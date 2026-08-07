@@ -1,9 +1,10 @@
 import hmac
 import hashlib
 import time
+import uuid
 import jwt
-from typing import Optional, Dict, Any
-from fastapi import HTTPException, Security, status, Header, Request
+from typing import Optional, Dict, Any, Literal
+from fastapi import HTTPException, Security, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from src.config import settings
 
@@ -25,9 +26,12 @@ def crear_jwt_token(sub: str = "taller_mecanico", extra_claims: Optional[Dict[st
     ahora = int(time.time())
     payload = {
         "sub": sub,
+        "rol": "administrador",
         "iat": ahora,
         "exp": ahora + JWT_EXPIRATION_SECONDS,
-        "iss": "CarBot-API-V1"
+        "iss": settings.jwt_issuer,
+        "aud": settings.jwt_audience,
+        "jti": str(uuid.uuid4()),
     }
     if extra_claims:
         payload.update(extra_claims)
@@ -49,7 +53,13 @@ def verificar_jwt_token(credentials: Optional[HTTPAuthorizationCredentials] = Se
     
     token = credentials.credentials
     try:
-        payload = jwt.decode(token, _obtener_jwt_secret(), algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(
+            token,
+            _obtener_jwt_secret(),
+            algorithms=[JWT_ALGORITHM],
+            issuer=settings.jwt_issuer,
+            audience=settings.jwt_audience,
+        )
         return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(
@@ -136,3 +146,66 @@ def anonimizar_identificador(identificador: str) -> str:
         
     return f"{prefix}{h}"
 
+
+def hash_identificador_persistencia(
+    identificador: str,
+    tipo: Literal["telefono", "placa"],
+) -> str:
+    """Genera el HMAC-SHA256 completo usado para búsquedas seguras en PostgreSQL."""
+
+    if not identificador or not identificador.strip():
+        raise ValueError("El identificador no puede estar vacío.")
+
+    if tipo == "telefono":
+        normalizado = "".join(caracter for caracter in identificador if caracter.isdigit())
+    elif tipo == "placa":
+        normalizado = "".join(
+            caracter for caracter in identificador.upper() if caracter.isalnum()
+        )
+    else:
+        raise ValueError("Tipo de identificador no soportado.")
+
+    if not normalizado:
+        raise ValueError("El identificador no contiene caracteres válidos.")
+
+    secret = getattr(settings, "PRIVACY_SECRET_KEY", "")
+    if not secret:
+        raise RuntimeError("PRIVACY_SECRET_KEY es obligatoria para persistir identificadores.")
+
+    return hmac.new(
+        secret.encode("utf-8"),
+        f"{tipo}:{normalizado}".encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+
+def _obtener_fernet_cipher():
+    """Genera la instancia Fernet derivada de PRIVACY_SECRET_KEY."""
+    import base64
+    from cryptography.fernet import Fernet
+
+    secret = getattr(settings, "PRIVACY_SECRET_KEY", "carbot_privacy_hmac_secret_key_2026")
+    key_bytes = hashlib.sha256(secret.encode("utf-8")).digest()
+    fernet_key = base64.urlsafe_b64encode(key_bytes)
+    return Fernet(fernet_key)
+
+
+def cifrar_texto_reversible(texto: str) -> str:
+    """Cifra un dato sensible de forma reversible (para que el worker de la cola pueda despachar)."""
+    if not texto:
+        return ""
+    cipher = _obtener_fernet_cipher()
+    return cipher.encrypt(texto.encode("utf-8")).decode("utf-8")
+
+
+def descifrar_texto_reversible(cifrado: str) -> str:
+    """Descifra el dato sensible en memoria al momento del despacho del mensaje."""
+    if not cifrado:
+        return ""
+    from cryptography.fernet import InvalidToken
+
+    try:
+        cipher = _obtener_fernet_cipher()
+        return cipher.decrypt(cifrado.encode("utf-8")).decode("utf-8")
+    except InvalidToken as exc:
+        raise ValueError("No se pudo descifrar el remitente del trabajo Gemini.") from exc
