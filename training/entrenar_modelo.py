@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import joblib
 import os
+import json
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -34,20 +37,21 @@ def entrenar_evaluar_modelo():
         ngram_range=(1, 2),
         sublinear_tf=True
     )
-    X_vec = vectorizador.fit_transform(X)
-
-    # 3. Split estratificado Train / Test (75% entrenar, 25% probar)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_vec, y, test_size=0.25, random_state=42, stratify=y
+    # 3. Separar ANTES de ajustar TF-IDF para impedir fuga de información del test.
+    X_train_text, X_test_text, y_train, y_test = train_test_split(
+        X, y, test_size=0.25, random_state=42, stratify=y
     )
+    X_train = vectorizador.fit_transform(X_train_text)
+    X_test = vectorizador.transform(X_test_text)
 
     # 4. Entrenar Random Forest Classifier sin restricción artificial de profundidad
     modelo = RandomForestClassifier(
-        n_estimators=300, 
+        n_estimators=100, 
         max_depth=None,
         min_samples_split=2,
         random_state=42,
-        class_weight='balanced'
+        class_weight='balanced',
+        n_jobs=1,
     )
     modelo.fit(X_train, y_train)
 
@@ -67,18 +71,34 @@ def entrenar_evaluar_modelo():
 
     # 6. Re-entrenar modelo final con 100% de los datos para producción/demo
     modelo_final = RandomForestClassifier(
-        n_estimators=300, 
+        n_estimators=100, 
         max_depth=None,
         min_samples_split=2,
         random_state=42,
-        class_weight='balanced'
+        class_weight='balanced',
+        n_jobs=1,
     )
-    modelo_final.fit(X_vec, y)
+    vectorizador_final = TfidfVectorizer(
+        lowercase=True, strip_accents='unicode', ngram_range=(1, 2), sublinear_tf=True
+    )
+    X_vec_final = vectorizador_final.fit_transform(X)
+    modelo_final.fit(X_vec_final, y)
 
     # Exportar los modelos .pkl
     os.makedirs("models", exist_ok=True)
-    joblib.dump(modelo_final, 'models/modelo_diagnostico.pkl')
-    joblib.dump(vectorizador, 'models/vectorizador_tfidf.pkl')
+    joblib.dump(modelo_final, 'models/modelo_diagnostico.pkl', compress=3)
+    joblib.dump(vectorizador_final, 'models/vectorizador_tfidf.pkl', compress=3)
+    metricas = {
+        "accuracy": float(exactitud),
+        "f1_macro": float(f1_macro),
+        "f1_weighted": float(f1_weighted),
+        "filas": int(len(df)),
+        "clases": int(df['falla'].nunique()),
+        "random_state": 42,
+        "evaluacion": "holdout_estratificado_sin_fuga_tfidf",
+    }
+    with open("models/metricas_modelo.json", "w", encoding="utf-8") as archivo_metricas:
+        json.dump(metricas, archivo_metricas, ensure_ascii=False, indent=2)
     print("\nArchivos exportados exitosamente:")
     print("  - models/modelo_diagnostico.pkl")
     print("  - models/vectorizador_tfidf.pkl")
