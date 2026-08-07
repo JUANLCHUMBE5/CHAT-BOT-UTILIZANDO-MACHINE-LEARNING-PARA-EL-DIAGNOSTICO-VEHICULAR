@@ -1,3 +1,5 @@
+import hmac
+
 from fastapi import APIRouter, HTTPException, status, Request
 from pydantic import BaseModel
 from src.core.security import crear_jwt_token
@@ -26,7 +28,9 @@ def login(request: Request, payload: LoginRequestDTO):
     expected_user = getattr(settings, "auth_username", "admin")
     expected_pass = getattr(settings, "auth_password", "carbot2026")
     
-    if payload.username == expected_user and payload.password == expected_pass:
+    usuario_valido = hmac.compare_digest(payload.username.encode(), expected_user.encode())
+    password_valido = hmac.compare_digest(payload.password.encode(), expected_pass.encode())
+    if usuario_valido and password_valido:
         token = crear_jwt_token(sub=payload.username)
         return TokenResponseDTO(access_token=token)
     

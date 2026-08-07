@@ -1,58 +1,62 @@
 import time
 from urllib.parse import parse_qs
-import requests
 from fastapi import APIRouter, Request, Query, HTTPException, BackgroundTasks, Header
 from fastapi.responses import PlainTextResponse, JSONResponse
-from fastapi.concurrency import run_in_threadpool
-from src.core.gestor_diagnostico import GestorDiagnostico, ResultadoDiagnostico as DTOInternal
+from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.security import verificar_firma_meta, verificar_firma_twilio, anonimizar_identificador
+from src.core.services.webhook_service import WebhookService
 from src.core.logger import logger
 from src.config import settings
 
 router = APIRouter()
+
 
 def obtener_gestor_diagnostico(request: Request) -> GestorDiagnostico:
     if hasattr(request.app.state, "gestor_diagnostico"):
         return request.app.state.gestor_diagnostico
     return GestorDiagnostico()
 
+
+def obtener_webhook_service(request: Request) -> WebhookService:
+    gestor = obtener_gestor_diagnostico(request)
+    return WebhookService(gestor)
+
+
 async def _procesar_y_responder_whatsapp(
     gestor: GestorDiagnostico,
-    remitente: str, 
-    tipo_mensaje: str, 
-    texto_cliente: str = "", 
+    remitente: str,
+    tipo_mensaje: str,
+    texto_cliente: str = "",
     audio_id: str = "",
     placa: str = "WAPP-01",
     marca_modelo: str = "Vehiculo Generico",
-    session_id: str = None
+    session_id: str = None,
+    meta_message_id: str = None,
+    proveedor: str = "whatsapp",
 ):
-    """Procesa en segundo plano la consulta de forma thread-safe y responde vía WhatsApp."""
+    """Procesa en segundo plano la consulta mediante WebhookService y responde vía WhatsApp."""
     start_t = time.time()
     try:
-        id_sesion = session_id or remitente
-        if tipo_mensaje == "text":
-            resultado_dto: DTOInternal = await run_in_threadpool(
-                gestor.procesar_consulta_texto,
-                texto_cliente, 
-                placa=placa, 
-                marca_modelo=marca_modelo, 
-                session_id=id_sesion
-            )
-            respuesta = resultado_dto.respuesta_texto
-        elif tipo_mensaje == "audio":
-            respuesta = await run_in_threadpool(gestor.procesar_consulta_audio, audio_id)
-        else:
-            respuesta = "Lo siento, actualmente solo puedo procesar mensajes de texto y notas de audio."
-
-        # Enviar mensaje de respuesta a la Graph API de Meta si hay número válido
-        if remitente and not remitente.startswith("test") and settings.TOKEN_WHATSAPP:
-            await run_in_threadpool(enviar_mensaje_whatsapp, remitente, respuesta)
-
+        service = WebhookService(gestor)
+        resultado = await service.procesar_mensaje(
+            remitente=remitente,
+            meta_message_id=meta_message_id or f"msg_{time.time_ns()}",
+            tipo_mensaje=tipo_mensaje,
+            texto_cliente=texto_cliente,
+            audio_id=audio_id,
+            placa=placa,
+            marca_modelo=marca_modelo,
+            proveedor=proveedor,
+            session_id=session_id,
+        )
         elapsed = (time.time() - start_t) * 1000
         rem_anon = anonimizar_identificador(remitente)
         logger.info(f"[Background Task Webhook] Procesado con éxito en {elapsed:.2f} ms para usuario {rem_anon}")
+        return resultado
     except Exception as e:
         logger.error(f"[Background Task Webhook] Error en segundo plano: {e}")
+        raise
+
 
 # ==========================================
 # ENDPOINTS META WHATSAPP CLOUD API
@@ -63,10 +67,12 @@ async def _procesar_y_responder_whatsapp(
 def verificar_webhook_meta(
     mode: str = Query(None, alias="hub.mode"),
     token: str = Query(None, alias="hub.verify_token"),
-    challenge: str = Query(None, alias="hub.challenge")
+    challenge: str = Query(None, alias="hub.challenge"),
 ):
     """Verificación obligatoria del Webhook requerida por Meta Cloud API."""
-    expected_token = getattr(settings, "META_VERIFY_TOKEN", getattr(settings, "VERIFY_TOKEN", "carbot_verify_token_ucv_2026"))
+    expected_token = getattr(
+        settings, "META_VERIFY_TOKEN", getattr(settings, "VERIFY_TOKEN", "carbot_verify_token_ucv_2026")
+    )
     verify_token_alt = getattr(settings, "VERIFY_TOKEN", "")
     if mode == "subscribe" and (token == expected_token or (verify_token_alt and token == verify_token_alt)):
         logger.info("Webhook de WhatsApp verificado con éxito por Meta.")
@@ -74,11 +80,12 @@ def verificar_webhook_meta(
     logger.warning("Intento de verificación de Webhook fallido por token incorrecto.")
     raise HTTPException(status_code=403, detail="Token de verificación inválido (Verify token incorrecto).")
 
+
 @router.post("/meta", summary="Recepción de Mensajes Meta Cloud API")
 async def recibir_mensaje_meta(
     request: Request,
     background_tasks: BackgroundTasks,
-    x_hub_signature_256: str = Header(None, alias="X-Hub-Signature-256")
+    x_hub_signature_256: str = Header(None, alias="X-Hub-Signature-256"),
 ):
     """
     Webhook dedicado para Meta Cloud API (WhatsApp).
@@ -86,6 +93,8 @@ async def recibir_mensaje_meta(
     """
     t_inicio = time.time()
     raw_body = await request.body()
+    if len(raw_body) > settings.webhook_max_body_bytes:
+        raise HTTPException(status_code=413, detail="Payload de webhook demasiado grande.")
 
     if not x_hub_signature_256 or not verificar_firma_meta(raw_body, x_hub_signature_256):
         logger.warning("[Webhook Meta] Firma criptográfica X-Hub-Signature-256 inválida o ausente.")
@@ -97,30 +106,52 @@ async def recibir_mensaje_meta(
         tipo_mensaje = "text"
         texto_cliente = ""
         audio_id = ""
+        meta_message_id = f"meta_{time.time_ns()}"
 
         if "entry" in payload:
             entry = payload.get("entry", [])[0]
             changes = entry.get("changes", [])[0]
             value = changes.get("value", {})
             messages = value.get("messages", [])
-            
-            if messages:
-                msg = messages[0]
-                remitente = msg.get("from", "desconocido")
-                tipo_mensaje = msg.get("type", "text")
-                if tipo_mensaje == "text":
-                    texto_cliente = msg.get("text", {}).get("body", "")
-                elif tipo_mensaje == "audio":
-                    audio_id = msg.get("audio", {}).get("id", "")
+
+            # Meta también envía estados (enviado/entregado/leído). No son
+            # consultas y no deben generar diagnósticos ficticios.
+            if not messages:
+                statuses = value.get("statuses", [])
+                if statuses:
+                    estado = statuses[0]
+                    await obtener_webhook_service(request).actualizar_estado_entrega_externo(
+                        estado.get("id", ""), estado.get("status", "")
+                    )
+                return JSONResponse(
+                    status_code=200,
+                    content={"status": "evento_ignorado", "proveedor": "Meta Cloud API"},
+                )
+
+            msg = messages[0]
+            meta_message_id = msg.get("id", meta_message_id)
+            remitente = msg.get("from", "desconocido")
+            tipo_mensaje = msg.get("type", "text")
+            if tipo_mensaje == "text":
+                texto_cliente = msg.get("text", {}).get("body", "")
+                if len(texto_cliente) > settings.user_text_max_chars:
+                    raise HTTPException(status_code=413, detail="Mensaje de texto demasiado largo.")
+            elif tipo_mensaje == "audio":
+                audio_id = msg.get("audio", {}).get("id", "")
+            else:
+                logger.info(f"[Webhook Meta] Tipo de mensaje no soportado: {tipo_mensaje}")
+                return JSONResponse(
+                    status_code=200,
+                    content={"status": "tipo_no_soportado", "tipo": tipo_mensaje},
+                )
         else:
             raise HTTPException(status_code=400, detail="Formato de payload Meta inválido.")
 
         rem_anon = anonimizar_identificador(remitente)
-        logger.info(f"[Webhook Meta API] Mensaje válido de usuario {rem_anon} (Tipo: {tipo_mensaje})")
+        logger.info(f"[Webhook Meta API] Mensaje válido de usuario {rem_anon} (Tipo: {tipo_mensaje}, MsgID: {meta_message_id})")
 
         gestor = obtener_gestor_diagnostico(request)
-        background_tasks.add_task(
-            _procesar_y_responder_whatsapp,
+        resultado_proceso = await _procesar_y_responder_whatsapp(
             gestor=gestor,
             remitente=remitente,
             tipo_mensaje=tipo_mensaje,
@@ -128,7 +159,9 @@ async def recibir_mensaje_meta(
             audio_id=audio_id,
             placa="WAPP-01",
             marca_modelo="Vehiculo Generico",
-            session_id=remitente
+            session_id=remitente,
+            meta_message_id=meta_message_id,
+            proveedor="meta",
         )
     except HTTPException:
         raise
@@ -141,10 +174,12 @@ async def recibir_mensaje_meta(
         status_code=200,
         content={
             "status": "procesado",
+            "estado_interno": resultado_proceso.get("status", "desconocido"),
             "proveedor": "Meta Cloud API",
-            "tiempo_respuesta_ms": round(elapsed_ms, 2)
-        }
+            "tiempo_respuesta_ms": round(elapsed_ms, 2),
+        },
     )
+
 
 # ==========================================
 # ENDPOINT TWILIO WHATSAPP
@@ -154,7 +189,7 @@ async def recibir_mensaje_meta(
 async def recibir_mensaje_twilio(
     request: Request,
     background_tasks: BackgroundTasks,
-    x_twilio_signature: str = Header(None, alias="X-Twilio-Signature")
+    x_twilio_signature: str = Header(None, alias="X-Twilio-Signature"),
 ):
     """
     Webhook dedicado para Twilio (Form-urlencoded).
@@ -162,7 +197,9 @@ async def recibir_mensaje_twilio(
     """
     t_inicio = time.time()
     raw_body = await request.body()
-    body_str = raw_body.decode('utf-8', errors='ignore')
+    if len(raw_body) > settings.webhook_max_body_bytes:
+        raise HTTPException(status_code=413, detail="Payload de webhook demasiado grande.")
+    body_str = raw_body.decode("utf-8", errors="ignore")
     parsed_qs = parse_qs(body_str)
 
     # Convertir dict de listas de parse_qs a valores simples
@@ -173,18 +210,26 @@ async def recibir_mensaje_twilio(
         logger.warning("[Webhook Twilio] Firma criptográfica X-Twilio-Signature inválida o ausente.")
         raise HTTPException(status_code=401, detail="Firma de webhook inválida (Unauthorized Twilio Payload).")
 
+    if params_dict.get("MessageStatus") and not params_dict.get("Body") and not params_dict.get("MediaUrl0"):
+        await obtener_webhook_service(request).actualizar_estado_entrega_externo(
+            params_dict.get("MessageSid", ""), params_dict.get("MessageStatus", "")
+        )
+        return JSONResponse(status_code=200, content={"status": "estado_actualizado", "proveedor": "Twilio"})
+
     remitente = params_dict.get("From", "whatsapp:+51000000000")
     texto_cliente = params_dict.get("Body", "")
+    if len(texto_cliente) > settings.user_text_max_chars:
+        raise HTTPException(status_code=413, detail="Mensaje de texto demasiado largo.")
     media_url = params_dict.get("MediaUrl0", "")
     tipo_mensaje = "audio" if media_url else "text"
     audio_id = media_url if media_url else ""
+    twilio_message_sid = params_dict.get("MessageSid", f"twilio_{time.time_ns()}")
 
     rem_anon = anonimizar_identificador(remitente)
     logger.info(f"[Webhook Twilio] Mensaje verificado recibido de {rem_anon}")
 
     gestor = obtener_gestor_diagnostico(request)
-    background_tasks.add_task(
-        _procesar_y_responder_whatsapp,
+    resultado_proceso = await _procesar_y_responder_whatsapp(
         gestor=gestor,
         remitente=remitente,
         tipo_mensaje=tipo_mensaje,
@@ -192,7 +237,9 @@ async def recibir_mensaje_twilio(
         audio_id=audio_id,
         placa="WAPP-01",
         marca_modelo="Vehiculo Generico",
-        session_id=remitente
+        session_id=remitente,
+        meta_message_id=twilio_message_sid,
+        proveedor="twilio",
     )
 
     elapsed_ms = (time.time() - t_inicio) * 1000
@@ -200,10 +247,12 @@ async def recibir_mensaje_twilio(
         status_code=200,
         content={
             "status": "procesado",
+            "estado_interno": resultado_proceso.get("status", "desconocido"),
             "proveedor": "Twilio",
-            "tiempo_respuesta_ms": round(elapsed_ms, 2)
-        }
+            "tiempo_respuesta_ms": round(elapsed_ms, 2),
+        },
     )
+
 
 # ==========================================
 # ENDPOINT RAÍZ COMPATIBILIDAD
@@ -214,7 +263,7 @@ async def recibir_mensaje(
     request: Request,
     background_tasks: BackgroundTasks,
     x_hub_signature_256: str = Header(None, alias="X-Hub-Signature-256"),
-    x_twilio_signature: str = Header(None, alias="X-Twilio-Signature")
+    x_twilio_signature: str = Header(None, alias="X-Twilio-Signature"),
 ):
     """
     Punto de entrada general con enrutamiento automático hacia /meta o /twilio según firmas e inspección del payload.
@@ -227,31 +276,7 @@ async def recibir_mensaje(
 
     return await recibir_mensaje_meta(request, background_tasks, x_hub_signature_256)
 
+
 def enviar_mensaje_whatsapp(numero_destino: str, texto: str):
     """Realiza la llamada HTTP POST a la Graph API de Meta para enviar la respuesta."""
-    token_activo = settings.TOKEN_WHATSAPP
-    telefono_id_activo = settings.TELEFONO_ID
-    
-    if not token_activo or not telefono_id_activo:
-        logger.warning("No se enviará mensaje vía HTTP Meta API (Falta TOKEN_WHATSAPP o TELEFONO_ID).")
-        return
-
-    url = f"https://graph.facebook.com/v18.0/{telefono_id_activo}/messages"
-    headers = {
-        "Authorization": f"Bearer {token_activo}",
-        "Content-Type": "application/json"
-    }
-    data = {
-        "messaging_product": "whatsapp",
-        "to": numero_destino,
-        "type": "text",
-        "text": {
-            "body": texto
-        }
-    }
-    try:
-        res = requests.post(url, headers=headers, json=data, timeout=5)
-        rem_anon = anonimizar_identificador(numero_destino)
-        logger.info(f"Respuesta enviada a usuario {rem_anon}. Meta Status Code: {res.status_code}")
-    except Exception as e:
-        logger.error(f"Falló el envío del mensaje vía HTTP a Meta API: {e}")
+    return WebhookService().enviar_mensaje_whatsapp(numero_destino, texto)

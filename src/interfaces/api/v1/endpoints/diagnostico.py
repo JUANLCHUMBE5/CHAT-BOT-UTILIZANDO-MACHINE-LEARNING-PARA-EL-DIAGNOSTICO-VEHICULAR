@@ -6,6 +6,8 @@ from src.core.gestor_diagnostico import GestorDiagnostico, ResultadoDiagnostico 
 from src.core.security import verificar_jwt_token, anonimizar_identificador
 from src.core.logger import logger
 from src.config import settings
+from src.core.gemini_queue import gemini_rate_limiter
+from src.infrastructure.database.connection import database_configurada
 
 from src.limiter import limiter
 
@@ -39,13 +41,19 @@ async def analizar_sintoma(
 
         marca_modelo = f"{consulta.marca} {consulta.modelo}".strip()
 
+        slot_gemini = None
+        if settings.GEMINI_API_KEY and database_configurada():
+            slot_gemini, _ = await gemini_rate_limiter.intentar_adquirir_slot_db()
+
         # Ejecutar en threadpool de forma thread-safe retornando DTO inmutable
         dto_resultado: DTOInternal = await run_in_threadpool(
             gestor.procesar_consulta_texto,
             consulta.sintoma, 
             placa=consulta.placa or "REST-API",
             marca_modelo=marca_modelo,
-            session_id=consulta.session_id
+            session_id=consulta.session_id,
+            proveedor="api",
+            slot_gemini_preconcedido=slot_gemini,
         )
         
         t_final = time.time()
