@@ -1,6 +1,4 @@
 import os
-import csv
-import pytest
 import concurrent.futures
 from fastapi.testclient import TestClient
 from main import app

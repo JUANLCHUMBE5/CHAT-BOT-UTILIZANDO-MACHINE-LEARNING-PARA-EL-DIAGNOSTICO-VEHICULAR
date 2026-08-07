@@ -52,7 +52,7 @@ La implementación del chatbot estructurado bajo la **Arquitectura en Capas (Lay
 | 3. Capa de Infraestructura (modelo_ml, motor_rag, persistencia)                   |
 | -> Soluciona: Pérdida de información y falta de estandarización.                  |
 | -> Cómo: Indexa manuales de taller reales (RAG) para dar respuestas confiables y  |
-|          guarda los reportes automáticamente en logs estructurados (CSV/DB).      |
+|          guarda los reportes en PostgreSQL con integridad y trazabilidad.         |
 +-----------------------------------------------------------------------------------+
 ```
 

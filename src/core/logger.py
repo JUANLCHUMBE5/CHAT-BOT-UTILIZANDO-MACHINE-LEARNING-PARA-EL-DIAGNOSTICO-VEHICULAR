@@ -1,6 +1,5 @@
 import logging
 import sys
-from datetime import datetime
 
 # Definición del formato personalizado con timestamp y niveles
 LOG_FORMAT = "[%(asctime)s] [%(levelname)s] [%(name)s]: %(message)s"

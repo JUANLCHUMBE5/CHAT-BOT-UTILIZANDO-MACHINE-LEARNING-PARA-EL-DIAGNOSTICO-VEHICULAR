@@ -1,6 +1,11 @@
 # Estrategia de Sustentación Frente al Dilema del Audio y Comité de Ética
 ## Proyecto: Chatbot de Diagnóstico Vehicular Híbrido
 
+> **Estado implementado:** el audio está desactivado por defecto
+> (`HABILITAR_AUDIO=false`). Solo se habilita con autorización y consentimiento.
+> En ese modo se descargan bytes reales de Meta/Twilio, se limita el tamaño,
+> se transcribe mediante Gemini y no se conserva el archivo. No se simulan audios.
+
 Este documento analiza la situación ética y de alcance de tu tesis, y te proporciona una **estrategia segura** para la sustentación, evitando observaciones de la Comisión de Ética y alineando el software con tus variables declaradas.
 
 ---

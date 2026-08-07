@@ -1,4 +1,3 @@
-import os
 import time
 import hmac
 import hashlib
@@ -24,7 +23,10 @@ def test_jwt_token_creacion_y_expiracion_2_horas():
     token = crear_jwt_token(sub="taller_test")
     assert isinstance(token, str)
     
-    payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    payload = jwt.decode(
+        token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM],
+        audience=settings.jwt_audience, issuer=settings.jwt_issuer,
+    )
     assert payload["sub"] == "taller_test"
     assert payload["exp"] - payload["iat"] == 7200
 
@@ -38,13 +40,18 @@ def test_verificar_jwt_token_helper_exito():
     assert payload["sub"] == "test_user"
 
 def test_jwt_token_estructura_y_claims():
-    """T1-JWT: Decoded JWT claims include sub, iat, exp, and iss='CarBot-API-V1'."""
+    """T1-JWT: El token incluye identidad, emisor, audiencia y JTI."""
     extra = {"role": "mecanico_senior", "workshop": "carabayllo_1"}
     token = crear_jwt_token(sub="user_123", extra_claims=extra)
-    payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    payload = jwt.decode(
+        token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM],
+        audience=settings.jwt_audience, issuer=settings.jwt_issuer,
+    )
     
     assert payload["sub"] == "user_123"
-    assert payload["iss"] == "CarBot-API-V1"
+    assert payload["iss"] == settings.jwt_issuer
+    assert payload["aud"] == settings.jwt_audience
+    assert payload["jti"]
     assert payload["role"] == "mecanico_senior"
     assert payload["workshop"] == "carabayllo_1"
 
@@ -53,7 +60,8 @@ def test_verificar_firma_meta_helper_valido_e_invalido(monkeypatch):
     monkeypatch.setattr(settings, "META_APP_SECRET", "secret_key_abc")
     raw_body = b'{"message": "test_payload"}'
     
-    import hmac, hashlib
+    import hmac
+    import hashlib
     valid_sig = "sha256=" + hmac.new(b"secret_key_abc", raw_body, hashlib.sha256).hexdigest()
     invalid_sig = "sha256=1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
     

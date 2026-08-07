@@ -1,8 +1,18 @@
+"""Procesador acústico y de audio para CarBot (FFT espectral + Transcripción de voz)."""
+
+from __future__ import annotations
+
+from typing import Optional, Tuple
+import base64
 import numpy as np
+import requests
+
+from src.config import settings
+
 
 class AudioProcessor:
-    """Clase encargada de procesar las señales de audio físicas (FFT y RMS)."""
-    
+    """Clase encargada de procesar las señales de audio físicas (FFT y RMS) y transcripción."""
+
     def __init__(self, samplerate: int = 44100):
         self.samplerate = samplerate
         self.umbral_silencio = 0.01
@@ -15,7 +25,17 @@ class AudioProcessor:
             return datos_audio / maximo
         return datos_audio
 
-    def analizar_audio(self, datos_audio_crudos: np.ndarray) -> tuple:
+    def bytes_a_vector(self, audio_bytes: bytes) -> np.ndarray:
+        """Convierte bytes de audio crudo en un vector NumPy normalizado."""
+        if not audio_bytes:
+            return np.zeros(0, dtype=np.float32)
+        try:
+            arr = np.frombuffer(audio_bytes, dtype=np.int16).astype(np.float32)
+            return self.normalizar_audio(arr)
+        except Exception:
+            return np.zeros(0, dtype=np.float32)
+
+    def analizar_audio(self, datos_audio_crudos: np.ndarray) -> Tuple[str, str]:
         """
         Analiza las propiedades físicas del audio.
         Retorna: (Tipo de entrada: 'Silencio'|'Ruido Mecánico'|'Voz Humana', Detalle/Diagnóstico)
@@ -25,16 +45,16 @@ class AudioProcessor:
 
         # Aplanar y normalizar
         datos_normalizados = self.normalizar_audio(datos_audio_crudos.flatten())
-        
+
         # Calcular energía RMS (Root Mean Square)
         energia_rms = np.sqrt(np.mean(datos_normalizados**2))
-        
+
         if energia_rms < self.umbral_silencio:
             return "Silencio", "No se detectaron niveles significativos de audio."
 
         # Aplicar Transformada Rápida de Fourier (FFT) para análisis espectral
         fft_resultado = np.abs(np.fft.rfft(datos_normalizados))
-        frecuencias = np.fft.rfftfreq(len(datos_normalizados), d=1.0/self.samplerate)
+        frecuencias = np.fft.rfftfreq(len(datos_normalizados), d=1.0 / self.samplerate)
 
         # Encontrar frecuencia dominante
         indice_maximo = np.argmax(fft_resultado)
@@ -58,4 +78,50 @@ class AudioProcessor:
             return "Ruido Mecánico", diagnostico
         else:
             # Audio con firma de voz humana
-            return "Voz Humana", "Señal correspondiente a voz hablada (para transcripción)."
+            return "Voz Humana", "Señal correspondiente a nota de voz hablada del mecánico o cliente."
+
+    def transcribir_nota_de_voz(
+        self,
+        audio_id: str,
+        audio_bytes: Optional[bytes] = None,
+        mime_type: str = "audio/ogg",
+        api_key: Optional[str] = None,
+    ) -> str:
+        """
+        Transcribe una nota de voz a texto para ingresarla al clasificador ML y RAG.
+        Transcribe bytes reales mediante la entrada multimodal de Gemini.
+        """
+        if not audio_id or not audio_bytes:
+            raise ValueError("La nota de voz no contiene bytes de audio reales.")
+        clave = api_key or settings.GEMINI_API_KEY
+        if not clave:
+            raise RuntimeError("GEMINI_API_KEY es obligatoria para transcribir audio.")
+        if len(audio_bytes) > settings.audio_max_bytes:
+            raise ValueError("El audio supera el tamaño máximo permitido.")
+
+        modelo = settings.GEMINI_MODEL
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent"
+        payload = {
+            "contents": [{"parts": [
+                {"text": "Transcribe literalmente esta nota de voz en español. Devuelve solo la transcripción, sin explicar ni diagnosticar."},
+                {"inline_data": {
+                    "mime_type": mime_type,
+                    "data": base64.b64encode(audio_bytes).decode("ascii"),
+                }},
+            ]}]
+        }
+        response = requests.post(
+            url,
+            headers={"Content-Type": "application/json", "x-goog-api-key": clave},
+            json=payload,
+            timeout=30,
+        )
+        response.raise_for_status()
+        data = response.json()
+        try:
+            texto = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+        except (KeyError, IndexError, TypeError) as exc:
+            raise RuntimeError("Gemini no devolvió una transcripción utilizable.") from exc
+        if not texto:
+            raise RuntimeError("La transcripción de audio está vacía.")
+        return texto

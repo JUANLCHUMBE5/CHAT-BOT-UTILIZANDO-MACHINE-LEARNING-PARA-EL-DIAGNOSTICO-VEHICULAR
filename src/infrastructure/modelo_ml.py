@@ -41,10 +41,17 @@ class ModeloML:
             
         try:
             entrada_vec = self.vectorizador.transform([texto])
+            if getattr(entrada_vec, "nnz", 0) == 0:
+                return "Síntoma fuera del vocabulario del modelo", 0.0
             if hasattr(self.modelo, "predict_proba"):
                 probabilidades = self.modelo.predict_proba(entrada_vec)[0]
                 idx_max = probabilidades.argmax()
-                confianza = float(probabilidades[idx_max])
+                ordenadas = sorted((float(p) for p in probabilidades), reverse=True)
+                maxima = ordenadas[0]
+                margen = maxima - ordenadas[1] if len(ordenadas) > 1 else maxima
+                # Random Forest no produce probabilidades calibradas. Este score
+                # conservador penaliza predicciones sin separación entre clases.
+                confianza = maxima * min(1.0, margen / 0.25)
                 prediccion = self.modelo.classes_[idx_max]
             else:
                 prediccion = self.modelo.predict(entrada_vec)[0]

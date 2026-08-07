@@ -1,6 +1,10 @@
 # Manual Técnico del Código y Módulos de Diagnóstico
 ## Proyecto: Chatbot de Diagnóstico Vehicular Híbrido
 
+> **Alcance vigente:** audio desactivado por defecto. Solo funciona con
+> `HABILITAR_AUDIO=true`, credenciales oficiales y aprobación de privacidad.
+> La implementación descarga y transcribe audio real; no usa señales sintéticas.
+
 Este manual técnico describe la estructura de archivos, el funcionamiento del código y aborda la discrepancia de la funcionalidad de audio entre tu borrador de informe de tesis y los scripts reales desarrollados en el proyecto.
 
 ---

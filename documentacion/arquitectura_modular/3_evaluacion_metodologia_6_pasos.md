@@ -57,6 +57,6 @@ A continuación, se detalla la alineación paso por paso entre la propuesta plan
 ### Paso 6: Pruebas, Validación y Evaluación de Variables Dependientes
 - **Tu propuesta**: Validar el funcionamiento correcto del chatbot, comprobar predicciones del ML, pertinencia del RAG, coherencia técnica del LLM y evaluar las variables dependientes (predicción correcta, registros completos, tiempo promedio de respuesta).
 - **Alineación con el Proyecto**:
-  - Automatización de registro de auditoría en `data/tracker_diagnosticos.csv`.
+  - Automatización del registro operacional y de auditoría en PostgreSQL; el archivo `data/tracker_diagnosticos.csv` se conserva como instrumento experimental exportable.
   - Evaluación experimental de tiempos de respuesta (< 3.5 segundos con RAG/LLM) y precisión predictiva del modelo ML.
   - Validación con scripts de prueba en `pruebas/`.

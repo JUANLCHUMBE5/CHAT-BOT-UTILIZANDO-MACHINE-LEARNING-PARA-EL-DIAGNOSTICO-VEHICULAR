@@ -1,4 +1,3 @@
-import pytest
 from src.infrastructure.container import ServiceContainer
 from src.core.gestor_diagnostico import GestorDiagnostico, ResultadoDiagnostico
 from src.core.traductor_jerga import normalizar_jerga_peruana

@@ -2,7 +2,6 @@ import hmac
 import hashlib
 import json
 import os
-import pytest
 from fastapi.testclient import TestClient
 from main import app
 from src.core.security import crear_jwt_token

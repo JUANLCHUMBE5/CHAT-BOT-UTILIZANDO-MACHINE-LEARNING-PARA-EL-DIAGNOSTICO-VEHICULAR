@@ -1,4 +1,5 @@
 import os
+import hashlib
 import numpy as np
 try:
     import faiss
@@ -7,7 +8,6 @@ except ImportError:
     FAISS_AVAILABLE = False
 
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 from src.core.logger import logger
 from src.config import settings
 
@@ -20,6 +20,7 @@ class MotorRAG:
         self.titulos = []
         self.vectorizador = None
         self.faiss_index = None
+        self.corpus_version = "manual-ausente"
         self._indexar_manual()
 
     def _indexar_manual(self):
@@ -30,6 +31,7 @@ class MotorRAG:
         try:
             with open(self.manual_path, "r", encoding="utf-8") as f:
                 contenido = f.read()
+            self.corpus_version = hashlib.sha256(contenido.encode("utf-8")).hexdigest()[:16]
             
             # Separar secciones por delimitador ===
             secciones = [sec.strip() for sec in contenido.split("===") if sec.strip()]
@@ -45,6 +47,8 @@ class MotorRAG:
             matriz_tfidf = self.vectorizador.fit_transform(self.documentos).toarray().astype(np.float32)
             
             # Normalización L2 para producto interno (equivalente a Cosine Similarity en FAISS)
+            if not FAISS_AVAILABLE:
+                raise RuntimeError("faiss-cpu no está instalado.")
             faiss.normalize_L2(matriz_tfidf)
             
             # Indexar vectores en FAISS IndexFlatIP (Inner Product)

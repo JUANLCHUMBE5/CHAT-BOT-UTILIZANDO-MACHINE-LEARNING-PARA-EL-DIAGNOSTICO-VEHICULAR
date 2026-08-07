@@ -1,0 +1,30 @@
+{
+  "version": "2.0.0-calibrated",
+  "algoritmo_ganador": "Random_Forest",
+  "exactitud_test": 1.0,
+  "f1_macro_test": 1.0,
+  "f1_weighted_test": 1.0,
+  "cv_5fold": {
+    "Random_Forest": {
+      "media_f1_macro": 0.9969034365801024,
+      "desviacion_std": 0.0029855762007978577
+    },
+    "Logistic_Regression": {
+      "media_f1_macro": 1.0,
+      "desviacion_std": 0.0
+    },
+    "Linear_SVM_Calibrado": {
+      "media_f1_macro": 1.0,
+      "desviacion_std": 0.0
+    },
+    "Complement_Naive_Bayes": {
+      "media_f1_macro": 0.9974538099329466,
+      "desviacion_std": 0.0022120045832190343
+    }
+  },
+  "registros_entrenamiento": 1822,
+  "clases_totales": 27,
+  "sha256_modelo": "84323508dbff6519a4d326f5937f7406fc40e8f3271add7fc9662518e7da7e14",
+  "sha256_vectorizador": "573cc22352d04a4227b50e9938b3e2287bf804225885c51119bcc1bd52740449",
+  "umbral_baja_confianza": 0.35
+}

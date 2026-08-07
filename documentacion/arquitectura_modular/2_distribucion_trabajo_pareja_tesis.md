@@ -47,7 +47,7 @@ Construcción de la **Arquitectura Modular por Capas**, implementación de la in
 
 3. **Desarrollo de la Capa de Aplicación e Integración LLM (Módulo 3)**:
    - Implementación del orquestador central `GestorDiagnostico` (`src/core/gestor_diagnostico.py`).
-   - Integración del LLM (Google Gemini 1.5 Flash API) mediante prompts aumentados con el contexto de ML y RAG.
+   - Integración del LLM (Google Gemini gemini-3.5-flash-lite API) mediante prompts aumentados con el contexto de ML y RAG.
    - Manejo del procesador de señales de audio (`src/core/audio_processor.py`) e implementación de fallbacks de contingencia.
 
 4. **Evaluación de Variables Dependientes del Sistema**:

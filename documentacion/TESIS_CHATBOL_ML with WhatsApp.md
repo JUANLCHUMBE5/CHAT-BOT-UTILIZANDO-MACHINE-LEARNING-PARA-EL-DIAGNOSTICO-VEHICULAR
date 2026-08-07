@@ -1,5 +1,8 @@
 # Chat Conversation
 
+> Documento histórico. La implementación vigente desactiva audio por defecto y
+> solo lo habilita con consentimiento, descarga real y transcripción sin retener el archivo.
+
 Note: _This is purely the output of the chat conversation and does not contain any raw data, codebase snippets, etc. used to generate the output._
 
 ### User Input

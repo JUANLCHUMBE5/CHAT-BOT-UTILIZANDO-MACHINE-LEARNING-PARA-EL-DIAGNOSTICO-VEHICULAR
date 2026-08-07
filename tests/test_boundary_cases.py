@@ -1,4 +1,5 @@
 import time
+
 import jwt
 import pytest
 from fastapi.testclient import TestClient
@@ -96,3 +97,9 @@ def test_ml_rag_dtc_codigo_desconocido():
     manual_texto, titulo = motor_rag.recuperar_contexto("DTC P9999 falla desconocida")
     assert isinstance(titulo, str)
     assert isinstance(manual_texto, str)
+
+
+def test_audio_sin_muestras_reales_no_se_simula():
+    gestor = GestorDiagnostico()
+    with pytest.raises(ValueError, match="muestras reales"):
+        gestor.procesar_consulta_audio("identificador-remoto", None)

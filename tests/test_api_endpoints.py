@@ -1,7 +1,6 @@
 import hmac
 import hashlib
 import json
-import pytest
 from fastapi.testclient import TestClient
 from main import app
 from src.core.security import crear_jwt_token
@@ -135,6 +134,33 @@ def test_webhook_post_payload_whatsapp_text(monkeypatch):
     assert data["status"] == "procesado"
     assert data["tiempo_respuesta_ms"] >= 0.0
 
+
+def test_webhook_meta_ignora_evento_de_estado(monkeypatch):
+    """Los recibos de entrega de Meta no deben crear una consulta diagnóstica."""
+    monkeypatch.setattr(settings, "META_APP_SECRET", "test_secret_key_123")
+    payload = {
+        "object": "whatsapp_business_account",
+        "entry": [{
+            "changes": [{
+                "value": {
+                    "statuses": [{"id": "wamid.estado", "status": "delivered"}]
+                }
+            }]
+        }]
+    }
+    raw_body = json.dumps(payload).encode("utf-8")
+    sig = hmac.new(b"test_secret_key_123", raw_body, hashlib.sha256).hexdigest()
+    response = client.post(
+        "/api/v1/webhook/meta",
+        content=raw_body,
+        headers={
+            "Content-Type": "application/json",
+            "X-Hub-Signature-256": f"sha256={sig}",
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "evento_ignorado"
+
 def test_webhook_twilio_endpoint_con_firma_valida(monkeypatch):
     """T1-WEBHOOK: POST /webhook/twilio processes Twilio form payload with valid X-Twilio-Signature."""
     monkeypatch.setattr(settings, "TWILIO_AUTH_TOKEN", "test_twilio_token_999")
@@ -155,4 +181,3 @@ def test_webhook_twilio_endpoint_con_firma_valida(monkeypatch):
     data = response.json()
     assert data["status"] == "procesado"
     assert data["proveedor"] == "Twilio"
-
