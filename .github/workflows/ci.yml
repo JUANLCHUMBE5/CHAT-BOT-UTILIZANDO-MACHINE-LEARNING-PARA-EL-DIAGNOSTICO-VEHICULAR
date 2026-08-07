@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: carbot_test
+          POSTGRES_USER: carbot_app
+          POSTGRES_PASSWORD: test_password_only
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U carbot_app -d carbot_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_ENABLED: "true"
+      DATABASE_REQUIRED: "true"
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: carbot_test
+      POSTGRES_USER: carbot_app
+      POSTGRES_PASSWORD: test_password_only
+      DATABASE_POOL_SIZE: "0"
+      PRIVACY_SECRET_KEY: ci_privacy_secret_only_not_for_production_123456
+      JWT_SECRET_KEY: ci_jwt_secret_only_not_for_production_123456789
+      META_APP_SECRET: ci_meta_secret
+      GEMINI_API_KEY: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: pip install ruff coverage
+      - run: python -m alembic upgrade head
+      - run: ruff check src tests main.py
+      - run: coverage run --source=src -m pytest -q
+      - run: coverage report --fail-under=55
+      - run: python -m alembic check
+      - run: pip-audit -r requirements.txt
