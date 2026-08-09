@@ -339,6 +339,7 @@ class WebhookService:
                 respuesta_texto = dto.respuesta_texto
                 diagnostico_ml = dto.diagnostico_ml
                 confianza_ml = dto.confianza_ml
+                similitud_rag = dto.similitud_rag
                 contexto_manual = dto.contexto_manual
                 titulo_manual = dto.titulo_manual
 
@@ -359,7 +360,8 @@ class WebhookService:
                 # =========================================================
                 # 7. GUARDAR DIAGNÓSTICO E HIPÓTESIS TÉCNICAS
                 # =========================================================
-                sintoma_norm = normalizar_jerga_peruana(sanitizar_prompt_usuario(texto_cliente))
+                sintoma_diagnostico = dto.sintoma_evaluado or texto_cliente
+                sintoma_norm = normalizar_jerga_peruana(sanitizar_prompt_usuario(sintoma_diagnostico))
                 
                 modo_diag = dto.modo_diagnostico
                 if modo_diag == "saludo":
@@ -386,10 +388,11 @@ class WebhookService:
                     mecanico_id=usuario.id,
                     conversacion_id=conversacion.id,
                     vehiculo_id=vehiculo.id if vehiculo else None,
-                    sintoma_original=texto_cliente or "[Nota de Audio]",
+                    sintoma_original=sintoma_diagnostico or "[Nota de Audio]",
                     sintoma_normalizado=sintoma_norm,
                     falla_predicha=diagnostico_ml,
                     confianza=confianza_ml,
+                    similitud_rag=similitud_rag,
                     fuente=fuente_diag,
                     modo_diagnostico=modo_diag,
                     estado="generado",
@@ -403,7 +406,7 @@ class WebhookService:
                     await gemini_rate_limiter.persistir_solicitud_en_sesion(
                         session,
                         solicitud_id=dto.solicitud_id,
-                        sintoma=texto_cliente,
+                        sintoma=sintoma_diagnostico,
                         diagnostico_ml=dto.diagnostico_ml,
                         confianza_ml=dto.confianza_ml,
                         contexto_manual=dto.contexto_manual,
@@ -417,11 +420,19 @@ class WebhookService:
                         conversacion_id=str(conversacion.id),
                     )
 
-                # Guardar hipótesis diagnóstica priorizada
+                # Guardar hipótesis diagnóstica priorizada con procedimiento RAG real
+                fuente_documental = "Corpus local preliminar no validado como OEM"
+                titulo_procedimiento = titulo_manual.strip() if titulo_manual else "Sin título recuperado"
                 evidencia = (
-                    f"RAG: {titulo_manual}. {contexto_manual[:400]}"
-                    if contexto_manual
-                    else f"Clasificador ML TF-IDF con {int(confianza_ml * 100)}% de confianza"
+                    f"Fuente: {fuente_documental}. "
+                    f"Procedimiento: {titulo_procedimiento}. "
+                    f"Corpus: {getattr(self.gestor.motor_rag, 'corpus_version', 'v1.0')}. "
+                    f"Clasificador ML TF-IDF: {int(confianza_ml * 100)}% de confianza"
+                )
+                proc_recomendado = (
+                    contexto_manual.strip()
+                    if contexto_manual and contexto_manual.strip()
+                    else "Sin procedimiento RAG registrado"
                 )
                 await diag_repo.agregar_hipotesis(
                     diagnostico_id=diag.id,
@@ -429,7 +440,7 @@ class WebhookService:
                     falla_probable=diagnostico_ml,
                     confianza=confianza_ml,
                     evidencia=evidencia,
-                    prueba_recomendada="Inspección directa de componentes en taller mecánico",
+                    prueba_recomendada=proc_recomendado,
                     resultado="pendiente",
                 )
 
@@ -501,6 +512,7 @@ class WebhookService:
                     "conversacion_id": str(conversacion.id),
                     "falla_predicha": diagnostico_ml,
                     "confianza": float(confianza_ml),
+                    "similitud_rag": float(similitud_rag),
                     "tiempo_total_ms": round(total_ms, 2),
                     "tiempo_ml_ms": duracion_ms,
                     "costo_estimado_usd": float(costo_gemini),

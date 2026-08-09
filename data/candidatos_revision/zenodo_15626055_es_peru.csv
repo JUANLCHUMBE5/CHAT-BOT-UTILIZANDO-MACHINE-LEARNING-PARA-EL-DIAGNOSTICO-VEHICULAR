@@ -1,0 +1,197 @@
+﻿sintoma_fuente_ingles,categoria_fuente,subcategoria_fuente,codigo_canonico_propuesto,decision,traduccion_espanol_validada,validado_por_mecanico,observaciones_revision,doi_fuente,licencia,sintoma_es_peru_candidato,estado_traduccion
+ABS warning light on,ABS System,ABS Control Module,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz de advertencia del ABS permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Brake pedal pulsation,ABS System,ABS Control Module,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno pulsa al frenar,PENDIENTE_VALIDACION_MECANICO
+ABS light stays on,ABS System,ABS Wheel Speed Sensor,FRENO_005,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz de ABS permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Erratic speedometer,ABS System,ABS Wheel Speed Sensor,FRENO_005,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El velocímetro marca de forma errática,PENDIENTE_VALIDACION_MECANICO
+Spongy brake pedal,ABS System,Brake Booster,FRENO_004,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno se siente esponjoso,PENDIENTE_VALIDACION_MECANICO
+Hard brake pedal,ABS System,Brake Booster,FRENO_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno está duro,PENDIENTE_VALIDACION_MECANICO
+Brake pulling to one side,ABS System,Brake Caliper,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo jala hacia un lado al frenar,PENDIENTE_VALIDACION_MECANICO
+Brake dragging,ABS System,Brake Caliper,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El freno queda frenado o pegado,PENDIENTE_VALIDACION_MECANICO
+Brake fluid leak,ABS System,Brake Hose,FRENO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fuga de líquido de frenos,PENDIENTE_VALIDACION_MECANICO
+Soft brake pedal,ABS System,Brake Hose,FRENO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno está demasiado suave,PENDIENTE_VALIDACION_MECANICO
+Spongy brake pedal,ABS System,Brake Master Cylinder,FRENO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno se siente esponjoso,PENDIENTE_VALIDACION_MECANICO
+Brake fluid leaks,ABS System,Brake Master Cylinder,FRENO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fugas de líquido de frenos,PENDIENTE_VALIDACION_MECANICO
+Squealing brakes,ABS System,Brake Pad,FRENO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Los frenos chillan al frenar,PENDIENTE_VALIDACION_MECANICO
+Brake pedal pulsation,ABS System,Brake Pad,FRENO_001,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno pulsa al frenar,PENDIENTE_VALIDACION_MECANICO
+Brake pedal pulsation,ABS System,Brake Rotor,FRENO_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno pulsa al frenar,PENDIENTE_VALIDACION_MECANICO
+Steering wheel vibration,ABS System,Brake Rotor,FRENO_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El timón vibra,PENDIENTE_VALIDACION_MECANICO
+Spongy brake pedal,ABS System,Brake Shoe & Drum,FRENO_001,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno se siente esponjoso,PENDIENTE_VALIDACION_MECANICO
+Brake dragging,ABS System,Brake Shoe & Drum,FRENO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El freno queda frenado o pegado,PENDIENTE_VALIDACION_MECANICO
+No cold air from vents,Air Conditioning System,AC Compressor,CLIMA_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,No sale aire frío por las rejillas,PENDIENTE_VALIDACION_MECANICO
+Loud noise when AC is on,Air Conditioning System,AC Compressor,CLIMA_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El aire acondicionado hace un ruido fuerte al encenderlo,PENDIENTE_VALIDACION_MECANICO
+Warm air from AC vents,Air Conditioning System,AC Condenser,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale aire tibio por las rejillas del aire acondicionado,PENDIENTE_VALIDACION_MECANICO
+AC system not cooling,Air Conditioning System,AC Condenser,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El aire acondicionado no enfría,PENDIENTE_VALIDACION_MECANICO
+Musty odor from vents,Air Conditioning System,AC Evaporator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale olor a humedad por las rejillas,PENDIENTE_VALIDACION_MECANICO
+Weak airflow from vents,Air Conditioning System,AC Evaporator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale poco aire por las rejillas,PENDIENTE_VALIDACION_MECANICO
+Warm air from vents,Air Conditioning System,AC Recharge,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale aire tibio por las rejillas,PENDIENTE_VALIDACION_MECANICO
+Low AC system pressure,Air Conditioning System,AC Recharge,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El sistema de aire acondicionado tiene baja presión,PENDIENTE_VALIDACION_MECANICO
+AC system not working,Air Conditioning System,Air Conditioning Diagnosis,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El aire acondicionado no funciona,PENDIENTE_VALIDACION_MECANICO
+Unusual noise from AC system,Air Conditioning System,Air Conditioning Diagnosis,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El aire acondicionado hace un ruido anormal,PENDIENTE_VALIDACION_MECANICO
+Musty odor from vents,Air Conditioning System,Cabin Air Filter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale olor a humedad por las rejillas,PENDIENTE_VALIDACION_MECANICO
+Reduced airflow from vents,Air Conditioning System,Cabin Air Filter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Disminuyó el flujo de aire por las rejillas,PENDIENTE_VALIDACION_MECANICO
+No air from vents,Air Conditioning System,Heater Blower Motor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,No sale aire por las rejillas,PENDIENTE_VALIDACION_MECANICO
+Loud noise from HVAC system,Air Conditioning System,Heater Blower Motor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El sistema de ventilación hace un ruido fuerte,PENDIENTE_VALIDACION_MECANICO
+HVAC fan speed erratic,Air Conditioning System,Heater Blower Motor Resistor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La velocidad del ventilador de cabina varía de forma errática,PENDIENTE_VALIDACION_MECANICO
+HVAC fan only works on certain settings,Air Conditioning System,Heater Blower Motor Resistor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El ventilador de cabina solo funciona en algunas velocidades,PENDIENTE_VALIDACION_MECANICO
+Engine overheating,Cooling System,Coolant/Antifreeze,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se recalienta,PENDIENTE_VALIDACION_MECANICO
+Coolant leaks under the vehicle,Cooling System,Coolant/Antifreeze,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fuga de refrigerante debajo del vehículo,PENDIENTE_VALIDACION_MECANICO
+Visible coolant puddle under vehicle,Cooling System,Coolant Leak Diagnosis,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se forma un charco de refrigerante debajo del vehículo,PENDIENTE_VALIDACION_MECANICO
+Coolant odor in cabin,Cooling System,Coolant Leak Diagnosis,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se siente olor a refrigerante dentro de la cabina,PENDIENTE_VALIDACION_MECANICO
+Engine overheating,Cooling System,Engine Cooling System,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se recalienta,PENDIENTE_VALIDACION_MECANICO
+Temperature gauge in red zone,Cooling System,Engine Cooling System,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La aguja de temperatura llega a la zona roja,PENDIENTE_VALIDACION_MECANICO
+No heat from vents,Cooling System,Heater Core,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,No sale aire caliente por las rejillas,PENDIENTE_VALIDACION_MECANICO
+Sweet smell in cabin,Cooling System,Heater Core,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se siente un olor dulce a refrigerante dentro de la cabina,PENDIENTE_VALIDACION_MECANICO
+Coolant odor in cabin,Cooling System,Heater Hose,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se siente olor a refrigerante dentro de la cabina,PENDIENTE_VALIDACION_MECANICO
+Visible coolant leak under vehicle,Cooling System,Heater Hose,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se observa una fuga de refrigerante debajo del vehículo,PENDIENTE_VALIDACION_MECANICO
+Engine overheating,Cooling System,Radiator/Cooling Fan,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se recalienta,PENDIENTE_VALIDACION_MECANICO
+AC not cooling at idle,Cooling System,Radiator/Cooling Fan,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El aire acondicionado no enfría cuando el motor está en mínimo,PENDIENTE_VALIDACION_MECANICO
+Coolant leak under vehicle,Cooling System,Radiator Hose,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fuga de refrigerante debajo del vehículo,PENDIENTE_VALIDACION_MECANICO
+Visible wear/cracks on hoses,Cooling System,Radiator Hose,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Las mangueras están cuarteadas o rajadas,PENDIENTE_VALIDACION_MECANICO
+Engine overheating,Cooling System,Water Pump,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se recalienta,PENDIENTE_VALIDACION_MECANICO
+Coolant leak near front of engine,Cooling System,Water Pump,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fuga de refrigerante en la parte delantera del motor,PENDIENTE_VALIDACION_MECANICO
+Whining noise from drivetrain,Drivetrain,Bevel Gears,TRANSMISION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un zumbido en la transmisión,PENDIENTE_VALIDACION_MECANICO
+Difficulty shifting gears,Drivetrain,Bevel Gears,TRANSMISION_002,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Cuesta pasar los cambios,PENDIENTE_VALIDACION_MECANICO
+Vehicle binding on turns,Drivetrain,Center Differential,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La transmisión se amarra al girar,PENDIENTE_VALIDACION_MECANICO
+Noise from drivetrain while turning,Drivetrain,Center Differential,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La transmisión hace ruido al girar,PENDIENTE_VALIDACION_MECANICO
+Clutch pedal feels loose,Drivetrain,Clutch Cable,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de embrague se siente flojo,PENDIENTE_VALIDACION_MECANICO
+Difficulty engaging gears,Drivetrain,Clutch Cable,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Cuesta engranar los cambios,PENDIENTE_VALIDACION_MECANICO
+Clutch pedal feels spongy,Drivetrain,Clutch Slave Cylinder,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de embrague se siente esponjoso,PENDIENTE_VALIDACION_MECANICO
+Fluid leak near clutch pedal,Drivetrain,Clutch Slave Cylinder,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fuga de líquido cerca del pedal de embrague,PENDIENTE_VALIDACION_MECANICO
+Whining noise from rear end,Drivetrain,Differential,TRANSMISION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un zumbido en la parte posterior,PENDIENTE_VALIDACION_MECANICO
+Vehicle vibration at high speeds,Drivetrain,Differential,TRANSMISION_002,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo vibra a alta velocidad,PENDIENTE_VALIDACION_MECANICO
+Axle noise while turning,Drivetrain,Live Axle,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El eje hace ruido al girar,PENDIENTE_VALIDACION_MECANICO
+Vehicle leans to one side,Drivetrain,Live Axle,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo queda inclinado hacia un lado,PENDIENTE_VALIDACION_MECANICO
+Vehicle bounces over bumps,Drivetrain,Rigid Axle,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo rebota demasiado al pasar baches,PENDIENTE_VALIDACION_MECANICO
+Loud noise from rear axle,Drivetrain,Rigid Axle,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El eje posterior hace un ruido fuerte,PENDIENTE_VALIDACION_MECANICO
+Transmission slipping,Drivetrain,Slushbox,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La caja automática patina,PENDIENTE_VALIDACION_MECANICO
+Delay in gear engagement,Drivetrain,Slushbox,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La caja demora en acoplar el cambio,PENDIENTE_VALIDACION_MECANICO
+Driveline vibration,Drivetrain,Universal Joint,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La línea de transmisión vibra,PENDIENTE_VALIDACION_MECANICO
+Clunking noise when shifting,Drivetrain,Universal Joint,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un golpe al realizar los cambios,PENDIENTE_VALIDACION_MECANICO
+Vehicle binding during turns,Drivetrain,Viscous Coupling,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La transmisión se amarra durante los giros,PENDIENTE_VALIDACION_MECANICO
+Noise from drivetrain while turning,Drivetrain,Viscous Coupling,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La transmisión hace ruido al girar,PENDIENTE_VALIDACION_MECANICO
+Engine cranks slowly,Electrical System,Battery Replacement,ELECTRICO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor de arranque gira lento,PENDIENTE_VALIDACION_MECANICO
+Clicking sound when starting,Electrical System,Battery Replacement,ELECTRICO_002,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un clic al intentar arrancar,PENDIENTE_VALIDACION_MECANICO
+Battery warning light on,Electrical System,Charging System,ELECTRICO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz de batería permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Dim headlights,Electrical System,Charging System,ELECTRICO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Las luces delanteras alumbran con poca intensidad,PENDIENTE_VALIDACION_MECANICO
+Check engine light on,Electrical System,Check Engine Light Diagnosis,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz Check Engine permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Poor engine performance,Electrical System,Check Engine Light Diagnosis,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor tiene bajo rendimiento,PENDIENTE_VALIDACION_MECANICO
+Window does not move,Electrical System,Door Window Motor,CARROCERIA_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vidrio eléctrico no sube ni baja,PENDIENTE_VALIDACION_MECANICO
+Window moves intermittently,Electrical System,Door Window Motor,CARROCERIA_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vidrio eléctrico funciona por momentos,PENDIENTE_VALIDACION_MECANICO
+Window off track,Electrical System,Door Window Regulator,CARROCERIA_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vidrio de la puerta se salió de la guía,PENDIENTE_VALIDACION_MECANICO
+Window stuck in one position,Electrical System,Door Window Regulator,CARROCERIA_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vidrio de la puerta quedó trabado,PENDIENTE_VALIDACION_MECANICO
+Headlight not working,Electrical System,Headlamp Bulb,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Una luz delantera no funciona,PENDIENTE_VALIDACION_MECANICO
+Dim headlight,Electrical System,Headlamp Bulb,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Una luz delantera alumbra con poca intensidad,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Electrical System,Ignition Distributor Cap,MOTOR_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Difficulty starting engine,Electrical System,Ignition Distributor Cap,MOTOR_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Al motor le cuesta arrancar,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Electrical System,Ignition Wire Set,MOTOR_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Poor fuel economy,Electrical System,Ignition Wire Set,MOTOR_001,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo consume demasiado combustible,PENDIENTE_VALIDACION_MECANICO
+Door lock not responding,Electrical System,Power Door Lock Actuator,CARROCERIA_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El seguro eléctrico de la puerta no responde,PENDIENTE_VALIDACION_MECANICO
+Clicking sound from door,Electrical System,Power Door Lock Actuator,CARROCERIA_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un clic dentro de la puerta,PENDIENTE_VALIDACION_MECANICO
+Engine does not crank,Electrical System,Starter Motor,ELECTRICO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor de arranque no gira,PENDIENTE_VALIDACION_MECANICO
+Clicking sound when key is turned,Electrical System,Starter Motor,ELECTRICO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Al girar la llave solo se escucha un clic,PENDIENTE_VALIDACION_MECANICO
+No washer fluid spray,Electrical System,Windshield Washer Pump,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,No sale líquido del lavaparabrisas,PENDIENTE_VALIDACION_MECANICO
+Weak washer fluid spray,Electrical System,Windshield Washer Pump,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El líquido del lavaparabrisas sale con poca presión,PENDIENTE_VALIDACION_MECANICO
+Wipers not working,Electrical System,Wiper Motor,CARROCERIA_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Los limpiaparabrisas no funcionan,PENDIENTE_VALIDACION_MECANICO
+Wipers operate intermittently,Electrical System,Wiper Motor,CARROCERIA_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Los limpiaparabrisas funcionan por momentos,PENDIENTE_VALIDACION_MECANICO
+Check engine light on,Emissions System,Canister Purge Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz Check Engine permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Rough idle,Emissions System,Canister Purge Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor trabaja inestable en mínimo,PENDIENTE_VALIDACION_MECANICO
+Rotten egg smell from exhaust,Emissions System,Catalytic Converter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale olor a huevo podrido por el escape,PENDIENTE_VALIDACION_MECANICO
+Check engine light on,Emissions System,Catalytic Converter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz Check Engine permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Fuel odor from vehicle,Emissions System,Charcoal Canister,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se siente olor a combustible alrededor del vehículo,PENDIENTE_VALIDACION_MECANICO
+Check engine light on,Emissions System,Charcoal Canister,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz Check Engine permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Loud exhaust noise,Emissions System,Exhaust Manifold,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El escape hace un ruido fuerte,PENDIENTE_VALIDACION_MECANICO
+Exhaust smell in cabin,Emissions System,Exhaust Manifold,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se siente olor a gases de escape dentro de la cabina,PENDIENTE_VALIDACION_MECANICO
+Loud exhaust noise,Emissions System,Exhaust Manifold Gasket,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El escape hace un ruido fuerte,PENDIENTE_VALIDACION_MECANICO
+Visible exhaust leaks,Emissions System,Exhaust Manifold Gasket,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se observa una fuga de gases en el escape,PENDIENTE_VALIDACION_MECANICO
+Check engine light on,Emissions System,Fuel Tank Pressure Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz Check Engine permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Gas cap warning light,Emissions System,Fuel Tank Pressure Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se enciende la advertencia de tapa de combustible,PENDIENTE_VALIDACION_MECANICO
+Engine knocking/pinging,Emissions System,Knock Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor cascabelea o pistonea,PENDIENTE_VALIDACION_MECANICO
+Poor fuel economy,Emissions System,Knock Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo consume demasiado combustible,PENDIENTE_VALIDACION_MECANICO
+Check engine light on,Emissions System,M.A.P. Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz Check Engine permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Rough idle,Emissions System,M.A.P. Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor trabaja inestable en mínimo,PENDIENTE_VALIDACION_MECANICO
+Check engine light on,Emissions System,Oxygen Sensor,COMBUSTIBLE_004,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz Check Engine permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Poor fuel economy,Emissions System,Oxygen Sensor,COMBUSTIBLE_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo consume demasiado combustible,PENDIENTE_VALIDACION_MECANICO
+Engine vibration,Engine Components,Balance Shaft,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor vibra demasiado,PENDIENTE_VALIDACION_MECANICO
+Rough idle,Engine Components,Balance Shaft,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor trabaja inestable en mínimo,PENDIENTE_VALIDACION_MECANICO
+Loss of power,Engine Components,Boost Pressure,TURBO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo pierde fuerza,PENDIENTE_VALIDACION_MECANICO
+Turbo lag,Engine Components,Boost Pressure,TURBO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El turbo demora en cargar y responder,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Engine Components,Diesel Injection Pump,COMBUSTIBLE_005,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Black smoke from exhaust,Engine Components,Diesel Injection Pump,COMBUSTIBLE_005,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale humo negro por el escape,PENDIENTE_VALIDACION_MECANICO
+Hard starting in cold weather,Engine Components,Diesel Glow Plug,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Al motor le cuesta arrancar en frío,PENDIENTE_VALIDACION_MECANICO
+Glow plug indicator light stays on,Engine Components,Diesel Glow Plug,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz de precalentamiento diésel permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Excessive engine movement,Engine Components,Engine Mounts,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se mueve demasiado,PENDIENTE_VALIDACION_MECANICO
+Clunking noise when accelerating,Engine Components,Engine Mounts,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un golpe al acelerar,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Engine Components,Exhaust Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Rough idle,Engine Components,Exhaust Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor trabaja inestable en mínimo,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Engine Components,Fuel Injector,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Poor fuel economy,Engine Components,Fuel Injector,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo consume demasiado combustible,PENDIENTE_VALIDACION_MECANICO
+Erratic idle speed,Engine Components,Idle Air Control Valve,COMBUSTIBLE_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Las revoluciones varían cuando el motor está en mínimo,PENDIENTE_VALIDACION_MECANICO
+Stalling at idle,Engine Components,Idle Air Control Valve,COMBUSTIBLE_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se apaga cuando está en mínimo,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Engine Components,Intake Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Rough idle,Engine Components,Intake Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor trabaja inestable en mínimo,PENDIENTE_VALIDACION_MECANICO
+Low oil pressure warning light,Engine Components,Oil Pump,MOTOR_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se enciende la luz de baja presión de aceite,PENDIENTE_VALIDACION_MECANICO
+Engine knocking noise,Engine Components,Oil Pump,MOTOR_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un golpeteo metálico en el motor,PENDIENTE_VALIDACION_MECANICO
+Blue smoke from exhaust,Engine Components,Piston Rings,MOTOR_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale humo azul por el escape,PENDIENTE_VALIDACION_MECANICO
+Loss of engine power,Engine Components,Piston Rings,MOTOR_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor pierde fuerza,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Engine Components,Timing Belt,MOTOR_005,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Engine won't start,Engine Components,Timing Belt,MOTOR_005,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor no arranca,PENDIENTE_VALIDACION_MECANICO
+Oil leak around valve cover,Engine Components,Valve Cover Gasket,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fuga de aceite alrededor de la tapa de válvulas,PENDIENTE_VALIDACION_MECANICO
+Burning oil smell from engine bay,Engine Components,Valve Cover Gasket,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se siente olor a aceite quemado en el compartimiento del motor,PENDIENTE_VALIDACION_MECANICO
+Engine overheating,Engine Components,Fan Belt,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se recalienta,PENDIENTE_VALIDACION_MECANICO
+Squealing noise from engine bay,Engine Components,Fan Belt,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un chillido en el compartimiento del motor,PENDIENTE_VALIDACION_MECANICO
+No sound when horn button pressed,Electrical System,Horn,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El claxon no suena al presionar el botón,PENDIENTE_VALIDACION_MECANICO
+Battery warning light on,Electrical System,Battery Charging,ELECTRICO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz de batería permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Low voltage,Electrical System,Battery Charging,ELECTRICO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El sistema eléctrico tiene bajo voltaje,PENDIENTE_VALIDACION_MECANICO
+Engine performance issues,Engine Components,Engine Belt,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor presenta bajo rendimiento,PENDIENTE_VALIDACION_MECANICO
+Squealing noise from engine bay,Engine Components,Engine Belt,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un chillido en el compartimiento del motor,PENDIENTE_VALIDACION_MECANICO
+Noise when turning steering wheel,Steering,Steering Noise,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha ruido al girar el timón,PENDIENTE_VALIDACION_MECANICO
+Uneven tire wear,Drivetrain,Shaft and Tires,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Las llantas presentan desgaste irregular,PENDIENTE_VALIDACION_MECANICO
+Vibration while driving,Drivetrain,Shaft and Tires,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo vibra al circular,PENDIENTE_VALIDACION_MECANICO
+Decreased engine performance,Engine Compartment,Air Filter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Disminuyó el rendimiento del motor,PENDIENTE_VALIDACION_MECANICO
+Black smoke from exhaust,Engine Compartment,Air Filter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale humo negro por el escape,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Engine Compartment,Engine Control Unit (ECU),,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Poor fuel economy,Engine Compartment,Engine Control Unit (ECU),,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo consume demasiado combustible,PENDIENTE_VALIDACION_MECANICO
+Low oil pressure warning light,Engine Compartment,Engine Oil,MOTOR_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se enciende la luz de baja presión de aceite,PENDIENTE_VALIDACION_MECANICO
+Loud engine noise,Engine Compartment,Engine Oil,MOTOR_004,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor hace un ruido fuerte,PENDIENTE_VALIDACION_MECANICO
+Engine stalls at high speeds,Engine Compartment,Fuel Filter,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se apaga al circular a alta velocidad,PENDIENTE_VALIDACION_MECANICO
+Poor acceleration,Engine Compartment,Fuel Filter,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo acelera con poca fuerza,PENDIENTE_VALIDACION_MECANICO
+Oil leaks,Engine Compartment,PCV Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fugas de aceite,PENDIENTE_VALIDACION_MECANICO
+Rough idle,Engine Compartment,PCV Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor trabaja inestable en mínimo,PENDIENTE_VALIDACION_MECANICO
+Poor acceleration,Engine Compartment,Throttle Body,COMBUSTIBLE_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo acelera con poca fuerza,PENDIENTE_VALIDACION_MECANICO
+Stalling at idle,Engine Compartment,Throttle Body,COMBUSTIBLE_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se apaga cuando está en mínimo,PENDIENTE_VALIDACION_MECANICO
+Engine misfires,Fuel System,Fuel Injector,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor falla y trabaja disparejo,PENDIENTE_VALIDACION_MECANICO
+Poor fuel economy,Fuel System,Fuel Injector,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo consume demasiado combustible,PENDIENTE_VALIDACION_MECANICO
+Engine stalls,Fuel System,Fuel Pressure Regulator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se apaga,PENDIENTE_VALIDACION_MECANICO
+Black smoke from exhaust,Fuel System,Fuel Pressure Regulator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Sale humo negro por el escape,PENDIENTE_VALIDACION_MECANICO
+Engine sputters at high speeds,Fuel System,Fuel Pump,COMBUSTIBLE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor tironea y falla a alta velocidad,PENDIENTE_VALIDACION_MECANICO
+Loss of power,Fuel System,Fuel Pump,COMBUSTIBLE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo pierde fuerza,PENDIENTE_VALIDACION_MECANICO
+Fuel odor inside vehicle,Fuel System,Fuel Tank,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se siente olor a combustible dentro del vehículo,PENDIENTE_VALIDACION_MECANICO
+Visible fuel leak under vehicle,Fuel System,Fuel Tank,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se observa una fuga de combustible debajo del vehículo,PENDIENTE_VALIDACION_MECANICO
+Engine hesitates on acceleration,Fuel System,Throttle Position Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se aguanta o demora en responder al acelerar,PENDIENTE_VALIDACION_MECANICO
+Stalling at idle,Fuel System,Throttle Position Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se apaga cuando está en mínimo,PENDIENTE_VALIDACION_MECANICO
+Soft brake pedal,Liquid Systems,Brake Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de freno está demasiado suave,PENDIENTE_VALIDACION_MECANICO
+Brake warning light on,Liquid Systems,Brake Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz de advertencia de frenos permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Engine overheating,Liquid Systems,Coolant Reservoir,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se recalienta,PENDIENTE_VALIDACION_MECANICO
+Low coolant warning light,Liquid Systems,Coolant Reservoir,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se enciende la advertencia de nivel bajo de refrigerante,PENDIENTE_VALIDACION_MECANICO
+Whining noise when turning,Liquid Systems,Power Steering Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un zumbido al girar el timón,PENDIENTE_VALIDACION_MECANICO
+Stiff steering wheel,Liquid Systems,Power Steering Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El timón está duro,PENDIENTE_VALIDACION_MECANICO
+Engine overheating,Liquid Systems,Radiator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El motor se recalienta,PENDIENTE_VALIDACION_MECANICO
+Coolant leak,Liquid Systems,Radiator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Hay fuga de refrigerante,PENDIENTE_VALIDACION_MECANICO
+No washer fluid spray,Liquid Systems,Windshield Washer Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,No sale líquido del lavaparabrisas,PENDIENTE_VALIDACION_MECANICO
+Weak washer fluid spray,Liquid Systems,Windshield Washer Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El líquido del lavaparabrisas sale con poca presión,PENDIENTE_VALIDACION_MECANICO
+Soft clutch pedal,Transmission,Clutch Master Cylinder,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El pedal de embrague está demasiado suave,PENDIENTE_VALIDACION_MECANICO
+Clutch slipping,Transmission,Clutch Master Cylinder,EMBRAGUE_002,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El embrague patina al acelerar,PENDIENTE_VALIDACION_MECANICO
+Slipping gears,Transmission,Torque Converter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Los cambios patinan,PENDIENTE_VALIDACION_MECANICO
+Shuddering during acceleration,Transmission,Torque Converter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,El vehículo tironea o tiembla al acelerar,PENDIENTE_VALIDACION_MECANICO
+Gears slipping,Transmission,Transmission Fluid,TRANSMISION_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Los cambios patinan,PENDIENTE_VALIDACION_MECANICO
+Transmission overheating,Transmission,Transmission Fluid,TRANSMISION_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La caja de cambios se recalienta,PENDIENTE_VALIDACION_MECANICO
+Delayed shifting,Transmission,Transmission Filter,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La caja demora en realizar los cambios,PENDIENTE_VALIDACION_MECANICO
+Transmission slipping,Transmission,Transmission Filter,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La caja automática patina,PENDIENTE_VALIDACION_MECANICO
+Erratic shifting,Transmission,Transmission Solenoid,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La caja realiza cambios bruscos o erráticos,PENDIENTE_VALIDACION_MECANICO
+Transmission won't shift gears,Transmission,Transmission Solenoid,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La caja no realiza los cambios,PENDIENTE_VALIDACION_MECANICO
+Grinding noise from wheels,Wheels & Tires,Wheel Bearing,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un ruido de raspado en las ruedas,PENDIENTE_VALIDACION_MECANICO
+Uneven tire wear,Wheels & Tires,Wheel Bearing,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Las llantas presentan desgaste irregular,PENDIENTE_VALIDACION_MECANICO
+TPMS warning light on,Wheels & Tires,Tire Pressure Monitoring System (TPMS),,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La luz de presión de llantas TPMS permanece encendida,PENDIENTE_VALIDACION_MECANICO
+Low tire pressure,Wheels & Tires,Tire Pressure Monitoring System (TPMS),,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Una o más llantas tienen baja presión,PENDIENTE_VALIDACION_MECANICO
+Clicking or popping noise when turning,Wheels & Tires,Wheel Hub,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,Se escucha un clac clac al girar,PENDIENTE_VALIDACION_MECANICO
+Wheel wobbling,Wheels & Tires,Wheel Hub,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0,La rueda tiene juego o bambolea,PENDIENTE_VALIDACION_MECANICO

@@ -127,6 +127,24 @@ def test_verificar_jwt_token_invalido_lanza_excepcion():
     assert exc_info.value.status_code == 401
     assert "inválido" in exc_info.value.detail.lower() or "alterada" in exc_info.value.detail.lower()
 
+def test_token_temporal_bloquea_api_hasta_cambiar_password():
+    from fastapi import HTTPException
+
+    token = crear_jwt_token(
+        sub="usuario_temporal",
+        extra_claims={"requiere_cambio_password": True},
+    )
+
+    class MockCredentials:
+        credentials = token
+
+    with pytest.raises(HTTPException) as exc_info:
+        verificar_jwt_token(credentials=MockCredentials())
+
+    assert exc_info.value.status_code == 403
+    assert "cambiar" in exc_info.value.detail.lower()
+
+
 # ==========================================
 # TIER 1: PROMPT INJECTION SANITIZER TESTS
 # ==========================================

@@ -1,4 +1,9 @@
 # Balotario Completo de 34 Preguntas del Jurado - Tesis I (9no Ciclo)
+> **Advertencia de auditoría (2026-08-08):** las respuestas que califican el corpus
+> como oficial, 100% verídico o libre de alucinaciones no deben utilizarse hasta
+> documentar la fuente OEM de cada procedimiento. Consulte
+> `manuales_taller/FUENTES_Y_VALIDACION.md`.
+
 ## Proyecto: Chatbot de Diagnóstico Vehicular con Machine Learning - UCV
 
 Este documento contiene un banco completo de **34 preguntas y respuestas** diseñado específicamente para tu sustentación de Tesis I. Las preguntas están agrupadas por las secciones oficiales de tu exposición y tu informe metodológico y tecnológico.

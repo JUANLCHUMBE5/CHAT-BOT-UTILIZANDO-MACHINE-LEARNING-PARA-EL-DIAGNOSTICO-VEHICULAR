@@ -7,11 +7,11 @@ El sistema de **Chatbot Vehicular para Diagnóstico Mecánico** está diseñado 
 graph TD
     A[Capa de Presentación: WhatsApp Cloud API / FastAPI Webhook] --> B[Capa de Aplicación: WebhookService & GestorDiagnostico]
     B --> C[Capa de Inteligencia Artificial: Sub-sistema Tripartito]
-    C --> C1[1. Módulo ML: Clasificador TF-IDF + Random Forest]
+    C --> C1[1. Módulo ML: TF-IDF + Linear SVM calibrado]
     C --> C2[2. Módulo RAG: Búsqueda Semántica FAISS en Manuales]
     C --> C3[3. Módulo LLM: Gemini (gemini-3.5-flash-lite) Sintetizador]
     C3 -->|Fallback de Emergencia| C4[Modo Degradado: diagnostico_degradado_ml_rag]
-    B --> D[Capa de Persistencia: PostgreSQL 16 + Repositorios SQLAlchemy Async]
+    B --> D[Capa de Persistencia: PostgreSQL 17 + Repositorios SQLAlchemy Async]
 ```
 
 ---
@@ -27,7 +27,7 @@ Normalización de Jerga Peruana
         ↓
 1. ML predice la falla vehicular y calcula el porcentaje de confianza
         ↓
-2. RAG recupera el procedimiento de reparación del manual de taller indexado
+2. RAG recupera contexto preliminar y su similitud, separada de la confianza ML
         ↓
 3. Gemini recibe: Síntoma + Predicción ML + Manual RAG
         ↓
@@ -67,14 +67,14 @@ Respuesta final enviada por WhatsApp al mecánico
 - **Función**: Ejecuta las tareas cognitivas complementarias:
 
 #### 🤖 Modelo 1: Machine Learning Supervisado (Clasificación Predictiva)
-- **Tecnología**: Scikit-Learn (`RandomForestClassifier` + `TfidfVectorizer`).
+- **Tecnología**: Scikit-Learn (`LinearSVC` calibrado + `TfidfVectorizer`).
 - **Función**: Analiza la descripción textual del síntoma ingresado por el mecánico y predice la categoría exacta de la falla.
 - **Salida**: Etiqueta predictiva de la falla vehicular y nivel de confianza numérico (0.0 a 1.0).
 
 #### 📚 Modelo 2: RAG - Retrieval-Augmented Generation (Recuperación Semántica)
 - **Tecnología**: FAISS Index / TF-IDF Vectorizer sobre `manuales_taller/manual_procedimientos.txt`.
-- **Función**: Consulta la base de conocimiento interna del taller para extraer el procedimiento exacto de inspección y reparación.
-- **Salida**: Fragmento técnico con pasos de diagnóstico y comprobación.
+- **Función**: Consulta una base preliminar; cada valor debe validarse contra la fuente OEM del vehículo.
+- **Salida**: Fragmento técnico y similitud coseno. La similitud RAG nunca modifica la confianza ML.
 
 #### 🧠 Modelo 3: LLM - Large Language Model (Sintetizador Conversacional)
 - **Tecnología**: Google Gemini (`gemini-3.5-flash-lite` API).
@@ -82,11 +82,11 @@ Respuesta final enviada por WhatsApp al mecánico
 
 ### Capa 4: Capa de Datos y Persistencia (Data Layer)
 - **Ubicación en Código**: `src/infrastructure/database/repositories/`, `src/infrastructure/database/models/`, `alembic/`.
-- **Función**: PostgreSQL 16 gestiona talleres, mecánicos autorizados (mediante `whatsapp_hash`), vehículos (mediante `placa_hash`), conversaciones activas de 24 horas, mensajes, diagnósticos, hipótesis técnicas y registro de costos en `uso_api`.
+- **Función**: PostgreSQL 17 gestiona talleres, mecánicos autorizados (mediante `whatsapp_hash`), vehículos (mediante `placa_hash`), conversaciones activas de 24 horas, mensajes, diagnósticos, hipótesis técnicas y registro de costos en `uso_api`.
 
 ---
 
 ## 4. Beneficios para la Tesis y Evaluación
-1. **Precisión Predictiva y Rigor Técnico**: La combinación de ML (para clasificación) y RAG (para procedimientos) evita alucinaciones del LLM.
+1. **Asistencia diagnóstica trazable**: ML clasifica y RAG recupera contexto, pero no garantizan exactitud ni eliminan alucinaciones; el mecánico debe comprobar la hipótesis.
 2. **Cero Costo en Pruebas**: Durante la ejecución de pruebas automatizadas, Gemini está mockeado internamente, garantizando $0.00 de gasto en CI/CD.
 3. **Resiliencia Operativa**: La presencia del modo degradado `diagnostico_degradado_ml_rag` asegura que el taller nunca quede inoperativo.

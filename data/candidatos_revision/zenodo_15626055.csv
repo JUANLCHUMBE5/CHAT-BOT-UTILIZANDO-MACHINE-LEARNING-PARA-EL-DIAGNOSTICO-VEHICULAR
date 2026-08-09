@@ -1,0 +1,197 @@
+﻿sintoma_fuente_ingles,categoria_fuente,subcategoria_fuente,codigo_canonico_propuesto,decision,traduccion_espanol_validada,validado_por_mecanico,observaciones_revision,doi_fuente,licencia
+ABS warning light on,ABS System,ABS Control Module,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake pedal pulsation,ABS System,ABS Control Module,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+ABS light stays on,ABS System,ABS Wheel Speed Sensor,FRENO_005,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Erratic speedometer,ABS System,ABS Wheel Speed Sensor,FRENO_005,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Spongy brake pedal,ABS System,Brake Booster,FRENO_004,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Hard brake pedal,ABS System,Brake Booster,FRENO_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake pulling to one side,ABS System,Brake Caliper,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake dragging,ABS System,Brake Caliper,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake fluid leak,ABS System,Brake Hose,FRENO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Soft brake pedal,ABS System,Brake Hose,FRENO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Spongy brake pedal,ABS System,Brake Master Cylinder,FRENO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake fluid leaks,ABS System,Brake Master Cylinder,FRENO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Squealing brakes,ABS System,Brake Pad,FRENO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake pedal pulsation,ABS System,Brake Pad,FRENO_001,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake pedal pulsation,ABS System,Brake Rotor,FRENO_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Steering wheel vibration,ABS System,Brake Rotor,FRENO_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Spongy brake pedal,ABS System,Brake Shoe & Drum,FRENO_001,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake dragging,ABS System,Brake Shoe & Drum,FRENO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+No cold air from vents,Air Conditioning System,AC Compressor,CLIMA_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loud noise when AC is on,Air Conditioning System,AC Compressor,CLIMA_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Warm air from AC vents,Air Conditioning System,AC Condenser,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+AC system not cooling,Air Conditioning System,AC Condenser,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Musty odor from vents,Air Conditioning System,AC Evaporator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Weak airflow from vents,Air Conditioning System,AC Evaporator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Warm air from vents,Air Conditioning System,AC Recharge,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Low AC system pressure,Air Conditioning System,AC Recharge,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+AC system not working,Air Conditioning System,Air Conditioning Diagnosis,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Unusual noise from AC system,Air Conditioning System,Air Conditioning Diagnosis,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Musty odor from vents,Air Conditioning System,Cabin Air Filter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Reduced airflow from vents,Air Conditioning System,Cabin Air Filter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+No air from vents,Air Conditioning System,Heater Blower Motor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loud noise from HVAC system,Air Conditioning System,Heater Blower Motor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+HVAC fan speed erratic,Air Conditioning System,Heater Blower Motor Resistor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+HVAC fan only works on certain settings,Air Conditioning System,Heater Blower Motor Resistor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine overheating,Cooling System,Coolant/Antifreeze,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Coolant leaks under the vehicle,Cooling System,Coolant/Antifreeze,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Visible coolant puddle under vehicle,Cooling System,Coolant Leak Diagnosis,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Coolant odor in cabin,Cooling System,Coolant Leak Diagnosis,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine overheating,Cooling System,Engine Cooling System,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Temperature gauge in red zone,Cooling System,Engine Cooling System,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+No heat from vents,Cooling System,Heater Core,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Sweet smell in cabin,Cooling System,Heater Core,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Coolant odor in cabin,Cooling System,Heater Hose,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Visible coolant leak under vehicle,Cooling System,Heater Hose,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine overheating,Cooling System,Radiator/Cooling Fan,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+AC not cooling at idle,Cooling System,Radiator/Cooling Fan,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Coolant leak under vehicle,Cooling System,Radiator Hose,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Visible wear/cracks on hoses,Cooling System,Radiator Hose,REFRIGERACION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine overheating,Cooling System,Water Pump,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Coolant leak near front of engine,Cooling System,Water Pump,REFRIGERACION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Whining noise from drivetrain,Drivetrain,Bevel Gears,TRANSMISION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Difficulty shifting gears,Drivetrain,Bevel Gears,TRANSMISION_002,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Vehicle binding on turns,Drivetrain,Center Differential,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Noise from drivetrain while turning,Drivetrain,Center Differential,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clutch pedal feels loose,Drivetrain,Clutch Cable,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Difficulty engaging gears,Drivetrain,Clutch Cable,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clutch pedal feels spongy,Drivetrain,Clutch Slave Cylinder,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Fluid leak near clutch pedal,Drivetrain,Clutch Slave Cylinder,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Whining noise from rear end,Drivetrain,Differential,TRANSMISION_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Vehicle vibration at high speeds,Drivetrain,Differential,TRANSMISION_002,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Axle noise while turning,Drivetrain,Live Axle,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Vehicle leans to one side,Drivetrain,Live Axle,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Vehicle bounces over bumps,Drivetrain,Rigid Axle,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loud noise from rear axle,Drivetrain,Rigid Axle,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Transmission slipping,Drivetrain,Slushbox,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Delay in gear engagement,Drivetrain,Slushbox,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Driveline vibration,Drivetrain,Universal Joint,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clunking noise when shifting,Drivetrain,Universal Joint,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Vehicle binding during turns,Drivetrain,Viscous Coupling,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Noise from drivetrain while turning,Drivetrain,Viscous Coupling,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine cranks slowly,Electrical System,Battery Replacement,ELECTRICO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clicking sound when starting,Electrical System,Battery Replacement,ELECTRICO_002,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Battery warning light on,Electrical System,Charging System,ELECTRICO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Dim headlights,Electrical System,Charging System,ELECTRICO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Check engine light on,Electrical System,Check Engine Light Diagnosis,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor engine performance,Electrical System,Check Engine Light Diagnosis,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Window does not move,Electrical System,Door Window Motor,CARROCERIA_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Window moves intermittently,Electrical System,Door Window Motor,CARROCERIA_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Window off track,Electrical System,Door Window Regulator,CARROCERIA_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Window stuck in one position,Electrical System,Door Window Regulator,CARROCERIA_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Headlight not working,Electrical System,Headlamp Bulb,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Dim headlight,Electrical System,Headlamp Bulb,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Electrical System,Ignition Distributor Cap,MOTOR_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Difficulty starting engine,Electrical System,Ignition Distributor Cap,MOTOR_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Electrical System,Ignition Wire Set,MOTOR_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor fuel economy,Electrical System,Ignition Wire Set,MOTOR_001,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Door lock not responding,Electrical System,Power Door Lock Actuator,CARROCERIA_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clicking sound from door,Electrical System,Power Door Lock Actuator,CARROCERIA_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine does not crank,Electrical System,Starter Motor,ELECTRICO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clicking sound when key is turned,Electrical System,Starter Motor,ELECTRICO_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+No washer fluid spray,Electrical System,Windshield Washer Pump,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Weak washer fluid spray,Electrical System,Windshield Washer Pump,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Wipers not working,Electrical System,Wiper Motor,CARROCERIA_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Wipers operate intermittently,Electrical System,Wiper Motor,CARROCERIA_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Check engine light on,Emissions System,Canister Purge Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Rough idle,Emissions System,Canister Purge Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Rotten egg smell from exhaust,Emissions System,Catalytic Converter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Check engine light on,Emissions System,Catalytic Converter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Fuel odor from vehicle,Emissions System,Charcoal Canister,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Check engine light on,Emissions System,Charcoal Canister,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loud exhaust noise,Emissions System,Exhaust Manifold,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Exhaust smell in cabin,Emissions System,Exhaust Manifold,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loud exhaust noise,Emissions System,Exhaust Manifold Gasket,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Visible exhaust leaks,Emissions System,Exhaust Manifold Gasket,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Check engine light on,Emissions System,Fuel Tank Pressure Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Gas cap warning light,Emissions System,Fuel Tank Pressure Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine knocking/pinging,Emissions System,Knock Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor fuel economy,Emissions System,Knock Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Check engine light on,Emissions System,M.A.P. Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Rough idle,Emissions System,M.A.P. Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Check engine light on,Emissions System,Oxygen Sensor,COMBUSTIBLE_004,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor fuel economy,Emissions System,Oxygen Sensor,COMBUSTIBLE_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine vibration,Engine Components,Balance Shaft,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Rough idle,Engine Components,Balance Shaft,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loss of power,Engine Components,Boost Pressure,TURBO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Turbo lag,Engine Components,Boost Pressure,TURBO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Engine Components,Diesel Injection Pump,COMBUSTIBLE_005,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Black smoke from exhaust,Engine Components,Diesel Injection Pump,COMBUSTIBLE_005,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Hard starting in cold weather,Engine Components,Diesel Glow Plug,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Glow plug indicator light stays on,Engine Components,Diesel Glow Plug,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Excessive engine movement,Engine Components,Engine Mounts,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clunking noise when accelerating,Engine Components,Engine Mounts,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Engine Components,Exhaust Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Rough idle,Engine Components,Exhaust Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Engine Components,Fuel Injector,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor fuel economy,Engine Components,Fuel Injector,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Erratic idle speed,Engine Components,Idle Air Control Valve,COMBUSTIBLE_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Stalling at idle,Engine Components,Idle Air Control Valve,COMBUSTIBLE_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Engine Components,Intake Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Rough idle,Engine Components,Intake Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Low oil pressure warning light,Engine Components,Oil Pump,MOTOR_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine knocking noise,Engine Components,Oil Pump,MOTOR_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Blue smoke from exhaust,Engine Components,Piston Rings,MOTOR_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loss of engine power,Engine Components,Piston Rings,MOTOR_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Engine Components,Timing Belt,MOTOR_005,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine won't start,Engine Components,Timing Belt,MOTOR_005,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Oil leak around valve cover,Engine Components,Valve Cover Gasket,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Burning oil smell from engine bay,Engine Components,Valve Cover Gasket,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine overheating,Engine Components,Fan Belt,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Squealing noise from engine bay,Engine Components,Fan Belt,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+No sound when horn button pressed,Electrical System,Horn,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Battery warning light on,Electrical System,Battery Charging,ELECTRICO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Low voltage,Electrical System,Battery Charging,ELECTRICO_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine performance issues,Engine Components,Engine Belt,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Squealing noise from engine bay,Engine Components,Engine Belt,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Noise when turning steering wheel,Steering,Steering Noise,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Uneven tire wear,Drivetrain,Shaft and Tires,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Vibration while driving,Drivetrain,Shaft and Tires,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Decreased engine performance,Engine Compartment,Air Filter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Black smoke from exhaust,Engine Compartment,Air Filter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Engine Compartment,Engine Control Unit (ECU),,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor fuel economy,Engine Compartment,Engine Control Unit (ECU),,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Low oil pressure warning light,Engine Compartment,Engine Oil,MOTOR_004,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loud engine noise,Engine Compartment,Engine Oil,MOTOR_004,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine stalls at high speeds,Engine Compartment,Fuel Filter,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor acceleration,Engine Compartment,Fuel Filter,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Oil leaks,Engine Compartment,PCV Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Rough idle,Engine Compartment,PCV Valve,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor acceleration,Engine Compartment,Throttle Body,COMBUSTIBLE_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Stalling at idle,Engine Compartment,Throttle Body,COMBUSTIBLE_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine misfires,Fuel System,Fuel Injector,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Poor fuel economy,Fuel System,Fuel Injector,COMBUSTIBLE_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine stalls,Fuel System,Fuel Pressure Regulator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Black smoke from exhaust,Fuel System,Fuel Pressure Regulator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine sputters at high speeds,Fuel System,Fuel Pump,COMBUSTIBLE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Loss of power,Fuel System,Fuel Pump,COMBUSTIBLE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Fuel odor inside vehicle,Fuel System,Fuel Tank,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Visible fuel leak under vehicle,Fuel System,Fuel Tank,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine hesitates on acceleration,Fuel System,Throttle Position Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Stalling at idle,Fuel System,Throttle Position Sensor,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Soft brake pedal,Liquid Systems,Brake Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Brake warning light on,Liquid Systems,Brake Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine overheating,Liquid Systems,Coolant Reservoir,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Low coolant warning light,Liquid Systems,Coolant Reservoir,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Whining noise when turning,Liquid Systems,Power Steering Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Stiff steering wheel,Liquid Systems,Power Steering Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Engine overheating,Liquid Systems,Radiator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Coolant leak,Liquid Systems,Radiator,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+No washer fluid spray,Liquid Systems,Windshield Washer Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Weak washer fluid spray,Liquid Systems,Windshield Washer Fluid,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Soft clutch pedal,Transmission,Clutch Master Cylinder,EMBRAGUE_002,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clutch slipping,Transmission,Clutch Master Cylinder,EMBRAGUE_002,REQUIERE_REVISION_AMBIGUEDAD,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Slipping gears,Transmission,Torque Converter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Shuddering during acceleration,Transmission,Torque Converter,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Gears slipping,Transmission,Transmission Fluid,TRANSMISION_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Transmission overheating,Transmission,Transmission Fluid,TRANSMISION_003,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Delayed shifting,Transmission,Transmission Filter,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Transmission slipping,Transmission,Transmission Filter,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Erratic shifting,Transmission,Transmission Solenoid,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Transmission won't shift gears,Transmission,Transmission Solenoid,TRANSMISION_001,MAPEO_PROPUESTO,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Grinding noise from wheels,Wheels & Tires,Wheel Bearing,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Uneven tire wear,Wheels & Tires,Wheel Bearing,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+TPMS warning light on,Wheels & Tires,Tire Pressure Monitoring System (TPMS),,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Low tire pressure,Wheels & Tires,Tire Pressure Monitoring System (TPMS),,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Clicking or popping noise when turning,Wheels & Tires,Wheel Hub,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0
+Wheel wobbling,Wheels & Tires,Wheel Hub,,REQUIERE_NUEVA_CLASE_O_DESCARTE,,NO,,10.5281/zenodo.15626055,CC BY 4.0

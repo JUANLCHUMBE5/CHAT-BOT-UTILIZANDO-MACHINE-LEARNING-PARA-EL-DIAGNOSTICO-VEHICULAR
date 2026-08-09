@@ -1,0 +1,12 @@
+{
+  "fuente": "https://doi.org/10.5281/zenodo.15626055",
+  "licencia": "CC BY 4.0",
+  "md5_verificado": "cb44431ef6b32f6ea9cf00dbe35f020c",
+  "registros_fuente": 99,
+  "sintomas_candidatos": 196,
+  "sintomas_con_mapeo_propuesto": 80,
+  "sintomas_con_mapeo_ambiguo": 12,
+  "sintomas_pendientes_nueva_clase_o_descarte": 104,
+  "incorporado_al_entrenamiento": false,
+  "motivo": "Pendiente de traducción y validación por mecánico."
+}

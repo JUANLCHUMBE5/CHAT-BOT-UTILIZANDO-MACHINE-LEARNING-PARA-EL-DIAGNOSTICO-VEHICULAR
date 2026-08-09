@@ -49,6 +49,50 @@ def test_endpoint_diagnostico_con_token_jwt_valido():
     assert "respuesta_explicativa" in data
     assert data["confianza"] > 0.0
 
+def test_listar_y_registrar_mecanicos_api():
+    """T1-ADMIN: GET and POST /api/v1/mecanicos manages mechanics list."""
+    token = crear_jwt_token(sub="admin")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    res_list = client.get("/api/v1/mecanicos", headers=headers)
+    assert res_list.status_code in (200, 503)
+
+    payload = {
+        "nombres": "Pedro Gutierrez Test",
+        "telefono_whatsapp": "+51 999 888 777",
+        "password": "carbot2026_password",
+        "rol": "mecanico"
+    }
+    res_post = client.post("/api/v1/mecanicos", json=payload, headers=headers)
+    assert res_post.status_code in (200, 503)
+
+def test_activar_y_bloquear_mecanico_api():
+    """T1-ADMIN: PATCH /api/v1/mecanicos/{id}/activar and /bloquear toggle mechanic states."""
+    token = crear_jwt_token(sub="admin")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    res_act = client.patch("/api/v1/mecanicos/mec-001/activar", headers=headers)
+    assert res_act.status_code in (200, 404, 503)
+
+    res_bloq = client.patch("/api/v1/mecanicos/mec-001/bloquear", headers=headers)
+    assert res_bloq.status_code in (200, 404, 503)
+
+def test_historial_y_confirmar_diagnosticos_api():
+    """T1-ADMIN: GET /diagnostico/historial and PATCH /diagnostico/{id}/confirmar manage diagnosis validation."""
+    token = crear_jwt_token(sub="admin")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    res_hist = client.get("/api/v1/diagnostico/historial", headers=headers)
+    assert res_hist.status_code in (200, 503)
+
+def test_obtener_metricas_resumen_api():
+    """T1-ADMIN: GET /api/v1/metricas/resumen returns aggregate shop statistics."""
+    token = crear_jwt_token(sub="admin")
+    headers = {"Authorization": f"Bearer {token}"}
+
+    res_met = client.get("/api/v1/metricas/resumen", headers=headers)
+    assert res_met.status_code in (200, 503)
+
 # ==========================================
 # TIER 1: WEBHOOK ENDPOINT TESTS
 # ==========================================

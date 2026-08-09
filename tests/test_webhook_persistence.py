@@ -132,6 +132,10 @@ async def test_webhook_mecanico_autorizado_guarda_en_tablas(setup_test_db, monke
         assert diag.modo_diagnostico in ("completo_ml_rag_llm", "diagnostico_degradado_ml_rag")
         assert len(diag.hipotesis) >= 1
         assert diag.hipotesis[0].orden == 1
+        assert diag.hipotesis[0].prueba_recomendada
+        assert diag.hipotesis[0].prueba_recomendada != diag.sintoma_normalizado
+        assert "no se encontr" not in diag.hipotesis[0].prueba_recomendada.lower()
+        assert diag.hipotesis[0].evidencia.startswith("Fuente:")
 
         # 4. Uso de API y costos registrados
         costo_total = await op_repo.obtener_costo_total_taller(data["taller_id"])

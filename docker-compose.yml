@@ -1,0 +1,81 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: carbot_db
+      POSTGRES_USER: carbot_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - carbot_postgres:/var/lib/postgresql/data
+      - ./scripts/postgresql/docker-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carbot_app -d carbot_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - carbot_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  api:
+    build: .
+    environment:
+      ENVIRONMENT: development
+      DATABASE_ENABLED: "true"
+      DATABASE_REQUIRED: "true"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: carbot_db
+      POSTGRES_USER: carbot_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
+      RATE_LIMIT_STORAGE_URI: redis://redis:6379/0
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["sh", "-c", "python -m alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+
+  test:
+    profiles: ["test"]
+    build: .
+    environment:
+      DATABASE_ENABLED: "true"
+      DATABASE_REQUIRED: "true"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: carbot_test
+      POSTGRES_USER: carbot_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
+      RATE_LIMIT_STORAGE_URI: redis://redis:6379/1
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["sh", "-c", "python -m alembic upgrade head && python -m pytest tests -q"]
+
+volumes:
+  carbot_postgres:
+  carbot_redis:

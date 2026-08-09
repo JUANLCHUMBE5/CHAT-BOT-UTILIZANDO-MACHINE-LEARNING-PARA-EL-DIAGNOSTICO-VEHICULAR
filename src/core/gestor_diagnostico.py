@@ -16,14 +16,84 @@ from src.core.gemini_queue import gemini_rate_limiter, SolicitudGeminiEncolada
 from src.core.logger import logger
 from src.config import settings
 
+from src.core.taxonomy.catalogo_fallas import CATALOGO_TAXONOMIA
+
 _tracker_lock = threading.Lock()
 
-# Constante compartida de palabras clave mecánicas (evita duplicación)
-PALABRAS_MECANICAS = [
-    "freno", "frenos", "motor", "bujia", "bujias", "bateria", "arranque", "arrancar",
-    "acelerar", "cuesta", "humo", "rueda", "timon", "volante", "caja", "cambio", "pedal",
-    "chillido", "cascabeleo", "esponjoso", "apaga", "tiembla", "vibracion", "sonido", "ruido", "scanner", "dtc", "p0"
+# Vocabulario de componentes automotrices derivado de taxonomía y sistemas vehiculares
+VOCABULARIO_COMPONENTES = [
+    "freno", "frenos", "pastilla", "pastillas", "disco", "discos", "zapata", "zapatas", "tambor", "pedal",
+    "booster", "servofreno", "abs", "pulmon", "secador", "aps", "camion", "camiones",
+    "motor", "bujia", "bujias", "bobina", "bobinas", "piston", "pistones", "anillos", "culata", "empaque",
+    "faja", "cadena", "distribucion", "tiempo", "aceite", "bomba", "lubricacion", "carter",
+    "inyector", "inyectores", "filtro", "combustible", "gasolina", "diesel", "diésel", "petroleo", "riel",
+    "gnv", "glp", "gas natural", "reductor", "vaporizador", "riel de gas", "inyector de gas",
+    "common rail", "scv", "iac", "mariposa", "acelerador", "aceleracion", "sensor", "oxigeno", "lambda", "maf", "map",
+    "embrague", "clutch", "bombin", "prensa", "collarin", "caja", "cambio", "cambios", "transmision",
+    "automatica", "mecanica", "cvt", "dsg", "dualogic", "diferencial", "rodaje", "rodajes", "valvolina",
+    "refrigeracion", "termostato", "radiador", "ventilador", "electroventilador", "refrigerante", "manguera",
+    "electrico", "eléctrico", "alternador", "bateria", "batería", "borne", "bornes", "arranque", "arrancador",
+    "solenoide", "ignicion", "fusible", "rele", "cableado",
+    "suspension", "suspensión", "amortiguador", "amortiguadores", "buche", "bujes", "trapecio", "rotula", "rótula",
+    "palier", "palieres", "homocinetica", "homocinética", "tripoide", "cremallera", "direccion", "dirección",
+    "timon", "timón", "volante", "eps", "llanta", "llantas", "rueda", "ruedas", "aro",
+    "clima", "aire", "acondicionado", "a/c", "compresor", "gas", "r134a", "evaporador", "condensador",
+    "turbo", "turbocompresor", "intercooler", "vgt", "wastegate", "dpf", "fap", "adblue", "def", "escape", "catalizador",
+    "puerta", "puertas", "chapa", "chapas", "pestillo", "pestillos", "cerradura", "cerraduras", "seguro", "seguros",
+    "control", "mando", "remoto", "actuador", "trinquete", "manija", "tirador",
+    "ventana", "ventanas", "vidrio", "vidrios", "luna", "lunas", "elevalunas", "alzacristales", "guaya",
+    "limpiaparabrisas", "pluma", "plumas", "parabrisas", "plumillas",
+    "hibrido", "híbrido", "ev", "inversor", "alto voltaje", "hv", "prius", "regenerativo",
+    "caliper", "mordaza", "bomba principal de freno", "modulo abs", "modulo de abs",
+    "calefaccion", "radiador de calefaccion", "soplador", "ventilador de cabina", "resistencia de soplador",
+    "eje", "eje posterior", "eje rigido", "cruceta", "junta universal", "cardan", "acople viscoso",
+    "faro", "luz delantera", "claxon", "bocina", "lavaparabrisas", "bomba lavaparabrisas",
+    "canister", "valvula de purga", "convertidor catalitico", "multiple de escape", "tapa de combustible",
+    "sensor de detonacion", "eje balanceador", "bujia de precalentamiento", "soporte de motor",
+    "valvula de admision", "valvula de escape", "tapa de valvulas", "pcv", "filtro de aire",
+    "regulador de presion", "tanque de combustible", "tps", "sensor de posicion del acelerador",
+    "liquido de direccion", "direccion hidraulica", "convertidor de par", "cubo de rueda", "tpms"
 ]
+
+
+def _vocabulario_desde_taxonomia() -> set[str]:
+    """Extrae terminos utiles para que el filtro evolucione con la taxonomia."""
+    ignoradas = {
+        "para", "con", "del", "los", "las", "una", "por", "falla", "sistema",
+        "alta", "baja", "media", "motor", "vehiculo", "vehicular",
+    }
+    terminos: set[str] = set()
+    for falla in CATALOGO_TAXONOMIA.values():
+        textos = [falla.sistema, falla.falla_principal, *falla.posibles_causas]
+        for texto in textos:
+            palabras = "".join(
+                caracter.lower() if caracter.isalnum() else " " for caracter in texto
+            ).split()
+            terminos.update(
+                palabra for palabra in palabras if len(palabra) >= 3 and palabra not in ignoradas
+            )
+    return terminos
+
+
+VOCABULARIO_COMPONENTES = sorted(
+    set(VOCABULARIO_COMPONENTES) | _vocabulario_desde_taxonomia()
+)
+
+VERBOS_FALLA = [
+    "no abre", "no cierra", "trabado", "trabada", "trancado", "trancada", "chueco", "chueca", "inclinado", "inclinada",
+    "desalineado", "desalineada", "bloqueado", "bloqueada", "desbloquea", "salta", "no sube", "no baja", "se cayo", "se cayó",
+    "chirria", "chirría", "chillido", "rechina", "rechinido", "vibra", "vibracion", "vibración", "tiembla", "cascabelea",
+    "cascabeleo", "golpeteo", "crujido", "chasquido", "sonido", "ruido", "se apaga", "apaga", "pierde fuerza", "sin fuerza",
+    "no arranca", "cuesta arrancar", "jalonea", "jaloneo", "tirones", "gotea", "fuga", "bota", "humo", "recalienta",
+    "hierve", "patina", "esponjoso", "duro", "pesado", "no responde", "no funciona", "falla", "defectuoso", "quemado", "roto", "partido",
+    "suelto", "oxido", "sulfatado", "baja presion", "alta presion", "no enfria", "no marca", "oscila",
+    "permanece encendido", "se amarra", "bambolea", "se inclina", "rebota", "pulsa", "demora en acoplar",
+    "flujo debil", "poca presion", "olor", "raspa", "golpea", "se mueve demasiado", "trabaja disparejo"
+]
+
+# Mantener compatibilidad retroactiva con PALABRAS_MECANICAS
+PALABRAS_MECANICAS = VOCABULARIO_COMPONENTES[:30]
+
 
 class ResultadoDiagnostico(BaseModel):
     """DTO inmutable de respuesta de diagnóstico por solicitud (evita condiciones de carrera)."""
@@ -32,6 +102,7 @@ class ResultadoDiagnostico(BaseModel):
     confianza_ml: float
     contexto_manual: str
     titulo_manual: str
+    similitud_rag: float = 0.0
     requiere_revision_humana: bool = False
     estado_sesion: str = "completado"
     modo_diagnostico: str = "completo_ml_rag_llm"
@@ -42,6 +113,8 @@ class ResultadoDiagnostico(BaseModel):
     posicion_cola: int = 0
     tiempo_espera_cola: float = 0.0
     solicitud_id: str | None = None
+    sintoma_evaluado: str = ""
+
 
 class GestorDiagnostico:
     """
@@ -60,35 +133,65 @@ class GestorDiagnostico:
     def _es_saludo_o_contacto_inicial(self, texto: str) -> Tuple[bool, str]:
         """Detecta si el mensaje es un saludo o contacto inicial sin detalles mecánicos."""
         texto_limpio = texto.strip().lower()
-        
+
         saludos = [
             "hola", "holaa", "holaaa", "buenas", "buenos dias", "buenas tardes", "buenas noches",
             "hola tengo un problema", "hola tengo problemas",
             "tengo una falla", "hola buenas", "saludos", "hola que tal", "ayuda", "consulta"
         ]
         
-        palabras_mecanicas = PALABRAS_MECANICAS
-        tiene_palabra_mecanica = any(pm in texto_limpio for pm in palabras_mecanicas)
+        tiene_componente = any(pm in texto_limpio for pm in VOCABULARIO_COMPONENTES)
+        tiene_verbo = any(vf in texto_limpio for vf in VERBOS_FALLA)
         
-        if texto_limpio in saludos or (any(s in texto_limpio for s in ["hola", "buenas"]) and not tiene_palabra_mecanica):
+        if texto_limpio in saludos or (any(s in texto_limpio for s in ["hola", "buenas"]) and not tiene_componente and not tiene_verbo):
             return True, "👋 ¡Hola! Bienvenido a CarBot. Por favor, cuéntame: **¿Qué problema o síntoma presenta tu vehículo hoy?**"
         return False, ""
 
+    @staticmethod
+    def _es_continuacion_contextual(texto: str) -> bool:
+        """Reconoce datos adicionales que deben unirse al síntoma anterior."""
+        limpio = texto.strip().lower()
+        conectores = (
+            "pero ", "ademas ", "además ", "tambien ", "también ",
+            "y tambien ", "y además ", "el auto es ", "el carro es ",
+            "funciona con ", "usa ", "es a gnv", "es gnv", "es a glp",
+            "cuando usa ", "solo pasa ", "me olvide ", "me olvidé ",
+        )
+        return any(limpio.startswith(valor) or valor in limpio for valor in conectores)
+
     def _es_consulta_ambigua(self, texto: str) -> Tuple[bool, str]:
-        """Determina si la consulta del usuario es incompleta o ambigua."""
+        """Determina si la consulta del usuario es incompleta o ambigua utilizando contexto técnico dinámico."""
         texto_limpio = texto.strip().lower()
         words = texto_limpio.split()
         
         frases_ambiguas = [
             "el carro falla", "mi auto falla", "mi carro falla", "tengo un problema", "tengo problemas",
-            "tengo una falla", "ayuda", "ruido", "freno", "motor", "falla el carro"
+            "tengo una falla", "ayuda", "falla el carro", "mi vehiculo falla", "mi coche falla",
+            "falla mi carro", "mi auto tiene una falla", "ayuda con mi carro"
         ]
         
-        palabras_mecanicas = PALABRAS_MECANICAS
-        tiene_palabra_mecanica = any(pm in texto_limpio for pm in palabras_mecanicas)
+        # Consulta explícitamente genérica o vacía
+        if texto_limpio in frases_ambiguas:
+            return True, "⚠️ Por favor, especifique el síntoma con más detalle (ej. si ocurre al frenar, al acelerar, al arrancar, al abrir puertas o si se escucha algún ruido/chillido)."
+
+        # Si el mensaje es descriptivo (>= 6 palabras) no declararlo ambiguo ciegamente
+        if len(words) >= 6:
+            return False, ""
+
+        tiene_componente = any(comp in texto_limpio for comp in VOCABULARIO_COMPONENTES)
+        tiene_verbo_falla = any(vf in texto_limpio for vf in VERBOS_FALLA)
         
-        if len(words) < 3 or texto_limpio in frases_ambiguas or not tiene_palabra_mecanica:
-            return True, "⚠️ Por favor, especifique el síntoma con más detalle (ej. si ocurre al frenar, al acelerar o si se escucha algún ruido/chillido)."
+        if tiene_componente and tiene_verbo_falla:
+            return False, ""
+
+        if len(words) < 3 or (not tiene_componente and not tiene_verbo_falla):
+            # Preguntas de aclaración contextualizadas según el sistema mencionado
+            if any(k in texto_limpio for k in ["puerta", "chapa", "cerradura", "pestillo", "seguro"]):
+                return True, "⚠️ Por favor, especifique el síntoma con más detalle. Por ejemplo: ¿El control remoto acciona las demás puertas? ¿Se escucha accionar el actuador eléctrico? ¿La puerta abre manualmente con la llave o la manija exterior?"
+            if any(k in texto_limpio for k in ["vidrio", "luna", "elevalunas", "ventana", "alzacristales"]):
+                return True, "⚠️ Por favor, especifique el síntoma con más detalle. Por ejemplo: ¿El motor del elevalunas emite sonido al presionar el botón? ¿El vidrio se cayó dentro de la puerta o está atascado en las guías?"
+            return True, "⚠️ Por favor, especifique el síntoma con más detalle (ej. si ocurre al frenar, al acelerar, al arrancar, al abrir puertas o si se escucha algún ruido/chillido)."
+
         return False, ""
 
     def _registrar_en_tracker(
@@ -160,7 +263,7 @@ class GestorDiagnostico:
         # 0. Sanitizar y normalizar entrada
         texto_sanitizado = sanitizar_prompt_usuario(texto_usuario)
         texto_normalizado = normalizar_jerga_peruana(texto_sanitizado)
-        
+
         placa_anonima = anonimizar_identificador(placa or "")
         session_id_anon = anonimizar_identificador(session_id or "")
         logger.info(
@@ -172,7 +275,7 @@ class GestorDiagnostico:
         es_saludo, mensaje_saludo = self._es_saludo_o_contacto_inicial(texto_normalizado)
         if es_saludo:
             if session_id:
-                self.session_manager.obtener_o_crear_sesion(session_id)
+                self.session_manager.reiniciar_sesion(session_id)
             return ResultadoDiagnostico(
                 respuesta_texto=mensaje_saludo,
                 diagnostico_ml="Consulta General / Saludo",
@@ -186,6 +289,14 @@ class GestorDiagnostico:
         clave_sesion = session_id or (placa if placa not in (None, "REST-API", "WAPP-01") else None)
 
         if clave_sesion:
+            sesion_anterior = self.session_manager.obtener_sesion(clave_sesion)
+            if (
+                sesion_anterior
+                and sesion_anterior.sintomas
+                and sesion_anterior.estado == "completo"
+                and not self._es_continuacion_contextual(texto_normalizado)
+            ):
+                self.session_manager.reiniciar_sesion(clave_sesion)
             sesion = self.session_manager.acumular_input_usuario(
                 session_id=clave_sesion,
                 texto_usuario=texto_normalizado,
@@ -221,29 +332,51 @@ class GestorDiagnostico:
         # =========================================================
         diagnostico_predictivo, confianza = self.modelo_ml.predecir_falla_con_confianza(texto_evaluar)
         
-        # Umbral estricto: si la confianza es < 10% no adivinar arbitrariamente
-        if confianza < 0.10:
-            return ResultadoDiagnostico(
-                respuesta_texto=(
-                    "⚠️ **Síntoma no reconocido con suficiente certeza (< 10%)**\n\n"
-                    "El modelo de Machine Learning requiere una descripción un poco más detallada del síntoma.\n"
-                    "Por favor, indique si el problema se relaciona con los **frenos**, el **motor**, el **sistema de encendido/batería** o el **acelerador/mínimo**."
-                ),
-                diagnostico_ml="Baja Confianza / Indeterminado",
-                confianza_ml=confianza,
-                contexto_manual="",
-                titulo_manual="",
-                requiere_revision_humana=True,
-                modo_diagnostico="baja_confianza",
-            )
-        
-        # Flag de recomendación de revisión humana en taller (confianza entre 10% y 69%)
-        requiere_revision_humana = confianza < 0.70
-
         # =========================================================
         # PASO 2: Motor RAG (Recuperación del manual de procedimientos)
         # =========================================================
-        contexto_manual, titulo_manual = self.motor_rag.recuperar_contexto(texto_evaluar)
+        if hasattr(self.motor_rag, "recuperar_contexto_con_similitud"):
+            contexto_manual, titulo_manual, similitud_rag = (
+                self.motor_rag.recuperar_contexto_con_similitud(texto_evaluar)
+            )
+        else:
+            contexto_manual, titulo_manual = self.motor_rag.recuperar_contexto(texto_evaluar)
+            similitud_rag = 0.0
+
+        rag_valido = (
+            contexto_manual
+            and "No se encontró" not in contexto_manual
+            and "Manual técnico no indexado" not in contexto_manual
+            and "Coincidencia baja" not in titulo_manual
+            and "Desconocido" not in titulo_manual
+            and "Error" not in titulo_manual
+        )
+
+        # ML y RAG conservan medidas separadas: RAG no aumenta la confianza ML.
+        if confianza < 0.10:
+            if rag_valido:
+                diagnostico_predictivo = f"Hipótesis ML de baja confianza: {diagnostico_predictivo}"
+                requiere_revision_humana = True
+            else:
+                return ResultadoDiagnostico(
+                    respuesta_texto=(
+                        "⚠️ **Síntoma no reconocido con suficiente certeza (< 10%)**\n\n"
+                        "El modelo de Machine Learning requiere una descripción un poco más detallada del síntoma.\n"
+                        "Por favor, indique el sistema o componente afectado (ej. **frenos**, **motor**, **carrocería/puertas**, **encendido/batería**, **transmisión** o **acelerador/mínimo**)."
+                    ),
+                    diagnostico_ml="Baja Confianza / Indeterminado",
+                    confianza_ml=confianza,
+                    contexto_manual="",
+                    titulo_manual="",
+                    similitud_rag=similitud_rag,
+                    requiere_revision_humana=True,
+                    modo_diagnostico="baja_confianza",
+                )
+        else:
+            requiere_revision_humana = confianza < settings.diagnostic.confidence_threshold
+
+        if rag_valido and not getattr(self.motor_rag, "corpus_validado", False):
+            requiere_revision_humana = True
         
         # =========================================================
         # PASO 3: Gemini LLM (Síntesis técnica y estructuración)
@@ -273,9 +406,10 @@ class GestorDiagnostico:
             campos_completos=1
         )
 
-        # Limpiar la sesión activa tras diagnóstico exitoso
+        # Conservar brevemente el contexto para mensajes complementarios como
+        # "pero el auto es a GNV". Una consulta nueva reinicia la sesión arriba.
         if clave_sesion:
-            self.session_manager.reiniciar_sesion(clave_sesion)
+            self.session_manager.obtener_o_crear_sesion(clave_sesion).estado = "completo"
         
         modo = uso_llm.get("modo", "completo_ml_rag_llm" if uso_llm.get("usado") else "diagnostico_degradado_ml_rag")
 
@@ -285,6 +419,7 @@ class GestorDiagnostico:
             confianza_ml=confianza,
             contexto_manual=contexto_manual,
             titulo_manual=titulo_manual,
+            similitud_rag=similitud_rag,
             requiere_revision_humana=requiere_revision_humana,
             modo_diagnostico=modo,
             solicitud_id=uso_llm.get("solicitud_id"),
@@ -294,6 +429,7 @@ class GestorDiagnostico:
             tokens_salida=uso_llm.get("tokens_salida", 0),
             posicion_cola=uso_llm.get("posicion_cola", 0),
             tiempo_espera_cola=uso_llm.get("tiempo_espera_cola", 0.0),
+            sintoma_evaluado=texto_evaluar,
         )
 
     def procesar_consulta_audio(self, audio_id: str, datos_audio_vector: Optional[np.ndarray] = None) -> str:
@@ -341,7 +477,12 @@ class GestorDiagnostico:
         Maneja la cola real de 12 req/min y recurre a fallback degradado solo ante falla real de red o indisponibilidad.
         """
         confianza_pct = int(confianza_ml * 100)
-        alerta_revision = "\n⚠️ *Nota:* Confianza media del modelo (< 70%). Se requiere inspección física obligatoria en taller.\n" if requiere_revision_humana else ""
+        alerta_revision = (
+            "\n⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML "
+            "es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.\n"
+            if requiere_revision_humana
+            else ""
+        )
         
         prompt_sistema = f"""
         Eres 'CarBot', el asistente técnico de diagnóstico de precisión para mecánicos de taller automotriz.
@@ -356,9 +497,10 @@ class GestorDiagnostico:
         REGLAS DE SEGURIDAD:
         1. La predicción ML es una HIPÓTESIS, no una falla confirmada.
         2. Usa exclusivamente pruebas y procedimientos presentes en el contexto RAG. No inventes pares de apriete, piezas ni pasos.
-        3. Si la confianza es menor de 70%, exige inspección humana antes de desmontar o reemplazar componentes.
+        3. Si se marca revisión humana, exige inspección antes de desmontar o reemplazar componentes.
         4. Si ML y manual no son coherentes, indícalo y limita la respuesta a pruebas de verificación seguras.
-        5. Estructura la respuesta en las siguientes 3 secciones:
+        5. Si la consulta menciona GNV/GLP y pérdida de fuerza, indica primero una prueba comparativa controlada gasolina vs gas. Si solo falla a gas, prioriza presión del reductor, filtros, inyectores y calibración GNV; si falla con ambos, revisa encendido, admisión, escape, compresión y alimentación. No atribuyas la falla al embrague solo por mencionar GNV.
+        6. Estructura la respuesta en las siguientes 3 secciones:
 
         🛠️ **1. Posible Falla Vehicular**
         Presenta la hipótesis principal ({diagnostico_ml}), su confianza ({confianza_pct}%) y qué evidencia falta para confirmarla.
@@ -441,10 +583,9 @@ class GestorDiagnostico:
                     f"[Gemini Queue] Solicitud {solicitud.id[:8]} colocada en cola de espera (Posición: {posicion}, Espera: ~{espera_segundos}s, Proveedor: {proveedor})."
                 )
                 mensaje_cola = (
-                    f"⏳ *Diagnóstico en cola de procesamiento (Posición #{posicion}):*\n\n"
-                    f"Tu consulta ha sido clasificada con éxito mediante ML ({diagnostico_ml}) y el manual RAG está listo.\n"
-                    f"La síntesis detallada con Gemini se completará en aproximadamente ~{int(espera_segundos)}s para respetar la cuota del taller.\n\n"
-                    f"🛠️ **Diagnóstico Preliminar ML:** {diagnostico_ml} ({confianza_pct}% certeza)"
+                    f"⏳ *Analizando consulta (cola #{posicion})*\n"
+                    f"Hipótesis preliminar, no confirmada: *{diagnostico_ml}* ({confianza_pct}%).\n"
+                    "En breve recibirás el resumen; el detalle quedará en el panel."
                 )
                 return mensaje_cola, {
                     "usado": False,

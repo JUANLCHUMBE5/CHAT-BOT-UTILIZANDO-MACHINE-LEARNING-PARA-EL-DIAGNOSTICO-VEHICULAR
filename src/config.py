@@ -23,6 +23,12 @@ class PathConfig(BaseModel):
     temp_audio: Path = BASE_DIR / "grabacion.wav"
 
 class DiagnosticConfig(BaseModel):
+    rag_min_similarity: float = Field(
+        default=float(os.getenv("RAG_MIN_SIMILARITY", "0.25")),
+        ge=0.0,
+        le=1.0,
+        description="Similitud coseno minima provisional para aceptar RAG",
+    )
     confidence_threshold: float = Field(default=0.70, description="Umbral mínimo de confianza para diagnóstico automático")
     rms_silence_threshold: float = Field(default=0.01, description="Umbral de energía RMS para detectar silencio")
     treble_ratio_threshold: float = Field(default=15.0, description="Porcentaje de frecuencias agudas (>2000Hz) para ruido mecánico")
@@ -82,7 +88,7 @@ class AppSettings(BaseModel):
     data_retention_days: int = int(os.getenv("DATA_RETENTION_DAYS", "180"))
     model_artifact_url: str = os.getenv("MODEL_ARTIFACT_URL", "")
     model_artifact_sha256: str = os.getenv("MODEL_ARTIFACT_SHA256", "")
-    model_version: str = os.getenv("MODEL_VERSION", "local-unversioned")
+    model_version: str = os.getenv("MODEL_VERSION", "2.1.0-grouped-calibrated")
 
     privacy_secret_key: str = os.getenv("PRIVACY_SECRET_KEY", "carbot_privacy_hmac_secret_key_2026")
 

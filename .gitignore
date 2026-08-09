@@ -34,6 +34,8 @@ ENV/
 .env.local
 .env.*.local
 *.pem
+credenciales_temporales*.txt
+credenciales_temporales*.csv
 
 # --- Archivos de Audio Temporales ---
 *.wav
@@ -56,6 +58,7 @@ TEST_READY.md
 
 # --- Datos operativos y artefactos ajenos al proyecto ---
 data/tracker_diagnosticos.csv
+data/evidencias_evaluacion/
 sss/
 
 
@@ -63,3 +66,6 @@ sss/
 models/modelo_diagnostico.pkl
 *.pkl
 
+# --- Frontend Web Dashboard ---
+web_dashboard/node_modules/
+web_dashboard/dist/

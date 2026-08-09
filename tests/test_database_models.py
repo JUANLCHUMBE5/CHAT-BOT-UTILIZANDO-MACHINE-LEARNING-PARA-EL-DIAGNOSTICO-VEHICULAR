@@ -58,11 +58,11 @@ def test_mensaje_meta_es_idempotente_por_restriccion_unica():
     assert ("meta_message_id",) in columnas_unicas
 
 
-def test_alembic_tiene_una_sola_revision_inicial():
+def test_alembic_tiene_una_sola_revision_head():
     config = Config("alembic.ini")
     scripts = ScriptDirectory.from_config(config)
 
-    assert scripts.get_current_head() == "20260807_06"
+    assert scripts.get_current_head() == "20260808_03"
 
 
 def test_hash_persistencia_normaliza_telefono_y_placa():

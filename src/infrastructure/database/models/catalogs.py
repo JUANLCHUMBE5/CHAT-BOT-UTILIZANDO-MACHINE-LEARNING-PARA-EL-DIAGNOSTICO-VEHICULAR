@@ -61,7 +61,12 @@ class Usuario(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     apellidos: Mapped[str | None] = mapped_column(String(120))
     whatsapp_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
     whatsapp_ultimos4: Mapped[str] = mapped_column(String(4), nullable=False)
+    password_hash: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    debe_cambiar_password: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True, server_default=text("true")
+    )
     activo: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text("true"))
+    bloqueado: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default=text("false"))
 
     taller: Mapped["Taller"] = relationship(back_populates="usuarios")
     rol: Mapped["Rol"] = relationship(back_populates="usuarios")

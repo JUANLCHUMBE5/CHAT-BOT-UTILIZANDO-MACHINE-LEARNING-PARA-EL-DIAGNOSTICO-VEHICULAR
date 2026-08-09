@@ -66,6 +66,7 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     sintoma_normalizado: Mapped[str | None] = mapped_column(Text)
     falla_predicha: Mapped[str | None] = mapped_column(String(200))
     confianza: Mapped[Decimal | None] = mapped_column(Numeric(5, 4))
+    similitud_rag: Mapped[Decimal | None] = mapped_column(Numeric(5, 4))
     fuente: Mapped[str] = mapped_column(String(20), nullable=False)
     modo_diagnostico: Mapped[str] = mapped_column(
         String(50), nullable=False, default="completo_ml_rag_llm", server_default=text("'completo_ml_rag_llm'")
@@ -75,6 +76,7 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     duracion_ms: Mapped[int | None] = mapped_column(Integer)
     conclusion_mecanico: Mapped[str | None] = mapped_column(Text)
+    sintesis_llm: Mapped[str | None] = mapped_column(Text)
     version_modelo_ml: Mapped[str | None] = mapped_column(String(80))
     version_corpus_rag: Mapped[str | None] = mapped_column(String(80))
 
@@ -83,12 +85,18 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     vehiculo: Mapped["Vehiculo | None"] = relationship(back_populates="diagnosticos")
     conversacion: Mapped["Conversacion | None"] = relationship(back_populates="diagnosticos")
     hipotesis: Mapped[list["HipotesisDiagnostico"]] = relationship(
-        back_populates="diagnostico", cascade="all, delete-orphan"
+        back_populates="diagnostico",
+        cascade="all, delete-orphan",
+        order_by="HipotesisDiagnostico.orden",
     )
     usos_api: Mapped[list["UsoApi"]] = relationship(back_populates="diagnostico")
 
     __table_args__ = (
         CheckConstraint("confianza IS NULL OR confianza BETWEEN 0 AND 1", name="confianza_rango"),
+        CheckConstraint(
+            "similitud_rag IS NULL OR similitud_rag BETWEEN 0 AND 1",
+            name="similitud_rag_rango",
+        ),
         CheckConstraint("duracion_ms IS NULL OR duracion_ms >= 0", name="duracion_no_negativa"),
         CheckConstraint("fuente IN ('ml', 'rag', 'gemini', 'hibrido', 'manual', 'regla')", name="fuente_valida"),
         CheckConstraint(

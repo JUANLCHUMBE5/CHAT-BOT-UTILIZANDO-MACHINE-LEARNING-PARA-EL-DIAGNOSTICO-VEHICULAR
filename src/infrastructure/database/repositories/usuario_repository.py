@@ -105,12 +105,38 @@ class UsuarioRepository:
         return result.scalars().first()
 
     async def listar_por_taller(self, taller_id: uuid.UUID) -> Sequence[Usuario]:
-        """Lista todos los usuarios pertenecientes a un taller."""
+        """Lista todos los usuarios pertenecientes a un taller con sus relaciones cargadas."""
         stmt = (
             select(Usuario)
-            .options(selectinload(Usuario.rol))
+            .options(
+                selectinload(Usuario.rol),
+                selectinload(Usuario.diagnosticos),
+                selectinload(Usuario.taller),
+            )
             .where(Usuario.taller_id == taller_id)
             .order_by(Usuario.nombres.asc())
         )
         result = await self.session.execute(stmt)
         return result.scalars().all()
+
+    async def eliminar_usuario(self, usuario_id: uuid.UUID, taller_id: Optional[uuid.UUID] = None) -> bool:
+        """Elimina un usuario de PostgreSQL tras desvincular sus diagnósticos históricos."""
+        usuario = await self.obtener_por_id(usuario_id)
+        if not usuario:
+            return False
+        if taller_id and usuario.taller_id != taller_id:
+            return False
+
+        from src.infrastructure.database.models.diagnostics import Diagnostico
+        from sqlalchemy import update
+
+        # Desvincular diagnósticos previos asignando mecanico_id = None para no perder el historial
+        await self.session.execute(
+            update(Diagnostico)
+            .where(Diagnostico.mecanico_id == usuario_id)
+            .values(mecanico_id=None)
+        )
+
+        await self.session.delete(usuario)
+        await self.session.commit()
+        return True

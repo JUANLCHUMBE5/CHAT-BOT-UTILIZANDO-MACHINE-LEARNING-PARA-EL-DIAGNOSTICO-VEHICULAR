@@ -11,3 +11,6 @@ class IMotorRAG(Protocol):
     """Protocolo de dominio para la búsqueda semántica en manuales de taller RAG."""
     def recuperar_contexto(self, query: str) -> Tuple[str, str]:
         ...
+
+    def recuperar_contexto_con_similitud(self, query: str) -> Tuple[str, str, float]:
+        ...

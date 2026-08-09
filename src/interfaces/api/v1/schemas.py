@@ -20,6 +20,12 @@ class WhatsAppWebhookPayloadDTO(BaseModel):
 # --- DTOs de Salida (Response Schemas) ---
 
 class DiagnosticResponseDTO(BaseModel):
+    similitud_rag: float = Field(
+        default=0.0,
+        ge=0.0,
+        le=100.0,
+        description="Similitud de recuperacion RAG (0-100), independiente de la confianza ML",
+    )
     sintoma: str = Field(..., description="Síntoma o consulta ingresada por el usuario")
     falla_predicha: str = Field(..., description="Falla vehicular estimada por el modelo ML")
     confianza: float = Field(..., description="Porcentaje de confianza del diagnóstico (0-100)", json_schema_extra={"example": 95.5})

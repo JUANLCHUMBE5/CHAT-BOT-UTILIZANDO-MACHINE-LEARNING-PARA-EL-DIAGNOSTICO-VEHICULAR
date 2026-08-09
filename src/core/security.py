@@ -1,5 +1,6 @@
 import hmac
 import hashlib
+import os
 import time
 import uuid
 import jwt
@@ -19,14 +20,45 @@ JWT_EXPIRATION_SECONDS = 2 * 60 * 60  # 2 horas = 7200 segundos
 def _obtener_jwt_secret() -> str:
     return getattr(settings, "JWT_SECRET_KEY", "super_secret_carbot_key_ucv_2026_carabayllo")
 
-def crear_jwt_token(sub: str = "taller_mecanico", extra_claims: Optional[Dict[str, Any]] = None) -> str:
+def generar_password_hash(password: str) -> str:
+    """Genera un hash criptográfico seguro con PBKDF2-HMAC-SHA256 (600,000 iteraciones + salt OWASP)."""
+    salt = os.urandom(16)
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 600_000)
+    return f"pbkdf2_sha256$600000${salt.hex()}${key.hex()}"
+
+def verificar_password(password: str, stored_hash: Optional[str]) -> bool:
+    """Verifica una contraseña contra su hash PBKDF2 almacenado. Rechaza hashes nulos o malformados."""
+    if not stored_hash or "$" not in stored_hash:
+        return False
+    try:
+        parts = stored_hash.split("$")
+        if len(parts) != 4 or parts[0] != "pbkdf2_sha256":
+            return False
+        iterations = int(parts[1])
+        salt = bytes.fromhex(parts[2])
+        expected_key = parts[3]
+        key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, iterations)
+        return hmac.compare_digest(key.hex(), expected_key)
+    except Exception:
+        return False
+
+def crear_jwt_token(
+    sub: str = "taller_mecanico",
+    rol: str = "administrador",
+    taller_id: Optional[str] = None,
+    usuario_id: Optional[str] = None,
+    extra_claims: Optional[Dict[str, Any]] = None,
+) -> str:
     """
     Genera un token JWT firmado digitalmente con validez exacta de 2 HORAS.
+    Incluye sub, rol, taller_id, usuario_id y claims estándar exp/iat/jti.
     """
     ahora = int(time.time())
     payload = {
         "sub": sub,
-        "rol": "administrador",
+        "rol": rol,
+        "taller_id": taller_id or "00000000-0000-0000-0000-000000000001",
+        "usuario_id": usuario_id or str(uuid.uuid4()),
         "iat": ahora,
         "exp": ahora + JWT_EXPIRATION_SECONDS,
         "iss": settings.jwt_issuer,
@@ -39,7 +71,9 @@ def crear_jwt_token(sub: str = "taller_mecanico", extra_claims: Optional[Dict[st
     token = jwt.encode(payload, _obtener_jwt_secret(), algorithm=JWT_ALGORITHM)
     return token
 
-def verificar_jwt_token(credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer)) -> Dict[str, Any]:
+def verificar_jwt_token_sin_restriccion(
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
+) -> Dict[str, Any]:
     """
     Middleware / Dependencia para verificar la validez y expiración del Token JWT.
     Lanza HTTP 401 Unauthorized si el token no existe, expiró o fue alterado.
@@ -73,6 +107,19 @@ def verificar_jwt_token(credentials: Optional[HTTPAuthorizationCredentials] = Se
             detail="Token JWT inválido o firma alterada.",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+
+def verificar_jwt_token(
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
+) -> Dict[str, Any]:
+    """Bloquea el resto de la API hasta cambiar una contraseña temporal."""
+    payload = verificar_jwt_token_sin_restriccion(credentials)
+    if payload.get("requiere_cambio_password"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Debe cambiar la contraseña temporal antes de utilizar el sistema.",
+        )
+    return payload
 
 def verificar_firma_meta(raw_body: bytes, signature_header: Optional[str]) -> bool:
     """

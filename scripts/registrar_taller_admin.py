@@ -14,7 +14,6 @@ from __future__ import annotations
 import argparse
 import asyncio
 import getpass
-import os
 from pathlib import Path
 import sys
 from typing import Optional
@@ -41,7 +40,6 @@ load_dotenv(RAIZ_PROYECTO / ".env")
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Importar configuración y repositorios
-from src.config import settings
 from src.core.security import hash_identificador_persistencia
 from src.infrastructure.database.connection import (
     cerrar_conexion,

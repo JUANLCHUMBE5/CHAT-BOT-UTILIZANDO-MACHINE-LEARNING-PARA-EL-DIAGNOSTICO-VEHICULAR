@@ -1,12 +1,20 @@
 import subprocess
 from contextlib import asynccontextmanager
-from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import uvicorn
 
-# Cargar variables de entorno automáticamente desde .env
-load_dotenv()
+# En desarrollo, .env sustituye credenciales antiguas heredadas de Windows.
+# En produccion, las variables inyectadas externamente conservan prioridad.
+from src.config_bootstrap import cargar_variables_entorno
+
+cargar_variables_entorno()
+
+# Aplicar secretos antes de importar src.config. Si AWS fue habilitado y falla,
+# el proceso se detiene en lugar de arrancar con credenciales vacias.
+from src.infrastructure.aws_secrets import aplicar_secretos_aws
+
+aplicar_secretos_aws()
 
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -74,6 +82,16 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.middleware("http")

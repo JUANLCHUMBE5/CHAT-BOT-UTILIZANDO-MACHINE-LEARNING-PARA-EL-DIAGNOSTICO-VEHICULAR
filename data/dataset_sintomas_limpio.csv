@@ -273,6 +273,13 @@ se apaga en cada rompemuelles si no lo mantengo acelerado,Cuerpo de aceleracion 
 tengo un problema se apaga en cada rompemuelles si no lo mantengo acelerado en carabayllo,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 hola maestro se apaga en cada rompemuelles si no lo mantengo acelerado al andar,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 mi carro presenta se apaga en cada rompemuelles si no lo mantengo acelerado ultimamente,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
+pasa que al cerrar la puerta de mi auto y al aplastar el control de la puerta este no lo abre y sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+la chapa de la puerta esta inclinada para el costado y no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+el seguro mecanico de la puerta se quedo trabado o chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+la chapa de la puerta no encaja ni cierra bien,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+el pestillo de la puerta esta doblado y la chapa no responde,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+la cerradura de la puerta se quedo trabada hacia un lado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+aplasto el control y el seguro de la puerta se queda trabado,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
 chillido feo al frenar,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
 sabes que chillido feo al frenar en la pista,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
 amigo mi auto presenta chillido feo al frenar en las mañanas,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
@@ -546,6 +553,119 @@ maestro una consulta cuesta meter primera y retroceso en las mañanas,Falla en b
 buenas tardes mecanico cuesta meter primera y retroceso en la pista,Falla en bombin o bomba hidraulica de embrague,EMBRAGUE_002,Transmisión y Embrague,alta
 tengo un problema con mi auto cuesta meter primera y retroceso al acelerar,Falla en bombin o bomba hidraulica de embrague,EMBRAGUE_002,Transmisión y Embrague,alta
 sabes que cuesta meter primera y retroceso en las mañanas,Falla en bombin o bomba hidraulica de embrague,EMBRAGUE_002,Transmisión y Embrague,alta
+zumbido constante en la caja de cambios al andar,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+al salir a trabajar zumbido constante en la caja de cambios al andar en la pista,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+sabes que zumbido constante en la caja de cambios al andar cuando voy manejando,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+buenas tardes mecanico zumbido constante en la caja de cambios al andar en carabayllo,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+hace dos dias noto que zumbido constante en la caja de cambios al andar al pasar un rompemuelles,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+hace dos dias noto que zumbido constante en la caja de cambios al andar de la nada,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+maestro una consulta zumbido constante en la caja de cambios al andar al acelerar,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+tengo un problema con mi auto zumbido constante en la caja de cambios al andar en la pista,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+suena un canto feo en la caja en neutro,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+hace dos dias noto que suena un canto feo en la caja en neutro en carabayllo,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+amigo mi auto presenta suena un canto feo en la caja en neutro en la pista,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+buenas tardes mecanico suena un canto feo en la caja en neutro al pasar un rompemuelles,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+tengo un problema con mi auto suena un canto feo en la caja en neutro cuando voy manejando,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+siento que suena un canto feo en la caja en neutro de la nada,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+resulta que en mi carro suena un canto feo en la caja en neutro de la nada,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+maestro una consulta suena un canto feo en la caja en neutro cuando voy manejando,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+maestro una consulta suena un canto feo en la caja en neutro en las mañanas,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+los cambios botan la marcha solos,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+amigo mi auto presenta los cambios botan la marcha solos al pasar un rompemuelles,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+siento que los cambios botan la marcha solos cuando voy manejando,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+siento que los cambios botan la marcha solos en las mañanas,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+tengo un problema con mi auto los cambios botan la marcha solos cuando voy manejando,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+amigo mi auto presenta los cambios botan la marcha solos cuando voy manejando,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+maestro una consulta los cambios botan la marcha solos en las mañanas,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+al salir a trabajar los cambios botan la marcha solos de la nada,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+sabes que los cambios botan la marcha solos al acelerar,Falta o degradacion de aceite de caja de cambios,TRANSMISION_003,Transmisión y Embrague,media
+la chapa de la puerta esta inclinada o trabada y no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al salir a trabajar la chapa de la puerta esta inclinada o trabada y no abre al acelerar,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes mecanico la chapa de la puerta esta inclinada o trabada y no abre en las mañanas,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta la chapa de la puerta esta inclinada o trabada y no abre al pasar un rompemuelles,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo mi auto presenta la chapa de la puerta esta inclinada o trabada y no abre en las mañanas,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta la chapa de la puerta esta inclinada o trabada y no abre de la nada,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes mecanico la chapa de la puerta esta inclinada o trabada y no abre al acelerar,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo mi auto presenta la chapa de la puerta esta inclinada o trabada y no abre en la pista,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+amigo mi auto presenta al aplastar el control la puerta sigue bloqueada en carabayllo,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+maestro una consulta al aplastar el control la puerta sigue bloqueada en carabayllo,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+al salir a trabajar al aplastar el control la puerta sigue bloqueada en las mañanas,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+resulta que en mi carro al aplastar el control la puerta sigue bloqueada cuando voy manejando,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+resulta que en mi carro al aplastar el control la puerta sigue bloqueada de la nada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+sabes que al aplastar el control la puerta sigue bloqueada cuando voy manejando,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+siento que al aplastar el control la puerta sigue bloqueada cuando voy manejando,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+tengo un problema con mi auto al aplastar el control la puerta sigue bloqueada en la pista,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+el pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+siento que el pestillo de la puerta se quedo chueco al acelerar,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que en mi carro el pestillo de la puerta se quedo chueco de la nada,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes mecanico el pestillo de la puerta se quedo chueco al pasar un rompemuelles,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+tengo un problema con mi auto el pestillo de la puerta se quedo chueco al acelerar,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta el pestillo de la puerta se quedo chueco cuando voy manejando,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+hace dos dias noto que el pestillo de la puerta se quedo chueco al pasar un rompemuelles,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo mi auto presenta el pestillo de la puerta se quedo chueco en la pista,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que en mi carro el pestillo de la puerta se quedo chueco al acelerar,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+la cerradura no encaja ni abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo mi auto presenta la cerradura no encaja ni abre al pasar un rompemuelles,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+tengo un problema con mi auto la cerradura no encaja ni abre en las mañanas,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+siento que la cerradura no encaja ni abre en la pista,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+sabes que la cerradura no encaja ni abre en las mañanas,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta la cerradura no encaja ni abre en carabayllo,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que en mi carro la cerradura no encaja ni abre al acelerar,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+sabes que la cerradura no encaja ni abre cuando voy manejando,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo mi auto presenta la cerradura no encaja ni abre de la nada,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+tengo un problema con mi auto la ventana del carro no sube ni baja en carabayllo,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que en mi carro la ventana del carro no sube ni baja en carabayllo,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que en mi carro la ventana del carro no sube ni baja en la pista,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que en mi carro la ventana del carro no sube ni baja cuando voy manejando,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+amigo mi auto presenta la ventana del carro no sube ni baja en carabayllo,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+sabes que la ventana del carro no sube ni baja cuando voy manejando,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+maestro una consulta la ventana del carro no sube ni baja en la pista,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+maestro una consulta la ventana del carro no sube ni baja al acelerar,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+se escucho un chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+hace dos dias noto que se escucho un chasquido y el vidrio cayo al fondo de la puerta en carabayllo,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al salir a trabajar se escucho un chasquido y el vidrio cayo al fondo de la puerta al acelerar,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes mecanico se escucho un chasquido y el vidrio cayo al fondo de la puerta en las mañanas,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+hace dos dias noto que se escucho un chasquido y el vidrio cayo al fondo de la puerta en las mañanas,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+amigo mi auto presenta se escucho un chasquido y el vidrio cayo al fondo de la puerta al pasar un rompemuelles,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes mecanico se escucho un chasquido y el vidrio cayo al fondo de la puerta al acelerar,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que en mi carro se escucho un chasquido y el vidrio cayo al fondo de la puerta en la pista,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+el motor del elevador de ventana no responde,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al salir a trabajar el motor del elevador de ventana no responde de la nada,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes mecanico el motor del elevador de ventana no responde en las mañanas,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+sabes que el motor del elevador de ventana no responde cuando voy manejando,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+maestro una consulta el motor del elevador de ventana no responde cuando voy manejando,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al salir a trabajar el motor del elevador de ventana no responde cuando voy manejando,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes mecanico el motor del elevador de ventana no responde en carabayllo,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+siento que el motor del elevador de ventana no responde de la nada,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+tengo un problema con mi auto el motor del elevador de ventana no responde en la pista,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+resulta que en mi carro las plumas del limpiaparabrisas no se mueven cuando voy manejando,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+hace dos dias noto que las plumas del limpiaparabrisas no se mueven de la nada,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+al salir a trabajar las plumas del limpiaparabrisas no se mueven en carabayllo,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+tengo un problema con mi auto las plumas del limpiaparabrisas no se mueven de la nada,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+resulta que en mi carro las plumas del limpiaparabrisas no se mueven al acelerar,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+tengo un problema con mi auto las plumas del limpiaparabrisas no se mueven en carabayllo,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+sabes que las plumas del limpiaparabrisas no se mueven al pasar un rompemuelles,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+resulta que en mi carro las plumas del limpiaparabrisas no se mueven en carabayllo,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+tengo un problema con mi auto el agua del limpiaparabrisas no sale al acelerar,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+maestro una consulta el agua del limpiaparabrisas no sale en las mañanas,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+maestro una consulta el agua del limpiaparabrisas no sale al pasar un rompemuelles,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+tengo un problema con mi auto el agua del limpiaparabrisas no sale en las mañanas,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+siento que el agua del limpiaparabrisas no sale al pasar un rompemuelles,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+maestro una consulta el agua del limpiaparabrisas no sale en la pista,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+sabes que el agua del limpiaparabrisas no sale cuando voy manejando,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+sabes que el agua del limpiaparabrisas no sale en las mañanas,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+las plumas se quedaron trabadas a la mitad,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+buenas tardes mecanico las plumas se quedaron trabadas a la mitad al pasar un rompemuelles,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+hace dos dias noto que las plumas se quedaron trabadas a la mitad cuando voy manejando,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+hace dos dias noto que las plumas se quedaron trabadas a la mitad de la nada,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+siento que las plumas se quedaron trabadas a la mitad en la pista,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+amigo mi auto presenta las plumas se quedaron trabadas a la mitad de la nada,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+siento que las plumas se quedaron trabadas a la mitad de la nada,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+buenas tardes mecanico las plumas se quedaron trabadas a la mitad de la nada,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
 el carro no arranca solo hace un click seco,Bateria descargada o bornes sulfatados,ELECTRICO_002,Sistema Eléctrico y Carga,media
 buenas tardes mecanico el carro no arranca solo hace un click seco en la pista,Bateria descargada o bornes sulfatados,ELECTRICO_002,Sistema Eléctrico y Carga,media
 maestro una consulta el carro no arranca solo hace un click seco en las mañanas,Bateria descargada o bornes sulfatados,ELECTRICO_002,Sistema Eléctrico y Carga,media
@@ -812,6 +932,174 @@ buenas tardes mecanico el minimo oscila sube y baja solo cuando voy manejando,Cu
 maestro una consulta el minimo oscila sube y baja solo de la nada,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 siento que el minimo oscila sube y baja solo al pasar un rompemuelles,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 maestro una consulta el minimo oscila sube y baja solo en la pista,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
+escucho un soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+maestro una consulta escucho un soplido continuo de aire en los tanques del camion al cargar la bateria,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+tengo un vehiculo pesado escucho un soplido continuo de aire en los tanques del camion al acelerar,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+resulta que mi pickup diesel escucho un soplido continuo de aire en los tanques del camion en carretera,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+tengo un camion escucho un soplido continuo de aire en los tanques del camion al acelerar,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+en mi auto hibrido escucho un soplido continuo de aire en los tanques del camion al acelerar,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+el pedal de freno de aire esta duro y la presion de aire no sube en los relojes,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+tengo un vehiculo pesado el pedal de freno de aire esta duro y la presion de aire no sube en los relojes en carabayllo,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+en mi auto hibrido el pedal de freno de aire esta duro y la presion de aire no sube en los relojes al acelerar,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+en mi auto hibrido el pedal de freno de aire esta duro y la presion de aire no sube en los relojes con carga pesada,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+maestro una consulta el pedal de freno de aire esta duro y la presion de aire no sube en los relojes al acelerar,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+maestro una consulta el pedal de freno de aire esta duro y la presion de aire no sube en los relojes en carretera,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+mi auto electrico el pedal de freno de aire esta duro y la presion de aire no sube en los relojes en carretera,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+los frenos de aire del camion se quedan clavados,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+en mi auto hibrido los frenos de aire del camion se quedan clavados en carretera,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+resulta que mi pickup diesel los frenos de aire del camion se quedan clavados en ruta larga,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+resulta que mi pickup diesel los frenos de aire del camion se quedan clavados al cargar la bateria,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+tengo un camion los frenos de aire del camion se quedan clavados en ruta larga,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+mi auto electrico los frenos de aire del camion se quedan clavados al cargar la bateria,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+mi auto electrico los frenos de aire del camion se quedan clavados en ruta larga,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+fuga de aire en la valvula de purga del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+resulta que mi pickup diesel fuga de aire en la valvula de purga del camion al acelerar,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+resulta que mi pickup diesel fuga de aire en la valvula de purga del camion en carretera,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+resulta que mi pickup diesel fuga de aire en la valvula de purga del camion al cargar la bateria,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+maestro una consulta fuga de aire en la valvula de purga del camion al acelerar,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+tengo un vehiculo pesado fuga de aire en la valvula de purga del camion al cargar la bateria,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+mi auto electrico fuga de aire en la valvula de purga del camion en ruta larga,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+el camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un camion el camion bota humo negro denso y no tiene fuerza para jalar carga en carabayllo,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+resulta que mi pickup diesel el camion bota humo negro denso y no tiene fuerza para jalar carga en carabayllo,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un vehiculo pesado el camion bota humo negro denso y no tiene fuerza para jalar carga al cargar la bateria,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+maestro una consulta el camion bota humo negro denso y no tiene fuerza para jalar carga en carabayllo,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+mi auto electrico el camion bota humo negro denso y no tiene fuerza para jalar carga al cargar la bateria,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+en mi auto hibrido el camion bota humo negro denso y no tiene fuerza para jalar carga en ruta larga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+zumbido fuerte en el turbo al acelerar el camion,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+maestro una consulta zumbido fuerte en el turbo al acelerar el camion en ruta larga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un vehiculo pesado zumbido fuerte en el turbo al acelerar el camion al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+en mi auto hibrido zumbido fuerte en el turbo al acelerar el camion en carretera,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+en mi auto hibrido zumbido fuerte en el turbo al acelerar el camion al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un vehiculo pesado zumbido fuerte en el turbo al acelerar el camion en ruta larga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+fuga de aceite en las mangueras del intercooler del camion,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+mi auto electrico fuga de aceite en las mangueras del intercooler del camion en ruta larga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un vehiculo pesado fuga de aceite en las mangueras del intercooler del camion en ruta larga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un vehiculo pesado fuga de aceite en las mangueras del intercooler del camion al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+maestro una consulta fuga de aceite en las mangueras del intercooler del camion al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un camion fuga de aceite en las mangueras del intercooler del camion con carga pesada,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+maestro una consulta fuga de aceite en las mangueras del intercooler del camion en carabayllo,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+el camion pierde presion de sobrealimentacion en subidas,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un vehiculo pesado el camion pierde presion de sobrealimentacion en subidas en carabayllo,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+maestro una consulta el camion pierde presion de sobrealimentacion en subidas en carabayllo,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un vehiculo pesado el camion pierde presion de sobrealimentacion en subidas en ruta larga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+en mi auto hibrido el camion pierde presion de sobrealimentacion en subidas con carga pesada,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+el camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que mi pickup diesel el camion demora bastante en arrancar en frio en ruta larga,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que mi pickup diesel el camion demora bastante en arrancar en frio al acelerar,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+mi auto electrico el camion demora bastante en arrancar en frio al acelerar,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+en mi auto hibrido el camion demora bastante en arrancar en frio en carabayllo,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que mi pickup diesel cascabelea el motor diesel bajo carga pesada al acelerar,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que mi pickup diesel cascabelea el motor diesel bajo carga pesada en ruta larga,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+en mi auto hibrido cascabelea el motor diesel bajo carga pesada en ruta larga,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+tengo un camion cascabelea el motor diesel bajo carga pesada al cargar la bateria,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+mi auto electrico cascabelea el motor diesel bajo carga pesada en carretera,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+maestro una consulta cascabelea el motor diesel bajo carga pesada con carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+inyectores diesel goteando y bota humo blanco con olor a petroleo,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que mi pickup diesel inyectores diesel goteando y bota humo blanco con olor a petroleo al acelerar,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+en mi auto hibrido inyectores diesel goteando y bota humo blanco con olor a petroleo al acelerar,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+en mi auto hibrido inyectores diesel goteando y bota humo blanco con olor a petroleo al cargar la bateria,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+tengo un camion inyectores diesel goteando y bota humo blanco con olor a petroleo al cargar la bateria,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que mi pickup diesel inyectores diesel goteando y bota humo blanco con olor a petroleo en ruta larga,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+fuga en el riel de alta presion de petroleo,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+en mi auto hibrido fuga en el riel de alta presion de petroleo en ruta larga,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+tengo un vehiculo pesado fuga en el riel de alta presion de petroleo en carabayllo,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+maestro una consulta fuga en el riel de alta presion de petroleo al cargar la bateria,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+mi auto electrico fuga en el riel de alta presion de petroleo en ruta larga,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+maestro una consulta fuga en el riel de alta presion de petroleo en ruta larga,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que mi pickup diesel fuga en el riel de alta presion de petroleo en carabayllo,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+la autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado la autonomia de la bateria del auto electrico cae bruscamente al cargar la bateria,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido la autonomia de la bateria del auto electrico cae bruscamente con carga pesada,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido la autonomia de la bateria del auto electrico cae bruscamente en carabayllo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido la autonomia de la bateria del auto electrico cae bruscamente en carretera,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel la autonomia de la bateria del auto electrico cae bruscamente al cargar la bateria,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido la autonomia de la bateria del auto electrico cae bruscamente al cargar la bateria,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta luz de advertencia de sistema hibrido en el tablero con carga pesada,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel luz de advertencia de sistema hibrido en el tablero en ruta larga,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un camion luz de advertencia de sistema hibrido en el tablero en ruta larga,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta luz de advertencia de sistema hibrido en el tablero en carretera,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta luz de advertencia de sistema hibrido en el tablero en ruta larga,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado luz de advertencia de sistema hibrido en el tablero al acelerar,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+el auto electrico no acepta la carga rapida,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta el auto electrico no acepta la carga rapida al acelerar,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un camion el auto electrico no acepta la carga rapida con carga pesada,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico el auto electrico no acepta la carga rapida en carabayllo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel el auto electrico no acepta la carga rapida al cargar la bateria,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+el indicador de bateria del auto hibrido pasa de lleno a vacio rapido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un camion el indicador de bateria del auto hibrido pasa de lleno a vacio rapido en carretera,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico el indicador de bateria del auto hibrido pasa de lleno a vacio rapido en carabayllo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado el indicador de bateria del auto hibrido pasa de lleno a vacio rapido al acelerar,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido el indicador de bateria del auto hibrido pasa de lleno a vacio rapido en carabayllo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel el indicador de bateria del auto hibrido pasa de lleno a vacio rapido con carga pesada,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado el indicador de bateria del auto hibrido pasa de lleno a vacio rapido con carga pesada,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+el auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido el auto electrico no pasa a modo ready y no avanza al acelerar,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un camion el auto electrico no pasa a modo ready y no avanza al acelerar,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel el auto electrico no pasa a modo ready y no avanza al acelerar,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico el auto electrico no pasa a modo ready y no avanza en carretera,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido el auto electrico no pasa a modo ready y no avanza en carabayllo,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un camion el auto electrico no pasa a modo ready y no avanza con carga pesada,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+zumbido agudo inusual en el motor electrico al acelerar,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado zumbido agudo inusual en el motor electrico al acelerar al cargar la bateria,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado zumbido agudo inusual en el motor electrico al acelerar en ruta larga,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido zumbido agudo inusual en el motor electrico al acelerar con carga pesada,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado zumbido agudo inusual en el motor electrico al acelerar con carga pesada,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido zumbido agudo inusual en el motor electrico al acelerar en carretera,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta zumbido agudo inusual en el motor electrico al acelerar en ruta larga,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+falla de aislamiento de alto voltaje en el inversor,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta falla de aislamiento de alto voltaje en el inversor en carretera,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico falla de aislamiento de alto voltaje en el inversor en carabayllo,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico falla de aislamiento de alto voltaje en el inversor en carretera,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta falla de aislamiento de alto voltaje en el inversor al acelerar,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido falla de aislamiento de alto voltaje en el inversor al cargar la bateria,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel falla de aislamiento de alto voltaje en el inversor al cargar la bateria,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+el vehiculo hibrido no conmuta al motor de gasolina,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido el vehiculo hibrido no conmuta al motor de gasolina al cargar la bateria,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta el vehiculo hibrido no conmuta al motor de gasolina en ruta larga,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido el vehiculo hibrido no conmuta al motor de gasolina al acelerar,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado el vehiculo hibrido no conmuta al motor de gasolina con carga pesada,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un camion el vehiculo hibrido no conmuta al motor de gasolina al acelerar,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+el freno regenerativo no retiene el auto al soltar el acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido el freno regenerativo no retiene el auto al soltar el acelerador al acelerar,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico el freno regenerativo no retiene el auto al soltar el acelerador en ruta larga,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado el freno regenerativo no retiene el auto al soltar el acelerador con carga pesada,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel el freno regenerativo no retiene el auto al soltar el acelerador en carabayllo,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta el freno regenerativo no retiene el auto al soltar el acelerador al acelerar,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido el freno regenerativo no retiene el auto al soltar el acelerador en carretera,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+sensacion brusca o jalón al frenar en el auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+tengo un camion sensacion brusca o jalón al frenar en el auto hibrido en carabayllo,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+tengo un camion sensacion brusca o jalón al frenar en el auto hibrido en carretera,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel sensacion brusca o jalón al frenar en el auto hibrido al acelerar,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta sensacion brusca o jalón al frenar en el auto hibrido en ruta larga,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel sensacion brusca o jalón al frenar en el auto hibrido con carga pesada,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido sensacion brusca o jalón al frenar en el auto hibrido en carabayllo,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+luz de advertencia de frenos regenerativos encendida,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+resulta que mi pickup diesel luz de advertencia de frenos regenerativos encendida en carretera,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+tengo un camion luz de advertencia de frenos regenerativos encendida en carabayllo,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado luz de advertencia de frenos regenerativos encendida con carga pesada,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+tengo un camion luz de advertencia de frenos regenerativos encendida en ruta larga,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico mensaje de sobrecalentamiento de la bateria de alto voltaje en ruta larga,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado mensaje de sobrecalentamiento de la bateria de alto voltaje en ruta larga,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta mensaje de sobrecalentamiento de la bateria de alto voltaje en ruta larga,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico mensaje de sobrecalentamiento de la bateria de alto voltaje con carga pesada,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+bomba de agua del inversor no circula refrigerante especial,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido bomba de agua del inversor no circula refrigerante especial en ruta larga,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico bomba de agua del inversor no circula refrigerante especial en ruta larga,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+tengo un camion bomba de agua del inversor no circula refrigerante especial al cargar la bateria,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado bomba de agua del inversor no circula refrigerante especial en ruta larga,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido bomba de agua del inversor no circula refrigerante especial en carretera,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado bomba de agua del inversor no circula refrigerante especial al acelerar,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+el auto electrico limita la potencia por alta temperatura en la bateria,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico el auto electrico limita la potencia por alta temperatura en la bateria en carretera,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+tengo un camion el auto electrico limita la potencia por alta temperatura en la bateria con carga pesada,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta el auto electrico limita la potencia por alta temperatura en la bateria en carretera,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+en mi auto hibrido el auto electrico limita la potencia por alta temperatura en la bateria en carabayllo,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+mi auto electrico el auto electrico limita la potencia por alta temperatura en la bateria en ruta larga,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+tengo un vehiculo pesado el auto electrico limita la potencia por alta temperatura en la bateria en carabayllo,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
 chillido agudo al frenar,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
 buenas tardes mecanico chillido agudo al frenar,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
 al salir a trabajar en carabayllo chillido agudo al frenar,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
@@ -969,6 +1257,31 @@ en la panamericana norte traqueteo en el palier,Juntas homocineticas o palieres 
 tengo un problema con mi caña traqueteo en el palier,Juntas homocineticas o palieres danados,SUSPENSION_002,Suspensión y Dirección,alta
 al andar a 60 km por hora traqueteo en el palier,Juntas homocineticas o palieres danados,SUSPENSION_002,Suspensión y Dirección,alta
 al salir a trabajar en carabayllo traqueteo en el palier,Juntas homocineticas o palieres danados,SUSPENSION_002,Suspensión y Dirección,alta
+la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al andar a 60 km por hora la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+tengo un problema con mi caña la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al salir a trabajar en carabayllo la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en mi vehiculo noto que la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en la panamericana norte la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes mecanico la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que mi auto la chapa de la puerta esta chueca no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+al andar a 60 km por hora al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+tengo un problema con mi caña al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+en la panamericana norte al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+resulta que mi auto al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+en mi vehiculo noto que al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+al salir a trabajar en carabayllo al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al salir a trabajar en carabayllo el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que mi auto el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al andar a 60 km por hora el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en la panamericana norte el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en mi vehiculo noto que el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+tengo un problema con mi caña el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes mecanico el seguro de la puerta se quedo trabado,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
 amigo mi auto presenta chillido agudo al frenar,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
 sabes que chillido agudo al frenar,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
 al andar a 80 km/h chillido agudo al frenar,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
@@ -1157,6 +1470,75 @@ amigo mi auto presenta fuga de aceite de direccion en el suelo,Cremallera de dir
 maestro una consulta fuga de aceite de direccion en el suelo,Cremallera de direccion asistida con holgura o fuga,SUSPENSION_003,Suspensión y Dirección,alta
 buenas tardes mecanico fuga de aceite de direccion en el suelo,Cremallera de direccion asistida con holgura o fuga,SUSPENSION_003,Suspensión y Dirección,alta
 resulta que en mi carro fuga de aceite de direccion en el suelo,Cremallera de direccion asistida con holgura o fuga,SUSPENSION_003,Suspensión y Dirección,alta
+la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al salir a trabajar en carabayllo la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo mi auto presenta la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes mecanico la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+hace dos dias noto que la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+tengo un problema con mi auto la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que en mi carro la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en la panamericana norte la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+sabes que la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al andar a 80 km/h la chapa de la puerta esta inclinada o trabada no abre,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que en mi carro al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+buenas tardes mecanico al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+al andar a 80 km/h al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+sabes que al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+amigo mi auto presenta al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+hace dos dias noto que al aplastar el control la puerta sigue bloqueada,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+tengo un problema con mi auto pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro una consulta pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo mi auto presenta pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al andar a 80 km/h pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en la panamericana norte pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al salir a trabajar en carabayllo pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes mecanico pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que en mi carro pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+hace dos dias noto que pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+sabes que pestillo de la puerta se quedo chueco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al andar a 80 km/h la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+tengo un problema con mi auto la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+sabes que la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+amigo mi auto presenta la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que en mi carro la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+maestro una consulta la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes mecanico la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al salir a trabajar en carabayllo la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+hace dos dias noto que la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+en la panamericana norte la ventana del carro no sube ni baja,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+en la panamericana norte se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+amigo mi auto presenta se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+sabes que se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que en mi carro se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al salir a trabajar en carabayllo se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+maestro una consulta se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+tengo un problema con mi auto se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+hace dos dias noto que se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes mecanico se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al andar a 80 km/h se escucho chasquido y el vidrio cayo al fondo de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+amigo mi auto presenta las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+hace dos dias noto que las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+en la panamericana norte las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+buenas tardes mecanico las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+maestro una consulta las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+al salir a trabajar en carabayllo las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+al andar a 80 km/h las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+tengo un problema con mi auto las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+resulta que en mi carro las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+sabes que las plumas del limpiaparabrisas no se mueven,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+amigo mi auto presenta el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+en la panamericana norte el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+buenas tardes mecanico el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+sabes que el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+resulta que en mi carro el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+tengo un problema con mi auto el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+al salir a trabajar en carabayllo el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+al andar a 80 km/h el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+hace dos dias noto que el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
+maestro una consulta el agua del limpiaparabrisas no sale,Limpiaparabrisas o motor pluma quemado,CARROCERIA_004,Carrocería y Confort,media
 hace dos dias noto que motor cascabelea en subidas,Falla en bujias o bobinas de encendido (misfire),MOTOR_001,Motor,alta
 maestro una consulta motor cascabelea en subidas,Falla en bujias o bobinas de encendido (misfire),MOTOR_001,Motor,alta
 tengo un problema con mi auto motor cascabelea en subidas,Falla en bujias o bobinas de encendido (misfire),MOTOR_001,Motor,alta
@@ -1344,6 +1726,157 @@ resulta que en mi carro minimo oscila sube y baja solo,Cuerpo de aceleracion o v
 hace dos dias noto que minimo oscila sube y baja solo,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 tengo un problema con mi auto minimo oscila sube y baja solo,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 al andar a 80 km/h minimo oscila sube y baja solo,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
+soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+al salir a trabajar en carabayllo soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+resulta que en mi carro soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+amigo mi auto presenta soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+buenas tardes mecanico soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+al andar a 80 km/h soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+sabes que soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+tengo un problema con mi auto soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+en la panamericana norte soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+maestro una consulta soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+hace dos dias noto que soplido continuo de aire en los tanques del camion,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+en la panamericana norte pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+maestro una consulta pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+al andar a 80 km/h pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+hace dos dias noto que pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+tengo un problema con mi auto pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+al salir a trabajar en carabayllo pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+sabes que pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+resulta que en mi carro pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+amigo mi auto presenta pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+buenas tardes mecanico pedal de freno de aire duro presion no sube,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),FRENO_006,Frenos Neumáticos,alta
+camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un problema con mi auto camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+al andar a 80 km/h camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+maestro una consulta camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+al salir a trabajar en carabayllo camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+buenas tardes mecanico camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+sabes que camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+amigo mi auto presenta camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+hace dos dias noto que camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+resulta que en mi carro camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+en la panamericana norte camion bota humo negro denso y no tiene fuerza para jalar carga,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+resulta que en mi carro zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+al salir a trabajar en carabayllo zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+sabes que zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+hace dos dias noto que zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+maestro una consulta zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+buenas tardes mecanico zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+en la panamericana norte zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+tengo un problema con mi auto zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+amigo mi auto presenta zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+al andar a 80 km/h zumbido fuerte en el turbo al acelerar,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+hace dos dias noto que camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+amigo mi auto presenta camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+buenas tardes mecanico camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+al salir a trabajar en carabayllo camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que en mi carro camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+tengo un problema con mi auto camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+maestro una consulta camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+al andar a 80 km/h camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+sabes que camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+en la panamericana norte camion demora bastante en arrancar en frio,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+al salir a trabajar en carabayllo cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+buenas tardes mecanico cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+en la panamericana norte cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+resulta que en mi carro cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+maestro una consulta cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+tengo un problema con mi auto cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+hace dos dias noto que cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+al andar a 80 km/h cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+amigo mi auto presenta cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+sabes que cascabelea el motor diesel bajo carga pesada,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),COMBUSTIBLE_005,Inyección Diésel,alta
+autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un problema con mi auto autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que en mi carro autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+al andar a 80 km/h autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+buenas tardes mecanico autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+al salir a trabajar en carabayllo autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+amigo mi auto presenta autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+sabes que autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+hace dos dias noto que autonomia de la bateria del auto electrico cae bruscamente,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo un problema con mi auto luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que en mi carro luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+al salir a trabajar en carabayllo luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+amigo mi auto presenta luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+sabes que luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+al andar a 80 km/h luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+buenas tardes mecanico luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+hace dos dias noto que luz de advertencia de sistema hibrido en el tablero,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+buenas tardes mecanico auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+resulta que en mi carro auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+sabes que auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+al salir a trabajar en carabayllo auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+hace dos dias noto que auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un problema con mi auto auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+amigo mi auto presenta auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+al andar a 80 km/h auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte auto electrico no pasa a modo ready y no avanza,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+al salir a trabajar en carabayllo zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+buenas tardes mecanico zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+hace dos dias noto que zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+sabes que zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+al andar a 80 km/h zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo un problema con mi auto zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+amigo mi auto presenta zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+resulta que en mi carro zumbido agudo inusual en el motor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+buenas tardes mecanico freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+amigo mi auto presenta freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+hace dos dias noto que freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+al salir a trabajar en carabayllo freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+tengo un problema con mi auto freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+resulta que en mi carro freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+al andar a 80 km/h freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+sabes que freno regenerativo no retiene el auto al soltar acelerador,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+amigo mi auto presenta sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+sabes que sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+buenas tardes mecanico sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+al andar a 80 km/h sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+hace dos dias noto que sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+tengo un problema con mi auto sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+resulta que en mi carro sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+al salir a trabajar en carabayllo sensacion brusca al frenar en auto hibrido,Falla en sistema de frenado regenerativo (EV / Hibridos),ELECTRICO_HV_003,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+buenas tardes mecanico mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+al salir a trabajar en carabayllo mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+tengo un problema con mi auto mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+resulta que en mi carro mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+amigo mi auto presenta mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+al andar a 80 km/h mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+sabes que mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+hace dos dias noto que mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte mensaje de sobrecalentamiento de la bateria de alto voltaje,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+hace dos dias noto que bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+resulta que en mi carro bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+sabes que bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+tengo un problema con mi auto bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+buenas tardes mecanico bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+maestro una consulta bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+al salir a trabajar en carabayllo bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+amigo mi auto presenta bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+al andar a 80 km/h bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte bomba de agua del inversor no circula refrigerante,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO_HV_004,Vehículos Eléctricos e Híbridos,alta
 bota vapor blanco por el escape y junta agua con aceite,Empaque de culata soplado o danado,MOTOR_003,Motor,alta
 tengo una falla en mi carro bota vapor blanco por el escape y junta agua con aceite,Empaque de culata soplado o danado,MOTOR_003,Motor,alta
 al andar por carabayllo bota vapor blanco por el escape y junta agua con aceite,Empaque de culata soplado o danado,MOTOR_003,Motor,alta
@@ -1494,6 +2027,36 @@ al andar por carabayllo luz de alerta de transmision automatica encendida,Sobrec
 en el taller me dijeron que luz de alerta de transmision automatica encendida,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION_001,Transmisión y Embrague,alta
 buenas tardes maestro luz de alerta de transmision automatica encendida,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION_001,Transmisión y Embrague,alta
 mi auto presenta luz de alerta de transmision automatica encendida,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION_001,Transmisión y Embrague,alta
+zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+mi auto presenta zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+tengo una falla en mi carro zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+amigo una consulta zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+buenas tardes maestro zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+al andar por carabayllo zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+resulta que zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+maestro mi caña zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+en la panamericana norte zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+en el taller me dijeron que zumbido fuerte en la caja de cambios que aumenta con la velocidad,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+buenas tardes maestro suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+resulta que suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+mi auto presenta suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+en el taller me dijeron que suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+en la panamericana norte suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+tengo una falla en mi carro suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+maestro mi caña suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+amigo una consulta suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+al andar por carabayllo suena como avion al andar a mas de 60 km/h en quinta,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+al andar por carabayllo caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+amigo una consulta caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+mi auto presenta caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+maestro mi caña caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+buenas tardes maestro caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+en el taller me dijeron que caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+resulta que caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+tengo una falla en mi carro caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
+en la panamericana norte caja de cambios vibra e palanca tiembla,Rodajes de caja mecanica o diferencial gastados,TRANSMISION_002,Transmisión y Embrague,alta
 chillido de fierro con fierro al pisar el freno en la rueda,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
 amigo una consulta chillido de fierro con fierro al pisar el freno en la rueda,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
 maestro mi caña chillido de fierro con fierro al pisar el freno en la rueda,Desgaste de pastillas y zapatas de freno,FRENO_001,Frenos,alta
@@ -1764,6 +2327,96 @@ tengo una falla en mi carro solenoide no empuja el bendix,Bateria descargada o b
 maestro mi caña solenoide no empuja el bendix,Bateria descargada o bornes sulfatados,ELECTRICO_002,Sistema Eléctrico y Carga,media
 en la panamericana norte solenoide no empuja el bendix,Bateria descargada o bornes sulfatados,ELECTRICO_002,Sistema Eléctrico y Carga,media
 resulta que solenoide no empuja el bendix,Bateria descargada o bornes sulfatados,ELECTRICO_002,Sistema Eléctrico y Carga,media
+la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro mi caña la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo una consulta la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+mi auto presenta la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en la panamericana norte la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+tengo una falla en mi carro la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en el taller me dijeron que la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al andar por carabayllo la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes maestro la chapa de la puerta esta inclinada y no encaja en el marco,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+maestro mi caña la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+amigo una consulta la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en el taller me dijeron que la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+tengo una falla en mi carro la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+buenas tardes maestro la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+al andar por carabayllo la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+mi auto presenta la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+resulta que la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+en la panamericana norte la puerta no abre por dentro ni por fuera,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_002,Carrocería y Confort,baja
+pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+tengo una falla en mi carro pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+al andar por carabayllo pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+mi auto presenta pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+en la panamericana norte pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+resulta que pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+buenas tardes maestro pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+en el taller me dijeron que pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+amigo una consulta pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+maestro mi caña pestillo electrico salta y no traba la chapa,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_001,Carrocería y Confort,baja
+vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+en la panamericana norte vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al andar por carabayllo vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+mi auto presenta vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+maestro mi caña vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes maestro vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+amigo una consulta vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+tengo una falla en mi carro vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+en el taller me dijeron que vidrio de la ventana cayo al fondo del tapizado de la puerta,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al andar por carabayllo motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+maestro mi caña motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+tengo una falla en mi carro motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+en la panamericana norte motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+mi auto presenta motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+amigo una consulta motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes maestro motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+en el taller me dijeron que motor del elevalunas suena pero la luna no sube,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+resulta que vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+amigo una consulta vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+mi auto presenta vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+en la panamericana norte vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+tengo una falla en mi carro vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+buenas tardes maestro vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+en el taller me dijeron que vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+al andar por carabayllo vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+maestro mi caña vidrio sube chueco y se traba,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_003,Carrocería y Confort,baja
+presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+maestro mi caña presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+mi auto presenta presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+resulta que presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+en el taller me dijeron que presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+tengo una falla en mi carro presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+buenas tardes maestro presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+en la panamericana norte presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+al andar por carabayllo presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+amigo una consulta presion de aire en los tanques del camion no llega a 8 bares,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+buenas tardes maestro freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+maestro mi caña freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+amigo una consulta freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+mi auto presenta freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+al andar por carabayllo freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+en el taller me dijeron que freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+resulta que freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+en la panamericana norte freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+tengo una falla en mi carro freno de pedal de camión duro y fuga constante por la purga,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+resulta que camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+en la panamericana norte camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+amigo una consulta camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+al andar por carabayllo camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+buenas tardes maestro camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+mi auto presenta camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+tengo una falla en mi carro camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+maestro mi caña camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
+en el taller me dijeron que camion bloqueado en los muelles de parqueo,Válvula de freno de aire o secador APS obstruido (Camiones),FRENO_007,Frenos Neumáticos,alta
 camion pierde torque en subidas pesadas y bota humo negro,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
 amigo una consulta camion pierde torque en subidas pesadas y bota humo negro,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
 mi auto presenta camion pierde torque en subidas pesadas y bota humo negro,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
@@ -1794,6 +2447,282 @@ en la panamericana norte geometria variable del turbo pegada,Fuga en mangueras d
 buenas tardes maestro geometria variable del turbo pegada,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
 amigo una consulta geometria variable del turbo pegada,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
 mi auto presenta geometria variable del turbo pegada,Fuga en mangueras de intercooler o turbocompresor danado,TURBO_001,Sobrealimentación y Turbo,alta
+ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en el taller me dijeron que ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+al andar por carabayllo ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro mi caña ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+buenas tardes maestro ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+mi auto presenta ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+amigo una consulta ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo una falla en mi carro ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que ventilador de la bateria de alto voltaje suena fuerte todo el tiempo,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+amigo una consulta luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro mi caña luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+mi auto presenta luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+al andar por carabayllo luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+buenas tardes maestro luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en el taller me dijeron que luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo una falla en mi carro luz de triangulo rojo de averia del sistema hibrido,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en el taller me dijeron que bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+buenas tardes maestro bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+resulta que bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+mi auto presenta bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+tengo una falla en mi carro bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+al andar por carabayllo bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+amigo una consulta bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+maestro mi caña bateria HV se descarga en 2 minutos de uso,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO_HV_001,Vehículos Eléctricos e Híbridos,alta
+vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+buenas tardes maestro vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+resulta que vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en el taller me dijeron que vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+al andar por carabayllo vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+amigo una consulta vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+mi auto presenta vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro mi caña vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo una falla en mi carro vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte vehiculo electrico marca Check EV y no entra en modo Ready,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en el taller me dijeron que sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+al andar por carabayllo sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+resulta que sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro mi caña sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+buenas tardes maestro sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+mi auto presenta sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo una falla en mi carro sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+amigo una consulta sobrecalentamiento en modulo inversor de corriente,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en la panamericana norte codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+maestro mi caña codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+tengo una falla en mi carro codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+al andar por carabayllo codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+resulta que codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+buenas tardes maestro codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+en el taller me dijeron que codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+mi auto presenta codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+amigo una consulta codigo DTC P0A1B de inversor electrico,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO_HV_002,Vehículos Eléctricos e Híbridos,alta
+carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+tengo una falla en mi carro carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+en la escaner salio carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+hola buenas tardes carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+maestro mi caña carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+amigo en subida carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+maestro una consulta carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+mi auto brasilero presenta carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+el mecanico de carabayllo dice que carro brasilero falla en frio al cambiar de gasolina a etanol alcohol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+tengo una falla en mi carro sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+maestro mi caña sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+el mecanico de carabayllo dice que sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+mi auto brasilero presenta sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+hola buenas tardes sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+maestro una consulta sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+en la escaner salio sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+amigo en subida sensor de AF (Air Fuel Ratio) no reconoce mezcla de etanol,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+mi auto brasilero presenta bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+tengo una falla en mi carro bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+en la escaner salio bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+amigo en subida bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+maestro una consulta bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+maestro mi caña bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+hola buenas tardes bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+el mecanico de carabayllo dice que bico injetor sujo em motor flex,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),COMBUSTIBLE_007,Inyección de Combustible,media
+caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+maestro una consulta caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+hola buenas tardes caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+el mecanico de carabayllo dice que caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+mi auto brasilero presenta caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+en la escaner salio caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+maestro mi caña caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+amigo en subida caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+tengo una falla en mi carro caja dualogic parpadea en N y se desengancha sola en semaforo,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+mi auto brasilero presenta bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+en la escaner salio bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+maestro una consulta bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+hola buenas tardes bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+amigo en subida bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+tengo una falla en mi carro bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+el mecanico de carabayllo dice que bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+maestro mi caña bomba de presion del robot i-motion suena sin parar,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+en la escaner salio falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+mi auto brasilero presenta falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+maestro una consulta falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+el mecanico de carabayllo dice que falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+hola buenas tardes falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+tengo una falla en mi carro falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+maestro mi caña falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+amigo en subida falta de presion hidraulica en robotizador de caja automatizada,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION_004,Transmisión y Embrague,alta
+correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+hola buenas tardes correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+en la escaner salio correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+mi auto brasilero presenta correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+maestro mi caña correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+maestro una consulta correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+el mecanico de carabayllo dice que correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+tengo una falla en mi carro correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+amigo en subida correa de distribucion desprendio caucho y tupio coladera de bomba de aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+el mecanico de carabayllo dice que baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+maestro una consulta baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+mi auto brasilero presenta baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+maestro mi caña baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+amigo en subida baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+tengo una falla en mi carro baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+hola buenas tardes baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+en la escaner salio baja presion de aceite por restos de faja bañada en aceite,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+amigo en subida ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+en la escaner salio ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+el mecanico de carabayllo dice que ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+tengo una falla en mi carro ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+hola buenas tardes ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+maestro mi caña ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+maestro una consulta ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+mi auto brasilero presenta ruido de taques en motor 3 cilindros turbo,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR_008,Motor,alta
+perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+mi auto brasilero presenta perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+el mecanico de carabayllo dice que perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+tengo una falla en mi carro perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+maestro mi caña perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+hola buenas tardes perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+maestro una consulta perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+amigo en subida perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+en la escaner salio perdió potencia brusca el motor TSI y prendió testigo EPC,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+en la escaner salio wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+hola buenas tardes wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+maestro una consulta wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+tengo una falla en mi carro wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+mi auto brasilero presenta wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+amigo en subida wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+maestro mi caña wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+el mecanico de carabayllo dice que wastegate de turbo con juego y DTC P0299 bajo presion de sobrealimentacion,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+mi auto brasilero presenta actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+maestro mi caña actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+maestro una consulta actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+el mecanico de carabayllo dice que actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+tengo una falla en mi carro actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+en la escaner salio actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+amigo en subida actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+hola buenas tardes actuador electronico de turbo trabado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,TURBO_002,Sobrealimentación y Turbo,alta
+motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+amigo en subida motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+maestro mi caña motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+el mecanico de carabayllo dice que motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+en la escaner salio motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+hola buenas tardes motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+mi auto brasilero presenta motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+tengo una falla en mi carro motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+maestro una consulta motor inyeccion directa GDI tiembla en minimo y cabecea en frio,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+hola buenas tardes acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+tengo una falla en mi carro acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+maestro mi caña acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+maestro una consulta acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+el mecanico de carabayllo dice que acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+en la escaner salio acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+mi auto brasilero presenta acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+amigo en subida acumulacion severa de carbonilla en valvulas de admision GDI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+maestro mi caña codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+en la escaner salio codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+tengo una falla en mi carro codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+mi auto brasilero presenta codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+maestro una consulta codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+amigo en subida codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+el mecanico de carabayllo dice que codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+hola buenas tardes codigo de misfire P0300 en motor inyeccion directa,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR_006,Motor,media
+solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+el mecanico de carabayllo dice que solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+maestro mi caña solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+maestro una consulta solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+mi auto brasilero presenta solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+en la escaner salio solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+tengo una falla en mi carro solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+amigo en subida solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+hola buenas tardes solenoide de actuador de levas ruidoso al encender en frio,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+el mecanico de carabayllo dice que ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+maestro mi caña ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+tengo una falla en mi carro ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+mi auto brasilero presenta ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+hola buenas tardes ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+amigo en subida ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+maestro una consulta ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+en la escaner salio ruido de matraca al dar arranque en el piñon VVT,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+en la escaner salio codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+maestro una consulta codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+amigo en subida codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+mi auto brasilero presenta codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+tengo una falla en mi carro codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+maestro mi caña codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+el mecanico de carabayllo dice que codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+hola buenas tardes codigo DTC P0011 / P0014 avance de levas fuera de rango,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR_007,Motor,alta
+mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+hola buenas tardes mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+maestro una consulta mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+amigo en subida mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+tengo una falla en mi carro mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+mi auto brasilero presenta mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+maestro mi caña mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+en la escaner salio mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+el mecanico de carabayllo dice que mensaje de regeneracion DPF saturado en tablero de camioneta diesel,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+tengo una falla en mi carro nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+mi auto brasilero presenta nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+el mecanico de carabayllo dice que nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+en la escaner salio nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+maestro mi caña nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+amigo en subida nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+maestro una consulta nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+hola buenas tardes nivel de adblue no sube y contador de arranque bloqueado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+tengo una falla en mi carro humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+el mecanico de carabayllo dice que humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+amigo en subida humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+en la escaner salio humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+maestro mi caña humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+mi auto brasilero presenta humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+maestro una consulta humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+hola buenas tardes humo denso y bloqueo de potencia por filtro de particulas tapado,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),ESCAPE_001,Sistema de Escape y Emisiones,alta
+carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+en la escaner salio carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+maestro una consulta carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+mi auto brasilero presenta carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+hola buenas tardes carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+tengo una falla en mi carro carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+amigo en subida carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+maestro mi caña carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+el mecanico de carabayllo dice que carro se apaga andando por sobrecalentamiento de modulo de bomba,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+el mecanico de carabayllo dice que bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+mi auto brasilero presenta bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+tengo una falla en mi carro bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+hola buenas tardes bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+maestro mi caña bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+maestro una consulta bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+en la escaner salio bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+amigo en subida bomba de gasolina inoperativa por conector quemado en FSCM,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+mi auto brasilero presenta codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+maestro mi caña codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+el mecanico de carabayllo dice que codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+maestro una consulta codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+hola buenas tardes codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+amigo en subida codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+tengo una falla en mi carro codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
+en la escaner salio codigo P0627 circuito de control de bomba de combustible,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),COMBUSTIBLE_006,Inyección de Combustible,alta
 pedal de acelerador no responde y tablero marca potencia de motor reducida,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 amigo en subida pedal de acelerador no responde y tablero marca potencia de motor reducida,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 hola buenas tardes pedal de acelerador no responde y tablero marca potencia de motor reducida,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
@@ -1821,3 +2750,113 @@ mi auto brasilero presenta cuerpo de aceleracion se queda trabado en modo limp h
 tengo una falla en mi carro cuerpo de aceleracion se queda trabado en modo limp home,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 amigo en subida cuerpo de aceleracion se queda trabado en modo limp home,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
 maestro mi caña cuerpo de aceleracion se queda trabado en modo limp home,Cuerpo de aceleracion o valvula IAC sucia,COMBUSTIBLE_003,Inyección de Combustible,media
+dificultad para meter cambios primera y retroceso con motor encendido por bombin,Falla en bombin o bomba hidraulica de embrague,,,
+el pedal de embrague no retorna y se queda pegado en el fondo de la alfombra,Falla en bombin o bomba hidraulica de embrague,,,
+bomba maestra de embrague pierde presion hidraulica y no desacopla el cambio,Falla en bombin o bomba hidraulica de embrague,,,
+bombin secundario de embrague con fuga de liquido bajo la campana de transmision,Falla en bombin o bomba hidraulica de embrague,,,
+fuga de liquido de frenos por el bombin de embrague con pedal esponjoso,Falla en bombin o bomba hidraulica de embrague,,,
+embrague no desembraga al pisar el pedal por cilindro esclavo hidraulico danado,Falla en bombin o bomba hidraulica de embrague,,,
+pedal de embrague blando que requiere varios bombeos para poder meter primera,Falla en bombin o bomba hidraulica de embrague,,,
+bomba hidraulica de clutch pasa liquido internamente y no empuja la horquilla,Falla en bombin o bomba hidraulica de embrague,,,
+imposible meter cambios con el motor encendido pero suave con motor apagado,Falla en bombin o bomba hidraulica de embrague,,,
+bombin de embrague trancado impidiendo que la prensa libere el disco,Falla en bombin o bomba hidraulica de embrague,,,
+aire en el circuito hidraulico del bombin de embrague dejando el pedal abajo,Falla en bombin o bomba hidraulica de embrague,,,
+gotera de liquido hidraulico en el vastago de la bomba de embrague del pedal,Falla en bombin o bomba hidraulica de embrague,,,
+cilindro maestro de embrague sin presion para accionar la horquilla de caja,Falla en bombin o bomba hidraulica de embrague,,,
+pedal de clutch se va al piso sin resistencia por rotura de copela en bombin,Falla en bombin o bomba hidraulica de embrague,,,
+dificultad severa para desacoplar el embrague en caliente por bombin defectuoso,Falla en bombin o bomba hidraulica de embrague,,,
+fuga en racor de conexion del bombin hidraulico de embrague de caja manual,Falla en bombin o bomba hidraulica de embrague,,,
+embrague hidraulico sin retorno por resorte y embolos trabados en bomba principal,Falla en bombin o bomba hidraulica de embrague,,,
+bombin esclavo de embrague perdiendo presion al mantener pisado en el semaforo,Falla en bombin o bomba hidraulica de embrague,,,
+bomba de embrague con liquido oscuro y sellos de goma gastados que no bombean,Falla en bombin o bomba hidraulica de embrague,,,
+accionamiento hidraulico de embrague defectuoso con pedal pegado al fondo,Falla en bombin o bomba hidraulica de embrague,,,
+falta de aceite de caja de cambios valvulina con cambios duros y rasposos,Falta o degradacion de aceite de caja de cambios,,,
+nivel bajo de valvulina en transmision manual produciendo dificultad de cambio,Falta o degradacion de aceite de caja de cambios,,,
+valvulina degradada y quemada con friccion excesiva en sincronizadores de caja,Falta o degradacion de aceite de caja de cambios,,,
+caja de cambios manual raspa al meter segunda y tercera marcha por falta de aceite,Falta o degradacion de aceite de caja de cambios,,,
+fuga de valvulina por retenes de palier dejando la caja de cambios mecanica seca,Falta o degradacion de aceite de caja de cambios,,,
+aceite de caja de cambios con virutas de bronce y olor a quemado en transmision,Falta o degradacion de aceite de caja de cambios,,,
+cambios de marcha excesivamente duros en frio por valvulina fuera de viscosidad,Falta o degradacion de aceite de caja de cambios,,,
+perdida de aceite de transmision manual por tapon de drenaje o junta de carter,Falta o degradacion de aceite de caja de cambios,,,
+sincronizadores de caja mecanica trabados por falta de lubricacion con valvulina,Falta o degradacion de aceite de caja de cambios,,,
+valvulina vencida y espumosa provocando sobrecalentamiento en la caja de cambios,Falta o degradacion de aceite de caja de cambios,,,
+caja de cambios manual ruidosa en neutro por bajo nivel de lubricante de transmision,Falta o degradacion de aceite de caja de cambios,,,
+fuga de aceite de transmision por reten de eje de mando de selectora de cambios,Falta o degradacion de aceite de caja de cambios,,,
+valvulina espesa con lodo en transmision manual que dificulta engranar marchas,Falta o degradacion de aceite de caja de cambios,,,
+rechinido de engranajes al cambiar de velocidad por falta de valvulina 75W90,Falta o degradacion de aceite de caja de cambios,,,
+aceite de caja de cambios filtrando por la carcasa intermedia de transmision,Falta o degradacion de aceite de caja de cambios,,,
+dificultad para meter quinta y retroceso por falta de lubricante en la caja,Falta o degradacion de aceite de caja de cambios,,,
+valvulina contaminada con agua formando emulsión lechosa en transmision manual,Falta o degradacion de aceite de caja de cambios,,,
+calentamiento excesivo de la carcasa de caja de cambios por operar sin valvulina,Falta o degradacion de aceite de caja de cambios,,,
+desgaste prematuro de anillos sincronizadores por valvulina degradada en caja,Falta o degradacion de aceite de caja de cambios,,,
+perdida de lubricacion en piñones de caja manual por reten de flecha roto,Falta o degradacion de aceite de caja de cambios,,,
+inyectores sucios y filtro de combustible obstruido produciendo tirones al acelerar,Inyectores sucios o filtro de combustible obstruido,,,
+filtro de gasolina tapado que no deja pasar caudal e inyectores con mala pulverizacion,Inyectores sucios o filtro de combustible obstruido,,,
+motor jalonea al acelerar a fondo en subidas por inyectores tupidos de sedimentos,Inyectores sucios o filtro de combustible obstruido,,,
+falta de potencia en alta velocidad por filtro de combustible sucio e inyectores tapados,Inyectores sucios o filtro de combustible obstruido,,,
+inyectores goteando y filtro de gasolina colmatado provocando consumo y cabeceo,Inyectores sucios o filtro de combustible obstruido,,,
+microfiltros de inyectores taponados de oxido y suciedad de tanque de combustible,Inyectores sucios o filtro de combustible obstruido,,,
+motor tose y tironea en aceleracion brusca por inyectores sucios y filtro tupido,Inyectores sucios o filtro de combustible obstruido,,,
+banco de inyectores desbalanceado en caudal cc/min por suciedad en toberas,Inyectores sucios o filtro de combustible obstruido,,,
+perdida de respuesta al pisar el acelerador por filtro de nafta tapado e inyectores,Inyectores sucios o filtro de combustible obstruido,,,
+inyectores trabados por barniz de gasolina con humo negro y fallos de alimentacion,Inyectores sucios o filtro de combustible obstruido,,,
+bujias desgastadas y bobina de encendido defectuosa con misfire y temblor de motor,Falla en bujias o bobinas de encendido (misfire),,,
+bobina de encendido quemada provocando que el motor trabaje en 3 cilindros,Falla en bujias o bobinas de encendido (misfire),,,
+bujias con holgura de electrodo excesiva y bobina fallando con cascabeleo al acelerar,Falla en bujias o bobinas de encendido (misfire),,,
+chispa debil en cilindro 2 por bobina de ignicion en corto y bujia empastada,Falla en bujias o bobinas de encendido (misfire),,,
+tirones fuertes y sacudidas de motor en ralenti por bujias desgastadas y bobinas,Falla en bujias o bobinas de encendido (misfire),,,
+testigo de check engine parpadea por fallo de encendido misfire en bujias y bobina,Falla en bujias o bobinas de encendido (misfire),,,
+bujias carbonizadas y bobina de encendido con fuga de alta tension a masa,Falla en bujias o bobinas de encendido (misfire),,,
+motor tiembla fuertemente al acelerar en baja por bujia gastada y bobina abierta,Falla en bujias o bobinas de encendido (misfire),,,
+bobina de ignicion recalienta y corta chispa tras media hora de funcionamiento,Falla en bujias o bobinas de encendido (misfire),,,
+perdida de potencia y explosiones leves por bujias vencidas y bobina defectuosa,Falla en bujias o bobinas de encendido (misfire),,,
+termostato pegado cerrado que hace hervir el refrigerante y subir la temperatura,Falla en termostato o motoventilador de radiador,,,
+motoventilador de radiador no enciende en trafico y el indicador sube a la zona roja,Falla en termostato o motoventilador de radiador,,,
+temperatura de motor al maximo por electroventilador quemado que no gira en caliente,Falla en termostato o motoventilador de radiador,,,
+termostato trabado dejando la manguera inferior de radiador fria y el motor hirviendo,Falla en termostato o motoventilador de radiador,,,
+rele de motoventilador defectuoso impidiendo que active la segunda velocidad,Falla en termostato o motoventilador de radiador,,,
+recalentamiento de motor al detenerse en semaforos por ventilador de radiador dañado,Falla en termostato o motoventilador de radiador,,,
+termostato no abre y el agua hierve saliendo por el vaso de expansion,Falla en termostato o motoventilador de radiador,,,
+sensor de temperatura activa tarde el motoventilador provocando calentamiento,Falla en termostato o motoventilador de radiador,,,
+motor recalienta en caliente por termostato atascado en su alojamiento de aluminio,Falla en termostato o motoventilador de radiador,,,
+ventilador de radiador con carbones gastados que gira muy lento sin enfriar,Falla en termostato o motoventilador de radiador,,,
+fuga de refrigerante por manguera de radiador picada dejando charco verde brillante,Fuga en mangueras de refrigerante o radiador picado,,,
+radiador de motor picado con fuga de liquido anticongelante por los paneles de aluminio,Fuga en mangueras de refrigerante o radiador picado,,,
+manguera superior de radiador rota y rajada expulsando chorro de agua caliente,Fuga en mangueras de refrigerante o radiador picado,,,
+fuga de liquido refrigerante por abrazadera suelta o manguera de calefaccion reventada,Fuga en mangueras de refrigerante o radiador picado,,,
+tanque plastico lateral de radiador fisurado con fuga continua de refrigerante,Fuga en mangueras de refrigerante o radiador picado,,,
+tapa de radiador no retiene presion y bota refrigerante por el tubo de rebose,Fuga en mangueras de refrigerante o radiador picado,,,
+charco de refrigerante verde o rosado bajo el vano motor por manguera picada,Fuga en mangueras de refrigerante o radiador picado,,,
+radiador goteando liquido anticongelante en las uniones de las celdas de enfriamiento,Fuga en mangueras de refrigerante o radiador picado,,,
+manguera inferior de radiador perforada dejando sin agua el circuito de motor,Fuga en mangueras de refrigerante o radiador picado,,,
+fuga visible de refrigerante por la pipa de agua termostatica y juntas de manguera,Fuga en mangueras de refrigerante o radiador picado,,,
+limpiaparabrisas no funciona y el motor pluma quemado no barre el agua del vidrio,Limpiaparabrisas o motor pluma quemado,,,
+las plumas del limpiaparabrisas se quedaron trabadas a mitad del recorrido,Limpiaparabrisas o motor pluma quemado,,,
+motorreductor de limpiaparabrisas quemado con olor a plastico y varillaje trabado,Limpiaparabrisas o motor pluma quemado,,,
+los brazos de plumas del limpiaparabrisas no se mueven al accionar la palanca,Limpiaparabrisas o motor pluma quemado,,,
+fusible del limpiaparabrisas se quema al activar por motor pluma en cortocircuito,Limpiaparabrisas o motor pluma quemado,,,
+escobillas de limpiaparabrisas congeladas en el parabrisas con motor averiado,Limpiaparabrisas o motor pluma quemado,,,
+varillaje de limpiaparabrisas desenganchado y motor pluma quemado sin fuerza,Limpiaparabrisas o motor pluma quemado,,,
+plumas del limpiaparabrisas barren de forma erratica y se clavan a medio parabrisas,Limpiaparabrisas o motor pluma quemado,,,
+motor de pluma de parabrisas sin fuerza que se detiene al barrer lluvia densa,Limpiaparabrisas o motor pluma quemado,,,
+limpiaparabrisas delantero no acciona en ninguna velocidad por motor quemado,Limpiaparabrisas o motor pluma quemado,,,
+bombin de embrague con fuga hidraulica y el pedal se queda pegado en la alfombra,Falla en bombin o bomba hidraulica de embrague,,,
+bomba maestra de embrague pierde presion hidraulica y no desacopla el disco,Falla en bombin o bomba hidraulica de embrague,,,
+bombin esclavo de embrague perdiendo liquido de freno bajo la campana,Falla en bombin o bomba hidraulica de embrague,,,
+el pedal de embrague se hunde al fondo sin resistencia por bombin danado,Falla en bombin o bomba hidraulica de embrague,,,
+cilindro maestro de embrague con embolos gastados y pedal flojo en el piso,Falla en bombin o bomba hidraulica de embrague,,,
+fuga de liquido por el bombin de embrague dejando el pedal abajo sin retorno,Falla en bombin o bomba hidraulica de embrague,,,
+aire en la linea hidraulica del bombin de embrague con pedal blando,Falla en bombin o bomba hidraulica de embrague,,,
+bomba hidraulica de clutch pasa liquido internamente sin empujar la horquilla,Falla en bombin o bomba hidraulica de embrague,,,
+bombin secundario trancado impidiendo liberar el embrague en marcha,Falla en bombin o bomba hidraulica de embrague,,,
+pedal de embrague no retorna y se queda trabado abajo por bombin roto,Falla en bombin o bomba hidraulica de embrague,,,
+falta de valvulina en caja de cambios manual con cambios duros y rasposos,Falta o degradacion de aceite de caja de cambios,,,
+nivel bajo de aceite de transmision mecanica produciendo friccion en piñones,Falta o degradacion de aceite de caja de cambios,,,
+valvulina 75W90 quemada y degradada en caja de cambios con virutas de bronce,Falta o degradacion de aceite de caja de cambios,,,
+fuga de aceite de transmision por reten de palier dejando la caja seca,Falta o degradacion de aceite de caja de cambios,,,
+cambios de marcha raspan al meter segunda por aceite de caja degradado,Falta o degradacion de aceite de caja de cambios,,,
+valvulina vencida y espumosa provocando calentamiento en la caja de cambios,Falta o degradacion de aceite de caja de cambios,,,
+caja de cambios manual ruidosa y dura por falta de lubricante de transmision,Falta o degradacion de aceite de caja de cambios,,,
+perdida de valvulina por tapon de drenaje flojo en la transmision manual,Falta o degradacion de aceite de caja de cambios,,,
+sincronizadores de caja mecanica duros por valvulina degradada y sucia,Falta o degradacion de aceite de caja de cambios,,,
+rechinido de engranajes en caja manual por operar con bajo nivel de valvulina,Falta o degradacion de aceite de caja de cambios,,,

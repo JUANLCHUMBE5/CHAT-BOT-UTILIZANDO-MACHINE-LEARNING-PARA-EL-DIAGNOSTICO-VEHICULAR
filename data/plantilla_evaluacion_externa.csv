@@ -1,0 +1,2 @@
+sintoma,falla,codigo_falla,tipo_vehiculo,metodo_confirmacion,mecanico_validador,fecha,id_evidencia,archivo_evidencia,estado_validacion,observaciones
+Descripcion real escrita antes de conocer la prediccion,Codigo o falla confirmada,CODIGO_001,Marca modelo y anio,Inspeccion y prueba que confirmo la falla,Identificador interno del mecanico,2026-08-08,EV-0001,EV-0001.pdf,pendiente,No incluir telefono DNI ni datos del cliente

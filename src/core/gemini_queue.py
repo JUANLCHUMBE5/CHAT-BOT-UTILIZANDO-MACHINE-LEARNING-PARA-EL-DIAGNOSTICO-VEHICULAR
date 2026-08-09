@@ -593,7 +593,8 @@ class GeminiRateLimiter:
         2. Usa exclusivamente pruebas y procedimientos presentes en el contexto RAG. No inventes pares de apriete, piezas ni pasos.
         3. Si la confianza es menor de 70%, exige inspección humana antes de desmontar o reemplazar componentes.
         4. Si ML y manual no son coherentes, indícalo y limita la respuesta a pruebas seguras.
-        5. Estructura la respuesta en las siguientes 3 secciones:
+        5. Si la consulta menciona GNV/GLP y pérdida de fuerza, exige primero una prueba comparativa controlada gasolina vs gas. Si solo falla a gas, prioriza presión del reductor, filtros, inyectores y calibración GNV; si falla con ambos, revisa encendido, admisión, escape, compresión y alimentación. No atribuyas la falla al embrague solo por mencionar GNV.
+        6. Estructura la respuesta en las siguientes 3 secciones:
 
         🛠️ **1. Posible Falla Vehicular**
         Presenta la hipótesis ({solicitud.diagnostico_ml}), su confianza ({confianza_pct}%) y la evidencia pendiente.
@@ -685,7 +686,8 @@ class GeminiRateLimiter:
         # 2. Persistir primero el segundo mensaje en el outbox durable. Otro ciclo
         # del worker lo enviará y reintentará sin volver a consumir Gemini.
         if solicitud.conversacion_id and settings.database.enabled:
-            await self._persistir_mensaje_saliente_db(solicitud, texto_respuesta, "pendiente")
+            resumen_whatsapp = self._crear_resumen_whatsapp(solicitud, texto_respuesta)
+            await self._persistir_mensaje_saliente_db(solicitud, resumen_whatsapp, "pendiente")
 
         # 4. Invocar callback de completado si existe
         if solicitud.callback_completado:
@@ -812,6 +814,7 @@ class GeminiRateLimiter:
                             diag.modo_diagnostico = modo_final
                             diag.fuente = fuente_final
                             diag.conclusion_mecanico = conclusion_final
+                            diag.sintesis_llm = texto_respuesta
 
                             if metadatos.get("usado"):
                                 operaciones_repo = OperacionesRepository(session)
@@ -845,11 +848,56 @@ class GeminiRateLimiter:
             logger.error(f"[Gemini Worker DB Update Error] {e}")
             raise
 
+    @staticmethod
+    def _crear_resumen_whatsapp(
+        solicitud: SolicitudGeminiEncolada, texto_respuesta: str
+    ) -> str:
+        """Crea una salida breve y operativa; el detalle completo queda en PostgreSQL."""
+        confianza = max(0, min(100, int(solicitud.confianza_ml * 100)))
+        sintoma = solicitud.sintoma.lower()
+        es_gas = "gnv" in sintoma or "gas natural" in sintoma or "glp" in sintoma
+        hipotesis = solicitud.diagnostico_ml
+        describe_patinamiento = (
+            ("rpm" in sintoma or "revoluciones" in sintoma)
+            and ("no avanza" in sintoma or "sin aumentar velocidad" in sintoma)
+        )
+        if es_gas and not describe_patinamiento and any(
+            termino in hipotesis.lower() for termino in ("embrague", "clutch", "disco")
+        ):
+            hipotesis = "Pérdida de potencia bajo carga: diferenciar sistema GNV/GLP y motor"
+
+        if es_gas:
+            primera_prueba = (
+                "Comparar el comportamiento en gasolina y GNV/GLP bajo carga. "
+                "Si solo falla a gas, revisar presión, filtros, inyectores y calibración."
+            )
+        else:
+            primera_prueba = "Realizar escaneo DTC e inspección funcional antes de desmontar o cambiar piezas."
+
+        texto_limpio = texto_respuesta.lower().replace("*", "")
+        if "gravedad: alta" in texto_limpio:
+            gravedad = "Alta"
+        elif "gravedad: media" in texto_limpio:
+            gravedad = "Media"
+        elif "gravedad: baja" in texto_limpio:
+            gravedad = "Baja"
+        else:
+            gravedad = "Por confirmar"
+        revision = " Se requiere validación física." if solicitud.requiere_revision_humana else ""
+        return (
+            "🔧 *Resumen de diagnóstico*\n"
+            f"Hipótesis: *{hipotesis}*\n"
+            f"Confianza ML: *{confianza}%*.{revision}\n"
+            f"Primera prueba: {primera_prueba}\n"
+            f"Gravedad: *{gravedad}*.\n"
+            "📋 Análisis completo disponible en el panel del taller."
+        )
+
     async def _despachar_mensaje_proveedor(self, solicitud: SolicitudGeminiEncolada, texto_respuesta: str) -> str:
         """Despacha la notificación según el proveedor (Meta Graph API o Twilio) usando remitente configurable."""
         prov = (solicitud.proveedor or "meta").lower()
         remitente = solicitud.remitente or ""
-        mensaje_notif = f"📲 *Síntesis Completa de Diagnóstico (Gemini):*\n\n{texto_respuesta}"
+        mensaje_notif = self._crear_resumen_whatsapp(solicitud, texto_respuesta)
 
         try:
             if prov == "twilio" and settings.TWILIO_ACCOUNT_SID and settings.TWILIO_AUTH_TOKEN:
@@ -910,7 +958,7 @@ class GeminiRateLimiter:
         try:
             db_engine = obtener_engine()
             out_msg_id = f"out_gemini_{uuid.uuid4()}"
-            texto_completo = f"📲 *Síntesis Completa de Diagnóstico (Gemini):*\n\n{texto_respuesta}"
+            texto_completo = texto_respuesta
             costo_msg = Decimal(str(getattr(settings, "twilio_message_price_usd", 0.0))) if solicitud.proveedor == "twilio" else COSTO_META_MENSAJE_SERVICIO_USD
 
             async with AsyncSession(db_engine, expire_on_commit=False) as session:

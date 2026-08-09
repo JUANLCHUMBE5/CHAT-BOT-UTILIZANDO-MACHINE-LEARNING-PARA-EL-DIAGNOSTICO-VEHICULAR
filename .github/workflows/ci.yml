@@ -26,6 +26,7 @@ jobs:
       POSTGRES_DB: carbot_test
       POSTGRES_USER: carbot_app
       POSTGRES_PASSWORD: test_password_only
+      TEST_DATABASE_URL: postgresql+asyncpg://carbot_app:test_password_only@127.0.0.1:5432/carbot_test
       DATABASE_POOL_SIZE: "0"
       PRIVACY_SECRET_KEY: ci_privacy_secret_only_not_for_production_123456
       JWT_SECRET_KEY: ci_jwt_secret_only_not_for_production_123456789
@@ -37,11 +38,26 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -r requirements.txt
-      - run: pip install ruff coverage
+      - run: pip install -r requirements-dev.txt
       - run: python -m alembic upgrade head
-      - run: ruff check src tests main.py
+      - run: ruff check src tests main.py locustfile.py training/entrenar_y_comparar_modelos.py training/evaluar_modelo_externo.py scripts
       - run: coverage run --source=src -m pytest -q
       - run: coverage report --fail-under=55
       - run: python -m alembic check
       - run: pip-audit -r requirements.txt
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web_dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web_dashboard/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build

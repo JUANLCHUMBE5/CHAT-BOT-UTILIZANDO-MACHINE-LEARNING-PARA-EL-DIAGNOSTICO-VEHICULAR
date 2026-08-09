@@ -1,4 +1,9 @@
 # Guía de Preparación para la Defensa de Tesis
+> **Advertencia de auditoría (2026-08-08):** este documento es un borrador y contiene
+> afirmaciones históricas sobre manuales "aprobados" o ausencia de alucinaciones que
+> todavía no están demostradas. Use `manuales_taller/FUENTES_Y_VALIDACION.md` y las
+> métricas JSON vigentes antes de presentar resultados ante el jurado.
+
 ## Título: Chatbot utilizando machine learning para el diagnóstico vehicular en talleres mecánicos en Carabayllo 2026
 **Autores**: Leon Chumbe, Juan Joel & Poma Cataño, Luisa Leonor
 

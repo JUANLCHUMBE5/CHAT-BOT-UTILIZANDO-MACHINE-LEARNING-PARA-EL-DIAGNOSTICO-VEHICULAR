@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 
 # Cargar variables de entorno de .env antes de importar settings
@@ -10,14 +11,30 @@ from src.config import settings
 from src.core.gemini_queue import gemini_rate_limiter
 
 # Asegurar habilitación de base de datos para pruebas si están configuradas
-if os.getenv("DATABASE_ENABLED", "true").lower() in ("1", "true", "yes", "si"):
+test_database_url = os.getenv("TEST_DATABASE_URL", "").strip()
+if test_database_url:
+    settings.database.enabled = True
+    settings.database.required = True
+    settings.database.url = test_database_url
+    settings.database.database = urlparse(test_database_url).path.lstrip("/")
+elif os.getenv("DATABASE_ENABLED", "false").lower() in ("1", "true", "yes", "si"):
     settings.database.enabled = True
     settings.database.url = os.getenv("DATABASE_URL", "")
     settings.database.host = os.getenv("POSTGRES_HOST", "127.0.0.1")
     settings.database.port = int(os.getenv("POSTGRES_PORT", 5433))
     settings.database.database = os.getenv("POSTGRES_DB", "carbot_db")
     settings.database.user = os.getenv("POSTGRES_USER", "carbot_app")
-    settings.database.pool_size = 0
+settings.database.pool_size = 0
+
+
+def _nombre_base_configurada() -> str:
+    if settings.database.url:
+        return urlparse(str(settings.database.url)).path.lstrip("/").lower()
+    return settings.database.database.lower()
+
+
+def _es_base_pruebas_segura() -> bool:
+    return settings.database.enabled and _nombre_base_configurada().endswith("_test")
 
 
 @pytest.fixture(autouse=True)
@@ -45,7 +62,12 @@ def aislar_postgresql_en_pruebas_unitarias(request, monkeypatch):
         "test_webhook_persistence.py",
         "test_cli_registrar_admin.py",
         "test_gemini_rate_limiting.py",
+        "test_dashboard_postgresql_integration.py",
     }
+    if request.path.name in modulos_integracion_db and not _es_base_pruebas_segura():
+        pytest.skip(
+            "Integracion PostgreSQL bloqueada: configure TEST_DATABASE_URL hacia una base *_test."
+        )
     if request.path.name not in modulos_integracion_db:
         monkeypatch.setattr(settings.database, "enabled", False)
     yield
@@ -57,7 +79,7 @@ async def async_db_session():
     from sqlalchemy.ext.asyncio import AsyncSession
     from src.infrastructure.database.connection import database_configurada, obtener_engine
 
-    if not database_configurada():
+    if not database_configurada() or not _es_base_pruebas_segura():
         pytest.skip("PostgreSQL no está configurado para pruebas.")
 
     engine = obtener_engine()

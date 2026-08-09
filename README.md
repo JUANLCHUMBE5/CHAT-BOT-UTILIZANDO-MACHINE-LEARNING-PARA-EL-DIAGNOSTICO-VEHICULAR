@@ -10,11 +10,13 @@
 - La cola Gemini y sus cuotas RPM/RPD son persistentes y coordinadas entre workers.
 - Los telefonos pendientes quedan cifrados y la privacidad falla de forma cerrada.
 - El audio esta desactivado por defecto y, al habilitarse, se descarga y transcribe realmente; no se simula.
-- El esquema vigente es `20260807_06` y guarda las versiones ML y RAG de cada diagnostico.
+- El esquema vigente es `20260808_01` y separa confianza ML de similitud RAG.
 - Las integraciones solo se prueban contra una base cuyo nombre termine en `_test`.
 - Se incluyen Docker, CI, health checks, retencion y descarga del modelo verificada por SHA-256.
 
-El modelo debe reentrenarse y superar una evaluacion externa con mecanicos antes de considerarlo validado cientificamente para produccion.
+El modelo fue reentrenado, pero sigue bloqueado para produccion: existen clases con
+soporte insuficiente, una clase con F1 interno igual a cero, calibracion deficiente y
+la evaluacion externa aun no tiene respaldos verificables de taller.
 
 ---
 
@@ -22,7 +24,7 @@ El modelo debe reentrenarse y superar una evaluacion externa con mecanicos antes
 
 Este proyecto desarrolla un **Asistente Virtual Híbrido para Diagnóstico Vehicular** diseñado para ayudar a conductores y mecánicos a identificar averías en vehículos automotrices a partir de descripciones en lenguaje natural (incluyendo jergas y modismos coloquiales) o códigos de error OBD-II.
 
-El sistema utiliza una **Arquitectura Tripartita Secuencial (ML + RAG + LLM)** donde los tres modelos trabajan conjuntamente en cada consulta para generar un diagnóstico certero, enriquecido con procedimientos de manuales de taller y sintetizado de forma conversacional:
+El sistema utiliza una **Arquitectura Tripartita Secuencial (ML + RAG + LLM)** donde los tres componentes generan una hipótesis diagnóstica preliminar, recuperan contexto técnico y sintetizan una respuesta conversacional:
 
 ---
 
@@ -49,11 +51,14 @@ Preprocesa el texto ingresado por el usuario traduciendo expresiones coloquiales
 
 ### 2. 🤖 Paso 1: Modelo de Machine Learning (Clasificación Supervisada)
 * **Función:** Predice la categoría exacta de la falla vehicular y calcula el porcentaje de certeza/confianza del modelo.
-* **Algoritmo:** Clasificador Random Forest / TF-IDF Vectorizer entrenado sobre un dataset multisistema automotriz.
+* **Algoritmo vigente:** Linear SVM calibrado + TF-IDF, seleccionado mediante validacion estratificada agrupada por familias de sintomas.
+* **Validacion interna:** F1 macro de holdout agrupado 96.00%, con limitaciones por clase y calibracion detalladas en `models/metricas_modelo.json`.
+* **Validación externa real:** pendiente. El repositorio incluye una plantilla para recolectar casos con evidencia, pero no presenta ejemplos sintéticos como órdenes de taller reales.
+* **Evaluación sintética de cobertura:** existe únicamente para detectar clases débiles y probar el pipeline; no demuestra desempeño clínico ni validación de mecánicos.
 * **Salida:** Etiqueta predictiva y confianza numérica para condicionar el razonamiento.
 
 ### 3. 📚 Paso 2: Motor RAG (Retrieval-Augmented Generation)
-* **Función:** Recuperación del procedimiento técnico y pasos de inspección desde la base de conocimientos de manuales de taller indexados.
+* **Función:** Recuperación de procedimientos preliminares desde la base indexada. Los valores técnicos requieren validación contra el manual OEM correspondiente; consulte `manuales_taller/FUENTES_Y_VALIDACION.md`.
 * **Mecanismo:** Búsqueda vectorial mediante índice FAISS / similitud semántica.
 * **Salida:** Pasos específicos de desmontaje, verificación y pruebas de comprobación.
 
@@ -163,13 +168,31 @@ uvicorn main:app --reload --port 8000
 ```
 Documentación interactiva Swagger en: [http://localhost:8000/docs](http://localhost:8000/docs)
 
+### 6. Iniciar el panel administrativo
+
+```bash
+cd web_dashboard
+cp .env.example .env
+npm install
+npm run dev
+```
+
+El panel utiliza `VITE_API_BASE_URL=http://localhost:8000/api/v1`. Las cuentas
+creadas o rotadas reciben una clave temporal y deben reemplazarla en el primer
+inicio de sesión. Nunca publique el archivo local de credenciales temporales.
+
 ---
 
 ## 🧪 Pruebas Automatizadas
 
-Para ejecutar las 73 pruebas de integración, seguridad y persistencia:
+Las pruebas de integración requieren una base exclusiva llamada `carbot_test`.
+Nunca deben ejecutarse contra `carbot_db`:
+
 ```bash
-pytest -v
+python scripts/postgresql/crear_base_pruebas.py
+$env:TEST_DATABASE_URL="postgresql+asyncpg://carbot_app:CLAVE@127.0.0.1:5433/carbot_test"
+python -m alembic upgrade head
+python -m pytest tests -q
 ```
 *(Nota: Durante las pruebas automáticas, las llamadas a Google Gemini están mockeadas internamente para garantizar costo $0.00 y pruebas 100% offline).*
 

@@ -31,15 +31,22 @@ class DiagnosticoRepository:
         sintoma_normalizado: Optional[str] = None,
         falla_predicha: Optional[str] = None,
         confianza: Optional[float | Decimal] = None,
+        similitud_rag: Optional[float | Decimal] = None,
         estado: str = "generado",
         duracion_ms: Optional[int] = None,
         conclusion_mecanico: Optional[str] = None,
+        sintesis_llm: Optional[str] = None,
         diagnostico_id: Optional[uuid.UUID] = None,
         version_modelo_ml: Optional[str] = None,
         version_corpus_rag: Optional[str] = None,
     ) -> Diagnostico:
         """Persiste un nuevo diagnóstico vehicular con sus métricas y fuentes."""
         conf_decimal = Decimal(str(round(float(confianza), 4))) if confianza is not None else None
+        similitud_decimal = (
+            Decimal(str(round(float(similitud_rag), 4)))
+            if similitud_rag is not None
+            else None
+        )
         diag = Diagnostico(
             id=diagnostico_id or uuid.uuid4(),
             taller_id=taller_id,
@@ -50,11 +57,13 @@ class DiagnosticoRepository:
             sintoma_normalizado=sintoma_normalizado,
             falla_predicha=falla_predicha,
             confianza=conf_decimal,
+            similitud_rag=similitud_decimal,
             fuente=fuente,
             modo_diagnostico=modo_diagnostico,
             estado=estado,
             duracion_ms=duracion_ms,
             conclusion_mecanico=conclusion_mecanico,
+            sintesis_llm=sintesis_llm,
             version_modelo_ml=version_modelo_ml,
             version_corpus_rag=version_corpus_rag,
         )
@@ -104,15 +113,45 @@ class DiagnosticoRepository:
         return result.scalars().first()
 
     async def listar_por_taller(
-        self, taller_id: uuid.UUID, limite: int = 50
+        self,
+        taller_id: uuid.UUID,
+        busqueda: Optional[str] = None,
+        estado: Optional[str] = None,
+        modo: Optional[str] = None,
+        mecanico_id: Optional[uuid.UUID] = None,
+        limite: int = 100,
     ) -> Sequence[Diagnostico]:
-        """Lista los diagnósticos realizados en un taller automotriz."""
+        """Lista los diagnósticos realizados en un taller automotriz con opciones de filtrado."""
         stmt = (
             select(Diagnostico)
-            .options(selectinload(Diagnostico.hipotesis))
+            .options(
+                selectinload(Diagnostico.mecanico),
+                selectinload(Diagnostico.vehiculo),
+                selectinload(Diagnostico.hipotesis),
+            )
             .where(Diagnostico.taller_id == taller_id)
-            .order_by(Diagnostico.creado_en.desc())
-            .limit(limite)
         )
+
+        if estado and estado != "todos":
+            stmt = stmt.where(Diagnostico.estado == estado)
+
+        if modo and modo != "todos":
+            stmt = stmt.where(Diagnostico.modo_diagnostico == modo)
+
+        if mecanico_id:
+            stmt = stmt.where(Diagnostico.mecanico_id == mecanico_id)
+
+        if busqueda:
+            term = f"%{busqueda.strip()}%"
+            from src.infrastructure.database.models.diagnostics import Vehiculo
+            from src.infrastructure.database.models.catalogs import Usuario
+            stmt = stmt.outerjoin(Diagnostico.vehiculo).outerjoin(Diagnostico.mecanico).where(
+                (Diagnostico.sintoma_original.ilike(term))
+                | (Diagnostico.falla_predicha.ilike(term))
+                | (Vehiculo.placa_ultimos4.ilike(term))
+                | (Usuario.nombres.ilike(term))
+            )
+
+        stmt = stmt.order_by(Diagnostico.creado_en.desc()).limit(limite)
         result = await self.session.execute(stmt)
         return result.scalars().all()

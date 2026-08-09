@@ -18,13 +18,13 @@ La clave de API se obtiene desde el portal oficial **Google AI Studio**:
 3. **Generar la clave de API**:
    - En la barra lateral izquierda, haz clic en **"Get API key"** (Obtener clave de API).
    - Haz clic en **"Create API key"** -> *"Create API key in new project"*.
-   - Copia la clave generada (comienza con el prefijo `AIzaSy...`).
+   - Copia la clave generada y no la compartas ni la publiques.
 
 4. **Configurar en el proyecto**:
-   Abre el archivo `.env` en la raíz de tu proyecto ([.env](file:///c:/Users/leonc/OneDrive/Desktop/CHAT_BOT_MACHINLEARNING/.env)) y configura las variables:
+   Abre el archivo `.env` en la raíz de tu proyecto y configura las variables:
 
    ```env
-   GEMINI_API_KEY="AIzaSy...tu_clave_copiada_aqui..."
+   GEMINI_API_KEY="REEMPLAZAR_CON_TU_CLAVE_PRIVADA"
    GEMINI_MODEL="gemini-3.5-flash-lite"
    GEMINI_USE_FREE_TIER=true
    GEMINI_INPUT_PRICE_PER_MILLION=0.075
