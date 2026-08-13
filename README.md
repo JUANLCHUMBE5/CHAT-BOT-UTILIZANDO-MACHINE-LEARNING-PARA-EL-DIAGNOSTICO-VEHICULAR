@@ -58,7 +58,7 @@ Preprocesa el texto ingresado por el usuario traduciendo expresiones coloquiales
 * **Salida:** Etiqueta predictiva y confianza numérica para condicionar el razonamiento.
 
 ### 3. 📚 Paso 2: Motor RAG (Retrieval-Augmented Generation)
-* **Función:** Recuperación de procedimientos preliminares desde la base indexada. Los valores técnicos requieren validación contra el manual OEM correspondiente; consulte `manuales_taller/FUENTES_Y_VALIDACION.md`.
+* **Función:** Recuperación de procedimientos preliminares desde la base indexada. Los valores técnicos requieren validación contra el manual OEM correspondiente; consulte `machine_learning/manuals/FUENTES_Y_VALIDACION.md`.
 * **Mecanismo:** Búsqueda vectorial mediante índice FAISS / similitud semántica.
 * **Salida:** Pasos específicos de desmontaje, verificación y pruebas de comprobación.
 
@@ -82,48 +82,39 @@ Preprocesa el texto ingresado por el usuario traduciendo expresiones coloquiales
 * **Inteligencia Artificial Generativa:** Google Generative AI (`gemini-3.5-flash-lite` API)
 * **Integración Webhook:** WhatsApp Cloud API (Meta Graph API) con verificación HMAC-SHA256
 * **Seguridad y Privacidad:** Anonimización HMAC-SHA256 con `PRIVACY_SECRET_KEY` para teléfonos y placas
-* **Pruebas Automatizadas:** Pytest (73 pruebas unitarias, de integración, persistencia y seguridad)
+* **Pruebas Automatizadas:** Pytest (100 pruebas aprobadas, además de integraciones condicionadas a PostgreSQL)
 
 ---
 
 ## 📁 Estructura del Repositorio
 
-```bash
+```text
 CHAT_BOT_MACHINLEARNING/
-├── alembic/                      # Versionamiento y migraciones de esquemas PostgreSQL
-├── data/                         # Datasets de síntomas y códigos OBD-II (CSV)
-│   ├── dataset_sintomas.csv
-│   └── tracker_diagnosticos.example.csv
-├── documentacion/                # Documentación técnica y arquitectura
-│   └── arquitectura_modular/
-├── manuales_taller/              # Manuales de procedimientos para el motor RAG
-│   └── manual_procedimientos.txt
-├── models/                       # Binarios serializados de los modelos ML (.pkl)
-├── scripts/                      # Utilidades y CLI seguro
-│   ├── registrar_taller_admin.py # Registro seguro de taller y admin por hash
-│   └── postgresql/
-├── src/                          # Código fuente modular por capas
-│   ├── config.py                 # Configuración y variables Pydantic Settings
-│   ├── core/                     # Lógica de negocio (Gestor Tripartito, Jerga, Queue, Audio)
-│   │   ├── gestor_diagnostico.py
-│   │   ├── gemini_queue.py       # Rate limiter de 12 req/min
-│   │   ├── audio_processor.py
-│   │   ├── session_manager.py
-│   │   └── traductor_jerga.py
-│   ├── infrastructure/           # Adaptadores ML, RAG y Repositorios DB
-│   │   ├── database/             # Modelos y repositorios SQLAlchemy
-│   │   │   ├── models/
-│   │   │   └── repositories/
-│   │   ├── modelo_ml.py
-│   │   └── motor_rag.py
-│   └── interfaces/api/v1/        # Endpoints REST y Webhook WhatsApp
-│       ├── endpoints/
-│       │   └── webhook.py
-│       └── schemas.py
-├── tests/                        # Suite Pytest completa (73 pruebas)
-├── main.py                       # Punto de entrada FastAPI
-├── pyproject.toml                # Manifiesto del proyecto
-└── README.md                     # Documentación general
+├── frontend/                     # Panel administrativo React + TypeScript
+│   ├── public/
+│   └── src/
+├── backend/                      # API FastAPI y arquitectura por capas
+│   ├── alembic/                  # Migraciones PostgreSQL
+│   ├── scripts/                  # Administración y mantenimiento
+│   ├── src/
+│   │   ├── core/                 # Lógica de negocio
+│   │   ├── infrastructure/       # Adaptadores ML, RAG y base de datos
+│   │   └── interfaces/api/v1/    # API REST y webhook de WhatsApp
+│   ├── tests/                    # Pruebas automatizadas
+│   ├── main.py                   # Punto de entrada FastAPI
+│   └── pyproject.toml
+├── machine_learning/             # Ciclo de vida de datos y modelos
+│   ├── data/                     # Datasets y evidencias
+│   ├── manuals/                  # Corpus técnico para RAG
+│   ├── models/                   # Artefactos y métricas ML
+│   └── training/                 # Entrenamiento y evaluación
+├── infrastructure/
+│   └── database/postgresql/      # Inicialización y utilidades PostgreSQL
+├── docs/                         # Documentación técnica y tesis
+├── scripts/                      # Lanzadores del proyecto completo
+├── .github/workflows/            # Integración continua
+├── docker-compose.yml
+└── README.md
 ```
 
 ---
@@ -144,7 +135,7 @@ source .venv/bin/activate
 
 ### 2. Instalar dependencias
 ```bash
-pip install -r requirements.txt
+pip install -r backend/requirements-dev.txt
 ```
 
 ### 3. Configurar variables de entorno
@@ -153,10 +144,16 @@ Copiar `.env.example` a `.env` y configurar las credenciales seguras:
 cp .env.example .env
 ```
 
+Las variables canónicas de Meta son `META_ACCESS_TOKEN`,
+`META_PHONE_NUMBER_ID`, `META_VERIFY_TOKEN` y `META_APP_SECRET`. Los nombres
+históricos siguen aceptándose temporalmente, pero no deben usarse en nuevas
+instalaciones.
+
 ### 4. Base de Datos PostgreSQL y Migraciones
 ```bash
-# Aplicar migraciones con Alembic
-alembic upgrade head
+# Entrar al backend y aplicar migraciones con Alembic
+cd backend
+python -m alembic upgrade head
 
 # Registrar el taller inicial y mecánico administrador (CLI interactivo seguro):
 python scripts/registrar_taller_admin.py --taller "Taller Mecánico Central" --ruc "20123456789" --nombres "Juan" --rol "admin"
@@ -164,6 +161,7 @@ python scripts/registrar_taller_admin.py --taller "Taller Mecánico Central" --r
 
 ### 5. Iniciar la aplicación
 ```bash
+cd backend
 uvicorn main:app --reload --port 8000
 ```
 Documentación interactiva Swagger en: [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -171,7 +169,7 @@ Documentación interactiva Swagger en: [http://localhost:8000/docs](http://local
 ### 6. Iniciar el panel administrativo
 
 ```bash
-cd web_dashboard
+cd frontend
 cp .env.example .env
 npm install
 npm run dev
@@ -189,12 +187,22 @@ Las pruebas de integración requieren una base exclusiva llamada `carbot_test`.
 Nunca deben ejecutarse contra `carbot_db`:
 
 ```bash
-python scripts/postgresql/crear_base_pruebas.py
+python infrastructure/database/postgresql/crear_base_pruebas.py
 $env:TEST_DATABASE_URL="postgresql+asyncpg://carbot_app:CLAVE@127.0.0.1:5433/carbot_test"
+cd backend
 python -m alembic upgrade head
 python -m pytest tests -q
 ```
 *(Nota: Durante las pruebas automáticas, las llamadas a Google Gemini están mockeadas internamente para garantizar costo $0.00 y pruebas 100% offline).*
+
+Para ejecutar toda la validación del monorepo desde Windows:
+
+```powershell
+.\scripts\verificar_proyecto.ps1
+```
+
+Consulte [CONTRIBUTING.md](CONTRIBUTING.md) para las convenciones y
+[SECURITY.md](SECURITY.md) para el manejo de credenciales y datos sensibles.
 
 ---
 

@@ -6,7 +6,8 @@ $ErrorActionPreference = "Stop"
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $backendPython = Join-Path $projectRoot ".venv\Scripts\python.exe"
-$frontendRoot = Join-Path $projectRoot "web_dashboard"
+$backendRoot = Join-Path $projectRoot "backend"
+$frontendRoot = Join-Path $projectRoot "frontend"
 $ngrokDomain = "lustrous-appear-traps.ngrok-free.dev"
 
 function Test-ListeningPort {
@@ -57,7 +58,7 @@ else {
 
 if (-not (Test-ListeningPort -Port 8000)) {
     $backendCommand = "& '$backendPython' -m uvicorn main:app --reload --port 8000"
-    Start-CarBotWindow -Title "CarBot - Backend" -WorkingDirectory $projectRoot -Command $backendCommand
+    Start-CarBotWindow -Title "CarBot - Backend" -WorkingDirectory $backendRoot -Command $backendCommand
     Write-Host "[OK] Iniciando chatbot y API..." -ForegroundColor Green
 }
 else {

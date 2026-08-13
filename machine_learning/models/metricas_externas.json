@@ -1,0 +1,10 @@
+{
+  "estado": "pendiente_validacion_externa_real",
+  "proveniencia_verificable": false,
+  "aprobado_produccion": false,
+  "motivo": "No existe todavía un conjunto externo con órdenes, actas o fotografías verificables aportadas por talleres.",
+  "artefacto_sintetico": "machine_learning/data/evaluacion_sintetica_cobertura.csv",
+  "uso_artefacto_sintetico": "Pruebas de cobertura y detección de clases débiles; no se reporta como evidencia empírica.",
+  "siguiente_paso": "Recolectar casos con machine_learning/data/plantilla_evaluacion_externa.csv, conservar evidencias privadas y ejecutar machine_learning/training/evaluar_modelo_externo.py."
+}
+

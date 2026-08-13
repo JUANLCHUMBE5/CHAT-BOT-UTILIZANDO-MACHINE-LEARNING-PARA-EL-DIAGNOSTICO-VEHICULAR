@@ -9,7 +9,7 @@ services:
       - "5433:5432"
     volumes:
       - carbot_postgres:/var/lib/postgresql/data
-      - ./scripts/postgresql/docker-init:/docker-entrypoint-initdb.d:ro
+      - ./infrastructure/database/postgresql/docker-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U carbot_app -d carbot_db"]
       interval: 5s
@@ -30,7 +30,9 @@ services:
       retries: 12
 
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       ENVIRONMENT: development
       DATABASE_ENABLED: "true"
@@ -41,13 +43,14 @@ services:
       POSTGRES_USER: carbot_app
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
       RATE_LIMIT_STORAGE_URI: redis://redis:6379/0
+      ML_ROOT: /app/machine_learning
     env_file:
       - path: .env
         required: false
     ports:
       - "8000:8000"
     volumes:
-      - ./models:/app/models:ro
+      - ./machine_learning:/app/machine_learning:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -57,7 +60,9 @@ services:
 
   test:
     profiles: ["test"]
-    build: .
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       DATABASE_ENABLED: "true"
       DATABASE_REQUIRED: "true"
@@ -67,8 +72,10 @@ services:
       POSTGRES_USER: carbot_app
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
       RATE_LIMIT_STORAGE_URI: redis://redis:6379/1
+      ML_ROOT: /app/machine_learning
     volumes:
       - .:/app
+    working_dir: /app/backend
     depends_on:
       postgres:
         condition: service_healthy

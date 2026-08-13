@@ -57,15 +57,15 @@ TEST_READY.md
 *.log
 
 # --- Datos operativos y artefactos ajenos al proyecto ---
-data/tracker_diagnosticos.csv
-data/evidencias_evaluacion/
+machine_learning/data/tracker_diagnosticos.csv
+machine_learning/data/evidencias_evaluacion/
 sss/
 
 
 # --- Modelos Binarios de ML (>100MB) ---
-models/modelo_diagnostico.pkl
+machine_learning/models/modelo_diagnostico.pkl
 *.pkl
 
 # --- Frontend Web Dashboard ---
-web_dashboard/node_modules/
-web_dashboard/dist/
+frontend/node_modules/
+frontend/dist/
