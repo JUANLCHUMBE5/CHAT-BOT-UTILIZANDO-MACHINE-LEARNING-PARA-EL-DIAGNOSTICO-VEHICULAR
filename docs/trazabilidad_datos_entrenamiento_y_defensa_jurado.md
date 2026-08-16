@@ -1,105 +1,86 @@
 # Trazabilidad de datos de CarBot y respuesta para el jurado
 
+Fecha de actualización: 15 de agosto de 2026
+
 ## Respuesta breve recomendada
 
-> El modelo se entrenó con un conjunto de síntomas automotrices sometido a
-> limpieza, cuarentena de registros defectuosos y unificación mediante una
-> taxonomía estable de fallas. Cada artefacto conserva su reporte de calidad.
-> Para ampliar el vocabulario se evaluó una fuente abierta de Zenodo bajo
-> licencia CC BY 4.0. Sus síntomas se conservaron con el texto original, DOI y
-> licencia, y se tradujeron al español técnico usado en Perú. Esos candidatos
-> no se incorporan automáticamente: deben ser revisados por un mecánico antes
-> del reentrenamiento. La validación externa real todavía está pendiente y se
-> mantendrá separada del entrenamiento para evitar fuga de información.
+> El clasificador se entrenó con 2,861 registros base sometidos a limpieza y
+> agrupación por familias de síntomas. Después se evaluó una fuente académica de
+> Zenodo con DOI y licencia CC BY 4.0. De 99 casos completos se admitieron 33 que
+> tenían traducción completa, correspondencia no ambigua con la taxonomía y
+> consistencia de código. Los datos externos participaron solo en entrenamiento;
+> el holdout de 570 casos se separó previamente del dataset base. La comparación
+> mejoró el F1 macro de 95.49 % a 95.95 %, por lo que se conservó el modelo
+> enriquecido. Esto no reemplaza la validación externa con reparaciones reales.
 
-## Datos verificables actualmente
+## Datos verificables vigentes
 
-- Registros iniciales auditados: **18,982**.
-- Dataset limpio vigente: **2,751 muestras**, **48 clases canónicas** y
-  **14 sistemas automotrices**.
-- Registros en cuarentena: **16,231**. Incluyen etiquetas OBD-II genéricas,
-  pares defectuosos y clases que no permiten afirmar una falla concreta.
-- Duplicados exactos eliminados en la última limpieza: **0**.
-- Fuente externa preparada: **196 síntomas** de 99 registros.
-- Traducciones a español técnico peruano: **196**.
-- Síntomas con mapeo canónico propuesto: **80**.
-- Correspondencias marcadas como ambiguas: **12**.
-- Síntomas pendientes de crear una clase o descartar: **104**.
+- Dataset base: 2,861 muestras.
+- Clases canónicas: 48.
+- Sistemas automotrices: 14.
+- Familias de síntomas: 1,541.
+- Fuente Zenodo: 99 casos completos.
+- Casos externos admitidos: 33.
+- Descartes: 53 sin mapeo, 12 ambiguos y 1 duplicado.
+- Dataset final de entrenamiento: 2,894 registros.
+- Holdout sin datos externos: 570 registros.
+- F1 macro del modelo seleccionado: 95.95 %.
+- Modelo aprobado para diagnóstico autónomo: no.
 
-Los 196 síntomas externos están en una bandeja de candidatos y **no forman
-parte del entrenamiento vigente** mientras `validado_por_mecanico` sea `NO`.
+El reporte de limpieza original termina en 2,751 filas. Las 110 filas añadidas
+después conservan síntoma y falla, pero tienen pendientes los campos de código,
+sistema y severidad. Esta limitación debe declararse y corregirse antes de cerrar
+el linaje taxonómico del dataset.
 
-## Procedencia de la ampliación externa
+## Procedencia externa
 
-- Nombre: *Automotive Faults Dataset for Diagnostic and Maintenance Systems*.
-- Repositorio: Zenodo.
+- Nombre: *Automotive Fault Diagnosis Dataset*.
 - DOI: https://doi.org/10.5281/zenodo.15626055
-- Licencia: Creative Commons Attribution 4.0 International (CC BY 4.0).
-- Integridad comprobada mediante MD5:
-  `cb44431ef6b32f6ea9cf00dbe35f020c`.
+- Licencia: CC BY 4.0.
+- MD5: `cb44431ef6b32f6ea9cf00dbe35f020c`.
+- Preparación: `machine_learning/training/preparar_dataset_externo_entrenamiento.py`.
+- Dataset auditado: `machine_learning/data/dataset_externo_auditado.csv`.
+- Reporte: `machine_learning/data/reporte_dataset_externo.json`.
 
-La fuente se utilizó como material candidato y no como validación peruana.
-El proceso reproducible está en `machine_learning/training/preparar_candidatos_zenodo.py` y
-`machine_learning/training/traducir_candidatos_es_peru.py`.
+Los 196 síntomas traducidos individualmente continúan como bandeja histórica de
+candidatos. No se entrenó con las filas aplanadas porque podían perder la
+relación entre síntomas y producir etiquetas contradictorias. La integración
+vigente usa 33 casos completos, conserva juntos los síntomas relacionados y los
+marca como `AUDITADO_TAXONOMIA_NO_CASO_TALLER`.
 
-## Adaptación lingüística para talleres de LATAM y Perú
+## Separación de conjuntos
 
-El sistema normaliza nombres regionales sin cambiar el significado técnico.
-Por ejemplo:
+1. El holdout se separa únicamente del dataset base.
+2. La selección de algoritmo y validación cruzada usan el entrenamiento base.
+3. Se compara un ajuste base contra otro enriquecido sobre el mismo holdout.
+4. El externo se conserva solo si mejora F1 macro y respeta las barreras de
+   exactitud, calibración y variación por clase.
+5. Después de seleccionar, el artefacto final se ajusta con base más externo.
 
-| Variante regional | Forma normalizada para Perú |
-|---|---|
-| balata, fricción | pastilla de freno |
-| cloche, croche, clutch | embrague |
-| marcha, burro de arranque, motor de partida | motor de arranque |
-| rulemán, balero | rodamiento |
-| mofle, mufla, exosto | silenciador de escape |
-| banda o correa de tiempo | faja de distribución |
-
-Las equivalencias ambiguas no se fuerzan. Por ejemplo, `cardán`, `palier` y
-`semi-eje` pueden designar componentes diferentes según el vehículo.
-
-## Diferencia entre entrenamiento, prueba sintética y validación externa
-
-1. **Entrenamiento:** datos usados para ajustar el clasificador.
-2. **Prueba sintética de cobertura:** frases generadas o controladas para
-   encontrar errores del software y clases débiles. El archivo
-   `machine_learning/data/evaluacion_sintetica_cobertura.csv` pertenece a esta categoría.
-3. **Validación externa real:** casos que el modelo no vio, confirmados mediante
-   inspección o prueba de taller y respaldados por órdenes, actas o fotografías.
-
-Una prueba sintética nunca debe presentarse como orden de trabajo, caso real ni
-validación efectuada por mecánicos. Por esa razón se retiraron del repositorio
-público los JSON generados que simulaban órdenes `OT-2026-*`, y las evidencias
-reales futuras se excluyen de Git para proteger datos del taller y sus clientes.
-
-## Cómo se realizará la validación externa real
-
-1. Registrar el síntoma antes de conocer la predicción del modelo.
-2. Confirmar la falla mediante inspección, medición, escáner o procedimiento
-   técnico documentado.
-3. Asignar un identificador interno al mecánico, sin publicar DNI ni teléfono.
-4. Guardar la evidencia en almacenamiento privado y referenciarla desde la
-   plantilla `machine_learning/data/plantilla_evaluacion_externa.csv`.
-5. Mantener esos casos fuera del entrenamiento.
-6. Ejecutar `machine_learning/training/evaluar_modelo_externo.py` y reportar F1 por clase,
-   exactitud, cobertura, solapamientos y bloqueos de producción.
-
-## Evidencias que se pueden mostrar al jurado
-
-- `machine_learning/data/reporte_calidad_dataset.json`.
-- `machine_learning/data/candidatos_revision/zenodo_15626055_reporte.json`.
-- `machine_learning/data/candidatos_revision/zenodo_15626055_es_peru.csv`.
-- `docs/notas/fuentes_externas_entrenamiento.md`.
-- `machine_learning/models/metricas_modelo.json` para resultados internos.
-- `machine_learning/models/metricas_externas.json` para comprobar que la producción permanece
-  bloqueada hasta obtener validación externa real.
+Esto evita presentar como mejora el simple hecho de evaluar al modelo con casos
+que ya vio.
 
 ## Qué no se debe afirmar
 
-- No afirmar que los 196 síntomas de Zenodo son casos peruanos.
-- No afirmar que una frase traducida ya fue validada por un mecánico.
-- No llamar "casos reales" a datos generados para cobertura.
-- No asegurar que el modelo está validado para producción mientras
-  `aprobado_produccion` sea `false`.
+- No decir que los datos Zenodo son casos del taller o casos peruanos.
+- No decir que la auditoría de taxonomía equivale a confirmación mecánica.
+- No llamar reparación confirmada a una queja de NHTSA.
+- No llamar validación externa a pruebas sintéticas.
+- No decir que el modelo está listo para diagnóstico autónomo.
 
+## Validación externa real pendiente
+
+Un caso real debe registrar el síntoma antes de mostrar la predicción, confirmar
+la falla mediante inspección, escáner o medición, conservar evidencia privada y
+permanecer fuera del entrenamiento usado para evaluarlo. La plantilla está en
+`machine_learning/data/plantilla_evaluacion_externa.csv` y la evaluación se
+ejecuta con `machine_learning/training/evaluar_modelo_externo.py`.
+
+## Evidencias para la defensa
+
+- `machine_learning/data/FUENTES_ENTRENAMIENTO.md`.
+- `machine_learning/data/reporte_calidad_dataset.json`.
+- `machine_learning/data/reporte_dataset_externo.json`.
+- `machine_learning/models/metricas_modelo.json`.
+- `machine_learning/models/metricas_externas.json`.
+- `docs/graficas/matriz_confusion_ml.png`.

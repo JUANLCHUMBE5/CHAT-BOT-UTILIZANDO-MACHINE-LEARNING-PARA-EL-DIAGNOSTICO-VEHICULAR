@@ -149,7 +149,10 @@ class AppSettings(BaseModel):
     data_retention_days: int = _env_int("DATA_RETENTION_DAYS", 180)
     model_artifact_url: str = os.getenv("MODEL_ARTIFACT_URL", "")
     model_artifact_sha256: str = os.getenv("MODEL_ARTIFACT_SHA256", "")
-    model_version: str = os.getenv("MODEL_VERSION", "2.1.0-grouped-calibrated")
+    model_version: str = os.getenv("MODEL_VERSION", "2.2.0-external-audited")
+    model_algorithm: str = os.getenv(
+        "MODEL_ALGORITHM", "Linear SVM calibrado + TF-IDF"
+    )
 
     paths: PathConfig = Field(default_factory=PathConfig)
     diagnostic: DiagnosticConfig = Field(default_factory=DiagnosticConfig)

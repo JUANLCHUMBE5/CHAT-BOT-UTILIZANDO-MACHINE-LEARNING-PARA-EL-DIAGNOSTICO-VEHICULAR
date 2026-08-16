@@ -104,8 +104,17 @@ def umbral_seguro(probabilidades: np.ndarray, y_real: np.ndarray, clases) -> flo
 def entrenar_y_comparar() -> None:
     ruta_dataset = Path("data/dataset_sintomas_limpio.csv")
     datos = pd.read_csv(ruta_dataset, encoding="utf-8")
+    ruta_dataset_externo = Path("data/dataset_externo_auditado.csv")
+    datos_externos = (
+        pd.read_csv(ruta_dataset_externo, encoding="utf-8-sig")
+        if ruta_dataset_externo.exists()
+        else pd.DataFrame(columns=["sintoma", "falla"])
+    )
     x = datos["sintoma"].astype(str).reset_index(drop=True)
     y = datos["falla"].astype(str).reset_index(drop=True)
+    datos_externos = datos_externos[datos_externos["falla"].isin(set(y.unique()))].copy()
+    x_externo = datos_externos["sintoma"].astype(str).reset_index(drop=True)
+    y_externo = datos_externos["falla"].astype(str).reset_index(drop=True)
     grupos = x.map(normalizar_grupo)
 
     if grupos.nunique() < 10:
@@ -162,16 +171,62 @@ def entrenar_y_comparar() -> None:
         ),
     )
 
-    vec_evaluacion = vectorizador()
-    x_train_vec = vec_evaluacion.fit_transform(x_train)
-    x_test_vec = vec_evaluacion.transform(x_test)
-    modelo_evaluacion = CalibratedClassifierCV(
-        estimadores()[ganador], method="sigmoid", cv=3
-    )
-    modelo_evaluacion.fit(x_train_vec, y_train)
-    predicciones = modelo_evaluacion.predict(x_test_vec)
-    probabilidades = modelo_evaluacion.predict_proba(x_test_vec)
     y_test_array = y_test.to_numpy()
+
+    def ajustar_y_evaluar(x_ajuste: pd.Series, y_ajuste: pd.Series) -> dict[str, object]:
+        vec = vectorizador()
+        x_ajuste_vec = vec.fit_transform(x_ajuste)
+        x_prueba_vec = vec.transform(x_test)
+        modelo = CalibratedClassifierCV(estimadores()[ganador], method="sigmoid", cv=3)
+        modelo.fit(x_ajuste_vec, y_ajuste)
+        pred = modelo.predict(x_prueba_vec)
+        proba = modelo.predict_proba(x_prueba_vec)
+        reporte = classification_report(
+            y_test, pred, output_dict=True, zero_division=0
+        )
+        f1_por_clase = {
+            clase: float(valores["f1-score"])
+            for clase, valores in reporte.items()
+            if clase not in {"accuracy", "macro avg", "weighted avg"}
+        }
+        return {
+            "vectorizador": vec,
+            "modelo": modelo,
+            "predicciones": pred,
+            "probabilidades": proba,
+            "exactitud": float(accuracy_score(y_test, pred)),
+            "f1_macro": float(f1_score(y_test, pred, average="macro", zero_division=0)),
+            "f1_weighted": float(f1_score(y_test, pred, average="weighted", zero_division=0)),
+            "ece": error_calibracion_esperado(proba, y_test_array, modelo.classes_),
+            "f1_por_clase": f1_por_clase,
+        }
+
+    evaluacion_base = ajustar_y_evaluar(x_train.reset_index(drop=True), y_train.reset_index(drop=True))
+    if len(datos_externos):
+        x_train_enriquecido = pd.concat([x_train.reset_index(drop=True), x_externo], ignore_index=True)
+        y_train_enriquecido = pd.concat([y_train.reset_index(drop=True), y_externo], ignore_index=True)
+        evaluacion_enriquecida = ajustar_y_evaluar(x_train_enriquecido, y_train_enriquecido)
+    else:
+        evaluacion_enriquecida = evaluacion_base
+
+    variacion_f1_por_clase = {
+        clase: evaluacion_enriquecida["f1_por_clase"][clase]
+        - evaluacion_base["f1_por_clase"][clase]
+        for clase in evaluacion_base["f1_por_clase"]
+    }
+    peor_variacion_f1_clase = min(variacion_f1_por_clase.values(), default=0.0)
+
+    usar_externos = bool(
+        len(datos_externos)
+        and evaluacion_enriquecida["f1_macro"] > evaluacion_base["f1_macro"]
+        and evaluacion_enriquecida["exactitud"] >= evaluacion_base["exactitud"] - 0.002
+        and evaluacion_enriquecida["ece"] <= evaluacion_base["ece"] + 0.02
+        and peor_variacion_f1_clase >= -0.10
+    )
+    evaluacion_seleccionada = evaluacion_enriquecida if usar_externos else evaluacion_base
+    modelo_evaluacion = evaluacion_seleccionada["modelo"]
+    predicciones = evaluacion_seleccionada["predicciones"]
+    probabilidades = evaluacion_seleccionada["probabilidades"]
 
     umbral = umbral_seguro(probabilidades, y_test_array, modelo_evaluacion.classes_)
     ece = error_calibracion_esperado(
@@ -202,10 +257,12 @@ def entrenar_y_comparar() -> None:
     if any(fold["clases_ausentes_validacion"] for fold in soporte_particiones_cv):
         bloqueos_produccion.append("Hay clases ausentes en particiones de validacion cruzada")
 
+    x_final = pd.concat([x, x_externo], ignore_index=True) if usar_externos else x
+    y_final = pd.concat([y, y_externo], ignore_index=True) if usar_externos else y
     vec_final = vectorizador()
-    x_completo = vec_final.fit_transform(x)
+    x_completo = vec_final.fit_transform(x_final)
     modelo_final = CalibratedClassifierCV(estimadores()[ganador], method="sigmoid", cv=3)
-    modelo_final.fit(x_completo, y)
+    modelo_final.fit(x_completo, y_final)
 
     directorio = Path("models")
     directorio.mkdir(exist_ok=True)
@@ -215,7 +272,7 @@ def entrenar_y_comparar() -> None:
     joblib.dump(vec_final, ruta_vectorizador, compress=3)
 
     metricas = {
-        "version": "2.1.0-grouped-calibrated",
+        "version": "2.2.0-external-audited",
         "algoritmo_ganador_cv": ganador,
         "exactitud_holdout_agrupado": float(accuracy_score(y_test, predicciones)),
         "f1_macro_holdout_agrupado": float(
@@ -239,7 +296,40 @@ def entrenar_y_comparar() -> None:
         "error_calibracion_esperado": ece,
         "brier_multiclase": brier_multiclase,
         "umbral_baja_confianza": umbral,
-        "registros": int(len(datos)),
+        "registros": int(len(x_final)),
+        "registros_base": int(len(datos)),
+        "registros_externos_disponibles": int(len(datos_externos)),
+        "registros_externos_incorporados": int(len(datos_externos) if usar_externos else 0),
+        "dataset_externo_seleccionado": usar_externos,
+        "comparacion_enriquecimiento_externo": {
+            "base": {
+                "exactitud": evaluacion_base["exactitud"],
+                "f1_macro": evaluacion_base["f1_macro"],
+                "f1_weighted": evaluacion_base["f1_weighted"],
+                "ece": evaluacion_base["ece"],
+            },
+            "enriquecido": {
+                "exactitud": evaluacion_enriquecida["exactitud"],
+                "f1_macro": evaluacion_enriquecida["f1_macro"],
+                "f1_weighted": evaluacion_enriquecida["f1_weighted"],
+                "ece": evaluacion_enriquecida["ece"],
+            },
+            "criterio": (
+                "Solo incorporar si mejora F1 macro, mantiene exactitud y calibracion, "
+                "y ninguna clase pierde mas de 0.10 de F1."
+            ),
+            "peor_variacion_f1_clase": peor_variacion_f1_clase,
+            "clases_mejoradas": {
+                clase: delta
+                for clase, delta in variacion_f1_por_clase.items()
+                if delta > 0.001
+            },
+            "clases_empeoradas": {
+                clase: delta
+                for clase, delta in variacion_f1_por_clase.items()
+                if delta < -0.001
+            },
+        },
         "familias_sintoma": int(grupos.nunique()),
         "clases": int(y.nunique()),
         "sha256_modelo": sha256(ruta_modelo),

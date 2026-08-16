@@ -188,6 +188,7 @@ class ClienteService:
             f"Tu solicitud ha sido enviada al administrador de *{info['nombre']}*.\n\n"
             "✅ *Próximos pasos:*\n"
             "1. El administrador validará tu identidad en el panel del taller.\n"
-            "2. Recibirás un mensaje de WhatsApp con tu confirmación y clave temporal.\n"
-            "3. Podrás consultar diagnósticos vehiculares con asistencia técnica inteligente."
+            "2. Recibirás la confirmación por este mismo chat de WhatsApp.\n"
+            "3. Desde ese momento podrás consultar diagnósticos vehiculares con asistencia técnica inteligente.\n\n"
+            "_No necesitas usuario ni contraseña para el panel web._"
         )

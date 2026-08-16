@@ -18,6 +18,7 @@ security_bearer = HTTPBearer(auto_error=False)
 JWT_SECRET_KEY = settings.jwt_secret_key
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_SECONDS = 2 * 60 * 60  # 2 horas = 7200 segundos
+JWT_REFRESH_EXPIRATION_SECONDS = 7 * 24 * 60 * 60  # 7 días
 
 def _obtener_jwt_secret() -> str:
     if not settings.jwt_secret_key:
@@ -68,12 +69,68 @@ def crear_jwt_token(
         "iss": settings.jwt_issuer,
         "aud": settings.jwt_audience,
         "jti": str(uuid.uuid4()),
+        "token_type": "access",
     }
     if extra_claims:
         payload.update(extra_claims)
         
     token = jwt.encode(payload, _obtener_jwt_secret(), algorithm=JWT_ALGORITHM)
     return token
+
+
+def crear_refresh_token(
+    sub: str,
+    rol: str,
+    taller_id: Optional[str] = None,
+    usuario_id: Optional[str] = None,
+    extra_claims: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Emite un token exclusivo para renovar la sesión sin reenviar la contraseña."""
+    ahora = int(time.time())
+    payload: Dict[str, Any] = {
+        "sub": sub,
+        "rol": rol,
+        "taller_id": taller_id or "00000000-0000-0000-0000-000000000001",
+        "usuario_id": usuario_id or str(uuid.uuid4()),
+        "iat": ahora,
+        "exp": ahora + JWT_REFRESH_EXPIRATION_SECONDS,
+        "iss": settings.jwt_issuer,
+        "aud": settings.jwt_audience,
+        "jti": str(uuid.uuid4()),
+        "token_type": "refresh",
+    }
+    if extra_claims:
+        payload.update(extra_claims)
+    return jwt.encode(payload, _obtener_jwt_secret(), algorithm=JWT_ALGORITHM)
+
+
+def verificar_refresh_token(token: str) -> Dict[str, Any]:
+    """Valida firma, vigencia y uso específico de un refresh token."""
+    try:
+        payload = jwt.decode(
+            token,
+            _obtener_jwt_secret(),
+            algorithms=[JWT_ALGORITHM],
+            issuer=settings.jwt_issuer,
+            audience=settings.jwt_audience,
+        )
+    except jwt.ExpiredSignatureError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="La sesión extendida expiró. Inicie sesión nuevamente.",
+        ) from exc
+    except jwt.InvalidTokenError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token inválido o alterado.",
+        ) from exc
+
+    if payload.get("token_type") != "refresh":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Se requiere un refresh token válido.",
+        )
+    return payload
 
 def verificar_jwt_token_sin_restriccion(
     credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
@@ -98,11 +155,17 @@ def verificar_jwt_token_sin_restriccion(
             issuer=settings.jwt_issuer,
             audience=settings.jwt_audience,
         )
+        if payload.get("token_type", "access") != "access":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Un refresh token no puede utilizarse para acceder a la API.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
         return payload
     except jwt.ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="El token JWT ha expirado (validez máxima de 2 horas). Por favor genere uno nuevo en /api/v1/auth/login.",
+            detail="El token de acceso ha expirado. El panel intentará renovar la sesión automáticamente.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     except jwt.InvalidTokenError:
@@ -122,6 +185,19 @@ def verificar_jwt_token(
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Debe cambiar la contraseña temporal antes de utilizar el sistema.",
+        )
+    return payload
+
+
+def verificar_jwt_administrador(
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
+) -> Dict[str, Any]:
+    """Autoriza exclusivamente cuentas administrativas para usar el panel web/API."""
+    payload = verificar_jwt_token(credentials)
+    if payload.get("rol") not in {"administrador", "admin"}:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="El panel web es exclusivo para administradores. Los mecánicos operan mediante WhatsApp.",
         )
     return payload
 

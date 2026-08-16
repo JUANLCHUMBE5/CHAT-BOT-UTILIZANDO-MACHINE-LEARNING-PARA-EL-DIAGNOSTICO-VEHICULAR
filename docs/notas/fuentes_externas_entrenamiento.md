@@ -1,5 +1,9 @@
 # Fuentes externas para ampliar CarBot
 
+> Nota de la etapa de evaluación inicial. La decisión final y las métricas
+> vigentes están en `machine_learning/data/FUENTES_ENTRENAMIENTO.md` y
+> `docs/trazabilidad_datos_entrenamiento_y_defensa_jurado.md`.
+
 ## Fuente evaluada
 
 - **Nombre:** Automotive Faults Dataset for Diagnostic and Maintenance Systems.
@@ -14,7 +18,9 @@
 
 La fuente no se incorpora automáticamente a `dataset_sintomas_limpio.csv`. Sus
 registros están en inglés, contienen pocos síntomas por componente y no
-representan por sí solos casos reales de talleres peruanos.
+representan por sí solos casos reales de talleres peruanos. Después de esta
+evaluación inicial se admitieron 33 casos completos en un dataset externo
+separado; nunca se sobrescribió el dataset base.
 
 El proceso obligatorio es:
 
@@ -62,10 +68,11 @@ mezcla con el clasificador actual de síntomas de WhatsApp.
 
 ## Cobertura funcional buscada
 
-La bandeja externa contempla frenos, climatización, refrigeración, transmisión,
+La bandeja histórica contempla frenos, climatización, refrigeración, transmisión,
 arranque/carga, emisiones, motor, combustible, dirección, suspensión, ruedas y
 carrocería. Las 196 frases están traducidas a español técnico peruano en
-`machine_learning/data/candidatos_revision/zenodo_15626055_es_peru.csv`; siguen fuera del
-entrenamiento hasta tener validación mecánica. Doce correspondencias de la
-fuente fueron marcadas explícitamente como ambiguas.
-
+`machine_learning/data/candidatos_revision/zenodo_15626055_es_peru.csv`. Esas
+filas aplanadas siguen fuera del entrenamiento. El modelo vigente utiliza en su
+lugar 33 casos completos auditados del archivo
+`machine_learning/data/dataset_externo_auditado.csv`. Doce correspondencias
+ambiguas fueron excluidas.

@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.security import verificar_jwt_token
+from src.core.security import verificar_jwt_administrador
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.models.diagnostics import Diagnostico
 
@@ -24,6 +24,8 @@ class ResumenMetricasResponseDTO(BaseModel):
     diagnosticos_hoy: int
     diagnosticos_semana: int
     diagnosticos_mes: int
+    diagnosticos_realizados: int = 0
+    diagnosticos_pendientes: int = 0
     porcentaje_confirmados: int
     tiempo_promedio_ms: int
     distribucion_modos: List[Dict[str, Any]]
@@ -35,7 +37,7 @@ class ResumenMetricasResponseDTO(BaseModel):
 async def obtener_resumen_metricas(
     fecha_inicio: Optional[str] = Query(None, description="Fecha de inicio (YYYY-MM-DD)"),
     fecha_fin: Optional[str] = Query(None, description="Fecha de fin (YYYY-MM-DD)"),
-    payload: dict = Depends(verificar_jwt_token),
+    payload: dict = Depends(verificar_jwt_administrador),
 ):
     """Ejecuta consultas agregadas SQL en PostgreSQL con filtro opcional de rango de fechas."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -95,7 +97,15 @@ async def obtener_resumen_metricas(
             )
             mes_count = res_mes.scalar() or 0
 
-            # 4. Porcentaje confirmados
+            # 4. Diagnósticos pendientes en el periodo seleccionado
+            filtros_pend = list(filtros_base)
+            filtros_pend.append(Diagnostico.estado.in_(["generado", "en_revision"]))
+            res_pend = await session.execute(
+                select(func.count(Diagnostico.id)).where(*filtros_pend)
+            )
+            pend_count = res_pend.scalar() or 0
+
+            # 5. Porcentaje confirmados
             filtros_conf = list(filtros_base)
             filtros_conf.append(Diagnostico.estado == "confirmado")
             res_conf = await session.execute(
@@ -104,17 +114,17 @@ async def obtener_resumen_metricas(
             confirmados_mes = res_conf.scalar() or 0
             pct_confirmados = min(100, int((confirmados_mes / mes_count * 100))) if mes_count > 0 else 0
 
-            # 5. Tiempo promedio de respuesta en ms
+            # 6. Tiempo promedio de respuesta en ms
             res_dur = await session.execute(
                 select(func.avg(Diagnostico.duracion_ms)).where(
-                    Diagnostico.taller_id == taller_uuid,
+                    *filtros_base,
                     Diagnostico.duracion_ms.isnot(None),
                 )
             )
             avg_dur = res_dur.scalar()
             tiempo_promedio = int(avg_dur) if avg_dur is not None else 0
 
-            # 6. Distribución de modos
+            # 7. Distribución de modos
             res_modos = await session.execute(
                 select(Diagnostico.modo_diagnostico, func.count(Diagnostico.id))
                 .where(*filtros_base)
@@ -125,7 +135,7 @@ async def obtener_resumen_metricas(
                 for modo, cant in res_modos.all()
             ]
 
-            # 7. Actividad diaria completando días del rango o semana actual
+            # 8. Actividad diaria completando días del rango o semana actual
             start_range = (dt_inicio.date() if dt_inicio else (inicio_hoy - timedelta(days=6)).date())
             end_range = (dt_fin.date() if dt_fin else inicio_hoy.date())
 
@@ -150,7 +160,7 @@ async def obtener_resumen_metricas(
                 })
                 curr_date += timedelta(days=1)
 
-            # 8. Fallas más frecuentes
+            # 9. Fallas más frecuentes
             res_fallas = await session.execute(
                 select(
                     Diagnostico.falla_predicha,
@@ -173,6 +183,8 @@ async def obtener_resumen_metricas(
                 diagnosticos_hoy=hoy_count,
                 diagnosticos_semana=sem_count,
                 diagnosticos_mes=mes_count,
+                diagnosticos_realizados=mes_count,
+                diagnosticos_pendientes=pend_count,
                 porcentaje_confirmados=pct_confirmados,
                 tiempo_promedio_ms=tiempo_promedio,
                 distribucion_modos=distribucion,

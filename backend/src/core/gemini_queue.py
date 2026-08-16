@@ -53,6 +53,7 @@ class SolicitudGeminiEncolada:
     confianza_ml: float = 0.0
     contexto_manual: str = ""
     titulo_manual: str = ""
+    tipo_consulta: str = "diagnostico"
     requiere_revision_humana: bool = False
     callback_completado: Optional[Callable] = None
     futuro_resultado: Optional[Any] = None
@@ -192,6 +193,7 @@ class GeminiRateLimiter:
         mensaje_salida_preliminar_id: Optional[str] = None,
         futuro_resultado: Optional[Any] = None,
         solicitud_id: Optional[str] = None,
+        tipo_consulta: str = "diagnostico",
     ) -> tuple[SolicitudGeminiEncolada, int, float]:
         """
         Inserta una solicitud en la cola FIFO (y en PostgreSQL si está habilitada) y retorna
@@ -205,6 +207,7 @@ class GeminiRateLimiter:
                 confianza_ml=confianza_ml,
                 contexto_manual=contexto_manual,
                 titulo_manual=titulo_manual,
+                tipo_consulta=tipo_consulta,
                 requiere_revision_humana=requiere_revision_humana,
                 callback_completado=callback_completado,
                 diagnostico_id=diagnostico_id,
@@ -249,6 +252,7 @@ class GeminiRateLimiter:
         diagnostico_id: Optional[str] = None,
         proveedor: str = "meta",
         solicitud_id: Optional[str] = None,
+        tipo_consulta: str = "diagnostico",
     ) -> Tuple[SolicitudGeminiEncolada, int, float]:
         """
         Encola la solicitud tanto en memoria como en la tabla trabajos_gemini de PostgreSQL
@@ -268,6 +272,7 @@ class GeminiRateLimiter:
             diagnostico_id=diagnostico_id,
             proveedor=proveedor,
             solicitud_id=solicitud_id,
+            tipo_consulta=tipo_consulta,
         )
 
         if database_configurada():
@@ -286,6 +291,7 @@ class GeminiRateLimiter:
                             requiere_revision_humana=requiere_revision_humana,
                             remitente=remitente,
                             proveedor=proveedor,
+                            tipo_consulta=tipo_consulta,
                             taller_id=uuid.UUID(taller_id) if taller_id else None,
                             usuario_id=uuid.UUID(usuario_id) if usuario_id else None,
                             conversacion_id=uuid.UUID(conversacion_id) if conversacion_id else None,
@@ -316,7 +322,8 @@ class GeminiRateLimiter:
         taller_id: str,
         usuario_id: str,
         conversacion_id: str,
-        diagnostico_id: str,
+        diagnostico_id: Optional[str],
+        tipo_consulta: str = "diagnostico",
     ) -> None:
         """Persiste el trabajo en la misma transacción del webhook.
 
@@ -338,10 +345,11 @@ class GeminiRateLimiter:
             requiere_revision_humana=requiere_revision_humana,
             remitente=remitente,
             proveedor=proveedor_normalizado,
+            tipo_consulta=tipo_consulta,
             taller_id=uuid.UUID(taller_id),
             usuario_id=uuid.UUID(usuario_id),
             conversacion_id=uuid.UUID(conversacion_id),
-            diagnostico_id=uuid.UUID(diagnostico_id),
+            diagnostico_id=uuid.UUID(diagnostico_id) if diagnostico_id else None,
         )
 
     def actualizar_contexto_encolado(
@@ -539,6 +547,7 @@ class GeminiRateLimiter:
                             confianza_ml=float(trabajo_db.confianza_ml or 0.0),
                             contexto_manual=trabajo_db.contexto_manual or "",
                             titulo_manual=trabajo_db.titulo_manual or "",
+                            tipo_consulta=trabajo_db.tipo_consulta or "diagnostico",
                             requiere_revision_humana=trabajo_db.requiere_revision_humana,
                         )
                     else:
@@ -569,6 +578,7 @@ class GeminiRateLimiter:
     async def _procesar_solicitud_encolada(
         self, solicitud: SolicitudGeminiEncolada, forzar_degradado: bool = False
     ) -> Tuple[str, dict]:
+        inicio_procesamiento = time.perf_counter()
         """Procesa una solicitud descolada realizando la síntesis con Gemini o fallback local."""
         confianza_pct = int(solicitud.confianza_ml * 100)
         alerta_revision = (
@@ -605,6 +615,30 @@ class GeminiRateLimiter:
         Indica urgencia, riesgos y necesidad de validación del mecánico.
         """
 
+        if solicitud.tipo_consulta == "consulta_tecnica":
+            prompt_sistema = f"""
+            Eres CarBot, asistente técnico automotriz para mecánicos de un taller.
+
+            PREGUNTA INFORMATIVA:
+            "{solicitud.sintoma}"
+
+            CONTEXTO DOCUMENTAL RECUPERADO (RAG): [{solicitud.titulo_manual}]
+            {solicitud.contexto_manual}
+
+            REGLAS:
+            1. Responde directamente y no inventes una avería ni una predicción ML.
+            2. Separa la orientación general de las especificaciones exactas del fabricante.
+            3. Si faltan marca, modelo, año, motor o equipo, pide esos datos antes de dar cifras exactas.
+            4. Con coincidencia documental baja, no inventes potencias, intervalos, capacidades ni requisitos legales.
+            5. Para GNV/GLP, remite la configuración exacta al fabricante del equipo y a un centro autorizado.
+            6. Para refrigerante, iluminación, lubricantes o repuestos, prioriza el manual del fabricante y la homologación aplicable.
+            7. Responde brevemente con orientación, datos faltantes y una verificación segura.
+            8. No saludes, no llames «colega» al usuario y no repitas la presentación de CarBot.
+            9. Los datos del vehículo fueron declarados por el usuario, no verificados por VIN.
+            10. Solo llama «especificación exacta» a un dato respaldado por un manual compatible en marca, modelo, año y motor.
+            11. Sin una fuente compatible, indica «orientación general no verificada para esta versión» y evita cifras definitivas.
+            """
+
         api_key = settings.gemini_api_key
         texto_respuesta = ""
         metadatos = {}
@@ -634,7 +668,11 @@ class GeminiRateLimiter:
                     metadatos = {
                         "usado": True,
                         "modelo": modelo,
-                        "modo": "completo_ml_rag_llm",
+                        "modo": (
+                            "consulta_tecnica"
+                            if solicitud.tipo_consulta == "consulta_tecnica"
+                            else "completo_ml_rag_llm"
+                        ),
                         "tokens_entrada": tokens_in,
                         "tokens_salida": tokens_out,
                     }
@@ -653,7 +691,11 @@ class GeminiRateLimiter:
             )
             return "", {
                 "usado": False,
-                "modo": "en_cola_gemini",
+                "modo": (
+                    "consulta_tecnica_en_cola"
+                    if solicitud.tipo_consulta == "consulta_tecnica"
+                    else "en_cola_gemini"
+                ),
                 "reintentar": True,
                 "error": error_reintentable,
             }
@@ -661,22 +703,48 @@ class GeminiRateLimiter:
         # Si no hubo respuesta exitosa de Gemini, generar fallback degradado
         if not texto_respuesta:
             no_manual = "No se encontró" in solicitud.contexto_manual or "Coincidencia baja" in solicitud.titulo_manual
-            seccion_1 = f"🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**\n• **Diagnóstico Sugerido (ML):** {solicitud.diagnostico_ml}\n• **Certeza del Modelo:** {confianza_pct}%{alerta_revision}"
-            if no_manual:
-                seccion_2 = "📖 **2. Procedimiento Técnico de Reparación:**\n⚠️ *Nota:* No se encontró un procedimiento específico en el manual de taller para esta consulta. Se sugiere revisión visual directa."
-                seccion_3 = "⏱️ **3. Tiempo Estimado y Gravedad:**\n• **Tiempo Estimado:** 30-45 minutos (Evaluación inicial)\n• **Gravedad:** Por determinar en taller"
+            if solicitud.tipo_consulta == "consulta_tecnica":
+                if no_manual:
+                    texto_respuesta = (
+                        "💡 *Consulta técnica identificada*\n\n"
+                        "No encontré una fuente documental suficientemente cercana para dar una cifra exacta. "
+                        "Indica marca, modelo, año, motor y, si aplica, la marca y modelo del equipo. "
+                        "Verifica la especificación en el manual del fabricante o con un centro autorizado."
+                    )
+                else:
+                    texto_respuesta = (
+                        f"💡 *Orientación técnica — {solicitud.titulo_manual}*\n\n"
+                        f"{solicitud.contexto_manual}\n\n"
+                        "Confirma la especificación exacta en el manual correspondiente al modelo y año."
+                    )
+                metadatos = {
+                    "usado": False,
+                    "modelo": None,
+                    "modo": "consulta_tecnica_degradada",
+                    "tokens_entrada": 0,
+                    "tokens_salida": 0,
+                }
             else:
-                seccion_2 = f"📖 **2. Procedimiento Técnico de Reparación ({solicitud.titulo_manual}):**\n{solicitud.contexto_manual}"
-                seccion_3 = "⏱️ **3. Tiempo Estimado y Gravedad:**\n• **Recomendación Técnica:** Siga los pasos del manual de taller adjunto y realice las pruebas de verificación correspondientes."
+                seccion_1 = f"🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**\n• **Diagnóstico Sugerido (ML):** {solicitud.diagnostico_ml}\n• **Certeza del Modelo:** {confianza_pct}%{alerta_revision}"
+                if no_manual:
+                    seccion_2 = "📖 **2. Procedimiento Técnico de Reparación:**\n⚠️ *Nota:* No se encontró un procedimiento específico en el manual de taller para esta consulta. Se sugiere revisión visual directa."
+                    seccion_3 = "⏱️ **3. Tiempo Estimado y Gravedad:**\n• **Tiempo Estimado:** 30-45 minutos (Evaluación inicial)\n• **Gravedad:** Por determinar en taller"
+                else:
+                    seccion_2 = f"📖 **2. Procedimiento Técnico de Reparación ({solicitud.titulo_manual}):**\n{solicitud.contexto_manual}"
+                    seccion_3 = "⏱️ **3. Tiempo Estimado y Gravedad:**\n• **Recomendación Técnica:** Siga los pasos del manual de taller adjunto y realice las pruebas de verificación correspondientes."
 
-            texto_respuesta = f"{seccion_1}\n\n{seccion_2}\n\n{seccion_3}"
-            metadatos = {
-                "usado": False,
-                "modelo": None,
-                "modo": "diagnostico_degradado_ml_rag",
-                "tokens_entrada": 0,
-                "tokens_salida": 0,
-            }
+                texto_respuesta = f"{seccion_1}\n\n{seccion_2}\n\n{seccion_3}"
+                metadatos = {
+                    "usado": False,
+                    "modelo": None,
+                    "modo": "diagnostico_degradado_ml_rag",
+                    "tokens_entrada": 0,
+                    "tokens_salida": 0,
+                }
+
+        metadatos["tiempo_llm_ms"] = max(
+            0, int((time.perf_counter() - inicio_procesamiento) * 1000)
+        )
 
         # 1. Actualizar registro en PostgreSQL si diagnostico_id o trabajo persistente está presente
         if settings.database.enabled:
@@ -814,6 +882,26 @@ class GeminiRateLimiter:
                             diag.fuente = fuente_final
                             diag.conclusion_mecanico = conclusion_final
                             diag.sintesis_llm = texto_respuesta
+                            trazabilidad = dict(diag.trazabilidad or {})
+                            trazabilidad["gemini"] = {
+                                "usado": bool(metadatos.get("usado")),
+                                "modelo": metadatos.get("modelo") or settings.gemini_model,
+                                "tokens_entrada": int(metadatos.get("tokens_entrada", 0)),
+                                "tokens_salida": int(metadatos.get("tokens_salida", 0)),
+                                "posicion_cola": 0,
+                            }
+                            etapas = list(trazabilidad.get("etapas") or [])
+                            for etapa in etapas:
+                                if etapa.get("clave") == "llm":
+                                    etapa["estado"] = "completado" if metadatos.get("usado") else "degradado"
+                                    etapa["detalle"] = metadatos.get("modelo") or settings.gemini_model
+                                    etapa["duracion_ms"] = int(metadatos.get("tiempo_llm_ms", 0))
+                            trazabilidad["etapas"] = etapas
+                            trazabilidad["tiempo_total_ms"] = int(
+                                trazabilidad.get("tiempo_total_ms", 0)
+                            ) + int(metadatos.get("tiempo_llm_ms", 0))
+                            diag.trazabilidad = trazabilidad
+                            diag.duracion_ms = int(trazabilidad["tiempo_total_ms"])
 
                             if metadatos.get("usado"):
                                 operaciones_repo = OperacionesRepository(session)
@@ -840,6 +928,27 @@ class GeminiRateLimiter:
                                     moneda="USD",
                                     diagnostico_id=diag.id,
                                 )
+                    elif metadatos.get("usado") and solicitud.taller_id:
+                        tokens_in = int(metadatos.get("tokens_entrada", 0))
+                        tokens_out = int(metadatos.get("tokens_salida", 0))
+                        if settings.gemini_use_free_tier:
+                            costo = Decimal("0.000000")
+                        else:
+                            p_in = Decimal(str(settings.gemini_input_price_per_million / 1_000_000))
+                            p_out = Decimal(str(settings.gemini_output_price_per_million / 1_000_000))
+                            costo = Decimal(tokens_in) * p_in + Decimal(tokens_out) * p_out
+                        await OperacionesRepository(session).registrar_uso_api(
+                            taller_id=uuid.UUID(solicitud.taller_id),
+                            proveedor="google",
+                            operacion="gemini_consulta_tecnica_cola",
+                            modelo=metadatos.get("modelo") or settings.gemini_model,
+                            tokens_entrada=tokens_in,
+                            tokens_salida=tokens_out,
+                            unidades=Decimal(str(tokens_in + tokens_out)),
+                            costo_estimado=costo,
+                            moneda="USD",
+                            diagnostico_id=None,
+                        )
                     logger.info(
                         f"[Gemini Worker DB] Diagnóstico {solicitud.diagnostico_id or solicitud.id[:8]} actualizado en DB -> {modo_final}."
                     )
@@ -852,6 +961,12 @@ class GeminiRateLimiter:
         solicitud: SolicitudGeminiEncolada, texto_respuesta: str
     ) -> str:
         """Crea una salida breve y operativa; el detalle completo queda en PostgreSQL."""
+        if solicitud.tipo_consulta == "consulta_tecnica":
+            respuesta = texto_respuesta.strip()
+            if len(respuesta) > 3800:
+                respuesta = respuesta[:3790].rstrip() + "…"
+            return f"💡 *Respuesta técnica CarBot*\n\n{respuesta}"
+
         confianza = max(0, min(100, int(solicitud.confianza_ml * 100)))
         sintoma = solicitud.sintoma.lower()
         es_gas = "gnv" in sintoma or "gas natural" in sintoma or "glp" in sintoma
@@ -1000,4 +1115,3 @@ class GeminiRateLimiter:
 
 # Instancia global del limitador y cola de Gemini (12 req/min / 18 req/día)
 gemini_rate_limiter = GeminiRateLimiter()
-

@@ -20,8 +20,29 @@ def test_login_y_obtencion_token_jwt():
     assert response.status_code == 200
     data = response.json()
     assert "access_token" in data
+    assert "refresh_token" in data
     assert data["token_type"] == "bearer"
     assert data["expires_in_seconds"] == 7200
+    assert data["refresh_expires_in_seconds"] == 604800
+
+
+def test_refresh_renueva_ambos_tokens_sin_password():
+    login_response = client.post(
+        "/api/v1/auth/login",
+        json={"username": "admin", "password": "carbot2026"},
+    )
+    tokens_iniciales = login_response.json()
+
+    response = client.post(
+        "/api/v1/auth/refresh",
+        json={"refresh_token": tokens_iniciales["refresh_token"]},
+    )
+
+    assert response.status_code == 200
+    tokens_nuevos = response.json()
+    assert tokens_nuevos["access_token"]
+    assert tokens_nuevos["refresh_token"]
+    assert tokens_nuevos["refresh_expires_in_seconds"] == 604800
 
 def test_login_credenciales_invalidas():
     """T1-AUTH: Incorrect username/password returns 401 Unauthorized."""
@@ -62,7 +83,7 @@ def test_listar_y_registrar_mecanicos_api():
     payload = {
         "nombres": "Pedro Gutierrez Test",
         "telefono_whatsapp": "+51 999 888 777",
-        "password": "carbot2026_password",
+        "password": "CarBot2026_Password",
         "rol": "mecanico"
     }
     res_post = client.post("/api/v1/mecanicos", json=payload, headers=headers)
@@ -227,4 +248,3 @@ def test_webhook_twilio_endpoint_con_firma_valida(monkeypatch):
     data = response.json()
     assert data["status"] == "procesado"
     assert data["proveedor"] == "Twilio"
-

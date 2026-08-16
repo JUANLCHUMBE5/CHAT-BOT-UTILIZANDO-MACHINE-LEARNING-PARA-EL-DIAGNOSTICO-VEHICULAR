@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import secrets
-import string
 import uuid
 from datetime import datetime, timezone
 from typing import List, Optional
@@ -13,7 +11,6 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.security import (
-    generar_password_hash,
     verificar_jwt_token,
 )
 from src.infrastructure.database.connection import database_configurada, obtener_engine
@@ -58,7 +55,6 @@ class AprobarSolicitudResponseDTO(BaseModel):
     solicitud_id: str
     usuario_id: str
     nuevo_rol: str
-    password_temporal: str
 
 
 class RechazarSolicitudDTO(BaseModel):
@@ -66,22 +62,14 @@ class RechazarSolicitudDTO(BaseModel):
 
 
 def exigir_rol_administrativo(payload: dict = Depends(verificar_jwt_token)) -> dict:
-    """Asegura que el usuario tenga rol de administrador, jefe_taller o supervisor."""
+    """Asegura que solo un administrador pueda operar el panel."""
     rol = payload.get("rol", "")
-    if rol not in ("administrador", "jefe_taller", "supervisor", "admin"):
+    if rol not in ("administrador", "admin"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Acceso denegado. Se requiere rol administrativo.",
         )
     return payload
-
-
-def _generar_password_temporal() -> str:
-    """Genera una contraseña temporal segura y fácil de ingresar."""
-    caracteres = string.ascii_letters + string.digits
-    clave = "".join(secrets.choice(caracteres) for _ in range(8))
-    return f"Mec_{clave}"
-
 
 # ==========================================
 # RUTAS DE CLIENTES
@@ -294,16 +282,12 @@ async def aprobar_solicitud_acceso(
                 detail="El cliente no posee un destinatario WhatsApp recuperable; debe escribir nuevamente al bot.",
             )
 
-        # 1. Generar contraseña temporal
-        password_temporal = _generar_password_temporal()
-        p_hash = generar_password_hash(password_temporal)
-
-        # 2. Promover usuario a mecánico
-        usuario = await user_repo.promover_a_mecanico(solicitud.usuario_id, password_hash=p_hash)
+        # 1. Promover usuario a mecánico. Su acceso es únicamente por WhatsApp.
+        usuario = await user_repo.promover_a_mecanico(solicitud.usuario_id)
         if not usuario:
             raise HTTPException(status_code=404, detail="Usuario asociado no encontrado.")
 
-        # 3. Actualizar estado de solicitud
+        # 2. Actualizar estado de solicitud
         await solicitud_repo.responder_solicitud(
             solicitud_id=sol_uuid,
             nuevo_estado="aprobada",
@@ -311,7 +295,7 @@ async def aprobar_solicitud_acceso(
             observaciones="Aprobado desde panel administrativo",
         )
 
-        # 4. Encolar notificación por WhatsApp
+        # 3. Encolar notificación por WhatsApp
         conversacion = await conv_repo.obtener_o_crear_activa(
             taller_id=taller_uuid,
             usuario_id=usuario.id,
@@ -322,9 +306,8 @@ async def aprobar_solicitud_acceso(
         mensaje_whatsapp = (
             "✅ *Tu acceso como mecánico ha sido autorizado*\n\n"
             "Ahora puedes enviar síntomas vehiculares o notas de voz para obtener apoyo técnico inteligente.\n\n"
-            "⚠️ *Nota técnica:* Los resultados son hipótesis orientativas que deben ser validadas físicamente en el taller.\n\n"
-            f"🔑 *Tu contraseña temporal para el panel web es:* `{password_temporal}`\n"
-            "_(Deberás cambiarla al ingresar por primera vez al panel)_"
+            "Tu número quedó autorizado para trabajar directamente con CarBot desde este chat.\n\n"
+            "⚠️ *Nota técnica:* Los resultados son hipótesis orientativas que deben ser validadas físicamente en el taller."
         )
 
         await msg_repo.crear_mensaje(
@@ -360,7 +343,6 @@ async def aprobar_solicitud_acceso(
             solicitud_id=str(solicitud.id),
             usuario_id=str(usuario.id),
             nuevo_rol="mecanico",
-            password_temporal=password_temporal,
         )
 
 

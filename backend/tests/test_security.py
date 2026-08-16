@@ -12,7 +12,10 @@ from src.core.security import (
     JWT_SECRET_KEY,
     anonimizar_identificador,
     crear_jwt_token,
+    crear_refresh_token,
+    verificar_refresh_token,
     verificar_firma_meta,
+    verificar_jwt_administrador,
     verificar_jwt_token,
 )
 
@@ -41,6 +44,28 @@ def test_verificar_jwt_token_helper_exito():
     assert isinstance(payload, dict)
     assert payload["sub"] == "test_user"
 
+
+def test_panel_web_rechaza_token_de_mecanico():
+    """Un JWT técnico válido no concede acceso a la API del panel web."""
+    from fastapi import HTTPException
+
+    class MockCredentials:
+        credentials = crear_jwt_token(sub="mecanico", rol="mecanico")
+
+    with pytest.raises(HTTPException) as exc_info:
+        verificar_jwt_administrador(credentials=MockCredentials())
+
+    assert exc_info.value.status_code == 403
+    assert "exclusivo para administradores" in exc_info.value.detail
+
+
+def test_panel_web_acepta_token_de_administrador():
+    class MockCredentials:
+        credentials = crear_jwt_token(sub="admin", rol="administrador")
+
+    payload = verificar_jwt_administrador(credentials=MockCredentials())
+    assert payload["rol"] == "administrador"
+
 def test_jwt_token_estructura_y_claims():
     """T1-JWT: El token incluye identidad, emisor, audiencia y JTI."""
     extra = {"role": "mecanico_senior", "workshop": "carabayllo_1"}
@@ -56,6 +81,30 @@ def test_jwt_token_estructura_y_claims():
     assert payload["jti"]
     assert payload["role"] == "mecanico_senior"
     assert payload["workshop"] == "carabayllo_1"
+
+
+def test_refresh_token_es_exclusivo_y_dura_siete_dias():
+    token = crear_refresh_token(sub="admin", rol="administrador")
+    payload = verificar_refresh_token(token)
+
+    assert payload["token_type"] == "refresh"
+    assert payload["exp"] - payload["iat"] == 7 * 24 * 60 * 60
+
+    class MockCredentials:
+        credentials = token
+
+    from fastapi import HTTPException
+    with pytest.raises(HTTPException) as exc_info:
+        verificar_jwt_token(credentials=MockCredentials())
+    assert exc_info.value.status_code == 401
+
+
+def test_access_token_no_puede_usarse_para_refrescar():
+    from fastapi import HTTPException
+
+    with pytest.raises(HTTPException) as exc_info:
+        verificar_refresh_token(crear_jwt_token(sub="admin", rol="administrador"))
+    assert exc_info.value.status_code == 401
 
 def test_verificar_firma_meta_helper_valido_e_invalido(monkeypatch):
     """T1-HMAC: verificar_firma_meta helper evaluates valid and altered raw payload digests."""
@@ -236,5 +285,3 @@ def test_anonimizacion_csv_tracker_y_logs():
     anon_result = anonimizar_identificador(placa_sensible)
     assert anon_result.startswith("PLACA_")
     assert placa_sensible not in anon_result
-
-

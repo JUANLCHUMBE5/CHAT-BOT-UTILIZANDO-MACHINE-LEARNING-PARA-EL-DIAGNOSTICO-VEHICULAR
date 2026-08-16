@@ -24,12 +24,17 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
     if (!tokenRes.user) {
       throw new Error('El servidor no devolvió la información del usuario.');
     }
+    if (!['administrador', 'admin'].includes(tokenRes.user.rol)) {
+      throw new Error('El panel web es exclusivo para administradores. Los mecánicos usan WhatsApp.');
+    }
     onLoginSuccess({
+      id: tokenRes.user.id || tokenRes.user.usuario_id,
       username: tokenRes.user.username,
       nombre: tokenRes.user.nombre,
       rol: tokenRes.user.rol,
       taller: tokenRes.user.taller_nombre,
       token: tokenRes.access_token,
+      refreshToken: tokenRes.refresh_token,
     });
   };
 
@@ -38,8 +43,17 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
     setError('');
 
     if (cambioPendiente) {
-      if (passwordNueva.length < 12) {
-        setError('La contraseña nueva debe tener al menos 12 caracteres.');
+      if (
+        passwordNueva.length < 12 ||
+        !/[a-z]/.test(passwordNueva) ||
+        !/[A-Z]/.test(passwordNueva) ||
+        !/\d/.test(passwordNueva)
+      ) {
+        setError('La contraseña nueva debe tener al menos 12 caracteres e incluir mayúsculas, minúsculas y números.');
+        return;
+      }
+      if (passwordNueva === password) {
+        setError('La contraseña nueva debe ser diferente de la contraseña temporal actual.');
         return;
       }
       if (passwordNueva !== passwordConfirmacion) {
@@ -56,6 +70,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         completarSesion({
           ...cambioPendiente,
           access_token: cambio.access_token,
+          refresh_token: cambio.refresh_token,
           user: cambioPendiente.user
             ? { ...cambioPendiente.user, requiere_cambio_password: false }
             : undefined,
@@ -161,7 +176,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             CarBot <span style={{ color: 'var(--primary)' }}>Carabayllo</span>
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4, maxWidth: '320px' }}>
-            Sistema Inteligente de Diagnóstico Vehicular para Mecánicos y Personal de Taller
+            Panel administrativo del sistema de diagnóstico vehicular
           </p>
         </div>
 
@@ -186,8 +201,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           {!cambioPendiente ? (
             <>
               <Input
-                label="Usuario o Teléfono WhatsApp"
-                placeholder="Ej. admin o +51 987 654 321"
+                label="Usuario administrador"
+                placeholder="Ej. administrador"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 icon={<User size={18} />}

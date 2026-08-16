@@ -66,6 +66,28 @@ def test_descolamiento_fifo_y_vaciado(rate_limiter):
     assert rate_limiter.descolar_siguiente() is None
 
 
+@pytest.mark.anyio
+async def test_cola_consulta_tecnica_no_genera_resumen_de_averia(rate_limiter):
+    solicitud, _, _ = rate_limiter.encolar_solicitud(
+        sintoma="qué potencia deben tener los focos LED H4 para una Suzuki APV",
+        diagnostico_ml="Consulta técnica informativa",
+        confianza_ml=0.0,
+        contexto_manual="No se encontró un procedimiento específico.",
+        titulo_manual="Coincidencia baja",
+        tipo_consulta="consulta_tecnica",
+        solicitud_id="consulta-tecnica-01",
+    )
+
+    texto, metadatos = await rate_limiter._procesar_solicitud_encolada(
+        solicitud, forzar_degradado=True
+    )
+
+    assert metadatos["modo"] == "consulta_tecnica_degradada"
+    assert "posible falla" not in texto.lower()
+    assert "diagnóstico sugerido" not in texto.lower()
+    assert "marca, modelo, año" in texto.lower()
+
+
 def test_recuperacion_worker_ante_excepciones():
     """Verifica que el worker de la cola se inicialice y detenga limpiamente sin fugas."""
     async def ejecutar_test():

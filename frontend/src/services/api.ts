@@ -6,6 +6,8 @@ import type {
   LoginRequestDTO,
   Mecanico,
   MecanicoCreateDTO,
+  MecanicoResponseDTO,
+  MecanicoUpdateDTO,
   MecanicoRol,
   ResumenMetricas,
   SolicitudAcceso,
@@ -17,6 +19,74 @@ const API_ORIGIN_OR_BASE = ((import.meta.env.VITE_API_BASE_URL as string) || 'ht
 const API_BASE_URL = API_ORIGIN_OR_BASE.endsWith('/api/v1')
   ? API_ORIGIN_OR_BASE
   : `${API_ORIGIN_OR_BASE}/api/v1`;
+
+export const SESSION_UPDATED_EVENT = 'carbot:session-updated';
+export const SESSION_EXPIRED_EVENT = 'carbot:session-expired';
+
+let refreshInProgress: Promise<string> | null = null;
+
+function readStoredSession(): UsuarioSesion | null {
+  try {
+    const raw = localStorage.getItem('carbot_session');
+    return raw ? JSON.parse(raw) as UsuarioSesion : null;
+  } catch {
+    return null;
+  }
+}
+
+function notifyExpiredSession(): void {
+  localStorage.removeItem('carbot_session');
+  window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+}
+
+async function renewAccessToken(): Promise<string> {
+  if (refreshInProgress) return refreshInProgress;
+
+  refreshInProgress = (async () => {
+    const session = readStoredSession();
+    if (!session?.refreshToken) throw new Error('La sesión no dispone de renovación automática.');
+
+    const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: session.refreshToken }),
+    });
+    if (!response.ok) throw new Error('No se pudo renovar la sesión.');
+
+    const tokens = await response.json() as TokenResponseDTO;
+    const updatedSession: UsuarioSesion = {
+      ...session,
+      token: tokens.access_token,
+      refreshToken: tokens.refresh_token,
+    };
+    localStorage.setItem('carbot_session', JSON.stringify(updatedSession));
+    window.dispatchEvent(new CustomEvent<UsuarioSesion>(SESSION_UPDATED_EVENT, { detail: updatedSession }));
+    return tokens.access_token;
+  })().catch((error: unknown) => {
+    notifyExpiredSession();
+    throw error;
+  }).finally(() => {
+    refreshInProgress = null;
+  });
+
+  return refreshInProgress;
+}
+
+async function authFetch(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
+  const execute = (accessToken?: string) => {
+    const headers = new Headers(init.headers);
+    if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+    const token = accessToken || readStoredSession()?.token;
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+    return fetch(input, { ...init, headers });
+  };
+
+  const response = await execute();
+  if (response.status !== 401) return response;
+
+  const renewedToken = await renewAccessToken();
+  return execute(renewedToken);
+}
 
 export function getAuthHeaders(): Record<string, string> {
   const sessionStr = localStorage.getItem('carbot_session');
@@ -68,7 +138,7 @@ class ApiService {
     token: string,
     passwordActual: string,
     passwordNuevo: string,
-  ): Promise<{ mensaje: string; access_token: string }> {
+  ): Promise<{ mensaje: string; access_token: string; refresh_token: string }> {
     const res = await fetch(`${API_BASE_URL}/auth/cambiar-password`, {
       method: 'POST',
       headers: {
@@ -92,7 +162,7 @@ class ApiService {
     if (fechaInicio) url.searchParams.append('fecha_inicio', fechaInicio);
     if (fechaFin) url.searchParams.append('fecha_fin', fechaFin);
 
-    const res = await fetch(url.toString(), {
+    const res = await authFetch(url.toString(), {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
@@ -103,7 +173,7 @@ class ApiService {
   }
 
   async getMecanicos(): Promise<Mecanico[]> {
-    const res = await fetch(`${API_BASE_URL}/mecanicos`, {
+    const res = await authFetch(`${API_BASE_URL}/mecanicos`, {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
@@ -114,7 +184,7 @@ class ApiService {
   }
 
   async registrarMecanico(data: MecanicoCreateDTO): Promise<Mecanico> {
-    const res = await fetch(`${API_BASE_URL}/mecanicos`, {
+    const res = await authFetch(`${API_BASE_URL}/mecanicos`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(data),
@@ -126,8 +196,21 @@ class ApiService {
     return await res.json();
   }
 
+  async actualizarMecanico(id: string, data: MecanicoUpdateDTO): Promise<MecanicoResponseDTO> {
+    const res = await authFetch(`${API_BASE_URL}/mecanicos/${id}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ detail: 'Error al actualizar perfil' }));
+      throw new Error(errorData.detail || 'No se pudo actualizar el perfil del mecánico');
+    }
+    return await res.json();
+  }
+
   async toggleActivarMecanico(id: string): Promise<Mecanico> {
-    const res = await fetch(`${API_BASE_URL}/mecanicos/${id}/activar`, {
+    const res = await authFetch(`${API_BASE_URL}/mecanicos/${id}/activar`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
     });
@@ -139,7 +222,7 @@ class ApiService {
   }
 
   async toggleBloquearMecanico(id: string): Promise<Mecanico> {
-    const res = await fetch(`${API_BASE_URL}/mecanicos/${id}/bloquear`, {
+    const res = await authFetch(`${API_BASE_URL}/mecanicos/${id}/bloquear`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
     });
@@ -151,7 +234,7 @@ class ApiService {
   }
 
   async eliminarMecanico(id: string): Promise<{ mensaje: string }> {
-    const res = await fetch(`${API_BASE_URL}/mecanicos/${id}/revocar-acceso`, {
+    const res = await authFetch(`${API_BASE_URL}/mecanicos/${id}/revocar-acceso`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
     });
@@ -162,11 +245,11 @@ class ApiService {
     return await res.json();
   }
 
-  async cambiarRolMecanico(id: string, nuevo_rol: MecanicoRol): Promise<Mecanico> {
-    const res = await fetch(`${API_BASE_URL}/mecanicos/${id}/rol`, {
+  async cambiarRolMecanico(id: string, nuevo_rol: MecanicoRol, password?: string): Promise<Mecanico> {
+    const res = await authFetch(`${API_BASE_URL}/mecanicos/${id}/rol`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ nuevo_rol }),
+      body: JSON.stringify({ nuevo_rol, password }),
     });
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({ detail: 'Error al cambiar rol del mecánico' }));
@@ -180,6 +263,8 @@ class ApiService {
     estado?: string;
     modo?: string;
     mecanico_id?: string;
+    limite?: number;
+    offset?: number;
   }): Promise<Diagnostico[]> {
     const url = new URL(`${API_BASE_URL}/diagnostico/historial`);
     if (params) {
@@ -187,9 +272,11 @@ class ApiService {
       if (params.estado) url.searchParams.append('estado', params.estado);
       if (params.modo) url.searchParams.append('modo', params.modo);
       if (params.mecanico_id) url.searchParams.append('mecanico_id', params.mecanico_id);
+      if (params.limite !== undefined) url.searchParams.append('limite', params.limite.toString());
+      if (params.offset !== undefined) url.searchParams.append('offset', params.offset.toString());
     }
 
-    const res = await fetch(url.toString(), {
+    const res = await authFetch(url.toString(), {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
@@ -202,7 +289,7 @@ class ApiService {
   async actualizarEstadoDiagnostico(
     dto: ActualizarEstadoDiagnosticoDTO
   ): Promise<{ mensaje: string }> {
-    const res = await fetch(`${API_BASE_URL}/diagnostico/${dto.diagnostico_id}/confirmar`, {
+    const res = await authFetch(`${API_BASE_URL}/diagnostico/${dto.diagnostico_id}/confirmar`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
       body: JSON.stringify({
@@ -226,7 +313,7 @@ class ApiService {
     if (busqueda) {
       url.searchParams.append('busqueda', busqueda);
     }
-    const res = await fetch(url.toString(), {
+    const res = await authFetch(url.toString(), {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
@@ -237,7 +324,7 @@ class ApiService {
   }
 
   async toggleBloquearCliente(id: string): Promise<{ mensaje: string; bloqueado: boolean }> {
-    const res = await fetch(`${API_BASE_URL}/clientes/${id}/bloquear`, {
+    const res = await authFetch(`${API_BASE_URL}/clientes/${id}/bloquear`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
     });
@@ -253,7 +340,7 @@ class ApiService {
     if (estado) {
       url.searchParams.append('estado', estado);
     }
-    const res = await fetch(url.toString(), {
+    const res = await authFetch(url.toString(), {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
@@ -264,7 +351,7 @@ class ApiService {
   }
 
   async aprobarSolicitudAcceso(id: string): Promise<AprobarSolicitudResponseDTO> {
-    const res = await fetch(`${API_BASE_URL}/clientes/solicitudes/${id}/aprobar`, {
+    const res = await authFetch(`${API_BASE_URL}/clientes/solicitudes/${id}/aprobar`, {
       method: 'POST',
       headers: getAuthHeaders(),
     });
@@ -276,7 +363,7 @@ class ApiService {
   }
 
   async rechazarSolicitudAcceso(id: string, motivo?: string): Promise<{ mensaje: string }> {
-    const res = await fetch(`${API_BASE_URL}/clientes/solicitudes/${id}/rechazar`, {
+    const res = await authFetch(`${API_BASE_URL}/clientes/solicitudes/${id}/rechazar`, {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify({ motivo }),
@@ -286,6 +373,34 @@ class ApiService {
       throw new Error(errorData.detail || 'No se pudo rechazar la solicitud');
     }
     return await res.json();
+  }
+
+  async getHealthReady(): Promise<{
+    status: 'ready' | 'not_ready' | 'offline';
+    componentes?: {
+      postgresql?: boolean;
+      worker_gemini?: boolean;
+      modelo_ml?: boolean;
+      rag?: boolean;
+    };
+  }> {
+    try {
+      const rootOrigin = API_BASE_URL.replace(/\/api\/v1\/?$/, '');
+      const res = await fetch(`${rootOrigin}/health/ready`, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
+      if (res.status === 200) {
+        const data = await res.json().catch(() => ({ status: 'ready' }));
+        return { status: 'ready', componentes: data.componentes };
+      } else if (res.status === 503) {
+        const data = await res.json().catch(() => ({ status: 'not_ready' }));
+        return { status: 'not_ready', componentes: data.componentes };
+      }
+      return { status: 'not_ready' };
+    } catch {
+      return { status: 'offline' };
+    }
   }
 }
 

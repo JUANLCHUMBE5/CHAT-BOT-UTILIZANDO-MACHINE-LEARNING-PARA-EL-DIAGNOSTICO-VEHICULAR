@@ -16,12 +16,12 @@ La aplicación usa:
 | Tabla | Responsabilidad |
 |---|---|
 | `talleres` | Organización propietaria de sus registros. |
-| `roles` | Catálogo de administrador, mecánico y supervisor. |
-| `usuarios` | Mecánicos autorizados, identificados mediante hash del número de WhatsApp. |
+| `roles` | Catálogo de administrador, mecánico, supervisor/jefe y cliente. |
+| `usuarios` | Clientes, mecánicos autorizados y administradores; el número se protege mediante HMAC. |
 | `vehiculos` | Datos técnicos del vehículo; la placa completa no se almacena en texto plano. |
-| `conversaciones` | Sesiones y ventana de servicio de WhatsApp. |
+| `conversaciones` | Sesiones, ventana de servicio y contexto temporal del vehículo. |
 | `mensajes` | Entrada/salida, estado de entrega, categoría y costo estimado. |
-| `diagnosticos` | Síntoma, predicción, confianza, fuente y conclusión del mecánico. |
+| `diagnosticos` | Síntoma, predicción, confianza, fuente, conclusión y trazabilidad JSON. |
 | `hipotesis_diagnostico` | Posibles fallas y pruebas recomendadas ordenadas. |
 | `uso_api` | Tokens, unidades y costo estimado de Meta, Google, AWS o procesos locales. |
 | `auditoria` | Trazabilidad de acciones sin guardar payloads completos ni secretos. |
@@ -62,17 +62,26 @@ un prompt oculto (así tampoco queda en el historial de PowerShell):
 python -m scripts.registrar_taller_admin --taller "Nombre del taller" --ruc "20123456789" --nombres "Nombre" --apellidos "Apellido" --rol administrador
 ```
 
-Roles válidos: `administrador`, `mecanico` y `supervisor`. El alias `admin` se
-mantiene únicamente por compatibilidad. El mismo número puede ejecutarse otra
-vez sin duplicar al usuario.
+Roles persistidos: `administrador`, `mecanico`, `supervisor` y `cliente`. Los
+alias `admin` y `jefe_taller` se mantienen por compatibilidad. Solo el
+administrador posee contraseña y acceso al panel; mecánicos y clientes se
+identifican mediante WhatsApp. El mismo número puede registrarse nuevamente sin
+duplicar al usuario.
 
 ## Persistencia del webhook
 
-Con `DATABASE_ENABLED=true`, el webhook autoriza al remitente por el hash de su
-número y guarda conversación, mensajes, diagnóstico, hipótesis, auditoría y uso
-de APIs. `meta_message_id` es único para hacer el procesamiento idempotente,
-incluso ante reintentos concurrentes de Meta. Los eventos de entrega o lectura
-se aceptan pero no generan diagnósticos.
+Con `DATABASE_ENABLED=true`, el webhook identifica al remitente por el hash de
+su número. Los clientes reciben el flujo básico; solo los roles técnicos
+autorizados ejecutan diagnóstico. Se guardan conversación, mensajes,
+diagnóstico, hipótesis, trazabilidad, auditoría y uso de APIs. Las consultas
+técnicas informativas se responden pero no se registran como averías.
+`meta_message_id` es único para hacer el procesamiento idempotente incluso ante
+reintentos concurrentes de Meta. Los eventos de entrega o lectura no generan
+diagnósticos.
+
+Las revisiones vigentes llegan a `20260815_04`. Las cuatro últimas eliminan
+credenciales de roles no administrativos, añaden trazabilidad de diagnóstico,
+distinguen consultas informativas en la cola y guardan contexto conversacional.
 
 El consumo de Gemini solo se registra cuando Google responde correctamente y
 entrega `usageMetadata`; el fallback local no se contabiliza como uso externo.
@@ -92,4 +101,3 @@ La migración generada siempre debe revisarse antes de ejecutarla. Alembic detec
 ## AWS
 
 En Amazon RDS para PostgreSQL se utilizará el mismo esquema y las mismas migraciones. Solo cambiarán `DATABASE_URL` o las variables `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER` y `POSTGRES_PASSWORD`. La contraseña nunca debe almacenarse en GitHub.
-

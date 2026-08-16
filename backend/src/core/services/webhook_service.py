@@ -337,7 +337,8 @@ class WebhookService:
                 # =========================================================
                 codigo_rol = usuario.rol.codigo if usuario.rol else "cliente"
 
-                if codigo_rol == "cliente":
+                roles_tecnicos_autorizados = {"mecanico", "jefe_taller", "supervisor", "administrador", "admin"}
+                if codigo_rol not in roles_tecnicos_autorizados:
                     # =========================================================
                     # FLUJO CLIENTE (CERO ML / CERO RAG / CERO GEMINI)
                     # =========================================================
@@ -384,10 +385,13 @@ class WebhookService:
                     }
 
                 # =========================================================
-                # 7. EJECUTAR DIAGNÓSTICO ML + RAG + GEMINI (MECÁNICOS / ADMIN)
+                # 7. EJECUTAR DIAGNÓSTICO ML + RAG + GEMINI (SOLO PERSONAL AUTORIZADO)
                 # =========================================================
                 t_ml_inicio = time.perf_counter()
                 id_sesion_str = str(conversacion.id)
+                self.gestor.session_manager.cargar_contexto(
+                    id_sesion_str, conversacion.contexto or {}
+                )
 
                 if tipo_mensaje == "audio":
                     try:
@@ -458,8 +462,67 @@ class WebhookService:
                 similitud_rag = dto.similitud_rag
                 contexto_manual = dto.contexto_manual
                 titulo_manual = dto.titulo_manual
+                conversacion.contexto = self.gestor.session_manager.exportar_contexto(
+                    id_sesion_str
+                )
 
                 duracion_ms = int((time.perf_counter() - t_ml_inicio) * 1000)
+
+                # Las preguntas informativas y los mensajes fuera de alcance no son averías.
+                # Se responden por WhatsApp, pero no contaminan el historial de diagnósticos.
+                if dto.tipo_consulta != "diagnostico":
+                    if dto.modo_diagnostico == "consulta_tecnica_en_cola" and dto.solicitud_id:
+                        await gemini_rate_limiter.persistir_solicitud_en_sesion(
+                            session,
+                            solicitud_id=dto.solicitud_id,
+                            sintoma=dto.sintoma_evaluado or texto_cliente,
+                            diagnostico_ml="Consulta técnica informativa",
+                            confianza_ml=0.0,
+                            contexto_manual=dto.contexto_manual,
+                            titulo_manual=dto.titulo_manual,
+                            requiere_revision_humana=False,
+                            diagnostico_id=None,
+                            remitente=remitente,
+                            proveedor=proveedor,
+                            taller_id=str(usuario.taller_id),
+                            usuario_id=str(usuario.id),
+                            conversacion_id=str(conversacion.id),
+                            tipo_consulta="consulta_tecnica",
+                        )
+
+                    out_msg_id = f"out_{meta_message_id or uuid.uuid4()}"
+                    await msg_repo.crear_mensaje(
+                        conversacion_id=conversacion.id,
+                        taller_id=usuario.taller_id,
+                        usuario_id=usuario.id,
+                        meta_message_id=out_msg_id,
+                        direccion="salida",
+                        tipo="texto",
+                        texto=respuesta_texto,
+                        categoria_cobro="servicio",
+                        estado_entrega="pendiente",
+                        costo_estimado=(
+                            Decimal(str(settings.twilio_message_price_usd))
+                            if proveedor == "twilio"
+                            else COSTO_META_MENSAJE_SERVICIO_USD
+                        ),
+                        moneda="USD",
+                        proveedor=proveedor,
+                        destinatario_cifrado=cifrar_texto_reversible(remitente),
+                        disponible_entrega_en=datetime.now(timezone.utc),
+                    )
+                    await session.commit()
+                    total_ms = (time.perf_counter() - inicio) * 1000
+                    logger.info(
+                        "[Webhook Técnico] Consulta informativa respondida sin crear diagnóstico "
+                        f"para {usuario.nombres} en {total_ms:.2f}ms"
+                    )
+                    return {
+                        "status": "consulta_tecnica" if dto.tipo_consulta == "consulta_tecnica" else "fuera_de_alcance",
+                        "conversacion_id": str(conversacion.id),
+                        "respuesta": respuesta_texto,
+                        "tiempo_total_ms": round(total_ms, 2),
+                    }
 
                 # =========================================================
                 # 6. ASOCIAR VEHÍCULO (SI APLICA)
@@ -516,6 +579,49 @@ class WebhookService:
                     conclusion_mecanico=conclusion_diag,
                     version_modelo_ml=settings.model_version,
                     version_corpus_rag=getattr(self.gestor.motor_rag, "corpus_version", "desconocido"),
+                    trazabilidad={
+                        "version": 1,
+                        "predicciones_ml": [pred.model_dump() for pred in dto.predicciones_ml],
+                        "etapas": [
+                            {
+                                "clave": "normalizacion",
+                                "nombre": "Normalización del síntoma",
+                                "estado": "completado",
+                                "duracion_ms": 0,
+                                "detalle": sintoma_norm,
+                            },
+                            {
+                                "clave": "ml",
+                                "nombre": settings.model_algorithm,
+                                "estado": "completado",
+                                "duracion_ms": dto.tiempo_ml_ms,
+                                "detalle": f"{len(dto.predicciones_ml)} clases comparadas en el resumen",
+                            },
+                            {
+                                "clave": "rag",
+                                "nombre": "Búsqueda RAG en manuales",
+                                "estado": "completado" if contexto_manual else "sin_resultado",
+                                "duracion_ms": dto.tiempo_rag_ms,
+                                "detalle": titulo_manual or "Sin coincidencia documental",
+                            },
+                            {
+                                "clave": "llm",
+                                "nombre": "Síntesis técnica Gemini",
+                                "estado": "en_cola" if dto.modo_diagnostico == "en_cola_gemini" else ("completado" if dto.llm_usado else "degradado"),
+                                "duracion_ms": dto.tiempo_llm_ms,
+                                "detalle": dto.llm_modelo or settings.gemini_model,
+                            },
+                        ],
+                        "gemini": {
+                            "usado": dto.llm_usado,
+                            "modelo": dto.llm_modelo,
+                            "tokens_entrada": dto.tokens_entrada,
+                            "tokens_salida": dto.tokens_salida,
+                            "posicion_cola": dto.posicion_cola,
+                        },
+                        "desde_cache": dto.desde_cache,
+                        "tiempo_total_ms": dto.tiempo_total_ms or duracion_ms,
+                    },
                 )
 
                 if dto.modo_diagnostico == "en_cola_gemini" and dto.solicitud_id:
@@ -550,15 +656,25 @@ class WebhookService:
                     if contexto_manual and contexto_manual.strip()
                     else "Sin procedimiento RAG registrado"
                 )
-                await diag_repo.agregar_hipotesis(
-                    diagnostico_id=diag.id,
-                    orden=1,
-                    falla_probable=diagnostico_ml,
-                    confianza=confianza_ml,
-                    evidencia=evidencia,
-                    prueba_recomendada=proc_recomendado,
-                    resultado="pendiente",
-                )
+                predicciones_a_guardar = dto.predicciones_ml or []
+                if not predicciones_a_guardar:
+                    predicciones_a_guardar = [
+                        {"falla": diagnostico_ml, "probabilidad": confianza_ml}
+                    ]
+                for orden, prediccion in enumerate(predicciones_a_guardar[:3], start=1):
+                    falla = getattr(prediccion, "falla", None) or prediccion.get("falla", diagnostico_ml)
+                    probabilidad = getattr(prediccion, "probabilidad", None)
+                    if probabilidad is None:
+                        probabilidad = prediccion.get("probabilidad", confianza_ml)
+                    await diag_repo.agregar_hipotesis(
+                        diagnostico_id=diag.id,
+                        orden=orden,
+                        falla_probable=falla,
+                        confianza=probabilidad,
+                        evidencia=evidencia if orden == 1 else f"Alternativa calculada por {settings.model_algorithm}.",
+                        prueba_recomendada=proc_recomendado if orden == 1 else None,
+                        resultado="pendiente",
+                    )
 
                 # =========================================================
                 # 8. REGISTRAR CONSUMO Y COSTO DE GEMINI LLM
@@ -668,6 +784,9 @@ class WebhookService:
                 marca_modelo=marca_modelo,
                 session_id=session_id or remitente,
                 proveedor=proveedor,
+                # Sin PostgreSQL no hay cuota durable ni trazabilidad: no bloquear
+                # el webhook esperando una llamada externa a Gemini.
+                slot_gemini_preconcedido=False,
             )
             respuesta = dto.respuesta_texto
             diag_ml = dto.diagnostico_ml

@@ -28,6 +28,11 @@ def test_modelo_ml_prediccion_directa():
     assert isinstance(confianza, float)
     assert 0.0 <= confianza <= 100.0
 
+    comparacion = modelo_ml.predecir_top_fallas("pastillas de freno chillan al frenar", limite=3)
+    assert 1 <= len(comparacion) <= 3
+    assert all("falla" in item and "probabilidad" in item for item in comparacion)
+    assert comparacion == sorted(comparacion, key=lambda item: item["probabilidad"], reverse=True)
+
 def test_motor_rag_busqueda_faiss():
     """T1-RAG: MotorRAG vector search retrieves workshop manual section for symptoms and DTC codes."""
     motor_rag = ServiceContainer.get_motor_rag()
@@ -50,6 +55,11 @@ def test_gestor_diagnostico_procesar_consulta_dto():
     assert res.diagnostico_ml != ""
     assert res.respuesta_texto != ""
     assert res.confianza_ml >= 0.0
+    assert res.predicciones_ml
+    assert res.predicciones_ml[0].falla
+    assert res.tiempo_ml_ms >= 0
+    assert res.tiempo_rag_ms >= 0
+    assert res.tiempo_total_ms >= 0
 
 def test_traductor_jerga_normalizacion():
     """T1-SLANG: normalizar_jerga_peruana converts Peruvian mechanical slang to standard technical terms."""

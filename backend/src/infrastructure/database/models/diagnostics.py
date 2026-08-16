@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import uuid
 from decimal import Decimal
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import (
+    JSON,
     CheckConstraint,
     ForeignKey,
     Integer,
@@ -17,6 +18,7 @@ from sqlalchemy import (
     UniqueConstraint,
     text,
 )
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.infrastructure.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -25,6 +27,9 @@ if TYPE_CHECKING:
     from src.infrastructure.database.models.catalogs import Taller, Usuario
     from src.infrastructure.database.models.messaging import Conversacion
     from src.infrastructure.database.models.operations import UsoApi
+
+
+JSONType = JSON().with_variant(JSONB(), "postgresql")
 
 
 class Vehiculo(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -89,6 +94,7 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     sintesis_llm: Mapped[str | None] = mapped_column(Text)
     version_modelo_ml: Mapped[str | None] = mapped_column(String(80))
     version_corpus_rag: Mapped[str | None] = mapped_column(String(80))
+    trazabilidad: Mapped[dict[str, Any] | None] = mapped_column(JSONType)
 
     taller: Mapped["Taller"] = relationship(back_populates="diagnosticos")
     mecanico: Mapped["Usuario"] = relationship(back_populates="diagnosticos")

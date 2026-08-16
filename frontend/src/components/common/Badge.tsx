@@ -1,4 +1,5 @@
 import React from 'react';
+import { getModoLabel } from '../../utils/modos';
 
 type BadgeType =
   | 'generado'
@@ -24,23 +25,23 @@ export const Badge: React.FC<BadgeProps> = ({ type, label, size = 'md' }) => {
     switch (type) {
       case 'confirmado':
       case 'activo':
-        return { bg: 'var(--status-success-bg)', color: 'var(--status-success-text)', text: label || 'Confirmado' };
+        return { bg: 'var(--status-success-bg)', color: 'var(--status-success-text)', text: label || (type === 'activo' ? 'Activo' : 'Confirmado') };
       case 'en_revision':
       case 'en_cola_gemini':
       case 'baja_confianza':
-        return { bg: 'var(--status-warning-bg)', color: 'var(--status-warning-text)', text: label || (type === 'en_cola_gemini' ? 'En Cola' : 'En Revisión') };
+        return { bg: 'var(--status-warning-bg)', color: 'var(--status-warning-text)', text: label || (type === 'en_cola_gemini' || type === 'baja_confianza' ? getModoLabel(type) : 'En Revisión') };
       case 'descartado':
       case 'bloqueado':
         return { bg: 'var(--status-danger-bg)', color: 'var(--status-danger-text)', text: label || (type === 'bloqueado' ? 'Bloqueado' : 'Descartado') };
       case 'generado':
       case 'completo_ml_rag_llm':
-        return { bg: '#fff7ed', color: '#c2410c', text: label || (type === 'completo_ml_rag_llm' ? 'ML+RAG+LLM' : 'Generado') };
+        return { bg: '#fff7ed', color: '#c2410c', text: label || (type === 'completo_ml_rag_llm' ? getModoLabel(type) : 'Generado') };
       case 'diagnostico_degradado_ml_rag':
-        return { bg: '#f1f5f9', color: '#475569', text: label || 'Degradado (ML+RAG)' };
+        return { bg: '#f1f5f9', color: '#475569', text: label || getModoLabel(type) };
       case 'saludo':
-        return { bg: '#e0f2fe', color: '#0369a1', text: label || 'Saludo' };
+        return { bg: '#e0f2fe', color: '#0369a1', text: label || getModoLabel(type) };
       default:
-        return { bg: 'var(--bg-subtle)', color: 'var(--text-secondary)', text: label || type };
+        return { bg: 'var(--bg-subtle)', color: 'var(--text-secondary)', text: label || getModoLabel(type) };
     }
   };
 

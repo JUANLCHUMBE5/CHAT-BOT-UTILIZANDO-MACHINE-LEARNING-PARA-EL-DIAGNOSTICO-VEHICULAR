@@ -15,6 +15,7 @@ from src.infrastructure.database.models.catalogs import Taller, Usuario
 from src.infrastructure.database.models.diagnostics import Diagnostico, HipotesisDiagnostico, Vehiculo
 from src.infrastructure.database.models.messaging import Conversacion, Mensaje
 from src.infrastructure.database.models.operations import Auditoria, UsoApi
+from src.infrastructure.database.models.jobs import TrabajoGemini
 from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
@@ -72,6 +73,7 @@ async def setup_test_db():
         subq = select(Diagnostico.id).where(Diagnostico.taller_id == taller_id)
         await session.execute(delete(HipotesisDiagnostico).where(HipotesisDiagnostico.diagnostico_id.in_(subq)))
         await session.execute(delete(UsoApi).where(UsoApi.taller_id == taller_id))
+        await session.execute(delete(TrabajoGemini).where(TrabajoGemini.taller_id == taller_id))
         await session.execute(delete(Auditoria).where(Auditoria.taller_id == taller_id))
         await session.execute(
             delete(Auditoria).where(
@@ -194,6 +196,32 @@ async def test_webhook_rechaza_mecanico_no_autorizado(setup_test_db, monkeypatch
         assert salida is not None
         assert salida.estado_entrega == "pendiente"
         assert "bienvenido" in salida.texto.lower()
+
+
+@pytest.mark.anyio
+async def test_consulta_tecnica_autorizada_no_crea_diagnostico(setup_test_db):
+    data = setup_test_db
+    gestor = GestorDiagnostico()
+    gestor.api_key = ""
+    service = WebhookService(gestor)
+    meta_msg_id = f"wamid_info_{uuid.uuid4().hex}"
+
+    resultado = await service.procesar_mensaje(
+        remitente=data["telefono_autorizado"],
+        meta_message_id=meta_msg_id,
+        tipo_mensaje="text",
+        texto_cliente="qué potencia deben tener los focos LED H4 para una Suzuki APV",
+    )
+
+    assert resultado["status"] == "consulta_tecnica"
+    async with AsyncSession(data["engine"], expire_on_commit=False) as session:
+        diagnosticos = await session.execute(
+            select(Diagnostico).where(Diagnostico.taller_id == data["taller_id"])
+        )
+        assert diagnosticos.scalars().all() == []
+        salida = await MensajeRepository(session).obtener_por_meta_message_id(f"out_{meta_msg_id}")
+        assert salida is not None
+        assert "falla vehicular" not in (salida.texto or "").lower()
 
 
 @pytest.mark.anyio

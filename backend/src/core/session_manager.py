@@ -1,6 +1,6 @@
 import threading
 import time
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from src.core.logger import logger
 
@@ -13,6 +13,10 @@ class DiagnosticSession:
         self.placa: Optional[str] = None
         self.marca_modelo: Optional[str] = None
         self.sintomas: List[str] = []
+        self.perfil_vehiculo: Dict[str, Any] = {}
+        self.consulta_tecnica_pendiente: Optional[str] = None
+        self.campos_requeridos: List[str] = []
+        self.kilometraje_por_aclarar: bool = False
         self.estado: str = "inicio"  # inicio, esperando_clarificacion, completo
         self.created_at: float = time.time()
         self.updated_at: float = time.time()
@@ -33,7 +37,57 @@ class DiagnosticSession:
     def reiniciar(self):
         with self._lock:
             self.sintomas = []
+            self.consulta_tecnica_pendiente = None
+            self.campos_requeridos = []
+            self.kilometraje_por_aclarar = False
             self.estado = "inicio"
+            self.updated_at = time.time()
+
+    def establecer_consulta_tecnica(
+        self, pregunta: str, campos_requeridos: List[str], kilometraje_por_aclarar: bool
+    ) -> None:
+        with self._lock:
+            self.consulta_tecnica_pendiente = pregunta
+            self.campos_requeridos = list(dict.fromkeys(campos_requeridos))
+            self.kilometraje_por_aclarar = kilometraje_por_aclarar
+            self.estado = "esperando_datos_vehiculo"
+            self.updated_at = time.time()
+
+    def actualizar_perfil(self, datos: Dict[str, Any]) -> None:
+        with self._lock:
+            self.perfil_vehiculo.update({k: v for k, v in datos.items() if v not in (None, "")})
+            marca = self.perfil_vehiculo.get("marca")
+            modelo = self.perfil_vehiculo.get("modelo")
+            if marca and modelo:
+                self.marca_modelo = f"{marca} {modelo}"
+            if "kilometraje" in datos:
+                self.kilometraje_por_aclarar = False
+            self.updated_at = time.time()
+
+    def campos_faltantes(self) -> List[str]:
+        with self._lock:
+            return [campo for campo in self.campos_requeridos if not self.perfil_vehiculo.get(campo)]
+
+    def exportar_contexto(self) -> Dict[str, Any]:
+        with self._lock:
+            return {
+                "perfil_vehiculo": dict(self.perfil_vehiculo),
+                "consulta_tecnica_pendiente": self.consulta_tecnica_pendiente,
+                "campos_requeridos": list(self.campos_requeridos),
+                "kilometraje_por_aclarar": self.kilometraje_por_aclarar,
+                "estado": self.estado,
+            }
+
+    def cargar_contexto(self, contexto: Dict[str, Any]) -> None:
+        with self._lock:
+            self.perfil_vehiculo = dict(contexto.get("perfil_vehiculo") or {})
+            marca = self.perfil_vehiculo.get("marca")
+            modelo = self.perfil_vehiculo.get("modelo")
+            self.marca_modelo = f"{marca} {modelo}" if marca and modelo else None
+            self.consulta_tecnica_pendiente = contexto.get("consulta_tecnica_pendiente")
+            self.campos_requeridos = list(contexto.get("campos_requeridos") or [])
+            self.kilometraje_por_aclarar = bool(contexto.get("kilometraje_por_aclarar", False))
+            self.estado = str(contexto.get("estado") or "inicio")
             self.updated_at = time.time()
 
     def ha_expirado(self, ttl_segundos: int = 1800) -> bool:
@@ -115,6 +169,15 @@ class SessionManager:
             if session_id in self._sesiones:
                 logger.debug(f"[SessionManager] Reiniciando sesión para session_id='{session_id}'")
                 self._sesiones[session_id].reiniciar()
+
+    def exportar_contexto(self, session_id: str) -> Dict[str, Any]:
+        sesion = self.obtener_sesion(session_id)
+        return sesion.exportar_contexto() if sesion else {}
+
+    def cargar_contexto(self, session_id: str, contexto: Optional[Dict[str, Any]]) -> None:
+        if not contexto:
+            return
+        self.obtener_o_crear_sesion(session_id).cargar_contexto(contexto)
 
     def _limpiar_sesiones_expiradas(self, ttl_segundos: int = 1800, force: bool = False):
         with self._lock:

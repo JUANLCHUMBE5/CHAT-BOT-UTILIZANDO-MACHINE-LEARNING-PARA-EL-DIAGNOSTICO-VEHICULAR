@@ -5,9 +5,10 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from decimal import Decimal
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Index, Integer, Numeric, String, Text, text
+from sqlalchemy import JSON, CheckConstraint, DateTime, ForeignKey, Index, Integer, Numeric, String, Text, text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.infrastructure.database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -16,6 +17,9 @@ if TYPE_CHECKING:
     from src.infrastructure.database.models.catalogs import Taller, Usuario
     from src.infrastructure.database.models.diagnostics import Diagnostico
     from src.infrastructure.database.models.operations import UsoApi
+
+
+JSONType = JSON().with_variant(JSONB(), "postgresql")
 
 
 class Conversacion(UUIDPrimaryKeyMixin, TimestampMixin, Base):
@@ -37,6 +41,9 @@ class Conversacion(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     ultimo_mensaje_en: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     ventana_servicio_hasta: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     cerrada_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    contexto: Mapped[dict[str, Any]] = mapped_column(
+        JSONType, nullable=False, default=dict, server_default=text("'{}'")
+    )
 
     taller: Mapped["Taller"] = relationship()
     usuario: Mapped["Usuario"] = relationship(back_populates="conversaciones")

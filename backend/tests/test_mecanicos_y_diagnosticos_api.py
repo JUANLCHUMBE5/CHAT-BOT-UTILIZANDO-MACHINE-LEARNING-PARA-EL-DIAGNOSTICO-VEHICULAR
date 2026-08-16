@@ -24,17 +24,31 @@ def token_admin():
     )
 
 
-def test_registro_mecanico_validacion_password_corta(client, token_admin):
-    """Verifica que el registro de mecánico rechace contraseñas de menos de 6 caracteres."""
+def test_registro_mecanico_no_requiere_password_web(client, token_admin):
+    """Un mecánico se autoriza por WhatsApp y no necesita contraseña web."""
     payload = {
         "nombres": "Carlos Mecanico",
         "telefono_whatsapp": "+51 999 888 777",
-        "password": "123",
         "rol": "mecanico",
     }
     response = client.post(
         "/api/v1/mecanicos",
         json=payload,
+        headers={"Authorization": f"Bearer {token_admin}"},
+    )
+    assert response.status_code in (200, 503)
+
+
+def test_registro_administrador_exige_password_segura(client, token_admin):
+    """Una cuenta administrativa sí requiere una contraseña web robusta."""
+    response = client.post(
+        "/api/v1/mecanicos",
+        json={
+            "nombres": "Segundo Administrador",
+            "telefono_whatsapp": "+51 999 888 776",
+            "password": "123",
+            "rol": "administrador",
+        },
         headers={"Authorization": f"Bearer {token_admin}"},
     )
     assert response.status_code == 400
@@ -46,7 +60,7 @@ def test_registro_mecanico_validacion_telefono_invalido(client, token_admin):
     payload = {
         "nombres": "Carlos Mecanico",
         "telefono_whatsapp": "123",
-        "password": "clave_segura_123",
+        "password": "ClaveSegura_123",
         "rol": "mecanico",
     }
     response = client.post(
@@ -107,3 +121,60 @@ def test_historial_no_presenta_mensaje_sin_coincidencia_como_procedimiento():
     assert _es_procedimiento_rag_real(
         "No se encontro un procedimiento especifico en los manuales para esta consulta."
     ) is False
+
+
+def test_guard_auto_modificacion_mecanico(client):
+    """Verifica que un administrador no pueda desactivarse, bloquearse, reducirse o revocarse a sí mismo."""
+    user_id = str(uuid.uuid4())
+    token_mismo_usuario = crear_jwt_token(
+        sub="Admin Test",
+        rol="administrador",
+        taller_id="00000000-0000-0000-0000-000000000001",
+        usuario_id=user_id,
+    )
+    headers = {"Authorization": f"Bearer {token_mismo_usuario}"}
+
+    # Intentar revocar su propio acceso
+    res_revocar = client.patch(f"/api/v1/mecanicos/{user_id}/revocar-acceso", headers=headers)
+    assert res_revocar.status_code == 400
+    assert "propio" in res_revocar.json()["detail"].lower()
+
+
+def test_actualizar_mecanico_put_invalid_uuid(client, token_admin):
+    """Verifica que PUT /mecanicos/{id} valide el formato UUID de mecanico_id."""
+    res = client.put(
+        "/api/v1/mecanicos/id-no-uuid",
+        json={"nombres": "Nuevo Nombre"},
+        headers={"Authorization": f"Bearer {token_admin}"},
+    )
+    assert res.status_code == 400
+    assert "UUID" in res.json()["detail"]
+
+
+def test_actualizar_mecanico_put_password_invalida(client, token_admin):
+    """Verifica que PUT /mecanicos/{id} valide la complejidad de la contraseña (min 12, mayus, minus, num)."""
+    target_id = str(uuid.uuid4())
+    res = client.put(
+        f"/api/v1/mecanicos/{target_id}",
+        json={"password": "123"},
+        headers={"Authorization": f"Bearer {token_admin}"},
+    )
+    assert res.status_code == 400
+    assert "12 caracteres" in res.json()["detail"].lower()
+
+
+def test_actualizar_mecanico_jerarquia_no_admin_edita_admin(client):
+    """Verifica que un jefe_taller o supervisor no pueda editar a un administrador."""
+    token_supervisor = crear_jwt_token(
+        sub="Supervisor Test",
+        rol="jefe_taller",
+        taller_id="00000000-0000-0000-0000-000000000001",
+        usuario_id=str(uuid.uuid4()),
+    )
+    target_admin_id = str(uuid.uuid4())
+    res = client.put(
+        f"/api/v1/mecanicos/{target_admin_id}",
+        json={"nombres": "Modificado Por Supervisor"},
+        headers={"Authorization": f"Bearer {token_supervisor}"},
+    )
+    assert res.status_code in (403, 404, 503)

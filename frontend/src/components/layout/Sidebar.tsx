@@ -1,28 +1,52 @@
-import React from 'react';
-import { LayoutDashboard, Users, UserCheck, FileSearch, ShieldCheck, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { LayoutDashboard, Users, FileSearch, ShieldCheck, X } from 'lucide-react';
+import type { UsuarioSesion } from '../../types';
+import { apiService } from '../../services/api';
 
-export type NavTab = 'resumen' | 'mecanicos' | 'clientes' | 'diagnosticos';
+export type NavTab = 'inicio' | 'personas' | 'diagnosticos';
 
 interface SidebarProps {
+  user?: UsuarioSesion | null;
   activeTab: NavTab;
   onSelectTab: (tab: NavTab) => void;
   isMobileOpen: boolean;
   onCloseMobile: () => void;
   isDesktopCollapsed?: boolean;
+  solicitudesPendientesCount?: number;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
+  user,
   activeTab,
   onSelectTab,
   isMobileOpen,
   onCloseMobile,
   isDesktopCollapsed = false,
+  solicitudesPendientesCount = 0,
 }) => {
-  const navItems: { id: NavTab; label: string; icon: React.ReactNode; badge?: string }[] = [
-    { id: 'resumen', label: 'Resumen Geral', icon: <LayoutDashboard size={18} /> },
-    { id: 'clientes', label: 'Clientes y Solicitudes', icon: <UserCheck size={18} /> },
-    { id: 'mecanicos', label: 'Gestión Mecánicos', icon: <Users size={18} /> },
-    { id: 'diagnosticos', label: 'Historial Diagnósticos', icon: <FileSearch size={18} /> },
+  const [saludSistema, setSaludSistema] = useState<'ready' | 'not_ready' | 'offline' | 'checking'>('checking');
+
+  useEffect(() => {
+    let montado = true;
+    const verificarSalud = async () => {
+      const res = await apiService.getHealthReady();
+      if (montado) {
+        setSaludSistema(res.status);
+      }
+    };
+
+    verificarSalud();
+    const intervalo = setInterval(verificarSalud, 30000);
+    return () => {
+      montado = false;
+      clearInterval(intervalo);
+    };
+  }, []);
+
+  const navItems: { id: NavTab; label: string; icon: React.ReactNode; badgeCount?: number }[] = [
+    { id: 'inicio', label: 'Inicio', icon: <LayoutDashboard size={18} /> },
+    { id: 'personas', label: 'Personas y accesos', icon: <Users size={18} />, badgeCount: solicitudesPendientesCount },
+    { id: 'diagnosticos', label: 'Diagnósticos', icon: <FileSearch size={18} /> },
   ];
 
   const content = (
@@ -92,6 +116,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 )}
                 <span>{item.icon}</span>
                 <span style={{ flex: 1 }}>{item.label}</span>
+                {item.badgeCount !== undefined && item.badgeCount > 0 && (
+                  <span
+                    className="badge-pending"
+                    style={{
+                      backgroundColor: '#ef4444',
+                      color: '#ffffff',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      borderRadius: '9999px',
+                      padding: '2px 8px',
+                      lineHeight: 1.2,
+                      marginLeft: 'auto',
+                    }}
+                  >
+                    {item.badgeCount}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -113,12 +154,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)' }}>
           <ShieldCheck size={16} />
           <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-main)' }}>
-            Taller Carabayllo
+            {user?.taller || 'Taller Autorizado'}
           </span>
         </div>
-        <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-          Base de Datos RAG: 25 Manuales de Servicio Activos.
-        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+          <span
+            style={{
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              backgroundColor:
+                saludSistema === 'ready'
+                  ? '#10b981'
+                  : saludSistema === 'not_ready'
+                  ? '#f59e0b'
+                  : saludSistema === 'offline'
+                  ? '#ef4444'
+                  : '#94a3b8',
+              display: 'inline-block',
+              boxShadow:
+                saludSistema === 'ready'
+                  ? '0 0 6px rgba(16, 185, 129, 0.4)'
+                  : saludSistema === 'offline'
+                  ? '0 0 6px rgba(239, 68, 68, 0.4)'
+                  : 'none',
+            }}
+          />
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+            {saludSistema === 'ready'
+              ? 'Sistema CarBot AI Activo'
+              : saludSistema === 'not_ready'
+              ? 'Servicios Parciales'
+              : saludSistema === 'offline'
+              ? 'Sin Conexión con Servidor'
+              : 'Verificando Sistema...'}
+          </span>
+        </div>
       </div>
     </div>
   );

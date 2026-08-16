@@ -5,7 +5,7 @@ from __future__ import annotations
 import uuid
 from typing import Optional, Sequence
 
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -51,6 +51,21 @@ class UsuarioRepository:
         roles["admin"] = roles["administrador"]
         roles["jefe_taller"] = roles["supervisor"]
         return roles
+
+    async def contar_administradores_activos(self, taller_id: uuid.UUID) -> int:
+        """Cuenta el número de usuarios activos y no bloqueados con rol administrador en un taller."""
+        stmt = (
+            select(func.count(Usuario.id))
+            .join(Usuario.rol)
+            .where(
+                Usuario.taller_id == taller_id,
+                Usuario.activo == True,
+                Usuario.bloqueado == False,
+                Rol.codigo.in_(["administrador", "admin"]),
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none() or 0
 
     async def buscar_por_whatsapp_hash(self, whatsapp_hash: str) -> Optional[Usuario]:
         """
@@ -195,17 +210,16 @@ class UsuarioRepository:
     async def promover_a_mecanico(
         self,
         usuario_id: uuid.UUID,
-        password_hash: str,
     ) -> Optional[Usuario]:
-        """Promueve un usuario cliente a rol mecánico asignando una contraseña temporal."""
+        """Promueve un cliente a mecánico con acceso exclusivo mediante WhatsApp."""
         usuario = await self.obtener_por_id(usuario_id)
         if not usuario:
             return None
 
         roles = await self.asegurar_roles_estandar()
         usuario.rol_id = roles["mecanico"].id
-        usuario.password_hash = password_hash
-        usuario.debe_cambiar_password = True
+        usuario.password_hash = None
+        usuario.debe_cambiar_password = False
         usuario.activo = True
         usuario.bloqueado = False
         await self.session.flush()
@@ -261,3 +275,24 @@ class UsuarioRepository:
         await self.session.delete(usuario)
         await self.session.commit()
         return True
+
+    async def actualizar_usuario(
+        self,
+        usuario: Usuario,
+        nombres: Optional[str] = None,
+        whatsapp_hash: Optional[str] = None,
+        whatsapp_ultimos4: Optional[str] = None,
+        password_hash: Optional[str] = None,
+    ) -> Usuario:
+        """Actualiza los campos principales de un usuario."""
+        if nombres is not None:
+            usuario.nombres = nombres
+        if whatsapp_hash is not None:
+            usuario.whatsapp_hash = whatsapp_hash
+        if whatsapp_ultimos4 is not None:
+            usuario.whatsapp_ultimos4 = whatsapp_ultimos4
+        if password_hash is not None:
+            usuario.password_hash = password_hash
+            usuario.debe_cambiar_password = False
+        await self.session.flush()
+        return usuario

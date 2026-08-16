@@ -24,7 +24,7 @@ export function useMecanicos() {
   const registrarMecanico = useCallback(async (data: {
     nombres: string;
     telefono: string;
-    password: string;
+    password?: string;
     rol: MecanicoRol;
   }) => {
     await apiService.registrarMecanico({

@@ -57,7 +57,7 @@ else {
 }
 
 if (-not (Test-ListeningPort -Port 8000)) {
-    $backendCommand = "& '$backendPython' -m uvicorn main:app --reload --port 8000"
+    $backendCommand = "& '$backendPython' -m alembic upgrade head; if (`$LASTEXITCODE -eq 0) { & '$backendPython' -m uvicorn main:app --reload --port 8000 }"
     Start-CarBotWindow -Title "CarBot - Backend" -WorkingDirectory $backendRoot -Command $backendCommand
     Write-Host "[OK] Iniciando chatbot y API..." -ForegroundColor Green
 }

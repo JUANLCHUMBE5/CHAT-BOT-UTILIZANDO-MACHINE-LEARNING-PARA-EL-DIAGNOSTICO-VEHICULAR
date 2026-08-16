@@ -1,9 +1,9 @@
 {
-  "version": "2.1.0-grouped-calibrated",
+  "version": "2.2.0-external-audited",
   "algoritmo_ganador_cv": "Linear_SVM",
   "exactitud_holdout_agrupado": 0.9754385964912281,
-  "f1_macro_holdout_agrupado": 0.954884784221047,
-  "f1_weighted_holdout_agrupado": 0.9691983905947585,
+  "f1_macro_holdout_agrupado": 0.9595292918452056,
+  "f1_weighted_holdout_agrupado": 0.9703275103530091,
   "cv_4fold_agrupado": {
     "Random_Forest": {
       "media_f1_macro": 0.9436676955922464,
@@ -155,9 +155,9 @@
       "support": 15.0
     },
     "Cuerpo de aceleracion o valvula IAC sucia": {
-      "precision": 0.68,
+      "precision": 0.6538461538461539,
       "recall": 1.0,
-      "f1-score": 0.8095238095238095,
+      "f1-score": 0.7906976744186046,
       "support": 17.0
     },
     "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)": {
@@ -191,9 +191,9 @@
       "support": 17.0
     },
     "Empaque de culata soplado o danado": {
-      "precision": 1.0,
+      "precision": 0.9545454545454546,
       "recall": 1.0,
-      "f1-score": 1.0,
+      "f1-score": 0.9767441860465116,
       "support": 21.0
     },
     "Faja o cadena de distribucion destensada o con salto de punto": {
@@ -227,9 +227,9 @@
       "support": 6.0
     },
     "Falla en bombin o bomba hidraulica de embrague": {
-      "precision": 1.0,
+      "precision": 0.9166666666666666,
       "recall": 1.0,
-      "f1-score": 1.0,
+      "f1-score": 0.9565217391304348,
       "support": 11.0
     },
     "Falla en bujias o bobinas de encendido (misfire)": {
@@ -300,8 +300,8 @@
     },
     "Falla en termostato o motoventilador de radiador": {
       "precision": 1.0,
-      "recall": 0.2,
-      "f1-score": 0.3333333333333333,
+      "recall": 0.4,
+      "f1-score": 0.5714285714285714,
       "support": 5.0
     },
     "Fallo en inversor de corriente IGBT o motor electrico (EV)": {
@@ -311,9 +311,9 @@
       "support": 16.0
     },
     "Falta o degradacion de aceite de caja de cambios": {
-      "precision": 0.9166666666666666,
+      "precision": 1.0,
       "recall": 1.0,
-      "f1-score": 0.9565217391304348,
+      "f1-score": 1.0,
       "support": 11.0
     },
     "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)": {
@@ -329,9 +329,9 @@
       "support": 15.0
     },
     "Fuga en mangueras de refrigerante o radiador picado": {
-      "precision": 0.6666666666666666,
-      "recall": 1.0,
-      "f1-score": 0.8,
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1-score": 0.75,
       "support": 4.0
     },
     "Fuga hidraulica o aire en el sistema de frenos": {
@@ -383,9 +383,9 @@
       "support": 6.0
     },
     "Sobrecalentamiento o solenoides en caja automatica CVT / DSG": {
-      "precision": 0.8571428571428571,
+      "precision": 1.0,
       "recall": 1.0,
-      "f1-score": 0.9230769230769231,
+      "f1-score": 1.0,
       "support": 6.0
     },
     "Válvula de freno de aire o secador APS obstruido (Camiones)": {
@@ -396,15 +396,15 @@
     },
     "accuracy": 0.9754385964912281,
     "macro avg": {
-      "precision": 0.9797120405179616,
-      "recall": 0.9594907407407408,
-      "f1-score": 0.954884784221047,
+      "precision": 0.9829325006134216,
+      "recall": 0.9584490740740742,
+      "f1-score": 0.9595292918452056,
       "support": 570.0
     },
     "weighted avg": {
-      "precision": 0.9816616761201249,
+      "precision": 0.9812955627013799,
       "recall": 0.9754385964912281,
-      "f1-score": 0.9691983905947585,
+      "f1-score": 0.9703275103530091,
       "support": 570.0
     }
   },
@@ -415,12 +415,43 @@
     "Hay clases con F1 inferior a 0.60 en holdout",
     "El error de calibracion ECE supera 0.10"
   ],
-  "error_calibracion_esperado": 0.25736887165504374,
-  "brier_multiclase": 0.12295150731157636,
+  "error_calibracion_esperado": 0.24812023402870662,
+  "brier_multiclase": 0.12063664527378887,
   "umbral_baja_confianza": 0.5,
-  "registros": 2861,
+  "registros": 2894,
+  "registros_base": 2861,
+  "registros_externos_disponibles": 33,
+  "registros_externos_incorporados": 33,
+  "dataset_externo_seleccionado": true,
+  "comparacion_enriquecimiento_externo": {
+    "base": {
+      "exactitud": 0.9754385964912281,
+      "f1_macro": 0.954884784221047,
+      "f1_weighted": 0.9691983905947585,
+      "ece": 0.25736887165504374
+    },
+    "enriquecido": {
+      "exactitud": 0.9754385964912281,
+      "f1_macro": 0.9595292918452056,
+      "f1_weighted": 0.9703275103530091,
+      "ece": 0.24812023402870662
+    },
+    "criterio": "Solo incorporar si mejora F1 macro, mantiene exactitud y calibracion, y ninguna clase pierde mas de 0.10 de F1.",
+    "peor_variacion_f1_clase": -0.050000000000000044,
+    "clases_mejoradas": {
+      "Falla en termostato o motoventilador de radiador": 0.23809523809523808,
+      "Falta o degradacion de aceite de caja de cambios": 0.04347826086956519,
+      "Sobrecalentamiento o solenoides en caja automatica CVT / DSG": 0.07692307692307687
+    },
+    "clases_empeoradas": {
+      "Cuerpo de aceleracion o valvula IAC sucia": -0.018826135105204922,
+      "Empaque de culata soplado o danado": -0.023255813953488413,
+      "Falla en bombin o bomba hidraulica de embrague": -0.04347826086956519,
+      "Fuga en mangueras de refrigerante o radiador picado": -0.050000000000000044
+    }
+  },
   "familias_sintoma": 1541,
   "clases": 48,
-  "sha256_modelo": "c1b00f4c9935e91af1cf7e6934e37a2d76f6086c767643a4329f06ad5b604be6",
-  "sha256_vectorizador": "9c67e6b505e267bdd6e3e246a2f8f344f462bbe1ebfe9394a75fce0214bf2543"
+  "sha256_modelo": "74e42873a6f8676fdb0c5f3d77cc851012fe30bb578ef8b7483a229f7e487a75",
+  "sha256_vectorizador": "efe5cfda83a1e51ab431455da30dd51c02ea494676847474b6ced4578701b5e9"
 }

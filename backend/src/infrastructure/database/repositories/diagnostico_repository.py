@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import uuid
 from decimal import Decimal
-from typing import Optional, Sequence
+from typing import Any, Optional, Sequence
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -39,6 +39,7 @@ class DiagnosticoRepository:
         diagnostico_id: Optional[uuid.UUID] = None,
         version_modelo_ml: Optional[str] = None,
         version_corpus_rag: Optional[str] = None,
+        trazabilidad: Optional[dict[str, Any]] = None,
     ) -> Diagnostico:
         """Persiste un nuevo diagnóstico vehicular con sus métricas y fuentes."""
         conf_decimal = Decimal(str(round(float(confianza), 4))) if confianza is not None else None
@@ -66,6 +67,7 @@ class DiagnosticoRepository:
             sintesis_llm=sintesis_llm,
             version_modelo_ml=version_modelo_ml,
             version_corpus_rag=version_corpus_rag,
+            trazabilidad=trazabilidad,
         )
         self.session.add(diag)
         await self.session.flush()
@@ -119,9 +121,10 @@ class DiagnosticoRepository:
         estado: Optional[str] = None,
         modo: Optional[str] = None,
         mecanico_id: Optional[uuid.UUID] = None,
-        limite: int = 100,
+        limite: Optional[int] = 100,
+        offset: int = 0,
     ) -> Sequence[Diagnostico]:
-        """Lista los diagnósticos realizados en un taller automotriz con opciones de filtrado."""
+        """Lista los diagnósticos realizados en un taller automotriz con opciones de filtrado y paginación."""
         stmt = (
             select(Diagnostico)
             .options(
@@ -152,6 +155,11 @@ class DiagnosticoRepository:
                 | (Usuario.nombres.ilike(term))
             )
 
-        stmt = stmt.order_by(Diagnostico.creado_en.desc()).limit(limite)
+        stmt = stmt.order_by(Diagnostico.creado_en.desc())
+        if offset > 0:
+            stmt = stmt.offset(offset)
+        if limite is not None and limite > 0:
+            stmt = stmt.limit(limite)
+
         result = await self.session.execute(stmt)
         return result.scalars().all()

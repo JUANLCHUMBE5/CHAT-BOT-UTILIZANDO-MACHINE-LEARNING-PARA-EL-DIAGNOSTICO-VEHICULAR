@@ -1,5 +1,8 @@
 # Reporte de profesionalización de CarBot
 
+> Documento histórico de la primera profesionalización (11 de agosto de 2026).
+> Para el estado funcional actual consulte `docs/ESTADO_FINAL_CARBOT.md`.
+
 Fecha: 11 de agosto de 2026
 
 ## Objetivo

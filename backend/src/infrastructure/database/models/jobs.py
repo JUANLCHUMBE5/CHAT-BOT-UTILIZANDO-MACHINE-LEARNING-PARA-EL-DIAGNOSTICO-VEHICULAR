@@ -79,6 +79,9 @@ class TrabajoGemini(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     proveedor: Mapped[str] = mapped_column(
         String(20), nullable=False, default="meta", server_default=text("'meta'")
     )
+    tipo_consulta: Mapped[str] = mapped_column(
+        String(30), nullable=False, default="diagnostico", server_default=text("'diagnostico'")
+    )
     remitente_cifrado: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     sintoma: Mapped[str] = mapped_column(Text, nullable=False)
@@ -121,6 +124,10 @@ class TrabajoGemini(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         CheckConstraint(
             "proveedor IN ('meta', 'twilio', 'api')",
             name="trabajo_gemini_proveedor_valido",
+        ),
+        CheckConstraint(
+            "tipo_consulta IN ('diagnostico', 'consulta_tecnica')",
+            name="trabajo_gemini_tipo_consulta_valido",
         ),
         Index("ix_trabajos_gemini_estado_disponible", "estado", "disponible_desde", "bloqueado_hasta"),
     )

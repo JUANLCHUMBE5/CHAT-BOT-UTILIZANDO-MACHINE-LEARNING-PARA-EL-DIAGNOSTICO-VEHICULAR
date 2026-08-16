@@ -2,9 +2,9 @@ import time
 import uuid
 from typing import List, Literal, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.concurrency import run_in_threadpool
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
@@ -12,7 +12,7 @@ from src.core.gemini_queue import gemini_rate_limiter
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.gestor_diagnostico import ResultadoDiagnostico as DTOInternal
 from src.core.logger import logger
-from src.core.security import anonimizar_identificador, verificar_jwt_token
+from src.core.security import anonimizar_identificador, verificar_jwt_administrador
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.interfaces.api.v1.schemas import ConsultaDiagnostico, ResultadoDiagnostico
@@ -42,6 +42,20 @@ class ActualizarEstadoDTO(BaseModel):
     notas_mecanico: Optional[str] = None
 
 
+class PrediccionMLDTO(BaseModel):
+    orden: int
+    falla: str
+    probabilidad: float
+
+
+class EtapaProcesamientoDTO(BaseModel):
+    clave: str
+    nombre: str
+    estado: str
+    duracion_ms: int = 0
+    detalle: Optional[str] = None
+
+
 class ItemDiagnosticoDTO(BaseModel):
     id: str
     sintoma_original: str
@@ -65,6 +79,14 @@ class ItemDiagnosticoDTO(BaseModel):
     sintesis_llm: Optional[str] = None
     notas_mecanico: Optional[str] = None
     fecha_confirmacion: Optional[str] = None
+    predicciones_ml: List[PrediccionMLDTO] = Field(default_factory=list)
+    etapas_procesamiento: List[EtapaProcesamientoDTO] = Field(default_factory=list)
+    version_modelo_ml: Optional[str] = None
+    llm_usado: bool = False
+    llm_modelo: Optional[str] = None
+    tokens_entrada: int = 0
+    tokens_salida: int = 0
+    desde_cache: bool = False
 
 
 def obtener_gestor_diagnostico(request: Request) -> GestorDiagnostico:
@@ -79,7 +101,7 @@ def obtener_gestor_diagnostico(request: Request) -> GestorDiagnostico:
 async def analizar_sintoma(
     request: Request,
     consulta: ConsultaDiagnostico,
-    token_payload: dict = Depends(verificar_jwt_token),
+    token_payload: dict = Depends(verificar_jwt_administrador),
     gestor: GestorDiagnostico = Depends(obtener_gestor_diagnostico),
 ):
     """Endpoint seguro con Autenticación JWT para analizar síntomas vehiculares."""
@@ -132,7 +154,9 @@ async def consultar_historial(
     estado: Optional[str] = None,
     modo: Optional[str] = None,
     mecanico_id: Optional[uuid.UUID] = None,
-    token_payload: dict = Depends(verificar_jwt_token),
+    limite: Optional[int] = Query(None, ge=1, le=1000, description="Límite de registros a retornar"),
+    offset: Optional[int] = Query(0, ge=0, description="Desplazamiento para paginación"),
+    token_payload: dict = Depends(verificar_jwt_administrador),
 ):
     """Retorna la lista de diagnósticos registrados en PostgreSQL filtrando por taller_id y query params."""
     taller_id_str = token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -148,7 +172,8 @@ async def consultar_historial(
                 estado=estado,
                 modo=modo,
                 mecanico_id=mecanico_id,
-                limite=100,
+                limite=limite,
+                offset=offset or 0,
             )
             res_items = []
             for d in diag_db_list:
@@ -174,6 +199,66 @@ async def consultar_historial(
                 if not fuente_ref and d.version_corpus_rag:
                     fuente_ref = f"Corpus local: {d.version_corpus_rag} (fuente documental no registrada)"
 
+                traza = d.trazabilidad or {}
+                duracion_val = int(traza.get("tiempo_total_ms", duracion_val))
+                predicciones_traza = traza.get("predicciones_ml") or []
+                if predicciones_traza:
+                    predicciones = [
+                        PrediccionMLDTO(
+                            orden=indice,
+                            falla=str(item.get("falla", "Sin clasificación")),
+                            probabilidad=round(float(item.get("probabilidad", 0)) * 100, 1),
+                        )
+                        for indice, item in enumerate(predicciones_traza[:3], start=1)
+                    ]
+                else:
+                    predicciones = [
+                        PrediccionMLDTO(
+                            orden=hipotesis.orden,
+                            falla=hipotesis.falla_probable,
+                            probabilidad=round(float(hipotesis.confianza or 0) * 100, 1),
+                        )
+                        for hipotesis in d.hipotesis[:3]
+                    ]
+                    if not predicciones:
+                        predicciones = [
+                            PrediccionMLDTO(
+                                orden=1,
+                                falla=d.falla_predicha or "Sin falla predicha",
+                                probabilidad=confianza_val,
+                            )
+                        ]
+
+                etapas_raw = traza.get("etapas") or []
+                etapas = []
+                for etapa_raw in etapas_raw:
+                    etapa = dict(etapa_raw)
+                    if etapa.get("clave") == "ml":
+                        etapa["nombre"] = settings.model_algorithm
+                    etapas.append(EtapaProcesamientoDTO(**etapa))
+                if not etapas:
+                    etapas = [
+                        EtapaProcesamientoDTO(
+                            clave="ml",
+                            nombre="Clasificación ML registrada",
+                            estado="completado",
+                            duracion_ms=duracion_val,
+                            detalle="Diagnóstico histórico: solo se conserva el tiempo total.",
+                        ),
+                        EtapaProcesamientoDTO(
+                            clave="rag",
+                            nombre="Búsqueda RAG en manuales",
+                            estado="completado" if similitud_val > 0 else "sin_resultado",
+                            detalle=fuente_ref,
+                        ),
+                        EtapaProcesamientoDTO(
+                            clave="llm",
+                            nombre="Síntesis técnica Gemini",
+                            estado="completado" if d.sintesis_llm else "sin_registro",
+                        ),
+                    ]
+                gemini = traza.get("gemini") or {}
+
                 res_items.append(
                     ItemDiagnosticoDTO(
                         id=str(d.id),
@@ -198,6 +283,14 @@ async def consultar_historial(
                         sintesis_llm=d.sintesis_llm,
                         notas_mecanico=d.conclusion_mecanico,
                         fecha_confirmacion=d.actualizado_en.strftime("%Y-%m-%d %H:%M") if d.actualizado_en else None,
+                        predicciones_ml=predicciones,
+                        etapas_procesamiento=etapas,
+                        version_modelo_ml=d.version_modelo_ml,
+                        llm_usado=bool(gemini.get("usado", bool(d.sintesis_llm))),
+                        llm_modelo=gemini.get("modelo"),
+                        tokens_entrada=int(gemini.get("tokens_entrada", 0)),
+                        tokens_salida=int(gemini.get("tokens_salida", 0)),
+                        desde_cache=bool(traza.get("desde_cache", False)),
                     )
                 )
             return res_items
@@ -209,7 +302,7 @@ async def consultar_historial(
 async def confirmar_diagnostico(
     diagnostico_id: str,
     dto: ActualizarEstadoDTO,
-    token_payload: dict = Depends(verificar_jwt_token),
+    token_payload: dict = Depends(verificar_jwt_administrador),
 ):
     """Actualiza el estado de validación mecánica en PostgreSQL verificando taller_id y restricciones de enum."""
     taller_id_str = token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -231,4 +324,3 @@ async def confirmar_diagnostico(
             return {"mensaje": f"Diagnóstico {diagnostico_id} actualizado a {dto.nuevo_estado} en PostgreSQL."}
 
     raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
-

@@ -13,6 +13,20 @@ export type FuenteDiagnostico = 'ml' | 'rag' | 'gemini' | 'hibrido' | 'manual' |
 
 export type MecanicoRol = 'mecanico' | 'jefe_taller' | 'administrador';
 
+export interface PrediccionML {
+  orden: number;
+  falla: string;
+  probabilidad: number;
+}
+
+export interface EtapaProcesamiento {
+  clave: string;
+  nombre: string;
+  estado: 'completado' | 'en_cola' | 'degradado' | 'sin_resultado' | 'sin_registro' | string;
+  duracion_ms: number;
+  detalle?: string;
+}
+
 export interface Diagnostico {
   id: string;
   sintoma_original: string;
@@ -36,6 +50,14 @@ export interface Diagnostico {
   sintesis_llm?: string;
   notas_mecanico?: string;
   fecha_confirmacion?: string;
+  predicciones_ml: PrediccionML[];
+  etapas_procesamiento: EtapaProcesamiento[];
+  version_modelo_ml?: string;
+  llm_usado: boolean;
+  llm_modelo?: string;
+  tokens_entrada: number;
+  tokens_salida: number;
+  desde_cache: boolean;
 }
 export interface Mecanico {
   id: string;
@@ -79,6 +101,8 @@ export interface ResumenMetricas {
   diagnosticos_hoy: number;
   diagnosticos_semana: number;
   diagnosticos_mes: number;
+  diagnosticos_realizados?: number;
+  diagnosticos_pendientes?: number;
   porcentaje_confirmados: number;
   tiempo_promedio_ms: number;
   distribucion_modos: { modo: string; cantidad: number }[];
@@ -95,9 +119,11 @@ export interface FiltrosDiagnostico {
 }
 
 export interface UsuarioSesion {
+  id?: string;
   username: string;
   nombre: string;
   rol: string;
   taller: string;
   token: string;
+  refreshToken: string;
 }

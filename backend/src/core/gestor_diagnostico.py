@@ -1,15 +1,20 @@
 import os
 import threading
+import time
 import uuid
 from typing import Optional, Tuple
 
 import numpy as np
 import requests
-from pydantic import BaseModel
+from requests.adapters import HTTPAdapter
+from urllib3.util import Retry
+from pydantic import BaseModel, Field
 
 from src.config import settings
 from src.core.audio_processor import AudioProcessor
+from src.core.diagnostic_cache import diagnostico_cache
 from src.core.gemini_queue import SolicitudGeminiEncolada, gemini_rate_limiter
+from src.core.intent_classifier import clasificar_intencion_consulta
 from src.core.interfaces import IModeloML, IMotorRAG
 from src.core.logger import logger
 from src.core.sanitizer import sanitizar_prompt_usuario
@@ -17,6 +22,7 @@ from src.core.security import anonimizar_identificador
 from src.core.session_manager import SessionManager
 from src.core.taxonomy.catalogo_fallas import CATALOGO_TAXONOMIA
 from src.core.traductor_jerga import normalizar_jerga_peruana
+from src.core.vehicle_profile import extraer_datos_vehiculo, kilometraje_es_ambiguo
 from src.infrastructure.container import ServiceContainer
 
 _tracker_lock = threading.Lock()
@@ -96,6 +102,11 @@ VERBOS_FALLA = [
 PALABRAS_MECANICAS = VOCABULARIO_COMPONENTES[:30]
 
 
+class PrediccionML(BaseModel):
+    falla: str
+    probabilidad: float
+
+
 class ResultadoDiagnostico(BaseModel):
     """DTO inmutable de respuesta de diagnóstico por solicitud (evita condiciones de carrera)."""
     respuesta_texto: str
@@ -115,6 +126,13 @@ class ResultadoDiagnostico(BaseModel):
     tiempo_espera_cola: float = 0.0
     solicitud_id: str | None = None
     sintoma_evaluado: str = ""
+    predicciones_ml: list[PrediccionML] = Field(default_factory=list)
+    tiempo_ml_ms: int = 0
+    tiempo_rag_ms: int = 0
+    tiempo_llm_ms: int = 0
+    tiempo_total_ms: int = 0
+    desde_cache: bool = False
+    tipo_consulta: str = "diagnostico"
 
 
 class GestorDiagnostico:
@@ -130,6 +148,17 @@ class GestorDiagnostico:
         self.motor_rag: IMotorRAG = motor_rag or ServiceContainer.get_motor_rag()
         self.procesador_audio = AudioProcessor()
         self.session_manager = SessionManager()
+
+        # Pool de conexiones HTTP persistente con Keep-Alive para reducir latencia TLS/TCP con Google API
+        self._http_session = requests.Session()
+        retry_strategy = Retry(
+            total=2,
+            backoff_factor=0.3,
+            status_forcelist=[500, 502, 503, 504],
+        )
+        adapter = HTTPAdapter(pool_connections=25, pool_maxsize=25, max_retries=retry_strategy)
+        self._http_session.mount("https://", adapter)
+        self._http_session.mount("http://", adapter)
 
     def _es_saludo_o_contacto_inicial(self, texto: str) -> Tuple[bool, str]:
         """Detecta si el mensaje es un saludo o contacto inicial sin detalles mecánicos."""
@@ -195,6 +224,146 @@ class GestorDiagnostico:
 
         return False, ""
 
+    def _procesar_consulta_tecnica(
+        self,
+        pregunta: str,
+        *,
+        inicio_total: float,
+        remitente: Optional[str],
+        proveedor: str,
+        taller_id: Optional[str],
+        usuario_id: Optional[str],
+        conversacion_id: Optional[str],
+        slot_gemini_preconcedido: Optional[bool],
+        diferir_encolado_persistente: bool,
+    ) -> ResultadoDiagnostico:
+        """Responde información automotriz sin forzar una clase de avería ML."""
+
+        inicio_rag = time.perf_counter()
+        if hasattr(self.motor_rag, "recuperar_contexto_con_similitud"):
+            contexto, titulo, similitud = self.motor_rag.recuperar_contexto_con_similitud(pregunta)
+        else:
+            contexto, titulo = self.motor_rag.recuperar_contexto(pregunta)
+            similitud = 0.0
+        tiempo_rag_ms = max(0, int((time.perf_counter() - inicio_rag) * 1000))
+
+        inicio_llm = time.perf_counter()
+        respuesta, uso_llm = self._generar_respuesta_con_metadatos(
+            pregunta=pregunta,
+            diagnostico_ml="Consulta técnica informativa",
+            confianza_ml=0.0,
+            contexto_manual=contexto,
+            titulo_manual=titulo,
+            requiere_revision_humana=False,
+            remitente=remitente,
+            proveedor=proveedor,
+            taller_id=taller_id,
+            usuario_id=usuario_id,
+            conversacion_id=conversacion_id,
+            slot_gemini_preconcedido=slot_gemini_preconcedido,
+            diferir_encolado_persistente=diferir_encolado_persistente,
+            tipo_consulta="consulta_tecnica",
+        )
+        tiempo_llm_ms = max(0, int((time.perf_counter() - inicio_llm) * 1000))
+        modo = uso_llm.get(
+            "modo",
+            "consulta_tecnica" if uso_llm.get("usado") else "consulta_tecnica_degradada",
+        )
+        return ResultadoDiagnostico(
+            respuesta_texto=respuesta,
+            diagnostico_ml="Consulta técnica informativa",
+            confianza_ml=0.0,
+            contexto_manual=contexto,
+            titulo_manual=titulo,
+            similitud_rag=similitud,
+            requiere_revision_humana=False,
+            modo_diagnostico=modo,
+            solicitud_id=uso_llm.get("solicitud_id"),
+            llm_usado=uso_llm.get("usado", False),
+            llm_modelo=uso_llm.get("modelo"),
+            tokens_entrada=uso_llm.get("tokens_entrada", 0),
+            tokens_salida=uso_llm.get("tokens_salida", 0),
+            posicion_cola=uso_llm.get("posicion_cola", 0),
+            tiempo_espera_cola=uso_llm.get("tiempo_espera_cola", 0.0),
+            sintoma_evaluado=pregunta,
+            tiempo_rag_ms=tiempo_rag_ms,
+            tiempo_llm_ms=tiempo_llm_ms,
+            tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
+            tipo_consulta="consulta_tecnica",
+        )
+
+    @staticmethod
+    def _campos_requeridos_consulta_tecnica(pregunta: str) -> list[str]:
+        texto = pregunta.lower()
+        campos = ["marca", "modelo", "anio"]
+        if any(
+            termino in texto
+            for termino in ("refrigerante", "aceite", "foco", "led", "bujía", "bujia", "batería", "bateria")
+        ):
+            campos.append("motor")
+        if any(termino in texto for termino in ("gnv", "glp", "equipo de gas", "directo a gas")):
+            campos.append("equipo_gas")
+        return campos
+
+    @staticmethod
+    def _formatear_perfil_vehiculo(perfil: dict) -> str:
+        etiquetas = {
+            "marca": "Marca",
+            "modelo": "Modelo",
+            "anio": "Año",
+            "motor": "Motor",
+            "combustible": "Combustible",
+            "kilometraje": "Kilometraje confirmado",
+            "equipo_gas": "Equipo GNV/GLP",
+        }
+        return "\n".join(
+            f"- {etiquetas[campo]}: {valor}"
+            for campo, valor in perfil.items()
+            if campo in etiquetas and valor not in (None, "")
+        )
+
+    def _resultado_solicitud_datos_vehiculo(self, sesion) -> ResultadoDiagnostico:
+        etiquetas = {
+            "marca": "marca",
+            "modelo": "modelo",
+            "anio": "año",
+            "motor": "motor o cilindrada",
+            "equipo_gas": "marca y modelo del equipo GNV/GLP",
+        }
+        faltantes = sesion.campos_faltantes()
+        lista = "\n".join(
+            f"{indice}. {etiquetas.get(campo, campo)}"
+            for indice, campo in enumerate(faltantes, start=1)
+        )
+        solicitud = (
+            f"Envíame en un solo mensaje:\n{lista}"
+            if lista
+            else "Solo falta confirmar el dato indicado a continuación."
+        )
+        aclaracion = (
+            "\n\nTambién aclara el kilometraje: ¿quisiste decir *100 km* o *100 000 km*?"
+            if sesion.kilometraje_por_aclarar
+            else ""
+        )
+        ejemplo = "Toyota Corolla 2020, motor 1.8 gasolina"
+        if "equipo_gas" in faltantes:
+            ejemplo += ", equipo GNV Tomasetto Achille"
+        return ResultadoDiagnostico(
+            respuesta_texto=(
+                "🔎 *Necesito identificar el vehículo antes de responder*\n\n"
+                f"{solicitud}{aclaracion}\n\n"
+                f"Ejemplo: _{ejemplo}_.\n"
+                "Si no conoces el motor o el equipo instalado, escribe *no sé*."
+            ),
+            diagnostico_ml="Consulta técnica pendiente de datos del vehículo",
+            confianza_ml=0.0,
+            contexto_manual="",
+            titulo_manual="",
+            modo_diagnostico="esperando_datos_vehiculo",
+            estado_sesion="esperando_datos_vehiculo",
+            sintoma_evaluado=sesion.consulta_tecnica_pendiente or "",
+            tipo_consulta="consulta_tecnica",
+        )
     def _registrar_en_tracker(
         self, 
         placa: str, 
@@ -261,6 +430,7 @@ class GestorDiagnostico:
         2. RAG recupera el procedimiento del manual de taller.
         3. Gemini LLM sintetiza la respuesta técnica estructurada en 3 secciones.
         """
+        inicio_total = time.perf_counter()
         # 0. Sanitizar y normalizar entrada
         texto_sanitizado = sanitizar_prompt_usuario(texto_usuario)
         texto_normalizado = normalizar_jerga_peruana(texto_sanitizado)
@@ -271,6 +441,32 @@ class GestorDiagnostico:
             f"Procesando consulta texto (Longitud: {len(texto_normalizado)} caracteres) | "
             f"Placa Anonimizada: {placa_anonima} | Session ID Anonimizado: {session_id_anon} | Proveedor: {proveedor}"
         )
+
+        clave_sesion = session_id or (placa if placa not in (None, "REST-API", "WAPP-01") else None)
+        sesion_pendiente = self.session_manager.obtener_sesion(clave_sesion) if clave_sesion else None
+        if sesion_pendiente and sesion_pendiente.estado == "esperando_datos_vehiculo":
+            datos_recibidos = extraer_datos_vehiculo(texto_normalizado)
+            if marca_modelo and marca_modelo not in ("Vehiculo Generico", "Generico", ""):
+                datos_recibidos.update(extraer_datos_vehiculo(marca_modelo))
+            sesion_pendiente.actualizar_perfil(datos_recibidos)
+            if sesion_pendiente.campos_faltantes() or sesion_pendiente.kilometraje_por_aclarar:
+                return self._resultado_solicitud_datos_vehiculo(sesion_pendiente)
+
+            pregunta_original = sesion_pendiente.consulta_tecnica_pendiente or texto_normalizado
+            perfil_texto = self._formatear_perfil_vehiculo(sesion_pendiente.perfil_vehiculo)
+            pregunta_contextual = f"{pregunta_original}\n\nDATOS CONFIRMADOS DEL VEHÍCULO:\n{perfil_texto}"
+            sesion_pendiente.reiniciar()
+            return self._procesar_consulta_tecnica(
+                pregunta_contextual,
+                inicio_total=inicio_total,
+                remitente=remitente,
+                proveedor=proveedor,
+                taller_id=taller_id,
+                usuario_id=usuario_id,
+                conversacion_id=conversacion_id,
+                slot_gemini_preconcedido=slot_gemini_preconcedido,
+                diferir_encolado_persistente=diferir_encolado_persistente,
+            )
 
         # 0.1. Validar si es un saludo / contacto inicial sin síntoma
         es_saludo, mensaje_saludo = self._es_saludo_o_contacto_inicial(texto_normalizado)
@@ -285,9 +481,6 @@ class GestorDiagnostico:
                 titulo_manual="",
                 modo_diagnostico="saludo",
             )
-
-        # Identificar clave de sesión multiturno
-        clave_sesion = session_id or (placa if placa not in (None, "REST-API", "WAPP-01") else None)
 
         if clave_sesion:
             sesion_anterior = self.session_manager.obtener_sesion(clave_sesion)
@@ -312,6 +505,37 @@ class GestorDiagnostico:
             marca_evaluar = marca_modelo
             placa_evaluar = placa
 
+        tipo_consulta = clasificar_intencion_consulta(texto_evaluar)
+        logger.debug("Intención detectada: %s", tipo_consulta)
+        if tipo_consulta == "consulta_tecnica":
+            if clave_sesion:
+                sesion_tecnica = self.session_manager.obtener_o_crear_sesion(clave_sesion)
+                datos_iniciales = extraer_datos_vehiculo(texto_evaluar)
+                if marca_evaluar and marca_evaluar not in ("Vehiculo Generico", "Generico", ""):
+                    datos_iniciales.update(extraer_datos_vehiculo(marca_evaluar))
+                sesion_tecnica.actualizar_perfil(datos_iniciales)
+                sesion_tecnica.establecer_consulta_tecnica(
+                    texto_evaluar,
+                    self._campos_requeridos_consulta_tecnica(texto_evaluar),
+                    kilometraje_es_ambiguo(texto_evaluar),
+                )
+                if sesion_tecnica.campos_faltantes() or sesion_tecnica.kilometraje_por_aclarar:
+                    return self._resultado_solicitud_datos_vehiculo(sesion_tecnica)
+
+                perfil_texto = self._formatear_perfil_vehiculo(sesion_tecnica.perfil_vehiculo)
+                texto_evaluar = f"{texto_evaluar}\n\nDATOS CONFIRMADOS DEL VEHÍCULO:\n{perfil_texto}"
+                sesion_tecnica.reiniciar()
+            return self._procesar_consulta_tecnica(
+                texto_evaluar,
+                inicio_total=inicio_total,
+                remitente=remitente,
+                proveedor=proveedor,
+                taller_id=taller_id,
+                usuario_id=usuario_id,
+                conversacion_id=conversacion_id,
+                slot_gemini_preconcedido=slot_gemini_preconcedido,
+                diferir_encolado_persistente=diferir_encolado_persistente,
+            )
         # 0.2 Validar ambigüedad / datos faltantes
         es_ambigua, mensaje_aclaracion = self._es_consulta_ambigua(texto_evaluar)
         if es_ambigua:
@@ -328,14 +552,61 @@ class GestorDiagnostico:
                 modo_diagnostico="esperando_clarificacion",
             )
 
+        if tipo_consulta == "fuera_de_alcance":
+            if clave_sesion:
+                self.session_manager.reiniciar_sesion(clave_sesion)
+            return ResultadoDiagnostico(
+                respuesta_texto=(
+                    "ℹ️ Puedo ayudarte con diagnósticos y consultas técnicas automotrices. "
+                    "Indica la marca, modelo y año del vehículo, o describe el síntoma que presenta."
+                ),
+                diagnostico_ml="Consulta fuera del alcance automotriz",
+                confianza_ml=0.0,
+                contexto_manual="",
+                titulo_manual="",
+                requiere_revision_humana=True,
+                modo_diagnostico="fuera_de_alcance",
+                sintoma_evaluado=texto_evaluar,
+                tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
+                tipo_consulta="fuera_de_alcance",
+            )
+
+        # 0.3 Consultar Caché LRU en Memoria (Respuesta instantánea < 5ms para múltiples mecánicos)
+        clave_cache = diagnostico_cache.generar_clave(
+            sintoma=texto_evaluar,
+            marca_modelo=marca_evaluar or "",
+            placa=placa_evaluar or ""
+        )
+        resultado_en_cache = diagnostico_cache.obtener(clave_cache)
+        if resultado_en_cache is not None:
+            logger.info("⚡ Diagnóstico obtenido instantáneamente desde Memoria Caché LRU (< 5ms)")
+            return resultado_en_cache.model_copy(
+                update={
+                    "desde_cache": True,
+                    "tiempo_total_ms": max(1, int((time.perf_counter() - inicio_total) * 1000)),
+                }
+            )
+
         # =========================================================
         # PASO 1: Machine Learning Supervisado (Predicción de falla)
         # =========================================================
-        diagnostico_predictivo, confianza = self.modelo_ml.predecir_falla_con_confianza(texto_evaluar)
+        inicio_ml = time.perf_counter()
+        if hasattr(self.modelo_ml, "predecir_top_fallas"):
+            predicciones_raw = self.modelo_ml.predecir_top_fallas(texto_evaluar, limite=3)
+            predicciones_ml = [PrediccionML(**item) for item in predicciones_raw]
+            diagnostico_predictivo = predicciones_ml[0].falla
+            confianza = predicciones_ml[0].probabilidad
+        else:
+            diagnostico_predictivo, confianza = self.modelo_ml.predecir_falla_con_confianza(texto_evaluar)
+            predicciones_ml = [
+                PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza)
+            ]
+        tiempo_ml_ms = max(0, int((time.perf_counter() - inicio_ml) * 1000))
         
         # =========================================================
         # PASO 2: Motor RAG (Recuperación del manual de procedimientos)
         # =========================================================
+        inicio_rag = time.perf_counter()
         if hasattr(self.motor_rag, "recuperar_contexto_con_similitud"):
             contexto_manual, titulo_manual, similitud_rag = (
                 self.motor_rag.recuperar_contexto_con_similitud(texto_evaluar)
@@ -343,6 +614,7 @@ class GestorDiagnostico:
         else:
             contexto_manual, titulo_manual = self.motor_rag.recuperar_contexto(texto_evaluar)
             similitud_rag = 0.0
+        tiempo_rag_ms = max(0, int((time.perf_counter() - inicio_rag) * 1000))
 
         rag_valido = (
             contexto_manual
@@ -372,6 +644,10 @@ class GestorDiagnostico:
                     similitud_rag=similitud_rag,
                     requiere_revision_humana=True,
                     modo_diagnostico="baja_confianza",
+                    predicciones_ml=predicciones_ml,
+                    tiempo_ml_ms=tiempo_ml_ms,
+                    tiempo_rag_ms=tiempo_rag_ms,
+                    tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
                 )
         else:
             requiere_revision_humana = confianza < settings.diagnostic.confidence_threshold
@@ -382,6 +658,7 @@ class GestorDiagnostico:
         # =========================================================
         # PASO 3: Gemini LLM (Síntesis técnica y estructuración)
         # =========================================================
+        inicio_llm = time.perf_counter()
         respuesta_explicativa, uso_llm = self._generar_respuesta_con_metadatos(
             pregunta=texto_evaluar,
             diagnostico_ml=diagnostico_predictivo,
@@ -397,6 +674,7 @@ class GestorDiagnostico:
             slot_gemini_preconcedido=slot_gemini_preconcedido,
             diferir_encolado_persistente=diferir_encolado_persistente,
         )
+        tiempo_llm_ms = max(0, int((time.perf_counter() - inicio_llm) * 1000))
         
         # Registrar en tracker CSV
         self._registrar_en_tracker(
@@ -414,7 +692,7 @@ class GestorDiagnostico:
         
         modo = uso_llm.get("modo", "completo_ml_rag_llm" if uso_llm.get("usado") else "diagnostico_degradado_ml_rag")
 
-        return ResultadoDiagnostico(
+        resultado_final = ResultadoDiagnostico(
             respuesta_texto=respuesta_explicativa,
             diagnostico_ml=diagnostico_predictivo,
             confianza_ml=confianza,
@@ -431,7 +709,17 @@ class GestorDiagnostico:
             posicion_cola=uso_llm.get("posicion_cola", 0),
             tiempo_espera_cola=uso_llm.get("tiempo_espera_cola", 0.0),
             sintoma_evaluado=texto_evaluar,
+            predicciones_ml=predicciones_ml,
+            tiempo_ml_ms=tiempo_ml_ms,
+            tiempo_rag_ms=tiempo_rag_ms,
+            tiempo_llm_ms=tiempo_llm_ms,
+            tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
         )
+
+        # Guardar en memoria caché LRU para acelerar futuras consultas idénticas
+        diagnostico_cache.guardar(clave_cache, resultado_final)
+
+        return resultado_final
 
     def procesar_consulta_audio(self, audio_id: str, datos_audio_vector: Optional[np.ndarray] = None) -> str:
         """Procesa análisis acústico espectral (FFT + RMS) sobre la señal de audio."""
@@ -471,6 +759,7 @@ class GestorDiagnostico:
         conversacion_id: Optional[str] = None,
         slot_gemini_preconcedido: Optional[bool] = None,
         diferir_encolado_persistente: bool = False,
+        tipo_consulta: str = "diagnostico",
     ) -> tuple[str, dict]:
         """
         Sintetiza la respuesta final con Gemini LLM integrando Síntoma + ML + RAG.
@@ -513,6 +802,30 @@ class GestorDiagnostico:
         Indica urgencia, riesgos y necesidad de validación por el mecánico. No prometas un tiempo si el manual no lo sustenta.
         """
         
+        if tipo_consulta == "consulta_tecnica":
+            prompt_sistema = f"""
+            Eres CarBot, asistente técnico automotriz para mecánicos de un taller.
+
+            PREGUNTA INFORMATIVA:
+            "{pregunta}"
+
+            CONTEXTO DOCUMENTAL RECUPERADO (RAG): [{titulo_manual}]
+            {contexto_manual}
+
+            REGLAS:
+            1. Responde la pregunta directamente; no inventes una avería ni presentes una predicción ML.
+            2. Distingue recomendaciones generales de especificaciones exactas del fabricante.
+            3. Si faltan marca, modelo, año, motor o tipo de equipo, pide esos datos antes de dar una cifra exacta.
+            4. Si el contexto documental tiene coincidencia baja, dilo brevemente y no inventes capacidades, potencias, intervalos ni requisitos legales.
+            5. Para GNV/GLP, indica que la configuración depende del fabricante del equipo y de un centro de conversión autorizado.
+            6. Para refrigerante, iluminación, lubricantes o repuestos, prioriza el manual del fabricante y la homologación aplicable.
+            7. Da una respuesta breve con orientación, datos que faltan y verificación segura recomendada.
+            8. No saludes, no llames «colega» al usuario y no repitas la presentación de CarBot.
+            9. Los datos del vehículo fueron declarados por el usuario, no verificados por VIN.
+            10. Solo llama «especificación exacta» a un dato respaldado por un manual compatible en marca, modelo, año y motor.
+            11. Sin una fuente compatible, indica «orientación general no verificada para esta versión» y evita cifras definitivas.
+            """
+
         if self.api_key:
             slot_disponible = (
                 gemini_rate_limiter.intentar_adquirir_slot()
@@ -530,7 +843,7 @@ class GestorDiagnostico:
                     payload = {
                         "contents": [{"parts": [{"text": prompt_sistema}]}]
                     }
-                    response = requests.post(url, json=payload, headers=headers, timeout=10)
+                    response = self._http_session.post(url, json=payload, headers=headers, timeout=10)
                     if response.status_code == 200:
                         data = response.json()
                         metadata = data.get("usageMetadata", {})
@@ -538,7 +851,11 @@ class GestorDiagnostico:
                         return texto_gemini, {
                             "usado": True,
                             "modelo": modelo,
-                            "modo": "completo_ml_rag_llm",
+                            "modo": (
+                                "consulta_tecnica"
+                                if tipo_consulta == "consulta_tecnica"
+                                else "completo_ml_rag_llm"
+                            ),
                             "tokens_entrada": int(metadata.get("promptTokenCount", max(1, len(prompt_sistema) // 4))),
                             "tokens_salida": int(metadata.get("candidatesTokenCount", max(1, len(texto_gemini) // 4))),
                         }
@@ -563,6 +880,7 @@ class GestorDiagnostico:
                         taller_id=taller_id,
                         usuario_id=usuario_id,
                         conversacion_id=conversacion_id,
+                        tipo_consulta=tipo_consulta,
                     )
                     posicion = gemini_rate_limiter.tamaño_cola() + 1
                     espera_segundos = gemini_rate_limiter.tiempo_espera_estimado()
@@ -579,6 +897,7 @@ class GestorDiagnostico:
                         taller_id=taller_id,
                         usuario_id=usuario_id,
                         conversacion_id=conversacion_id,
+                        tipo_consulta=tipo_consulta,
                     )
                 logger.info(
                     f"[Gemini Queue] Solicitud {solicitud.id[:8]} colocada en cola de espera (Posición: {posicion}, Espera: ~{espera_segundos}s, Proveedor: {proveedor})."
@@ -588,10 +907,20 @@ class GestorDiagnostico:
                     f"Hipótesis preliminar, no confirmada: *{diagnostico_ml}* ({confianza_pct}%).\n"
                     "En breve recibirás el resumen; el detalle quedará en el panel."
                 )
+                if tipo_consulta == "consulta_tecnica":
+                    mensaje_cola = (
+                        f"⏳ *Analizando consulta técnica (cola #{posicion})*\n"
+                        "En breve recibirás una orientación informativa. "
+                        "No se registrará como una avería ni como un diagnóstico."
+                    )
                 return mensaje_cola, {
                     "usado": False,
                     "modelo": None,
-                    "modo": "en_cola_gemini",
+                    "modo": (
+                        "consulta_tecnica_en_cola"
+                        if tipo_consulta == "consulta_tecnica"
+                        else "en_cola_gemini"
+                    ),
                     "solicitud_id": solicitud.id,
                     "tokens_entrada": 0,
                     "tokens_salida": 0,
@@ -601,6 +930,28 @@ class GestorDiagnostico:
                 
         # Fallback local de emergencia marcado explícitamente como modo degradado
         no_manual = "No se encontró" in contexto_manual or "Coincidencia baja" in titulo_manual
+
+        if tipo_consulta == "consulta_tecnica":
+            if no_manual:
+                respuesta_tecnica = (
+                    "💡 *Consulta técnica identificada*\n\n"
+                    "No encontré una fuente documental suficientemente cercana para dar una cifra "
+                    "exacta con seguridad. Indica marca, modelo, año, motor y, si corresponde, "
+                    "la marca y modelo del equipo GNV o del componente. Verifica la especificación "
+                    "en el manual del fabricante o con un centro autorizado."
+                )
+            else:
+                respuesta_tecnica = (
+                    f"💡 *Orientación técnica — {titulo_manual}*\n\n{contexto_manual}\n\n"
+                    "Confirma la especificación exacta en el manual correspondiente al modelo y año."
+                )
+            return respuesta_tecnica, {
+                "usado": False,
+                "modelo": None,
+                "modo": "consulta_tecnica_degradada",
+                "tokens_entrada": 0,
+                "tokens_salida": 0,
+            }
         
         seccion_1 = f"🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**\n• **Diagnóstico Sugerido (ML):** {diagnostico_ml}\n• **Certeza del Modelo:** {confianza_pct}%{alerta_revision}"
         
@@ -638,4 +989,3 @@ class GestorDiagnostico:
             requiere_revision_humana=requiere_revision_humana,
         )
         return texto
-

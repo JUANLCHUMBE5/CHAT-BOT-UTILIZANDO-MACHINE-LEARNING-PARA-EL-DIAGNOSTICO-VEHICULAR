@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Calendar, TrendingUp, CheckCircle, Clock, Users, ArrowRight } from 'lucide-react';
+import { Calendar, CheckCircle, Clock, Users, ArrowRight, Zap, FileText, RefreshCw } from 'lucide-react';
 import { StatCard } from '../common/StatCard';
 import { Card } from '../common/Card';
 import { DateRangeModal } from '../common/DateRangeModal';
 import type { ResumenMetricas } from '../../types';
+import { getModoLabel } from '../../utils/modos';
 import {
   BarChart,
   Bar,
@@ -17,7 +18,8 @@ import {
 } from 'recharts';
 
 interface DashboardViewProps {
-  metricas: ResumenMetricas;
+  metricas: ResumenMetricas | null;
+  cargando?: boolean;
   onFiltrarMetricas?: (fechaInicio?: string, fechaFin?: string) => void;
   onIrAMecanicos?: () => void;
 }
@@ -25,12 +27,15 @@ interface DashboardViewProps {
 const MODOS_COLORS: Record<string, string> = {
   completo_ml_rag_llm: '#f97316',
   diagnostico_degradado_ml_rag: '#06b6d4',
+  base_arboles_decision: '#10b981',
+  evaluacion_reglas_expertas: '#6366f1',
+  rapido_patrones_frecuentes: '#ec4899',
   en_cola_gemini: '#8b5cf6',
   saludo: '#3b82f6',
   baja_confianza: '#f59e0b',
 };
 
-const PALETTE_FALLBACKS = ['#f97316', '#06b6d4', '#8b5cf6', '#3b82f6', '#f59e0b'];
+const PALETTE_FALLBACKS = ['#f97316', '#06b6d4', '#8b5cf6', '#3b82f6', '#f59e0b', '#10b981', '#6366f1'];
 
 const formatDateLocal = (date: Date): string => {
   const year = date.getFullYear();
@@ -39,12 +44,19 @@ const formatDateLocal = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
+const formatTiempoPromedio = (ms?: number): string => {
+  if (!ms || ms <= 0) return '0 s';
+  if (ms < 1000) return `${ms} ms`;
+  return `${(ms / 1000).toFixed(1)} s`;
+};
+
 export const DashboardView: React.FC<DashboardViewProps> = ({
   metricas,
+  cargando = false,
   onFiltrarMetricas,
   onIrAMecanicos,
 }) => {
-  const [activeTabPreset, setActiveTabPreset] = useState<'hoy' | '7dias' | 'esteMes' | 'custom'>('hoy');
+  const [activeTabPreset, setActiveTabPreset] = useState<'hoy' | '7dias' | 'esteMes' | 'custom'>('esteMes');
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
@@ -84,13 +96,93 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   const handleResetFiltro = () => {
-    setActiveTabPreset('hoy');
+    setActiveTabPreset('esteMes');
     setFechaInicio('');
     setFechaFin('');
     if (onFiltrarMetricas) {
       onFiltrarMetricas(undefined, undefined);
     }
   };
+
+  // Loading skeleton state when metrics are fetching
+  if (cargando && !metricas) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+              Resumen del taller
+            </h2>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
+              Cargando indicadores clave...
+            </p>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              style={{
+                height: '110px',
+                backgroundColor: '#ffffff',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-color)',
+                padding: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <RefreshCw size={20} className="animate-spin" style={{ color: 'var(--primary)', opacity: 0.5 }} />
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+          {[1, 2].map((i) => (
+            <div
+              key={i}
+              style={{
+                height: '260px',
+                backgroundColor: '#ffffff',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-color)',
+                padding: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Cargando gráficas...</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Fallback when no metrics available
+  if (!metricas) {
+    return (
+      <div style={{ padding: '40px', textAlign: 'center', backgroundColor: '#ffffff', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+        <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-main)' }}>No se pudieron cargar las métricas</p>
+        <button
+          type="button"
+          onClick={() => onFiltrarMetricas && onFiltrarMetricas()}
+          style={{ marginTop: '12px', padding: '8px 16px', backgroundColor: '#3b82f6', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}
+        >
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+
+  // Format mode names for PieChart legend & tooltips
+  const distribucionModosFormateada = (metricas.distribucion_modos || []).map((item) => ({
+    ...item,
+    nombreModo: getModoLabel(item.modo),
+  }));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -116,7 +208,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </span>
           </div>
           <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-main)', margin: 0, letterSpacing: '-0.02em' }}>
-            Resumen Operativo
+            Resumen del taller
           </h2>
         </div>
       </div>
@@ -174,161 +266,138 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         }}
       >
         <StatCard
-          title="Hoy"
-          value={metricas.diagnosticos_hoy}
-          icon={<Calendar size={16} />}
-          trend={{ text: '+15%', positive: true }}
+          title="Diagnósticos realizados"
+          value={metricas.diagnosticos_realizados ?? metricas.diagnosticos_mes}
+          icon={<FileText size={16} />}
+          trend={{ text: 'Periodo', positive: true }}
         />
         <StatCard
-          title="Esta Semana"
-          value={metricas.diagnosticos_semana}
-          icon={<TrendingUp size={16} />}
-          trend={{ text: '+8%', positive: true }}
-        />
-        <StatCard
-          title="Este Mes"
-          value={metricas.diagnosticos_mes}
+          title="Diagnósticos pendientes"
+          value={metricas.diagnosticos_pendientes ?? 0}
           icon={<Clock size={16} />}
+          trend={{ text: 'Por validar', positive: false }}
         />
         <StatCard
-          title="Precisión"
+          title="Tasa de confirmación"
           value={`${metricas.porcentaje_confirmados}%`}
           icon={<CheckCircle size={16} />}
-          trend={{ text: 'UCV', positive: true }}
+          trend={{ text: 'Validados', positive: true }}
+        />
+        <StatCard
+          title="Tiempo promedio"
+          value={formatTiempoPromedio(metricas.tiempo_promedio_ms)}
+          icon={<Zap size={16} />}
+          trend={{ text: 'Periodo', positive: true }}
         />
       </div>
 
-      {/* Single App-Native Primary Action Banner */}
-      {onIrAMecanicos && (
-        <button
-          type="button"
-          onClick={onIrAMecanicos}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '14px 18px',
-            borderRadius: '14px',
-            background: 'linear-gradient(135deg, #f97316 0%, #ea580c 45%, #c2410c 100%)',
-            color: '#ffffff',
-            border: '1px solid rgba(255, 255, 255, 0.25)',
-            fontSize: '13px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            boxShadow: '0 10px 25px -4px rgba(234, 88, 12, 0.42), 0 4px 10px rgba(0, 0, 0, 0.06)',
-            width: '100%',
-          }}
-          className="management-btn-native card-hover-effect"
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div
-              style={{
-                width: '36px',
-                height: '36px',
-                borderRadius: '10px',
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                backdropFilter: 'blur(4px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
-            >
-              <Users size={20} color="#ffffff" />
-            </div>
-            <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: '13px', fontWeight: 700, lineHeight: 1.2 }}>
-                Gestionar Equipo y Mecánicos
-              </div>
-              <div style={{ fontSize: '11px', fontWeight: 400, opacity: 0.9 }}>
-                Alta de nuevo personal, roles y estado de acceso
-              </div>
-            </div>
-          </div>
-          <div className="arrow-icon-animated" style={{ display: 'flex', alignItems: 'center' }}>
-            <ArrowRight size={20} color="#ffffff" />
-          </div>
-        </button>
-      )}
-
-      {/* Charts Grid */}
+      {/* Charts Row: Compact & Mobile Optimized */}
       <div
+        className="charts-grid-mobile"
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '14px',
+          gap: '12px',
         }}
       >
-        {/* Bar Chart: Volúmen diario */}
-        <Card title="Volumen Diarios">
-          <div className="chart-container-mobile" style={{ width: '100%', height: 180, marginTop: '4px' }}>
+        {/* Daily Diagnostics Bar Chart */}
+        <Card style={{ padding: '14px 12px 10px 12px', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
+              Volumen diario
+            </h4>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 500 }}>
+              {activeTabPreset === 'hoy'
+                ? 'Hoy'
+                : activeTabPreset === '7dias'
+                ? 'Últimos 7 días'
+                : activeTabPreset === 'esteMes'
+                ? 'Este mes'
+                : 'Rango personalizado'}
+            </span>
+          </div>
+          <div style={{ width: '100%', height: 160, minHeight: 160 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={metricas.actividad_diaria} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="barOrangeGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#f97316" stopOpacity={1} />
-                    <stop offset="100%" stopColor="#ea580c" stopOpacity={0.85} />
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="fecha" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'rgba(15, 23, 42, 0.88)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '12px',
-                    color: '#ffffff',
-                    fontSize: '12px',
-                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25)',
-                    padding: '8px 12px',
-                  }}
-                  itemStyle={{ color: '#ffedd5', fontWeight: 600 }}
-                  labelStyle={{ color: '#94a3b8', fontWeight: 500 }}
+              <BarChart
+                data={metricas.actividad_diaria}
+                margin={{ top: 8, right: 4, left: -24, bottom: 0 }}
+              >
+                <XAxis
+                  dataKey="fecha"
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  interval="preserveStartEnd"
                 />
-                <Bar dataKey="cantidad" fill="url(#barOrangeGradient)" radius={[6, 6, 0, 0]} name="Diagnósticos" />
+                <YAxis
+                  stroke="#94a3b8"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                  allowDecimals={false}
+                />
+                <Tooltip
+                  cursor={{ fill: 'rgba(59, 130, 246, 0.06)' }}
+                  contentStyle={{
+                    backgroundColor: '#ffffff',
+                    borderColor: 'var(--border-color)',
+                    borderRadius: '8px',
+                    fontSize: '11px',
+                    padding: '6px 10px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                  }}
+                />
+                <Bar
+                  dataKey="cantidad"
+                  fill="#3b82f6"
+                  radius={[4, 4, 0, 0]}
+                  name="Diagnósticos"
+                  maxBarSize={28}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </Card>
 
-        {/* Donut Chart: Modos de Diagnóstico */}
-        <Card title="Distribución por Modo">
-          <div className="chart-container-mobile" style={{ width: '100%', height: 180, marginTop: '4px', display: 'flex', alignItems: 'center' }}>
+        {/* AI Modes Distribution Donut Chart */}
+        <Card style={{ padding: '14px 12px 10px 12px', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
+              Modos de IA
+            </h4>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 500 }}>
+              Distribución
+            </span>
+          </div>
+          <div style={{ width: '100%', height: 160, minHeight: 160 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
                 <Pie
-                  data={metricas.distribucion_modos}
-                  dataKey="cantidad"
-                  nameKey="modo"
+                  data={distribucionModosFormateada}
                   cx="50%"
                   cy="50%"
-                  innerRadius={38}
-                  outerRadius={62}
-                  paddingAngle={4}
+                  innerRadius={36}
+                  outerRadius={58}
+                  paddingAngle={3}
+                  dataKey="cantidad"
+                  nameKey="nombreModo"
                 >
-                  {metricas.distribucion_modos.map((entry, index) => (
+                  {distribucionModosFormateada.map((entry, index) => (
                     <Cell
-                      key={`cell-${index}`}
+                      key={`cell-${entry.modo || index}`}
                       fill={MODOS_COLORS[entry.modo] || PALETTE_FALLBACKS[index % PALETTE_FALLBACKS.length]}
                     />
                   ))}
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'rgba(15, 23, 42, 0.88)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '12px',
-                    color: '#ffffff',
-                    fontSize: '12px',
-                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.25)',
-                    padding: '8px 12px',
+                    backgroundColor: '#ffffff',
+                    borderColor: 'var(--border-color)',
+                    borderRadius: '8px',
+                    fontSize: '11px',
+                    padding: '6px 10px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
                   }}
-                  itemStyle={{ color: '#ffffff', fontWeight: 600 }}
-                  labelStyle={{ color: '#94a3b8', fontWeight: 500 }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -336,52 +405,93 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </Card>
       </div>
 
-      {/* Frequent Faults Table */}
-      <Card title="Fallas Frecuentes">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '2px' }}>
-          {metricas.fallas_frecuentes.map((item, index) => (
-            <div
-              key={index}
+      {/* Frequent Faults & Quick Actions Row */}
+      <div
+        className="bottom-grid-mobile"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '12px',
+        }}
+      >
+        {/* Frequent Faults List */}
+        <Card style={{ padding: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+            <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
+              Fallas frecuentes
+            </h4>
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Top detectadas</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {(metricas.fallas_frecuentes && metricas.fallas_frecuentes.length > 0) ? (
+              metricas.fallas_frecuentes.map((f, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '6px 10px',
+                    backgroundColor: 'var(--bg-subtle)',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                  }}
+                >
+                  <span style={{ color: 'var(--text-main)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '75%' }}>
+                    {f.falla}
+                  </span>
+                  <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '11px' }}>
+                    {f.cantidad} casos
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div style={{ textAlign: 'center', padding: '16px 0', color: 'var(--text-muted)', fontSize: '12px' }}>
+                No se registraron fallas en este periodo.
+              </div>
+            )}
+          </div>
+        </Card>
+
+        {/* Quick Management Card */}
+        <Card style={{ padding: '14px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+              <Users size={16} color="var(--primary)" />
+              <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
+                Equipo y personal
+              </h4>
+            </div>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 10px 0', lineHeight: 1.4 }}>
+              Gestiona el equipo técnico, roles y solicitudes de acceso del taller.
+            </p>
+          </div>
+          {onIrAMecanicos && (
+            <button
+              type="button"
+              onClick={onIrAMecanicos}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '7px 10px',
-                backgroundColor: 'var(--bg-subtle)',
+                justifyContent: 'center',
+                gap: '6px',
+                width: '100%',
+                padding: '9px 12px',
+                backgroundColor: 'var(--primary)',
+                color: '#ffffff',
+                border: 'none',
                 borderRadius: 'var(--radius-sm)',
                 fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span
-                  style={{
-                    fontWeight: 700,
-                    color: 'var(--primary)',
-                    width: '16px',
-                    textAlign: 'center',
-                  }}
-                >
-                  {index + 1}
-                </span>
-                <span style={{ fontWeight: 500, color: 'var(--text-main)' }}>{item.falla}</span>
-              </div>
-              <span
-                style={{
-                  fontSize: '10px',
-                  fontWeight: 600,
-                  backgroundColor: '#ffffff',
-                  padding: '2px 6px',
-                  borderRadius: '10px',
-                  border: '1px solid var(--border-color)',
-                  color: 'var(--text-secondary)',
-                }}
-              >
-                {item.cantidad}
-              </span>
-            </div>
-          ))}
-        </div>
-      </Card>
+              <span>Ir a Personas y Accesos</span>
+              <ArrowRight size={14} />
+            </button>
+          )}
+        </Card>
+      </div>
     </div>
   );
 };

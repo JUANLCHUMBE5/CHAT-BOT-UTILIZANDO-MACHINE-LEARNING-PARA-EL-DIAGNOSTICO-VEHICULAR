@@ -1,0 +1,15 @@
+{
+  "fuente": "https://doi.org/10.5281/zenodo.15626055",
+  "licencia": "CC BY 4.0",
+  "checksum_md5": "cb44431ef6b32f6ea9cf00dbe35f020c",
+  "casos_fuente": 99,
+  "casos_externos_admitidos": 33,
+  "descartes": {
+    "sin_mapeo_taxonomico": 53,
+    "ambiguo": 12,
+    "traduccion_incompleta": 0,
+    "codigo_inconsistente": 0,
+    "duplicado": 1
+  },
+  "regla_evaluacion": "Los casos externos solo pueden entrar al entrenamiento; nunca al holdout."
+}
