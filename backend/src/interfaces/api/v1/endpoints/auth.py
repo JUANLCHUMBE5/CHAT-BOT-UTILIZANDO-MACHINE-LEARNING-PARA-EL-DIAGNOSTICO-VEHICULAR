@@ -4,7 +4,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel, Field
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -104,22 +104,25 @@ async def login(request: Request, payload: LoginRequestDTO):
     async with AsyncSession(engine, expire_on_commit=False) as session:
         user_repo = UsuarioRepository(session)
 
-        # 1. Buscar usuario en PostgreSQL por nombres o por teléfono/WhatsApp
+        # 1. Buscar usuario en PostgreSQL por teléfono/WhatsApp, username o nombres (fallback)
         usuario = None
         if sum(c.isdigit() for c in payload.username) >= 6:
             usuario = await user_repo.buscar_por_telefono(payload.username)
 
         if not usuario:
+            usuario = await user_repo.buscar_por_username(payload.username)
+
+        if not usuario:
             stmt = (
                 select(Usuario)
                 .options(selectinload(Usuario.taller), selectinload(Usuario.rol))
-                .where(Usuario.nombres == payload.username)
+                .where(func.lower(Usuario.nombres) == payload.username.strip().lower())
             )
             coincidencias = list((await session.execute(stmt)).scalars().all())
             if len(coincidencias) > 1:
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
-                    detail="Existe más de un usuario con ese nombre. Ingrese con su teléfono.",
+                    detail="Existe más de un usuario con ese nombre. Ingrese con su nombre de usuario o teléfono.",
                 )
             usuario = coincidencias[0] if coincidencias else None
 
@@ -150,26 +153,27 @@ async def login(request: Request, payload: LoginRequestDTO):
             )
 
         token = crear_jwt_token(
-            sub=usuario.nombres,
+            sub=usuario.username or usuario.nombres,
             rol=rol_codigo,
             taller_id=str(usuario.taller_id),
             usuario_id=str(usuario.id),
             extra_claims={"requiere_cambio_password": bool(usuario.debe_cambiar_password)},
         )
         refresh_token = crear_refresh_token(
-            sub=usuario.nombres,
+            sub=usuario.username or usuario.nombres,
             rol=rol_codigo,
             taller_id=str(usuario.taller_id),
             usuario_id=str(usuario.id),
             extra_claims={"requiere_cambio_password": bool(usuario.debe_cambiar_password)},
         )
 
+        display_username = usuario.username or usuario.nombres
         return TokenResponseDTO(
             access_token=token,
             refresh_token=refresh_token,
             user=UserInfoDTO(
                 id=str(usuario.id),
-                username=usuario.nombres,
+                username=display_username,
                 nombre=f"{usuario.nombres} {usuario.apellidos or ''}".strip(),
                 rol=rol_codigo,
                 taller_id=str(usuario.taller_id),

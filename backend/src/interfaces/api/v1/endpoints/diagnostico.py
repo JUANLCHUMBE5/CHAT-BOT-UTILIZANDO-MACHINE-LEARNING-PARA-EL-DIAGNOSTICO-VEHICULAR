@@ -68,6 +68,8 @@ class ItemDiagnosticoDTO(BaseModel):
     fuente: str
     mecanico_id: str
     mecanico_nombre: str
+    cliente_nombre: str = "Cliente WhatsApp"
+    cliente_telefono: Optional[str] = None
     placa_vehiculo: str
     marca_modelo: str
     fecha_hora: str
@@ -259,6 +261,15 @@ async def consultar_historial(
                     ]
                 gemini = traza.get("gemini") or {}
 
+                cliente_nom = "Cliente WhatsApp"
+                cliente_tel = None
+                if d.conversacion and d.conversacion.usuario:
+                    cliente_nom = d.conversacion.usuario.nombres or "Cliente WhatsApp"
+                    cliente_tel = f"+51 *** *** {d.conversacion.usuario.whatsapp_ultimos4}"
+                elif d.vehiculo and d.vehiculo.registrado_por:
+                    cliente_nom = d.vehiculo.registrado_por.nombres or "Cliente WhatsApp"
+                    cliente_tel = f"+51 *** *** {d.vehiculo.registrado_por.whatsapp_ultimos4}"
+
                 res_items.append(
                     ItemDiagnosticoDTO(
                         id=str(d.id),
@@ -272,6 +283,8 @@ async def consultar_historial(
                         fuente=d.fuente,
                         mecanico_id=str(d.mecanico_id),
                         mecanico_nombre=d.mecanico.nombres if d.mecanico else "Mecánico No Asignado",
+                        cliente_nombre=cliente_nom,
+                        cliente_telefono=cliente_tel,
                         placa_vehiculo=placa_str,
                         marca_modelo=marca_str,
                         fecha_hora=d.creado_en.strftime("%Y-%m-%d %H:%M") if d.creado_en else "Fecha no registrada",

@@ -28,6 +28,7 @@ router = APIRouter()
 
 class MecanicoCreateDTO(BaseModel):
     nombres: str
+    username: Optional[str] = None
     telefono_whatsapp: str
     password: Optional[str] = None
     rol: Literal["mecanico", "jefe_taller", "administrador"] = "mecanico"
@@ -35,6 +36,7 @@ class MecanicoCreateDTO(BaseModel):
 
 class MecanicoUpdateDTO(BaseModel):
     nombres: Optional[str] = None
+    username: Optional[str] = None
     telefono_whatsapp: Optional[str] = None
     password: Optional[str] = None
 
@@ -48,6 +50,7 @@ class CambiarRolDTO(BaseModel):
 class MecanicoResponseDTO(BaseModel):
     id: str
     nombres: str
+    username: Optional[str] = None
     telefono: str
     rol: str
     activo: bool
@@ -83,6 +86,7 @@ async def listar_mecanicos(payload: dict = Depends(exigir_rol_administrativo)):
                 MecanicoResponseDTO(
                     id=str(u.id),
                     nombres=u.nombres,
+                    username=u.username,
                     telefono=f"+51 *** *** {u.whatsapp_ultimos4}",
                     rol=u.rol.codigo if u.rol else "mecanico",
                     activo=u.activo,
@@ -131,6 +135,15 @@ async def registrar_mecanico(
     ultimos4 = digits[-4:] if len(digits) >= 4 else digits.zfill(4)
     w_hash = hash_identificador_persistencia(dto.telefono_whatsapp, "telefono")
 
+    username_limpio = None
+    if dto.username:
+        username_limpio = dto.username.strip().lower()
+        if len(username_limpio) < 3 or not re.match(r"^[a-zA-Z0-9_.-]+$", username_limpio):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="El nombre de usuario debe tener al menos 3 caracteres y solo contener letras, números, guiones o puntos.",
+            )
+
     if database_configurada():
         engine = obtener_engine()
         async with AsyncSession(engine, expire_on_commit=False) as session:
@@ -140,6 +153,14 @@ async def registrar_mecanico(
             operaciones_repo = OperacionesRepository(session)
             roles = await user_repo.asegurar_roles_estandar()
             rol_obj = roles.get(dto.rol, roles["mecanico"])
+
+            if username_limpio:
+                existente_user = await user_repo.buscar_por_username(username_limpio)
+                if existente_user:
+                    raise HTTPException(
+                        status_code=status.HTTP_409_CONFLICT,
+                        detail="El nombre de usuario ya está registrado por otro miembro.",
+                    )
 
             existente = await user_repo.buscar_por_whatsapp_hash(w_hash)
             if existente:
@@ -155,6 +176,8 @@ async def registrar_mecanico(
                     )
 
                 existente.nombres = dto.nombres.strip()
+                if username_limpio:
+                    existente.username = username_limpio
                 existente.rol_id = rol_obj.id
                 existente.password_hash = generar_password_hash(raw_password) if es_nuevo_admin else None
                 existente.debe_cambiar_password = es_nuevo_admin
@@ -203,6 +226,7 @@ async def registrar_mecanico(
                 return MecanicoResponseDTO(
                     id=str(existente.id),
                     nombres=existente.nombres,
+                    username=existente.username,
                     telefono=f"+51 *** *** {ultimos4}",
                     rol=rol_obj.codigo,
                     activo=True,
@@ -217,6 +241,7 @@ async def registrar_mecanico(
                     taller_id=taller_uuid,
                     rol_id=rol_obj.id,
                     nombres=dto.nombres.strip(),
+                    username=username_limpio,
                     whatsapp_hash=w_hash,
                     whatsapp_ultimos4=ultimos4,
                     password_hash=generar_password_hash(raw_password) if es_nuevo_admin else None,
@@ -244,6 +269,7 @@ async def registrar_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {ultimos4}",
                 rol=rol_obj.codigo,
                 activo=True,
@@ -302,6 +328,7 @@ async def toggle_activar_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {usuario.whatsapp_ultimos4}",
                 rol=usuario.rol.codigo if usuario.rol else "mecanico",
                 activo=usuario.activo,
@@ -363,6 +390,7 @@ async def toggle_bloquear_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {usuario.whatsapp_ultimos4}",
                 rol=usuario.rol.codigo if usuario.rol else "mecanico",
                 activo=usuario.activo,
@@ -447,6 +475,7 @@ async def cambiar_rol_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {usuario.whatsapp_ultimos4}",
                 rol=rol_obj.codigo,
                 activo=usuario.activo,
@@ -580,6 +609,14 @@ async def actualizar_mecanico(
                 detail="La contraseña debe tener al menos 12 caracteres, incluir mayúsculas, minúsculas y números.",
             )
 
+    if dto.username is not None:
+        username_candidate = dto.username.strip().lower()
+        if username_candidate and (len(username_candidate) < 3 or not re.match(r"^[a-zA-Z0-9_.-]+$", username_candidate)):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="El nombre de usuario debe tener al menos 3 caracteres y solo contener letras, números, guiones o puntos.",
+            )
+
     if database_configurada():
         engine = obtener_engine()
         async with AsyncSession(engine, expire_on_commit=False) as session:
@@ -607,12 +644,26 @@ async def actualizar_mecanico(
 
             detalles_dict = {
                 "nombres_modificados": dto.nombres is not None,
+                "username_modificado": dto.username is not None,
                 "telefono_modificado": dto.telefono_whatsapp is not None,
                 "password_modificado": bool(dto.password),
             }
 
             if dto.nombres is not None:
                 usuario.nombres = dto.nombres.strip()
+
+            if dto.username is not None:
+                new_username = dto.username.strip().lower()
+                if new_username:
+                    existente_u = await user_repo.buscar_por_username(new_username)
+                    if existente_u and existente_u.id != usuario.id:
+                        raise HTTPException(
+                            status_code=status.HTTP_409_CONFLICT,
+                            detail="El nombre de usuario ya está en uso por otro miembro.",
+                        )
+                    usuario.username = new_username
+                else:
+                    usuario.username = None
 
             if dto.telefono_whatsapp is not None:
                 telefono_raw = dto.telefono_whatsapp.strip()
@@ -668,6 +719,7 @@ async def actualizar_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {usuario.whatsapp_ultimos4}",
                 rol=usuario.rol.codigo if usuario.rol else "mecanico",
                 activo=usuario.activo,

@@ -35,11 +35,11 @@ from src.infrastructure.database.repositories.trabajo_gemini_repository import T
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
 
 
-def test_alembic_head_es_20260809_01():
+def test_alembic_head_es_20260816_01():
     """Verifica que la migración más reciente sea el head activo de Alembic."""
     config = Config("alembic.ini")
     scripts = ScriptDirectory.from_config(config)
-    assert scripts.get_current_head() == "20260809_01"
+    assert scripts.get_current_head() == "20260816_01"
 
 
 def test_gemini_rate_limiter_concede_12_y_encola_excedentes():

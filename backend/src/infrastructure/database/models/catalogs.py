@@ -68,6 +68,7 @@ class Usuario(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     )
     nombres: Mapped[str] = mapped_column(String(120), nullable=False)
     apellidos: Mapped[str | None] = mapped_column(String(120))
+    username: Mapped[str | None] = mapped_column(String(60), nullable=True, index=True)
     whatsapp_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
     whatsapp_ultimos4: Mapped[str] = mapped_column(String(4), nullable=False, default="0000")
     password_hash: Mapped[str | None] = mapped_column(String(128), nullable=True)

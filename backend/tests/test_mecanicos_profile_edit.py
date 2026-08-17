@@ -176,6 +176,15 @@ def test_actualizar_perfil_validacion_nombre_vacio(client, token_admin, mecanico
     assert "vacío" in response.json()["detail"].lower()
 
 
+def test_actualizar_perfil_validacion_username_invalido(client, token_admin, mecanico_user_id):
+    """Verifica que un nombre de usuario con formato inválido o menor a 3 caracteres retorne HTTP 400."""
+    payload = {"username": "ab"}
+    headers = {"Authorization": f"Bearer {token_admin}"}
+    response = client.put(f"/api/v1/mecanicos/{mecanico_user_id}", json=payload, headers=headers)
+    assert response.status_code == 400
+    assert "3 caracteres" in response.json()["detail"].lower()
+
+
 # ==============================================================================
 # TIER 1, 2, 3 & 4: Pruebas E2E de Base de Datos (Requiere PostgreSQL habilitado)
 # ==============================================================================

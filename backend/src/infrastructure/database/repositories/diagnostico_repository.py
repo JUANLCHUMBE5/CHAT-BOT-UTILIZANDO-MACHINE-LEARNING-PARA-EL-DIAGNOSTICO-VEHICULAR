@@ -10,7 +10,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from src.infrastructure.database.models.diagnostics import Diagnostico, HipotesisDiagnostico
+from src.infrastructure.database.models.diagnostics import Diagnostico, HipotesisDiagnostico, Vehiculo
+from src.infrastructure.database.models.messaging import Conversacion
 
 
 class DiagnosticoRepository:
@@ -107,7 +108,8 @@ class DiagnosticoRepository:
             .options(
                 selectinload(Diagnostico.hipotesis),
                 selectinload(Diagnostico.mecanico),
-                selectinload(Diagnostico.vehiculo),
+                selectinload(Diagnostico.vehiculo).selectinload(Vehiculo.registrado_por),
+                selectinload(Diagnostico.conversacion).selectinload(Conversacion.usuario),
             )
             .where(Diagnostico.id == diagnostico_id)
         )
@@ -121,6 +123,7 @@ class DiagnosticoRepository:
         estado: Optional[str] = None,
         modo: Optional[str] = None,
         mecanico_id: Optional[uuid.UUID] = None,
+        usuario_id: Optional[uuid.UUID] = None,
         limite: Optional[int] = 100,
         offset: int = 0,
     ) -> Sequence[Diagnostico]:
@@ -129,7 +132,8 @@ class DiagnosticoRepository:
             select(Diagnostico)
             .options(
                 selectinload(Diagnostico.mecanico),
-                selectinload(Diagnostico.vehiculo),
+                selectinload(Diagnostico.vehiculo).selectinload(Vehiculo.registrado_por),
+                selectinload(Diagnostico.conversacion).selectinload(Conversacion.usuario),
                 selectinload(Diagnostico.hipotesis),
             )
             .where(Diagnostico.taller_id == taller_id)
@@ -144,15 +148,33 @@ class DiagnosticoRepository:
         if mecanico_id:
             stmt = stmt.where(Diagnostico.mecanico_id == mecanico_id)
 
+        if usuario_id:
+            stmt = stmt.outerjoin(Diagnostico.conversacion).where(
+                (Diagnostico.mecanico_id == usuario_id)
+                | (Conversacion.usuario_id == usuario_id)
+            )
+
         if busqueda:
             term = f"%{busqueda.strip()}%"
             from src.infrastructure.database.models.catalogs import Usuario
-            from src.infrastructure.database.models.diagnostics import Vehiculo
-            stmt = stmt.outerjoin(Diagnostico.vehiculo).outerjoin(Diagnostico.mecanico).where(
-                (Diagnostico.sintoma_original.ilike(term))
-                | (Diagnostico.falla_predicha.ilike(term))
-                | (Vehiculo.placa_ultimos4.ilike(term))
-                | (Usuario.nombres.ilike(term))
+            from src.infrastructure.database.models.messaging import Conversacion as ConvModel
+            from sqlalchemy.orm import aliased
+
+            UsuarioMec = aliased(Usuario, name="mecanico_user")
+            UsuarioCli = aliased(Usuario, name="cliente_user")
+
+            stmt = (
+                stmt.outerjoin(Diagnostico.vehiculo)
+                .outerjoin(UsuarioMec, Diagnostico.mecanico_id == UsuarioMec.id)
+                .outerjoin(ConvModel, Diagnostico.conversacion_id == ConvModel.id)
+                .outerjoin(UsuarioCli, ConvModel.usuario_id == UsuarioCli.id)
+                .where(
+                    (Diagnostico.sintoma_original.ilike(term))
+                    | (Diagnostico.falla_predicha.ilike(term))
+                    | (Vehiculo.placa_ultimos4.ilike(term))
+                    | (UsuarioMec.nombres.ilike(term))
+                    | (UsuarioCli.nombres.ilike(term))
+                )
             )
 
         stmt = stmt.order_by(Diagnostico.creado_en.desc())
