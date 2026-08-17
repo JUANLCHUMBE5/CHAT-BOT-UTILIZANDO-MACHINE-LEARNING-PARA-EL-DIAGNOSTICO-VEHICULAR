@@ -39,6 +39,8 @@ export interface Diagnostico {
   fuente: FuenteDiagnostico;
   mecanico_id: string;
   mecanico_nombre: string;
+  cliente_nombre?: string;
+  cliente_telefono?: string;
   placa_vehiculo: string;
   marca_modelo: string;
   fecha_hora: string;
@@ -62,6 +64,7 @@ export interface Diagnostico {
 export interface Mecanico {
   id: string;
   nombres: string;
+  username?: string;
   telefono: string;
   rol: MecanicoRol;
   activo: boolean;

@@ -21,6 +21,7 @@ export interface EquipoTallerTabProps {
   cargando: boolean;
   currentUser: UsuarioSesion | null;
   onRecargar: () => void;
+  onActualizarPerfilSesion?: (actualizado: Partial<UsuarioSesion>) => void;
 }
 
 export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
@@ -28,6 +29,7 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
   cargando,
   currentUser,
   onRecargar,
+  onActualizarPerfilSesion,
 }) => {
   // Feedback notifications (replaces native alert)
   const [notificacionError, setNotificacionError] = useState<string | null>(null);
@@ -36,6 +38,7 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
   // Modal de registro manual de nuevo personal
   const [modalNuevoAbierto, setModalNuevoAbierto] = useState(false);
   const [nuevoNombre, setNuevoNombre] = useState('');
+  const [nuevoUsername, setNuevoUsername] = useState('');
   const [nuevoTelefono, setNuevoTelefono] = useState('');
   const [nuevoPassword, setNuevoPassword] = useState('');
   const [nuevoRol, setNuevoRol] = useState<MecanicoRol>('mecanico');
@@ -45,8 +48,10 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
   // Modal de edición de datos de personal
   const [mecanicoAEditar, setMecanicoAEditar] = useState<Mecanico | null>(null);
   const [editNombres, setEditNombres] = useState('');
+  const [editUsername, setEditUsername] = useState('');
   const [editTelefono, setEditTelefono] = useState('');
   const [editPassword, setEditPassword] = useState('');
+  const [deseaCambiarPassword, setDeseaCambiarPassword] = useState(false);
   const [guardandoEdicion, setGuardandoEdicion] = useState(false);
   const [errorEdicion, setErrorEdicion] = useState<string | null>(null);
 
@@ -281,12 +286,14 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
     try {
       await apiService.registrarMecanico({
         nombres: nombreTrim,
+        username: nuevoUsername.trim() ? nuevoUsername.trim().toLowerCase() : undefined,
         telefono_whatsapp: telTrim,
         password: nuevoRol === 'administrador' ? passTrim : undefined,
         rol: nuevoRol,
       });
       setModalNuevoAbierto(false);
       setNuevoNombre('');
+      setNuevoUsername('');
       setNuevoTelefono('');
       setNuevoPassword('');
       setNuevoRol('mecanico');
@@ -302,8 +309,10 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
   const handleAbrirModalEditar = (m: Mecanico) => {
     setMecanicoAEditar(m);
     setEditNombres(m.nombres || '');
-    setEditTelefono(m.telefono || '');
+    setEditUsername(m.username || '');
+    setEditTelefono('');
     setEditPassword('');
+    setDeseaCambiarPassword(false);
     setErrorEdicion(null);
   };
 
@@ -318,13 +327,12 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
       return;
     }
 
-    const passTrim = editPassword.trim();
+    const usernameTrim = editUsername.trim().toLowerCase();
+
     const editandoAdmin = mecanicoAEditar.rol === 'administrador' || (mecanicoAEditar.rol as string) === 'admin';
-    if (passTrim && !editandoAdmin) {
-      setErrorEdicion('Los mecánicos no usan contraseña ni tienen acceso al panel web.');
-      return;
-    }
-    if (passTrim.length > 0) {
+    const passTrim = editPassword.trim();
+
+    if (deseaCambiarPassword && editandoAdmin) {
       if (
         passTrim.length < 12 ||
         !/[a-z]/.test(passTrim) ||
@@ -339,9 +347,14 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
     const telTrim = editTelefono.trim();
     const payload: MecanicoUpdateDTO = {
       nombres: nombreTrim,
+      username: usernameTrim || undefined,
     };
 
-    if (telTrim && telTrim !== mecanicoAEditar.telefono) {
+    if (telTrim) {
+      if (telTrim.includes('*')) {
+        setErrorEdicion('Para actualizar el teléfono, ingrese el nuevo número completo (sin asteriscos).');
+        return;
+      }
       const digits = telTrim.replace(/\D/g, '');
       if (digits.length < 6) {
         setErrorEdicion('El número de teléfono WhatsApp debe contener al menos 6 dígitos válidos.');
@@ -350,7 +363,7 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
       payload.telefono_whatsapp = telTrim;
     }
 
-    if (passTrim.length > 0) {
+    if (deseaCambiarPassword && editandoAdmin && passTrim.length > 0) {
       payload.password = passTrim;
     }
 
@@ -358,6 +371,20 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
     try {
       await apiService.actualizarMecanico(mecanicoAEditar.id, payload);
       setNotificacionExito(`Perfil de ${nombreTrim} actualizado exitosamente.`);
+
+      const isCurrentUser = Boolean(
+        (currentUser?.id && mecanicoAEditar.id === currentUser.id) ||
+        (currentUser?.nombre && mecanicoAEditar.nombres.toLowerCase() === currentUser.nombre.toLowerCase()) ||
+        (currentUser?.username && (mecanicoAEditar.username || mecanicoAEditar.nombres).toLowerCase() === currentUser.username.toLowerCase())
+      );
+
+      if (isCurrentUser && onActualizarPerfilSesion) {
+        onActualizarPerfilSesion({
+          nombre: nombreTrim,
+          username: usernameTrim || currentUser?.username || nombreTrim,
+        });
+      }
+
       setMecanicoAEditar(null);
       setErrorEdicion(null);
       onRecargar();
@@ -493,20 +520,27 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
                 return (
                   <tr key={m.id} style={{ borderBottom: '1px solid var(--border-color)' }}>
                     <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-main)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>{m.nombres}</span>
-                        {guards.isSelf && (
-                          <span
-                            style={{
-                              padding: '2px 6px',
-                              borderRadius: '8px',
-                              fontSize: '10px',
-                              fontWeight: 700,
-                              backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                              color: '#1d4ed8',
-                            }}
-                          >
-                            Tú (Sesión actual)
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span>{m.nombres}</span>
+                          {guards.isSelf && (
+                            <span
+                              style={{
+                                padding: '2px 6px',
+                                borderRadius: '8px',
+                                fontSize: '10px',
+                                fontWeight: 700,
+                                backgroundColor: 'rgba(59, 130, 246, 0.15)',
+                                color: '#1d4ed8',
+                              }}
+                            >
+                              Tú (Sesión actual)
+                            </span>
+                          )}
+                        </div>
+                        {m.username && (
+                          <span style={{ fontSize: '11px', fontWeight: 400, color: 'var(--text-muted)' }}>
+                            @{m.username}
                           </span>
                         )}
                       </div>
@@ -698,6 +732,22 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
                 required
                 style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '13px', boxSizing: 'border-box' }}
               />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '4px' }}>
+                Nombre de Usuario (Login) <span style={{ fontSize: '11px', fontWeight: 400, color: 'var(--text-muted)' }}>(Opcional)</span>
+              </label>
+              <input
+                type="text"
+                value={nuevoUsername}
+                onChange={(e) => setNuevoUsername(e.target.value)}
+                placeholder="Ej: cmendoza"
+                style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '13px', boxSizing: 'border-box' }}
+              />
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                Identificador para iniciar sesión en la web.
+              </p>
             </div>
 
             <div>
@@ -920,41 +970,83 @@ export const EquipoTallerTab: React.FC<EquipoTallerTabProps> = ({
                 disabled={guardandoEdicion}
                 style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '13px', boxSizing: 'border-box' }}
               />
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                Nombre y apellido real de la persona para reportes y diagnósticos.
+              </p>
             </div>
 
             <div>
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '4px' }}>
-                Teléfono / WhatsApp
+                Nombre de Usuario (Login) <span style={{ fontSize: '11px', fontWeight: 400, color: 'var(--text-muted)' }}>(Opcional)</span>
               </label>
+              <input
+                type="text"
+                value={editUsername}
+                onChange={(e) => setEditUsername(e.target.value)}
+                placeholder="Ej: cmendoza"
+                disabled={guardandoEdicion}
+                style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '13px', boxSizing: 'border-box' }}
+              />
+              <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                Identificador para iniciar sesión en la web.
+              </p>
+            </div>
+
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-main)' }}>
+                  Teléfono / WhatsApp <span style={{ fontSize: '11px', fontWeight: 400, color: 'var(--text-muted)' }}>(Opcional)</span>
+                </label>
+                <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
+                  Actual: <strong>{mecanicoAEditar.telefono}</strong>
+                </span>
+              </div>
               <input
                 type="text"
                 value={editTelefono}
                 onChange={(e) => setEditTelefono(e.target.value)}
-                placeholder="+51 987 654 321"
+                placeholder="Dejar en blanco para conservar el actual"
                 disabled={guardandoEdicion}
                 style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '13px', boxSizing: 'border-box' }}
               />
               <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
-                Ingrese el nuevo número con formato internacional (mínimo 6 dígitos).
+                Ingrese el nuevo número con formato internacional solo si desea cambiarlo.
               </p>
             </div>
 
-            {(mecanicoAEditar.rol === 'administrador' || (mecanicoAEditar.rol as string) === 'admin') && <div>
-              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '4px' }}>
-                Nueva Contraseña <span style={{ fontSize: '11px', fontWeight: 400, color: 'var(--text-muted)' }}>(Opcional)</span>
-              </label>
-              <input
-                type="password"
-                value={editPassword}
-                onChange={(e) => setEditPassword(e.target.value)}
-                placeholder="••••••••••••"
-                disabled={guardandoEdicion}
-                style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '13px', boxSizing: 'border-box' }}
-              />
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
-                Dejar en blanco para conservar la contraseña actual. Si se cambia: mínimo 12 caracteres (mayúsculas, minúsculas y números).
-              </p>
-            </div>}
+            {(mecanicoAEditar.rol === 'administrador' || (mecanicoAEditar.rol as string) === 'admin') && (
+              <div style={{ padding: '12px', backgroundColor: 'var(--bg-main)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', cursor: 'pointer', margin: 0 }}>
+                  <input
+                    type="checkbox"
+                    checked={deseaCambiarPassword}
+                    onChange={(e) => {
+                      setDeseaCambiarPassword(e.target.checked);
+                      if (!e.target.checked) setEditPassword('');
+                    }}
+                    disabled={guardandoEdicion}
+                  />
+                  <span>Deseo cambiar la contraseña de acceso web</span>
+                </label>
+
+                {deseaCambiarPassword && (
+                  <div style={{ marginTop: '4px' }}>
+                    <input
+                      type="password"
+                      value={editPassword}
+                      onChange={(e) => setEditPassword(e.target.value)}
+                      placeholder="Nueva contraseña (mínimo 12 caracteres)"
+                      autoComplete="new-password"
+                      disabled={guardandoEdicion}
+                      style={{ width: '100%', padding: '9px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)', fontSize: '13px', boxSizing: 'border-box', backgroundColor: '#ffffff' }}
+                    />
+                    <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
+                      Mínimo 12 caracteres (mayúsculas, minúsculas y números).
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
               <button

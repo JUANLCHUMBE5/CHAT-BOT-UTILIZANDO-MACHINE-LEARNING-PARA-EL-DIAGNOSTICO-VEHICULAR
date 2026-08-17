@@ -43,6 +43,7 @@ export interface ActualizarEstadoDiagnosticoDTO {
 
 export interface MecanicoCreateDTO {
   nombres: string;
+  username?: string;
   telefono_whatsapp: string;
   password?: string;
   rol: MecanicoRol;
@@ -50,6 +51,7 @@ export interface MecanicoCreateDTO {
 
 export interface MecanicoUpdateDTO {
   nombres?: string;
+  username?: string;
   telefono_whatsapp?: string;
   password?: string;
 }

@@ -187,27 +187,37 @@ export const App: React.FC = () => {
   const handleLoginSuccess = (usuarioSesion: UsuarioSesion) => {
     if (!isAdminSession(usuarioSesion)) {
       localStorage.removeItem('carbot_session');
+      localStorage.removeItem(LAST_ROUTE_KEY);
       setUser(null);
       setCurrentRoute('/login');
       return;
     }
     setUser(usuarioSesion);
     localStorage.setItem('carbot_session', JSON.stringify(usuarioSesion));
-    const restoredRoute = getValidRoute(readLastRoute(), usuarioSesion);
-    if (window.location.pathname !== restoredRoute) {
-      window.history.pushState({}, '', restoredRoute);
+    localStorage.setItem(LAST_ROUTE_KEY, '/inicio');
+    if (window.location.pathname !== '/inicio') {
+      window.history.pushState({}, '', '/inicio');
     }
-    setCurrentRoute(restoredRoute);
+    setCurrentRoute('/inicio');
   };
 
   const handleLogout = () => {
-    if (currentRoute !== '/login') localStorage.setItem(LAST_ROUTE_KEY, currentRoute);
+    localStorage.removeItem(LAST_ROUTE_KEY);
     setUser(null);
     localStorage.removeItem('carbot_session');
     if (window.location.pathname !== '/login') {
       window.history.pushState({}, '', '/login');
     }
     setCurrentRoute('/login');
+  };
+
+  const handleActualizarPerfilSesion = (actualizado: Partial<UsuarioSesion>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const nuevo = { ...prev, ...actualizado };
+      localStorage.setItem('carbot_session', JSON.stringify(nuevo));
+      return nuevo;
+    });
   };
 
   if (!isAdminSession(user) || currentRoute === '/login') {
@@ -259,6 +269,7 @@ export const App: React.FC = () => {
             <PersonasAccesosView
               user={user}
               onRecargarMecanicos={handleRecargarPersonas}
+              onActualizarPerfilSesion={handleActualizarPerfilSesion}
             />
           )}
 

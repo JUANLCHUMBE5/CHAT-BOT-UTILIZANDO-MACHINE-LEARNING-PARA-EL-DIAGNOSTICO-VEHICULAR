@@ -120,6 +120,22 @@ export function enmascararIdentificadorSensible(valor: string, tipo: 'placa' | '
   }
 }
 
+async function extractErrorMessage(res: Response, fallback: string): Promise<string> {
+  try {
+    const errorData = await res.json();
+    if (typeof errorData?.detail === 'string') return errorData.detail;
+    if (Array.isArray(errorData?.detail)) {
+      return errorData.detail
+        .map((e: unknown) => (typeof e === 'object' && e !== null && 'msg' in e ? String((e as { msg: unknown }).msg) : String(e)))
+        .join(', ');
+    }
+    if (typeof errorData?.message === 'string') return errorData.message;
+    return fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 class ApiService {
   async login(payload: LoginRequestDTO): Promise<TokenResponseDTO> {
     const res = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -128,8 +144,7 @@ class ApiService {
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error de servidor' }));
-      throw new Error(errorData.detail || 'Credenciales inválidas');
+      throw new Error(await extractErrorMessage(res, 'Credenciales inválidas'));
     }
     return await res.json();
   }
@@ -151,8 +166,7 @@ class ApiService {
       }),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error cambiando contraseña' }));
-      throw new Error(errorData.detail || 'No se pudo cambiar la contraseña');
+      throw new Error(await extractErrorMessage(res, 'No se pudo cambiar la contraseña'));
     }
     return await res.json();
   }
@@ -166,8 +180,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error obteniendo métricas' }));
-      throw new Error(errorData.detail || 'Error consultando métricas en PostgreSQL');
+      throw new Error(await extractErrorMessage(res, 'Error consultando métricas en PostgreSQL'));
     }
     return await res.json();
   }
@@ -177,8 +190,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error obteniendo mecánicos' }));
-      throw new Error(errorData.detail || 'Error consultando mecánicos en PostgreSQL');
+      throw new Error(await extractErrorMessage(res, 'Error consultando mecánicos en PostgreSQL'));
     }
     return await res.json();
   }
@@ -190,8 +202,7 @@ class ApiService {
       body: JSON.stringify(data),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error registrando mecánico' }));
-      throw new Error(errorData.detail || 'No se pudo registrar el mecánico en PostgreSQL');
+      throw new Error(await extractErrorMessage(res, 'No se pudo registrar el mecánico en PostgreSQL'));
     }
     return await res.json();
   }
@@ -203,8 +214,7 @@ class ApiService {
       body: JSON.stringify(data),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al actualizar perfil' }));
-      throw new Error(errorData.detail || 'No se pudo actualizar el perfil del mecánico');
+      throw new Error(await extractErrorMessage(res, 'No se pudo actualizar el perfil del mecánico'));
     }
     return await res.json();
   }
@@ -215,8 +225,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al cambiar estado' }));
-      throw new Error(errorData.detail || 'No se pudo actualizar el estado del mecánico');
+      throw new Error(await extractErrorMessage(res, 'No se pudo actualizar el estado del mecánico'));
     }
     return await res.json();
   }
@@ -227,8 +236,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al bloquear mecánico' }));
-      throw new Error(errorData.detail || 'No se pudo bloquear el mecánico');
+      throw new Error(await extractErrorMessage(res, 'No se pudo bloquear el mecánico'));
     }
     return await res.json();
   }
@@ -239,8 +247,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al revocar el acceso técnico' }));
-      throw new Error(errorData.detail || 'No se pudo regresar el usuario a cliente');
+      throw new Error(await extractErrorMessage(res, 'No se pudo regresar el usuario a cliente'));
     }
     return await res.json();
   }
@@ -252,8 +259,7 @@ class ApiService {
       body: JSON.stringify({ nuevo_rol, password }),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al cambiar rol del mecánico' }));
-      throw new Error(errorData.detail || 'No se pudo cambiar el rol del mecánico');
+      throw new Error(await extractErrorMessage(res, 'No se pudo cambiar el rol del mecánico'));
     }
     return await res.json();
   }
@@ -280,8 +286,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error obteniendo historial' }));
-      throw new Error(errorData.detail || 'Error consultando diagnósticos en PostgreSQL');
+      throw new Error(await extractErrorMessage(res, 'Error consultando diagnósticos en PostgreSQL'));
     }
     return await res.json();
   }
@@ -298,8 +303,7 @@ class ApiService {
       }),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al confirmar diagnóstico' }));
-      throw new Error(errorData.detail || 'No se pudo confirmar el diagnóstico en PostgreSQL');
+      throw new Error(await extractErrorMessage(res, 'No se pudo confirmar el diagnóstico en PostgreSQL'));
     }
     return await res.json();
   }
@@ -317,8 +321,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error obteniendo clientes' }));
-      throw new Error(errorData.detail || 'Error consultando clientes en PostgreSQL');
+      throw new Error(await extractErrorMessage(res, 'Error consultando clientes en PostgreSQL'));
     }
     return await res.json();
   }
@@ -329,8 +332,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al bloquear/desbloquear cliente' }));
-      throw new Error(errorData.detail || 'No se pudo actualizar el estado del cliente');
+      throw new Error(await extractErrorMessage(res, 'No se pudo actualizar el estado del cliente'));
     }
     return await res.json();
   }
@@ -344,8 +346,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error obteniendo solicitudes' }));
-      throw new Error(errorData.detail || 'Error consultando solicitudes de acceso');
+      throw new Error(await extractErrorMessage(res, 'Error consultando solicitudes de acceso'));
     }
     return await res.json();
   }
@@ -356,8 +357,7 @@ class ApiService {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al aprobar solicitud' }));
-      throw new Error(errorData.detail || 'No se pudo aprobar la solicitud');
+      throw new Error(await extractErrorMessage(res, 'No se pudo aprobar la solicitud'));
     }
     return await res.json();
   }
@@ -369,8 +369,7 @@ class ApiService {
       body: JSON.stringify({ motivo }),
     });
     if (!res.ok) {
-      const errorData = await res.json().catch(() => ({ detail: 'Error al rechazar solicitud' }));
-      throw new Error(errorData.detail || 'No se pudo rechazar la solicitud');
+      throw new Error(await extractErrorMessage(res, 'No se pudo rechazar la solicitud'));
     }
     return await res.json();
   }
