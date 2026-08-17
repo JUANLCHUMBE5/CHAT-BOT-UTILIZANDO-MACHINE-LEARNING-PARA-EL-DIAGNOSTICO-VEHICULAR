@@ -1,7 +1,9 @@
 import type {
   ActualizarEstadoDiagnosticoDTO,
   AprobarSolicitudResponseDTO,
+  CasoValidacionDTO,
   Cliente,
+  CrearCasoValidacionDTO,
   Diagnostico,
   LoginRequestDTO,
   Mecanico,
@@ -9,6 +11,7 @@ import type {
   MecanicoResponseDTO,
   MecanicoUpdateDTO,
   MecanicoRol,
+  MetricasValidacionDTO,
   ResumenMetricas,
   SolicitudAcceso,
   TokenResponseDTO,
@@ -401,6 +404,65 @@ class ApiService {
       return { status: 'offline' };
     }
   }
+
+  // ==========================================
+  // VALIDACIÓN REAL DE TALLER & TRACKER TESIS
+  // ==========================================
+
+  async getCasosValidacion(params?: {
+    fase?: string;
+    marca?: string;
+    acierto?: number;
+    busqueda?: string;
+    skip?: number;
+    limit?: number;
+  }): Promise<{ total: number; skip: number; limit: number; casos: CasoValidacionDTO[] }> {
+    const url = new URL(`${API_BASE_URL}/validacion-taller`);
+    if (params?.fase) url.searchParams.append('fase', params.fase);
+    if (params?.marca) url.searchParams.append('marca', params.marca);
+    if (params?.acierto !== undefined) url.searchParams.append('acierto', String(params.acierto));
+    if (params?.busqueda) url.searchParams.append('busqueda', params.busqueda);
+    if (params?.skip !== undefined) url.searchParams.append('skip', String(params.skip));
+    if (params?.limit !== undefined) url.searchParams.append('limit', String(params.limit));
+
+    const res = await authFetch(url.toString(), {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) {
+      throw new Error(await extractErrorMessage(res, 'Error al obtener casos de validación de taller'));
+    }
+    return await res.json();
+  }
+
+  async getMetricasValidacion(): Promise<MetricasValidacionDTO> {
+    const res = await authFetch(`${API_BASE_URL}/validacion-taller/metricas`, {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) {
+      throw new Error(await extractErrorMessage(res, 'Error al obtener métricas de validación'));
+    }
+    return await res.json();
+  }
+
+  async crearCasoValidacion(dto: CrearCasoValidacionDTO): Promise<CasoValidacionDTO> {
+    const res = await authFetch(`${API_BASE_URL}/validacion-taller`, {
+      method: 'POST',
+      headers: {
+        ...getAuthHeaders(),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dto),
+    });
+    if (!res.ok) {
+      throw new Error(await extractErrorMessage(res, 'Error al registrar caso de validación'));
+    }
+    return await res.json();
+  }
+
+  getExportarTrackerCsvUrl(): string {
+    return `${API_BASE_URL}/validacion-taller/exportar-csv`;
+  }
 }
 
 export const apiService = new ApiService();
+

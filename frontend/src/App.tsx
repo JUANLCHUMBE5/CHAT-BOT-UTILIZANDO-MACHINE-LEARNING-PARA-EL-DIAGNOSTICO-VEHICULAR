@@ -6,6 +6,8 @@ import { LoginView } from './components/views/LoginView';
 import { DashboardView } from './components/views/DashboardView';
 import { PersonasAccesosView } from './components/views/PersonasAccesosView';
 import { DiagnosticosView } from './components/views/DiagnosticosView';
+import { ValidacionTallerView } from './components/views/ValidacionTallerView';
+import { FichasTesisView } from './components/views/FichasTesisView';
 import { useMecanicos } from './hooks/useMecanicos';
 import { useDiagnosticos } from './hooks/useDiagnosticos';
 import { useMetricas } from './hooks/useMetricas';
@@ -20,7 +22,7 @@ const LAST_ROUTE_KEY = 'carbot_last_route';
 
 const readLastRoute = (): AppRoute => {
   const saved = localStorage.getItem(LAST_ROUTE_KEY);
-  return ['/inicio', '/personas', '/diagnosticos'].includes(saved || '')
+  return ['/inicio', '/personas', '/diagnosticos', '/validacion', '/fichas'].includes(saved || '')
     ? saved as AppRoute
     : '/inicio';
 };
@@ -139,7 +141,16 @@ export const App: React.FC = () => {
     cargarSolicitudesPendientesCount();
   }, [cargarSolicitudesPendientesCount]);
 
-  const activeTab: NavTab = currentRoute === '/personas' ? 'personas' : currentRoute === '/diagnosticos' ? 'diagnosticos' : 'inicio';
+  const activeTab: NavTab =
+    currentRoute === '/personas'
+      ? 'personas'
+      : currentRoute === '/diagnosticos'
+      ? 'diagnosticos'
+      : currentRoute === '/validacion'
+      ? 'validacion'
+      : currentRoute === '/fichas'
+      ? 'fichas'
+      : 'inicio';
 
   // Load module data on demand when tab changes
   useEffect(() => {
@@ -285,6 +296,14 @@ export const App: React.FC = () => {
               onCerrarModalDetalle={() => setDiagnosticoSeleccionado(null)}
               onAbrirModalDetalle={(diag) => setDiagnosticoSeleccionado(diag)}
             />
+          )}
+
+          {activeTab === 'validacion' && (
+            <ValidacionTallerView />
+          )}
+
+          {activeTab === 'fichas' && (
+            <FichasTesisView />
           )}
         </main>
       </div>

@@ -58,6 +58,49 @@ export interface MecanicoUpdateDTO {
 
 export type MecanicoResponseDTO = Mecanico;
 
+export interface CasoValidacionDTO {
+  item: number;
+  fase: string;
+  fecha: string;
+  placa: string;
+  marca_modelo: string;
+  sintoma: string;
+  falla_real: string;
+  chatbot_prediccion: string;
+  campos_completos: number;
+  tiempo_diagnostico_minutos: number;
+  prediccion_correcta: number;
+}
+
+export interface CrearCasoValidacionDTO {
+  fase: string;
+  fecha?: string;
+  placa: string;
+  marca_modelo: string;
+  sintoma: string;
+  falla_real: string;
+  chatbot_prediccion: string;
+  campos_completos: number;
+  tiempo_diagnostico_minutos: number;
+  prediccion_correcta: number;
+}
+
+export interface MetricasValidacionDTO {
+  total_casos: number;
+  total_aciertos: number;
+  total_desaciertos: number;
+  tasa_acierto_global_porcentaje: number;
+  casos_pretest: number;
+  tasa_acierto_pretest_porcentaje: number;
+  tiempo_promedio_pretest_min: number;
+  casos_posttest: number;
+  tasa_acierto_posttest_porcentaje: number;
+  tiempo_promedio_posttest_min: number;
+  reduccion_tiempo_porcentaje: number;
+  distribucion_marcas: { marca: string; conteo: number }[];
+  top_fallas_reales: { falla: string; conteo: number }[];
+}
+
 export interface AprobarSolicitudResponseDTO {
   mensaje: string;
   solicitud_id: string;

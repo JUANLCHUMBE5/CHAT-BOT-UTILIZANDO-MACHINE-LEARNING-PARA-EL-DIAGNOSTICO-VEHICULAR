@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Users, FileSearch, ShieldCheck, X } from 'lucide-react';
+import { LayoutDashboard, Users, FileSearch, ShieldCheck, X, FlaskConical, GraduationCap } from 'lucide-react';
 import type { UsuarioSesion } from '../../types';
 import { apiService } from '../../services/api';
 
-export type NavTab = 'inicio' | 'personas' | 'diagnosticos';
+export type NavTab = 'inicio' | 'personas' | 'diagnosticos' | 'validacion' | 'fichas';
 
 interface SidebarProps {
   user?: UsuarioSesion | null;
@@ -47,6 +47,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'inicio', label: 'Inicio', icon: <LayoutDashboard size={18} /> },
     { id: 'personas', label: 'Personas y accesos', icon: <Users size={18} />, badgeCount: solicitudesPendientesCount },
     { id: 'diagnosticos', label: 'Diagnósticos', icon: <FileSearch size={18} /> },
+    { id: 'validacion', label: 'Validación Taller', icon: <FlaskConical size={18} /> },
+    { id: 'fichas', label: 'Fichas de Tesis', icon: <GraduationCap size={18} /> },
   ];
 
   const content = (
