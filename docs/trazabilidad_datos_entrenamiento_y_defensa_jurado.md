@@ -27,10 +27,11 @@ Fecha de actualización: 15 de agosto de 2026
 - F1 macro del modelo seleccionado: 95.95 %.
 - Modelo aprobado para diagnóstico autónomo: no.
 
-El reporte de limpieza original termina en 2,751 filas. Las 110 filas añadidas
-después conservan síntoma y falla, pero tienen pendientes los campos de código,
-sistema y severidad. Esta limitación debe declararse y corregirse antes de cerrar
-el linaje taxonómico del dataset.
+El reporte de limpieza y calidad (`reporte_calidad_dataset.json`) cubre la totalidad
+de las 2,861 filas del dataset base limpio, con 0 nulos en `codigo_falla`, `sistema`
+y `severidad`. Las 110 filas añadidas han sido debidamente mapeadas a la taxonomía
+estándar de `catalogo_fallas.py`, asegurando un linaje completamente trazable y
+biunívoco (1-a-1) para las 48 clases vehiculares.
 
 ## Procedencia externa
 

@@ -577,3 +577,8 @@ MAPA_UNIFICACION_ETIQUETAS: Dict[str, str] = {
     "Falla en sistema de frenado regenerativo (EV / Hbridos)": "ELECTRICO_HV_003",
     "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)": "ELECTRICO_HV_004",
 }
+
+# Registrar automáticamente todas las fallas principales canónicas en el mapa de unificación
+for _cod, _item in CATALOGO_TAXONOMIA.items():
+    if _item.falla_principal not in MAPA_UNIFICACION_ETIQUETAS:
+        MAPA_UNIFICACION_ETIQUETAS[_item.falla_principal] = _cod

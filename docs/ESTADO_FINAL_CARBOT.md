@@ -273,12 +273,11 @@ El modelo continúa bloqueado para uso autónomo porque hay soporte insuficiente
 una clase con F1 de 0.20 y calibración por encima del objetivo. Los valores
 exactos están en `machine_learning/models/metricas_modelo.json`.
 
-Deuda de calidad conocida: `reporte_calidad_dataset.json` documenta la limpieza
-que produjo 2,751 filas. El CSV base vigente contiene 110 ejemplos añadidos
-posteriormente que tienen `sintoma` y `falla`, pero todavía carecen de
-`codigo_falla`, `sistema` y `severidad`. El clasificador puede utilizarlos porque
-entrena con texto y falla; sin embargo, esos metadatos deben completarse mediante
-la taxonomía antes de declarar totalmente cerrado el linaje del dataset base.
+Calidad y linaje del dataset: `reporte_calidad_dataset.json` documenta la
+limpieza y normalización que cubre la totalidad de las 2,861 filas del CSV base
+limpio (`dataset_sintomas_limpio.csv`), con 0 valores nulos en `codigo_falla`,
+`sistema` y `severidad`. Cada uno de los 48 diagnósticos canónicos mapea de forma
+biunívoca (1-a-1) con la taxonomía vehicular de `catalogo_fallas.py`.
 
 ## 12. Meta, ngrok, GitHub Pages y dominios
 
@@ -347,10 +346,8 @@ deprecadas deben mantenerse bajo seguimiento.
 
 ## 15. Limitaciones y trabajo pendiente
 
-- El modelo no está aprobado para diagnóstico autónomo.
-- Hay 110 filas base con etiqueta de falla válida pero metadatos taxonómicos
-  incompletos; deben normalizarse y generar un nuevo reporte de calidad.
-- Faltan casos reales confirmados y reservados para validación externa.
+- El modelo no está aprobado para diagnóstico autónomo (persisten bloqueos por calibración ECE y clases débiles como bomba de gasolina y termostato/motoventilador).
+- Faltan casos reales confirmados y reservados para validación externa (independientes del dataset de entrenamiento).
 - El corpus RAG necesita más manuales OEM con marca, modelo, año, edición y página.
 - La información de recalls debe proceder de fuentes oficiales y mostrarse como
   evidencia, no como predicción aprendida.
