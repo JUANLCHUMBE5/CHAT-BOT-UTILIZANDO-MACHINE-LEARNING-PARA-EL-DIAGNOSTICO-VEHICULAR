@@ -1,942 +1,1533 @@
 [
   {
     "id_procedimiento": "RAG_PROC_001",
-    "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
-    "marca": "Toyota",
-    "modelo": "Yaris",
-    "anio": "2020-2024",
-    "motor": "1.5L 2NR-FE Dual VVT-i",
-    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
-    "edicion": "Edición Oficial Toyota Motor Corporation 2020",
-    "pagina": 31,
-    "codigos_dtc": [
-      "C0035"
-    ],
-    "categoria_directorio": "toyota\\yaris\\2020",
-    "archivo_fuente": "toyota_yaris.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_002",
     "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 12,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 1,
     "codigos_dtc": [
       "C0040"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "befa899a2c80282d526ee688f4fac54a436ff4a4ca1cf60585e50f762cbe99ef",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_003",
+    "id_procedimiento": "RAG_PROC_002",
     "titulo": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 13,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 2,
     "codigos_dtc": [
       "C0045"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "1b3cd8afdc8d2fbfd91ad558afd5ad799ce192ec441e7fb9a1ad38e56bc415ae",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_004",
+    "id_procedimiento": "RAG_PROC_003",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE VELOCIDAD ABS Y CILINDRO MAESTRO (DTC C0035 / C0221)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 14,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 3,
     "codigos_dtc": [
       "C0035",
       "C0221"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "0fd2df97d147cd9fcf9cfa7c1b4047b0414b2c8d700eea389a5542e64affb783",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_005",
-    "titulo": "PROCEDIMIENTO: LIMPIEZA Y PRUEBA DE INYECTORES DE COMBUSTIBLE EN BANCO ULTRASONIDO (DTC P0200 / P0261)",
-    "marca": "Toyota",
-    "modelo": "Yaris",
-    "anio": "2020-2024",
-    "motor": "1.5L 2NR-FE Dual VVT-i",
-    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
-    "edicion": "Edición Oficial Toyota Motor Corporation 2020",
-    "pagina": 35,
-    "codigos_dtc": [
-      "P0200",
-      "P0261"
-    ],
-    "categoria_directorio": "toyota\\yaris\\2020",
-    "archivo_fuente": "toyota_yaris.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_006",
-    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
-    "marca": "Toyota",
-    "modelo": "Yaris",
-    "anio": "2020-2024",
-    "motor": "1.5L 2NR-FE Dual VVT-i",
-    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
-    "edicion": "Edición Oficial Toyota Motor Corporation 2020",
-    "pagina": 36,
-    "codigos_dtc": [
-      "P0505",
-      "P2119"
-    ],
-    "categoria_directorio": "toyota\\yaris\\2020",
-    "archivo_fuente": "toyota_yaris.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_007",
-    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE COMBUSTIBLE Y PRESIÓN DE LÍNEA GASOLINA/GLP/GNV (DTC P0087 / P0088)",
-    "marca": "Multimarca GNV/GLP",
-    "modelo": "Sistemas 5ta Generación",
-    "anio": "2016-2024",
-    "motor": "Gasolina / GNV / GLP Secuencial",
-    "manual_oem": "Manual de Calibración e Instalación GNV/GLP 5ta Gen (Tomasetto / Lovato)",
-    "edicion": "Guía Técnica de Taller 2021",
-    "pagina": 52,
-    "codigos_dtc": [
-      "P0087",
-      "P0088"
-    ],
-    "categoria_directorio": "gnv_glp\\5ta_generacion",
-    "archivo_fuente": "gnv_glp.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_008",
+    "id_procedimiento": "RAG_PROC_004",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y LIMPIEZA DE SENSORES DE FLUJO DE AIRE MAF Y PRESIÓN MAP (DTC P0100 / P0106)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 18,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 4,
     "codigos_dtc": [
       "P0100",
       "P0106"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "c03a5fcaeb11709f8a9d9f5b9e0b60695baf748918ba0fbb055deb282e93a3a3",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_009",
+    "id_procedimiento": "RAG_PROC_005",
     "titulo": "PROCEDIMIENTO: REPARACIÓN Y ALINEACIÓN DE CHAPA DE PUERTA / PESTILLO MECÁNICO",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 19,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 5,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "ceba69571990f6c0e438b2bfda4b3252403f9101e85b2cdbdf4b26f15380a1e4",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_010",
-    "titulo": "PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550)",
-    "marca": "Toyota",
-    "modelo": "Yaris",
-    "anio": "2020-2024",
-    "motor": "1.5L 2NR-FE Dual VVT-i",
-    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
-    "edicion": "Edición Oficial Toyota Motor Corporation 2020",
-    "pagina": 40,
-    "codigos_dtc": [
-      "C0550"
-    ],
-    "categoria_directorio": "toyota\\yaris\\2020",
-    "archivo_fuente": "toyota_yaris.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_011",
+    "id_procedimiento": "RAG_PROC_006",
     "titulo": "PROCEDIMIENTO: REEMPLAZO DE JUNTA HOMOCINÉTICA Y CUBREPOLVOS DE PALIER (CLAC CLAC AL DOBLAR)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 21,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 6,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "6e9dc68a757cbb42abae5acfe56e7ff952058855b4a2491d2ab6011235a5a24c",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_012",
+    "id_procedimiento": "RAG_PROC_007",
     "titulo": "PROCEDIMIENTO: REEMPLAZO DE RÓTULAS DE SUSPENSIÓN, TRAPECIOS Y BUJES (JUEGO EN TIMÓN / JALONEO)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 22,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 7,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "375a0574b1074ad45351df59820dd2d5f7e2adac2f2b2e6dfeac9e5b7bd6ec16",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_013",
+    "id_procedimiento": "RAG_PROC_008",
     "titulo": "PROCEDIMIENTO: MANTENIMIENTO DE DIRECCIÓN HIDRÁULICA Y DIAGNÓSTICO DE EPS ELECTRÓNICA (DTC C1500 / C1511)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 23,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 8,
     "codigos_dtc": [
       "C1500",
       "C1511"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "3ad994f4620e615d07ebe7b658a00850e4fb38a635ae386ec1608414a5d93868",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_014",
-    "titulo": "PROCEDIMIENTO: REEMPLAZO DEL KIT DE EMBRAGUE EN TRANSMISIÓN MANUAL (DISCO, PRENSA Y COLLARÍN)",
-    "marca": "Toyota",
-    "modelo": "Yaris",
-    "anio": "2020-2024",
-    "motor": "1.5L 2NR-FE Dual VVT-i",
-    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
-    "edicion": "Edición Oficial Toyota Motor Corporation 2020",
-    "pagina": 44,
-    "codigos_dtc": [],
-    "categoria_directorio": "toyota\\yaris\\2020",
-    "archivo_fuente": "toyota_yaris.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_015",
-    "titulo": "PROCEDIMIENTO: MANTENIMIENTO Y CAMBIO DE FLUIDO ATF/CVT EN TRANSMISIÓN AUTOMÁTICA (DTC P0700 / P0730)",
-    "marca": "Nissan",
-    "modelo": "Sentra / Versa",
-    "anio": "2020-2023",
-    "motor": "2.0L MR20DD / 1.6L HR16DE",
-    "manual_oem": "Nissan Service Manual SM20E00-B18",
-    "edicion": "Edición Oficial Nissan North America 2020",
-    "pagina": 95,
-    "codigos_dtc": [
-      "P0700",
-      "P0730"
-    ],
-    "categoria_directorio": "nissan\\sentra\\2020",
-    "archivo_fuente": "nissan_sentra.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_016",
+    "id_procedimiento": "RAG_PROC_009",
     "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECÁNICA Y DIFERENCIAL (CAMBIO DE VALVOLINA Y SINCRONIZADORES)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 26,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 9,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "0277d56e881b0e024728d12475c1fb5451b4467e2b24b0140fa098c3ca264d77",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_017",
+    "id_procedimiento": "RAG_PROC_010",
     "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 27,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 10,
     "codigos_dtc": [
       "P0300",
       "P0301"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "a04cf8a7bc692ea5e24e053a3c9378d72511a137d685358866573b508921743e",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_018",
+    "id_procedimiento": "RAG_PROC_011",
     "titulo": "PROCEDIMIENTO: CAMBIO Y CALIBRACIÓN DE CORREA O CADENA DE DISTRIBUCIÓN (DTC P0016 / P0017)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 28,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 11,
     "codigos_dtc": [
       "P0016",
       "P0017"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "444e14ec62ea627f030c6a96216bc5599f36a521001a7d2ba91a4516057cbf79",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_019",
+    "id_procedimiento": "RAG_PROC_012",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 29,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 12,
     "codigos_dtc": [
       "P0217"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "a4cf37ddaf9e98f17542971cb2c37b79823ef6812d689b8ff3ba3f9e52b70fa0",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_020",
+    "id_procedimiento": "RAG_PROC_013",
     "titulo": "PROCEDIMIENTO: CAMBIO DE ACEITE DE MOTOR, FILTRO Y LIMPIEZA DE CÁRTER (DTC P0520 / BAJA PRESIÓN)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 30,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 13,
     "codigos_dtc": [
       "P0520"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "15cba8cbdb4085d066620f4e0909be6f0b9b72c393661e1eb8654999e4e32ad1",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_021",
+    "id_procedimiento": "RAG_PROC_014",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE POSICIÓN DE CIGÜEÑAL CKP Y LEVAS CMP (DTC P0335 / P0340)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 31,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 14,
     "codigos_dtc": [
       "P0335",
       "P0340"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "e43b308d5c52aed36301c0b8438dc6355dcc6e865a369c6c58ab2c7a943d2b34",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_022",
-    "titulo": "PROCEDIMIENTO: CARGA DE REFRIGERANTE R134a / R1234yf Y PRUEBA DE FUGAS CON MANÓMETROS (DTC B1000 / A/C TIBIO)",
-    "marca": "Multimarca GNV/GLP",
-    "modelo": "Sistemas 5ta Generación",
-    "anio": "2016-2024",
-    "motor": "Gasolina / GNV / GLP Secuencial",
-    "manual_oem": "Manual de Calibración e Instalación GNV/GLP 5ta Gen (Tomasetto / Lovato)",
-    "edicion": "Guía Técnica de Taller 2021",
-    "pagina": 67,
-    "codigos_dtc": [
-      "B1000"
-    ],
-    "categoria_directorio": "gnv_glp\\5ta_generacion",
-    "archivo_fuente": "gnv_glp.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_023",
-    "titulo": "PROCEDIMIENTO: REPARACIÓN DE EMBRAGUE ELECTROMAGNÉTICO Y COMPRESOR DE A/C (DTC B1421 / RUIDO EN COMPRESOR)",
-    "marca": "Toyota",
-    "modelo": "Yaris",
-    "anio": "2020-2024",
-    "motor": "1.5L 2NR-FE Dual VVT-i",
-    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
-    "edicion": "Edición Oficial Toyota Motor Corporation 2020",
-    "pagina": 53,
-    "codigos_dtc": [
-      "B1421"
-    ],
-    "categoria_directorio": "toyota\\yaris\\2020",
-    "archivo_fuente": "toyota_yaris.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_024",
+    "id_procedimiento": "RAG_PROC_015",
     "titulo": "PROCEDIMIENTO: LIMPIEZA DEL EVAPORADOR, REEMPLAZO DE FILTRO DE CABINA Y PRESOSTATO (DTC B1005 / MAL OLOR)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 34,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 15,
     "codigos_dtc": [
       "B1005"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "17a4198959bbee501f7feda64bcd3b22fc4e3548f5b8281eb00864f82e9d5ffb",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_025",
+    "id_procedimiento": "RAG_PROC_016",
     "titulo": "PROCEDIMIENTO: PROTOCOLO ESTANDARIZADO DE ESCANEO OBD-II, LECTURA DTC Y BORRADO DE CHECK ENGINE",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 35,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 16,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "040535203bb7f9033b3992bbbe8efddc75dc639d9c3fe26b3c0d92e6ad881a3c",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_026",
+    "id_procedimiento": "RAG_PROC_017",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE OXÍGENO / LAMBDA (DTC P0130 / P0135 / P0141)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 36,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 17,
     "codigos_dtc": [
       "P0130",
       "P0135",
       "P0141"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "6a9a2f8d105d5062cab4df38e7e5d065058c9cec0317c0a3cd9a9ac1152018ed",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_027",
+    "id_procedimiento": "RAG_PROC_018",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA POBRE / RICA Y ANÁLISIS DE DATOS EN VIVO STFT & LTFT (DTC P0171 / P0172)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 37,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 18,
     "codigos_dtc": [
       "P0171",
       "P0172"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "81a84d0d8052a0f43b8ac26db3839e9f9747c1b5ea4ebd3041d45a4dead814eb",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_028",
+    "id_procedimiento": "RAG_PROC_019",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE FRENOS DE AIRE NEUMÁTICOS EN CAMIONES (SCANIA / VOLVO / SPN 1087)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 38,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 19,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "dcb969092c0269021df8cae89316096abbd62d2939386b98e0a66f785a3317f7",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_029",
-    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE ALTO VOLTAJE E INVERSOR EN VEHÍCULOS ELÉCTRICOS E HÍBRIDOS (EV/HEV / DTC P0A80)",
-    "marca": "Toyota",
-    "modelo": "Prius HEV",
-    "anio": "2018-2022",
-    "motor": "1.8L 2ZR-FXE THS-II",
-    "manual_oem": "Toyota Prius Hybrid Repair Manual (Pub. RM3140U)",
-    "edicion": "Edición 2018 (Toyota Technical Service)",
-    "pagina": 149,
-    "codigos_dtc": [],
-    "categoria_directorio": "toyota\\prius_hev\\2018",
-    "archivo_fuente": "toyota_prius.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_030",
+    "id_procedimiento": "RAG_PROC_020",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE ALTERNADOR Y SISTEMA DE CARGA DE 12V (DTC P0562 / P0563 / BATERÍA NO CARGA)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 40,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 20,
     "codigos_dtc": [
       "P0562",
       "P0563"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "ff863bd708fb821dbc867061aeae44526e9bb60adee1bbc3775431d22ea77626",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_031",
+    "id_procedimiento": "RAG_PROC_021",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MOTOR DE ARRANQUE Y SOLENOIDE DE IGNICIÓN (CLIC SIN ARRANQUE / DTC P0615)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 41,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 21,
     "codigos_dtc": [
       "P0615"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "12bb077059d482227324085f22764f565fff6f3048c94845753a7f74afb60f07",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_032",
+    "id_procedimiento": "RAG_PROC_022",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONSUMO PARÁSITO Y CAÍDA DE TENSIÓN EN BUS DE COMUNICACIÓN CAN (DESCARGA DE BATERÍA / DTC U0100)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 42,
-    "codigos_dtc": [
-      "U0100"
-    ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 22,
+    "codigos_dtc": [],
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "2454075c3c70b719e9258a23980946b6c946294f3392587d68c7ea619f83946c",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_033",
-    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS)",
-    "marca": "Toyota",
-    "modelo": "Yaris",
-    "anio": "2020-2024",
-    "motor": "1.5L 2NR-FE Dual VVT-i",
-    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
-    "edicion": "Edición Oficial Toyota Motor Corporation 2020",
-    "pagina": 63,
-    "codigos_dtc": [
-      "P0741"
-    ],
-    "categoria_directorio": "toyota\\yaris\\2020",
-    "archivo_fuente": "toyota_yaris.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_034",
-    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT (VARIADORES, CORREA METÁLICA Y SOLENOIDES / DTC P0701 / P0841)",
-    "marca": "Nissan",
-    "modelo": "Sentra / Versa",
-    "anio": "2020-2023",
-    "motor": "2.0L MR20DD / 1.6L HR16DE",
-    "manual_oem": "Nissan Service Manual SM20E00-B18",
-    "edicion": "Edición Oficial Nissan North America 2020",
-    "pagina": 114,
-    "codigos_dtc": [
-      "P0701",
-      "P0841"
-    ],
-    "categoria_directorio": "nissan\\sentra\\2020",
-    "archivo_fuente": "nissan_sentra.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_035",
+    "id_procedimiento": "RAG_PROC_023",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CUERPO DE VÁLVULAS Y SOLENOIDES DE CAMBIO EN TRANSMISIÓN AUTOMÁTICA CON CONVERTIDOR DE PAR (DTC P0750 / P0755)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 45,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 23,
     "codigos_dtc": [
+      "P0740",
       "P0750",
       "P0755"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "7f18d7ff79010b4ca277ca2efc5f46d68c8c62f374558a866190ca9f92bed2d8",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_036",
+    "id_procedimiento": "RAG_PROC_024",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE VÁLVULA DE EXPANSIÓN TÉRMICA Y FILTRO DESECANTE DE A/C (DTC B1008 / FALTA DE ENFRÍAMIENTO / PRESIONES ANORMALES)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 46,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 24,
     "codigos_dtc": [
       "B1008"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "1eb3822d4a153744e481e235340ac9685a349b6a0c27268d7adfdcbafc6c7c52",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_037",
+    "id_procedimiento": "RAG_PROC_025",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SERVOMOTORES DE COMPUERTAS HVAC Y MÓDULO RESISTOR DEL BLOWER (DTC B1082 / AIRE CALIENTE EN COPILOTO / SIN VENTILACIÓN)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 47,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 25,
     "codigos_dtc": [
-      "B1082"
+      "B1082",
+      "B1086"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "4ad6cc84e890c8428a7e92a61dbeeb5303f05edf72c67e054b57532f4cf2290b",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_038",
-    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONDENSADOR Y FUGAS EN EL RADIADOR DE CALEFACCIÓN / EVAPORADOR (DTC B1010 / REFRIGERANTE EN ALFOMBRA / LÍNEA AC SECA)",
-    "marca": "Multimarca GNV/GLP",
-    "modelo": "Sistemas 5ta Generación",
-    "anio": "2016-2024",
-    "motor": "Gasolina / GNV / GLP Secuencial",
-    "manual_oem": "Manual de Calibración e Instalación GNV/GLP 5ta Gen (Tomasetto / Lovato)",
-    "edicion": "Guía Técnica de Taller 2021",
-    "pagina": 83,
-    "codigos_dtc": [
-      "B1010"
-    ],
-    "categoria_directorio": "gnv_glp\\5ta_generacion",
-    "archivo_fuente": "gnv_glp.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
-  },
-  {
-    "id_procedimiento": "RAG_PROC_039",
+    "id_procedimiento": "RAG_PROC_026",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DEL MÓDULO DE CONTROL ELECTRÓNICO ABS/ESP Y UNIDAD HIDRÁULICA HCU (DTC C0110 / C0265 / SIN COMUNICACIÓN CON ABS)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 49,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 26,
     "codigos_dtc": [
       "C0110",
       "C0265"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "b4e0e401071e25d47b7a19a18fe7d9aa89aca89104ff6a8d8af4b537598b29b5",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_040",
+    "id_procedimiento": "RAG_PROC_027",
     "titulo": "PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y CONTROL DE ESTABILIDAD ESP/VSC (DTC C1231 / C1210 / TABLERO ESP ENCENDIDO)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 50,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 27,
     "codigos_dtc": [
+      "C1210",
       "C1231",
-      "C1210"
+      "C1515"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "ef6c067f900a8d5fee19b9dbe7f1df8a0520b61efabada9e76c9f983c538b3c5",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_041",
+    "id_procedimiento": "RAG_PROC_028",
     "titulo": "PROCEDIMIENTO: PURGA ELECTRÓNICA Y REEMPLAZO DE ELECTROVÁLVULAS DEL MÓDULO ABS CON ESCÁNER DIAGNÓSTICO (DTC C0020 / C0082 / PEDAL DURO BAJO ACTIVACIÓN ABS)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 51,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 28,
     "codigos_dtc": [
       "C0020",
       "C0082"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "3005b08bd7dcbcbf5e18b580f287a5cc2514ace136e577c5b61f9107e206d3ab",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_042",
+    "id_procedimiento": "RAG_PROC_029",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DEL SENSOR DE PAR/TORQUE Y MOTOR ELECTRÓNICO EPS DE COLUMNA (DTC C1515 / C1525 / TIMÓN RÍGIDO CON VOLANTE DESVIADO)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 52,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 29,
     "codigos_dtc": [
+      "C1511",
       "C1515",
       "C1525"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "6455feb4ae7500377e2b73a8c6c56c8d80ca087c2e27b326e6e1d0ccb67d2dd2",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_043",
+    "id_procedimiento": "RAG_PROC_030",
     "titulo": "PROCEDIMIENTO: CALIBRACIÓN DE PUNTO CERO Y REAPRENDIZAJE DEL SISTEMA DE DIRECCIÓN ASISTIDA EPS CON ESCÁNER (DTC C1555 / ERROR DE CALIBRACIÓN EPS)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 53,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 30,
     "codigos_dtc": [
+      "C1515",
       "C1555"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "3dd6dde7782486816c1f6300aaddce73c70a5d27fe971b7c1a1e95c185ff3f20",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_044",
+    "id_procedimiento": "RAG_PROC_031",
     "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 54,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 31,
     "codigos_dtc": [
       "C1532"
     ],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "8da62e7f9eaa8b6b76860c04b0b55f501b7957faff354c27da7932a1e1adf601",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_045",
+    "id_procedimiento": "RAG_PROC_032",
     "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REPARACION DE CIERRE CENTRALIZADO Y ACTUADOR ELECTRICO DE PUERTA (CARROCERIA_001)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 55,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 32,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "1c2978f4b5e45664c600de4602e0c706bac05f80c9198d014ed7d2d2c608c8c2",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_046",
+    "id_procedimiento": "RAG_PROC_033",
     "titulo": "PROCEDIMIENTO: REPARACION Y ALINEACION DE CHAPA, PESTILLO Y CERRADURA MECANICA DE PUERTA (CARROCERIA_002)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 56,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 33,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "a5261680587235e84c60b7eee46e96c308a94199c96b06cd424acc536f5f6bc3",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_047",
+    "id_procedimiento": "RAG_PROC_034",
     "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REEMPLAZO DE ELEVALUNAS ELECTRICO / ALZACRISTALES Y GUAYA (CARROCERIA_003)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 57,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 34,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "0c19e7665d2ab81f02cf016eb644d808f165304c1a4b28e3af0dd897c01a4838",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_048",
+    "id_procedimiento": "RAG_PROC_035",
     "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REEMPLAZO DE MOTOR DE LIMPIAPARABRISAS / PLUMAS (CARROCERIA_004)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 58,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 35,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "52448e0909f9ac9b511b7f09168e8eaf23bff967d71a4aa6da71fdcdb95bcd9a",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_049",
+    "id_procedimiento": "RAG_PROC_036",
     "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 59,
-    "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 36,
+    "codigos_dtc": [
+      "P0087",
+      "P0093"
+    ],
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "5856d20ab5a8e14a0e24f5525bd4371fc6a0dcb116854d4c8614830ccfa9e83b",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_050",
+    "id_procedimiento": "RAG_PROC_037",
     "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REGENERACION DE FILTRO DE PARTICULAS DPF Y SISTEMA ADBLUE DEF (ESCAPE_001)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 60,
-    "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 37,
+    "codigos_dtc": [
+      "P2002"
+    ],
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "2b1c3d815988ab490eddfefef1bb6b6d084ef2eb2fc13dfa307e86d23925836e",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_051",
+    "id_procedimiento": "RAG_PROC_038",
     "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA DE FRENOS DE AIRE NEUMATICOS EN CAMIONES (FRENO_006 / FRENO_007)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 61,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 38,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "11f6680f4c4c05520418e1d7482c48220eff4ee2ec2864272ef6c1ed5c6f6eee",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
-    "id_procedimiento": "RAG_PROC_052",
+    "id_procedimiento": "RAG_PROC_039",
     "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
     "marca": "Universal / Multimarca",
     "modelo": "Estándar SAE / ISO",
-    "anio": "2015-2024",
-    "motor": "Multimarca Gasolina / Diésel / Neumático",
+    "anio": "2018-2024",
     "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
-    "edicion": "Normativa Técnica Automotriz 2022",
-    "pagina": 62,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 39,
     "codigos_dtc": [],
-    "categoria_directorio": "generales",
-    "archivo_fuente": "generales.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "e659d31ea4028ab205b9e256644012acd6444b9da604900ba2f3a936b6fa70e1",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_040",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+    "marca": "Universal / Multimarca",
+    "modelo": "Estándar SAE / ISO",
+    "anio": "2018-2024",
+    "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 40,
+    "codigos_dtc": [
+      "P0562",
+      "P0620"
+    ],
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "72fce79ffb6119350e1717a11bb0c390ff744d03fa81024e5c0ba4d817eebbf2",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_041",
+    "titulo": "PROCEDIMIENTO: REPARACIÓN Y REEMPLAZO DE MOTOR ELEVALUNAS ELÉCTRICO, GUAYA Y ALZACRISTALES (LUNA O VIDRIO DE PUERTA TRABADO)",
+    "marca": "Universal / Multimarca",
+    "modelo": "Estándar SAE / ISO",
+    "anio": "2018-2024",
+    "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 41,
+    "codigos_dtc": [],
+    "archivo_fuente": "generales/manual_procedimientos_multimarca.txt",
+    "sha256_fragmento": "81e15a1e0fcda81deb90b1ecf014af2acb487c77121bf8448e91072d8df3d9be",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_042",
+    "titulo": "PROCEDIMIENTO: CALIBRACIÓN Y DIAGNÓSTICO DE SISTEMA GNV / GLP 5TA GENERACIÓN (RAMPA DE INYECTORES, REDUCTOR Y PRESIÓN DE GAS)",
+    "marca": "Multimarca GNV/GLP",
+    "modelo": "Sistemas 5ta Generación",
+    "anio": "2018-2024",
+    "manual_oem": "Manual de Calibración e Instalación GNV/GLP 5ta Gen (Tomasetto / Lovato / STAG)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 42,
+    "codigos_dtc": [
+      "P0171",
+      "P0172",
+      "P0300"
+    ],
+    "archivo_fuente": "gnv_glp/5ta_generacion/manual_gnv_glp_5ta_gen.txt",
+    "sha256_fragmento": "56692579b2f6803fb5fb6edbc4e1eeb9401489a1e2b8c94cc26e01339beb356c",
+    "url_referencia": "Normativa Técnica Automotriz MTC / Especificaciones Técnicas de Conversión Tomasetto STAG Lovato",
+    "tipo_licencia": "Normativa y Guías Técnicas de Taller Abiertas",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_043",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE COMBUSTIBLE Y PRESIÓN DE LÍNEA GASOLINA/GLP/GNV (DTC P0087 / P0088)",
+    "marca": "Multimarca GNV/GLP",
+    "modelo": "Sistemas 5ta Generación",
+    "anio": "2018-2024",
+    "manual_oem": "Manual de Calibración e Instalación GNV/GLP 5ta Gen (Tomasetto / Lovato / STAG)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 43,
+    "codigos_dtc": [
+      "P0087",
+      "P0088"
+    ],
+    "archivo_fuente": "gnv_glp/5ta_generacion/manual_gnv_glp_5ta_gen.txt",
+    "sha256_fragmento": "807362bb21ab4a749618331a1de1b42cd7d1c71b9920c63b2b54f038438fc10f",
+    "url_referencia": "Normativa Técnica Automotriz MTC / Especificaciones Técnicas de Conversión Tomasetto STAG Lovato",
+    "tipo_licencia": "Normativa y Guías Técnicas de Taller Abiertas",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_044",
+    "titulo": "PROCEDIMIENTO: CARGA DE REFRIGERANTE R134a / R1234yf Y PRUEBA DE FUGAS CON MANÓMETROS (DTC B1000 / A/C TIBIO)",
+    "marca": "Multimarca GNV/GLP",
+    "modelo": "Sistemas 5ta Generación",
+    "anio": "2018-2024",
+    "manual_oem": "Manual de Calibración e Instalación GNV/GLP 5ta Gen (Tomasetto / Lovato / STAG)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 44,
+    "codigos_dtc": [
+      "B1000"
+    ],
+    "archivo_fuente": "gnv_glp/5ta_generacion/manual_gnv_glp_5ta_gen.txt",
+    "sha256_fragmento": "c5454d05747ac1c32049c680ed71f193512741489ac3bca2c4fc445e5e1adbd7",
+    "url_referencia": "Normativa Técnica Automotriz MTC / Especificaciones Técnicas de Conversión Tomasetto STAG Lovato",
+    "tipo_licencia": "Normativa y Guías Técnicas de Taller Abiertas",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_045",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y PEDAL TPS (DTC P2135 / P2101 / RALENTÍ INESTABLE HYUNDAI ACCENT)",
+    "marca": "Hyundai",
+    "modelo": "Accent",
+    "anio": "2018-2024",
+    "manual_oem": "Hyundai Accent Workshop Manual (HMA-RB2019)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 45,
+    "codigos_dtc": [
+      "P2101",
+      "P2135"
+    ],
+    "archivo_fuente": "hyundai/accent/2019/manual_hyundai_accent.txt",
+    "sha256_fragmento": "f79c8a338df3d3080f6ea758d254cde736f4764a89081ea17c464c57d5c827df",
+    "url_referencia": "Hyundai Service Information (https://www.hyundaitechinfo.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_046",
+    "titulo": "PROCEDIMIENTO: PURGA Y REEMPLAZO DEL BOMBÍN Y CILINDRO MAESTRO DE EMBRAGUE HYUNDAI ACCENT (DTC MANUAL / PEDAL DURO O PEGADO AL PISO)",
+    "marca": "Hyundai",
+    "modelo": "Accent",
+    "anio": "2018-2024",
+    "manual_oem": "Hyundai Accent Workshop Manual (HMA-RB2019)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 46,
+    "codigos_dtc": [],
+    "archivo_fuente": "hyundai/accent/2019/manual_hyundai_accent.txt",
+    "sha256_fragmento": "32dd29d2c7638eae8f66dcbcc442afd8739098fca8ca5bc8f2a0c3ac3dc130d6",
+    "url_referencia": "Hyundai Service Information (https://www.hyundaitechinfo.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_047",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CAMBIO DE VÁLVULA SOLENOIDE DE SINCRONIZACIÓN VARIABLE VVT / OCV KIA RIO (DTC P0011 / P0016 / CASCABELEO EN MOTOR KAPPA)",
+    "marca": "Kia",
+    "modelo": "Rio",
+    "anio": "2018-2024",
+    "manual_oem": "Kia Rio Service Repair Manual (KMA-YB2020)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 47,
+    "codigos_dtc": [
+      "P0011",
+      "P0016"
+    ],
+    "archivo_fuente": "kia/rio/2020/manual_kia_rio.txt",
+    "sha256_fragmento": "06872a1cb82055ba1e4636c5e9b806fce676ba44ef5f56f0ff1011388654ea14",
+    "url_referencia": "Kia Global Information System (https://www.kiatechinfo.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_048",
+    "titulo": "PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE)",
+    "marca": "Kia",
+    "modelo": "Rio",
+    "anio": "2018-2024",
+    "manual_oem": "Kia Rio Service Repair Manual (KMA-YB2020)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 48,
+    "codigos_dtc": [
+      "P0300",
+      "P0301",
+      "P0304"
+    ],
+    "archivo_fuente": "kia/rio/2020/manual_kia_rio.txt",
+    "sha256_fragmento": "8a80324e424138029d3bb04be1743ce03e1b28653ac4e07b62178f030e404fe1",
+    "url_referencia": "Kia Global Information System (https://www.kiatechinfo.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_049",
+    "titulo": "PROCEDIMIENTO: MANTENIMIENTO Y CAMBIO DE FLUIDO ATF/CVT EN TRANSMISIÓN AUTOMÁTICA (DTC P0700 / P0730)",
+    "marca": "Nissan",
+    "modelo": "Sentra",
+    "anio": "2018-2024",
+    "manual_oem": "Nissan Service Manual SM20E00-B18",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 49,
+    "codigos_dtc": [
+      "P0700",
+      "P0730"
+    ],
+    "archivo_fuente": "nissan/sentra/2020/manual_nissan_sentra.txt",
+    "sha256_fragmento": "cca4dffb356f1a8c78acdf0bd8ef6b615e0f671cee098160c52e148a50b6b84e",
+    "url_referencia": "Nissan TechInfo Publications (https://www.nissan-techinfo.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_050",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)",
+    "marca": "Nissan",
+    "modelo": "Sentra",
+    "anio": "2018-2024",
+    "manual_oem": "Nissan Service Manual SM20E00-B18",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 50,
+    "codigos_dtc": [
+      "P0700",
+      "P0701",
+      "P0746",
+      "P0841"
+    ],
+    "archivo_fuente": "nissan/sentra/2020/manual_nissan_sentra.txt",
+    "sha256_fragmento": "988af26da602b8c4001aa2b4e8424032ae151a0d6d5048409425a387ece5da08",
+    "url_referencia": "Nissan TechInfo Publications (https://www.nissan-techinfo.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_051",
+    "titulo": "PROCEDIMIENTO MANTENIMIENTO PREVENTIVO NISSAN_VERSA",
+    "marca": "Nissan",
+    "modelo": "Versa",
+    "anio": "2018-2024",
+    "manual_oem": "Nissan Versa Service Manual SM21E00-N17",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 51,
+    "codigos_dtc": [],
+    "archivo_fuente": "nissan/versa/2021/manual_nissan_versa.txt",
+    "sha256_fragmento": "b114bbbe1719139f1ed20e800b77a2f0901e821dc7c58c20ea753af88fce8104",
+    "url_referencia": "Nissan TechInfo Publications (https://www.nissan-techinfo.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_052",
+    "titulo": "PROCEDIMIENTO MANTENIMIENTO PREVENTIVO TOYOTA_COROLLA",
+    "marca": "Toyota",
+    "modelo": "Corolla",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Corolla Workshop Manual (Pub. RM2450U)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 52,
+    "codigos_dtc": [],
+    "archivo_fuente": "toyota/corolla/2019/manual_toyota_corolla.txt",
+    "sha256_fragmento": "5c26c0dd3df65a32a251411b3b453fb5e1a42d4caf44123642cd9dea6c36f663",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   },
   {
     "id_procedimiento": "RAG_PROC_053",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE ALTO VOLTAJE E INVERSOR EN VEHÍCULOS ELÉCTRICOS E HÍBRIDOS (EV/HEV / DTC P0A80)",
+    "marca": "Toyota",
+    "modelo": "Prius HEV",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Prius Hybrid Repair Manual (Pub. RM3140U)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 53,
+    "codigos_dtc": [],
+    "archivo_fuente": "toyota/prius_hev/2018/manual_toyota_prius_hev.txt",
+    "sha256_fragmento": "1f4b611e297238b75ff94323efa0642e0c84598fa54235c048341ff017c2482e",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_054",
     "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE BATERIA DE ALTO VOLTAJE E INVERSOR EN VEHICULOS ELECTRICOS E HIBRIDOS (ELECTRICO_HV_001 A 004)",
     "marca": "Toyota",
     "modelo": "Prius HEV",
-    "anio": "2018-2022",
-    "motor": "1.8L 2ZR-FXE THS-II",
+    "anio": "2018-2024",
     "manual_oem": "Toyota Prius Hybrid Repair Manual (Pub. RM3140U)",
-    "edicion": "Edición 2018 (Toyota Technical Service)",
-    "pagina": 173,
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 54,
     "codigos_dtc": [],
-    "categoria_directorio": "toyota\\prius_hev\\2018",
-    "archivo_fuente": "toyota_prius.txt",
-    "estado_validacion": "validado_tecnico",
-    "mecanico_responsable": "Mecánico Jefe de Taller Certificado"
+    "archivo_fuente": "toyota/prius_hev/2018/manual_toyota_prius_hev.txt",
+    "sha256_fragmento": "458c60f181153707a7efbe66fcb9670d44d64aa4bdcaa49c69ab79315817b4d5",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_055",
+    "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+    "marca": "Toyota",
+    "modelo": "Yaris",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 55,
+    "codigos_dtc": [
+      "C0035"
+    ],
+    "archivo_fuente": "toyota/yaris/2020/manual_toyota_yaris.txt",
+    "sha256_fragmento": "2c4dd166931be3c30f3d3611f415ebc0dda382c7a828c8033f526b27d763c195",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_056",
+    "titulo": "PROCEDIMIENTO: LIMPIEZA Y PRUEBA DE INYECTORES DE COMBUSTIBLE EN BANCO ULTRASONIDO (DTC P0200 / P0261)",
+    "marca": "Toyota",
+    "modelo": "Yaris",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 56,
+    "codigos_dtc": [
+      "P0200",
+      "P0261"
+    ],
+    "archivo_fuente": "toyota/yaris/2020/manual_toyota_yaris.txt",
+    "sha256_fragmento": "659261c0130f82eb0c2ff3afc9d22aa78895143f32a75931d20795563175fe68",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_057",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+    "marca": "Toyota",
+    "modelo": "Yaris",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 57,
+    "codigos_dtc": [
+      "P0505",
+      "P2119"
+    ],
+    "archivo_fuente": "toyota/yaris/2020/manual_toyota_yaris.txt",
+    "sha256_fragmento": "fb00bcfafffa6d7d875007482b9188463d451fe2c5c3b2e7611c15f71086c052",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_058",
+    "titulo": "PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550)",
+    "marca": "Toyota",
+    "modelo": "Yaris",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 58,
+    "codigos_dtc": [
+      "C0550"
+    ],
+    "archivo_fuente": "toyota/yaris/2020/manual_toyota_yaris.txt",
+    "sha256_fragmento": "372f6e1533996fa422e087a06aa0c71483514ddf31454b716f167451c224a77a",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_059",
+    "titulo": "PROCEDIMIENTO: REEMPLAZO DEL KIT DE EMBRAGUE EN TRANSMISIÓN MANUAL (DISCO, PRENSA, COLLARÍN Y BOMBÍN HIDRÁULICO TOYOTA YARIS)",
+    "marca": "Toyota",
+    "modelo": "Yaris",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 59,
+    "codigos_dtc": [],
+    "archivo_fuente": "toyota/yaris/2020/manual_toyota_yaris.txt",
+    "sha256_fragmento": "9e2067171983fb84f8ffdff986a03af49308a0403c75364a2ab137789b18cdb9",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_060",
+    "titulo": "PROCEDIMIENTO: REPARACIÓN DE EMBRAGUE ELECTROMAGNÉTICO Y COMPRESOR DE A/C (DTC B1421 / RUIDO EN COMPRESOR)",
+    "marca": "Toyota",
+    "modelo": "Yaris",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 60,
+    "codigos_dtc": [
+      "B1421"
+    ],
+    "archivo_fuente": "toyota/yaris/2020/manual_toyota_yaris.txt",
+    "sha256_fragmento": "d2aa2c4e8ba5656112f1121380bf4ce570e1ebcec4126cb9ad0d004fb46d02fd",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_061",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS)",
+    "marca": "Toyota",
+    "modelo": "Yaris",
+    "anio": "2018-2024",
+    "manual_oem": "Toyota Yaris Owner Workshop Manual (Pub. RM0130E)",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 61,
+    "codigos_dtc": [
+      "P0741"
+    ],
+    "archivo_fuente": "toyota/yaris/2020/manual_toyota_yaris.txt",
+    "sha256_fragmento": "a8fbdc731400312c3535081f11cd902df7dad16f5c5dc211a5d8c5a336b0c679",
+    "url_referencia": "Toyota Technical Information System (TIS - https://techinfo.toyota.com)",
+    "tipo_licencia": "Documentación Técnica Referencial - Investigación Académica / Tesis",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_062",
+    "titulo": "PROCEDIMIENTO: REEMPLAZO DEL KIT DE EMBRAGUE EN TRANSMISIÓN MANUAL (DISCO, PRENSA Y COLLARÍN)",
+    "marca": "Universal / Multimarca",
+    "modelo": "Estándar SAE / ISO",
+    "anio": "2018-2024",
+    "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 62,
+    "codigos_dtc": [],
+    "archivo_fuente": "manual_procedimientos.txt",
+    "sha256_fragmento": "2fa67bf5d81f27b10bd514d4d2d44ccdcbfcf6a1fffc3dd122145dbc620249dd",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_063",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT (VARIADORES, CORREA METÁLICA Y SOLENOIDES / DTC P0701 / P0841)",
+    "marca": "Universal / Multimarca",
+    "modelo": "Estándar SAE / ISO",
+    "anio": "2018-2024",
+    "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 63,
+    "codigos_dtc": [
+      "P0701",
+      "P0746",
+      "P0841"
+    ],
+    "archivo_fuente": "manual_procedimientos.txt",
+    "sha256_fragmento": "611ac0f54fc6f73c725ae47810b6ade2d0d8b7c717622545b4465490a4c1c0bc",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
+  },
+  {
+    "id_procedimiento": "RAG_PROC_064",
+    "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONDENSADOR Y FUGAS EN EL RADIADOR DE CALEFACCIÓN / EVAPORADOR (DTC B1010 / REFRIGERANTE EN ALFOMBRA / LÍNEA AC SECA)",
+    "marca": "Universal / Multimarca",
+    "modelo": "Estándar SAE / ISO",
+    "anio": "2018-2024",
+    "manual_oem": "Manual de Procedimientos y Diagnóstico Automotriz Multimarca",
+    "edicion": "Edición de Taller / Publicación Técnica Referencial",
+    "pagina": 64,
+    "codigos_dtc": [
+      "B1010"
+    ],
+    "archivo_fuente": "manual_procedimientos.txt",
+    "sha256_fragmento": "90dadcc0cc4a3f05bfcb27b52055b9d31285d40b6e68f7440aea314162403d5d",
+    "url_referencia": "Normas Estándar SAE International (J1939 / J2012) & ISO 14229",
+    "tipo_licencia": "Estándares Técnicos Universales del Sector Automotriz",
+    "fecha_registro_corpus": "2026-08-17",
+    "estado_validacion": "corpus_preliminar_taller",
+    "auditoria": {
+      "verificado_documental": true,
+      "auditoria_mecanica_formal_firmada": false,
+      "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
+    }
   }
 ]

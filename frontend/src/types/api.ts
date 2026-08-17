@@ -62,7 +62,8 @@ export interface CasoValidacionDTO {
   item: number;
   fase: string;
   fecha: string;
-  placa: string;
+  placa_enmascarada: string;
+  placa_hash: string;
   marca_modelo: string;
   sintoma: string;
   falla_real: string;
@@ -70,10 +71,14 @@ export interface CasoValidacionDTO {
   campos_completos: number;
   tiempo_diagnostico_minutos: number;
   prediccion_correcta: number;
+  taller_id?: string;
+  mecanico_id?: string;
+  metodo_confirmacion?: string;
+  evidencia_ref?: string;
 }
 
 export interface CrearCasoValidacionDTO {
-  fase: string;
+  fase: 'Pre-test' | 'Post-test' | 'Piloto';
   fecha?: string;
   placa: string;
   marca_modelo: string;
@@ -83,6 +88,8 @@ export interface CrearCasoValidacionDTO {
   campos_completos: number;
   tiempo_diagnostico_minutos: number;
   prediccion_correcta: number;
+  metodo_confirmacion?: string;
+  evidencia_ref?: string;
 }
 
 export interface MetricasValidacionDTO {
@@ -99,6 +106,7 @@ export interface MetricasValidacionDTO {
   reduccion_tiempo_porcentaje: number;
   distribucion_marcas: { marca: string; conteo: number }[];
   top_fallas_reales: { falla: string; conteo: number }[];
+  nota_metodologica?: string;
 }
 
 export interface AprobarSolicitudResponseDTO {

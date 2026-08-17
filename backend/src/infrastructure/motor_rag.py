@@ -19,6 +19,21 @@ from src.config import settings
 from src.core.logger import logger
 
 
+SPANISH_STOP_WORDS = [
+    "de", "la", "que", "el", "en", "y", "a", "los", "del", "se", "las", "por", "un", "para",
+    "con", "no", "una", "su", "al", "lo", "como", "mas", "más", "pero", "sus", "le", "ya",
+    "o", "este", "sí", "porque", "esta", "entre", "cuando", "muy", "sin", "sobre", "tambien",
+    "también", "me", "hasta", "hay", "donde", "quien", "desde", "todo", "nos", "durante",
+    "todos", "uno", "les", "ni", "contra", "otros", "ese", "eso", "ante", "ellos", "e",
+    "esto", "mí", "antes", "algunos", "qué", "unos", "yo", "otro", "otras", "otra", "él",
+    "tanto", "esa", "estos", "mucho", "quienes", "nada", "muchos", "cual", "poco", "ella",
+    "estar", "estas", "algunas", "algo", "nosotros", "mi", "mis", "tú", "te", "ti", "tu", "tus",
+    "ellas", "nosotras", "vosotros", "vosotras", "os", "mio", "mia", "mios", "mias", "tuyo",
+    "tuya", "tuyos", "tuyas", "suyo", "suya", "suyos", "suyas", "nuestro", "nuestra",
+    "nuestros", "nuestras", "vuestro", "vuestra", "vuestros", "vuestras", "esos", "esas"
+]
+
+
 class MotorRAG:
     """Clase encargada de indexar y buscar información dentro de los manuales técnicos multimarca utilizando FAISS / Cosine Similarity (RAG)."""
 
@@ -30,7 +45,8 @@ class MotorRAG:
         self.vectorizador: Optional[TfidfVectorizer] = None
         self.faiss_index: Optional[Any] = None
         self.corpus_version = "manual-ausente"
-        self.corpus_validado = True
+        # El corpus actual es referencial/experimental para tesis; FUENTES_Y_VALIDACION.md documenta su estado.
+        self.corpus_validado = False
         self._indexar_manuales_multimarca()
 
     def _indexar_manuales_multimarca(self):
@@ -54,7 +70,7 @@ class MotorRAG:
         # 2. Recopilar todos los archivos .txt de manuales
         archivos_a_leer = []
         if directorio_manuales.exists() and directorio_manuales.is_dir():
-            archivos_a_leer = list(directorio_manuales.glob("**/*.txt"))
+            archivos_a_leer = sorted(list(directorio_manuales.glob("**/*.txt")))
         elif self.manual_path.exists():
             archivos_a_leer = [self.manual_path]
 
@@ -96,7 +112,13 @@ class MotorRAG:
                         "manual_oem": "Manual General de Procedimientos",
                         "edicion": "Edición de Taller",
                         "pagina": len(self.documentos) + 1,
-                        "estado_validacion": "validado_tecnico"
+                        "archivo_fuente": str(ruta_arch.name),
+                        "sha256_fragmento": huella,
+                        "estado_validacion": "corpus_preliminar_taller",
+                        "auditoria": {
+                            "verificado_documental": True,
+                            "auditoria_mecanica_formal_firmada": False,
+                        }
                     })
 
                     self.titulos.append(titulo)
@@ -105,9 +127,16 @@ class MotorRAG:
 
             self.corpus_version = hash_global.hexdigest()[:16]
 
-            # Inicializar matriz TF-IDF
-            self.vectorizador = TfidfVectorizer(lowercase=True, strip_accents="unicode")
-            matriz_tfidf = self.vectorizador.fit_transform(self.documentos).toarray().astype(np.float32)
+            # Fusión de título + cuerpo para vectorización TF-IDF con stop words
+            textos_vectorizables = [f"{t}\n{c}" for t, c in zip(self.titulos, self.documentos)]
+            self.vectorizador = TfidfVectorizer(
+                lowercase=True,
+                strip_accents="unicode",
+                stop_words=SPANISH_STOP_WORDS,
+                ngram_range=(1, 2),
+                sublinear_tf=True
+            )
+            matriz_tfidf = self.vectorizador.fit_transform(textos_vectorizables).toarray().astype(np.float32)
 
             # Normalización L2 para producto interno (equivalente a Cosine Similarity en FAISS)
             if not FAISS_AVAILABLE:
@@ -140,30 +169,40 @@ class MotorRAG:
             "p0a80": "bateria alto voltaje hibrido prius celdas",
             "p2002": "filtro particulas dpf fap adblue escape",
             "p0087": "presion combustible riel common rail bomba alta",
+            "p2135": "cuerpo de aceleracion mariposa electronica tps",
+            "p0011": "valvula solenoide ocv sincronizacion variable vvt",
+            "p0700": "transmision automatica cvt caja solenoide sobrecalentamiento",
+            "p0841": "sensor presion fluido transmision cvt",
+            "cvt": "transmision continuamente variable cvt poleas fluido ns3 nissan",
             "chillido": "pastillas de freno freno",
-            "esponjoso": "liquido de frenos purga fuga",
-            "cascabelea": "bujias motor encendido",
-            "cascabeleo": "bujias motor encendido",
-            "se apaga": "valvula iac minimo ralenti",
-            "control": "cierre centralizado actuador puerta seguro electrico",
-            "bloqueada": "cierre centralizado actuador puerta chapa cerradura",
-            "desbloquea": "cierre centralizado control actuador puerta",
+            "esponjoso": "liquido de frenos purga fuga bombin",
+            "cascabelea": "bujias motor encendido ocv vvt",
+            "cascabeleo": "bujias motor encendido ocv vvt",
+            "se apaga": "valvula iac cuerpo aceleracion ralenti",
             "pestillo": "chapa cerradura puerta seguro pestillo mecanico",
-            "chapa": "cerradura chapa pestillo puerta alineacion trinquete",
-            "cerradura": "chapa cerradura pestillo puerta trinquete",
             "elevalunas": "alzacristales vidrio guaya motor ventana",
             "alzacristales": "elevalunas vidrio guaya ventana",
-            "vidrio": "elevalunas alzacristales guaya luna",
-            "luna": "elevalunas alzacristales vidrio ventana",
             "limpiaparabrisas": "motor plumas varillaje limpiaparabrisas",
-            "pluma": "limpiaparabrisas motor varillaje",
             "common rail": "diesel bomba alta presion inyectores scv",
             "dpf": "filtro particulas hollin adblue def regeneracion",
             "adblue": "urea def regeneracion dpf catalizador",
             "freno de aire": "camion neumatico valvula secador aps compresor",
             "inversor": "hibrido ev alto voltaje igbt bomba enfriamiento",
             "hibrido": "bateria alto voltaje inversor motor electrico ready",
-            "valvolina": "caja cambios mecanica rodajes diferencial aceite"
+            "valvolina": "caja cambios mecanica rodajes diferencial aceite",
+            "gnv": "gas natural vehicular rampa reductor 5ta generacion gas",
+            "glp": "gas licuado petroleo rampa reductor 5ta generacion gas",
+            "desembraga": "embrague bombin plato prensa disco hidraulico",
+            "puerta": "cierre centralizado actuador puerta seguro electrico chapa",
+            "desbloquea": "cierre centralizado control remoto actuador puerta",
+            "bloqueada": "cierre centralizado actuador puerta chapa cerradura",
+            "chapa": "cerradura chapa pestillo puerta trinquete",
+            "cerradura": "chapa cerradura pestillo puerta trinquete",
+            "humo blanco": "empaquetadura culata refrigerante motor sobrecalentamiento",
+            "culata": "empaquetadura culata refrigerante motor sobrecalentamiento",
+            "refrigerante": "termostato ventilador fuga refrigerante culata",
+            "alternador": "alternador bateria sistema electrico carga bornes",
+            "bateria": "bateria alternador voltaje arranque sistema electrico"
         }
         
         for clave, valor in diccionario_dtc.items():

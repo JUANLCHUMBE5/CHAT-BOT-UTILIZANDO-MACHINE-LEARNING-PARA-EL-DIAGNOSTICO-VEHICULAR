@@ -47,7 +47,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'inicio', label: 'Inicio', icon: <LayoutDashboard size={18} /> },
     { id: 'personas', label: 'Personas y accesos', icon: <Users size={18} />, badgeCount: solicitudesPendientesCount },
     { id: 'diagnosticos', label: 'Diagnósticos', icon: <FileSearch size={18} /> },
-    { id: 'validacion', label: 'Validación Taller', icon: <FlaskConical size={18} /> },
+    { id: 'validacion', label: 'Registro Experimental', icon: <FlaskConical size={18} /> },
     { id: 'fichas', label: 'Fichas de Tesis', icon: <GraduationCap size={18} /> },
   ];
 

@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   TrendingUp,
+  ShieldCheck,
 } from 'lucide-react';
 import { Card } from '../common/Card';
 import { Button } from '../common/Button';
@@ -45,13 +46,15 @@ export const ValidacionTallerView: React.FC = () => {
   const [nuevoCaso, setNuevoCaso] = useState<CrearCasoValidacionDTO>({
     fase: 'Post-test',
     placa: '',
-    marca_modelo: 'Toyota Yaris',
+    marca_modelo: 'Toyota Yaris 2020',
     sintoma: '',
     falla_real: '',
     chatbot_prediccion: '',
     campos_completos: 1,
     tiempo_diagnostico_minutos: 15,
     prediccion_correcta: 1,
+    metodo_confirmacion: 'Inspección Visual + Escáner OBD-II',
+    evidencia_ref: '',
   });
 
   const cargarDatos = useCallback(async () => {
@@ -74,7 +77,7 @@ export const ValidacionTallerView: React.FC = () => {
         setTotalCasos(casosRes.total);
       });
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Error al cargar validaciones de taller');
+      setError(err instanceof Error ? err.message : 'Error al cargar datos del tracker experimental');
     } finally {
       setCargando(false);
     }
@@ -93,23 +96,25 @@ export const ValidacionTallerView: React.FC = () => {
     try {
       setGuardando(true);
       await apiService.crearCasoValidacion(nuevoCaso);
-      setExitoMensaje('¡Caso real de taller registrado exitosamente en el Tracker!');
+      setExitoMensaje('¡Registro experimental guardado exitosamente con placa pseudonimizada!');
       setModalAbierto(false);
       setNuevoCaso({
         fase: 'Post-test',
         placa: '',
-        marca_modelo: 'Toyota Yaris',
+        marca_modelo: 'Toyota Yaris 2020',
         sintoma: '',
         falla_real: '',
         chatbot_prediccion: '',
         campos_completos: 1,
         tiempo_diagnostico_minutos: 15,
         prediccion_correcta: 1,
+        metodo_confirmacion: 'Inspección Visual + Escáner OBD-II',
+        evidencia_ref: '',
       });
       cargarDatos();
       setTimeout(() => setExitoMensaje(null), 4000);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'No se pudo registrar el caso');
+      alert(err instanceof Error ? err.message : 'No se pudo guardar el registro');
     } finally {
       setGuardando(false);
     }
@@ -127,22 +132,44 @@ export const ValidacionTallerView: React.FC = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-main)', margin: '0 0 4px 0' }}>
-            🔬 Validación Real en Taller Mecánico
+            🔬 Seguimiento Experimental y Simulación de Taller
           </h1>
           <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
-            Seguimiento de campo empírico: Comparación entre predicciones CarBot y diagnósticos confirmados por mecánicos.
+            Plataforma de evaluación empírica de tesis: Comparación entre fase Pre-test (manual) y Post-test (asistida por CarBot).
           </p>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <Button variant="outline" size="sm" onClick={handleDescargarCsv}>
             <Download size={15} style={{ marginRight: '6px' }} />
-            Exportar CSV Tesis
+            Exportar CSV Sanitizado
           </Button>
           <Button variant="primary" size="sm" onClick={() => setModalAbierto(true)}>
             <Plus size={15} style={{ marginRight: '6px' }} />
-            Registrar Caso Real
+            Registrar Caso de Taller
           </Button>
         </div>
+      </div>
+
+      {/* Nota Metodológica de Tesis */}
+      <div
+        style={{
+          padding: '12px 16px',
+          backgroundColor: '#f8fafc',
+          border: '1px solid #cbd5e1',
+          borderRadius: '8px',
+          fontSize: '12px',
+          color: '#475569',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+        }}
+      >
+        <ShieldCheck size={18} color="#2563eb" style={{ flexShrink: 0 }} />
+        <span>
+          <strong>Nota Metodológica de Tesis:</strong> Las métricas agregadas reflejan el seguimiento del piloto experimental
+          (Pre-test vs Post-test) y los 33 casos reales de taller auditados. Las placas se encuentran pseudonimizadas
+          mediante encriptación SHA-256 para estricto cumplimiento de privacidad de datos.
+        </span>
       </div>
 
       {exitoMensaje && (
@@ -165,7 +192,7 @@ export const ValidacionTallerView: React.FC = () => {
           <Card style={{ padding: '16px', borderLeft: '4px solid #2563eb' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Casos Evaluados</span>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Registros Tracker</span>
                 <h3 style={{ fontSize: '24px', fontWeight: 800, margin: '4px 0 0 0', color: 'var(--text-main)' }}>
                   {metricas.total_casos.toLocaleString()}
                 </h3>
@@ -192,14 +219,14 @@ export const ValidacionTallerView: React.FC = () => {
               </div>
             </div>
             <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-              Pre-test inicial: <strong>{metricas.tasa_acierto_pretest_porcentaje}%</strong>
+              Pre-test manual: <strong>{metricas.tasa_acierto_pretest_porcentaje}%</strong>
             </div>
           </Card>
 
           <Card style={{ padding: '16px', borderLeft: '4px solid #f59e0b' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Tiempo Diagnóstico Post-Test</span>
+                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Tiempo Post-Test</span>
                 <h3 style={{ fontSize: '24px', fontWeight: 800, margin: '4px 0 0 0', color: '#d97706' }}>
                   {metricas.tiempo_promedio_posttest_min} min
                 </h3>
@@ -209,7 +236,7 @@ export const ValidacionTallerView: React.FC = () => {
               </div>
             </div>
             <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-              Pre-test manual: <strong>{metricas.tiempo_promedio_pretest_min} min</strong>
+              Pre-test tradicional: <strong>{metricas.tiempo_promedio_pretest_min} min</strong>
             </div>
           </Card>
 
@@ -226,7 +253,7 @@ export const ValidacionTallerView: React.FC = () => {
               </div>
             </div>
             <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-              Ahorro de ~<strong>{Math.round(metricas.tiempo_promedio_pretest_min - metricas.tiempo_promedio_posttest_min)} min</strong> por vehículo
+              Ahorro de ~<strong>{Math.round(metricas.tiempo_promedio_pretest_min - metricas.tiempo_promedio_posttest_min)} min</strong> por diagnóstico
             </div>
           </Card>
         </div>
@@ -238,7 +265,7 @@ export const ValidacionTallerView: React.FC = () => {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center', flex: 1, minWidth: '280px' }}>
             <div style={{ position: 'relative', flex: 1, minWidth: '220px' }}>
               <Input
-                placeholder="Buscar por placa, síntoma, falla real o predicción..."
+                placeholder="Buscar por placa pseudonimizada, síntoma, falla o predicción..."
                 value={busqueda}
                 onChange={(e) => {
                   setBusqueda(e.target.value);
@@ -260,6 +287,7 @@ export const ValidacionTallerView: React.FC = () => {
                   { value: '', label: 'Todas las Fases' },
                   { value: 'Pre-test', label: 'Pre-test (Manual)' },
                   { value: 'Post-test', label: 'Post-test (Con Bot)' },
+                  { value: 'Piloto', label: 'Fase Piloto' },
                 ]}
               />
             </div>
@@ -287,7 +315,7 @@ export const ValidacionTallerView: React.FC = () => {
         </div>
       </Card>
 
-      {/* Tabla de Casos Reales del Tracker */}
+      {/* Tabla de Casos del Tracker */}
       <Card style={{ padding: 0, overflow: 'hidden' }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
@@ -295,10 +323,11 @@ export const ValidacionTallerView: React.FC = () => {
               <tr style={{ backgroundColor: 'var(--bg-subtle)', borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
                 <th style={{ padding: '10px 14px', fontWeight: 600 }}>Item</th>
                 <th style={{ padding: '10px 14px', fontWeight: 600 }}>Fase / Fecha</th>
-                <th style={{ padding: '10px 14px', fontWeight: 600 }}>Vehículo</th>
-                <th style={{ padding: '10px 14px', fontWeight: 600 }}>Síntoma Inicial</th>
+                <th style={{ padding: '10px 14px', fontWeight: 600 }}>Vehículo (Pseudónimo)</th>
+                <th style={{ padding: '10px 14px', fontWeight: 600 }}>Síntoma Declarado</th>
                 <th style={{ padding: '10px 14px', fontWeight: 600 }}>Predicción CarBot</th>
-                <th style={{ padding: '10px 14px', fontWeight: 600 }}>Diagnóstico Real Mecánico</th>
+                <th style={{ padding: '10px 14px', fontWeight: 600 }}>Diagnóstico Mecánico</th>
+                <th style={{ padding: '10px 14px', fontWeight: 600 }}>Método Confirmación</th>
                 <th style={{ padding: '10px 14px', fontWeight: 600, textAlign: 'center' }}>Tiempo</th>
                 <th style={{ padding: '10px 14px', fontWeight: 600, textAlign: 'center' }}>Resultado</th>
               </tr>
@@ -306,13 +335,13 @@ export const ValidacionTallerView: React.FC = () => {
             <tbody>
               {cargando && casos.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    Cargando casos reales de taller...
+                  <td colSpan={9} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    Cargando registros del tracker experimental...
                   </td>
                 </tr>
               ) : casos.length === 0 ? (
                 <tr>
-                  <td colSpan={8} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  <td colSpan={9} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
                     No se encontraron registros con los filtros seleccionados.
                   </td>
                 </tr>
@@ -338,18 +367,25 @@ export const ValidacionTallerView: React.FC = () => {
                     </td>
                     <td style={{ padding: '10px 14px' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                        <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>{c.placa}</span>
+                        <span style={{ fontWeight: 700, color: 'var(--text-main)', letterSpacing: '0.04em' }}>
+                          {c.placa_enmascarada}
+                        </span>
                         <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{c.marca_modelo}</span>
                       </div>
                     </td>
-                    <td style={{ padding: '10px 14px', maxWidth: '240px' }}>
+                    <td style={{ padding: '10px 14px', maxWidth: '220px' }}>
                       <span style={{ color: 'var(--text-main)' }}>{c.sintoma}</span>
                     </td>
-                    <td style={{ padding: '10px 14px', maxWidth: '200px' }}>
+                    <td style={{ padding: '10px 14px', maxWidth: '180px' }}>
                       <span style={{ color: '#1e40af', fontWeight: 600 }}>{c.chatbot_prediccion}</span>
                     </td>
-                    <td style={{ padding: '10px 14px', maxWidth: '200px' }}>
+                    <td style={{ padding: '10px 14px', maxWidth: '180px' }}>
                       <span style={{ color: '#065f46', fontWeight: 600 }}>{c.falla_real}</span>
+                    </td>
+                    <td style={{ padding: '10px 14px', maxWidth: '160px' }}>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '11px' }}>
+                        {c.metodo_confirmacion || 'Inspección Visual'}
+                      </span>
                     </td>
                     <td style={{ padding: '10px 14px', textAlign: 'center' }}>
                       <span style={{ padding: '3px 8px', borderRadius: '6px', backgroundColor: 'var(--bg-subtle)', fontWeight: 600, fontSize: '11px' }}>
@@ -401,12 +437,12 @@ export const ValidacionTallerView: React.FC = () => {
         </div>
       </Card>
 
-      {/* Modal Registrar Nuevo Caso Real */}
+      {/* Modal Registrar Nuevo Caso */}
       {modalAbierto && (
         <Modal
           isOpen={modalAbierto}
           onClose={() => setModalAbierto(false)}
-          title="Registrar Caso Real de Taller (Tracker Tesis)"
+          title="Registrar Caso de Taller (Tracker Experimental Tesis)"
           maxWidth="640px"
         >
           <form onSubmit={handleCrearCaso} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -415,17 +451,18 @@ export const ValidacionTallerView: React.FC = () => {
                 <Select
                   label="Fase de Evaluación"
                   value={nuevoCaso.fase}
-                  onChange={(e) => setNuevoCaso({ ...nuevoCaso, fase: e.target.value })}
+                  onChange={(e) => setNuevoCaso({ ...nuevoCaso, fase: e.target.value as 'Pre-test' | 'Post-test' | 'Piloto' })}
                   options={[
-                    { value: 'Post-test', label: 'Post-test (Con Asistencia CarBot)' },
+                    { value: 'Post-test', label: 'Post-test (Asistencia CarBot)' },
                     { value: 'Pre-test', label: 'Pre-test (Diagnóstico Tradicional)' },
+                    { value: 'Piloto', label: 'Fase Piloto' },
                   ]}
                 />
               </div>
 
               <div>
                 <Input
-                  label="Placa Vehicular"
+                  label="Placa Vehicular (Será Pseudonimizada)"
                   placeholder="Ej. ABC-123"
                   value={nuevoCaso.placa}
                   onChange={(e) => setNuevoCaso({ ...nuevoCaso, placa: e.target.value.toUpperCase() })}
@@ -479,6 +516,26 @@ export const ValidacionTallerView: React.FC = () => {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
               <div>
                 <Input
+                  label="Método de Confirmación"
+                  placeholder="Ej. Manómetro hidráulico + Inspección visual"
+                  value={nuevoCaso.metodo_confirmacion || ''}
+                  onChange={(e) => setNuevoCaso({ ...nuevoCaso, metodo_confirmacion: e.target.value })}
+                />
+              </div>
+
+              <div>
+                <Input
+                  label="Referencia de Evidencia (Opcional)"
+                  placeholder="Ej. FOTO_BOMBIN_01.JPG / INFORME_PDF"
+                  value={nuevoCaso.evidencia_ref || ''}
+                  onChange={(e) => setNuevoCaso({ ...nuevoCaso, evidencia_ref: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+              <div>
+                <Input
                   label="Tiempo de Diagnóstico (Minutos)"
                   type="number"
                   min="1"
@@ -507,7 +564,7 @@ export const ValidacionTallerView: React.FC = () => {
                 Cancelar
               </Button>
               <Button variant="primary" type="submit" disabled={guardando}>
-                {guardando ? 'Guardando...' : 'Guardar Caso en Tracker'}
+                {guardando ? 'Guardando...' : 'Guardar en Tracker'}
               </Button>
             </div>
           </form>

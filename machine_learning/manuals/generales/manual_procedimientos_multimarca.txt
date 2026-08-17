@@ -511,3 +511,31 @@ Instrucciones paso a paso:
 4. Si el zumbido persiste con aceite nuevo: desacoplar la caja de cambios, abrir la carcasa e inspeccionar los rodamientos conicos del eje primario, secundario y pistas de la corona del diferencial.
 5. Extraer los rodamientos picados con extractor de garras y prensa hidraulica, montar rodamientos nuevos y calibrar la precarga con lainas de ajuste (shim measurement).
 6. Sellar carcasas con formador de juntas RTV anaerobico resistente a hidrocarburos y verificar el engrane suave de todas las marchas.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA) ===
+Código de Falla Asociado: DTC P0562 (Voltaje del Sistema Bajo) / DTC P0620 (Circuito de Control del Alternador) / Falla de Batería y Carga
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Testigo de batería encendido en el tablero, el alternador no carga y la batería se descarga rápido, pérdida de luces o dificultad para arrancar.
+Instrucciones paso a paso:
+1. Mida el voltaje de la batería en reposo con multímetro (debe registrar 12.4V a 12.7V con motor apagado).
+2. Encienda el motor y mida el voltaje de carga entre bornes a 2000 RPM (debe registrar entre 13.8V y 14.5V). Si marca menos de 13.0V o más de 15.0V, el alternador o regulador de voltaje está defectuoso.
+3. Realice prueba de caída de tensión en el cable positivo (+) del alternador a la batería (máximo 0.2V) y en el circuito de masa (-) (máximo 0.1V).
+4. Verifique la tensión y estado de la faja serpentina de accesorios.
+5. Desmonte el alternador, revise la placa de diodos rectificadores, los carbones/escobillas y el rotor.
+6. Si la batería no retiene carga tras prueba de conductancia con analizador digital, reemplace la batería automotriz y limpie bornes sulfatados.
+
+=== PROCEDIMIENTO: REPARACIÓN Y REEMPLAZO DE MOTOR ELEVALUNAS ELÉCTRICO, GUAYA Y ALZACRISTALES (LUNA O VIDRIO DE PUERTA TRABADO) ===
+Código de Falla Asociado: Falla Sistema Alzacristales / Elevalunas Eléctrico / Guaya Rota
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Sentra/Versa, Changan, DFSK
+Gravedad: Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: El vidrio o luna de la puerta no sube ni baja, se cayó la luna dentro de la puerta, suena la guaya o el motor de elevalunas hace ruido de zumbido sin mover el cristal.
+Instrucciones paso a paso:
+1. Desmonte el tapiz interior de la puerta retirando los tornillos fijadores del apoyabrazos y manija interior.
+2. Desconecte la botonera de mandos del alzacristales y la conexión eléctrica del motor elevalunas.
+3. Despegue con cuidado el plástico aislante de humedad.
+4. Sostenga el vidrio o luna en la parte superior con ventosas de sujeción de seguridad.
+5. Desatornille las mordazas que fijan la base del cristal al riel guía del elevalunas.
+6. Retire las tuercas de sujeción del conjunto riel-motor-guaya y extraiga el mecanismo completo.
+7. Si la guaya de acero está enredada o deshilachada, sustituya el mecanismo de tijera/guía alzacristales completo y engrase los rieles.
+8. Verifique el libre desplazamiento de las colisas de jebe de la ventana y calibre la función de subida automática (one-touch).

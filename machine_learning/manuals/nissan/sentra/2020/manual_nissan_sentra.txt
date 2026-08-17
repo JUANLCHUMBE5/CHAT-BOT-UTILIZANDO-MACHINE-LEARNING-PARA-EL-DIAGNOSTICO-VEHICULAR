@@ -12,11 +12,11 @@ Instrucciones paso a paso:
 6. Rellene con fluido especificado por fabricante OEM (Toyota WS, Nissan NS-3, Hyundai SP-IV).
 7. Calibre el nivel exacto usando la varilla o el perno rebosadero de nivel a la temperatura de prueba.
 
-=== PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT (VARIADORES, CORREA METÁLICA Y SOLENOIDES / DTC P0701 / P0841) ===
-Código de Falla Asociado: DTC P0701 (Control Transmisión CVT fuera de Rango) / DTC P0841 (Sensor Presión Fluido Transmisión CVT) / DTC P0746
-Modelos Compatibles Frecuentes en Perú: Nissan Versa/Kicks/Sentra (CVT Jatco JF015E/JF011E), Toyota Corolla CVT (K313), Honda Civic CVT, Chery Tiggo CVT
+=== PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841) ===
+Código de Falla Asociado: DTC P0700 (Control Transmisión) / DTC P0701 (Control Transmisión CVT fuera de Rango) / DTC P0841 (Sensor Presión Fluido Transmisión CVT) / DTC P0746
+Modelos Compatibles Frecuentes en Perú: Nissan Sentra B17/B18 (CVT Jatco JF015E/JF011E), Nissan Versa/Kicks
 Gravedad: Crítica | Tiempo Estimado de Taller: 120 minutos
-Síntomas: Zumbido o silbido metálico al acelerar, sobrecalentamiento de caja en carretera, el auto no acelera al pisar el pedal (patinamiento de poleas), demora en enganchar Drive.
+Síntomas: Zumbido o silbido metálico al acelerar, sobrecalentamiento de caja automática CVT en carretera, el auto no acelera al pisar el pedal (patinamiento de poleas), demora en enganchar Drive.
 Instrucciones paso a paso:
 1. Realizar diagnóstico con escáner e inspeccionar el contador de degradación de aceite CVT (CVT Oil Deterioration Date).
 2. Medir presiones de línea en puertos de prueba hidráulicos con manómetro (Presión primaria y secundaria: 0.5 a 4.5 MPa). Presión baja indica solenoide de control de presión trabado o desgaste en poleas variadoras.

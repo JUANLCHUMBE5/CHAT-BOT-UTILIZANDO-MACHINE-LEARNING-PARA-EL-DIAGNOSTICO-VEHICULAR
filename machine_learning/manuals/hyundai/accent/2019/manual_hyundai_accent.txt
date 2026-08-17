@@ -1,2 +1,26 @@
-=== PROCEDIMIENTO MANTENIMIENTO PREVENTIVO HYUNDAI_ACCENT ===
-Inspección general de fluidos, torques y escaneo OBD-II.
+=== PROCEDIMIENTO: DIAGNÓSTICO DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y PEDAL TPS (DTC P2135 / P2101 / RALENTÍ INESTABLE HYUNDAI ACCENT) ===
+Código de Falla Asociado: DTC P2135 (Correlación de Voltaje Sensor Acelerador/Mariposa) / DTC P2101 (Rendimiento Motor Actuador ETC)
+Modelos Compatibles Frecuentes en Perú: Hyundai Accent 1.4L/1.6L Gamma / Kappa (2018-2023)
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: El motor no acelera o entra en modo de emergencia (limp home mode), el ralentí fluctúa violentamente entre 500 y 1500 RPM, luz Check Engine encendida en tablero.
+Instrucciones paso a paso:
+1. Conecte el escáner y verifique la señal de los sensores TPS 1 y TPS 2 en el flujo de datos en vivo (Live Data):
+   - TPS 1: 0.6V a 0.9V en reposo, subiendo linealmente hasta 4.2V a plena apertura.
+   - TPS 2: 4.2V a 4.5V en reposo, bajando linealmente hasta 0.8V a fondo.
+   - La suma (TPS1 + TPS2) debe mantenerse constante en 5.0V (+/- 0.2V).
+2. Desmonte la manguera de admisión de aire. Inspeccione la mariposa motorizada: limpie los depósitos de carbonilla con limpiador de carburador dieléctrico (sin mover bruscamente la aleta manualmente).
+3. Revise el arnés de 6 pines del cuerpo de aceleración midiendo alimentación de 5V y masa del sensor (resistencia de masa < 1.0 Ohm).
+4. Mida la resistencia del motor de corriente continua (DC Motor) entre los pines de actuador (valor estándar: 1.5 a 3.5 Ohmios a 20°C).
+5. Tras el montaje con junta O-ring nueva, ejecute el procedimiento de aprendizaje de posición cero de la mariposa (Throttle Valve Closed Position Learning) mediante escáner o ciclo de contacto (ON 15s -> OFF 15s -> Arranque en frío).
+
+=== PROCEDIMIENTO: PURGA Y REEMPLAZO DEL BOMBÍN Y CILINDRO MAESTRO DE EMBRAGUE HYUNDAI ACCENT (DTC MANUAL / PEDAL DURO O PEGADO AL PISO) ===
+Código de Falla Asociado: Falla Sistema Hidráulico de Embrague
+Modelos Compatibles Frecuentes en Perú: Hyundai Accent 1.4L/1.6L Mecánico 6MT
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Dificultad para engranar la 1ra marcha y retroceso, pedal de embrague que se queda pegado a mitad de recorrido o bajo nivel de líquido en el reservorio.
+Instrucciones paso a paso:
+1. Inspeccione visualmente el cilindro maestro de embrague ubicado detrás del pedal de embrague dentro de la cabina buscando fugas de líquido hidráulico en el vástago.
+2. Levante el vehículo y revise el bombín receptor de embrague (Slave Cylinder) en la carcasa de la caja de cambios.
+3. Si el guardapolvo del bombín tiene humedad de líquido DOT 3/4, reemplace el cilindro esclavo.
+4. Para purgar el circuito: conecte manguera transparente al nipler de purga del bombín esclavo, presione el pedal de embrague y abra el purgador.
+5. Deje fluir el líquido hasta eliminar todas las microburbujas de aire y asegurar un pedal firme con 15mm de juego libre en la parte superior.

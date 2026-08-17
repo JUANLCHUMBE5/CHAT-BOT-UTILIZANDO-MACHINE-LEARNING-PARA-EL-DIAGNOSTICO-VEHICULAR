@@ -56,11 +56,11 @@ Instrucciones paso a paso:
 7. Reemplace la cazoleta, el rodamiento de empuje y el guardapolvo con tope de rebote de goma.
 8. Instale el amortiguador nuevo, torquee la tuerca superior a 45 Nm y descomprima el resorte con cuidado.
 
-=== PROCEDIMIENTO: REEMPLAZO DEL KIT DE EMBRAGUE EN TRANSMISIÓN MANUAL (DISCO, PRENSA Y COLLARÍN) ===
-Código de Falla Asociado: Inspección Transmisión Manual / Embrague Patina
-Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Avanza, Hyundai Accent/i10, Kia Rio/Picanto, Suzuki Swift, Changan Alsvin
+=== PROCEDIMIENTO: REEMPLAZO DEL KIT DE EMBRAGUE EN TRANSMISIÓN MANUAL (DISCO, PRENSA, COLLARÍN Y BOMBÍN HIDRÁULICO TOYOTA YARIS) ===
+Código de Falla Asociado: Inspección Transmisión Manual / Embrague Patina / No Desembraga
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris (2NR-FE / 1NZ-FE 5MT), Toyota Avanza
 Gravedad: Alta | Tiempo Estimado de Taller: 240 minutos
-Síntomas: El motor acelera pero el vehículo no gana velocidad (embrague patina), pedal duro o trepidación al salir en primera marcha.
+Síntomas: El motor acelera pero no avanza (patina), o el pedal de embrague no desembraga, pedal esponjoso o con fuga en el bombín hidráulico.
 Instrucciones paso a paso:
 1. Desconecte la batería, retire la caja del filtro de aire, el varillaje selector de cambios y el motor de arranque.
 2. Levante el vehículo en elevador, retire ruedas delanteras, palieres de transmisión y soporte inferior del motor.
