@@ -1,0 +1,36 @@
+=== PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE COMBUSTIBLE Y PRESIÓN DE LÍNEA GASOLINA/GLP/GNV (DTC P0087 / P0088) ===
+Código de Falla Asociado: DTC P0087 (Presión Sistema Muy Baja) / DTC P0088 (Presión Muy Alta)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Avanza, Hyundai Accent GLP, Kia Rio GNV, Changan, DFSK
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Dificultad para arrancar en frío, el auto pierde fuerza en pendientes o se apaga tras correr varios kilómetros.
+Instrucciones paso a paso:
+1. Conecte un manómetro de presión de combustible en la puerto Schrader o intercalado en la cañería del riel de inyección.
+2. Abra el contacto (Key ON Engine OFF): la presión debe subir instantáneamente a la especificación de fábrica (3.0 a 4.2 bar / 45 a 60 PSI).
+3. Encienda el motor en mínimo y observe la aguja: si cae a menos de 2.5 bar al acelerar bruscamente, el filtro de combustible está obstruido o la pila de combustible está agotada.
+4. Verifique la retención de presión: apague el motor y compruebe que la presión no caiga a cero en 15 minutos.
+5. Para cambiar la pila: acceda bajo el asiento posterior, desenrosque la tapa plástica del tanque, extraiga el módulo completo y cambie el cartucho de bomba y el prefiltro de malla.
+
+=== PROCEDIMIENTO: CARGA DE REFRIGERANTE R134a / R1234yf Y PRUEBA DE FUGAS CON MANÓMETROS (DTC B1000 / A/C TIBIO) ===
+Código de Falla Asociado: DTC B1000 / Falla de Climatización / Refrigerante Bajo
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Suzuki, Changan, Chery
+Gravedad: Media | Tiempo Estimado de Taller: 60 minutos
+Síntomas: El aire acondicionado bota aire tibio por las rejillas, el compresor no acopla o se oye silbido en el evaporador.
+Instrucciones paso a paso:
+1. Conecte la manguera azul de baja presión (L) y roja de alta presión (H) del manifold de manómetros en las válvulas de servicio.
+2. Conecte la bomba de vacío a la manguera amarilla central y efectúe vacío durante 25 minutos (-30 inHg).
+3. Mantenga el vacío durante 15 minutos comprobando que la aguja no caiga.
+4. Conecte el balón de gas R134a, purgue la manguera e inyecte refrigerante por baja presión con motor a 1500 RPM y A/C al máximo.
+5. Ajuste presiones de trabajo: Baja entre 25 y 35 PSI; Alta entre 150 y 220 PSI.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE CONDENSADOR Y FUGAS EN EL RADIADOR DE CALEFACCIÓN / EVAPORADOR (DTC B1010 / REFRIGERANTE EN ALFOMBRA / LÍNEA AC SECA) ===
+Código de Falla Asociado: DTC B1010 (Fuga Sistema de Climatización / Baja Presión de Gas)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, DFSK Glory
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 120 minutos
+Síntomas: Olor dulce a anticongelante en la cabina, alfombra del piso del copiloto húmeda/pegajosa, empañamiento aceitoso en el parabrisas, pérdida continua de gas refrigerante A/C confirmada con tinte UV.
+Instrucciones paso a paso:
+1. Realizar inspección de fugas de A/C inyectando nitrógeno seco a 150 PSI o utilizando lámpara de luz ultravioleta (UV) y gafas amarillas para ubicar rastros de tinte fluorescente en el condensador, tuberías y evaporador.
+2. Si la fuga está en el condensador (frente al radiador del motor, golpeado por piedras): vaciar sistema, retirar parachoques delantero, desacoplar cañerías de A/C, retirar condensador y colocar uno nuevo con sellos O-ring nuevos.
+3. Si existe fuga de anticongelante por el radiador de calefacción (Heater Core): drenar el refrigerante del motor (coolant), desacoplar las mangueras de agua en la pared de fuego.
+4. Desmontar la consola central y la estructura del tablero (dash replacement) si el modelo lo requiere para extraer el radiador de calefacción dañado de la caja climática.
+5. Reemplazar el radiador de calefacción, armar la caja climática, reconectar mangueras de refrigerante, rellenar refrigerante de motor 50/50 y purgar el sistema de enfriamiento del motor.
+6. Efectuar prueba de vacío y recarga de refrigerante R134a al A/C probando el funcionamiento del climatizador a máxima potencia de frío y calor.

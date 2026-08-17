@@ -1,0 +1,513 @@
+=== PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040) ===
+Código de Falla Asociado: DTC C0040 / Fuga Hidráulica o Aire en Circuito
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Changan Alsvin, Chery Tiggo 2, DFSK
+Gravedad: Crítica | Tiempo Estimado de Taller: 50 minutos
+Síntomas: El pedal de freno se siente blando o esponjoso, se va hasta el fondo o pierde eficacia tras frenadas continuas.
+Instrucciones paso a paso:
+1. Drene el líquido degradado del depósito principal con jeringa de succión y rellenar con líquido DOT 3 o DOT 4 fresco.
+2. Establezca la secuencia de purga comenzando por la rueda más alejada del cilindro maestro (Trasera Derecha -> Trasera Izquierda -> Delantera Derecha -> Delantera Izquierda).
+3. Conecte una manguera transparente de silicona al nipler de purga sumergida en un frasco con líquido de frenos nuevo.
+4. Solicite a un asistente presionar el pedal 3 o 4 veces y mantenerlo pisado a fondo.
+5. Abra la válvula de purga con llave de 8mm o 10mm 1/4 de vuelta hasta expulsar aire y líquido oscuro, luego cierre la válvula antes de soltar el pedal.
+6. Repita la operación hasta que el líquido salga totalmente limpio y sin burbujas. Mantenga el depósito siempre lleno.
+7. Verifique la firmeza del pedal y compruebe la ausencia de fugas en racores y cañerías.
+
+=== PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045) ===
+Código de Falla Asociado: DTC C0045 / Inspección Freno Trasero / Freno de Estacionamiento
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Agya, Hyundai i10/Accent, Suzuki Alto/Swift, Chevrolet Spark GT
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 75 minutos
+Síntomas: Ruido de rozamiento en la parte trasera, freno de mano muy alto o sin capacidad de retener el vehículo en pendientes.
+Instrucciones paso a paso:
+1. Desenganche el freno de mano, levante el eje posterior y retire las ruedas traseras.
+2. Retire el tambor de freno (utilice pernos M8x1.25 en los orificios roscados si el tambor está pegado por óxido).
+3. Limpie el polvo de fricción acumulado con desengrasante para frenos en aerosol (Brake Cleaner).
+4. Desconecte los resortes de tracción, el cable de freno de mano y los pines retenedores cazoleta de las zapatas.
+5. Revise el cilindro de rueda posterior retirando los guardapolvos laterales para verificar que no exista fuga de líquido.
+6. Aplique grasa de litio/antigripante en los 6 puntos de apoyo metálicos de las zapatas en el plato de freno.
+7. Instale zapatas nuevas con el trinquete ajustador automático lubricado y regule hasta que el tambor entre con un leve rozamiento.
+8. Calibre la palanca de freno de mano entre 5 y 7 clics.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE VELOCIDAD ABS Y CILINDRO MAESTRO (DTC C0035 / C0221) ===
+Código de Falla Asociado: DTC C0035 (Sensor Rueda Delantera) / DTC C0221 (Circuito Presión Hidráulica ABS)
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla, Hyundai Elantra, Kia Cerato, Nissan Sentra, BYD, Changan CS35
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Luz de advertencia de ABS y ESP encendidas en el tablero, comportamiento errático o pulsaciones anormales en el pedal a baja velocidad.
+Instrucciones paso a paso:
+1. Conecte el escáner al puerto OBD-II y consulte el módulo ABS para identificar el sensor de rueda o electroválvula con falla.
+2. Mida la resistencia del sensor de velocidad de rueda con multímetro (valor estándar: 800 a 1600 Ohmios para inductivos pasivos).
+3. Limpie la corona dentada o anillo reluctor magnético de la bocina eliminando limallas y barro.
+4. Si el sensor está dañado, retire el perno de sujeción de 10mm del mangueta y desconecte el arnés impermeable.
+5. Instale el sensor nuevo aplicando grasa de silicona en la junta O-ring de sellado.
+6. Si el código refiere al cilindro maestro (C0221), ejecute la rutina de purga electrónica del módulo ABS mediante escáner activando las electroválvulas de retorno.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y LIMPIEZA DE SENSORES DE FLUJO DE AIRE MAF Y PRESIÓN MAP (DTC P0100 / P0106) ===
+Código de Falla Asociado: DTC P0100 (Sensor MAF) / DTC P0106 (Sensor MAP)
+Modelos Compatibles Frecuentes en Perú: Nissan Versa/Sentra, Toyota Corolla, Hyundai Elantra, Chery, JAC
+Gravedad: Media | Tiempo Estimado de Taller: 30 minutos
+Síntomas: Humo negro por el escape, consumo elevado de combustible, tirones en aceleración y falta de respuesta del motor.
+Instrucciones paso a paso:
+1. Ubique el sensor MAF en el tubo del filtro de aire o el sensor MAP en la cavidad del múltiple de admisión.
+2. Desconecte la traba del arnés eléctrico.
+3. Retire los 2 tornillos Torx o estrella de sujeción.
+4. Rocíe la resistencia caliente del sensor de platino únicamente con limpiador dieléctrico específico para MAF (Zero Residue Cleaner). NUNCA tocar la resistencia ni usar trapos.
+5. Deje secar el sensor al aire durante 10 minutos.
+6. Inspeccione el O-ring de sellado y reemplace si está agrietado.
+7. Verifique datos en vivo con escáner: voltaje MAF en ralentí debe registrar entre 0.9V y 1.4V.
+
+=== PROCEDIMIENTO: REPARACIÓN Y ALINEACIÓN DE CHAPA DE PUERTA / PESTILLO MECÁNICO ===
+Código de Falla Asociado: Falla de Cierre Centralizado / Chapa Trabada / Puerta Bloqueada
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Changan Alsvin, Chery Tiggo, DFSK
+Gravedad: Baja-Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: La chapa de la puerta está inclinada, chueca, trabada o no responde al control remoto ni a la llave manual.
+Instrucciones paso a paso:
+1. Desmonte el tapiz o moldura interior de la puerta retirando los pernos ocultos en el tirador y manija.
+2. Desconecte el arnés del elevalunas eléctrico y altavoz.
+3. Retire el plástico protector antipolvo para acceder al mecanismo interno de la cerradura.
+4. Inspeccione las varillas metálicas del seguro y el actuador eléctrico de cierre centralizado.
+5. Si la chapa o conjunto de cerradura está desalineado o su soporte doblado, enderécelo o reemplace el mecanismo de chapa metálica.
+6. Aplique lubricante de grafito o grasa blanca de litio en el mecanismo de pestillo.
+7. Pruebe el cierre y apertura manual con la llave y con el mando a distancia antes de colocar el tapiz.
+
+=== PROCEDIMIENTO: REEMPLAZO DE JUNTA HOMOCINÉTICA Y CUBREPOLVOS DE PALIER (CLAC CLAC AL DOBLAR) ===
+Código de Falla Asociado: Falla de Tracción Delantera / Palier / Junta Homocinética
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Suzuki Swift, Chery, Changan
+Gravedad: Alta | Tiempo Estimado de Taller: 75 minutos
+Síntomas: Sonido metálico repetitivo ("clac clac clac") en las ruedas delanteras al virar la dirección o dar vueltas en U.
+Instrucciones paso a paso:
+1. Desafloje la tuerca central del eje de la rueda con dado de 30mm o 32mm mientras el auto está apoyado en el piso.
+2. Levante el vehículo, retire la rueda, el cáliper de freno y el terminal de dirección.
+3. Desconecte la rótula de suspensión inferior para desacoplar el mangueta del eje del palier.
+4. Retire las abrazaderas metálicas del cubrepolvo roto y retire la grasa contaminada.
+5. Desmonte la junta homocinética exterior del eje usando un extractor de rodajes o golpeteo controlado con martillo de bronce.
+6. Limpie la canastilla y esferas. Si presenta surcos o picaduras, reemplace la junta completa.
+7. Instale el nuevo fuelle de neopreno, empaque abundante grasa de bisulfuro de molibdeno (grasa negra) y apriete las abrazaderas.
+
+=== PROCEDIMIENTO: REEMPLAZO DE RÓTULAS DE SUSPENSIÓN, TRAPECIOS Y BUJES (JUEGO EN TIMÓN / JALONEO) ===
+Código de Falla Asociado: Inspección del Tren Delantero / Rótulas y Trapecios
+Modelos Compatibles Frecuentes en Perú: Toyota, Hyundai, Kia, Nissan, Suzuki, Changan, Great Wall Haval
+Gravedad: Alta | Tiempo Estimado de Taller: 80 minutos
+Síntomas: Juego en la dirección, desgastes irregulares en los bordes interiores del neumático y desalineación constante.
+Instrucciones paso a paso:
+1. Levante el auto y desmonte la rueda.
+2. Retire el perno pasante o pasador de seguridad de la tuerca almenada de la rótula en el mangueta.
+3. Desacople el perno cónico de la rótula del mangueta utilizando un extractor de rótulas tipo horquilla.
+4. Desatornille los pernos principal y secundario que sujetan el trapecio al subchasis.
+5. Retire el trapecio y reemplace los bujes en prensa hidráulica o cambie el trapecio completo.
+6. Coloque la rótula nueva, torquee los pernos a 65 Nm y arme el conjunto.
+7. Realice de manera obligatoria la alineación de dirección.
+
+=== PROCEDIMIENTO: MANTENIMIENTO DE DIRECCIÓN HIDRÁULICA Y DIAGNÓSTICO DE EPS ELECTRÓNICA (DTC C1500 / C1511) ===
+Código de Falla Asociado: DTC C1500 (Falla de Torque EPS) / DTC C1511 (Circuito Motor EPS)
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla/Yaris EPS, Hyundai Accent Hydraulic/EPS, Kia Rio, Nissan Sentra
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Timón extremadamente duro, chillido agudo de faja al girar a tope, o luz de dirección asistida encendida en tablero.
+Instrucciones paso a paso:
+1. En dirección hidráulica: revise el nivel y estado del fluido ATF Dexron III en el depósito.
+2. Para purgar la dirección hidráulica: eleve las ruedas delanteras en el aire, desconecte la manguera de retorno y gire el volante suavemente de tope a tope 10 veces con motor apagado vertiendo fluido nuevo.
+3. En dirección eléctrica (EPS): ante código C1500, inspeccione el fusible principal de alta corriente (60A/80A) y el relé de potencia del módulo EPS bajo el timón.
+4. Inspeccione el acople flexible de goma en forma de estrella (flexible coupler) en la columna EPS por desgaste o juego mecánico.
+
+=== PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECÁNICA Y DIFERENCIAL (CAMBIO DE VALVOLINA Y SINCRONIZADORES) ===
+Código de Falla Asociado: Inspección de Caja Mecánica / Diferencial
+Modelos Compatibles Frecuentes en Perú: Toyota HiAce, Nissan Frontier, Hyundai H1, Suzuki Swift, Camiones Jac/Fuso
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Rasca o cruje al meter la 2da o 3ra marcha, o zumbido metálico continuo en aceleración proveniente de la caja/diferencial.
+Instrucciones paso a paso:
+1. Compruebe la ausencia de fugas en retenes de salida de palier y piñón de ataque del diferencial.
+2. Retire primero el tapón de llenado/nivel superior para garantizar que se pueda volver a llenar.
+3. Retire el tapón de drenaje magnético inferior y vacíe el aceite degradado.
+4. Examine la presencia de partículas doradas (desgaste de anillos sincronizadores de bronce) o metálicas plateadas.
+5. Inyecte aceite valvolina sintético viscosidad 75W-90 / 80W-90 API GL-4 o GL-5 hasta que rebose por el orificio de llenado.
+
+=== PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301) ===
+Código de Falla Asociado: DTC P0300 (Misfire Múltiple) / P0301 (Misfire Cilindro 1)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Changan Alsvin, Chery Tiggo 2
+Gravedad: Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Cascabeleo, vibración intensa al estar detenido en mínimo, pérdida de potencia y parpadeo del testigo Check Engine.
+Instrucciones paso a paso:
+1. Apague el motor y espere a que esté completamente frío.
+2. Retire la cubierta plástica del motor y desconecte las bobinas COP.
+3. Extraiga las bujías usadas utilizando dado magnético para bujías de 5/8 pulgada o 14mm.
+4. Verifique la luz de electrodos con galga de espesores (0.040 pulgadas o 1.1mm).
+5. Rosque manualmente las nuevas bujías y ajuste con torquímetro a 20 Nm.
+6. Coloque bobinas, borre códigos DTC y pruebe en mínimo.
+
+=== PROCEDIMIENTO: CAMBIO Y CALIBRACIÓN DE CORREA O CADENA DE DISTRIBUCIÓN (DTC P0016 / P0017) ===
+Código de Falla Asociado: DTC P0016 / P0017 (Desfase de Posición Cigüeñal vs Árbol de Levas)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla (Cadena), Hyundai Accent/Elantra, Kia Rio, Chevrolet Sail, Chery, DFSK
+Gravedad: Crítica | Tiempo Estimado de Taller: 180 minutos
+Síntomas: Traqueteo metálico al arrancar en frío, pérdida de sincronismo, tirones graves o motor no arranca.
+Instrucciones paso a paso:
+1. Posicione el cilindro N° 1 en Punto Muerto Superior (PMS / TDC) en carrera de compresión.
+2. Alinee las marcas de tiempo del engranaje del cigüeñal y piñones de árboles de levas de admisión/escape.
+3. En sistemas por correa: afloje el perno del tensor, retire la correa vieja y reemplace la bomba de agua y poleas locas de guía.
+4. Instale la correa nueva asegurando que el lado de tracción quede tenso.
+5. Gire manualmente el cigüeñal 2 vueltas completas (720°) en sentido horario y confirme la coincidencia exacta de las marcas de tiempo.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217) ===
+Código de Falla Asociado: DTC P0217 (Sobrecalentamiento del Motor) / Culata Picada
+Modelos Compatibles Frecuentes en Perú: Toyota, Hyundai, Kia, Changan, Chery, DFSK, JAC
+Gravedad: Crítica | Tiempo Estimado de Taller: 240 minutos
+Síntomas: Humo blanco denso por el escape con olor dulce, consumo rápido de refrigerante o tapa de aceite con pasta color café con leche.
+Instrucciones paso a paso:
+1. Realice prueba de fugas de cilindro con aire comprimido (Leakdown test) o prueba química de CO2 en el depósito de refrigerante.
+2. Drene el aceite del cárter y el refrigerante del radiador.
+3. Desmonte el múltiple de admisión, escape, distribución y tapa de balancines.
+4. Retire los pernos de culata en secuencia inversa a la especificada por el fabricante.
+5. Extraiga la culata y revise planitud con regla de precisión y galgas (deformación máxima permitida: 0.05mm).
+6. Coloque empaque de culata multilámina de acero (MLS) nuevo en seco y apriete pernos en 3 etapas angulares.
+
+=== PROCEDIMIENTO: CAMBIO DE ACEITE DE MOTOR, FILTRO Y LIMPIEZA DE CÁRTER (DTC P0520 / BAJA PRESIÓN) ===
+Código de Falla Asociado: DTC P0520 (Circuito Sensor Presión Aceite) / Inspección Mantenimiento
+Modelos Compatibles Frecuentes en Perú: Multimarca (Toyota, Hyundai, Kia, Nissan, Chevrolet, Changan)
+Gravedad: Baja-Media | Tiempo Estimado de Taller: 30 minutos
+Síntomas: Luz de presión de aceite encendida en tablero, aceite degradado/negro, intervalo de servicio superado.
+Instrucciones paso a paso:
+1. Opere el motor 3 minutos para entibiar el aceite.
+2. Sitúe la bandeja de drenaje bajo el cárter y retire el tapón de drenaje reemplazando la arandela.
+3. Retire el filtro de aceite usado con llave de garra/zuncho.
+4. Limpie el plano de acople del filtro en el bloque y lubrique el O-ring del filtro nuevo con aceite limpio.
+5. Enrosque el filtro nuevo a mano hasta que el empaque haga contacto y aplique 3/4 de vuelta adicional.
+6. Torquee el tapón a 35 Nm, vierta el aceite de viscosidad recomendada (5W-30 / 10W-40) y verifique el nivel en la varilla.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE POSICIÓN DE CIGÜEÑAL CKP Y LEVAS CMP (DTC P0335 / P0340) ===
+Código de Falla Asociado: DTC P0335 (Sensor CKP) / DTC P0340 (Sensor CMP)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Sentra, Chevrolet Sail
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+Síntomas: El motor gira pero no arranca, se apaga repentinamente al calentar o el tacómetro de RPM marca cero en marcha.
+Instrucciones paso a paso:
+1. Conecte el escáner y verifique códigos almacenados en la PCM.
+2. Mida la resistencia del sensor CKP inductivo (500 a 1000 Ohmios) o verifique la presencia de 5V/12V de alimentación en sensores Hall.
+3. Retire el perno de sujeción de 10mm del sensor en la tapa de distribución o bloque motor.
+4. Instale el sensor CKP/CMP nuevo con junta O-ring lubricada.
+5. Borre los códigos DTC y realice prueba de encendido.
+
+=== PROCEDIMIENTO: LIMPIEZA DEL EVAPORADOR, REEMPLAZO DE FILTRO DE CABINA Y PRESOSTATO (DTC B1005 / MAL OLOR) ===
+Código de Falla Asociado: DTC B1005 / Falla de Flujo de Aire o Presostato A/C
+Modelos Compatibles Frecuentes en Perú: Multimarca (Toyota, Hyundai, Kia, Changan, DFSK, Nissan)
+Gravedad: Baja | Tiempo Estimado de Taller: 40 minutos
+Síntomas: Flujo de aire muy débil por las rejillas del tablero, olor rancio a humedad/moho y parabrisas empañado.
+Instrucciones paso a paso:
+1. Abra la guantera del lado del copiloto y desenganche los topes laterales.
+2. Extraiga el filtro de cabina saturado de polvo y suciedad.
+3. Aplique espuma higienizante antibacteriana para A/C sobre el evaporador y deje actuar 15 minutos.
+4. Instale filtro de cabina nuevo de carbón activado respetando la dirección de flujo de aire (AIR FLOW DOWN).
+
+=== PROCEDIMIENTO: PROTOCOLO ESTANDARIZADO DE ESCANEO OBD-II, LECTURA DTC Y BORRADO DE CHECK ENGINE ===
+Código de Falla Asociado: Todos los Códigos DTC OBD-II / EOBD / JOBD (P, C, B, U)
+Modelos Compatibles Frecuentes en Perú: Todos los vehículos estándar OBD-II (1996 en adelante)
+Gravedad: Informativa / Diagnóstica | Tiempo Estimado de Taller: 20 minutos
+Síntomas: Testigo Check Engine / MIL encendido en el tablero o revisión técnica obligatoria.
+Instrucciones paso a paso:
+1. Ubique el conector DLC de 16 pines bajo el tablero del lado del conductor.
+2. Conecte el escáner automotriz en posición de contacto (Key ON Engine OFF).
+3. Seleccione la opción de lectura de códigos de falla confirmados y pendientes (DTCs de 5 dígitos).
+4. Registre los datos congelados del momento del fallo (Freeze Frame Data: RPM, ECT, velocidad, STFT/LTFT).
+5. Ejecute el borrado de códigos DTC ÚNICAMENTE tras corregir el problema físico o reemplazar el componente defectuoso.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE OXÍGENO / LAMBDA (DTC P0130 / P0135 / P0141) ===
+Código de Falla Asociado: DTC P0130 (Circuito Sensor O2) / DTC P0135 (Calentador Sensor 1) / DTC P0141 (Calentador Sensor 2)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail
+Gravedad: Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Consumo excesivo de gasolina, olor penetrante a gas no quemado por el escape y luz MIL encendida.
+Instrucciones paso a paso:
+1. Ubique el Sensor 1 (pre-catalizador) o Sensor 2 (post-catalizador).
+2. Mida la resistencia del circuito calefactor con multímetro: valor estándar entre 2.0 y 14.0 Ohmios.
+3. Con motor en marcha a 80°C, verifique la señal en vivo: Sensor 1 debe oscilar velozmente entre 0.1V (pobre) y 0.9V (rico).
+4. Extraiga el sensor usado con dado ranurado de 7/8 pulgada (22mm).
+5. Aplique pasta antigripante en la rosca del sensor nuevo y ajuste a 40 Nm.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA POBRE / RICA Y ANÁLISIS DE DATOS EN VIVO STFT & LTFT (DTC P0171 / P0172) ===
+Código de Falla Asociado: DTC P0171 (Sistema Mezcla Demasiado Pobre) / DTC P0172 (Sistema Mezcla Demasiado Rica)
+Modelos Compatibles Frecuentes en Perú: Toyota, Hyundai, Kia, Nissan, Suzuki, Chevrolet, Changan
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: DTC P0171 o P0172 en escáner, el motor da explosiones en admisión, jalonea o ahoga al acelerar.
+Instrucciones paso a paso:
+1. Conecte el escáner y seleccione flujo de datos en vivo (Live Data): Ajuste Corto (STFT) y Largo (LTFT).
+2. Sume STFT + LTFT: Si el valor total supera +15% a +25%, indica Mezcla Pobre (P0171). Inspeccione fugas de vacío en mangueras PCV o múltiple.
+3. Si la suma STFT + LTFT es negativa (-15% a -25%), indica Mezcla Rica (P0172): Inspeccione inyectores goteando o válvula del Cánister trabada.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE FRENOS DE AIRE NEUMÁTICOS EN CAMIONES (SCANIA / VOLVO / SPN 1087) ===
+Código de Falla Asociado: SPN 1087 / Falla en Sistema APS (Air Pressure System) / Frenos Neumáticos
+Modelos Compatibles Frecuentes en Perú: Camiones Scania R450, Volvo FH, International Workstar, Fuso Canter, Hino 300
+Gravedad: Crítica | Tiempo Estimado de Taller: 120 minutos
+Síntomas: Pedal de freno neumático duro, presión en manómetro de cabina por debajo de 6 bar o soplido continuo en secador APU.
+Instrucciones paso a paso:
+1. Conecte el escáner de vehículo pesado en el puerto de diagnóstico J1939 de 9 o 16 pines.
+2. Mida la presión neumática en el puerto de prueba de la unidad secadora de aire APU/APS con manómetro patrón.
+3. Revise fugas de aire aplicando agua jabonosa en los acoples rilsan y pulmones de freno.
+4. Reemplace el cartucho del filtro secador de aire APU y descarbonice la válvula del compresor.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE ALTERNADOR Y SISTEMA DE CARGA DE 12V (DTC P0562 / P0563 / BATERÍA NO CARGA) ===
+Código de Falla Asociado: DTC P0562 (Voltaje de Sistema Bajo) / DTC P0563 (Voltaje de Sistema Alto)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Suzuki Swift, Changan Alsvin, DFSK
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Luz de batería encendida en tablero, luces tenues o parpadeantes, pérdida de potencia eléctrica, motor se apaga en marcha por falta de corriente.
+Instrucciones paso a paso:
+1. Desconectar borne negativo de la batería de 12V.
+2. Mida el voltaje de batería en reposo (mínimo 12.6V) y con motor en marcha a 2000 RPM (voltaje estándar de carga del alternador: 13.8V a 14.5V). Si marca menos de 13.2V, hay falla de carga; si supera 15.0V, el regulador de voltaje está fallando.
+3. Realice prueba de caída de tensión (Voltage Drop test) con multímetro entre el borne positivo B+ del alternador y el positivo de la batería (máximo 0.2V de caída) y entre carcasa del alternador y tierra del chasis (máximo 0.1V).
+4. Afloje el tensor de la faja serpentina de accesorios y desmonte la correa.
+5. Desconecte el arnés de control del regulador y el cable de potencia B+ retenido por tuerca de 12mm/13mm.
+6. Desmonte los pernos de sujeción del alternador al bloque motor y retire la unidad.
+7. Instale el alternador nuevo o reparado (puente rectificador/diodos y carbones nuevos), ajuste pernos a 45 Nm, reinstale la faja serpentina verificando la tensión y reconecte la batería.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MOTOR DE ARRANQUE Y SOLENOIDE DE IGNICIÓN (CLIC SIN ARRANQUE / DTC P0615) ===
+Código de Falla Asociado: DTC P0615 (Circuito Relé de Arranque) / Falla Mecánica Solenoide
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio/Picanto, Nissan Tiida/Sentra, Chevrolet Sail
+Gravedad: Alta | Tiempo Estimado de Taller: 75 minutos
+Síntomas: Al girar la llave o presionar botón Start solo se escucha un "clic" seco, el motor de arranque gira lento o no responde habiendo batería cargada.
+Instrucciones paso a paso:
+1. Verifique el estado de la batería de 12V con probador de carga (CCA) y asegúrese de que los bornes estén limpios de sulfato y ajustados a 8 Nm.
+2. Compruebe la llegada de voltaje (+12V) al terminal ST (solenoide) del arrancador al dar arranque con la llave o botón.
+3. Si llega voltaje pero el arrancador no gira, desmonte el conjunto: desconecte el cable negativo de la batería.
+4. Desconecte el cable principal de batería (+12V B+) y el terminal del suiche de ignición en el solenoide.
+5. Retire los 2 pernos pasantes de 14mm que fijan el motor de arranque a la campana de la transmisión.
+6. En banco de trabajo, inspeccione los carbones (escobillas), el colector del inducido y la horquilla del bendix. Reemplace el solenoide o el arrancador completo si los contactos están fogueados.
+7. Reinstale el motor de arranque, apriete pernos a 50 Nm, reconecte bornes y verifique arranque suave.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE CONSUMO PARÁSITO Y CAÍDA DE TENSIÓN EN BUS DE COMUNICACIÓN CAN (DESCARGA DE BATERÍA / DTC U0100) ===
+Código de Falla Asociado: DTC U0100 (Pérdida de Comunicación con ECM/PCM) / Consumo Parásito Batería
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla, Hyundai Elantra/Tucson, Kia Cerato/Sportage, Nissan Kicks, Changan CS35
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: La batería se descarga completamente de un día para otro con el auto apagado, fallas intermitentes en tablero, agujas locas o códigos de red CAN bus.
+Instrucciones paso a paso:
+1. Espere 20 minutos con el vehículo apagado, llaves alejadas y puertas cerradas para que los módulos ECU entren en modo reposo (Sleep Mode).
+2. Conecte un multímetro en función de amperaje DC en serie con el borne negativo de la batería. El consumo parásito normal debe ser menor a 50 mA (0.05 A). Si supera 100 mA, hay un consumo parásito activo.
+3. Vaya retirando uno a uno los fusibles de la fusilera del vano motor y de la cabina mientras observa el multímetro hasta que el consumo caiga a niveles normales, identificando el circuito responsable (radio, alarma, rastreador GPS, módulo de carrocería BCM).
+4. Para fallas de red CAN (DTC U0100): mida la resistencia entre los pines 6 (CAN High) y 14 (CAN Low) del conector OBD-II con batería desconectada. Debe marcar aproximadamente 60 Ohmios (dos resistencias de terminación de 120 Ohmios en paralelo).
+5. Si la resistencia marca 120 Ohmios, uno de los módulos finales o la línea de bus CAN está interrumpida; si marca 0 Ohmios, hay cortocircuito entre líneas CAN.
+6. Repare el arnés o sustituya el módulo defectuoso que impide la dormida de la red vehicular.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE CUERPO DE VÁLVULAS Y SOLENOIDES DE CAMBIO EN TRANSMISIÓN AUTOMÁTICA CON CONVERTIDOR DE PAR (DTC P0750 / P0755) ===
+Código de Falla Asociado: DTC P0750 (Solenoide de Cambio A Falla Circuito) / DTC P0755 (Solenoide de Cambio B) / DTC P0740 (Embrague Convertidor TCC)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla (Caja U340E/U341E), Hyundai Accent/Elantra (A4CF1/A6MF1), Kia Rio, Chevrolet Cruze/Tracker
+Gravedad: Alta | Tiempo Estimado de Taller: 100 minutos
+Síntomas: Golpe brusco o "pateo" al pasar de 2da a 3ra marcha, la caja entra en modo de emergencia (Emergency limp mode / se queda trabada en 3ra marcha), códigos de solenoide eléctrico.
+Instrucciones paso a paso:
+1. Escanear el módulo TCU/PCM para obtener el código específico del solenoide electrohidráulico defectuoso.
+2. Levantar el vehículo, drenar el fluido ATF y retirar el cárter de transmisión.
+3. Desconectar el arnés de cableado interno de solenoides (arnés flexible de cinta).
+4. Mida la resistencia de cada solenoide en Ohmios con multímetro directamente en el conector (Solenoides de cambio ON/OFF: 11 a 15 Ohmios; Solenoides de control lineal PWM: 5 a 7 Ohmios).
+5. Retire los pernos de fijación del cuerpo de válvulas hidráulico y desmonte la unidad con cuidado de no perder los balines de chequeo de goma/acero.
+6. Limpie las galerías del cuerpo de válvulas con solvente dieléctrico y reemplace el solenoide afectado o el kit completo de solenoides de cambio.
+7. Instale el cuerpo de válvulas ajustando pernos al torque especificado (8 Nm), reinstale filtro nuevo de ATF, coloque cárter y rellene fluido ATF Toyota WS / Hyundai SP-IV.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE VÁLVULA DE EXPANSIÓN TÉRMICA Y FILTRO DESECANTE DE A/C (DTC B1008 / FALTA DE ENFRÍAMIENTO / PRESIONES ANORMALES) ===
+Código de Falla Asociado: DTC B1008 / Presiones Manifold Fuera de Rango / Obstrucción Circuito A/C
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent/i10, Kia Rio/Sportage, Nissan Versa, Changan, DFSK
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: El aire acondicionado no enfría en absoluto o enfría intermitentemente, la manguera de alta presión se congela o se sobrecalienta, el manómetro de baja marca vacío (-10 inHg) y el de alta marca 250+ PSI.
+Instrucciones paso a paso:
+1. Recuperar el gas refrigerante R134a/R1234yf del sistema mediante estación de reciclaje de A/C.
+2. Ubicar la válvula de expansión térmica (TXV) montada en la pared de fuego (firewall) de ingreso al evaporador.
+3. Desconectar las tuberías de alta y baja presión de aluminio retirando las tuercas/pernos de 10mm. Reemplazar todos los empaquetados O-rings verdes de HNBR por nuevos lubricados con aceite PAG.
+4. Retire los 2 pernos Allen/Torx de retención de la válvula TXV y extraiga la válvula obstruida por humedad o limallas.
+5. En el condensador delantero, abra el tapón inferior roscado y sustituya el filtro desecante (cartucho de sílice en bolsa) para eliminar la humedad del circuito.
+6. Instale la nueva válvula de expansión TXV, apriete pernos a 8 Nm y conecte las cañerías.
+7. Realice prueba de vacío de 30 minutos (-30 inHg), compruebe estanqueidad y recargue la dosis exacta en gramos de gas R134a y 30cc de aceite refrigerante PAG 46.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SERVOMOTORES DE COMPUERTAS HVAC Y MÓDULO RESISTOR DEL BLOWER (DTC B1082 / AIRE CALIENTE EN COPILOTO / SIN VENTILACIÓN) ===
+Código de Falla Asociado: DTC B1082 (Actuador de Mezcla de Temperatura) / DTC B1086 (Actuador Modo Distribución Aire) / Falla Resistencia Blower
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla, Hyundai Tucson/Elantra, Kia Cerato/Sportage, Nissan Sentra/Kicks, Suzuki Vitara
+Gravedad: Media | Tiempo Estimado de Taller: 60 minutos
+Síntomas: El aire sale caliente por un lado del tablero y frío por el otro, se oye un chasquido o "taca taca" dentro del tablero al cambiar la temperatura, o el ventilador soplador (blower) solo funciona en la velocidad máxima (velocidad 4).
+Instrucciones paso a paso:
+1. Escanear el módulo Climatizador HVAC para leer DTCs de los servomotores actuadores de compuerta (Blend Door Actuator).
+2. Si el ventilador interior no sopla en velocidades 1, 2 y 3 pero sí en la 4: desmonte la resistencia del blower bajo la guantera (módulo resistor de velocidad) y reemplace el fusible térmico o el módulo completo.
+3. Para servomotores trabados: desmonte la tapa lateral inferior de la consola central o guantera.
+4. Observe el movimiento de las palancas plásticas de la caja de distribución HVAC mientras conmuta la temperatura en el panel.
+5. Retire los 3 tornillos de estrella (Phillips) de sujeción del actuador defectuoso y desconecte la ficha eléctrica.
+6. Instale el servo actuador nuevo alineando los piñones plásticos en la posición de muesca neutral.
+7. Ejecute el procedimiento de autocalibración de compuertas HVAC mediante el escáner o la secuencia manual de botones (mantener presionado AC + Recirculación durante 5 segundos).
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DEL MÓDULO DE CONTROL ELECTRÓNICO ABS/ESP Y UNIDAD HIDRÁULICA HCU (DTC C0110 / C0265 / SIN COMUNICACIÓN CON ABS) ===
+Código de Falla Asociado: DTC C0110 (Falla Circuito Motor Bomba ABS) / DTC C0265 (Falla Relé de Módulo EBCM/ABS) / DTC U0121 (Pérdida Comunicación con ABS)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent/Tucson, Kia Rio/Sportage, Nissan Versa/Sentra, Chevrolet Tracker
+Gravedad: Crítica | Tiempo Estimado de Taller: 120 minutos
+Síntomas: Testigos de ABS, ESP/VSC y Freno de Mano encendidos fijamente en tablero, el motor de la bomba ABS se queda encendido continuamente incluso con auto apagado o el pedal de freno no tiene asistencia ABS.
+Instrucciones paso a paso:
+1. Realizar escaneo al sistema EBCM/ABS. Verificar fusibles de alta corriente del ABS (40A/60A) en la caja de fusibles del motor y la masa/tierra principal del módulo.
+2. Medir llegada de +12V en los pines de potencia del arnés multipin del ABS. Si hay voltaje y masa correcta pero marca DTC C0110/C0265 o no hay comunicación, la unidad electrónica EBCM o la bomba interna están averiadas.
+3. Drenar el líquido de frenos del depósito principal.
+4. Marcar e identificar las 6 tuberías rígidas de freno metálicas acopladas a la unidad hidráulica HCU (2 de cilindro maestro y 4 para cada rueda).
+5. Aflojar los racores roscados de las cañerías con llave para tuberías de 10mm/11mm y desacoplar las líneas.
+6. Desmontar los 3 pernos de sujeción del módulo ABS al chasis y retirar la unidad HCU/EBCM completa.
+7. Instalar el nuevo módulo ABS, ajustar racores de cañerías a 16 Nm, conectar el arnés eléctrico, realizar codificación VIN de la ECU ABS con escáner e iniciar el protocolo de purga electrónica de electroválvulas.
+
+=== PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y CONTROL DE ESTABILIDAD ESP/VSC (DTC C1231 / C1210 / TABLERO ESP ENCENDIDO) ===
+Código de Falla Asociado: DTC C1231 (Falla Circuito Sensor Ángulo Dirección SAS) / DTC C1210 (Sensor Ángulo Dirección No Calibrado) / DTC C1515
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla/Yaris, Hyundai Elantra/Tucson, Kia Cerato/Sportage, Nissan Qashqai, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Luz de advertencia de ESP / VSC / Slip encendida permanentemente en el tablero tras realizar una alineación de ruedas, desmontar la columna de dirección o cambiar la batería.
+Instrucciones paso a paso:
+1. Verificar que los neumáticos tengan la presión de aire correcta recomendada por el fabricante y que la suspensión no presente juego mecánico en rótulas ni terminales.
+2. Estacionar el vehículo en una superficie completamente plana y nivelada.
+3. Posicionar las ruedas delanteras perfectamente rectas hacia adelante y centrar la posición visual del volante (posición 12 en punto).
+4. Conectar el escáner al puerto OBD-II y seleccionar el módulo ESP / VSC / ABS.
+5. Ingresar a la sección de Funciones Especiales / Adaptación y seleccionar "Calibración de Punto Cero Sensor SAS" (Steering Angle Sensor Zero Point Calibration).
+6. Siga la secuencia en pantalla: mantener el auto estático sin mover el volante ni tocar pedales durante 10 segundos, apagar el contacto (Key OFF) 15 segundos y volver a encender (Key ON).
+7. Comprobar en el flujo de datos en vivo que el valor del ángulo de dirección marque 0.0° con el volante centrado. Borrar códigos DTC y realizar prueba de manejo comprobando que la luz ESP se apague.
+
+=== PROCEDIMIENTO: PURGA ELECTRÓNICA Y REEMPLAZO DE ELECTROVÁLVULAS DEL MÓDULO ABS CON ESCÁNER DIAGNÓSTICO (DTC C0020 / C0082 / PEDAL DURO BAJO ACTIVACIÓN ABS) ===
+Código de Falla Asociado: DTC C0020 (Circuito Motor Bomba ABS Fuera de Rango) / DTC C0082 (Luz Indique Falla Frenos)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, DFSK
+Gravedad: Crítica | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Pedal de freno se siente esponjoso únicamente al activarse el ABS, o el pedal se va al fondo tras intervenir cañerías hidráulicas debido a aire atrapado en la cámara interna del bloque de electroválvulas HCU.
+Instrucciones paso a paso:
+1. Conectar la máquina de purga por presión en el depósito de freno a 1.5 bar o asegurar que el depósito de líquido de frenos se mantenga lleno con DOT 4 sintético.
+2. Conectar el escáner automotriz profesional al puerto OBD-II y entrar al módulo ABS.
+3. Seleccionar la función "Purga de Servicio ABS" / "Automated ABS Bleed Protocol".
+4. El escáner solicitará abrir el niple de purga de la rueda Trasera Derecha. Abrir el niple 1/4 de vuelta con llave de 8mm/10mm y presionar "Continuar" en el escáner.
+5. La bomba del ABS y las electroválvulas internas se ciclo-activarán electrónicamente durante 60 segundos expulsando el aire atrapado en los acumuladores internos de la HCU hacia la rueda. Cierre el niple al finalizar el ciclo.
+6. Repita la secuencia guiada por el escáner para las ruedas Trasera Izquierda, Delantera Derecha y Delantera Izquierda.
+7. Verifique la firmeza del pedal de freno. El pedal debe sentirse completamente rígido y sin recorrido excesivo.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DEL SENSOR DE PAR/TORQUE Y MOTOR ELECTRÓNICO EPS DE COLUMNA (DTC C1515 / C1525 / TIMÓN RÍGIDO CON VOLANTE DESVIADO) ===
+Código de Falla Asociado: DTC C1515 (Sensor de Torque Punto Cero No Inicializado) / DTC C1525 (Falla Circuito Sensor de Torque EPS) / DTC C1511
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla/Yaris, Hyundai Accent/i10, Kia Rio/Picanto, Nissan Sentra, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: El timón se pone extremadamente duro como si no tuviera asistencia, la luz de advertencia P/S (Power Steering) parpadea o se enciende en rojo en el tablero, asistencia desigual (suave hacia la izquierda y dura hacia la derecha).
+Instrucciones paso a paso:
+1. Conectar el escáner de diagnóstico e ingresar al módulo EPS (Electric Power Steering).
+2. Comprobar los valores en tiempo real de los sensores de torque principal (TRQ1) y secundario (TRQ2): en reposo ambos deben marcar aproximadamente 2.5V (o diferencia entre ambos < 0.15V).
+3. Verificar la llegada de alimentación principal (+12V permanente) al módulo de control EPS proveniente del fusible de alta capacidad (60A/80A EPS) ubicado en el vano motor.
+4. Si el sensor de torque interno de la columna presenta cortocircuito o diferencia de voltaje constante, desmonte la columna de dirección inferior retirando el volante (desconectar batería 15 min antes para desactivar Airbag), las cubiertas plásticas y la junta cardánica.
+5. Desmonte el servomotor eléctrico asistido o el conjunto de columna con sensor de par integrado.
+6. Instale la nueva columna/motor EPS torqueando pernos de sujeción a 30 Nm.
+7. Reconecte la batería, realice de manera obligatoria la Calibración de Punto Cero del Sensor de Torque EPS con escáner y verifique la suavidad de giro en ambas direcciones.
+
+=== PROCEDIMIENTO: CALIBRACIÓN DE PUNTO CERO Y REAPRENDIZAJE DEL SISTEMA DE DIRECCIÓN ASISTIDA EPS CON ESCÁNER (DTC C1555 / ERROR DE CALIBRACIÓN EPS) ===
+Código de Falla Asociado: DTC C1555 (Falla Módulo ECU EPS / Error Calibración) / DTC C1515
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla/RAV4, Hyundai Accent/Elantra, Kia Rio/Cerato, Nissan Kicks
+Gravedad: Alta | Tiempo Estimado de Taller: 35 minutos
+Síntomas: Luz de advertencia P/S encendida en el tablero tras desconectar la batería de 12V, realizar trabajos de suspensión o sustituir el módulo ECU de la EPS.
+Instrucciones paso a paso:
+1. Asegurar que la batería tenga un voltaje estable superior a 12.5V (conectar cargador/mantenedor de batería si es necesario).
+2. Colocar las ruedas delanteras apoyadas sobre el suelo plano perfectamente derechas y centradas.
+3. Conectar el escáner automotriz e ingresar a EPS -> Funciones Especiales -> "Calibración del Sensor de Par / Torque Sensor Calibration".
+4. Seleccionar "Borrado de Datos de Calibración Anterior" (Clear Calibration Data).
+5. Seleccionar "Aprendizaje de Punto Cero" (Zero Point Calibration). Durante el procedimiento, NO tocar el volante ni aplicar fuerza alguna sobre el timón.
+6. Seguir las instrucciones de ciclaje de ignición: apagar el switch (Key OFF) por 10 segundos, encender el switch (Key ON) sin arrancar el motor y esperar la confirmación de "Procedimiento Exitoso" en la pantalla del escáner.
+7. Borrar los códigos de falla DTC almacenados, encender el motor y comprobar que la luz de dirección asistida (P/S) se apague.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532) ===
+Código de Falla Asociado: DTC C1532 (Falla Mecánica / Acoplamiento Motor EPS) / Ruido Mecánico en Cremallera
+Modelos Compatibles Frecuentes en Perú: Hyundai Accent/i10/Elantra, Kia Rio/Picanto/Cerato, Toyota Yaris, Nissan Versa
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 120 minutos
+Síntomas: Golpeteo seco o chasquido tipo "taca taca" metálico al girar el timón en terreno empedrado o al maniobrar para estacionar, juego libre excesivo en el volante, desalineación.
+Instrucciones paso a paso:
+1. Para ruido proveniente de la columna EPS en modelos Hyundai/Kia: desmonte la parte inferior de la columna de dirección EPS bajo el tablero para acceder al servomotor.
+2. Retire los 3 pernos de fijación del servomotor de la columna y extraiga el acople flexible de goma en forma de estrella (Flexible Steering Coupler). Si los dientes de goma están desgastados o pulverizados, instale el nuevo acople de poliuretano reforzado y vuelva a armar el servomotor.
+3. Para holgura en la caja de dirección cremallera asistida (Rack & Pinion): levante el auto, retire las ruedas delanteras y desacople los terminales de dirección de los manguetas.
+4. Desmonte las abrazaderas de la barra estabilizadora y baje el subchasis cuna del motor retirando los pernos principales.
+5. Desmonte la caja cremallera de dirección desacoplando el nudo cardánico de la columna.
+6. Instale la nueva caja cremallera de dirección EPS, torquee pernos de sujeción al subchasis a 90 Nm, oriente los axiales y terminales de dirección.
+7. Arme el conjunto, realice la alineación computarizada de dirección e inicie la calibración del sensor de punto cero de dirección EPS con escáner.
+
+=== PROCEDIMIENTO: DIAGNOSTICO Y REPARACION DE CIERRE CENTRALIZADO Y ACTUADOR ELECTRICO DE PUERTA (CARROCERIA_001) ===
+Codigo de Falla Asociado: CARROCERIA_001 / Falla Electrica de Cierre Centralizado / Actuador de Puerta
+Modelos Compatibles Frecuentes en Peru: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Changan Alsvin, DFSK Glory
+Gravedad: Baja | Tiempo Estimado de Taller: 45 minutos
+Sintomas: Al presionar el control remoto la puerta sigue bloqueada o no abre, el seguro electrico salta y no traba la chapa, el actuador no emite sonido o el cierre centralizado no responde al mando a distancia.
+Instrucciones paso a paso:
+1. Verificar la pila y transceptor del control remoto de la llave (medir voltaje de pila de boton CR2032 >= 3.0V).
+2. Revisar el fusible del circuito de cierre centralizado / Door Lock (fusible de 15A/20A en la fusiblera interna bajo el tablero).
+3. Desmontar el tapiz interior de la puerta retirando los tornillos ocultos de la manija y tirador, desacoplando los clips de plastico con espatula.
+4. Desconectar el conector electrico del actuador de la cerradura y verificar con lampara de prueba logica o multimetro la llegada de pulsos de +12V y masa al accionar el mando de bloqueo/desbloqueo.
+5. Inspeccionar el mazo de cables pasacables de goma entre el pilar A/B y la puerta para descartar cables quebrados por fatiga de flexion.
+6. Si llega alimentacion de 12V pero el motor interno del actuador no gira o tiene engranajes desgastados, desmontar el conjunto del actuador y reemplazarlo por uno nuevo.
+7. Conectar el nuevo actuador, verificar el funcionamiento de apertura/cierre con el control remoto y el boton maestro, lubricar varillaje y colocar el tapiz.
+
+=== PROCEDIMIENTO: REPARACION Y ALINEACION DE CHAPA, PESTILLO Y CERRADURA MECANICA DE PUERTA (CARROCERIA_002) ===
+Codigo de Falla Asociado: CARROCERIA_002 / Mecanismo de Chapa Desalineada / Pestillo Trabado
+Modelos Compatibles Frecuentes en Peru: Toyota Yaris, Hyundai i10/Accent, Kia Rio, Nissan Tiida, Suzuki Swift, Chery Tiggo
+Gravedad: Baja | Tiempo Estimado de Taller: 45 minutos
+Sintomas: La chapa de la puerta esta inclinada, chueca o trabada, la puerta no encaja ni cierra bien en el marco, el pestillo manual esta doblado o la cerradura mecanica no abre por dentro ni por fuera.
+Instrucciones paso a paso:
+1. Inspeccionar visualmente la alineacion de la puerta con respecto a las lineas de la carroceria y el pilar B/C.
+2. Comprobar el perno de impacto cerradero (striker pin) en el marco del pilar: si esta flojo, desgastado o desfasado, aflojar los 2 pernos Torx T40 y regular la altura y profundidad de cierre.
+3. Desmontar el tapiz interior de la puerta para acceder al mecanismo de trinquete y varillas de accionamiento mecanico.
+4. Revisar si las varillas metalicas de trinquete estan dobladas, salidas de sus grapas plasticas de sujecion o con holgura. Enderezar o reemplazar grapas quebradas.
+5. Limpiar el mecanismo de cerradura metalica retirando polvo y grasa vieja endurecida con desengrasante dielectrico.
+6. Aplicar grasa blanca de litio o spray de grafito en el trinquete, uña de bloqueo y resortes de retorno de la chapa.
+7. Comprobar que la cerradura enganche suavemente en el primer y segundo clic de seguridad al empujar la puerta y que la llave manual gire sin resistencia.
+
+=== PROCEDIMIENTO: DIAGNOSTICO Y REEMPLAZO DE ELEVALUNAS ELECTRICO / ALZACRISTALES Y GUAYA (CARROCERIA_003) ===
+Codigo de Falla Asociado: CARROCERIA_003 / Elevalunas Electrico Defectuoso / Guaya Alzacristales Rota
+Modelos Compatibles Frecuentes en Peru: Toyota Yaris/Corolla, Hyundai Accent/Elantra, Kia Rio/Cerato, Nissan Versa/Sentra, Chevrolet Sail
+Gravedad: Baja | Tiempo Estimado de Taller: 60 minutos
+Sintomas: El vidrio no sube ni baja, la luna se cayo dentro de la puerta, se escucha el motor girar pero el vidrio no se mueve, ruido de crujido de guaya metalica enredada o botonera sin respuesta.
+Instrucciones paso a paso:
+1. Comprobar con multimetro la llegada de +12V al interruptor de la puerta y la continuidad de los contactos de subida y bajada.
+2. Desmontar el panel interior de la puerta y retirar la lamina de sellado antipolvo.
+3. Si la guaya de acero esta deshilachada, cortada o salida de la polea, sujetar la luna de vidrio con cinta de carrocero o ventosa a la parte superior del marco.
+4. Aflojar los 2 pernos de 10mm que sujetan la mordaza inferior del vidrio al riel del alzacristales.
+5. Desmontar los pernos del motor electrico y del riel deslizador de tijera/guaya y extraer el mecanismo completo por el hueco inferior de la puerta.
+6. Instalar el nuevo conjunto de elevador de vidrios (motor y riel con guaya preensamblada).
+7. Lubricar las colisas y guias de goma laterales con lubricante de silicona para evitar friccion excesiva, montar la luna, calibrar el tope superior/inferior (auto-relearn) y armar el panel.
+
+=== PROCEDIMIENTO: DIAGNOSTICO Y REEMPLAZO DE MOTOR DE LIMPIAPARABRISAS / PLUMAS (CARROCERIA_004) ===
+Codigo de Falla Asociado: CARROCERIA_004 / Limpiaparabrisas Quemado / Varillaje de Plumas
+Modelos Compatibles Frecuentes en Peru: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Tiida, Suzuki Alto, Changan
+Gravedad: Media | Tiempo Estimado de Taller: 45 minutos
+Sintomas: Las plumas del limpiaparabrisas no se mueven, se quedan trabadas a mitad del parabrisas, no retornan a su posicion de reposo o el motor suena forzado y huele a quemado.
+Instrucciones paso a paso:
+1. Comprobar el fusible de 20A/25A del limpiaparabrisas (Wiper) y el rele de temporizador/intermitencia en la fusiblera del vano motor.
+2. Retirar las tapas plasticas de las tuercas de 14mm de los brazos de las plumas y extraer ambos brazos con un extractor de brazos o balanceo suave.
+3. Desmontar los clips plasticos y retirar la rejilla deflectora de agua (torpedo) bajo el parabrisas.
+4. Inspeccionar el varillaje mecanico: verificar si alguna rotula o buje plastico de enlace se desengancho o partio impidiendo la transmision de movimiento.
+5. Desconectar el conector electrico del motor y medir alimentacion (+12V en velocidad baja, alta e intermitente).
+6. Si llega corriente pero el motor no gira, desatornillar los pernos de fijacion del motor al chasis y reemplazar el motorreductor del limpiaparabrisas.
+7. Conectar el nuevo motor, encender una vez para que se situe en su punto cero automatico (Park Position), montar el varillaje, colocar la rejilla y alinear los brazos de las plumas a 2 cm sobre la base del parabrisas.
+
+=== PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005) ===
+Codigo de Falla Asociado: COMBUSTIBLE_005 / Fuga o Baja Presion en Sistema Common Rail Diesel (DTC P0087 / P0093)
+Modelos Compatibles Frecuentes en Peru: Toyota Hilux 1KD/2GD, Mitsubishi L200, Nissan Frontier/Navara YD25, Isuzu D-Max, Hyundai H1
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Sintomas: Dificultad para encender el motor en caliente, humo negro, cascabeleo diesel, perdida de potencia bajo carga y codigo de baja presion en riel de combustible.
+Instrucciones paso a paso:
+1. Conectar escaner y monitorear la presion real de riel (Fuel Rail Actual Pressure) vs presion deseada: en ralenti debe oscilar entre 250 y 350 bar; en aceleracion plena entre 1400 y 1800 bar.
+2. Realizar prueba de retorno de inyectores con probetas graduadas (retorno maximo admisible: no mas de 20-25 ml por inyector en 2 minutos a ralenti). Si un inyector tiene retorno excesivo, la presion de riel colapsa.
+3. Desmontar la valvula dosificadora de combustible SCV (Suction Control Valve) en la bomba de alta presion, limpiar con solvente dielectrico o sustituir si presenta atasco mecanico por impurezas de combustible.
+4. Inspeccionar el filtro de combustible diesel (trampa de agua/sedimentador): drenar agua y sustituir elemento filtrante si presenta mas de 10,000 km.
+5. Verificar la estanqueidad de la cañeria de alta presion y del sensor de presion de riel (FRP) descartando fugas de petroleo o aire en el circuito de baja presion.
+
+=== PROCEDIMIENTO: DIAGNOSTICO Y REGENERACION DE FILTRO DE PARTICULAS DPF Y SISTEMA ADBLUE DEF (ESCAPE_001) ===
+Codigo de Falla Asociado: ESCAPE_001 / DPF Saturado / Sistema AdBlue DEF (DTC P2002 / P20EE / P204F)
+Modelos Compatibles Frecuentes en Peru: Toyota Hilux Euro 6, Ford Ranger 3.2/2.0, VW Amarok TDI, Mitsubishi L200 Euro 5/6, Camiones Hino/Isuzu
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Sintomas: Testigo de DPF encendido en el tablero, mensaje de bloqueo de arranque en X kilometros por AdBlue, perdida de potencia (modo limp) y aumento del nivel de aceite en carter por postinyeccion fallida.
+Instrucciones paso a paso:
+1. Conectar escaner OBD y leer los parametros de presion diferencial del DPF (DTC P2002) y masa de hollin/ceniza acumulada en gramos (Soot Mass).
+2. Si la masa de hollin esta entre 25g y 40g, realizar una regeneracion forzada de DPF por escaner con el vehiculo al aire libre sobre superficie no inflamable y motor a temperatura de regimen (> 80°C).
+3. Si la masa supera los 45g o el DPF esta colmatado de cenizas, desmontar el filtro DPF para limpieza quimica por inmersion y lavado a contracorriente con maquina hidroneumatica especializada.
+4. Para fallas en el sistema SCR AdBlue / Urea: comprobar el nivel de liquido DEF en el deposito auxiliar y verificar con refractometro la concentracion del 32.5% de urea.
+5. Desmontar el inyector dosificador de AdBlue ubicado en el tubo de escape y retirar las cristalizaciones blancas de urea con agua caliente desmineralizada.
+6. Borrar codigos de error y ejecutar el procedimiento de restablecimiento de autonomia de arranque y reaprendizaje de sensores NOx en el escaner.
+
+=== PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA DE FRENOS DE AIRE NEUMATICOS EN CAMIONES (FRENO_006 / FRENO_007) ===
+Codigo de Falla Asociado: FRENO_006 (Fugas de Aire) / FRENO_007 (Valvula Secadora APS Obstruida) / SPN 1087
+Modelos Compatibles Frecuentes en Peru: Camiones Volvo FH/FM, Scania R/G, Mercedes-Benz Actros/Atego, Freightliner, Hino 500, Isuzu Forward
+Gravedad: Critica | Tiempo Estimado de Taller: 90 minutos
+Sintomas: Caida rapida de presion en los manometros de aire de los circuitos 1 y 2, los frenos de estacionamiento (maxi-brake) se quedan bloqueados, el compresor no descarga o expulsa agua/aceite por la valvula de escape.
+Instrucciones paso a paso:
+1. Encender el motor y comprobar el tiempo de presurizacion de los tanques de aire (de 0 a 8.5 bar en menos de 3 minutos).
+2. Apagar el motor y realizar prueba de estanqueidad: la presion no debe caer mas de 0.2 bar en 3 minutos con los frenos aplicados.
+3. Rociar agua jabonosa en racores, mangueras espirales y camaras de freno (pulmones dobles de servicio/emergencia) para localizar fugas de aire.
+4. Desmontar el cartucho desecante del secador de aire (APS / APU): si presenta saturacion de aceite proveniente del compresor, cambiar el cartucho desecante y purgar los depositos humedos.
+5. Comprobar la valvula de cuatro vias (valvula protectora de circuitos) para asegurar la distribucion equilibrada de presion entre frenos delanteros, traseros, remolque y accesorios neumaticos.
+6. Calibrar las palancas de ajuste automatico (ratchets / slack adjusters) verificando que el recorrido del vastago de la camara de freno no supere 45 mm al pisar a fondo.
+
+=== PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003) ===
+Codigo de Falla Asociado: TRANSMISION_002 (Rodajes Gastados) / TRANSMISION_003 (Degradacion de Valvulina)
+Modelos Compatibles Frecuentes en Peru: Toyota Yaris/Hilux, Hyundai Accent/H1, Kia Rio, Nissan Versa/NP300, Suzuki Swift, Changan
+Gravedad: Alta | Tiempo Estimado de Taller: 120 minutos
+Sintomas: Zumbido continuo tipo rodamiento que aumenta con la velocidad del vehiculo pero no cambia al girar el timon, dificultad para engranar marchas o presencia de limallas metalicas en el tapon magnetico de drenaje.
+Instrucciones paso a paso:
+1. Levantar el vehiculo en elevador y retirar el tapon de drenaje de la caja de cambios/diferencial.
+2. Inspeccionar la valvulina drenada: verificar viscosidad, color y presencia de viruta en el iman del tapon de vaciado.
+3. Si el aceite esta negro o con agua, realizar lavado interno de la carcasa y rellenar con aceite sintetico para engranajes segun especificacion de fabricante (GL-4 75W-90 para cajas sincronizadas de bronce; GL-5 80W-90 o 85W-140 para diferenciales de corona y piñon).
+4. Si el zumbido persiste con aceite nuevo: desacoplar la caja de cambios, abrir la carcasa e inspeccionar los rodamientos conicos del eje primario, secundario y pistas de la corona del diferencial.
+5. Extraer los rodamientos picados con extractor de garras y prensa hidraulica, montar rodamientos nuevos y calibrar la precarga con lainas de ajuste (shim measurement).
+6. Sellar carcasas con formador de juntas RTV anaerobico resistente a hidrocarburos y verificar el engrane suave de todas las marchas.
