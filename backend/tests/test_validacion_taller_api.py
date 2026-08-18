@@ -1,21 +1,58 @@
 import asyncio
 import csv
 import io
+import os
+import time
+from concurrent.futures import ProcessPoolExecutor
+from pathlib import Path
+
 import pandas as pd
 import pytest
-from concurrent.futures import ThreadPoolExecutor
 from fastapi.testclient import TestClient
 
 from main import app
 from src.config import settings
 from src.core.security import crear_jwt_token
 from src.interfaces.api.v1.endpoints import validacion_taller
-from src.interfaces.api.v1.endpoints.validacion_taller import _pseudonimizar_placa
+from src.interfaces.api.v1.endpoints.validacion_taller import (
+    _bloqueo_archivo_interproceso,
+    _guardar_df_tracker_atomico,
+    _pseudonimizar_placa,
+)
 
 client = TestClient(app)
 
 TALLER_1_ID = "00000000-0000-0000-0000-000000000001"
 TALLER_2_ID = "00000000-0000-0000-0000-000000000002"
+
+
+def _worker_escribir_proceso(csv_path_str: str, worker_id: int) -> bool:
+    """Función de nivel superior ejecutable por un subproceso independiente del SO."""
+    csv_p = Path(csv_path_str)
+    with _bloqueo_archivo_interproceso(csv_p, timeout=8.0):
+        df = pd.read_csv(csv_p)
+        item_id = int(df["item"].max()) + 1 if not df.empty and "item" in df.columns else 1
+        nueva_fila = {
+            "item": item_id,
+            "fase": "Post-test",
+            "fecha": "2026-08-17",
+            "placa": f"PRC-{worker_id:03d}",
+            "placa_hash": f"hash_proc_{worker_id:03d}".ljust(64, "0"),
+            "marca_modelo": f"Car Multiprocess {worker_id}",
+            "sintoma": f"Sintoma proceso {worker_id}",
+            "falla_real": f"Falla proceso {worker_id}",
+            "chatbot_prediccion": "Prediccion proceso",
+            "campos_completos": 1,
+            "tiempo_diagnostico_minutos": 12,
+            "prediccion_correcta": 1,
+            "taller_id": TALLER_1_ID,
+            "mecanico_id": f"mecanico-{worker_id}",
+            "metodo_confirmacion": "Prueba Multiproceso OS",
+            "evidencia_ref": "",
+        }
+        df_act = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)
+        _guardar_df_tracker_atomico(df_act, csv_p)
+    return True
 
 
 @pytest.fixture(autouse=True)
@@ -28,6 +65,7 @@ def mock_tracker_csv(tmp_path, monkeypatch):
             "fase": "Pre-test",
             "fecha": "2026-08-01",
             "placa": "ABC-***",
+            "placa_hash": _pseudonimizar_placa("ABC-101")[1],
             "marca_modelo": "Toyota Yaris 2019",
             "sintoma": "Pedal de freno duro",
             "falla_real": "Pastillas desgastadas",
@@ -45,6 +83,7 @@ def mock_tracker_csv(tmp_path, monkeypatch):
             "fase": "Post-test",
             "fecha": "2026-08-02",
             "placa": "XYZ-***",
+            "placa_hash": _pseudonimizar_placa("XYZ-202")[1],
             "marca_modelo": "Hyundai Accent 2020",
             "sintoma": "Motor cascabelea",
             "falla_real": "Bujias sulfatadas",
@@ -62,6 +101,7 @@ def mock_tracker_csv(tmp_path, monkeypatch):
             "fase": "Post-test",
             "fecha": "2026-08-03",
             "placa": "MNO-***",
+            "placa_hash": _pseudonimizar_placa("MNO-303")[1],
             "marca_modelo": "Nissan Sentra 2021",
             "sintoma": "Zumbido en caja CVT",
             "falla_real": "Degradación fluido CVT",
@@ -161,6 +201,47 @@ def test_hmac_sha256_pseudonimizacion():
     assert hash1 != hash2
 
 
+def test_estabilidad_placa_hash_post_hacia_get(auth_headers_admin_taller1):
+    """Verifica que el hash HMAC-SHA-256 persista intacto e inmutable entre POST y GET."""
+    caso_crear = {
+        "fase": "Post-test",
+        "fecha": "2026-08-17",
+        "placa": "DEF-456",
+        "marca_modelo": "Toyota Corolla 2021",
+        "sintoma": "Pedal de freno esponjoso",
+        "falla_real": "Aire en lineas de freno",
+        "chatbot_prediccion": "Fuga de liquido de frenos",
+        "campos_completos": 1,
+        "tiempo_diagnostico_minutos": 14,
+        "prediccion_correcta": 1,
+        "metodo_confirmacion": "Prueba de Purga Hidráulica",
+        "evidencia_ref": "EVID_DEF456.JPG",
+    }
+    resp_post = client.post("/api/v1/validacion-taller", json=caso_crear, headers=auth_headers_admin_taller1)
+    assert resp_post.status_code == 201
+    data_post = resp_post.json()
+    post_item = data_post["item"]
+    post_hash = data_post["placa_hash"]
+    assert len(post_hash) == 64
+    assert data_post["placa_enmascarada"] == "DEF-***"
+
+    # Consultar por GET y encontrar el item creado
+    resp_get = client.get("/api/v1/validacion-taller?limit=10", headers=auth_headers_admin_taller1)
+    assert resp_get.status_code == 200
+    data_get = resp_get.json()
+    
+    caso_encontrado = None
+    for c in data_get["casos"]:
+        if c["item"] == post_item:
+            caso_encontrado = c
+            break
+
+    assert caso_encontrado is not None
+    # El hash retornado en GET debe ser idéntico al persistido en el POST
+    assert caso_encontrado["placa_hash"] == post_hash
+    assert caso_encontrado["placa_enmascarada"] == "DEF-***"
+
+
 def test_sanitizacion_ataques_csv_formula_injection(auth_headers_admin_taller1):
     """Verifica que payloads maliciosos de fórmulas (=, +, -, @) sean neutralizados con comilla simple."""
     caso_malicioso = {
@@ -198,9 +279,38 @@ def test_sanitizacion_ataques_csv_formula_injection(auth_headers_admin_taller1):
     assert any(col.startswith("'-10*2") for col in fila_encontrada)
 
 
+def test_bloqueo_interproceso_timeout_devuelve_503(auth_headers_admin_taller1, mock_tracker_csv):
+    """Verifica que si un proceso retiene el archivo de bloqueo .lock, el endpoint responde HTTP 503."""
+    lock_file = mock_tracker_csv.with_suffix(".lock")
+    # Crear lockfile manual para simular otro proceso ocupado
+    fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_RDWR)
+    os.close(fd)
+
+    try:
+        payload = {
+            "fase": "Post-test",
+            "fecha": "2026-08-17",
+            "placa": "LCK-001",
+            "marca_modelo": "Lock Test Car",
+            "sintoma": "Sintoma de prueba bloqueo",
+            "falla_real": "Falla prueba bloqueo",
+            "chatbot_prediccion": "Prediccion",
+            "campos_completos": 1,
+            "tiempo_diagnostico_minutos": 10,
+            "prediccion_correcta": 1,
+        }
+        # Intentar POST mientras el lock está tomado (con timeout corto)
+        resp = client.post("/api/v1/validacion-taller", json=payload, headers=auth_headers_admin_taller1)
+        assert resp.status_code == 503
+        assert "ocupado" in resp.json()["detail"].lower()
+    finally:
+        if lock_file.exists():
+            lock_file.unlink()
+
+
 @pytest.mark.anyio
 async def test_concurrencia_escrituras_atomicas(auth_headers_admin_taller1, mock_tracker_csv):
-    """Verifica que múltiples escrituras concurrentes se ejecuten atómicamente sin pérdida de datos."""
+    """Verifica que múltiples corrutinas concurrentes se ejecuten atómicamente sin pérdida de datos."""
     import httpx
     transport = httpx.ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as async_client:
@@ -229,6 +339,19 @@ async def test_concurrencia_escrituras_atomicas(auth_headers_admin_taller1, mock
     # 3 iniciales + 10 concurrentes = 13 filas en total
     assert len(df_final) == 13
     assert len(df_final["item"].unique()) == 13
+
+
+def test_concurrencia_multiproceso_real_os(mock_tracker_csv):
+    """Verifica concurrencia real entre procesos de sistema operativo independientes."""
+    csv_str = str(mock_tracker_csv)
+    with ProcessPoolExecutor(max_workers=4) as executor:
+        resultados = list(executor.map(_worker_escribir_proceso, [csv_str] * 4, [101, 102, 103, 104]))
+
+    assert all(r is True for r in resultados)
+    df_res = pd.read_csv(mock_tracker_csv)
+    # 3 iniciales + 4 procesos OS = 7 filas
+    assert len(df_res) == 7
+    assert len(df_res["item"].unique()) == 7
 
 
 def test_mecanico_no_puede_acceder_validacion(auth_headers_mecanico):

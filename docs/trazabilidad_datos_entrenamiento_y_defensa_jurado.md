@@ -77,11 +77,20 @@ permanecer fuera del entrenamiento usado para evaluarlo. La plantilla está en
 `machine_learning/data/plantilla_evaluacion_externa.csv` y la evaluación se
 ejecuta con `machine_learning/training/evaluar_modelo_externo.py`.
 
+## Base de Conocimiento RAG y Tracker Experimental de Tesis
+
+- **Corpus RAG Multimarca**: 64 procedimientos estructurados con metadatos e integridad SHA-256 local (`machine_learning/manuals/metadatos_manuales.json`).
+- **Benchmark RAG**: Evaluación interna controlada en 10 casos (`docs/evaluacion_rag_benchmark.md`), con umbral 0.25 y rechazo fuera de dominio.
+- **Tracker Experimental de Campo**: 1,925 registros de seguimiento (30 pre-test tradicional y 1,895 post-test asistido por CarBot). Las placas vehiculares se encuentran pseudonimizadas mediante HMAC-SHA-256 (64 caracteres) con clave secreta y enmascaramiento visual (`ABC-***`).
+
 ## Evidencias para la defensa
 
 - `machine_learning/data/FUENTES_ENTRENAMIENTO.md`.
 - `machine_learning/data/reporte_calidad_dataset.json`.
 - `machine_learning/data/reporte_dataset_externo.json`.
+- `machine_learning/manuals/metadatos_manuales.json`.
+- `machine_learning/manuals/FUENTES_Y_VALIDACION.md`.
+- `docs/evaluacion_rag_benchmark.md`.
 - `machine_learning/models/metricas_modelo.json`.
 - `machine_learning/models/metricas_externas.json`.
 - `docs/graficas/matriz_confusion_ml.png`.

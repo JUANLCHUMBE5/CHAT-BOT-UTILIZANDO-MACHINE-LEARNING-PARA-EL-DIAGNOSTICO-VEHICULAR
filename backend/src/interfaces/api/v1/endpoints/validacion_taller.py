@@ -126,15 +126,18 @@ def _bloqueo_archivo_interproceso(lock_path: Path, timeout: float = 6.0):
             time.sleep(0.02)
         except Exception:
             break
+
+    if not adquirido:
+        raise TimeoutError(f"No se pudo adquirir el bloqueo de archivo exclusivo en {lock_file} tras {timeout}s")
+
     try:
-        yield adquirido
+        yield
     finally:
-        if adquirido:
-            try:
-                if lock_file.exists():
-                    lock_file.unlink()
-            except Exception:
-                pass
+        try:
+            if lock_file.exists():
+                lock_file.unlink()
+        except Exception:
+            pass
 
 
 def _guardar_df_tracker_atomico(df: pd.DataFrame, csv_path: Path) -> None:
@@ -153,7 +156,7 @@ def _cargar_df_tracker() -> pd.DataFrame:
     if not TRACKER_CSV_PATH.exists():
         return pd.DataFrame(
             columns=[
-                "item", "fase", "fecha", "placa", "marca_modelo", "sintoma",
+                "item", "fase", "fecha", "placa", "placa_hash", "marca_modelo", "sintoma",
                 "falla_real", "chatbot_prediccion", "campos_completos",
                 "tiempo_diagnostico_minutos", "prediccion_correcta",
                 "taller_id", "mecanico_id", "metodo_confirmacion", "evidencia_ref"
@@ -214,7 +217,15 @@ async def listar_casos_validacion(
     casos_lista = []
     for r in df_pagina.to_dict(orient="records"):
         placa_raw = str(r.get("placa", ""))
-        enmascarada, p_hash = _pseudonimizar_placa(placa_raw)
+        
+        # Recuperar placa_hash persistido si ya existe en el registro
+        p_hash_existente = str(r.get("placa_hash", "")).strip() if pd.notna(r.get("placa_hash")) else ""
+        if p_hash_existente:
+            p_hash = p_hash_existente
+            enmascarada = placa_raw if ("-" in placa_raw and "***" in placa_raw) else _pseudonimizar_placa(placa_raw)[0]
+        else:
+            enmascarada, p_hash = _pseudonimizar_placa(placa_raw)
+
         casos_lista.append(
             CasoValidacionDTO(
                 item=int(r.get("item", 0)),
@@ -324,59 +335,66 @@ async def registrar_caso_validacion(
     payload: dict = Depends(verificar_jwt_administrador),
 ):
     async with _ASYNC_CSV_LOCK:
-        with _bloqueo_archivo_interproceso(TRACKER_CSV_PATH):
-            df = _cargar_df_tracker()
-            siguiente_item = int(df["item"].max()) + 1 if not df.empty and "item" in df.columns else 1
-            fecha_hoy = dto.fecha or datetime.now(LIMA_TZ).strftime("%Y-%m-%d")
-            taller_id = payload.get("taller_id", DEFAULT_SEED_TALLER_ID)
-            mecanico_id = payload.get("usuario_id", payload.get("sub", ""))
+        try:
+            with _bloqueo_archivo_interproceso(TRACKER_CSV_PATH):
+                df = _cargar_df_tracker()
+                siguiente_item = int(df["item"].max()) + 1 if not df.empty and "item" in df.columns else 1
+                fecha_hoy = dto.fecha or datetime.now(LIMA_TZ).strftime("%Y-%m-%d")
+                taller_id = payload.get("taller_id", DEFAULT_SEED_TALLER_ID)
+                mecanico_id = payload.get("usuario_id", payload.get("sub", ""))
 
-            enmascarada, p_hash = _pseudonimizar_placa(dto.placa)
+                enmascarada, p_hash = _pseudonimizar_placa(dto.placa)
 
-            nuevo_registro = {
-                "item": siguiente_item,
-                "fase": dto.fase,
-                "fecha": fecha_hoy,
-                "placa": enmascarada,
-                "marca_modelo": dto.marca_modelo.strip(),
-                "sintoma": dto.sintoma.strip(),
-                "falla_real": dto.falla_real.strip(),
-                "chatbot_prediccion": dto.chatbot_prediccion.strip(),
-                "campos_completos": dto.campos_completos,
-                "tiempo_diagnostico_minutos": dto.tiempo_diagnostico_minutos,
-                "prediccion_correcta": dto.prediccion_correcta,
-                "taller_id": taller_id,
-                "mecanico_id": mecanico_id,
-                "metodo_confirmacion": dto.metodo_confirmacion or "Inspección Visual",
-                "evidencia_ref": dto.evidencia_ref or "",
-            }
+                nuevo_registro = {
+                    "item": siguiente_item,
+                    "fase": dto.fase,
+                    "fecha": fecha_hoy,
+                    "placa": enmascarada,
+                    "placa_hash": p_hash,
+                    "marca_modelo": dto.marca_modelo.strip(),
+                    "sintoma": dto.sintoma.strip(),
+                    "falla_real": dto.falla_real.strip(),
+                    "chatbot_prediccion": dto.chatbot_prediccion.strip(),
+                    "campos_completos": dto.campos_completos,
+                    "tiempo_diagnostico_minutos": dto.tiempo_diagnostico_minutos,
+                    "prediccion_correcta": dto.prediccion_correcta,
+                    "taller_id": taller_id,
+                    "mecanico_id": mecanico_id,
+                    "metodo_confirmacion": dto.metodo_confirmacion or "Inspección Visual",
+                    "evidencia_ref": dto.evidencia_ref or "",
+                }
 
-            df_nuevo = pd.DataFrame([nuevo_registro])
-            if df.empty:
-                df_actualizado = df_nuevo
-            else:
-                df_actualizado = pd.concat([df, df_nuevo], ignore_index=True)
+                df_nuevo = pd.DataFrame([nuevo_registro])
+                if df.empty:
+                    df_actualizado = df_nuevo
+                else:
+                    df_actualizado = pd.concat([df, df_nuevo], ignore_index=True)
 
-            _guardar_df_tracker_atomico(df_actualizado, TRACKER_CSV_PATH)
+                _guardar_df_tracker_atomico(df_actualizado, TRACKER_CSV_PATH)
+        except TimeoutError as exc:
+            raise HTTPException(
+                status_code=503,
+                detail="El tracker se encuentra ocupado procesando otra escritura. Intente nuevamente en unos segundos."
+            ) from exc
 
-            return CasoValidacionDTO(
-                item=siguiente_item,
-                fase=dto.fase,
-                fecha=fecha_hoy,
-                placa_enmascarada=enmascarada,
-                placa_hash=p_hash,
-                marca_modelo=dto.marca_modelo.strip(),
-                sintoma=dto.sintoma.strip(),
-                falla_real=dto.falla_real.strip(),
-                chatbot_prediccion=dto.chatbot_prediccion.strip(),
-                campos_completos=dto.campos_completos,
-                tiempo_diagnostico_minutos=dto.tiempo_diagnostico_minutos,
-                prediccion_correcta=dto.prediccion_correcta,
-                taller_id=taller_id,
-                mecanico_id=mecanico_id,
-                metodo_confirmacion=dto.metodo_confirmacion,
-                evidencia_ref=dto.evidencia_ref,
-            )
+        return CasoValidacionDTO(
+            item=siguiente_item,
+            fase=dto.fase,
+            fecha=fecha_hoy,
+            placa_enmascarada=enmascarada,
+            placa_hash=p_hash,
+            marca_modelo=dto.marca_modelo.strip(),
+            sintoma=dto.sintoma.strip(),
+            falla_real=dto.falla_real.strip(),
+            chatbot_prediccion=dto.chatbot_prediccion.strip(),
+            campos_completos=dto.campos_completos,
+            tiempo_diagnostico_minutos=dto.tiempo_diagnostico_minutos,
+            prediccion_correcta=dto.prediccion_correcta,
+            taller_id=taller_id,
+            mecanico_id=mecanico_id,
+            metodo_confirmacion=dto.metodo_confirmacion,
+            evidencia_ref=dto.evidencia_ref,
+        )
 
 
 @router.get("/exportar-csv", summary="Descargar CSV sanitizado contra inyecciones de fórmulas (Aislamiento Multitenant)")

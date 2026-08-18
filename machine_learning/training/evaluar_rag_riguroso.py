@@ -107,11 +107,12 @@ def evaluar_rag():
     tasa_rechazo_negativos = (rechazos_correctos / len(casos_negativos)) * 100
 
     print("\n" + "=" * 80)
-    print("MÉTRICAS FORMALES DE EVALUACIÓN RAG")
+    print("RESULTADOS DEL BENCHMARK INTERNO CONTROLADO RAG (N=10)")
     print("=" * 80)
     print(f"Precision@1 en Casos Positivos: {precision_positivos:.1f}% ({aciertos_positivos}/{len(casos_positivos)})")
     print(f"Tasa de Rechazo Fuera de Dominio: {tasa_rechazo_negativos:.1f}% ({rechazos_correctos}/{len(casos_negativos)})")
-    print(f"Efectividad Global RAG: {total_aciertos}/{total_pruebas} ({(total_aciertos/total_pruebas)*100:.1f}%)")
+    print(f"Desempeño en Banco de Pruebas Controlado: {total_aciertos}/{total_pruebas} ({(total_aciertos/total_pruebas)*100:.1f}%)")
+    print("Nota Metodológica: Resultado preliminar en casos controlados (docs/evaluacion_rag_benchmark.md).")
     print("=" * 80)
 
     assert aciertos_positivos == len(casos_positivos), f"Fallaron {len(casos_positivos) - aciertos_positivos} casos positivos"
