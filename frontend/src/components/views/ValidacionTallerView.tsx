@@ -166,9 +166,9 @@ export const ValidacionTallerView: React.FC = () => {
       >
         <ShieldCheck size={18} color="#2563eb" style={{ flexShrink: 0 }} />
         <span>
-          <strong>Nota Metodológica de Tesis:</strong> Las métricas agregadas reflejan el seguimiento del piloto experimental
-          (Pre-test vs Post-test) y los 33 casos reales de taller auditados. Las placas se encuentran pseudonimizadas
-          mediante encriptación SHA-256 para estricto cumplimiento de privacidad de datos.
+          <strong>Nota Metodológica de Tesis:</strong> Las métricas agregadas reflejan el seguimiento del estudio experimental
+          (Pre-test vs Post-test) y los 33 casos de prueba externos de referencia taxonómica (Zenodo). Las placas se encuentran pseudonimizadas
+          mediante HMAC-SHA-256 para estricto cumplimiento de privacidad de datos.
         </span>
       </div>
 

@@ -37,8 +37,9 @@ Los procedimientos están organizados en subcarpetas estructuradas:
 ## 3. Trazabilidad y Metadatos JSON
 
 Cada fragmento indexado cuenta con registro en `metadatos_manuales.json`:
-- `id_procedimiento`: Identificador unívoco (`RAG_PROC_001` a `RAG_PROC_060`).
-- `archivo_fuente`: Ruta relativa exacta del archivo `.txt`.
+- `id_procedimiento`: Identificador unívoco (`RAG_PROC_001` a `RAG_PROC_064`).
+- `archivo_fuente`: Ruta relativa exacta del archivo `.txt` existente en el repositorio.
 - `sha256_fragmento`: Checksum SHA-256 criptográfico para verificar la integridad del texto.
 - `codigos_dtc`: Lista normalizada de códigos OBD-II asociados.
-- `estado_validacion`: `corpus_preliminar_taller` con bandera de auditoría documental.
+- `manual_oem` / `url_referencia`: Categorización referencial estándar de manuales de taller para consulta técnica.
+- `estado_validacion`: `corpus_preliminar_taller` con bandera de auditoría documental (requiere posterior firma y homologación en taller).
