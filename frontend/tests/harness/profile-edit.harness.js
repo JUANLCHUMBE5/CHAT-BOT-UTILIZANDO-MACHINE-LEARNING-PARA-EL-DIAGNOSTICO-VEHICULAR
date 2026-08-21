@@ -10,11 +10,12 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const frontendRoot = path.resolve(__dirname, '..', '..');
 
 console.log('=== TEST SUITE 1: Source File & Contract Export Verification ===');
 
-const apiServicePath = path.join(__dirname, 'src', 'services', 'api.ts');
-const apiTypesPath = path.join(__dirname, 'src', 'types', 'api.ts');
+const apiServicePath = path.join(frontendRoot, 'src', 'services', 'api.ts');
+const apiTypesPath = path.join(frontendRoot, 'src', 'types', 'api.ts');
 
 assert(fs.existsSync(apiServicePath), 'src/services/api.ts must exist');
 assert(fs.existsSync(apiTypesPath), 'src/types/api.ts must exist');

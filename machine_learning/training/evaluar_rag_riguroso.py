@@ -7,8 +7,9 @@ RAIZ = Path(__file__).resolve().parents[2]
 if str(RAIZ / "backend") not in sys.path:
     sys.path.insert(0, str(RAIZ / "backend"))
 
-from src.infrastructure.motor_rag import MotorRAG
-from src.config import settings
+from src.config import settings  # noqa: E402 - importa tras configurar sys.path
+from src.infrastructure.motor_rag import MotorRAG  # noqa: E402
+
 
 def evaluar_rag():
     print("=" * 80)

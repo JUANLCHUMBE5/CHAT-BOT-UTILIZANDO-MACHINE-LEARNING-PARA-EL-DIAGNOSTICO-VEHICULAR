@@ -6,7 +6,6 @@ import re
 import unicodedata
 from typing import Any
 
-
 MARCAS = (
     "alfa romeo", "aston martin", "great wall", "mercedes benz", "land rover",
     "toyota", "suzuki", "hyundai", "kia", "nissan", "chevrolet", "volkswagen",

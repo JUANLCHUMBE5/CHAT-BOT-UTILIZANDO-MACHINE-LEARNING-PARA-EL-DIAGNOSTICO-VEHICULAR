@@ -31,7 +31,7 @@ revisión en
 - Cliente HTTP: `frontend/src/services/api.ts`.
 - Contratos: `frontend/src/types/api.ts` y `frontend/src/types/domain.ts`.
 - Pruebas backend: `backend/tests/test_mecanicos_profile_edit.py`.
-- Arnés frontend: `frontend/test_profile_edit_harness.js`.
+- Arnés frontend: `frontend/tests/harness/profile-edit.harness.js`.
 
 ## Resultado
 

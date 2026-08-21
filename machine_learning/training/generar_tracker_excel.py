@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 
@@ -60,8 +62,6 @@ df = pd.DataFrame(registros)
 df['prediccion_correcta'] = (df['falla_real'] == df['chatbot_prediccion']).astype(int)
 
 # Guardar a archivo CSV para abrir en Excel
-import os
-
 os.makedirs("data", exist_ok=True)
 df.to_csv("data/tracker_diagnosticos.csv", index=False, encoding="utf-8")
 

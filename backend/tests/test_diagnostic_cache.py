@@ -5,8 +5,8 @@ y reducción de latencia / concurrencia para múltiples trabajadores mecánicos.
 """
 
 import time
-import pytest
-from src.core.diagnostic_cache import DiagnosticoLRUCache, diagnostico_cache
+
+from src.core.diagnostic_cache import DiagnosticoLRUCache
 from src.core.gestor_diagnostico import GestorDiagnostico, ResultadoDiagnostico
 
 
@@ -71,9 +71,7 @@ def test_gestor_diagnostico_reutiliza_cache_en_segunda_llamada():
     sintoma = "pastillas de freno chillan en bajada prueba cache"
 
     # Primera llamada: procesa y guarda en caché
-    t0 = time.time()
     res1 = gestor.procesar_consulta_texto(sintoma, marca_modelo="Toyota Corolla")
-    t_primera = (time.time() - t0) * 1000
 
     # Segunda llamada idéntica: debe responder desde caché en tiempo récord (< 10 ms)
     t1 = time.time()

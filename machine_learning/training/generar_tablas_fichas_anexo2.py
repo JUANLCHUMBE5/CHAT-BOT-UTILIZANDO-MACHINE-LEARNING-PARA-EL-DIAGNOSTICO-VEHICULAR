@@ -8,8 +8,8 @@ Generador oficial de tablas para las FICHAS DE REGISTRO (Anexo 2) de la Tesis UC
 
 import os
 import sys
+
 import pandas as pd
-import numpy as np
 from scipy import stats
 
 # Asegurar codificación UTF-8
@@ -125,7 +125,7 @@ def realizar_contraste_hipotesis():
     print(f"• Tamaño de muestra pareada (N): {len(pre_test)} vehículos")
     print(f"• Estadístico T calculado:       {t_stat:.4f}")
     print(f"• Grados de libertad (gl = N-1): {len(pre_test) - 1}")
-    print(f"• Nivel de significancia (alfa): 0.05")
+    print("• Nivel de significancia (alfa): 0.05")
     print(f"• P-Valor (Significancia p):     {p_val:.10f}")
     print()
     if p_val < 0.05:

@@ -156,9 +156,10 @@ class DiagnosticoRepository:
 
         if busqueda:
             term = f"%{busqueda.strip()}%"
+            from sqlalchemy.orm import aliased
+
             from src.infrastructure.database.models.catalogs import Usuario
             from src.infrastructure.database.models.messaging import Conversacion as ConvModel
-            from sqlalchemy.orm import aliased
 
             UsuarioMec = aliased(Usuario, name="mecanico_user")
             UsuarioCli = aliased(Usuario, name="cliente_user")

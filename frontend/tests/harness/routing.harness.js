@@ -9,9 +9,10 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const frontendRoot = path.resolve(__dirname, '..', '..');
 
 // Read and verify utils/routing.ts exists and export structure
-const routingModulePath = path.join(__dirname, 'src', 'utils', 'routing.ts');
+const routingModulePath = path.join(frontendRoot, 'src', 'utils', 'routing.ts');
 assert(fs.existsSync(routingModulePath), 'src/utils/routing.ts must exist');
 
 // 1. Implementation of getValidRoute matching src/utils/routing.ts exactly

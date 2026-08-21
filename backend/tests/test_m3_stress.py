@@ -6,10 +6,9 @@ Tests cover:
 3. Period metric ratio and status invariant assertions.
 """
 
-import pytest
 from datetime import datetime
-from zoneinfo import ZoneInfo
-from src.interfaces.api.v1.endpoints.metricas import ResumenMetricasResponseDTO, LIMA_TZ
+
+from src.interfaces.api.v1.endpoints.metricas import LIMA_TZ, ResumenMetricasResponseDTO
 
 
 def test_resumen_metricas_dto_defaults_and_fields():

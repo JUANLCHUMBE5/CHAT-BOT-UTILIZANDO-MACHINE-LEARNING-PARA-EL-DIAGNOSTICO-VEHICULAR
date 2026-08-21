@@ -14,7 +14,6 @@ import urllib.request
 from pathlib import Path
 
 import pandas as pd
-
 from preparar_candidatos_zenodo import (
     COMBINACIONES_AMBIGUAS,
     DOI,

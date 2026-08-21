@@ -1,32 +1,26 @@
-# React + TypeScript + Vite
+# Frontend administrativo
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Panel web de CarBot construido con React, TypeScript y Vite. Su uso está
+restringido a administradores; los mecánicos trabajan mediante WhatsApp.
 
-Currently, two official plugins are available:
+## Organización
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `src/components/common/`: componentes reutilizables.
+- `src/components/layout/`: estructura visual y navegación.
+- `src/components/views/`: pantallas funcionales.
+- `src/hooks/`: carga y estado por dominio.
+- `src/services/`: cliente de la API REST.
+- `src/types/`: contratos y tipos TypeScript.
+- `src/utils/`: navegación, errores y utilidades puras.
+- `tests/harness/`: comprobaciones ligeras de contratos y permisos.
 
-## React Compiler
+## Comandos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```powershell
+npm run dev
+npm run verify
+npm run preview
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+En desarrollo, Vite redirige `/api` hacia `http://127.0.0.1:8000`. Para otros
+entornos se utiliza `VITE_API_BASE_URL`, documentada en `.env.example`.

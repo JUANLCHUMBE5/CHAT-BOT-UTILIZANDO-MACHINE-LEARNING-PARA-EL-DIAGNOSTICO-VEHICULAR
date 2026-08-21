@@ -14,9 +14,12 @@ BACKEND_ROOT = RAIZ_PROYECTO.parent / "backend"
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
-from training.entrenar_y_comparar_modelos import normalizar_grupo
+from training.entrenar_y_comparar_modelos import normalizar_grupo  # noqa: E402
 
-from src.core.taxonomy.catalogo_fallas import CATALOGO_TAXONOMIA, MAPA_UNIFICACION_ETIQUETAS
+from src.core.taxonomy.catalogo_fallas import (  # noqa: E402 - importa tras configurar sys.path
+    CATALOGO_TAXONOMIA,
+    MAPA_UNIFICACION_ETIQUETAS,
+)
 
 
 def normalizar_texto_sintoma(texto: str) -> str:

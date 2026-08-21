@@ -20,7 +20,7 @@ if (-not $ruffCommand) {
 
 Push-Location $backend
 try {
-    & $ruffCommand check src tests main.py locustfile.py scripts ..\machine_learning\training ..\infrastructure\database\postgresql
+    & $ruffCommand check src tests main.py scripts ..\machine_learning\training ..\infrastructure\database\postgresql
     & $python -m pytest -q
 }
 finally {
@@ -29,8 +29,7 @@ finally {
 
 Push-Location $frontend
 try {
-    npm run lint
-    npm run build
+    npm run verify
 }
 finally {
     Pop-Location

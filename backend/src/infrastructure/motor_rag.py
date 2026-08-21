@@ -1,6 +1,5 @@
 import hashlib
 import json
-import os
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -17,7 +16,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from src.config import settings
 from src.core.logger import logger
-
 
 SPANISH_STOP_WORDS = [
     "a", "al", "algo", "algunas", "algunos", "ante", "antes", "como", "con", "contra",

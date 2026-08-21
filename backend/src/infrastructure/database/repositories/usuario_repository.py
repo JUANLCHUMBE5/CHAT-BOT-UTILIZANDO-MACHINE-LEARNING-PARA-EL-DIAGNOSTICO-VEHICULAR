@@ -59,8 +59,8 @@ class UsuarioRepository:
             .join(Usuario.rol)
             .where(
                 Usuario.taller_id == taller_id,
-                Usuario.activo == True,
-                Usuario.bloqueado == False,
+                Usuario.activo.is_(True),
+                Usuario.bloqueado.is_(False),
                 Rol.codigo.in_(["administrador", "admin"]),
             )
         )

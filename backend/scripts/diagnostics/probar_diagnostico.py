@@ -2,15 +2,21 @@
 probar_diagnostico.py — Script de Demostración Interactiva para Sustentación de Tesis UCV 2026
 Permite probar el chatbot de diagnóstico vehicular directamente desde la consola.
 """
-import sys
 import os
+import sys
+from pathlib import Path
 
 # Asegurar codificación UTF-8 en Windows
 os.environ["PYTHONUTF8"] = "1"
 if sys.stdout.encoding != "utf-8":
     sys.stdout.reconfigure(encoding="utf-8")
 
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
+
 from src.core.gestor_diagnostico import GestorDiagnostico
+
 
 def main():
     print("=" * 70)

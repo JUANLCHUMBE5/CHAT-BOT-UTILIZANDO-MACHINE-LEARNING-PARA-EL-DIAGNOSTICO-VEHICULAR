@@ -1,14 +1,18 @@
+"""Inspecciona relaciones de diagnósticos y usuarios en PostgreSQL."""
+
 import asyncio
-import json
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from src.infrastructure.database.connection import obtener_engine
 from src.infrastructure.database.models.catalogs import Usuario
 from src.infrastructure.database.models.diagnostics import Diagnostico, Vehiculo
 from src.infrastructure.database.models.messaging import Conversacion
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 
-async def check_diagnostics():
+
+async def inspeccionar_diagnosticos():
     async with AsyncSession(obtener_engine()) as session:
         stmt = select(Diagnostico).options(
             selectinload(Diagnostico.mecanico),
@@ -32,4 +36,4 @@ async def check_diagnostics():
             print(f"- {u.nombres} (ID: {u.id}, Rol: {u.rol.codigo if u.rol else 'N/A'}, Phone: ***{u.whatsapp_ultimos4})")
 
 if __name__ == "__main__":
-    asyncio.run(check_diagnostics())
+    asyncio.run(inspeccionar_diagnosticos())

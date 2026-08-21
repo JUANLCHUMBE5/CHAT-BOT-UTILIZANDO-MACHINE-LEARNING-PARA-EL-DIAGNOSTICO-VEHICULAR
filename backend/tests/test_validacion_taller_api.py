@@ -11,7 +11,6 @@ import pytest
 from fastapi.testclient import TestClient
 
 from main import app
-from src.config import settings
 from src.core.security import crear_jwt_token
 from src.interfaces.api.v1.endpoints import validacion_taller
 from src.interfaces.api.v1.endpoints.validacion_taller import (
@@ -280,11 +279,14 @@ def test_sanitizacion_ataques_csv_formula_injection(auth_headers_admin_taller1):
 
 
 def test_bloqueo_interproceso_timeout_devuelve_503(auth_headers_admin_taller1, mock_tracker_csv):
-    """Verifica que si un proceso retiene el archivo de bloqueo .lock, el endpoint responde HTTP 503."""
+    """Verifica que si un proceso activo retiene el archivo de bloqueo .lock, el endpoint responde HTTP 503."""
     lock_file = mock_tracker_csv.with_suffix(".lock")
-    # Crear lockfile manual para simular otro proceso ocupado
+    # Crear lockfile manual con PID actual para simular proceso activo ocupado
     fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_RDWR)
-    os.close(fd)
+    try:
+        os.write(fd, f"{os.getpid()}:{time.time()}\n".encode("utf-8"))
+    finally:
+        os.close(fd)
 
     try:
         payload = {
@@ -305,7 +307,25 @@ def test_bloqueo_interproceso_timeout_devuelve_503(auth_headers_admin_taller1, m
         assert "ocupado" in resp.json()["detail"].lower()
     finally:
         if lock_file.exists():
-            lock_file.unlink()
+            try:
+                lock_file.unlink()
+            except Exception:
+                pass
+
+
+def test_bloqueo_interproceso_auto_recuperacion_lock_abandonado(mock_tracker_csv):
+    """Verifica que un lock abandonado con PID muerto se auto-recupere sin saturar."""
+    lock_file = mock_tracker_csv.with_suffix(".lock")
+    # Simular lock huérfano con PID inexistente
+    fd = os.open(str(lock_file), os.O_CREAT | os.O_EXCL | os.O_RDWR)
+    try:
+        os.write(fd, b"99999999:1000.0\n")
+    finally:
+        os.close(fd)
+
+    # Debe auto-recuperar y adquirir el lock sin lanzar TimeoutError
+    with _bloqueo_archivo_interproceso(mock_tracker_csv, timeout=2.0):
+        assert lock_file.exists()
 
 
 @pytest.mark.anyio

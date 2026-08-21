@@ -1,12 +1,17 @@
+"""Lista los diagnósticos persistidos para verificación operativa."""
+
 import asyncio
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from src.infrastructure.database.connection import obtener_engine
 from src.infrastructure.database.models.diagnostics import Diagnostico, Vehiculo
 from src.infrastructure.database.models.messaging import Conversacion
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
 
-async def check_all_diags():
+
+async def listar_diagnosticos():
     async with AsyncSession(obtener_engine()) as session:
         stmt = select(Diagnostico).options(
             selectinload(Diagnostico.mecanico),
@@ -20,7 +25,10 @@ async def check_all_diags():
             mecanico_nom = d.mecanico.nombres if d.mecanico else "Sin mecánico"
             conv_user = d.conversacion.usuario.nombres if d.conversacion and d.conversacion.usuario else "Sin conv user"
             placa = d.vehiculo.placa_ultimos4 if d.vehiculo else "Sin placa"
-            print(f"[{i+1}] {d.creado_en} | Cliente: {conv_user} | Mecánico: {mecanico_nom} | Falla: {d.falla_predicha} | Síntoma: {d.sintoma_original[:40]}...")
+            print(
+                f"[{i + 1}] {d.creado_en} | Cliente: {conv_user} | Mecánico: {mecanico_nom} "
+                f"| Placa: ***{placa} | Falla: {d.falla_predicha} | Síntoma: {d.sintoma_original[:40]}..."
+            )
 
 if __name__ == "__main__":
-    asyncio.run(check_all_diags())
+    asyncio.run(listar_diagnosticos())

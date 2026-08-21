@@ -1,4 +1,4 @@
-"""Carga segura del endpoint REST; no suplanta webhooks ni envia WhatsApp real."""
+"""Prueba de carga segura; no suplanta webhooks ni envía WhatsApp real."""
 
 from __future__ import annotations
 

@@ -101,9 +101,9 @@ class DatabaseConfig(BaseModel):
 
 
 class AppSettings(BaseModel):
-    app_name: str = "CarBot — Diagnóstico Vehicular ML+RAG"
+    app_name: str = "CHAT BOT UTILIZANDO MACHINE LEARNING PARA EL DIAGNOSTICO VEHICULAR"
     version: str = "1.0.0"
-    description: str = "Chatbot de diagnóstico vehicular para talleres mecánicos."
+    description: str = "Chatbot utilizando machine learning para el diagnóstico vehicular en talleres mecánicos."
     environment: str = os.getenv("ENVIRONMENT", "development").strip().lower()
     debug: bool = _env_bool("DEBUG")
     port: int = _env_int("PORT", 8000)

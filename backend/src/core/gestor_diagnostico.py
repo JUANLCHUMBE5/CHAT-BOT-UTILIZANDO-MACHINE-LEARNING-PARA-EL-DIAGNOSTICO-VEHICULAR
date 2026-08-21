@@ -6,9 +6,9 @@ from typing import Optional, Tuple
 
 import numpy as np
 import requests
+from pydantic import BaseModel, Field
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
-from pydantic import BaseModel, Field
 
 from src.config import settings
 from src.core.audio_processor import AudioProcessor

@@ -5,6 +5,7 @@ del ChatBot de Diagnóstico Vehicular con Machine Learning (Tesis UCV 2026).
 """
 
 import pytest
+
 from src.core.gestor_diagnostico import GestorDiagnostico, ResultadoDiagnostico
 from src.core.traductor_jerga import normalizar_jerga_peruana
 

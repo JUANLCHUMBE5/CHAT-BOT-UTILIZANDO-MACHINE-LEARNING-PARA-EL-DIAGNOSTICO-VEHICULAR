@@ -1,5 +1,11 @@
 # Índice de documentación de CarBot
 
+## Arquitectura y organización
+
+- Estructura del monorepo: `docs/arquitectura/estructura_proyecto.md`.
+- Conexiones entre frontend, backend, ML e infraestructura:
+  `docs/arquitectura/conexiones_modulos.md`.
+
 ## Documentos vigentes
 
 | Necesidad | Documento |

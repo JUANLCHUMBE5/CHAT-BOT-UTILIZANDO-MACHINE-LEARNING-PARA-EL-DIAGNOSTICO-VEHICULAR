@@ -1,5 +1,5 @@
 """
-analizar_respuestas_test.py
+analizar_respuestas.py
 Script integral para ejecutar pruebas y analizar los resultados y respuestas
 del Chatbot de Diagnóstico Vehicular con Machine Learning (Tesis UCV 2026).
 """
@@ -7,6 +7,7 @@ del Chatbot de Diagnóstico Vehicular con Machine Learning (Tesis UCV 2026).
 import os
 import sys
 import time
+from pathlib import Path
 
 # Asegurar codificación UTF-8 en consola Windows
 os.environ["PYTHONUTF8"] = "1"
@@ -17,9 +18,9 @@ if sys.stdout.encoding != "utf-8":
         pass
 
 # Asegurar que backend esté en el sys.path
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-if BASE_DIR not in sys.path:
-    sys.path.insert(0, BASE_DIR)
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
+if str(BACKEND_ROOT) not in sys.path:
+    sys.path.insert(0, str(BACKEND_ROOT))
 
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.traductor_jerga import normalizar_jerga_peruana
@@ -91,9 +92,9 @@ def ejecutar_pruebas_obtencion_respuestas():
     tiempos = []
 
     for i, caso in enumerate(casos_prueba, start=1):
-        print(f"\n─────────────────────────────────────────────────────────────────────────────")
+        print("\n─────────────────────────────────────────────────────────────────────────────")
         print(f"📌 CASO DE PRUEBA #{i}: {caso['categoria']}")
-        print(f"─────────────────────────────────────────────────────────────────────────────")
+        print("─────────────────────────────────────────────────────────────────────────────")
         print(f"👤 Entrada Usuario:   \"{caso['entrada']}\"")
         print(f"🚘 Vehículo:          {caso['marca']} | Placa: {caso['placa']}")
 
@@ -119,7 +120,7 @@ def ejecutar_pruebas_obtencion_respuestas():
         print(f"📚 Manual RAG:        {resultado.titulo_manual or 'N/A'}")
         print(f"⏱️  Tiempo Ejecución:  {duracion_ms:.2f} ms")
         print(f"⚙️  Modo / Estado:     {resultado.modo_diagnostico} (Req. Humana: {resultado.requiere_revision_humana})")
-        print(f"\n💬 RESPUESTA GENERADA AL CLIENTE:")
+        print("\n💬 RESPUESTA GENERADA AL CLIENTE:")
         print("   " + "\n   ".join(resultado.respuesta_texto.split("\n")[:8]))
         if len(resultado.respuesta_texto.split("\n")) > 8:
             print("   ...")
