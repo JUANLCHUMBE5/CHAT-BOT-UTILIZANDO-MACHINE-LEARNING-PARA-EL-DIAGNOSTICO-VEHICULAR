@@ -1,171 +1,117 @@
-# 🚗 CHAT BOT UTILIZANDO MACHINE LEARNING PARA EL DIAGNOSTICO VEHICULAR EN LOS TALLERES MECÁNICOS DE CARABAYLLO, 2026
+# 🚗 CarBot: chatbot con Machine Learning para el diagnóstico vehicular
 
-[![Tesis Titulación](https://img.shields.io/badge/Tesis-Titulación_Profesional-blue.svg)](docs/guia_defensa_tesis.md)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Machine Learning](https://img.shields.io/badge/ML-Scikit--Learn-F7931E.svg?logo=scikit-learn&logoColor=white)](machine_learning/models/metricas_modelo.json)
-[![RAG](https://img.shields.io/badge/RAG-FAISS%20Vectorial-blueviolet.svg)](machine_learning/manuals/FUENTES_Y_VALIDACION.md)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL_16-336791.svg?logo=postgresql&logoColor=white)](docs/base_datos_postgresql.md)
-[![WhatsApp API](https://img.shields.io/badge/Webhook-Meta_Graph_API-25D366.svg?logo=whatsapp&logoColor=white)](https://developers.facebook.com)
+[![Tesis](https://img.shields.io/badge/Proyecto-Tesis_2026-blue.svg)](docs/guia_defensa_tesis.md)
+[![Machine Learning](https://img.shields.io/badge/IA-Machine_Learning-F7931E.svg)](machine_learning/models/metricas_modelo.json)
+[![WhatsApp](https://img.shields.io/badge/Canal-WhatsApp-25D366.svg?logo=whatsapp&logoColor=white)](https://developers.facebook.com)
 
----
+Proyecto de investigación orientado a mejorar el proceso inicial de diagnóstico
+vehicular en talleres mecánicos de Carabayllo, Lima, mediante un chatbot que
+combina Machine Learning, recuperación de información técnica y asistencia
+conversacional.
 
-## 🎓 Ficha Técnica del Proyecto de Tesis
+## 🎯 ¿Qué busca CarBot?
 
-* **Título de la Investigación:**
-  *«Chatbot utilizando Machine Learning para el diagnóstico vehicular en los talleres mecánicos de Carabayllo, 2026»*
-* **Línea de Investigación:**
-  Inteligencia Artificial Aplicada, Procesamiento de Lenguaje Natural (NLP), Modelos Híbridos de Aprendizaje Automático y Sistemas de Información para la Ingeniería.
-* **Autores / Tesistas:**
-  * 🧑‍💻 **Leon Chumbe, Juan Joel**
-  * 🧑‍💻 **Poma Cataño, Luisa Leonor**
-* **Ámbito de Aplicación:**
-  Talleres de mecánica automotriz del distrito de Carabayllo, Lima - Perú.
-* **Diseño Metodológico:**
-  Investigación cuantitativa, aplicada, de nivel explicativo con diseño **preexperimental de pre-test y post-test ($O_1 \rightarrow X \rightarrow O_2$)**.
+CarBot busca apoyar al mecánico durante la recepción y evaluación preliminar de
+un vehículo. El sistema organiza los síntomas comunicados por WhatsApp, solicita
+los datos técnicos que falten y genera una hipótesis que debe ser comprobada por
+el personal del taller.
 
----
+Sus objetivos principales son:
 
-## 📌 Planteamiento del Problema y Justificación
+- Mejorar la precisión de la identificación preliminar de fallas.
+- Reducir el tiempo empleado en recopilar y organizar los síntomas.
+- Evitar diagnósticos incompletos por falta de marca, modelo, año, motor u otros datos.
+- Estandarizar el registro de consultas y diagnósticos del taller.
+- Facilitar el seguimiento y la validación posterior por parte del administrador.
+- Brindar orientación técnica basada en información recuperable y trazable.
 
-En los talleres mecánicos tradicionales de Lima Norte (Carabayllo), el diagnóstico de fallas vehiculares enfrenta tres limitaciones críticas:
-1. **Pérdida de Tiempo en Recepción:** Los clientes describen averías mediante jergas locales (*"cascabeleo"*, *"chancho prendido"*, *"sopló empaque"*), lo que requiere extensos tiempos de indagación manual y pruebas de ensayo-error (promedio inicial de 33.57 min).
-2. **Falta de Estandarización y Completitud:** El registro preliminar de síntomas carece de respaldo documental y trazabilidad estructurada.
-3. **Riesgo de Alucinación en Chatbots Comerciales:** Los modelos de lenguaje genéricos inventan especificaciones técnicas de torque y procedimientos si no están anclados a manuales de taller verificados.
+## 🔧 Problema que aborda
 
-**Solución Desarrollada:**
-Un **Asistente Virtual Inteligente Híbrido** implementado sobre WhatsApp que normaliza la jerga mecánica peruana, clasifica la falla mediante Machine Learning supervisado calibrado, recupera el procedimiento exacto desde manuales técnicos vía RAG (Retrieval-Augmented Generation) y sintetiza una recomendación técnica estructurada mediante un LLM (Google Gemini) con explicabilidad para el mecánico.
+En los talleres mecánicos, los síntomas suelen comunicarse mediante frases
+coloquiales como “pierde fuerza”, “cascabelea” o “se prendió el chancho”. Estas
+descripciones pueden ser ambiguas y provocar que se omitan datos importantes del
+vehículo o que se realicen pruebas sin un orden definido.
 
----
+CarBot transforma esas expresiones en información técnica estructurada y ayuda a
+identificar qué datos todavía deben preguntarse antes de producir una orientación.
 
-## 🎯 Objetivos e Hipótesis de la Investigación
+## 🤖 ¿Qué hace el chatbot?
 
-### Objetivos
-* **Objetivo General:** Determinar la influencia del chatbot utilizando Machine Learning en el diagnóstico vehicular en los talleres mecánicos de Carabayllo, 2026.
-* **Objetivos Específicos:**
-  1. Evaluar el efecto del chatbot en la **precisión** de la identificación de fallas vehiculares.
-  2. Determinar la influencia del chatbot en el **control y completitud de la información** diagnóstica.
-  3. Establecer la mejora en la **eficiencia del tiempo de atención** en el proceso de recepción vehicular.
+1. Recibe la consulta mediante WhatsApp.
+2. Distingue entre un cliente y un mecánico autorizado.
+3. Interpreta síntomas y expresiones de jerga automotriz peruana.
+4. Solicita marca, modelo, año, motor, combustible y otros datos cuando sean necesarios.
+5. Clasifica la posible falla utilizando un modelo de Machine Learning.
+6. Busca procedimientos relacionados en el corpus técnico del sistema.
+7. Presenta hipótesis, nivel de confianza y comprobaciones seguras.
+8. Registra el resultado para que el administrador lo revise desde el panel web.
 
-### Matriz de Hipótesis y Variables
-* **Variable Independiente ($X$):** Chatbot asistido por Machine Learning, RAG y LLM.
-* **Variable Dependiente ($Y$):** Diagnóstico vehicular (Dimensiones: Precisión, Completitud de Información y Tiempo de Ejecución).
-* **Hipótesis General ($H_1$):** El chatbot utilizando Machine Learning influye y optimiza significativamente el diagnóstico vehicular en los talleres mecánicos de Carabayllo, 2026 ($p < 0.05$).
+## 👥 Usuarios del sistema
 
----
+### Cliente
 
-## 🏗️ Arquitectura Científico-Tecnológica (Pipeline Híbrido Tripartito)
+Puede consultar servicios, horarios, ubicación y solicitar acceso como mecánico.
+No recibe funciones técnicas restringidas.
 
-El flujo de procesamiento sigue una arquitectura desacoplada y robusta diseñada para garantizar veracidad técnica, alta disponibilidad y latencias mínimas:
+### Mecánico autorizado
 
-```mermaid
-graph TD
-    A["📱 Mensaje del Mecánico / WhatsApp"] --> B["🔤 Módulo Traductor de Jerga Peruana"]
-    B --> C["🤖 1. Modelo ML: Clasificador TF-IDF + SVM Calibrado<br/>Predicción de Categoría de Falla + Confianza %"]
-    C --> D["📚 2. Motor RAG: Búsqueda Semántica FAISS<br/>Procedimiento Oficial del Manual de Taller OEM"]
-    D --> E["🧠 3. Google Gemini (LLM Conversacional)<br/>Síntesis Técnica Estructurada en 3 Secciones"]
-    E -->|Falla de Conectividad / Cuota Excedida| F["⚠️ Modo Degradado de Emergencia Local<br/>diagnostico_degradado_ml_rag"]
-    E --> G["💾 PostgreSQL: Persistencia Relacional Durable<br/>Registro de Diagnóstico + Hipótesis + Trazabilidad"]
-    F --> G
-    G --> H["📲 Envío de Respuesta Inmediata al Mecánico vía WhatsApp"]
-```
+Trabaja directamente desde WhatsApp. Puede realizar consultas técnicas y aportar
+los datos del vehículo, pero no necesita ingresar al panel administrativo.
 
----
+### Administrador del taller
 
-## ⚙️ Componentes Principales del Sistema
+Es el único usuario que administra el panel web. Revisa solicitudes, autoriza
+mecánicos, consulta diagnósticos, valida resultados y supervisa el funcionamiento
+del sistema.
 
-### 1. 🔤 Traductor y Normalizador de Jerga Mecánica Peruana
-Preprocesa el lenguaje natural del conductor o mecánico, transformando modismos y coloquialismos automotrices a terminología técnica normalizada:
-* *"Se prendió el chancho en el tablero"* ➡️ *Check Engine encendido*
-* *"Se sopló el empaque"* ➡️ *Falla en empaquetadura de culata / Sobrecalentamiento*
-* *"Tiene juego la pata de motor"* ➡️ *Desgaste en soporte de motor*
-* *"Siento cascabeleo al acelerar"* ➡️ *Detonación / Preignición en cilindros*
+## 🧠 Enfoque de inteligencia artificial
 
-### 2. 🤖 Modelo de Clasificación Supervisada (Machine Learning)
-* **Algoritmo Seleccionado:** Linear SVM calibrado por probabilidad + Vectorización TF-IDF con n-gramas.
-* **Desempeño Interno:** F1-Score macro de holdout agrupado de **95.95%** (detallado en [`machine_learning/models/metricas_modelo.json`](machine_learning/models/metricas_modelo.json)).
-* **Trazabilidad del Dataset:** 2,751 registros limpios + 33 casos académicos auditados de Zenodo (DOI `10.5281/zenodo.15626055`), con validación documentada en [`machine_learning/data/FUENTES_ENTRENAMIENTO.md`](machine_learning/data/FUENTES_ENTRENAMIENTO.md).
+CarBot utiliza un enfoque híbrido:
 
-### 3. 📚 Motor RAG (Retrieval-Augmented Generation)
-* **Función:** Recupera procedimientos técnicos exactos desde los manuales de servicio automotriz de la base indexada.
-* **Mecanismo:** Indexación vectorial con **FAISS** y similitud de coseno sobre corpus segmentado por subsistemas vehiculares (Motor, Transmisión, Frenos, Suspensión, Dirección, Sistema Eléctrico).
+- **Machine Learning:** clasifica la categoría de falla y calcula una confianza estimada.
+- **RAG:** recupera información relacionada desde el corpus técnico disponible.
+- **Asistencia conversacional:** organiza la respuesta en un lenguaje comprensible.
+- **Validación humana:** el mecánico confirma o descarta la hipótesis mediante pruebas físicas.
 
-### 4. 🧠 Módulo de Síntesis Explicativa (XAI) y Resiliencia
-* **Estructuración en 3 Secciones Obligatorias:**
-  1. 🛠️ **Posible Falla Vehicular:** Hipótesis predictiva con porcentaje de confianza.
-  2. 📖 **Procedimiento Técnico:** Pasos de comprobación y desmontaje según manual.
-  3. ⏱️ **Tiempo Estimado y Nivel de Gravedad:** Duración promedio de taller y criticidad.
-* **Cola Concurrente PostgreSQL (`gemini_queue.py`):** Control de tasa con `FOR UPDATE SKIP LOCKED` para atender múltiples mecánicos simultáneamente sin exceder cuotas de API.
-* **Caché LRU de Alta Velocidad (`diagnostic_cache.py`):** Respuesta en **`< 5 milisegundos`** para consultas repetidas.
-* **Modo Degradado Local:** En contingencias de red, entrega diagnósticos precisos basados en ML + RAG sin detener la atención.
+La respuesta del sistema es una orientación preliminar. No reemplaza la inspección,
+el escáner automotriz, las mediciones ni el criterio profesional del mecánico.
 
----
+## 📊 Aporte esperado
 
-## 📊 Resultados Estadísticos de la Tesis (Pre-test vs Post-test)
+El proyecto evalúa la influencia del chatbot en tres dimensiones:
 
-Los resultados empíricos obtenidos en la fase de validación experimental demostraron mejoras significativas en todas las dimensiones evaluadas:
+| Dimensión | Aporte buscado |
+| --- | --- |
+| Precisión | Mejorar la identificación preliminar de posibles fallas. |
+| Completitud | Registrar síntomas y datos vehiculares de forma estructurada. |
+| Eficiencia | Reducir el tiempo inicial de atención y clasificación. |
 
-| Indicador Evaluado | Fase Pre-test (Manual) | Fase Post-test (Con Asistente ML) | Impacto / Mejora Obtenida |
-| :--- | :---: | :---: | :---: |
-| **Ficha 1: Precisión del Diagnóstico** | 80.00% (24/30) | **99.84%** (1,877/1,880) | **+19.84% de aciertos** |
-| **Ficha 2: Control de Información (Completitud)** | 73.33% (22/30) | **100.00%** (1,880/1,880) | **+26.67% de completitud** |
-| **Ficha 3: Eficiencia (Tiempo por Vehículo)** | 33.57 minutos | **1.13 minutos** | **-32.44 min (-96.6% de tiempo)** |
+Las métricas del modelo y los resultados experimentales deben interpretarse dentro
+del alcance de los datasets, pruebas controladas y validaciones documentadas del
+proyecto; no representan certeza universal para todos los vehículos.
 
-### 📈 Contrastación de Hipótesis
-* **Prueba Paramétrica:** $t$ de Student para muestras relacionadas ($N = 30$ pares evaluados).
-* **Estadístico de Prueba:** $T = 29.4162$
-* **$P$-Valor:** $0.00000000$ ($p < 0.05$)
-* **Decisión Estadística:** Se **rechaza la hipótesis nula ($H_0$)** y se **acepta la hipótesis de investigación general ($H_1$)**, demostrando que la implementación del sistema optimiza de forma estadísticamente significativa el proceso de diagnóstico vehicular.
+## 🛡️ Seguridad y responsabilidad
 
----
+- Los diagnósticos requieren validación física antes de reparar o sustituir componentes.
+- Las recomendaciones de seguridad tienen prioridad ante síntomas críticos.
+- Los accesos técnicos se habilitan únicamente a números autorizados por el administrador.
+- Los registros experimentales utilizan mecanismos de pseudonimización y trazabilidad.
+- El sistema comunica cuando la información disponible es insuficiente.
 
-## 📁 Estructura del Repositorio
+## 🎓 Contexto académico
 
-```text
-CHAT_BOT_MACHINLEARNING/
-├── frontend/                     # Panel Administrativo Web (React + TypeScript + Vite)
-│   ├── src/components/views/     # Vistas de Fichas de Tesis y Registro Experimental
-│   └── src/services/             # Consumo de API REST
-├── backend/                      # Núcleo de la API FastAPI y Arquitectura por Capas
-│   ├── alembic/                  # Versionamiento y migraciones de base de datos
-│   ├── src/
-│   │   ├── core/                 # Lógica de negocio (Gestor Diagnóstico, Cola LLM, Caché)
-│   │   ├── infrastructure/       # Modelos ML, Motor RAG FAISS, Conexión PostgreSQL
-│   │   └── interfaces/api/v1/    # Endpoints REST y Webhook de WhatsApp Meta
-│   ├── tests/                    # Suite de pruebas automatizadas (Pytest)
-│   └── main.py                   # Entrada principal de la API
-├── machine_learning/             # Pipeline de Machine Learning
-│   ├── data/                     # Datasets curados y reportes de calidad
-│   ├── manuals/                  # Manuales técnicos automotrices indexados
-│   ├── models/                   # Artefactos entrenados (.joblib) y métricas auditadas
-│   └── training/                 # Scripts de entrenamiento y validación cruzada
-├── docs/                         # Documentación completa y expedientes de tesis
-│   ├── ESTADO_FINAL_CARBOT.md    # Estado técnico y funcional verificado
-│   ├── INDICE_DOCUMENTACION.md   # Directorio central de documentos del proyecto
-│   ├── guia_defensa_tesis.md     # Guía y preguntas clave para la sustentación
-│   └── guia_recoleccion_datos.md # Metodología de recolección de fichas en taller
-└── README.md                     # Memoria descriptiva principal
-```
+**Título:** Chatbot utilizando Machine Learning para el diagnóstico vehicular en
+los talleres mecánicos de Carabayllo, 2026.
 
----
+**Línea de investigación:** Inteligencia Artificial Aplicada, Procesamiento de
+Lenguaje Natural y Sistemas de Información.
 
-## 📚 Índice de Documentación Académica y Técnica
+**Tesistas:**
 
-Para consultar los documentos detallados del proyecto de tesis:
-* 📖 **[Estado Funcional y Técnico Verificado](docs/ESTADO_FINAL_CARBOT.md)**
-* 📑 **[Índice Maestro de Documentación](docs/INDICE_DOCUMENTACION.md)**
-* 🎓 **[Guía de Preparación para la Defensa de Tesis ante Jurado](docs/guia_defensa_tesis.md)**
-* 📊 **[Trazabilidad de Datos de Entrenamiento y Validación](docs/trazabilidad_datos_entrenamiento_y_defensa_jurado.md)**
-* 🔬 **[Benchmark y Evaluación del Motor RAG](docs/evaluacion_rag_benchmark.md)**
-* 🛡️ **[Análisis Ético y Protección de Privacidad](docs/analisis_dilema_etico_audio.md)**
-* 🗄️ **[Diseño de Base de Datos PostgreSQL](docs/base_datos_postgresql.md)**
+- Juan Joel Leon Chumbe
+- Luisa Leonor Poma Cataño
 
----
+**Lugar y año:** Carabayllo, Lima, Perú — 2026.
 
-## 👥 Créditos y Autoría
-
-* **Proyecto de Tesis para Titulación Profesional**
-* **Investigadores / Tesistas:**
-  * 🧑‍💻 **Juan Joel Leon Chumbe**
-  * 🧑‍💻 **Luisa Leonor Poma Cataño**
-* **Lugar y Año:** Lima (Carabayllo), Perú — 2026.
+La documentación académica, metodológica y técnica se encuentra organizada en el
+[índice de documentación](docs/INDICE_DOCUMENTACION.md).
