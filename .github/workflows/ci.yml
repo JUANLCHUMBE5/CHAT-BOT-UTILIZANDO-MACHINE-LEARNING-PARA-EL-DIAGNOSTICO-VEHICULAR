@@ -47,7 +47,7 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: python -m alembic upgrade head
       - run: ruff check src tests main.py scripts ../machine_learning/training
-      - run: coverage run --source=src -m pytest -q
+      - run: coverage run --source=src -m pytest -q -m "not real_gemini"
       - run: coverage report --fail-under=55
       - run: python -m alembic check
       - run: pip-audit -r requirements.txt

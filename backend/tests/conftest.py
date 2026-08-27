@@ -176,7 +176,7 @@ def mock_gemini_en_todas_las_pruebas(request, monkeypatch):
     Bloquea rigurosamente cualquier llamada externa a Google Gemini en los tests automáticos,
     excepto en pruebas explícitas de integración real con Gemini.
     """
-    if "real_gemini" in request.keywords or "test_gemini_real" in getattr(request.node, "nodeid", ""):
+    if "real_gemini" in request.keywords:
         yield
         return
 
@@ -255,4 +255,3 @@ def isolate_tracker_csv(tmp_path, monkeypatch):
 
     monkeypatch.setattr(settings.paths, "tracker_csv", temp_tracker)
     yield
-

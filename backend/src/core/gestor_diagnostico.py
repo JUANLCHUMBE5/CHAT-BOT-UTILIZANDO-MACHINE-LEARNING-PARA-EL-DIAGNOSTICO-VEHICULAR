@@ -845,6 +845,7 @@ class GestorDiagnostico:
                     }
                     response = self._http_session.post(url, json=payload, headers=headers, timeout=10)
                     if response.status_code == 200:
+                        gemini_rate_limiter.registrar_estado_gemini(exitoso=True, codigo_http=200)
                         data = response.json()
                         metadata = data.get("usageMetadata", {})
                         texto_gemini = data['candidates'][0]['content']['parts'][0]['text'].strip()
@@ -859,8 +860,17 @@ class GestorDiagnostico:
                             "tokens_entrada": int(metadata.get("promptTokenCount", max(1, len(prompt_sistema) // 4))),
                             "tokens_salida": int(metadata.get("candidatesTokenCount", max(1, len(texto_gemini) // 4))),
                         }
+                    gemini_rate_limiter.registrar_estado_gemini(
+                        exitoso=False,
+                        codigo_http=response.status_code,
+                        error=f"Gemini HTTP {response.status_code}",
+                    )
                     logger.warning(f"[Gemini API] Código HTTP {response.status_code}; activando fallback degradado.")
                 except Exception as e:
+                    gemini_rate_limiter.registrar_estado_gemini(
+                        exitoso=False,
+                        error=f"{type(e).__name__}: {e}",
+                    )
                     logger.error(f"[Gemini API Error] Fallo al consultar Gemini: {e}. Activando fallback degradado.")
             else:
                 proveedor_normalizado = "meta" if proveedor.lower() in ("meta", "whatsapp") else proveedor.lower()

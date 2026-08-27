@@ -30,7 +30,7 @@ const MODELOS_COMPARATIVA_DATA = [
   {
     modelo: 'SVM',
     modeloCompleto: 'Linear SVM (Calibrado)',
-    f1_macro: 97.37,
+    f1_macro: 95.95,
     exactitud: 97.54,
     f1_weighted: 97.03,
     desviacion: '±1.20%',
@@ -136,7 +136,7 @@ export const ModeloIATab: React.FC = () => {
         />
         <StatCard
           title="F1-Macro (4-Fold)"
-          value="97.37%"
+          value="95.95%"
           icon={<Brain size={18} />}
           trend={{ text: 'Desviación ±1.20%', positive: true }}
         />
@@ -220,7 +220,7 @@ export const ModeloIATab: React.FC = () => {
             }}
           >
             <div>
-              <strong>🥇 Linear SVM:</strong> 97.37% (Ganador)
+              <strong>🥇 Linear SVM:</strong> 95.95% F1 macro (Ganador)
             </div>
             <div>
               <strong>🌲 Random Forest:</strong> 94.37% (Árboles)
@@ -382,11 +382,11 @@ export const ModeloIATab: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
             <FileText size={16} style={{ color: '#8b5cf6' }} />
             <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
-              Pipeline RAG & Corpus de Manuales OEM
+              Pipeline RAG y corpus técnico preliminar
             </h4>
           </div>
           <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-            El corpus de conocimiento vectorial está indexado en <strong>FAISS</strong> con manuales oficiales de servicio (Toyota, Nissan, Hyundai, Kia, Chevrolet). Cuando el ML clasifica la falla, el RAG recupera los fragmentos técnicos exactos (pares de apriete, tolerancias de calibración de bujías y valores de sensor) para enriquecer la respuesta.
+            El corpus vectorial está indexado en <strong>FAISS</strong> con 64 procedimientos técnicos referenciales. Cuando el ML clasifica la falla, RAG recupera el fragmento preliminar más relevante para enriquecer la respuesta. El corpus todavía no cuenta con auditoría mecánica homologada y no debe tratarse como una especificación OEM exacta.
           </p>
         </Card>
       </div>

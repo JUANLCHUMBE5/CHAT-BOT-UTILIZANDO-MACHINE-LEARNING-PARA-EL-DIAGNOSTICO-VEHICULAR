@@ -1,8 +1,8 @@
 # Documentación general del sistema CarBot
 
-**Proyecto:** Chatbot utilizando Machine Learning para el diagnóstico vehicular en los talleres mecánicos de Carabayllo, 2026  
-**Fecha de actualización:** 21 de agosto de 2026  
-**Tipo de documento:** Descripción funcional, técnica y arquitectónica  
+**Proyecto:** Chatbot utilizando Machine Learning para el diagnóstico vehicular en los talleres mecánicos de Carabayllo, 2026
+**Fecha de actualización:** 27 de agosto de 2026
+**Tipo de documento:** Descripción funcional, técnica y arquitectónica
 **Estado:** Sistema de apoyo al diagnóstico preliminar; requiere validación humana
 
 ## 1. Resumen ejecutivo
@@ -321,6 +321,11 @@ El benchmark RAG de 10/10 corresponde únicamente a diez consultas controladas:
 siete positivas y tres negativas. Sirve para verificar el comportamiento básico
 del recuperador, no demuestra efectividad universal.
 
+La recuperación de Nissan Sentra se corrigió alineando el modelo esperado del
+caso de prueba (`Sentra`) con el metadato realmente indexado. Este ajuste corrige
+la especificación del benchmark; no representa por sí solo una modificación del
+algoritmo de recuperación.
+
 Cuando la similitud no supera el umbral configurado, el sistema debe reconocer
 que el corpus no ofrece respaldo suficiente.
 
@@ -336,21 +341,34 @@ La cola de trabajos:
 - registra estados, tiempos y consumo;
 - permite un modo degradado cuando no existe cuota o conectividad.
 
+El endpoint `/health/ready` separa el estado del worker del último resultado
+real observado en Google. Antes de la primera llamada informa `no_verificado`;
+después puede informar `disponible`, `degradado`, `degradado_sin_cuota` o
+`sin_api_key`, junto con la fecha, el código HTTP y el último error conocido.
+
+La prueba externa consume cuota y se ejecuta únicamente bajo solicitud explícita:
+
+```powershell
+$env:RUN_REAL_GEMINI_TESTS="1"
+..\.venv\Scripts\python.exe -m pytest -q -s -m real_gemini tests\test_gemini_real.py
+```
+
+La suite automática y el CI excluyen esa llamada externa y validan el fallback
+de forma determinista, sin consumir cuota.
+
 No se deben enviar secretos, credenciales ni datos personales innecesarios al
 servicio externo.
 
 ## 15. Panel administrativo
 
-El frontend utiliza React, TypeScript y Vite. Sus vistas principales son:
+El frontend utiliza React, TypeScript y Vite. La navegación administrativa se
+consolida en tres módulos:
 
 | Vista | Función |
 | --- | --- |
-| Login | Autenticación y cambio obligatorio de contraseña. |
 | Inicio | Métricas y estado general del sistema. |
-| Personas y accesos | Solicitudes, clientes y equipo del taller. |
-| Diagnósticos | Historial, filtros, detalle y validación de resultados. |
-| Validación de taller | Seguimiento experimental, métricas y exportación. |
-| Fichas de tesis | Presentación de instrumentos y resultados académicos. |
+| Gestión y actividad | Solicitudes, mecánicos autorizados, historial y validación de diagnósticos. |
+| Proyecto CarBot | Funcionamiento, modelo de IA, instrumentos y resultados de tesis. |
 
 El historial de diagnósticos permite búsqueda, filtros, ordenamiento,
 paginación y estados de revisión. Para descartar un diagnóstico se exige una
@@ -524,4 +542,3 @@ vehículo y priorizar una evaluación profesional segura.
 - `machine_learning/data/FUENTES_ENTRENAMIENTO.md`
 - `machine_learning/manuals/FUENTES_Y_VALIDACION.md`
 - `SECURITY.md`
-

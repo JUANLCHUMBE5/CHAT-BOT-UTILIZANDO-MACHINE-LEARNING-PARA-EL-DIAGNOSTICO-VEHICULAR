@@ -61,6 +61,9 @@ where = ["."]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = [".", "../machine_learning"]
+markers = [
+    "real_gemini: prueba de integración externa que consume cuota real de Google Gemini",
+]
 
 [tool.coverage.run]
 source = ["src"]

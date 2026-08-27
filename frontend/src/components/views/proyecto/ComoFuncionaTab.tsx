@@ -51,10 +51,10 @@ export const ComoFuncionaTab: React.FC = () => {
       paso: 4,
       titulo: '4. Recuperación RAG',
       icono: <BookOpen size={18} color="#06b6d4" />,
-      subtitulo: 'Búsqueda en Manuales OEM',
+      subtitulo: 'Búsqueda en corpus preliminar',
       descripcion:
-        'El motor RAG consulta el índice FAISS vectorial con manuales técnicos de taller para recuperar pasos de comprobación, pares de apriete, tolerancias y precauciones oficiales.',
-      detalleTecnico: 'FAISS IndexFlatIP con embeddings vectoriales sobre corpus técnico de manuales automotrices OEM',
+        'El motor RAG consulta el índice FAISS para recuperar el fragmento técnico preliminar más relacionado. La evidencia es referencial y requiere validación con documentación compatible y revisión mecánica.',
+      detalleTecnico: 'FAISS IndexFlatIP sobre un corpus técnico preliminar de 64 procedimientos referenciales',
       color: '#06b6d4',
     },
     {
@@ -64,7 +64,7 @@ export const ComoFuncionaTab: React.FC = () => {
       subtitulo: 'Gemini 2.5 Flash / Modo Degradado',
       descripcion:
         'Gemini redacta una respuesta estructurada, concisa y profesional combinando las hipótesis del ML y la evidencia del manual. Si hay saturación de cuota, el modo degradado responde con el manual sin fallar.',
-      detalleTecnico: 'Worker asíncrono con cola thread-safe, circuit-breaker y fallback a modo degradado (100% disponibilidad)',
+      detalleTecnico: 'Worker asíncrono con cola, control de cuota y fallback local cuando la API externa falla',
       color: '#f97316',
     },
   ];
@@ -93,7 +93,7 @@ export const ComoFuncionaTab: React.FC = () => {
             </h3>
           </div>
           <p style={{ fontSize: '12px', color: '#1e40af', margin: 0, lineHeight: 1.5 }}>
-            CarBot combina un pipeline híbrido en tiempo real: recibe la consulta por <strong>WhatsApp</strong>, infiere la falla con <strong>Machine Learning (Linear SVM)</strong> en 12 ms, recupera manuales de taller mediante <strong>RAG</strong> y redacta la respuesta con <strong>Gemini</strong> con resiliencia garantizada ante cortes de API.
+            CarBot combina un pipeline híbrido: recibe la consulta por <strong>WhatsApp</strong>, infiere una hipótesis con <strong>Machine Learning</strong>, recupera evidencia preliminar mediante <strong>RAG</strong> y, cuando está disponible, usa <strong>Gemini</strong> para redactar la respuesta. Ante un fallo externo emplea un modo degradado local.
           </p>
         </div>
 
@@ -272,7 +272,7 @@ export const ComoFuncionaTab: React.FC = () => {
                 </span>
               </div>
               <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '11px', lineHeight: 1.4 }}>
-                Solicita acceso mediante la Opción 4 de WhatsApp. Una vez autorizado por el administrador, accede al diagnóstico técnico guiado, códigos de falla OBD-II, manuales de reparación OEM y tolerancias.
+                Solicita acceso mediante la Opción 4 de WhatsApp. Una vez autorizado por el administrador, accede a orientación técnica, hipótesis ML y fragmentos referenciales del corpus RAG, siempre sujetos a comprobación física.
               </p>
             </div>
 

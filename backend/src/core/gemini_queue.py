@@ -97,6 +97,57 @@ class GeminiRateLimiter:
         self._worker_corriendo = False
         self._worker_task: Optional[asyncio.Task] = None
         self._loop: Optional[asyncio.AbstractEventLoop] = None
+        self._gemini_ultimo_exito: Optional[str] = None
+        self._gemini_ultimo_error: Optional[str] = None
+        self._gemini_ultimo_codigo_http: Optional[int] = None
+        self._gemini_ultima_verificacion: Optional[str] = None
+
+    def registrar_estado_gemini(
+        self,
+        exitoso: bool,
+        codigo_http: Optional[int] = None,
+        error: Optional[str] = None,
+    ) -> None:
+        """Registra el resultado realmente observado en la API externa de Gemini."""
+        ahora = datetime.now(timezone.utc).isoformat()
+        with self._lock:
+            self._gemini_ultima_verificacion = ahora
+            self._gemini_ultimo_codigo_http = codigo_http
+            if exitoso:
+                self._gemini_ultimo_exito = ahora
+                self._gemini_ultimo_error = None
+            else:
+                self._gemini_ultimo_error = (error or "Error no especificado")[:300]
+
+    def obtener_estado_gemini(self, api_key_valida: bool) -> dict[str, Any]:
+        """Devuelve un estado auditable sin confundir configuración con disponibilidad real."""
+        with self._lock:
+            self._verificar_y_resetear_conteo_diario()
+            codigo_http = self._gemini_ultimo_codigo_http
+            ultimo_error = self._gemini_ultimo_error
+            ultima_verificacion = self._gemini_ultima_verificacion
+            ultimo_exito = self._gemini_ultimo_exito
+            cuota_local_agotada = self._solicitudes_hoy_conteo >= self.max_por_dia
+
+        if not api_key_valida:
+            estado = "sin_api_key"
+        elif cuota_local_agotada or codigo_http == 429:
+            estado = "degradado_sin_cuota"
+        elif ultima_verificacion is None:
+            estado = "no_verificado"
+        elif ultimo_error:
+            estado = "degradado"
+        else:
+            estado = "disponible"
+
+        return {
+            "estado": estado,
+            "disponible": estado == "disponible",
+            "ultima_verificacion": ultima_verificacion,
+            "ultimo_exito": ultimo_exito,
+            "ultimo_codigo_http": codigo_http,
+            "ultimo_error": ultimo_error,
+        }
 
     def _verificar_y_resetear_conteo_diario(self):
         """Reinicia el contador diario local si cambió la fecha."""
@@ -658,6 +709,7 @@ class GeminiRateLimiter:
                     requests.post, url, json=payload, headers=headers, timeout=10
                 )
                 if response.status_code == 200:
+                    self.registrar_estado_gemini(exitoso=True, codigo_http=200)
                     data = response.json()
                     usage = data.get("usageMetadata", {})
                     texto_gemini = data['candidates'][0]['content']['parts'][0]['text'].strip()
@@ -677,10 +729,19 @@ class GeminiRateLimiter:
                         "tokens_salida": tokens_out,
                     }
                 else:
+                    self.registrar_estado_gemini(
+                        exitoso=False,
+                        codigo_http=response.status_code,
+                        error=f"Gemini HTTP {response.status_code}",
+                    )
                     logger.warning(f"[Gemini Worker] HTTP {response.status_code}; aplicando fallback degradado.")
                     if response.status_code == 429 or response.status_code >= 500:
                         error_reintentable = f"Gemini HTTP {response.status_code}"
             except Exception as e:
+                self.registrar_estado_gemini(
+                    exitoso=False,
+                    error=f"{type(e).__name__}: {e}",
+                )
                 logger.error(f"[Gemini Worker Error] Falló llamada HTTP a Gemini: {e}")
                 error_reintentable = f"Error temporal Gemini: {type(e).__name__}"
 
@@ -1111,6 +1172,10 @@ class GeminiRateLimiter:
             self._cola_pendientes.clear()
             self._mapa_solicitudes.clear()
             self._solicitudes_hoy_conteo = 0
+            self._gemini_ultimo_exito = None
+            self._gemini_ultimo_error = None
+            self._gemini_ultimo_codigo_http = None
+            self._gemini_ultima_verificacion = None
 
 
 # Instancia global del limitador y cola de Gemini (12 req/min / 18 req/día)

@@ -132,20 +132,17 @@ async def health_ready(request: Request):
         and not settings.gemini_api_key.startswith("AIzaSyDummy")
     )
     worker_iniciado = bool(gemini_rate_limiter._worker_corriendo)
-    cuota_agotada = gemini_rate_limiter._solicitudes_hoy_conteo >= gemini_rate_limiter.max_por_dia
-
-    if not gemini_key_valida:
-        gemini_estado = "sin_api_key"
-    elif cuota_agotada:
-        gemini_estado = "gemini_degradado_o_sin_cuota"
-    else:
-        gemini_estado = "gemini_disponible"
+    estado_gemini = gemini_rate_limiter.obtener_estado_gemini(gemini_key_valida)
 
     componentes = {
         "postgresql": not settings.database.enabled,
         "worker_gemini_iniciado": worker_iniciado,
-        "gemini_disponible": gemini_estado == "gemini_disponible",
-        "gemini_estado": gemini_estado,
+        "gemini_disponible": estado_gemini["disponible"],
+        "gemini_estado": estado_gemini["estado"],
+        "gemini_ultima_verificacion": estado_gemini["ultima_verificacion"],
+        "gemini_ultimo_exito": estado_gemini["ultimo_exito"],
+        "gemini_ultimo_codigo_http": estado_gemini["ultimo_codigo_http"],
+        "gemini_ultimo_error": estado_gemini["ultimo_error"],
         "modelo_ml": False,
         "rag": False,
     }

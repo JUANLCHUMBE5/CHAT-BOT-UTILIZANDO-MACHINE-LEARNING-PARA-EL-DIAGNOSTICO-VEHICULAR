@@ -63,7 +63,7 @@ const MODELOS_COMPARATIVA_DATA = [
   {
     modelo: 'SVM',
     modeloCompleto: 'Linear SVM (Calibrado)',
-    f1_macro: 97.37,
+    f1_macro: 95.95,
     exactitud: 97.54,
     f1_weighted: 97.03,
     desviacion: '±1.20%',
@@ -661,7 +661,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             />
             <StatCard
               title="F1-Macro (4-Fold)"
-              value="97.37%"
+              value="95.95%"
               icon={<Brain size={16} />}
               trend={{ text: '±1.20%', positive: true }}
             />
@@ -751,7 +751,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px', marginTop: '8px', paddingTop: '8px', borderTop: '1px solid var(--border-color)', fontSize: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#2563eb', flexShrink: 0 }} />
-                  <span><strong>SVM:</strong> 97.37% (Ganador)</span>
+                  <span><strong>SVM:</strong> 95.95% F1 macro (Ganador)</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981', flexShrink: 0 }} />
@@ -888,7 +888,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </h4>
               </div>
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.45, margin: 0 }}>
-                En representaciones con <strong>TF-IDF (n-gramas 1-2)</strong>, el espacio vectorial es disperso. <strong>Linear SVM (97.37%)</strong> superó a <strong>Random Forest (94.37%)</strong> al hallar hiperplanos óptimos de separación sin sobreajuste por profundidad de árboles.
+                En el holdout agrupado, <strong>Linear SVM</strong> obtuvo <strong>97.54% de exactitud y 95.95% de F1 macro</strong>. Estos resultados internos no equivalen a efectividad general en casos reales y requieren validación mecánica.
               </p>
             </Card>
 
@@ -900,7 +900,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </h4>
               </div>
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.45, margin: 0 }}>
-                La integración de <strong>RAG + Modo Degradado</strong> garantiza disponibilidad: si la API de Gemini se satura, el bot responde de inmediato con <strong>SVM + manual técnico OEM</strong> sin interrupción.
+                La integración de <strong>RAG + modo degradado</strong> permite continuar con <strong>SVM + un fragmento relevante del corpus preliminar</strong> cuando Gemini no está disponible. La respuesta sigue requiriendo validación mecánica.
               </p>
             </Card>
           </div>

@@ -381,7 +381,13 @@ class ApiService {
     status: 'ready' | 'not_ready' | 'offline';
     componentes?: {
       postgresql?: boolean;
-      worker_gemini?: boolean;
+      worker_gemini_iniciado?: boolean;
+      gemini_disponible?: boolean;
+      gemini_estado?: 'sin_api_key' | 'no_verificado' | 'disponible' | 'degradado' | 'degradado_sin_cuota';
+      gemini_ultima_verificacion?: string | null;
+      gemini_ultimo_exito?: string | null;
+      gemini_ultimo_codigo_http?: number | null;
+      gemini_ultimo_error?: string | null;
       modelo_ml?: boolean;
       rag?: boolean;
     };
@@ -465,4 +471,3 @@ class ApiService {
 }
 
 export const apiService = new ApiService();
-
