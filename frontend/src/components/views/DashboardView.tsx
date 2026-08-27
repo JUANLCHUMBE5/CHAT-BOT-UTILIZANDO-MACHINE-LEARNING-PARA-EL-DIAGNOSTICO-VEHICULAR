@@ -375,13 +375,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             onReset={handleResetFiltro}
           />
 
-          {/* Metric Cards (2x2 Grid on mobile) */}
+          {/* Metric Cards (1 Row on desktop) */}
           <div
             className="stat-grid-mobile"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '10px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '12px',
             }}
           >
             <StatCard
@@ -644,12 +644,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </p>
           </div>
 
-          {/* 4 Stat Cards in 2x2 Grid for Mobile */}
+          {/* 4 Stat Cards in 1 Row */}
           <div
+            className="stat-grid-mobile"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '10px',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '12px',
             }}
           >
             <StatCard

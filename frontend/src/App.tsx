@@ -4,14 +4,12 @@ import { Sidebar } from './components/layout/Sidebar';
 import type { NavTab } from './components/layout/Sidebar';
 import { LoginView } from './components/views/LoginView';
 import { DashboardView } from './components/views/DashboardView';
-import { PersonasAccesosView } from './components/views/PersonasAccesosView';
-import { DiagnosticosView } from './components/views/DiagnosticosView';
-import { ValidacionTallerView } from './components/views/ValidacionTallerView';
-import { FichasTesisView } from './components/views/FichasTesisView';
+import { GestionChatbotView, type GestionSubTab } from './components/views/GestionChatbotView';
+import { ProyectoCarbotView } from './components/views/ProyectoCarbotView';
 import { useMecanicos } from './hooks/useMecanicos';
 import { useDiagnosticos } from './hooks/useDiagnosticos';
 import { useMetricas } from './hooks/useMetricas';
-import type { UsuarioSesion, Diagnostico } from './types';
+import type { UsuarioSesion, Diagnostico, SolicitudAcceso } from './types';
 import { apiService, SESSION_EXPIRED_EVENT, SESSION_UPDATED_EVENT } from './services/api';
 import { getValidRoute } from './utils/routing';
 import type { AppRoute } from './utils/routing';
@@ -22,8 +20,8 @@ const LAST_ROUTE_KEY = 'carbot_last_route';
 
 const readLastRoute = (): AppRoute => {
   const saved = localStorage.getItem(LAST_ROUTE_KEY);
-  return ['/inicio', '/personas', '/diagnosticos', '/validacion', '/fichas'].includes(saved || '')
-    ? saved as AppRoute
+  return ['/inicio', '/gestion', '/proyecto', '/personas', '/diagnosticos', '/validacion', '/fichas'].includes(saved || '')
+    ? (saved === '/personas' || saved === '/diagnosticos' ? '/gestion' : saved) as AppRoute
     : '/inicio';
 };
 
@@ -64,7 +62,9 @@ export const App: React.FC = () => {
     return initialRoute;
   });
 
-  const [solicitudesPendientesCount, setSolicitudesPendientesCount] = useState<number>(0);
+  const [solicitudes, setSolicitudes] = useState<SolicitudAcceso[]>([]);
+  const [cargandoSolicitudes, setCargandoSolicitudes] = useState(false);
+  const [gestionSubTab, setGestionSubTab] = useState<GestionSubTab>('solicitudes');
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -111,6 +111,7 @@ export const App: React.FC = () => {
   const { metricas, cargando: cargandoMetricas, cargarMetricas } = useMetricas();
   const {
     mecanicos,
+    cargando: cargandoMecanicos,
     cargarMecanicos,
   } = useMecanicos();
   const {
@@ -123,33 +124,34 @@ export const App: React.FC = () => {
   // Selected diagnostic modal state
   const [diagnosticoSeleccionado, setDiagnosticoSeleccionado] = useState<Diagnostico | null>(null);
 
-  // Fetch pending requests count (only for administrative roles)
-  const cargarSolicitudesPendientesCount = useCallback(async () => {
+  // Fetch all access requests
+  const cargarSolicitudes = useCallback(async () => {
     if (!isAdminSession(user)) {
-      setSolicitudesPendientesCount(0);
+      setSolicitudes([]);
       return;
     }
     try {
-      const lista = await apiService.getSolicitudesAcceso('pendiente');
-      setSolicitudesPendientesCount(Array.isArray(lista) ? lista.length : 0);
+      setCargandoSolicitudes(true);
+      const lista = await apiService.getSolicitudesAcceso();
+      setSolicitudes(Array.isArray(lista) ? lista : []);
     } catch (err) {
-      console.error('Error al cargar solicitudes pendientes:', err);
+      console.error('Error al cargar solicitudes:', err);
+    } finally {
+      setCargandoSolicitudes(false);
     }
   }, [user]);
 
-  const handleRecargarPersonas = useCallback(() => {
-    cargarSolicitudesPendientesCount();
-  }, [cargarSolicitudesPendientesCount]);
+  const solicitudesPendientesCount = solicitudes.filter((s) => s.estado === 'pendiente').length;
+
+  const handleRecargarGestion = useCallback(async () => {
+    await Promise.all([cargarSolicitudes(), cargarMecanicos(), cargarDiagnosticos()]);
+  }, [cargarSolicitudes, cargarMecanicos, cargarDiagnosticos]);
 
   const activeTab: NavTab =
-    currentRoute === '/personas'
-      ? 'personas'
-      : currentRoute === '/diagnosticos'
-      ? 'diagnosticos'
-      : currentRoute === '/validacion'
-      ? 'validacion'
-      : currentRoute === '/fichas'
-      ? 'fichas'
+    currentRoute === '/gestion' || currentRoute === '/personas' || currentRoute === '/diagnosticos'
+      ? 'gestion'
+      : currentRoute === '/proyecto'
+      ? 'proyecto'
       : 'inicio';
 
   // Load module data on demand when tab changes
@@ -157,20 +159,18 @@ export const App: React.FC = () => {
     if (!user) return;
     if (activeTab === 'inicio') {
       cargarMetricas();
-    } else if (activeTab === 'diagnosticos') {
-      cargarDiagnosticos();
-      cargarMecanicos();
-    } else if (activeTab === 'personas') {
-      cargarSolicitudesPendientesCount();
+      cargarSolicitudes();
+    } else if (activeTab === 'gestion') {
+      handleRecargarGestion();
     }
-  }, [user, activeTab, cargarMetricas, cargarDiagnosticos, cargarMecanicos, cargarSolicitudesPendientesCount]);
+  }, [user, activeTab, cargarMetricas, cargarSolicitudes, handleRecargarGestion]);
 
   // Initial badge count load for non-mechanic users
   useEffect(() => {
     if (isAdminSession(user)) {
-      cargarSolicitudesPendientesCount();
+      cargarSolicitudes();
     }
-  }, [user, cargarSolicitudesPendientesCount]);
+  }, [user, cargarSolicitudes]);
 
   // Sync route on popstate (browser back/forward buttons)
   useEffect(() => {
@@ -222,13 +222,9 @@ export const App: React.FC = () => {
     setCurrentRoute('/login');
   };
 
-  const handleActualizarPerfilSesion = (actualizado: Partial<UsuarioSesion>) => {
-    setUser((prev) => {
-      if (!prev) return prev;
-      const nuevo = { ...prev, ...actualizado };
-      localStorage.setItem('carbot_session', JSON.stringify(nuevo));
-      return nuevo;
-    });
+  const handleIrAMecanicos = () => {
+    setGestionSubTab('mecanicos');
+    navigate('/gestion');
   };
 
   if (!isAdminSession(user) || currentRoute === '/login') {
@@ -272,38 +268,31 @@ export const App: React.FC = () => {
               metricas={metricas}
               cargando={cargandoMetricas}
               onFiltrarMetricas={cargarMetricas}
-              onIrAMecanicos={() => navigate('/personas')}
+              onIrAMecanicos={handleIrAMecanicos}
             />
           )}
 
-          {activeTab === 'personas' && (
-            <PersonasAccesosView
+          {activeTab === 'gestion' && (
+            <GestionChatbotView
               user={user}
-              onRecargarMecanicos={handleRecargarPersonas}
-              onActualizarPerfilSesion={handleActualizarPerfilSesion}
-            />
-          )}
-
-          {activeTab === 'diagnosticos' && (
-            <DiagnosticosView
-              diagnosticos={diagnosticos}
-              cargando={cargandoDiagnosticos}
+              initialSubTab={gestionSubTab}
+              solicitudes={solicitudes}
+              cargandoSolicitudes={cargandoSolicitudes}
               mecanicos={mecanicos}
-              currentUser={user}
-              onActualizarEstado={actualizarEstado}
-              onFiltrar={cargarDiagnosticos}
+              cargandoMecanicos={cargandoMecanicos}
+              diagnosticos={diagnosticos}
+              cargandoDiagnosticos={cargandoDiagnosticos}
+              onRecargarDatos={handleRecargarGestion}
+              onActualizarEstadoDiagnostico={actualizarEstado}
+              onFiltrarDiagnosticos={cargarDiagnosticos}
               diagnosticoSeleccionadoModal={diagnosticoSeleccionado}
               onCerrarModalDetalle={() => setDiagnosticoSeleccionado(null)}
               onAbrirModalDetalle={(diag) => setDiagnosticoSeleccionado(diag)}
             />
           )}
 
-          {activeTab === 'validacion' && (
-            <ValidacionTallerView />
-          )}
-
-          {activeTab === 'fichas' && (
-            <FichasTesisView />
+          {activeTab === 'proyecto' && (
+            <ProyectoCarbotView />
           )}
         </main>
       </div>

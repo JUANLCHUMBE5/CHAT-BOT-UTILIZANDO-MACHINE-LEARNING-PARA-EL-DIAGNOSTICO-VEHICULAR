@@ -126,9 +126,26 @@ async def health_live():
 
 @app.get("/health/ready", include_in_schema=False)
 async def health_ready(request: Request):
+    gemini_key_valida = bool(
+        settings.gemini_api_key
+        and settings.gemini_api_key != "tu_api_key_aqui"
+        and not settings.gemini_api_key.startswith("AIzaSyDummy")
+    )
+    worker_iniciado = bool(gemini_rate_limiter._worker_corriendo)
+    cuota_agotada = gemini_rate_limiter._solicitudes_hoy_conteo >= gemini_rate_limiter.max_por_dia
+
+    if not gemini_key_valida:
+        gemini_estado = "sin_api_key"
+    elif cuota_agotada:
+        gemini_estado = "gemini_degradado_o_sin_cuota"
+    else:
+        gemini_estado = "gemini_disponible"
+
     componentes = {
         "postgresql": not settings.database.enabled,
-        "worker_gemini": bool(gemini_rate_limiter._worker_corriendo),
+        "worker_gemini_iniciado": worker_iniciado,
+        "gemini_disponible": gemini_estado == "gemini_disponible",
+        "gemini_estado": gemini_estado,
         "modelo_ml": False,
         "rag": False,
     }
@@ -142,7 +159,7 @@ async def health_ready(request: Request):
     if gestor:
         componentes["modelo_ml"] = bool(getattr(gestor.modelo_ml, "modelo", None))
         componentes["rag"] = bool(getattr(gestor.motor_rag, "faiss_index", None))
-    listo = all(componentes.values())
+    listo = componentes["postgresql"] and componentes["modelo_ml"] and componentes["rag"]
     return JSONResponse(
         status_code=200 if listo else 503,
         content={"status": "ready" if listo else "not_ready", "componentes": componentes},

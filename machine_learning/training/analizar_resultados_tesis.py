@@ -1,14 +1,20 @@
-import os
+﻿import os
+from pathlib import Path
 
 import pandas as pd
 from scipy import stats
 
-if not os.path.exists("data/tracker_diagnosticos.csv"):
-    print("Error: No se encontro 'data/tracker_diagnosticos.csv'. Ejecuta primero 'generar_tracker_excel.py'")
-    exit()
+RAIZ_ML = Path(__file__).resolve().parents[1]
+tracker_path = RAIZ_ML / "data" / "tracker_diagnosticos.csv"
+if not tracker_path.exists():
+    tracker_path = Path("data/tracker_diagnosticos.csv")
+
+if not tracker_path.exists():
+    print(f"Error: No se encontro '{tracker_path}'. Ejecuta primero 'generar_tracker_excel.py'")
+    exit(1)
 
 # Cargar los datos
-df = pd.read_csv("data/tracker_diagnosticos.csv")
+df = pd.read_csv(tracker_path)
 
 # Separar los datos en Pre-test (sin chatbot) y Post-test (con chatbot)
 pre_test = df[df['fase'] == 'Pre-test']
@@ -59,7 +65,6 @@ print(f"Fase Post-test: Tiempo Total = {tiempo_total_post} min | Promedio = {tie
 print(f"--> Reduccion de tiempo de atencion: -{tiempo_prom_pre - tiempo_prom_post:.2f} minutos por vehiculo.")
 
 # --- 4. CONTRASTACION DE HIPOTESIS ESTADISTICA (PRUEBA T-STUDENT RELACIONADA) ---
-# Evaluamos si la reduccion del tiempo de diagnostico es significativa para muestras relacionadas (Pág. 27 del PDF)
 n_muestras = min(len(pre_test), len(post_test))
 t_stat, p_value = stats.ttest_rel(
     pre_test['tiempo_diagnostico_minutos'].iloc[:n_muestras], 
@@ -71,7 +76,6 @@ print("-" * 65)
 print(f"Valor estadistico T: {t_stat:.4f}")
 print(f"Valor P (P-Value):   {p_value:.8f}")
 
-# Nivel de significancia alfa = 0.05
 if p_value < 0.05:
     print("\nCONCLUSION CIENTIFICA:")
     print("Dado que el P-Valor es menor que 0.05, se RECHAZA la hipotesis nula y se ACEPTA la hipotesis general:")
@@ -81,57 +85,3 @@ else:
     print("No hay diferencia estadisticamente significativa.")
 
 print("=" * 80)
-
-# --- 5. GENERACION DE GRAFICAS ACADEMICAS PARA LA TESIS ---
-try:
-    import matplotlib.pyplot as plt
-    import seaborn as sns
-    
-    # Crear carpeta para las gráficas si no existe
-    os.makedirs("../docs/graficas", exist_ok=True)
-    
-    # Configurar estilo
-    sns.set_theme(style="whitegrid")
-    plt.rcParams.update({'font.size': 11})
-    
-    # Gráfica 1: Comparación de Tiempos (Boxplot)
-    plt.figure(figsize=(7, 5))
-    sns.boxplot(x='fase', y='tiempo_diagnostico_minutos', data=df, palette='Set2', width=0.5)
-    plt.title('Eficiencia del Diagnóstico: Tiempos Pre-test vs Post-test', pad=15)
-    plt.xlabel('Fase de Evaluación')
-    plt.ylabel('Tiempo de Diagnóstico (Minutos)')
-    plt.savefig('../docs/graficas/comparacion_tiempos_diagnostico.png', dpi=300, bbox_inches='tight')
-    plt.close()
-    
-    # Gráfica 2: Precisión y Completitud (Barras agrupadas)
-    metricas = {
-        'Fase': ['Pre-test', 'Post-test', 'Pre-test', 'Post-test'],
-        'Métrica': ['Precisión del Diagnóstico', 'Precisión del Diagnóstico', 'Completitud de Ficha', 'Completitud de Ficha'],
-        'Porcentaje (%)': [porcentaje_pre, porcentaje_post, pct_completo_pre, pct_completo_post]
-    }
-    df_metricas = pd.DataFrame(metricas)
-    
-    plt.figure(figsize=(8, 5))
-    ax = sns.barplot(x='Métrica', y='Porcentaje (%)', hue='Fase', data=df_metricas, palette='Set1')
-    plt.title('Impacto en la Calidad del Diagnóstico Vehicular', pad=15)
-    plt.ylabel('Porcentaje (%)')
-    plt.ylim(0, 115)
-    
-    # Agregar etiquetas sobre las barras
-    for p in ax.patches:
-        height = p.get_height()
-        if height > 0:
-            ax.annotate(f'{height:.1f}%',
-                        (p.get_x() + p.get_width() / 2., height),
-                        ha='center', va='center',
-                        xytext=(0, 8),
-                        textcoords='offset points',
-                        fontweight='bold')
-            
-    plt.savefig('../docs/graficas/comparacion_calidad_diagnostico.png', dpi=300, bbox_inches='tight')
-    plt.close()
-    
-    print("\n[Graficador] Graficas exportadas con exito en: '../docs/graficas/'")
-except Exception as e:
-    print(f"\n[Error] Error al generar las graficas: {e}")
-

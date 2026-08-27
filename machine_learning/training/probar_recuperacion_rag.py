@@ -12,7 +12,7 @@ from src.infrastructure.motor_rag import MotorRAG  # noqa: E402 - importa tras c
 
 def probar_recuperacion():
     print("=" * 80)
-    print("EVALUACIÓN DE RECUPERACIÓN RAG MULTIMARCA Y METADATOS OEM")
+    print("EVALUACIÓN DE RECUPERACIÓN RAG MULTIMARCA Y FRAGMENTOS DEL CORPUS PRELIMINAR")
     print("=" * 80)
 
     motor = MotorRAG()
@@ -33,7 +33,7 @@ def probar_recuperacion():
         {
             "query": "Nissan Sentra transmision automatica CVT sobrecalentamiento solenoide p0700",
             "marca_esperada": "Nissan",
-            "modelo_esperado": "Sentra / Versa",
+            "modelo_esperado": "Sentra",
         },
         {
             "query": "Sistema de conversion a GNV GLP 5ta generacion calibracion rampa",
@@ -53,7 +53,7 @@ def probar_recuperacion():
         print(f"\n[Caso {i}] Consulta: '{q}'")
         print(f"   -> Título Recuperado: {titulo[:70]}...")
         print(f"   -> Similitud Coseno FAISS: {sim:.4f}")
-        print(f"   -> Marca: {meta.get('marca')} | Modelo: {meta.get('modelo')} | OEM: {meta.get('manual_oem')}")
+        print(f"   -> Marca: {meta.get('marca')} | Modelo: {meta.get('modelo')} | Fuente: {meta.get('manual_oem')}")
         print(f"   -> Edición: {meta.get('edicion')} | Página: {meta.get('pagina')}")
 
         valido = sim > 0.05 and meta.get("marca") == caso["marca_esperada"]
@@ -62,7 +62,7 @@ def probar_recuperacion():
 
         if valido:
             aciertos += 1
-            print("   [OK] Recuperacion RAG EXACTA y consistente!")
+            print("   [OK] Recuperacion RAG consistente (fragmento relevante del corpus preliminar)")
         else:
             print("   [WARN] Coincidencia generica")
 

@@ -171,11 +171,15 @@ async def async_db_session():
 
 
 @pytest.fixture(autouse=True)
-def mock_gemini_en_todas_las_pruebas(monkeypatch):
+def mock_gemini_en_todas_las_pruebas(request, monkeypatch):
     """
-    Bloquea rigurosamente cualquier llamada externa a Google Gemini en los tests automáticos.
-    Evita cobros, consumo de cuota real y dependencia de conexión a internet durante pruebas.
+    Bloquea rigurosamente cualquier llamada externa a Google Gemini en los tests automáticos,
+    excepto en pruebas explícitas de integración real con Gemini.
     """
+    if "real_gemini" in request.keywords or "test_gemini_real" in getattr(request.node, "nodeid", ""):
+        yield
+        return
+
     import requests
 
     def mocked_requests_post(url, *args, **kwargs):

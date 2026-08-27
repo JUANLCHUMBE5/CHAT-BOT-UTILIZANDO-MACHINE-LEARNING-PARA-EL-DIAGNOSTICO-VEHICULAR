@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Users, FileSearch, ShieldCheck, X, FlaskConical, GraduationCap } from 'lucide-react';
+import { LayoutDashboard, Users, Brain, ShieldCheck, X } from 'lucide-react';
 import type { UsuarioSesion } from '../../types';
 import { apiService } from '../../services/api';
 
-export type NavTab = 'inicio' | 'personas' | 'diagnosticos' | 'validacion' | 'fichas';
+export type NavTab = 'inicio' | 'gestion' | 'proyecto';
 
 interface SidebarProps {
   user?: UsuarioSesion | null;
@@ -45,10 +45,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const navItems: { id: NavTab; label: string; icon: React.ReactNode; badgeCount?: number }[] = [
     { id: 'inicio', label: 'Inicio', icon: <LayoutDashboard size={18} /> },
-    { id: 'personas', label: 'Personas y accesos', icon: <Users size={18} />, badgeCount: solicitudesPendientesCount },
-    { id: 'diagnosticos', label: 'Diagnósticos', icon: <FileSearch size={18} /> },
-    { id: 'validacion', label: 'Registro Experimental', icon: <FlaskConical size={18} /> },
-    { id: 'fichas', label: 'Fichas de Tesis', icon: <GraduationCap size={18} /> },
+    { id: 'gestion', label: 'Gestión y actividad', icon: <Users size={18} />, badgeCount: solicitudesPendientesCount },
+    { id: 'proyecto', label: 'Proyecto CarBot', icon: <Brain size={18} /> },
   ];
 
   const content = (

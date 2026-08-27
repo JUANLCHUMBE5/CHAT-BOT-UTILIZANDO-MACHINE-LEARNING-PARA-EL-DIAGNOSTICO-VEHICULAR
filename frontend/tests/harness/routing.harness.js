@@ -19,8 +19,18 @@ assert(fs.existsSync(routingModulePath), 'src/utils/routing.ts must exist');
 const getValidRoute = (pathStr, user) => {
   if (!user || !['administrador', 'admin'].includes(user.rol)) return '/login';
   if (pathStr === '/login' || pathStr === '/' || pathStr === '/resumen') return '/inicio';
-  if (pathStr === '/clientes' || pathStr === '/mecanicos') return '/personas';
-  if (['/inicio', '/personas', '/diagnosticos'].includes(pathStr)) return pathStr;
+  // Redirecciones unificadas a Gestión
+  if (['/gestion', '/personas', '/diagnosticos', '/mecanicos', '/clientes', '/solicitudes'].includes(pathStr)) {
+    return '/gestion';
+  }
+  // Módulo Proyecto CarBot (Tesis, Fichas, Modelo IA, Arquitectura)
+  if (['/proyecto', '/tesis', '/modelo', '/arquitectura'].includes(pathStr)) {
+    return '/proyecto';
+  }
+  if (['/fichas', '/validacion'].includes(pathStr)) {
+    return '/inicio';
+  }
+  if (pathStr === '/inicio') return '/inicio';
   return '/inicio';
 };
 
@@ -28,11 +38,13 @@ console.log('=== TEST SUITE 1: Route Normalization & Role-Based Protection ===')
 
 // Unauthenticated tests
 assert.strictEqual(getValidRoute('/inicio', null), '/login', 'Unauth /inicio should redirect to /login');
+assert.strictEqual(getValidRoute('/gestion', null), '/login', 'Unauth /gestion should redirect to /login');
+assert.strictEqual(getValidRoute('/proyecto', null), '/login', 'Unauth /proyecto should redirect to /login');
 assert.strictEqual(getValidRoute('/personas', null), '/login', 'Unauth /personas should redirect to /login');
 assert.strictEqual(getValidRoute('/diagnosticos', null), '/login', 'Unauth /diagnosticos should redirect to /login');
 assert.strictEqual(getValidRoute('/login', null), '/login', 'Unauth /login stays /login');
 assert.strictEqual(getValidRoute('/random', null), '/login', 'Unauth unknown path redirects to /login');
-console.log('✔ Unauthenticated route normalizations passed (5/5)');
+console.log('✔ Unauthenticated route normalizations passed (7/7)');
 
 // Authenticated administrator tests
 const adminUser = { id: 'usr-1', username: 'admin', rol: 'administrador' };
@@ -41,12 +53,17 @@ const jefeUser = { id: 'usr-2', username: 'jefe', rol: 'jefe_taller' };
 assert.strictEqual(getValidRoute('/login', adminUser), '/inicio', 'Admin /login should redirect to /inicio');
 assert.strictEqual(getValidRoute('/', adminUser), '/inicio', 'Admin / should redirect to /inicio');
 assert.strictEqual(getValidRoute('/resumen', adminUser), '/inicio', 'Admin legacy /resumen should redirect to /inicio');
-assert.strictEqual(getValidRoute('/clientes', adminUser), '/personas', 'Admin legacy /clientes should redirect to /personas');
-assert.strictEqual(getValidRoute('/mecanicos', adminUser), '/personas', 'Admin legacy /mecanicos should redirect to /personas');
+assert.strictEqual(getValidRoute('/clientes', adminUser), '/gestion', 'Admin legacy /clientes should redirect to /gestion');
+assert.strictEqual(getValidRoute('/mecanicos', adminUser), '/gestion', 'Admin legacy /mecanicos should redirect to /gestion');
+assert.strictEqual(getValidRoute('/personas', adminUser), '/gestion', 'Admin legacy /personas should redirect to /gestion');
+assert.strictEqual(getValidRoute('/diagnosticos', adminUser), '/gestion', 'Admin legacy /diagnosticos should redirect to /gestion');
+assert.strictEqual(getValidRoute('/validacion', adminUser), '/inicio', 'Admin legacy /validacion should redirect to /inicio');
+assert.strictEqual(getValidRoute('/fichas', adminUser), '/inicio', 'Admin legacy /fichas should redirect to /inicio');
+assert.strictEqual(getValidRoute('/tesis', adminUser), '/proyecto', 'Admin legacy /tesis should redirect to /proyecto');
 assert.strictEqual(getValidRoute('/inicio', adminUser), '/inicio', 'Admin /inicio remains /inicio');
-assert.strictEqual(getValidRoute('/personas', adminUser), '/personas', 'Admin /personas remains /personas');
-assert.strictEqual(getValidRoute('/diagnosticos', adminUser), '/diagnosticos', 'Admin /diagnosticos remains /diagnosticos');
-console.log('✔ Authenticated administrator route permissions passed (8/8)');
+assert.strictEqual(getValidRoute('/gestion', adminUser), '/gestion', 'Admin /gestion remains /gestion');
+assert.strictEqual(getValidRoute('/proyecto', adminUser), '/proyecto', 'Admin /proyecto remains /proyecto');
+console.log('✔ Authenticated administrator route permissions passed (13/13)');
 
 // Non-administrator accounts never enter the web panel
 const mecanicoUser = { id: 'usr-3', username: 'mecanico1', rol: 'mecanico' };
@@ -166,34 +183,34 @@ class MockAppRouter {
   }
 }
 
-// Scenario 1: Unauthenticated direct landing on /personas
-const router1 = new MockAppRouter('/personas', null);
-assert.strictEqual(router1.currentRoute, '/login', 'Direct landing on /personas without session redirects to /login');
+// Scenario 1: Unauthenticated direct landing on /gestion
+const router1 = new MockAppRouter('/gestion', null);
+assert.strictEqual(router1.currentRoute, '/login', 'Direct landing on /gestion without session redirects to /login');
 assert.strictEqual(router1.history.currentPath, '/login', 'History replaced with /login');
 
 // Scenario 2: Mechanic session is rejected from every panel route
 const router2 = new MockAppRouter('/inicio', mecanicoUser);
-router2.navigate('/personas');
+router2.navigate('/gestion');
 assert.strictEqual(router2.currentRoute, '/login', 'Mechanic navigation is blocked and routed to /login');
 
 // Scenario 3: Admin full navigation history back and forward
 const router3 = new MockAppRouter('/login', adminUser);
 assert.strictEqual(router3.currentRoute, '/inicio');
 
-router3.navigate('/personas');
-assert.strictEqual(router3.currentRoute, '/personas');
+router3.navigate('/gestion');
+assert.strictEqual(router3.currentRoute, '/gestion');
 
-router3.navigate('/diagnosticos');
-assert.strictEqual(router3.currentRoute, '/diagnosticos');
+router3.navigate('/inicio');
+assert.strictEqual(router3.currentRoute, '/inicio');
 
 router3.simulateBrowserBack();
-assert.strictEqual(router3.currentRoute, '/personas');
+assert.strictEqual(router3.currentRoute, '/gestion');
 
 router3.simulateBrowserBack();
 assert.strictEqual(router3.currentRoute, '/inicio');
 
 router3.simulateBrowserForward();
-assert.strictEqual(router3.currentRoute, '/personas');
+assert.strictEqual(router3.currentRoute, '/gestion');
 
 // Scenario 4: Logout from protected view redirects to /login
 router3.setUser(null);

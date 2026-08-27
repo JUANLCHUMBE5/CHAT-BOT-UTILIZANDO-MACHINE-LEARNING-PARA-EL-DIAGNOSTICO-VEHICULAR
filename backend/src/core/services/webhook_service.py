@@ -438,6 +438,8 @@ class WebhookService:
                             slot_gemini_preconcedido=False,
                             diferir_encolado_persistente=True,
                         )
+                        if dto.respuesta_texto and texto_cliente:
+                            dto.respuesta_texto = f"🎤 *Entendí:* \"{texto_cliente}\"\n\n{dto.respuesta_texto}"
                 else:
                     dto = await asyncio.to_thread(
                         self.gestor.procesar_consulta_texto,
