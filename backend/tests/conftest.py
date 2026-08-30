@@ -20,6 +20,8 @@ import pytest
 
 from src.config import settings
 from src.core.gemini_queue import gemini_rate_limiter
+from src.core.login_attempt_store import login_attempt_store
+from src.core.refresh_token_store import refresh_token_store
 from src.limiter import limiter
 
 # Asegurar habilitación de base de datos para pruebas si están configuradas
@@ -109,6 +111,8 @@ def reset_rate_limiter():
         if hasattr(limiter, "_storage") and hasattr(limiter._storage, "reset"):
             limiter._storage.reset()
     gemini_rate_limiter.reiniciar()
+    login_attempt_store.reiniciar_local()
+    refresh_token_store.reiniciar_local()
     yield
 
 

@@ -1,3 +1,4 @@
+import re
 import subprocess
 import uuid
 from contextlib import asynccontextmanager
@@ -6,6 +7,7 @@ import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 # En desarrollo, .env sustituye credenciales antiguas heredadas de Windows.
 # En produccion, las variables inyectadas externamente conservan prioridad.
@@ -24,9 +26,9 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
 from scripts.descargar_modelo import asegurar_artefactos_modelo
+from src.application.jobs import gemini_rate_limiter
+from src.application.services import GestorDiagnostico
 from src.config import settings
-from src.core.gemini_queue import gemini_rate_limiter
-from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.logger import logger
 from src.core.services.retention_service import aplicar_retencion_datos
 from src.infrastructure.database.connection import cerrar_conexion, comprobar_conexion
@@ -83,26 +85,50 @@ app = FastAPI(
     version=settings.version,
     debug=settings.debug,
     lifespan=lifespan,
+    docs_url=None if settings.is_production else "/docs",
+    redoc_url=None if settings.is_production else "/redoc",
+    openapi_url=None if settings.is_production else "/openapi.json",
 )
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(settings.trusted_hosts))
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=list(settings.cors_allowed_origins),
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-CSRF-Token"],
+    expose_headers=["X-Request-ID", "X-RateLimit-Limit", "X-RateLimit-Remaining", "Retry-After"],
 )
 
 
 @app.middleware("http")
 async def agregar_request_id(request: Request, call_next):
-    request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+    request_id_recibido = request.headers.get("X-Request-ID", "")
+    request_id = (
+        request_id_recibido
+        if re.fullmatch(r"[A-Za-z0-9._:-]{1,64}", request_id_recibido)
+        else str(uuid.uuid4())
+    )
+    request.state.request_id = request_id
     response = await call_next(request)
     response.headers["X-Request-ID"] = request_id
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["Permissions-Policy"] = "camera=(), geolocation=(), microphone=()"
+    response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+    if request.url.path.startswith(("/api/", "/health/")):
+        response.headers["Cache-Control"] = "no-store"
+    if settings.is_production:
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+        )
+        if request.url.scheme == "https":
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     return response
 
 # Incluir las rutas modulares versionadas bajo /api/v1
@@ -132,7 +158,7 @@ async def health_ready(request: Request):
         and not settings.gemini_api_key.startswith("AIzaSyDummy")
     )
     worker_iniciado = bool(gemini_rate_limiter._worker_corriendo)
-    estado_gemini = gemini_rate_limiter.obtener_estado_gemini(gemini_key_valida)
+    estado_gemini = await gemini_rate_limiter.obtener_estado_gemini_compartido(gemini_key_valida)
 
     componentes = {
         "postgresql": not settings.database.enabled,
@@ -143,6 +169,7 @@ async def health_ready(request: Request):
         "gemini_ultimo_exito": estado_gemini["ultimo_exito"],
         "gemini_ultimo_codigo_http": estado_gemini["ultimo_codigo_http"],
         "gemini_ultimo_error": estado_gemini["ultimo_error"],
+        "gemini_cooldown_segundos": estado_gemini["cooldown_segundos"],
         "modelo_ml": False,
         "rag": False,
     }
@@ -157,9 +184,12 @@ async def health_ready(request: Request):
         componentes["modelo_ml"] = bool(getattr(gestor.modelo_ml, "modelo", None))
         componentes["rag"] = bool(getattr(gestor.motor_rag, "faiss_index", None))
     listo = componentes["postgresql"] and componentes["modelo_ml"] and componentes["rag"]
+    contenido = {"status": "ready" if listo else "not_ready"}
+    if not settings.is_production or settings.expose_health_details:
+        contenido["componentes"] = componentes
     return JSONResponse(
         status_code=200 if listo else 503,
-        content={"status": "ready" if listo else "not_ready", "componentes": componentes},
+        content=contenido,
     )
 
 def _iniciar_ngrok_autonomo(puerto: int, dominio: str) -> None:

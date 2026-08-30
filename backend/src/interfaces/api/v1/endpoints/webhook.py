@@ -4,11 +4,11 @@ from urllib.parse import parse_qs
 from fastapi import APIRouter, BackgroundTasks, Header, HTTPException, Query, Request
 from fastapi.responses import JSONResponse, PlainTextResponse
 
+from src.application.services import GestorDiagnostico
+from src.application.services.whatsapp import WebhookService
 from src.config import settings
-from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.logger import logger
 from src.core.security import anonimizar_identificador, verificar_firma_meta, verificar_firma_twilio
-from src.core.services.webhook_service import WebhookService
 
 router = APIRouter()
 

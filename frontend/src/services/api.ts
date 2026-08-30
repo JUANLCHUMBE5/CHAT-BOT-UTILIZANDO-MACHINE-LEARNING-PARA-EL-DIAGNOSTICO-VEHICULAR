@@ -27,6 +27,7 @@ export const SESSION_UPDATED_EVENT = 'carbot:session-updated';
 export const SESSION_EXPIRED_EVENT = 'carbot:session-expired';
 
 let refreshInProgress: Promise<string> | null = null;
+let accessTokenInMemory: string | null = null;
 
 function readStoredSession(): UsuarioSesion | null {
   try {
@@ -38,6 +39,7 @@ function readStoredSession(): UsuarioSesion | null {
 }
 
 function notifyExpiredSession(): void {
+  accessTokenInMemory = null;
   localStorage.removeItem('carbot_session');
   window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
 }
@@ -46,24 +48,19 @@ async function renewAccessToken(): Promise<string> {
   if (refreshInProgress) return refreshInProgress;
 
   refreshInProgress = (async () => {
-    const session = readStoredSession();
-    if (!session?.refreshToken) throw new Error('La sesión no dispone de renovación automática.');
-
     const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: session.refreshToken }),
+      credentials: 'include',
     });
     if (!response.ok) throw new Error('No se pudo renovar la sesión.');
 
     const tokens = await response.json() as TokenResponseDTO;
-    const updatedSession: UsuarioSesion = {
-      ...session,
-      token: tokens.access_token,
-      refreshToken: tokens.refresh_token,
-    };
-    localStorage.setItem('carbot_session', JSON.stringify(updatedSession));
-    window.dispatchEvent(new CustomEvent<UsuarioSesion>(SESSION_UPDATED_EVENT, { detail: updatedSession }));
+    accessTokenInMemory = tokens.access_token;
+    const session = readStoredSession();
+    if (session) {
+      window.dispatchEvent(new CustomEvent<UsuarioSesion>(SESSION_UPDATED_EVENT, { detail: session }));
+    }
     return tokens.access_token;
   })().catch((error: unknown) => {
     notifyExpiredSession();
@@ -79,7 +76,7 @@ async function authFetch(input: RequestInfo | URL, init: RequestInit = {}): Prom
   const execute = (accessToken?: string) => {
     const headers = new Headers(init.headers);
     if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
-    const token = accessToken || readStoredSession()?.token;
+    const token = accessToken || accessTokenInMemory;
     if (token) headers.set('Authorization', `Bearer ${token}`);
     return fetch(input, { ...init, headers });
   };
@@ -92,19 +89,11 @@ async function authFetch(input: RequestInfo | URL, init: RequestInit = {}): Prom
 }
 
 export function getAuthHeaders(): Record<string, string> {
-  const sessionStr = localStorage.getItem('carbot_session');
-  if (sessionStr) {
-    try {
-      const session: UsuarioSesion = JSON.parse(sessionStr);
-      if (session?.token) {
-        return {
-          'Authorization': `Bearer ${session.token}`,
-          'Content-Type': 'application/json',
-        };
-      }
-    } catch {
-      // fallback
-    }
+  if (accessTokenInMemory) {
+    return {
+      'Authorization': `Bearer ${accessTokenInMemory}`,
+      'Content-Type': 'application/json',
+    };
   }
   return { 'Content-Type': 'application/json' };
 }
@@ -140,29 +129,37 @@ async function extractErrorMessage(res: Response, fallback: string): Promise<str
 }
 
 class ApiService {
+  setAccessToken(token: string | null): void {
+    accessTokenInMemory = token;
+  }
+
   async login(payload: LoginRequestDTO): Promise<TokenResponseDTO> {
     const res = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
       throw new Error(await extractErrorMessage(res, 'Credenciales inválidas'));
     }
-    return await res.json();
+    const tokens = await res.json() as TokenResponseDTO;
+    accessTokenInMemory = tokens.access_token;
+    return tokens;
   }
 
   async cambiarPassword(
     token: string,
     passwordActual: string,
     passwordNuevo: string,
-  ): Promise<{ mensaje: string; access_token: string; refresh_token: string }> {
+  ): Promise<{ mensaje: string; access_token: string; refresh_token?: string }> {
     const res = await fetch(`${API_BASE_URL}/auth/cambiar-password`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({
         password_actual: passwordActual,
         password_nuevo: passwordNuevo,
@@ -171,7 +168,20 @@ class ApiService {
     if (!res.ok) {
       throw new Error(await extractErrorMessage(res, 'No se pudo cambiar la contraseña'));
     }
-    return await res.json();
+    const tokens = await res.json() as { mensaje: string; access_token: string; refresh_token?: string };
+    accessTokenInMemory = tokens.access_token;
+    return tokens;
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await fetch(`${API_BASE_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } finally {
+      accessTokenInMemory = null;
+    }
   }
 
   async getResumenMetricas(fechaInicio?: string, fechaFin?: string): Promise<ResumenMetricas> {

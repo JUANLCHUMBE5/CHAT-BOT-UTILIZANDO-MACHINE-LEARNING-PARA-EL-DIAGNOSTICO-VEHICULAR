@@ -111,14 +111,20 @@ class AppSettings(BaseModel):
     cors_allowed_origins: tuple[str, ...] = Field(
         default_factory=lambda: _env_csv("CORS_ALLOWED_ORIGINS", ("http://localhost:5173",))
     )
+    trusted_hosts: tuple[str, ...] = Field(
+        default_factory=lambda: _env_csv(
+            "TRUSTED_HOSTS", ("localhost", "127.0.0.1", "testserver", "test")
+        )
+    )
+    expose_health_details: bool = _env_bool("EXPOSE_HEALTH_DETAILS", default=False)
 
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
     gemini_use_free_tier: bool = _env_bool("GEMINI_USE_FREE_TIER", default=True)
     gemini_input_price_per_million: float = _env_float("GEMINI_INPUT_PRICE_PER_MILLION", 0.30)
     gemini_output_price_per_million: float = _env_float("GEMINI_OUTPUT_PRICE_PER_MILLION", 2.50)
-    gemini_max_requests_per_minute: int = _env_int("GEMINI_MAX_REQUESTS_PER_MINUTE", 12)
-    gemini_max_requests_per_day: int = _env_int("GEMINI_MAX_REQUESTS_PER_DAY", 18)
+    gemini_max_requests_per_minute: int = _env_int("GEMINI_MAX_REQUESTS_PER_MINUTE", 10)
+    gemini_max_requests_per_day: int = _env_int("GEMINI_MAX_REQUESTS_PER_DAY", 450)
 
     # META_ACCESS_TOKEN y META_PHONE_NUMBER_ID son los nombres preferidos.
     # TOKEN_WHATSAPP y TELEFONO_ID se mantienen como compatibilidad temporal.
@@ -141,14 +147,23 @@ class AppSettings(BaseModel):
     fallback_auth_username: str = _env_first("LOCAL_AUTH_USERNAME", "AUTH_USERNAME")
     fallback_auth_password: str = _env_first("LOCAL_AUTH_PASSWORD", "AUTH_PASSWORD")
     rate_limit_storage_uri: str = os.getenv("RATE_LIMIT_STORAGE_URI", "memory://")
+    refresh_cookie_name: str = os.getenv("REFRESH_COOKIE_NAME", "carbot_refresh")
+    refresh_cookie_samesite: str = os.getenv("REFRESH_COOKIE_SAMESITE", "lax").lower()
+    legacy_refresh_token_body: bool = _env_bool("LEGACY_REFRESH_TOKEN_BODY", default=True)
+    login_max_failed_attempts: int = _env_int("LOGIN_MAX_FAILED_ATTEMPTS", 5)
+    login_lockout_seconds: int = _env_int("LOGIN_LOCKOUT_SECONDS", 900)
 
     webhook_max_body_bytes: int = _env_int("WEBHOOK_MAX_BODY_BYTES", 1_048_576)
     user_text_max_chars: int = _env_int("USER_TEXT_MAX_CHARS", 500)
+    rag_context_max_chars: int = _env_int("RAG_CONTEXT_MAX_CHARS", 12_000)
+    gemini_output_max_chars: int = _env_int("GEMINI_OUTPUT_MAX_CHARS", 8_000)
     audio_max_bytes: int = _env_int("AUDIO_MAX_BYTES", 10_485_760)
     audio_enabled: bool = _env_bool("AUDIO_ENABLED", "HABILITAR_AUDIO")
     data_retention_days: int = _env_int("DATA_RETENTION_DAYS", 180)
     model_artifact_url: str = os.getenv("MODEL_ARTIFACT_URL", "")
     model_artifact_sha256: str = os.getenv("MODEL_ARTIFACT_SHA256", "")
+    model_pkl_sha256: str = os.getenv("MODEL_PKL_SHA256", "")
+    vectorizer_pkl_sha256: str = os.getenv("VECTORIZER_PKL_SHA256", "")
     model_version: str = os.getenv("MODEL_VERSION", "2.2.0-external-audited")
     model_algorithm: str = os.getenv(
         "MODEL_ALGORITHM", "Linear SVM calibrado + TF-IDF"
@@ -174,8 +189,16 @@ class AppSettings(BaseModel):
             errors.append("PRIVACY_SECRET_KEY debe tener al menos 32 caracteres.")
         if self.rate_limit_storage_uri == "memory://":
             errors.append("RATE_LIMIT_STORAGE_URI debe usar almacenamiento compartido.")
+        if self.legacy_refresh_token_body:
+            errors.append("LEGACY_REFRESH_TOKEN_BODY debe ser false en producción.")
+        if self.refresh_cookie_samesite not in {"lax", "strict", "none"}:
+            errors.append("REFRESH_COOKIE_SAMESITE debe ser lax, strict o none.")
+        if self.refresh_cookie_samesite == "none":
+            errors.append("REFRESH_COOKIE_SAMESITE no puede ser none en producción sin protección CSRF adicional.")
         if "*" in self.cors_allowed_origins:
             errors.append("CORS_ALLOWED_ORIGINS no puede contener '*' en producción.")
+        if not self.trusted_hosts or "*" in self.trusted_hosts:
+            errors.append("TRUSTED_HOSTS debe contener hosts explícitos en producción.")
 
         uses_meta = bool(self.meta_access_token or self.meta_phone_number_id)
         uses_twilio = bool(self.twilio_account_sid or self.twilio_auth_token)
@@ -195,6 +218,8 @@ class AppSettings(BaseModel):
             errors.append("PostgreSQL debe estar habilitado en producción.")
         if self.database.enabled and not (self.database.url or self.database.password.get_secret_value()):
             errors.append("PostgreSQL requiere DATABASE_URL o POSTGRES_PASSWORD.")
+        if not self.model_pkl_sha256 or not self.vectorizer_pkl_sha256:
+            errors.append("MODEL_PKL_SHA256 y VECTORIZER_PKL_SHA256 son obligatorios en producción.")
 
         if errors:
             raise RuntimeError("Configuración de producción inválida:\n - " + "\n - ".join(errors))

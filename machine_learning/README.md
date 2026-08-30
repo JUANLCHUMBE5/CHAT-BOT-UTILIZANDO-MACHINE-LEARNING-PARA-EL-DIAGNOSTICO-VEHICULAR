@@ -8,7 +8,7 @@ otro servidor web.
 - `models/`: artefactos entrenados y métricas versionadas.
 - `training/`: preparación, entrenamiento y evaluación reproducible.
 
-El backend consume estos artefactos mediante
-`backend/src/infrastructure/modelo_ml.py` y
-`backend/src/infrastructure/motor_rag.py`.
-
+El backend consume estos artefactos mediante los puntos de entrada canónicos
+`backend/src/infrastructure/ml/` y `backend/src/infrastructure/rag/`. Los
+archivos históricos `modelo_ml.py` y `motor_rag.py` se conservan como
+implementación compatible durante la reorganización.

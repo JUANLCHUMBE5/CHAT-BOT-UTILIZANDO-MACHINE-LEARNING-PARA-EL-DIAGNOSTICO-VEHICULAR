@@ -6,7 +6,7 @@ import jwt
 import pytest
 
 from src.config import settings
-from src.core.sanitizer import sanitizar_prompt_usuario
+from src.core.sanitizer import redactar_datos_sensibles_para_llm, sanitizar_prompt_usuario
 from src.core.security import (
     JWT_ALGORITHM,
     JWT_SECRET_KEY,
@@ -285,3 +285,14 @@ def test_anonimizacion_csv_tracker_y_logs():
     anon_result = anonimizar_identificador(placa_sensible)
     assert anon_result.startswith("PLACA_")
     assert placa_sensible not in anon_result
+
+
+def test_datos_sensibles_se_redactan_antes_del_llm():
+    texto = "Mi placa es ABC-123 y mi teléfono es +51 987654321"
+
+    resultado = redactar_datos_sensibles_para_llm(texto)
+
+    assert "ABC-123" not in resultado
+    assert "987654321" not in resultado
+    assert "[PLACA_REDACTADA]" in resultado
+    assert "[TELEFONO_REDACTADO]" in resultado

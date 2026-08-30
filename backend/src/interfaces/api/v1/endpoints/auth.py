@@ -2,13 +2,15 @@ import hmac
 import uuid
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from pydantic import BaseModel, Field
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.config import settings
+from src.core.login_attempt_store import login_attempt_store
+from src.core.refresh_token_store import refresh_token_store
 from src.core.security import (
     JWT_EXPIRATION_SECONDS,
     JWT_REFRESH_EXPIRATION_SECONDS,
@@ -28,8 +30,8 @@ router = APIRouter()
 
 
 class LoginRequestDTO(BaseModel):
-    username: str
-    password: str
+    username: str = Field(min_length=1, max_length=100)
+    password: str = Field(min_length=1, max_length=128)
 
 
 class UserInfoDTO(BaseModel):
@@ -53,7 +55,7 @@ class RefreshTokenDTO(BaseModel):
 
 class TokenResponseDTO(BaseModel):
     access_token: str
-    refresh_token: str
+    refresh_token: Optional[str] = None
     token_type: str = "bearer"
     expires_in_seconds: int = JWT_EXPIRATION_SECONDS
     refresh_expires_in_seconds: int = JWT_REFRESH_EXPIRATION_SECONDS
@@ -61,13 +63,47 @@ class TokenResponseDTO(BaseModel):
     user: Optional[UserInfoDTO] = None
 
 
+def _guardar_cookie_refresh(response: Response, token: str) -> None:
+    response.set_cookie(
+        key=settings.refresh_cookie_name,
+        value=token,
+        max_age=JWT_REFRESH_EXPIRATION_SECONDS,
+        httponly=True,
+        secure=settings.is_production,
+        samesite=settings.refresh_cookie_samesite,
+        path="/api/v1/auth",
+    )
+
+
+async def _registrar_refresh(response: Response, token: str) -> dict:
+    payload = verificar_refresh_token(token)
+    await refresh_token_store.registrar(payload)
+    _guardar_cookie_refresh(response, token)
+    return payload
+
+
+def _refresh_compatible(token: str) -> Optional[str]:
+    return token if settings.legacy_refresh_token_body else None
+
+
 @router.post("/login", response_model=TokenResponseDTO, summary="Generar Token JWT con validez de 2 horas")
 @limiter.limit("5/minute")
-async def login(request: Request, payload: LoginRequestDTO):
+async def login(request: Request, response: Response, payload: LoginRequestDTO):
     """
     Endpoint de Autenticación seguro que valida la contraseña almacenada en PostgreSQL.
     Rechaza usuarios no registrados, bloqueados o contraseñas inválidas.
     """
+    clave_intentos = login_attempt_store.clave(
+        payload.username,
+        request.client.host if request.client else "unknown",
+    )
+    if not await login_attempt_store.permitido(clave_intentos):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Demasiados intentos fallidos. Intente nuevamente más tarde.",
+            headers={"Retry-After": str(settings.login_lockout_seconds)},
+        )
+
     # Fallback para entorno de pruebas unitarias sin PostgreSQL
     if not database_configurada():
         expected_user = settings.fallback_auth_username
@@ -80,11 +116,13 @@ async def login(request: Request, payload: LoginRequestDTO):
         u_valid = hmac.compare_digest(payload.username.encode(), expected_user.encode())
         p_valid = hmac.compare_digest(payload.password.encode(), expected_pass.encode())
         if u_valid and p_valid:
+            await login_attempt_store.limpiar(clave_intentos)
             token = crear_jwt_token(sub=payload.username, rol="administrador")
             refresh_token = crear_refresh_token(sub=payload.username, rol="administrador")
+            await _registrar_refresh(response, refresh_token)
             return TokenResponseDTO(
                 access_token=token,
-                refresh_token=refresh_token,
+                refresh_token=_refresh_compatible(refresh_token),
                 user=UserInfoDTO(
                     id="00000000-0000-0000-0000-000000000001",
                     username=payload.username,
@@ -95,6 +133,7 @@ async def login(request: Request, payload: LoginRequestDTO):
                     requiere_cambio_password=False,
                 ),
             )
+        await login_attempt_store.registrar_fallo(clave_intentos)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credenciales de autenticación inválidas.",
@@ -127,6 +166,7 @@ async def login(request: Request, payload: LoginRequestDTO):
             usuario = coincidencias[0] if coincidencias else None
 
         if not usuario:
+            await login_attempt_store.registrar_fallo(clave_intentos)
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Credenciales de autenticación inválidas.",
@@ -147,11 +187,13 @@ async def login(request: Request, payload: LoginRequestDTO):
 
         # 2. Verificar contraseña PBKDF2 (600,000 iteraciones)
         if not verificar_password(payload.password, usuario.password_hash):
+            await login_attempt_store.registrar_fallo(clave_intentos)
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Credenciales de autenticación inválidas.",
             )
 
+        await login_attempt_store.limpiar(clave_intentos)
         token = crear_jwt_token(
             sub=usuario.username or usuario.nombres,
             rol=rol_codigo,
@@ -166,11 +208,12 @@ async def login(request: Request, payload: LoginRequestDTO):
             usuario_id=str(usuario.id),
             extra_claims={"requiere_cambio_password": bool(usuario.debe_cambiar_password)},
         )
+        await _registrar_refresh(response, refresh_token)
 
         display_username = usuario.username or usuario.nombres
         return TokenResponseDTO(
             access_token=token,
-            refresh_token=refresh_token,
+            refresh_token=_refresh_compatible(refresh_token),
             user=UserInfoDTO(
                 id=str(usuario.id),
                 username=display_username,
@@ -185,9 +228,18 @@ async def login(request: Request, payload: LoginRequestDTO):
 
 @router.post("/refresh", response_model=TokenResponseDTO, summary="Renovar automáticamente la sesión")
 @limiter.limit("30/minute")
-async def refresh_session(request: Request, payload: RefreshTokenDTO):
+async def refresh_session(
+    request: Request,
+    response: Response,
+    payload: Optional[RefreshTokenDTO] = None,
+):
     """Rota el refresh token y emite un acceso nuevo tras validar la cuenta."""
-    token_payload = verificar_refresh_token(payload.refresh_token)
+    refresh_recibido = request.cookies.get(settings.refresh_cookie_name)
+    if not refresh_recibido and payload:
+        refresh_recibido = payload.refresh_token
+    if not refresh_recibido:
+        raise HTTPException(status_code=401, detail="Falta la sesión de renovación segura.")
+    token_payload = verificar_refresh_token(refresh_recibido)
     rol_claim = str(token_payload.get("rol", ""))
     if rol_claim not in {"administrador", "admin"}:
         raise HTTPException(
@@ -200,6 +252,17 @@ async def refresh_session(request: Request, payload: RefreshTokenDTO):
         taller_id = str(token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001"))
         usuario_id = str(token_payload.get("usuario_id", "00000000-0000-0000-0000-000000000001"))
         requiere_cambio = bool(token_payload.get("requiere_cambio_password", False))
+        refresh_nuevo = crear_refresh_token(
+            sub=sub,
+            rol=rol_claim,
+            taller_id=taller_id,
+            usuario_id=usuario_id,
+            extra_claims={"requiere_cambio_password": requiere_cambio},
+        )
+        payload_nuevo = verificar_refresh_token(refresh_nuevo)
+        if not await refresh_token_store.rotar(token_payload, payload_nuevo):
+            raise HTTPException(status_code=401, detail="La sesión ya fue utilizada o revocada.")
+        _guardar_cookie_refresh(response, refresh_nuevo)
         return TokenResponseDTO(
             access_token=crear_jwt_token(
                 sub=sub,
@@ -208,13 +271,7 @@ async def refresh_session(request: Request, payload: RefreshTokenDTO):
                 usuario_id=usuario_id,
                 extra_claims={"requiere_cambio_password": requiere_cambio},
             ),
-            refresh_token=crear_refresh_token(
-                sub=sub,
-                rol=rol_claim,
-                taller_id=taller_id,
-                usuario_id=usuario_id,
-                extra_claims={"requiere_cambio_password": requiere_cambio},
-            ),
+            refresh_token=_refresh_compatible(refresh_nuevo),
         )
 
     try:
@@ -238,6 +295,17 @@ async def refresh_session(request: Request, payload: RefreshTokenDTO):
 
         requiere_cambio = bool(usuario.debe_cambiar_password)
         claims = {"requiere_cambio_password": requiere_cambio}
+        refresh_nuevo = crear_refresh_token(
+            sub=usuario.nombres,
+            rol=rol_codigo,
+            taller_id=str(usuario.taller_id),
+            usuario_id=str(usuario.id),
+            extra_claims=claims,
+        )
+        payload_nuevo = verificar_refresh_token(refresh_nuevo)
+        if not await refresh_token_store.rotar(token_payload, payload_nuevo):
+            raise HTTPException(status_code=401, detail="La sesión ya fue utilizada o revocada.")
+        _guardar_cookie_refresh(response, refresh_nuevo)
         return TokenResponseDTO(
             access_token=crear_jwt_token(
                 sub=usuario.nombres,
@@ -246,13 +314,7 @@ async def refresh_session(request: Request, payload: RefreshTokenDTO):
                 usuario_id=str(usuario.id),
                 extra_claims=claims,
             ),
-            refresh_token=crear_refresh_token(
-                sub=usuario.nombres,
-                rol=rol_codigo,
-                taller_id=str(usuario.taller_id),
-                usuario_id=str(usuario.id),
-                extra_claims=claims,
-            ),
+            refresh_token=_refresh_compatible(refresh_nuevo),
             user=UserInfoDTO(
                 id=str(usuario.id),
                 username=usuario.nombres,
@@ -269,6 +331,7 @@ async def refresh_session(request: Request, payload: RefreshTokenDTO):
 @limiter.limit("5/minute")
 async def cambiar_password(
     request: Request,
+    response: Response,
     payload: CambiarPasswordDTO,
     token_payload: dict = Depends(verificar_jwt_token_sin_restriccion),
 ):
@@ -328,8 +391,40 @@ async def cambiar_password(
         usuario_id=str(usuario.id),
         extra_claims={"requiere_cambio_password": False},
     )
+    refresh_anterior = request.cookies.get(settings.refresh_cookie_name)
+    if refresh_anterior:
+        try:
+            await refresh_token_store.revocar(verificar_refresh_token(refresh_anterior))
+        except (HTTPException, ValueError):
+            pass
+    await _registrar_refresh(response, refresh_nuevo)
     return {
         "mensaje": "Contraseña actualizada correctamente.",
         "access_token": token_nuevo,
-        "refresh_token": refresh_nuevo,
+        "refresh_token": _refresh_compatible(refresh_nuevo),
     }
+
+
+@router.post("/logout", summary="Cerrar y revocar la sesión actual")
+@limiter.limit("30/minute")
+async def logout(
+    request: Request,
+    response: Response,
+    payload: Optional[RefreshTokenDTO] = None,
+):
+    refresh_recibido = request.cookies.get(settings.refresh_cookie_name)
+    if not refresh_recibido and payload:
+        refresh_recibido = payload.refresh_token
+    if refresh_recibido:
+        try:
+            await refresh_token_store.revocar(verificar_refresh_token(refresh_recibido))
+        except (HTTPException, ValueError):
+            pass
+    response.delete_cookie(
+        settings.refresh_cookie_name,
+        path="/api/v1/auth",
+        secure=settings.is_production,
+        httponly=True,
+        samesite=settings.refresh_cookie_samesite,
+    )
+    return {"mensaje": "Sesión cerrada correctamente."}

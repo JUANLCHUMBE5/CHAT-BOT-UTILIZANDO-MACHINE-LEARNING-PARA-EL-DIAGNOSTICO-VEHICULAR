@@ -50,6 +50,11 @@ class CuotaGeminiGlobal(Base):
     minuto_epoch: Mapped[int] = mapped_column(
         BigInteger, nullable=False, default=0, server_default=text("0")
     )
+    cooldown_hasta: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    ultima_verificacion: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    ultimo_exito: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    ultimo_codigo_http: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
+    ultimo_error: Mapped[str | None] = mapped_column(String(300), nullable=True)
     actualizado_en: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

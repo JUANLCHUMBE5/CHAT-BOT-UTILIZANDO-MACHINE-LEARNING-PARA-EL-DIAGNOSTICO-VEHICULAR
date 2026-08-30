@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Wrench, Lock, User, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
-import { apiService } from '../../services/api';
+import { authApi } from '../../features/auth/api';
 import type { UsuarioSesion } from '../../types';
 import type { TokenResponseDTO } from '../../types';
 
@@ -27,14 +27,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
     if (!['administrador', 'admin'].includes(tokenRes.user.rol)) {
       throw new Error('El panel web es exclusivo para administradores. Los mecánicos usan WhatsApp.');
     }
+    authApi.establecerAccessToken(tokenRes.access_token);
     onLoginSuccess({
       id: tokenRes.user.id || tokenRes.user.usuario_id,
       username: tokenRes.user.username,
       nombre: tokenRes.user.nombre,
       rol: tokenRes.user.rol,
       taller: tokenRes.user.taller_nombre,
-      token: tokenRes.access_token,
-      refreshToken: tokenRes.refresh_token,
     });
   };
 
@@ -62,7 +61,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       }
       setLoading(true);
       try {
-        const cambio = await apiService.cambiarPassword(
+        const cambio = await authApi.cambiarPassword(
           cambioPendiente.access_token,
           password,
           passwordNueva,
@@ -91,7 +90,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
     setLoading(true);
 
     try {
-      const tokenRes = await apiService.login({ username, password });
+      const tokenRes = await authApi.login({ username, password });
       if (!tokenRes.user) {
         throw new Error('El servidor no devolvió la información del usuario.');
       }

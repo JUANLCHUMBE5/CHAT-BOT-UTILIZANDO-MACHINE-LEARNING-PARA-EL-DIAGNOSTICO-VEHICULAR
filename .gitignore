@@ -1,6 +1,7 @@
 # --- Python Cache ---
 __pycache__/
 .pytest_cache/
+.ruff_cache/
 .coverage
 htmlcov/
 *.py[cod]
@@ -47,6 +48,7 @@ credenciales_temporales*.csv
 .idea/
 .DS_Store
 Thumbs.db
+~$*.docx
 
 # --- Archivos de Auditoría y Agentes ---
 .gemini/

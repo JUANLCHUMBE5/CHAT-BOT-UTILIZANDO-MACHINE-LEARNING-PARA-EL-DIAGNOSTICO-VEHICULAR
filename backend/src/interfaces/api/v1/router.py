@@ -6,7 +6,7 @@ from src.interfaces.api.v1.endpoints.diagnostico import router as diagnostico_ro
 from src.interfaces.api.v1.endpoints.mecanicos import router as mecanicos_router
 from src.interfaces.api.v1.endpoints.metricas import router as metricas_router
 from src.interfaces.api.v1.endpoints.validacion_taller import router as validacion_taller_router
-from src.interfaces.api.v1.endpoints.webhook import router as webhook_router
+from src.interfaces.messaging.whatsapp import router as webhook_router
 
 api_router = APIRouter()
 

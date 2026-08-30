@@ -1,7 +1,7 @@
 from typing import Optional
 
-from src.infrastructure.modelo_ml import ModeloML
-from src.infrastructure.motor_rag import MotorRAG
+from src.infrastructure.ml import ModeloML
+from src.infrastructure.rag import MotorRAG
 
 
 class ServiceContainer:

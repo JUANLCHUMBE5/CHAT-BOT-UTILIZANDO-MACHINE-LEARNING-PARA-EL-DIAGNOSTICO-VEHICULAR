@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { apiService } from '../services/api';
+import { diagnosticsApi } from '../features/management/api/diagnosticsApi';
 import type { Diagnostico, EstadoDiagnostico } from '../types';
 import { getErrorMessage } from '../utils/errors';
 
@@ -17,7 +17,7 @@ export function useDiagnosticos() {
     setCargando(true);
     setError(null);
     try {
-      const data = await apiService.getDiagnosticos(filtros);
+      const data = await diagnosticsApi.listar(filtros);
       setDiagnosticos(data);
     } catch (error: unknown) {
       setError(getErrorMessage(error, 'Error al cargar el historial de diagnósticos'));
@@ -31,7 +31,7 @@ export function useDiagnosticos() {
     nuevoEstado: EstadoDiagnostico,
     notas?: string
   ) => {
-    await apiService.actualizarEstadoDiagnostico({
+    await diagnosticsApi.actualizarEstado({
       diagnostico_id: id,
       nuevo_estado: nuevoEstado,
       notas_mecanico: notas,

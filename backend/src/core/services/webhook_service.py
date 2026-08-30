@@ -408,7 +408,9 @@ class WebhookService:
                             mime_type,
                             self.gestor.api_key,
                         )
+                        await gemini_rate_limiter.persistir_estado_local_db()
                     except Exception as exc:
+                        await gemini_rate_limiter.persistir_estado_local_db()
                         logger.warning(f"[Audio WhatsApp] No se pudo transcribir: {exc}")
                         dto = ResultadoDiagnostico(
                             respuesta_texto=(

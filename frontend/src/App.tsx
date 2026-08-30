@@ -1,18 +1,25 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Header } from './components/layout/Header';
-import { Sidebar } from './components/layout/Sidebar';
-import type { NavTab } from './components/layout/Sidebar';
-import { LoginView } from './components/views/LoginView';
-import { DashboardView } from './components/views/DashboardView';
-import { GestionChatbotView, type GestionSubTab } from './components/views/GestionChatbotView';
-import { ProyectoCarbotView } from './components/views/ProyectoCarbotView';
-import { useMecanicos } from './hooks/useMecanicos';
-import { useDiagnosticos } from './hooks/useDiagnosticos';
-import { useMetricas } from './hooks/useMetricas';
-import type { UsuarioSesion, Diagnostico, SolicitudAcceso } from './types';
-import { apiService, SESSION_EXPIRED_EVENT, SESSION_UPDATED_EVENT } from './services/api';
-import { getValidRoute } from './utils/routing';
-import type { AppRoute } from './utils/routing';
+import { LoginView } from './features/auth';
+import { DashboardView, useMetricas } from './features/dashboard';
+import {
+  GestionChatbotView,
+  type GestionSubTab,
+  useDiagnosticos,
+  useMecanicos,
+} from './features/management';
+import { ProyectoCarbotView } from './features/project';
+import {
+  apiService,
+  SESSION_EXPIRED_EVENT,
+  SESSION_UPDATED_EVENT,
+} from './shared/api';
+import { Header, Sidebar, type NavTab } from './shared/layout';
+import { getValidRoute, type AppRoute } from './shared/routing';
+import type {
+  Diagnostico,
+  SolicitudAcceso,
+  UsuarioSesion,
+} from './shared/types';
 
 export type { AppRoute };
 
@@ -33,7 +40,18 @@ const readAdminSession = (): UsuarioSesion | null => {
     const saved = localStorage.getItem('carbot_session');
     if (!saved) return null;
     const parsed = JSON.parse(saved) as UsuarioSesion;
-    if (isAdminSession(parsed)) return parsed;
+    if (isAdminSession(parsed)) {
+      if (parsed.token) apiService.setAccessToken(parsed.token);
+      const safeSession: UsuarioSesion = {
+        id: parsed.id,
+        username: parsed.username,
+        nombre: parsed.nombre,
+        rol: parsed.rol,
+        taller: parsed.taller,
+      };
+      localStorage.setItem('carbot_session', JSON.stringify(safeSession));
+      return safeSession;
+    }
   } catch {
     // Una sesión dañada o antigua se elimina abajo.
   }
@@ -204,7 +222,14 @@ export const App: React.FC = () => {
       return;
     }
     setUser(usuarioSesion);
-    localStorage.setItem('carbot_session', JSON.stringify(usuarioSesion));
+    const safeSession: UsuarioSesion = {
+      id: usuarioSesion.id,
+      username: usuarioSesion.username,
+      nombre: usuarioSesion.nombre,
+      rol: usuarioSesion.rol,
+      taller: usuarioSesion.taller,
+    };
+    localStorage.setItem('carbot_session', JSON.stringify(safeSession));
     localStorage.setItem(LAST_ROUTE_KEY, '/inicio');
     if (window.location.pathname !== '/inicio') {
       window.history.pushState({}, '', '/inicio');
@@ -213,6 +238,7 @@ export const App: React.FC = () => {
   };
 
   const handleLogout = () => {
+    void apiService.logout();
     localStorage.removeItem(LAST_ROUTE_KEY);
     setUser(null);
     localStorage.removeItem('carbot_session');

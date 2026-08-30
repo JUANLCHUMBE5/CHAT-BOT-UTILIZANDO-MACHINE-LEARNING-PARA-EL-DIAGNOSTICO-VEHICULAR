@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
   pull_request:
@@ -47,6 +50,7 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: python -m alembic upgrade head
       - run: ruff check src tests main.py scripts ../machine_learning/training
+      - run: ruff check src main.py --select S --ignore S104,S105,S110,S603
       - run: coverage run --source=src -m pytest -q -m "not real_gemini"
       - run: coverage report --fail-under=55
       - run: python -m alembic check
@@ -67,3 +71,15 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
+      - run: npm run test:harness
+      - run: npm audit --omit=dev --audit-level=high
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

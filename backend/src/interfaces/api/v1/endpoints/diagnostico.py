@@ -130,6 +130,7 @@ async def analizar_sintoma(
             proveedor="api",
             slot_gemini_preconcedido=slot_gemini,
         )
+        await gemini_rate_limiter.persistir_estado_local_db()
 
         t_final = time.time()
         elapsed_ms = (t_final - t_inicio) * 1000

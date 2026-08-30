@@ -91,7 +91,9 @@ class MetricasValidacionResponseDTO(BaseModel):
 
 def _pseudonimizar_placa(placa_raw: str, secret_key: Optional[str] = None) -> tuple[str, str]:
     """Genera hash HMAC-SHA-256 completo de 64 caracteres con clave secreta y máscara visual."""
-    clave_str = secret_key or settings.privacy_secret_key or settings.jwt_secret_key or "carbot-pseudonymization-secret-key-2026"
+    clave_str = secret_key or settings.privacy_secret_key or settings.jwt_secret_key
+    if not clave_str:
+        raise RuntimeError("PRIVACY_SECRET_KEY es obligatoria para pseudonimizar placas.")
     clave = clave_str.encode("utf-8")
     placa_limpia = re.sub(r"[^A-Za-z0-9]", "", placa_raw).upper()
     placa_hash = hmac.new(clave, placa_limpia.encode("utf-8"), hashlib.sha256).hexdigest()

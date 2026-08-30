@@ -127,6 +127,6 @@ export interface UsuarioSesion {
   nombre: string;
   rol: string;
   taller: string;
-  token: string;
-  refreshToken: string;
+  token?: string;
+  refreshToken?: string;
 }

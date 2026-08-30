@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { apiService } from '../services/api';
+import { dashboardApi } from '../features/dashboard/api';
 import type { ResumenMetricas } from '../types';
 import { getErrorMessage } from '../utils/errors';
 
@@ -12,7 +12,7 @@ export function useMetricas() {
     setCargando(true);
     setError(null);
     try {
-      const data = await apiService.getResumenMetricas(fechaInicio, fechaFin);
+      const data = await dashboardApi.getResumenMetricas(fechaInicio, fechaFin);
       setMetricas(data);
     } catch (error: unknown) {
       setError(getErrorMessage(error, 'Error al cargar las métricas ejecutivas'));
