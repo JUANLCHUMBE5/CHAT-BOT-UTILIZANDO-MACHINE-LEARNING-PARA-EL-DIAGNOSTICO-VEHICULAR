@@ -82,6 +82,7 @@ export const App: React.FC = () => {
 
   const [solicitudes, setSolicitudes] = useState<SolicitudAcceso[]>([]);
   const [cargandoSolicitudes, setCargandoSolicitudes] = useState(false);
+  const [errorSolicitudes, setErrorSolicitudes] = useState<string | null>(null);
   const [gestionSubTab, setGestionSubTab] = useState<GestionSubTab>('solicitudes');
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -130,13 +131,15 @@ export const App: React.FC = () => {
   const {
     mecanicos,
     cargando: cargandoMecanicos,
+    error: errorMecanicos,
     cargarMecanicos,
   } = useMecanicos();
   const {
     diagnosticos,
+    total: totalDiagnosticos,
     cargando: cargandoDiagnosticos,
+    error: errorDiagnosticos,
     cargarDiagnosticos,
-    actualizarEstado,
   } = useDiagnosticos();
 
   // Selected diagnostic modal state
@@ -150,10 +153,12 @@ export const App: React.FC = () => {
     }
     try {
       setCargandoSolicitudes(true);
+      setErrorSolicitudes(null);
       const lista = await apiService.getSolicitudesAcceso();
       setSolicitudes(Array.isArray(lista) ? lista : []);
     } catch (err) {
       console.error('Error al cargar solicitudes:', err);
+      setErrorSolicitudes(err instanceof Error ? err.message : 'Error al cargar las solicitudes');
     } finally {
       setCargandoSolicitudes(false);
     }
@@ -283,6 +288,7 @@ export const App: React.FC = () => {
         <main
           style={{
             flex: 1,
+            minWidth: 0,
             padding: '24px 32px',
             width: '100%',
             maxWidth: '100%',
@@ -300,16 +306,19 @@ export const App: React.FC = () => {
 
           {activeTab === 'gestion' && (
             <GestionChatbotView
-              user={user}
               initialSubTab={gestionSubTab}
               solicitudes={solicitudes}
               cargandoSolicitudes={cargandoSolicitudes}
               mecanicos={mecanicos}
               cargandoMecanicos={cargandoMecanicos}
               diagnosticos={diagnosticos}
+              totalDiagnosticos={totalDiagnosticos}
               cargandoDiagnosticos={cargandoDiagnosticos}
-              onRecargarDatos={handleRecargarGestion}
-              onActualizarEstadoDiagnostico={actualizarEstado}
+              errorSolicitudes={errorSolicitudes}
+              errorMecanicos={errorMecanicos}
+              errorDiagnosticos={errorDiagnosticos}
+              onRecargarSolicitudes={cargarSolicitudes}
+              onRecargarMecanicos={cargarMecanicos}
               onFiltrarDiagnosticos={cargarDiagnosticos}
               diagnosticoSeleccionadoModal={diagnosticoSeleccionado}
               onCerrarModalDetalle={() => setDiagnosticoSeleccionado(null)}

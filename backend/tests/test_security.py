@@ -23,8 +23,8 @@ from src.core.security import (
 # TIER 1: SECURITY & JWT HELPER TESTS
 # ==========================================
 
-def test_jwt_token_creacion_y_expiracion_2_horas():
-    """T1-JWT: Token generation sets exp - iat to exactly 7200 seconds (2 hours)."""
+def test_jwt_token_creacion_y_expiracion_30_minutos():
+    """T1-JWT: El access token expira exactamente en 30 minutos."""
     token = crear_jwt_token(sub="taller_test")
     assert isinstance(token, str)
     
@@ -33,7 +33,7 @@ def test_jwt_token_creacion_y_expiracion_2_horas():
         audience=settings.jwt_audience, issuer=settings.jwt_issuer,
     )
     assert payload["sub"] == "taller_test"
-    assert payload["exp"] - payload["iat"] == 7200
+    assert payload["exp"] - payload["iat"] == 30 * 60
 
 def test_verificar_jwt_token_helper_exito():
     """T1-JWT: verificar_jwt_token returns valid payload dictionary when valid credentials provided."""

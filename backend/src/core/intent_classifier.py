@@ -20,7 +20,7 @@ PATRONES_SINTOMA = (
     r"\bno (?:arranca|enciende|frena|acelera|enfria|funciona|abre|cierra|sube|baja|responde|carga)\b",
     r"\b(?:pierde|perdio) (?:fuerza|potencia|aceite|refrigerante)\b",
     r"\b(?:vibra|tiembla|jalonea|cascabelea|recalienta|hierve|patina|gotea|humea|chilla|rechina|golpea|raspa)\b",
-    r"\b(?:ruido|chillido|rechinido|golpeteo|vibracion|fuga|humo|olor a quemado|luz de falla|check engine)\b",
+    r"\b(?:ruido|chillido|rechinido|golpeteo|vibracion(?:es)?|fuga|humo|olor a quemado|luz de falla|check engine)\b",
     r"\b(?:se apaga|esta duro|esta esponjoso|se traba|esta trabado|se quedo trabado|trabado|inclinada|inclinado|no encaja|se descarga|consume demasiado)\b",
     r"\b(?:falla|fallando|averia|defectuoso|roto|quemado|sulfatado|baja presion|alta temperatura)\b",
     r"\b(?:p|b|c|u)\d{4}\b",

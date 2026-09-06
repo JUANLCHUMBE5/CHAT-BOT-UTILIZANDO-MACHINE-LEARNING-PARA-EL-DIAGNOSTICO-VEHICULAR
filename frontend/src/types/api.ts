@@ -1,6 +1,6 @@
 /** Contratos JSON intercambiados con la API FastAPI. */
 
-import type { Diagnostico, EstadoDiagnostico, Mecanico, MecanicoRol } from './domain';
+import type { Diagnostico, Mecanico, MecanicoRol } from './domain';
 
 export interface LoginRequestDTO {
   username: string;
@@ -34,12 +34,6 @@ export interface CambiarPasswordDTO {
 }
 
 export type DiagnosticoHistorialResponseDTO = Diagnostico;
-
-export interface ActualizarEstadoDiagnosticoDTO {
-  diagnostico_id: string;
-  nuevo_estado: EstadoDiagnostico;
-  notas_mecanico?: string;
-}
 
 export interface MecanicoCreateDTO {
   nombres: string;
@@ -93,6 +87,8 @@ export interface CrearCasoValidacionDTO {
 }
 
 export interface MetricasValidacionDTO {
+  registros_completos_pretest_porcentaje: number;
+  registros_completos_posttest_porcentaje: number;
   total_casos: number;
   total_aciertos: number;
   total_desaciertos: number;

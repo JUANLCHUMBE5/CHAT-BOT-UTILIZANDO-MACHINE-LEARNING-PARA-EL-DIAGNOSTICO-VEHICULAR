@@ -1,4 +1,5 @@
 import os
+import re
 import threading
 import time
 import uuid
@@ -22,7 +23,12 @@ from src.core.security import anonimizar_identificador
 from src.core.session_manager import SessionManager
 from src.core.taxonomy.catalogo_fallas import CATALOGO_TAXONOMIA
 from src.core.traductor_jerga import normalizar_jerga_peruana
-from src.core.vehicle_profile import extraer_datos_vehiculo, kilometraje_es_ambiguo
+from src.core.vehicle_profile import (
+    extraer_datos_vehiculo,
+    extraer_datos_vehiculo_contextual,
+    kilometraje_es_ambiguo,
+)
+from src.core.whatsapp_response import formatear_consulta_tecnica_whatsapp
 from src.infrastructure.container import ServiceContainer
 
 _tracker_lock = threading.Lock()
@@ -166,16 +172,33 @@ class GestorDiagnostico:
 
         saludos = [
             "hola", "holaa", "holaaa", "buenas", "buenos dias", "buenas tardes", "buenas noches",
-            "hola tengo un problema", "hola tengo problemas",
-            "tengo una falla", "hola buenas", "saludos", "hola que tal", "ayuda", "consulta"
+            "hola buenas", "saludos", "hola que tal"
         ]
         
         tiene_componente = any(pm in texto_limpio for pm in VOCABULARIO_COMPONENTES)
         tiene_verbo = any(vf in texto_limpio for vf in VERBOS_FALLA)
         
         if texto_limpio in saludos or (any(s in texto_limpio for s in ["hola", "buenas"]) and not tiene_componente and not tiene_verbo):
-            return True, "👋 ¡Hola! Bienvenido a CarBot. Por favor, cuéntame: **¿Qué problema o síntoma presenta tu vehículo hoy?**"
+            return True, "👋 Hola. ¿Qué falla presenta el vehículo?"
         return False, ""
+
+    @staticmethod
+    def _es_respuesta_cordial(texto: str) -> bool:
+        """Reconoce respuestas breves que no representan un síntoma nuevo."""
+
+        limpio = texto.strip().lower().strip(" .,!¡¿?")
+        return limpio in {
+            "ok",
+            "okay",
+            "bien",
+            "está bien",
+            "esta bien",
+            "entendido",
+            "gracias",
+            "perfecto",
+            "listo",
+            "de acuerdo",
+        }
 
     @staticmethod
     def _es_continuacion_contextual(texto: str) -> bool:
@@ -189,10 +212,122 @@ class GestorDiagnostico:
         )
         return any(limpio.startswith(valor) or valor in limpio for valor in conectores)
 
+    @staticmethod
+    def _es_perdida_potencia_bajo_carga(texto: str) -> bool:
+        limpio = texto.lower()
+        sintomas = (
+            "pierde fuerza", "pierde potencia", "perdida de fuerza", "perdida de potencia",
+            "sin fuerza", "se aguanta", "no acelera", "no responde al acelerar",
+            "tirones al acelerar", "tironea al acelerar", "jalonea al acelerar",
+        )
+        carga = ("aceler", "subida", "velocidad", "carga", "corriendo", "carretera")
+        return any(sintoma in limpio for sintoma in sintomas) and any(valor in limpio for valor in carga)
+
+    @staticmethod
+    def _extraer_contexto_combustible(texto: str) -> tuple[Optional[str], Optional[str]]:
+        limpio = texto.lower()
+        combustible: Optional[str] = None
+        if "gnv" in limpio or "gas natural" in limpio:
+            combustible = "GNV"
+        elif "glp" in limpio:
+            combustible = "GLP"
+        elif "gasolina" in limpio:
+            combustible = "gasolina"
+
+        ambos = (
+            "ambos", "los dos", "en los 2", "en ambos", "tanto en gasolina como",
+            "gasolina y gnv", "gnv y gasolina", "gasolina y glp", "glp y gasolina",
+        )
+        if any(valor in limpio for valor in ambos):
+            return combustible, "ambos"
+
+        frases_bien = ("funciona bien", "anda bien", "va bien", "normal", "no falla")
+        clausulas = [
+            clausula.strip()
+            for clausula in re.split(r"[,;]|\bpero\b|\by\b", limpio)
+            if clausula.strip()
+        ]
+        gasolina_bien = any(
+            "gasolina" in clausula and any(frase in clausula for frase in frases_bien)
+            for clausula in clausulas
+        )
+        gas_bien = any(
+            any(gas in clausula for gas in ("gnv", "glp", "gas natural"))
+            and any(frase in clausula for frase in frases_bien)
+            for clausula in clausulas
+        )
+        solo_gas = bool(
+            re.search(
+                r"\bsolo(?:\s+\w+){0,2}\s+(?:en|a|con|usando)\s+"
+                r"(?:gnv|glp|gas natural|gas)\b",
+                limpio,
+            )
+        )
+        solo_gasolina = bool(
+            re.search(
+                r"\bsolo(?:\s+\w+){0,2}\s+(?:en|a|con|usando)\s+gasolina\b",
+                limpio,
+            )
+        )
+        if solo_gas:
+            return combustible, "solo_gas"
+        if solo_gasolina:
+            return combustible, "solo_gasolina"
+        if gasolina_bien:
+            return combustible, "solo_gas"
+        if gas_bien:
+            return combustible, "solo_gasolina"
+        return combustible, None
+
+    @staticmethod
+    def _texto_modo_combustible(combustible: str, modo: str) -> str:
+        descripciones = {
+            "solo_gas": f"La falla ocurre solo usando {combustible}; en gasolina funciona bien.",
+            "solo_gasolina": "La falla ocurre solo usando gasolina; con gas funciona bien.",
+            "ambos": "La falla ocurre tanto usando gasolina como usando gas.",
+        }
+        return f"Combustible confirmado: {combustible}. {descripciones[modo]}"
+
+    def _resultado_solicitud_combustible(
+        self, sesion, combustible: Optional[str] = None
+    ) -> ResultadoDiagnostico:
+        if combustible in {"GNV", "GLP"}:
+            pregunta = f"🔎 ¿Falla solo en *{combustible}*, en gasolina o en ambos?"
+        else:
+            pregunta = "🔎 ¿Usa *GNV*, *GLP* o gasolina? ¿En cuál presenta la falla?"
+        return ResultadoDiagnostico(
+            respuesta_texto=pregunta,
+            diagnostico_ml="Pendiente de comparar el modo de combustible",
+            confianza_ml=0.0,
+            contexto_manual="",
+            titulo_manual="",
+            requiere_revision_humana=True,
+            estado_sesion="esperando_combustible",
+            modo_diagnostico="esperando_clarificacion",
+            sintoma_evaluado=sesion.consulta_combustible_pendiente or "",
+            tipo_consulta="aclaracion",
+        )
+
     def _es_consulta_ambigua(self, texto: str) -> Tuple[bool, str]:
         """Determina si la consulta del usuario es incompleta o ambigua utilizando contexto técnico dinámico."""
         texto_limpio = texto.strip().lower()
         words = texto_limpio.split()
+
+        if "vibracion" in texto_limpio and not any(
+            detalle in texto_limpio
+            for detalle in (
+                "al frenar",
+                "al acelerar",
+                "velocidad",
+                "km/h",
+                "en minimo",
+                "en ralenti",
+                "volante",
+                "asiento",
+                "pedal",
+            )
+        ):
+            return True, "🔎 ¿Vibra al frenar, a cierta velocidad o en mínimo?"
         
         frases_ambiguas = [
             "el carro falla", "mi auto falla", "mi carro falla", "tengo un problema", "tengo problemas",
@@ -202,7 +337,7 @@ class GestorDiagnostico:
         
         # Consulta explícitamente genérica o vacía
         if texto_limpio in frases_ambiguas:
-            return True, "⚠️ Por favor, especifique el síntoma con más detalle (ej. si ocurre al frenar, al acelerar, al arrancar, al abrir puertas o si se escucha algún ruido/chillido)."
+            return True, "⚠️ Especifique: ¿ocurre al arrancar, acelerar o frenar?"
 
         # Si el mensaje es descriptivo (>= 6 palabras) no declararlo ambiguo ciegamente
         if len(words) >= 6:
@@ -220,7 +355,7 @@ class GestorDiagnostico:
                 return True, "⚠️ Por favor, especifique el síntoma con más detalle. Por ejemplo: ¿El control remoto acciona las demás puertas? ¿Se escucha accionar el actuador eléctrico? ¿La puerta abre manualmente con la llave o la manija exterior?"
             if any(k in texto_limpio for k in ["vidrio", "luna", "elevalunas", "ventana", "alzacristales"]):
                 return True, "⚠️ Por favor, especifique el síntoma con más detalle. Por ejemplo: ¿El motor del elevalunas emite sonido al presionar el botón? ¿El vidrio se cayó dentro de la puerta o está atascado en las guías?"
-            return True, "⚠️ Por favor, especifique el síntoma con más detalle (ej. si ocurre al frenar, al acelerar, al arrancar, al abrir puertas o si se escucha algún ruido/chillido)."
+            return True, "⚠️ Especifique: ¿ocurre al arrancar, acelerar o frenar?"
 
         return False, ""
 
@@ -269,6 +404,13 @@ class GestorDiagnostico:
             "modo",
             "consulta_tecnica" if uso_llm.get("usado") else "consulta_tecnica_degradada",
         )
+        if proveedor.lower() in {"meta", "twilio", "whatsapp"} and modo != (
+            "consulta_tecnica_en_cola"
+        ):
+            respuesta = formatear_consulta_tecnica_whatsapp(
+                respuesta,
+                modelo_informado=bool(extraer_datos_vehiculo(pregunta).get("modelo")),
+            )
         return ResultadoDiagnostico(
             respuesta_texto=respuesta,
             diagnostico_ml="Consulta técnica informativa",
@@ -294,16 +436,10 @@ class GestorDiagnostico:
 
     @staticmethod
     def _campos_requeridos_consulta_tecnica(pregunta: str) -> list[str]:
-        texto = pregunta.lower()
-        campos = ["marca", "modelo", "anio"]
-        if any(
-            termino in texto
-            for termino in ("refrigerante", "aceite", "foco", "led", "bujía", "bujia", "batería", "bateria")
-        ):
-            campos.append("motor")
-        if any(termino in texto for termino in ("gnv", "glp", "equipo de gas", "directo a gas")):
-            campos.append("equipo_gas")
-        return campos
+        """Los datos del vehículo enriquecen la respuesta, pero no bloquean la consulta."""
+
+        del pregunta
+        return []
 
     @staticmethod
     def _formatear_perfil_vehiculo(perfil: dict) -> str:
@@ -345,15 +481,11 @@ class GestorDiagnostico:
             if sesion.kilometraje_por_aclarar
             else ""
         )
-        ejemplo = "Toyota Corolla 2020, motor 1.8 gasolina"
-        if "equipo_gas" in faltantes:
-            ejemplo += ", equipo GNV Tomasetto Achille"
         return ResultadoDiagnostico(
             respuesta_texto=(
-                "🔎 *Necesito identificar el vehículo antes de responder*\n\n"
+                "🔎 *Necesito aclarar un dato antes de dar una cifra exacta*\n\n"
                 f"{solicitud}{aclaracion}\n\n"
-                f"Ejemplo: _{ejemplo}_.\n"
-                "Si no conoces el motor o el equipo instalado, escribe *no sé*."
+                "Marca, modelo y año son opcionales y no bloquean el análisis."
             ),
             diagnostico_ml="Consulta técnica pendiente de datos del vehículo",
             confianza_ml=0.0,
@@ -444,29 +576,75 @@ class GestorDiagnostico:
 
         clave_sesion = session_id or (placa if placa not in (None, "REST-API", "WAPP-01") else None)
         sesion_pendiente = self.session_manager.obtener_sesion(clave_sesion) if clave_sesion else None
-        if sesion_pendiente and sesion_pendiente.estado == "esperando_datos_vehiculo":
-            datos_recibidos = extraer_datos_vehiculo(texto_normalizado)
-            if marca_modelo and marca_modelo not in ("Vehiculo Generico", "Generico", ""):
-                datos_recibidos.update(extraer_datos_vehiculo(marca_modelo))
-            sesion_pendiente.actualizar_perfil(datos_recibidos)
-            if sesion_pendiente.campos_faltantes() or sesion_pendiente.kilometraje_por_aclarar:
-                return self._resultado_solicitud_datos_vehiculo(sesion_pendiente)
+        if sesion_pendiente and sesion_pendiente.estado == "esperando_combustible":
+            combustible, modo_falla = self._extraer_contexto_combustible(texto_normalizado)
+            combustible_anterior = sesion_pendiente.perfil_vehiculo.get("combustible")
+            if combustible in {"GNV", "GLP"} or (combustible and not combustible_anterior):
+                sesion_pendiente.actualizar_perfil({"combustible": combustible})
+            sesion_pendiente.establecer_modo_falla_combustible(modo_falla)
+            combustible_confirmado = sesion_pendiente.perfil_vehiculo.get("combustible")
+            if not combustible_confirmado or not sesion_pendiente.modo_falla_combustible:
+                return self._resultado_solicitud_combustible(
+                    sesion_pendiente, combustible_confirmado
+                )
 
-            pregunta_original = sesion_pendiente.consulta_tecnica_pendiente or texto_normalizado
-            perfil_texto = self._formatear_perfil_vehiculo(sesion_pendiente.perfil_vehiculo)
-            pregunta_contextual = f"{pregunta_original}\n\nDATOS CONFIRMADOS DEL VEHÍCULO:\n{perfil_texto}"
-            sesion_pendiente.reiniciar()
-            return self._procesar_consulta_tecnica(
-                pregunta_contextual,
-                inicio_total=inicio_total,
-                remitente=remitente,
-                proveedor=proveedor,
-                taller_id=taller_id,
-                usuario_id=usuario_id,
-                conversacion_id=conversacion_id,
-                slot_gemini_preconcedido=slot_gemini_preconcedido,
-                diferir_encolado_persistente=diferir_encolado_persistente,
+            pregunta_original = sesion_pendiente.consulta_combustible_pendiente or ""
+            contexto_combustible = self._texto_modo_combustible(
+                combustible_confirmado, sesion_pendiente.modo_falla_combustible
             )
+            texto_normalizado = f"{pregunta_original} {contexto_combustible}".strip()
+            sesion_pendiente.reiniciar()
+
+        if sesion_pendiente and sesion_pendiente.estado == "esperando_datos_vehiculo":
+            # Compatibilidad con conversaciones creadas antes de que marca, modelo,
+            # año, motor y equipo pasaran a ser datos opcionales.
+            sesion_pendiente.campos_requeridos = []
+            es_nueva_consulta = (
+                clasificar_intencion_consulta(texto_normalizado) == "consulta_tecnica"
+            )
+            if es_nueva_consulta:
+                # Una pregunta nueva reemplaza la consulta antigua pendiente; no debe
+                # responder sobre otro vehículo o componente por arrastre de contexto.
+                sesion_pendiente.reiniciar()
+            else:
+                datos_recibidos = extraer_datos_vehiculo_contextual(
+                    texto_normalizado,
+                    sesion_pendiente.campos_faltantes(),
+                    sesion_pendiente.perfil_vehiculo,
+                )
+                if marca_modelo and marca_modelo not in (
+                    "Vehiculo Generico",
+                    "Generico",
+                    "",
+                ):
+                    datos_recibidos.update(extraer_datos_vehiculo(marca_modelo))
+                sesion_pendiente.actualizar_perfil(datos_recibidos)
+                if sesion_pendiente.kilometraje_por_aclarar:
+                    return self._resultado_solicitud_datos_vehiculo(sesion_pendiente)
+
+                pregunta_original = (
+                    sesion_pendiente.consulta_tecnica_pendiente or texto_normalizado
+                )
+                perfil_texto = self._formatear_perfil_vehiculo(
+                    sesion_pendiente.perfil_vehiculo
+                )
+                pregunta_contextual = pregunta_original
+                if perfil_texto:
+                    pregunta_contextual += (
+                        f"\n\nDATOS CONFIRMADOS DEL VEHÍCULO:\n{perfil_texto}"
+                    )
+                sesion_pendiente.reiniciar()
+                return self._procesar_consulta_tecnica(
+                    pregunta_contextual,
+                    inicio_total=inicio_total,
+                    remitente=remitente,
+                    proveedor=proveedor,
+                    taller_id=taller_id,
+                    usuario_id=usuario_id,
+                    conversacion_id=conversacion_id,
+                    slot_gemini_preconcedido=slot_gemini_preconcedido,
+                    diferir_encolado_persistente=diferir_encolado_persistente,
+                )
 
         # 0.1. Validar si es un saludo / contacto inicial sin síntoma
         es_saludo, mensaje_saludo = self._es_saludo_o_contacto_inicial(texto_normalizado)
@@ -480,6 +658,21 @@ class GestorDiagnostico:
                 contexto_manual="",
                 titulo_manual="",
                 modo_diagnostico="saludo",
+                tipo_consulta="conversacional",
+            )
+
+        if self._es_respuesta_cordial(texto_normalizado):
+            if clave_sesion:
+                self.session_manager.reiniciar_sesion(clave_sesion)
+            return ResultadoDiagnostico(
+                respuesta_texto="👍 Entendido.",
+                diagnostico_ml="Confirmación conversacional",
+                confianza_ml=0.0,
+                contexto_manual="",
+                titulo_manual="",
+                modo_diagnostico="conversacional",
+                sintoma_evaluado=texto_normalizado,
+                tipo_consulta="conversacional",
             )
 
         if clave_sesion:
@@ -505,6 +698,22 @@ class GestorDiagnostico:
             marca_evaluar = marca_modelo
             placa_evaluar = placa
 
+        combustible_detectado, modo_falla_combustible = self._extraer_contexto_combustible(
+            texto_evaluar
+        )
+        if clave_sesion and self._es_perdida_potencia_bajo_carga(texto_evaluar):
+            sesion_combustible = self.session_manager.obtener_o_crear_sesion(clave_sesion)
+            combustible_confirmado = (
+                combustible_detectado or sesion_combustible.perfil_vehiculo.get("combustible")
+            )
+            if combustible_detectado:
+                sesion_combustible.actualizar_perfil({"combustible": combustible_detectado})
+            if not combustible_confirmado or not modo_falla_combustible:
+                sesion_combustible.establecer_consulta_combustible(texto_evaluar)
+                return self._resultado_solicitud_combustible(
+                    sesion_combustible, combustible_confirmado
+                )
+
         tipo_consulta = clasificar_intencion_consulta(texto_evaluar)
         logger.debug("Intención detectada: %s", tipo_consulta)
         if tipo_consulta == "consulta_tecnica":
@@ -522,8 +731,13 @@ class GestorDiagnostico:
                 if sesion_tecnica.campos_faltantes() or sesion_tecnica.kilometraje_por_aclarar:
                     return self._resultado_solicitud_datos_vehiculo(sesion_tecnica)
 
-                perfil_texto = self._formatear_perfil_vehiculo(sesion_tecnica.perfil_vehiculo)
-                texto_evaluar = f"{texto_evaluar}\n\nDATOS CONFIRMADOS DEL VEHÍCULO:\n{perfil_texto}"
+                perfil_texto = self._formatear_perfil_vehiculo(
+                    sesion_tecnica.perfil_vehiculo
+                )
+                if perfil_texto:
+                    texto_evaluar += (
+                        f"\n\nDATOS CONFIRMADOS DEL VEHÍCULO:\n{perfil_texto}"
+                    )
                 sesion_tecnica.reiniciar()
             return self._procesar_consulta_tecnica(
                 texto_evaluar,
@@ -550,6 +764,7 @@ class GestorDiagnostico:
                 requiere_revision_humana=True,
                 estado_sesion="esperando_clarificacion",
                 modo_diagnostico="esperando_clarificacion",
+                tipo_consulta="aclaracion",
             )
 
         if tipo_consulta == "fuera_de_alcance":
@@ -557,8 +772,7 @@ class GestorDiagnostico:
                 self.session_manager.reiniciar_sesion(clave_sesion)
             return ResultadoDiagnostico(
                 respuesta_texto=(
-                    "ℹ️ Puedo ayudarte con diagnósticos y consultas técnicas automotrices. "
-                    "Indica la marca, modelo y año del vehículo, o describe el síntoma que presenta."
+                    "🚗 Describe el síntoma, por ejemplo: *vibra al manejar*."
                 ),
                 diagnostico_ml="Consulta fuera del alcance automotriz",
                 confianza_ml=0.0,
@@ -601,6 +815,14 @@ class GestorDiagnostico:
             predicciones_ml = [
                 PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza)
             ]
+        if (
+            self._es_perdida_potencia_bajo_carga(texto_evaluar)
+            and modo_falla_combustible == "solo_gas"
+            and confianza < settings.diagnostic.confidence_threshold
+        ):
+            diagnostico_predictivo = (
+                "Sistema GNV/GLP: diferenciar calibración, presión, filtros e inyectores"
+            )
         tiempo_ml_ms = max(0, int((time.perf_counter() - inicio_ml) * 1000))
         
         # =========================================================
@@ -824,11 +1046,11 @@ class GestorDiagnostico:
             REGLAS:
             1. Responde la pregunta directamente; no inventes una avería ni presentes una predicción ML.
             2. Distingue recomendaciones generales de especificaciones exactas del fabricante.
-            3. Si faltan marca, modelo, año, motor o tipo de equipo, pide esos datos antes de dar una cifra exacta.
+            3. Marca, modelo, año, motor y tipo de equipo son opcionales: no bloquees la respuesta. Si faltan, da orientación general y solicítalos solo como ayuda para una cifra exacta.
             4. Si el contexto documental tiene coincidencia baja, dilo brevemente y no inventes capacidades, potencias, intervalos ni requisitos legales.
             5. Para GNV/GLP, indica que la configuración depende del fabricante del equipo y de un centro de conversión autorizado.
             6. Para refrigerante, iluminación, lubricantes o repuestos, prioriza el manual del fabricante y la homologación aplicable.
-            7. Da una respuesta breve con orientación, datos que faltan y verificación segura recomendada.
+            7. Usa como máximo 45 palabras y un solo párrafo. Responde primero lo esencial y no repitas encabezados ni contexto.
             8. No saludes, no llames «colega» al usuario y no repitas la presentación de CarBot.
             9. Los datos del vehículo fueron declarados por el usuario, no verificados por VIN.
             10. Solo llama «especificación exacta» a un dato respaldado por un manual compatible en marca, modelo, año y motor.
@@ -854,7 +1076,7 @@ class GestorDiagnostico:
                         "contents": [{"parts": [{"text": prompt_sistema}]}],
                         "generationConfig": {
                             "temperature": 0.2,
-                            "maxOutputTokens": 1200,
+                            "maxOutputTokens": 140 if tipo_consulta == "consulta_tecnica" else 1200,
                         },
                     }
                     response = self._http_session.post(url, json=payload, headers=headers, timeout=10)
@@ -934,17 +1156,30 @@ class GestorDiagnostico:
                 logger.info(
                     f"[Gemini Queue] Solicitud {solicitud.id[:8]} colocada en cola de espera (Posición: {posicion}, Espera: ~{espera_segundos}s, Proveedor: {proveedor})."
                 )
-                mensaje_cola = (
-                    f"⏳ *Analizando consulta (cola #{posicion})*\n"
-                    f"Hipótesis preliminar, no confirmada: *{diagnostico_ml}* ({confianza_pct}%).\n"
-                    "En breve recibirás el resumen; el detalle quedará en el panel."
-                )
-                if tipo_consulta == "consulta_tecnica":
+                es_prioridad_gas = diagnostico_ml.startswith("Sistema GNV/GLP")
+                if es_prioridad_gas:
                     mensaje_cola = (
-                        f"⏳ *Analizando consulta técnica (cola #{posicion})*\n"
-                        "En breve recibirás una orientación informativa. "
-                        "No se registrará como una avería ni como un diagnóstico."
+                        f"⏳ *Analizando consulta (cola #{posicion})*\n"
+                        "Como la falla ocurre solo en GNV/GLP, revisaré primero una posible "
+                        "descalibración y la alimentación de gas bajo carga.\n"
+                        f"Es una hipótesis por confirmar; la confianza ML es {confianza_pct}%."
                     )
+                elif confianza_pct < int(settings.diagnostic.confidence_threshold * 100):
+                    mensaje_cola = (
+                        f"⏳ *Analizando consulta (cola #{posicion})*\n"
+                        f"La clasificación inicial tiene baja confianza ({confianza_pct}%). "
+                        "No asumiré una pieza hasta contrastar datos y pruebas.\n"
+                        "En breve recibirás el resumen; el detalle quedará en el panel."
+                    )
+                else:
+                    mensaje_cola = (
+                        f"⏳ *Analizando consulta (cola #{posicion})*\n"
+                        f"Hipótesis preliminar, no confirmada: *{diagnostico_ml}* "
+                        f"({confianza_pct}%).\n"
+                        "En breve recibirás el resumen; el detalle quedará en el panel."
+                    )
+                if tipo_consulta == "consulta_tecnica":
+                    mensaje_cola = f"⏳ Analizando (cola #{posicion}). Te respondo en breve."
                 return mensaje_cola, {
                     "usado": False,
                     "modelo": None,
@@ -968,8 +1203,8 @@ class GestorDiagnostico:
                 respuesta_tecnica = (
                     "💡 *Consulta técnica identificada*\n\n"
                     "No encontré una fuente documental suficientemente cercana para dar una cifra "
-                    "exacta con seguridad. Indica marca, modelo, año, motor y, si corresponde, "
-                    "la marca y modelo del equipo GNV o del componente. Verifica la especificación "
+                    "exacta con seguridad. Puedes agregar, si los conoces, marca, modelo, año, motor "
+                    "y el equipo GNV/GLP. Estos datos son opcionales; verifica la especificación "
                     "en el manual del fabricante o con un centro autorizado."
                 )
             else:

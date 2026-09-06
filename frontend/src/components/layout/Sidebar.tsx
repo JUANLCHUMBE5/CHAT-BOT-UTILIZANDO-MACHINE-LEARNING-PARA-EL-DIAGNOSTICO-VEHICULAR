@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Users, Brain, ShieldCheck, X } from 'lucide-react';
+import React from 'react';
+import { LayoutDashboard, Users, Brain, X } from 'lucide-react';
 import type { UsuarioSesion } from '../../types';
-import { apiService } from '../../services/api';
 
 export type NavTab = 'inicio' | 'gestion' | 'proyecto';
 
@@ -16,7 +15,6 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  user,
   activeTab,
   onSelectTab,
   isMobileOpen,
@@ -24,29 +22,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isDesktopCollapsed = false,
   solicitudesPendientesCount = 0,
 }) => {
-  const [saludSistema, setSaludSistema] = useState<'ready' | 'not_ready' | 'offline' | 'checking'>('checking');
-
-  useEffect(() => {
-    let montado = true;
-    const verificarSalud = async () => {
-      const res = await apiService.getHealthReady();
-      if (montado) {
-        setSaludSistema(res.status);
-      }
-    };
-
-    verificarSalud();
-    const intervalo = setInterval(verificarSalud, 30000);
-    return () => {
-      montado = false;
-      clearInterval(intervalo);
-    };
-  }, []);
-
   const navItems: { id: NavTab; label: string; icon: React.ReactNode; badgeCount?: number }[] = [
     { id: 'inicio', label: 'Inicio', icon: <LayoutDashboard size={18} /> },
-    { id: 'gestion', label: 'Gestión y actividad', icon: <Users size={18} />, badgeCount: solicitudesPendientesCount },
-    { id: 'proyecto', label: 'Proyecto CarBot', icon: <Brain size={18} /> },
+    { id: 'gestion', label: 'Accesos y diagnósticos', icon: <Users size={18} />, badgeCount: solicitudesPendientesCount },
+    { id: 'proyecto', label: 'Impacto y validación', icon: <Brain size={18} /> },
   ];
 
   const content = (
@@ -55,7 +34,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        justifyContent: 'space-between',
         padding: '20px 12px',
       }}
     >
@@ -139,58 +117,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      {/* Workshop info widget */}
-      <div
-        style={{
-          padding: '14px',
-          backgroundColor: 'var(--bg-subtle)',
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--border-color)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '6px',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary)' }}>
-          <ShieldCheck size={16} />
-          <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-main)' }}>
-            {user?.taller || 'Taller Autorizado'}
-          </span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
-          <span
-            style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              backgroundColor:
-                saludSistema === 'ready'
-                  ? '#10b981'
-                  : saludSistema === 'not_ready'
-                  ? '#f59e0b'
-                  : saludSistema === 'offline'
-                  ? '#ef4444'
-                  : '#94a3b8',
-              display: 'inline-block',
-              boxShadow:
-                saludSistema === 'ready'
-                  ? '0 0 6px rgba(16, 185, 129, 0.4)'
-                  : saludSistema === 'offline'
-                  ? '0 0 6px rgba(239, 68, 68, 0.4)'
-                  : 'none',
-            }}
-          />
-          <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-            {saludSistema === 'ready'
-              ? 'Sistema CarBot AI Activo'
-              : saludSistema === 'not_ready'
-              ? 'Servicios Parciales'
-              : saludSistema === 'offline'
-              ? 'Sin Conexión con Servidor'
-              : 'Verificando Sistema...'}
-          </span>
-        </div>
-      </div>
     </div>
   );
 

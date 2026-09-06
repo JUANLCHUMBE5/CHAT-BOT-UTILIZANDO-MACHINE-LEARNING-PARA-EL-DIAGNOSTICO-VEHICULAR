@@ -21,7 +21,9 @@ if (-not $ruffCommand) {
 Push-Location $backend
 try {
     & $ruffCommand check src tests main.py scripts ..\machine_learning\training ..\infrastructure\database\postgresql
+    if ($LASTEXITCODE -ne 0) { throw "Ruff detectó errores (código $LASTEXITCODE)." }
     & $python -m pytest -q
+    if ($LASTEXITCODE -ne 0) { throw "Pytest falló (código $LASTEXITCODE)." }
 }
 finally {
     Pop-Location
@@ -30,6 +32,7 @@ finally {
 Push-Location $frontend
 try {
     npm run verify
+    if ($LASTEXITCODE -ne 0) { throw "La verificación del frontend falló (código $LASTEXITCODE)." }
 }
 finally {
     Pop-Location

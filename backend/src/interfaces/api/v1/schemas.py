@@ -6,9 +6,9 @@ from pydantic import BaseModel, Field
 
 class SymptomRequestDTO(BaseModel):
     sintoma: str = Field(..., max_length=500, description="Texto con la descripción del síntoma o problema del auto", json_schema_extra={"example": "siento un chillido feo al frenar el carro"})
-    marca: Optional[str] = Field(default="Generico", max_length=50, description="Marca del vehículo", json_schema_extra={"example": "Toyota"})
-    modelo: Optional[str] = Field(default="Generico", max_length=50, description="Modelo del vehículo", json_schema_extra={"example": "Yaris"})
-    anio: Optional[int] = Field(default=2015, ge=1900, le=2100, description="Año de fabricación del vehículo", json_schema_extra={"example": 2018})
+    marca: Optional[str] = Field(default=None, max_length=50, description="Marca opcional del vehículo", json_schema_extra={"example": "Toyota"})
+    modelo: Optional[str] = Field(default=None, max_length=50, description="Modelo opcional del vehículo", json_schema_extra={"example": "Yaris"})
+    anio: Optional[int] = Field(default=None, ge=1900, le=2100, description="Año opcional de fabricación", json_schema_extra={"example": 2018})
     placa: Optional[str] = Field(default=None, max_length=20, description="Placa del vehículo", json_schema_extra={"example": "ABC-123"})
     session_id: Optional[str] = Field(default=None, max_length=100, description="ID de sesión para el seguimiento conversacional", json_schema_extra={"example": "sess-12345"})
 

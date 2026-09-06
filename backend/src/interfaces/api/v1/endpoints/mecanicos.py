@@ -4,75 +4,35 @@ from __future__ import annotations
 
 import re
 import uuid
-from typing import List, Literal, Optional
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.core.authorization import exigir_gestion_usuarios
 from src.core.security import (
     cifrar_texto_reversible,
     generar_password_hash,
     hash_identificador_persistencia,
-    verificar_jwt_token,
 )
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.repositories.identidad_whatsapp_repository import IdentidadWhatsAppRepository
 from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
 from src.infrastructure.database.repositories.solicitud_acceso_repository import SolicitudAccesoRepository
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
+from src.interfaces.api.v1.dtos.mecanicos import (
+    CambiarRolDTO,
+    MecanicoCreateDTO,
+    MecanicoResponseDTO,
+    MecanicoUpdateDTO,
+)
 
 router = APIRouter()
 
 
-class MecanicoCreateDTO(BaseModel):
-    nombres: str
-    username: Optional[str] = None
-    telefono_whatsapp: str
-    password: Optional[str] = None
-    rol: Literal["mecanico", "jefe_taller", "administrador"] = "mecanico"
-
-
-class MecanicoUpdateDTO(BaseModel):
-    nombres: Optional[str] = None
-    username: Optional[str] = None
-    telefono_whatsapp: Optional[str] = None
-    password: Optional[str] = None
-
-
-
-class CambiarRolDTO(BaseModel):
-    nuevo_rol: Literal["mecanico", "jefe_taller", "administrador"]
-    password: Optional[str] = None
-
-
-class MecanicoResponseDTO(BaseModel):
-    id: str
-    nombres: str
-    username: Optional[str] = None
-    telefono: str
-    rol: str
-    activo: bool
-    bloqueado: bool
-    fecha_registro: str
-    total_diagnosticos: int
-    ultimo_acceso: str
-
-
-def exigir_rol_administrativo(payload: dict = Depends(verificar_jwt_token)) -> dict:
-    """Asegura que solo un administrador pueda operar el panel."""
-    rol = payload.get("rol", "")
-    if rol not in ("administrador", "admin"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Acceso denegado. Se requiere rol administrativo.",
-        )
-    return payload
-
-
 @router.get("", response_model=List[MecanicoResponseDTO], summary="Listar mecánicos del taller")
-async def listar_mecanicos(payload: dict = Depends(exigir_rol_administrativo)):
+async def listar_mecanicos(payload: dict = Depends(exigir_gestion_usuarios)):
     """Retorna la lista de mecánicos pertenecientes al taller autenticado desde PostgreSQL."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
     taller_uuid = uuid.UUID(taller_id_str)
@@ -101,9 +61,14 @@ async def listar_mecanicos(payload: dict = Depends(exigir_rol_administrativo)):
     raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
 
 
-@router.post("", response_model=MecanicoResponseDTO, summary="Registrar nuevo mecánico")
+@router.post(
+    "",
+    response_model=MecanicoResponseDTO,
+    status_code=status.HTTP_201_CREATED,
+    summary="Registrar nuevo mecánico",
+)
 async def registrar_mecanico(
-    dto: MecanicoCreateDTO, payload: dict = Depends(exigir_rol_administrativo)
+    dto: MecanicoCreateDTO, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Registra personal; solo las cuentas administrativas reciben contraseña web."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -284,7 +249,7 @@ async def registrar_mecanico(
 
 @router.patch("/{mecanico_id}/activar", response_model=MecanicoResponseDTO, summary="Alternar activación de mecánico")
 async def toggle_activar_mecanico(
-    mecanico_id: str, payload: dict = Depends(exigir_rol_administrativo)
+    mecanico_id: str, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Activa o desactiva la cuenta de un mecánico verificando taller_id."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -343,7 +308,7 @@ async def toggle_activar_mecanico(
 
 @router.patch("/{mecanico_id}/bloquear", response_model=MecanicoResponseDTO, summary="Alternar bloqueo de mecánico")
 async def toggle_bloquear_mecanico(
-    mecanico_id: str, payload: dict = Depends(exigir_rol_administrativo)
+    mecanico_id: str, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Bloquea o desbloquea el acceso de un mecánico verificando taller_id."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -405,7 +370,7 @@ async def toggle_bloquear_mecanico(
 
 @router.patch("/{mecanico_id}/rol", response_model=MecanicoResponseDTO, summary="Cambiar el rol de un mecánico")
 async def cambiar_rol_mecanico(
-    mecanico_id: str, dto: CambiarRolDTO, payload: dict = Depends(exigir_rol_administrativo)
+    mecanico_id: str, dto: CambiarRolDTO, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Cambia el rol de un usuario o mecánico en PostgreSQL."""
     taller_uuid = uuid.UUID(str(payload.get("taller_id")))
@@ -491,7 +456,7 @@ async def cambiar_rol_mecanico(
 @router.patch("/{mecanico_id}/revocar-acceso", summary="Revocar acceso técnico y regresar a cliente")
 @router.delete("/{mecanico_id}", summary="Compatibilidad: revocar acceso técnico", deprecated=True)
 async def revocar_acceso_mecanico(
-    mecanico_id: str, payload: dict = Depends(exigir_rol_administrativo)
+    mecanico_id: str, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Retira permisos internos sin borrar identidad, conversaciones ni diagnósticos."""
     try:
@@ -559,7 +524,7 @@ async def revocar_acceso_mecanico(
 async def actualizar_mecanico(
     mecanico_id: str,
     dto: MecanicoUpdateDTO,
-    payload: dict = Depends(exigir_rol_administrativo),
+    payload: dict = Depends(exigir_gestion_usuarios),
 ):
     """Actualiza los datos personales de un mecánico (nombres, teléfono WhatsApp, contraseña)."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")

@@ -9,6 +9,29 @@ from __future__ import annotations
 
 import re
 
+# Variantes frecuentes de dictado/ASR y escritura informal. Son equivalencias
+# automotrices cerradas: evitamos un corrector difuso general que pueda cambiar
+# nombres de modelos, marcas o componentes válidos.
+DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
+    (
+        r"\bhumo blanco\b[^.]{0,100}\b(?:consume|pierde)\s+(?:el\s+)?refrigerante\b",
+        "vapor blanco consume refrigerante posible empaque de culata",
+    ),
+    (
+        r"\bp\s*0*300\b",
+        "codigo p0300 de falla de encendido multiple misfire en cilindros, revisar bujias o bobinas",
+    ),
+    (r"\bg\s*[.\-]?\s*n\s*[.\-]?\s*[bv]\b|\b(?:gnb|gnev|genebe)\b", "gnv"),
+    (r"\bg\s*[.\-]?\s*l\s*[.\-]?\s*[bp]\b|\b(?:glb|gelepe)\b", "glp"),
+    (r"\b(?:menjar|menejar|manegar)\b", "manejar"),
+    (r"\bvibraci[oó]n(?:es)?\b", "vibracion"),
+    (
+        r"\b(?:se\s+)?(?:vuelve|pone|queda)\s+chanch[oa]\b|"
+        r"\b(?:se\s+)?(?:chanchea|chanchaea|achancha|achanchea|chanchonea)\b",
+        "pierde potencia y presenta tirones al acelerar",
+    ),
+)
+
 # Las frases más específicas deben ir antes que las palabras individuales.
 # No se incluyen equivalencias regionales ambiguas (por ejemplo, ``cardán`` no
 # se transforma en ``palier``) porque podrían cambiar el sistema diagnosticado.
@@ -55,7 +78,6 @@ DICCIONARIO_JERGA_PERUANA: tuple[tuple[str, str], ...] = (
     (r"\bcaña\b", "vehiculo"),
     (r"\bcascabelea\b", "preignicion o falla de bujias por cascabeleo"),
     (r"\bcascabeleando\b", "preignicion o falla de bujias"),
-    (r"\bchanchaea\b", "falla de encendido en cilindro misfire"),
     (r"\bcabecea\b", "vibracion e inestabilidad en el motor"),
     (r"\bse chupa\b", "pierde potencia y se aguanta al acelerar"),
     (r"\bse aguanta\b", "perdida de fuerza al acelerar"),
@@ -89,7 +111,12 @@ def normalizar_jerga_peruana(texto: str) -> str:
         return ""
 
     texto_procesado = texto.lower()
-    for patron, reemplazo in DICCIONARIO_JERGA_LATAM + DICCIONARIO_JERGA_PERUANA:
+    diccionarios = (
+        DICCIONARIO_VARIANTES_ENTRADA
+        + DICCIONARIO_JERGA_LATAM
+        + DICCIONARIO_JERGA_PERUANA
+    )
+    for patron, reemplazo in diccionarios:
         texto_procesado = re.sub(patron, reemplazo, texto_procesado, flags=re.IGNORECASE)
 
     return re.sub(r"\s+", " ", texto_procesado).strip()

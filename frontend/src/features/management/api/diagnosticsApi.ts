@@ -1,5 +1,4 @@
 import { apiService } from '../../../services/api';
-import type { ActualizarEstadoDiagnosticoDTO } from '../../../types';
 
 export const diagnosticsApi = {
   listar: (filtros?: {
@@ -7,7 +6,9 @@ export const diagnosticsApi = {
     estado?: string;
     modo?: string;
     mecanico_id?: string;
+    limite?: number;
+    offset?: number;
+    fecha_desde?: string;
+    fecha_hasta?: string;
   }) => apiService.getDiagnosticos(filtros),
-  actualizarEstado: (dto: ActualizarEstadoDiagnosticoDTO) =>
-    apiService.actualizarEstadoDiagnostico(dto),
 };

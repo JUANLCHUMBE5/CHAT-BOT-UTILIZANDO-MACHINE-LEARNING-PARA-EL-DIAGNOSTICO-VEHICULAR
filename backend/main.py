@@ -1,10 +1,12 @@
+import asyncio
 import re
 import subprocess
 import uuid
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -27,11 +29,17 @@ from slowapi.middleware import SlowAPIMiddleware
 
 from scripts.descargar_modelo import asegurar_artefactos_modelo
 from src.application.jobs import gemini_rate_limiter
+from src.application.jobs.system_worker import SystemWorker
 from src.application.services import GestorDiagnostico
 from src.config import settings
 from src.core.logger import logger
 from src.core.services.retention_service import aplicar_retencion_datos
 from src.infrastructure.database.connection import cerrar_conexion, comprobar_conexion
+from src.interfaces.api.errors import (
+    manejar_error_no_controlado,
+    manejar_error_validacion,
+    manejar_http_exception,
+)
 from src.interfaces.api.v1.router import api_router
 from src.limiter import limiter
 
@@ -68,12 +76,26 @@ async def lifespan(app: FastAPI):
     logger.info("¡Instancia global Singleton cargada exitosamente!")
 
     # Iniciar worker background para la cola real de Gemini
-    gemini_rate_limiter.iniciar_worker()
+    system_worker = None
+    system_worker_task = None
+    if settings.queue_embedded_worker:
+        gemini_rate_limiter.iniciar_worker()
+        system_worker = SystemWorker(app.state.gestor_diagnostico)
+        system_worker_task = asyncio.create_task(system_worker.run())
 
     try:
         yield
     finally:
-        await gemini_rate_limiter.detener_worker()
+        if settings.queue_embedded_worker:
+            if system_worker is not None:
+                await system_worker.detener()
+            if system_worker_task is not None:
+                system_worker_task.cancel()
+                try:
+                    await system_worker_task
+                except asyncio.CancelledError:
+                    pass
+            await gemini_rate_limiter.detener_worker()
         await cerrar_conexion()
         logger.info("Cerrando recursos de la aplicación...")
 
@@ -92,6 +114,9 @@ app = FastAPI(
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(HTTPException, manejar_http_exception)
+app.add_exception_handler(RequestValidationError, manejar_error_validacion)
+app.add_exception_handler(Exception, manejar_error_no_controlado)
 app.add_middleware(SlowAPIMiddleware)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(settings.trusted_hosts))
 
@@ -101,7 +126,13 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-CSRF-Token"],
-    expose_headers=["X-Request-ID", "X-RateLimit-Limit", "X-RateLimit-Remaining", "Retry-After"],
+    expose_headers=[
+        "X-Request-ID",
+        "X-RateLimit-Limit",
+        "X-RateLimit-Remaining",
+        "X-Total-Count",
+        "Retry-After",
+    ],
 )
 
 
@@ -140,7 +171,7 @@ def read_root():
         "estado": "online",
         "sistema": settings.app_name,
         "taller": "Taller Mecánico en Carabayllo",
-        "seguridad": "JWT Bearer Token (2 Horas Exp.) + Validación Firma HMAC + Rate Limiting + Concurrencia Thread-Safe",
+        "seguridad": "JWT Bearer de 30 minutos + refresh HttpOnly + HMAC + rate limiting",
         "documentacion": "Módulos de la arquitectura modular cargados correctamente: Presentación (api/v1), Aplicación, Infraestructura."
     }
 

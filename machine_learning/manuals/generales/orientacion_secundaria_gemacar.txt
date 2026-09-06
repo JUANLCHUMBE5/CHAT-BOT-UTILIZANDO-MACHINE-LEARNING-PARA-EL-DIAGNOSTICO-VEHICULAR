@@ -1,0 +1,318 @@
+=== ORIENTACION SECUNDARIA NO VALIDADA: EL AUTO NO ARRANCA ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto no arranca.
+Condicion: al girar la llave o pulsar el boton de encendido.
+Causas posibles a diferenciar: bateria descargada; bornes sulfatados o flojos; alternador que no carga; motor de arranque defectuoso; fusible quemado; problema de llave, inmovilizador o alarma; bomba de gasolina defectuosa.
+Factores no concluyentes que deben descartarse: falta de combustible.
+Revision inicial: Revisar luces, bornes y sonido al intentar arrancar.
+Pregunta de aclaracion: ¿El motor gira, solo hace clic o no enciende ninguna luz?
+Urgencia orientativa: ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: CHECK ENGINE ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: se enciende la luz check engine.
+Condicion: con el motor encendido.
+Causas posibles a diferenciar: tapa de combustible floja o dañada; sensor de oxigeno defectuoso; bujias o bobinas en mal estado; mezcla incorrecta de aire y combustible; catalizador con problema; sensor de motor defectuoso; fuga de vacio; problema del sistema de emisiones.
+Revision inicial: Leer codigos OBD2 y comprobar si la luz esta fija o parpadea.
+Pregunta de aclaracion: ¿La luz esta fija o parpadea?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: MOTOR RECALENTADO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el motor se calienta.
+Condicion: durante la marcha o en trafico.
+Causas posibles a diferenciar: nivel bajo de refrigerante; fuga de refrigerante; radiador obstruido o dañado; motoventilador que no enciende; termostato trabado; bomba de agua defectuosa; tapa de radiador dañada; aceite bajo o degradado.
+Revision inicial: Comprobar temperatura y refrigerante solo con el motor frio.
+Pregunta de aclaracion: ¿Sube la temperatura, pierde refrigerante o sale vapor?
+Urgencia orientativa: ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: EL AUTO SE APAGA SOLO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto se apaga solo.
+Condicion: en minimo, en marcha, al frenar o al acelerar.
+Causas posibles a diferenciar: bomba de gasolina debil; filtro de combustible obstruido; alternador defectuoso; conexion deficiente de bateria; sensor de cigüeñal defectuoso; sensor de arbol de levas defectuoso; cuerpo de aceleracion sucio; valvula IAC sucia o defectuosa; fuga de vacio.
+Revision inicial: Precisar cuando se apaga y revisar combustible, carga y admision.
+Pregunta de aclaracion: ¿Se apaga en minimo, al frenar, al acelerar o despues de calentarse?
+Urgencia orientativa: ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: BATERIA DESCARGADA ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: la bateria se descarga con frecuencia.
+Condicion: con el vehiculo apagado o despues de trayectos cortos.
+Causas posibles a diferenciar: bateria envejecida; alternador que no carga; bornes sucios o flojos; consumo electrico parasitario; degradacion por calor.
+Factores no concluyentes que deben descartarse: luces o accesorios quedaron encendidos; trayectos demasiado cortos.
+Revision inicial: Medir bateria, carga del alternador, bornes y consumo en reposo.
+Pregunta de aclaracion: ¿Se descarga aun despues de cargarla o cambiarla?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: ALTERNADOR EN MAL ESTADO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: hay luz de bateria, luces debiles o apagones.
+Condicion: con el motor en funcionamiento.
+Causas posibles a diferenciar: alternador defectuoso.
+Revision inicial: Medir voltaje de bateria y carga del alternador.
+Pregunta de aclaracion: ¿Las luces se debilitan o el auto se apaga con el motor encendido?
+Urgencia orientativa: ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: PERDIDA DE POTENCIA ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto pierde fuerza.
+Condicion: al acelerar o subir pendientes.
+Causas posibles a diferenciar: filtro de aire sucio; filtro de combustible obstruido; bujias desgastadas; bobinas defectuosas; inyectores sucios; sensor MAF o MAP defectuoso; catalizador obstruido; problema de transmision.
+Factores no concluyentes que deben descartarse: combustible de mala calidad.
+Revision inicial: Revisar filtro de aire, respuesta al acelerar y codigos OBD2.
+Pregunta de aclaracion: ¿Pierde fuerza al acelerar, en subida o en ambos casos?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: CONSUMO EXCESIVO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto consume demasiado combustible.
+Condicion: comparado con su consumo habitual.
+Causas posibles a diferenciar: filtro de aire sucio; bujias en mal estado; sensor de oxigeno defectuoso; inyectores sucios; frenos pegados.
+Factores no concluyentes que deben descartarse: presion baja de neumaticos; aceite incorrecto; manejo agresivo; exceso de peso.
+Revision inicial: Comparar consumo y revisar mantenimiento y presion de neumaticos.
+Pregunta de aclaracion: ¿Aumento el consumo junto con tirones, humo o perdida de fuerza?
+Urgencia orientativa: MEDIA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: HUMO BLANCO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: sale humo blanco por el escape.
+Condicion: de forma persistente con el motor caliente.
+Causas posibles a diferenciar: refrigerante entrando al motor; empaque de culata dañado.
+Revision inicial: Comprobar perdida de refrigerante y temperatura.
+Pregunta de aclaracion: ¿El humo desaparece al calentar o sigue siendo denso?
+Urgencia orientativa: ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: VAPOR BLANCO EN FRIO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: sale vapor blanco leve por el escape.
+Condicion: solo al encender en frio y desaparece.
+Condiciones que pueden ser normales: condensacion normal.
+Revision inicial: Observar si desaparece al alcanzar temperatura normal.
+Pregunta de aclaracion: ¿Desaparece pocos minutos despues del arranque?
+Urgencia orientativa: BAJA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: HUMO AZUL ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: sale humo azul por el escape.
+Condicion: al acelerar o de forma constante.
+Causas posibles a diferenciar: aceite quemado por desgaste o sellos.
+Revision inicial: Revisar nivel y consumo de aceite.
+Pregunta de aclaracion: ¿Baja el nivel de aceite entre servicios?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: HUMO NEGRO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: sale humo negro por el escape.
+Condicion: al acelerar o bajo carga.
+Causas posibles a diferenciar: mezcla rica de combustible; filtro de aire muy sucio; inyectores defectuosos; sensor de mezcla defectuoso.
+Revision inicial: Revisar mezcla, filtro de aire, inyectores y sensores.
+Pregunta de aclaracion: ¿El humo aparece al acelerar y aumento el consumo?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: RUIDOS AL CONDUCIR ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: se escucha un ruido nuevo en el auto.
+Condicion: al frenar, pasar baches, rodar, girar o acelerar.
+Causas posibles a diferenciar: pastillas de freno gastadas; bujes o suspension desgastados; rodamiento o neumatico defectuoso; correa floja o desgastada; bajo aceite o daño interno de motor; direccion, junta homocinetica o suspension.
+Revision inicial: Identificar origen, tipo de ruido y momento en que aparece.
+Pregunta de aclaracion: ¿Suena al frenar, girar, acelerar o pasar un bache?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: VIBRACION A VELOCIDAD ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto vibra al manejar.
+Condicion: a una velocidad determinada.
+Causas posibles a diferenciar: neumaticos desbalanceados; rin doblado; neumatico deformado; falta de alineacion.
+Revision inicial: Revisar balanceo, alineacion, neumaticos y rines.
+Pregunta de aclaracion: ¿Vibra a cierta velocidad, al frenar o tambien detenido?
+Urgencia orientativa: MEDIA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: VIBRACION AL FRENAR ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto o el pedal vibra al frenar.
+Condicion: durante el frenado.
+Causas posibles a diferenciar: discos de freno deformados.
+Revision inicial: Inspeccionar discos y componentes del sistema de frenos.
+Pregunta de aclaracion: ¿La vibracion aparece solo al pisar el freno?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: VIBRACION EN MINIMO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el motor vibra estando detenido.
+Condicion: en minimo o ralenti.
+Causas posibles a diferenciar: soporte de motor dañado; falla de combustion.
+Revision inicial: Revisar soportes y descartar falla de combustion.
+Pregunta de aclaracion: ¿Vibra detenido y cambia al acelerar?
+Urgencia orientativa: MEDIA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: VIBRACION EN MARCHA ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el vehiculo vibra durante la marcha.
+Condicion: al acelerar o cambiar de carga.
+Causas posibles a diferenciar: junta homocinetica o palier desgastado; componente de suspension desgastado.
+Revision inicial: Revisar ejes, juntas homocineticas y suspension.
+Pregunta de aclaracion: ¿Se siente en el volante, asiento o en todo el vehiculo?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: FUGA DE LIQUIDO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: hay una fuga de liquido debajo del auto.
+Condicion: despues de estacionar.
+Causas posibles a diferenciar: fuga de aceite de motor; fuga de refrigerante; fuga de fluido de transmision; fuga de liquido de frenos.
+Condiciones que pueden ser normales: agua limpia del aire acondicionado.
+Revision inicial: Identificar color, ubicacion y variacion del nivel.
+Pregunta de aclaracion: ¿De que color es el liquido y debajo de que zona aparece?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: DISTRIBUCION ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: hay ruido, fallas o perdida de sincronizacion.
+Condicion: cerca de la correa de distribucion.
+Causas posibles a diferenciar: correa de distribucion desgastada o fuera de punto.
+Revision inicial: Comprobar historial, kilometraje y sincronizacion sin desmontar a ciegas.
+Pregunta de aclaracion: ¿La correa supero su intervalo o hay ruido en esa zona?
+Urgencia orientativa: ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Fallas comunes del auto: guia para diagnosticar sintomas, causas y que revisar.
+URL: https://gemacar.com/blog/fallas-comunes-auto/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: CAUSAS COMUNES DE PERDIDA DE POTENCIA ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el motor pierde potencia.
+Condicion: de forma general.
+Causas posibles a diferenciar: filtro de aire sucio; inyectores sucios; cuerpo de aceleracion sucio; sensor MAF o MAP defectuoso; bujias gastadas; bobinas defectuosas; bomba de gasolina debil; filtro de combustible obstruido; catalizador obstruido; sensor de oxigeno defectuoso; fuga de vacio; problema de transmision; bajo voltaje o falla electrica; motor sobrecalentado.
+Revision inicial: Leer codigos y revisar aire, encendido, combustible, escape y transmision.
+Pregunta de aclaracion: ¿Ocurre al acelerar, subir, en caliente o todo el tiempo?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Perdida de potencia del motor: causas comunes y que revisar primero.
+URL: https://gemacar.com/blog/perdida-de-potencia-del-motor/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: PERDIDA DE POTENCIA AL ACELERAR ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto pierde potencia al acelerar.
+Condicion: al pisar el acelerador.
+Causas posibles a diferenciar: filtro de aire sucio; sensor MAF o MAP defectuoso; bujias gastadas; bobinas defectuosas; inyectores sucios; presion de combustible insuficiente; cuerpo de aceleracion sucio; catalizador obstruido; problema de transmision.
+Revision inicial: Revisar admision, encendido, combustible, escape y entrega de transmision.
+Pregunta de aclaracion: ¿Da tirones, suben las revoluciones o se ahoga?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Perdida de potencia del motor: causas comunes y que revisar primero.
+URL: https://gemacar.com/blog/perdida-de-potencia-del-motor/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: PERDIDA DE POTENCIA EN SUBIDA ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto pierde fuerza en subidas.
+Condicion: bajo carga o en pendientes.
+Causas posibles a diferenciar: bomba de gasolina debil; filtro de combustible obstruido; catalizador obstruido; bujias o bobinas defectuosas; inyectores sucios; problema de transmision; baja compresion del motor.
+Revision inicial: Medir combustible y revisar encendido, escape, transmision y compresion.
+Pregunta de aclaracion: ¿Falla solo en subida o tambien al acelerar en plano?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Perdida de potencia del motor: causas comunes y que revisar primero.
+URL: https://gemacar.com/blog/perdida-de-potencia-del-motor/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: PERDIDA DE POTENCIA CON HUMO NEGRO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto pierde potencia y bota humo negro.
+Condicion: al acelerar o bajo carga.
+Causas posibles a diferenciar: inyectores goteando; sensor MAF o MAP defectuoso; sensor de oxigeno defectuoso; filtro de aire muy sucio; bujias defectuosas; bobinas defectuosas; mezcla rica; catalizador afectado.
+Revision inicial: Revisar mezcla, admision, encendido, inyeccion y escape.
+Pregunta de aclaracion: ¿El humo aparece al acelerar y aumento el consumo?
+Urgencia orientativa: ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Perdida de potencia del motor: causas comunes y que revisar primero.
+URL: https://gemacar.com/blog/perdida-de-potencia-del-motor/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: PERDIDA DE POTENCIA Y CONSUMO ALTO ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto pierde potencia y consume mas combustible.
+Condicion: en uso habitual.
+Causas posibles a diferenciar: bujias gastadas; inyectores sucios; filtro de aire sucio; sensor de oxigeno defectuoso; sensor MAF o MAP defectuoso; cuerpo de aceleracion sucio; catalizador obstruido; frenos pegados.
+Factores no concluyentes que deben descartarse: trafico, clima o habito de manejo.
+Revision inicial: Revisar encendido, inyeccion, admision, sensores, escape y frenos.
+Pregunta de aclaracion: ¿Tambien hay tirones, humo negro o check engine?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Perdida de potencia del motor: causas comunes y que revisar primero.
+URL: https://gemacar.com/blog/perdida-de-potencia-del-motor/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: PERDIDA DE POTENCIA SIN CHECK ENGINE ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto pierde potencia sin encender check engine.
+Condicion: sin luces de averia.
+Causas posibles a diferenciar: filtro de aire sucio; frenos pegados; alineacion deficiente; filtro de combustible restringido; catalizador parcialmente obstruido; transmision desgastada.
+Factores no concluyentes que deben descartarse: presion baja de neumaticos; mantenimiento atrasado; peso excesivo; aceite incorrecto.
+Revision inicial: Revisar elementos mecanicos y mantenimiento aunque no existan codigos.
+Pregunta de aclaracion: ¿Ocurre siempre, a cierta velocidad o solo bajo carga?
+Urgencia orientativa: MEDIA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Perdida de potencia del motor: causas comunes y que revisar primero.
+URL: https://gemacar.com/blog/perdida-de-potencia-del-motor/
+
+=== ORIENTACION SECUNDARIA NO VALIDADA: PERDIDA DE POTENCIA CON VIBRACIONES O TIRONES ===
+Estado: fuente web secundaria; pendiente de validacion mecanica.
+Sintoma: el auto pierde fuerza, vibra o da tirones.
+Condicion: al acelerar o bajo carga.
+Causas posibles a diferenciar: bujias o bobinas defectuosas; inyectores o suministro de combustible; soportes de motor dañados; problema de transmision.
+Revision inicial: Separar falla de combustion, soportes, combustible y transmision.
+Pregunta de aclaracion: ¿Vibra detenido, al acelerar o al cambiar de marcha?
+Urgencia orientativa: MEDIA_ALTA.
+Regla de seguridad: no confirmar una pieza ni ordenar un reemplazo sin pruebas fisicas, codigos y mediciones del fabricante.
+Fuente secundaria: Perdida de potencia del motor: causas comunes y que revisar primero.
+URL: https://gemacar.com/blog/perdida-de-potencia-del-motor/

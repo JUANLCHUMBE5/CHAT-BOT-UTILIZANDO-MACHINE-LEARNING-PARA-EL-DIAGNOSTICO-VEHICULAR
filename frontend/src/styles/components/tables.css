@@ -1,0 +1,80 @@
+/* Table transitions and responsiveness */
+.table-row-hover {
+  transition: background-color 0.18s ease !important;
+}
+
+.table-row-hover:hover {
+  background-color: rgba(234, 88, 12, 0.035) !important;
+}
+
+.table-responsive-container,
+div[style*="overflowX: 'auto'"],
+div[style*="overflow-x: auto"] {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 640px) {
+  .table-responsive-container table,
+  div[style*="overflowX: 'auto'"] table,
+  div[style*="overflow-x: auto"] table {
+    min-width: 480px;
+  }
+}
+
+/* Responsive Diagnostic Table vs Mobile Card Feed */
+.diagnosticos-desktop-table {
+  display: block;
+}
+.diagnosticos-mobile-list {
+  display: none;
+}
+
+.diagnosticos-filtros-grid {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.4fr) repeat(3, minmax(120px, 1fr));
+  gap: 8px;
+  align-items: center;
+}
+.diagnosticos-filtros-search {
+  grid-column: auto;
+}
+
+@media (max-width: 768px) {
+  .diagnosticos-desktop-table {
+    display: none;
+  }
+  .diagnosticos-mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .diagnosticos-filtros-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .diagnosticos-filtros-search {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Gestion Subtabs Grid: 4 columns on desktop, 2x2 grid on mobile */
+.gestion-subtabs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  background-color: #f1f5f9;
+  padding: 4px;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .gestion-subtabs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+  }
+}

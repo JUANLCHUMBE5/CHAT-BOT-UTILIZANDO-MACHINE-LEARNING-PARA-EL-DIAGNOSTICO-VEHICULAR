@@ -12,8 +12,11 @@ export function useMetricas() {
     setCargando(true);
     setError(null);
     try {
-      const data = await dashboardApi.getResumenMetricas(fechaInicio, fechaFin);
-      setMetricas(data);
+      const [data, colas] = await Promise.all([
+        dashboardApi.getResumenMetricas(fechaInicio, fechaFin),
+        dashboardApi.getMetricasColas().catch(() => undefined),
+      ]);
+      setMetricas({ ...data, colas });
     } catch (error: unknown) {
       setError(getErrorMessage(error, 'Error al cargar las métricas ejecutivas'));
     } finally {

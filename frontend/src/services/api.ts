@@ -1,5 +1,4 @@
 import type {
-  ActualizarEstadoDiagnosticoDTO,
   AprobarSolicitudResponseDTO,
   CasoValidacionDTO,
   Cliente,
@@ -12,6 +11,7 @@ import type {
   MecanicoUpdateDTO,
   MecanicoRol,
   MetricasValidacionDTO,
+  MetricasCola,
   ResumenMetricas,
   SolicitudAcceso,
   TokenResponseDTO,
@@ -175,8 +175,11 @@ class ApiService {
 
   async logout(): Promise<void> {
     try {
+      const headers = new Headers();
+      if (accessTokenInMemory) headers.set('Authorization', `Bearer ${accessTokenInMemory}`);
       await fetch(`${API_BASE_URL}/auth/logout`, {
         method: 'POST',
+        headers,
         credentials: 'include',
       });
     } finally {
@@ -184,16 +187,27 @@ class ApiService {
     }
   }
 
-  async getResumenMetricas(fechaInicio?: string, fechaFin?: string): Promise<ResumenMetricas> {
+  async getResumenMetricas(fechaInicio?: string, fechaFin?: string, todo = false): Promise<ResumenMetricas> {
     const url = new URL(`${API_BASE_URL}/metricas/resumen`);
     if (fechaInicio) url.searchParams.append('fecha_inicio', fechaInicio);
     if (fechaFin) url.searchParams.append('fecha_fin', fechaFin);
+    if (todo) url.searchParams.set('todo', 'true');
 
     const res = await authFetch(url.toString(), {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
       throw new Error(await extractErrorMessage(res, 'Error consultando métricas en PostgreSQL'));
+    }
+    return await res.json();
+  }
+
+  async getMetricasColas(): Promise<MetricasCola> {
+    const res = await authFetch(`${API_BASE_URL}/metricas/colas`, {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) {
+      throw new Error(await extractErrorMessage(res, 'Error consultando el estado de las colas'));
     }
     return await res.json();
   }
@@ -254,15 +268,19 @@ class ApiService {
     return await res.json();
   }
 
-  async eliminarMecanico(id: string): Promise<{ mensaje: string }> {
+  async revocarAccesoMecanico(id: string): Promise<{ mensaje: string }> {
     const res = await authFetch(`${API_BASE_URL}/mecanicos/${id}/revocar-acceso`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
-      throw new Error(await extractErrorMessage(res, 'No se pudo regresar el usuario a cliente'));
+      throw new Error(await extractErrorMessage(res, 'No se pudo revocar el acceso técnico del mecánico'));
     }
     return await res.json();
+  }
+
+  async eliminarMecanico(id: string): Promise<{ mensaje: string }> {
+    return this.revocarAccesoMecanico(id);
   }
 
   async cambiarRolMecanico(id: string, nuevo_rol: MecanicoRol, password?: string): Promise<Mecanico> {
@@ -284,7 +302,9 @@ class ApiService {
     mecanico_id?: string;
     limite?: number;
     offset?: number;
-  }): Promise<Diagnostico[]> {
+    fecha_desde?: string;
+    fecha_hasta?: string;
+  }): Promise<{ items: Diagnostico[]; total: number }> {
     const url = new URL(`${API_BASE_URL}/diagnostico/historial`);
     if (params) {
       if (params.busqueda) url.searchParams.append('busqueda', params.busqueda);
@@ -293,6 +313,8 @@ class ApiService {
       if (params.mecanico_id) url.searchParams.append('mecanico_id', params.mecanico_id);
       if (params.limite !== undefined) url.searchParams.append('limite', params.limite.toString());
       if (params.offset !== undefined) url.searchParams.append('offset', params.offset.toString());
+      if (params.fecha_desde) url.searchParams.append('fecha_desde', params.fecha_desde);
+      if (params.fecha_hasta) url.searchParams.append('fecha_hasta', params.fecha_hasta);
     }
 
     const res = await authFetch(url.toString(), {
@@ -301,24 +323,12 @@ class ApiService {
     if (!res.ok) {
       throw new Error(await extractErrorMessage(res, 'Error consultando diagnósticos en PostgreSQL'));
     }
-    return await res.json();
-  }
-
-  async actualizarEstadoDiagnostico(
-    dto: ActualizarEstadoDiagnosticoDTO
-  ): Promise<{ mensaje: string }> {
-    const res = await authFetch(`${API_BASE_URL}/diagnostico/${dto.diagnostico_id}/confirmar`, {
-      method: 'PATCH',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
-        nuevo_estado: dto.nuevo_estado,
-        notas_mecanico: dto.notas_mecanico,
-      }),
-    });
-    if (!res.ok) {
-      throw new Error(await extractErrorMessage(res, 'No se pudo confirmar el diagnóstico en PostgreSQL'));
-    }
-    return await res.json();
+    const items = await res.json() as Diagnostico[];
+    const totalHeader = Number(res.headers.get('X-Total-Count'));
+    return {
+      items,
+      total: Number.isFinite(totalHeader) ? totalHeader : items.length,
+    };
   }
 
   // ==========================================
@@ -421,11 +431,34 @@ class ApiService {
     }
   }
 
+  async getTrabajosFallidos(limite: number = 20): Promise<Array<{ id: string; tipo: string; payload: Record<string, unknown>; error?: string; reintentos: number; creado_en: string }>> {
+    const res = await authFetch(`${API_BASE_URL}/metricas/trabajos/fallidos?limite=${limite}`, {
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) {
+      return [];
+    }
+    return await res.json();
+  }
+
+  async reintentarTrabajoFallido(trabajoId: string): Promise<{ status: string; trabajo_id: string }> {
+    const res = await authFetch(`${API_BASE_URL}/metricas/trabajos/${trabajoId}/reintentar`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    });
+    if (!res.ok) {
+      throw new Error(await extractErrorMessage(res, 'Error al reintentar trabajo fallido'));
+    }
+    return await res.json();
+  }
+
   // ==========================================
   // VALIDACIÓN REAL DE TALLER & TRACKER TESIS
   // ==========================================
 
   async getCasosValidacion(params?: {
+    fecha_desde?: string;
+    fecha_hasta?: string;
     fase?: string;
     marca?: string;
     acierto?: number;
@@ -434,6 +467,8 @@ class ApiService {
     limit?: number;
   }): Promise<{ total: number; skip: number; limit: number; casos: CasoValidacionDTO[] }> {
     const url = new URL(`${API_BASE_URL}/validacion-taller`);
+    if (params?.fecha_desde) url.searchParams.set('fecha_desde', params.fecha_desde);
+    if (params?.fecha_hasta) url.searchParams.set('fecha_hasta', params.fecha_hasta);
     if (params?.fase) url.searchParams.append('fase', params.fase);
     if (params?.marca) url.searchParams.append('marca', params.marca);
     if (params?.acierto !== undefined) url.searchParams.append('acierto', String(params.acierto));
@@ -450,8 +485,10 @@ class ApiService {
     return await res.json();
   }
 
-  async getMetricasValidacion(): Promise<MetricasValidacionDTO> {
-    const res = await authFetch(`${API_BASE_URL}/validacion-taller/metricas`, {
+  async getMetricasValidacion(periodo: { fecha_desde?: string; fecha_hasta?: string } = {}): Promise<MetricasValidacionDTO> {
+    const url = new URL(`${API_BASE_URL}/validacion-taller/metricas`);
+    for (const [key, value] of Object.entries(periodo)) if (value) url.searchParams.set(key, value);
+    const res = await authFetch(url.toString(), {
       headers: getAuthHeaders(),
     });
     if (!res.ok) {
@@ -461,13 +498,14 @@ class ApiService {
   }
 
   async crearCasoValidacion(dto: CrearCasoValidacionDTO): Promise<CasoValidacionDTO> {
+    const { chatbot_prediccion: prediccion_inicial, ...datos } = dto;
     const res = await authFetch(`${API_BASE_URL}/validacion-taller`, {
       method: 'POST',
       headers: {
         ...getAuthHeaders(),
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(dto),
+      body: JSON.stringify({ ...datos, prediccion_inicial }),
     });
     if (!res.ok) {
       throw new Error(await extractErrorMessage(res, 'Error al registrar caso de validación'));
@@ -477,6 +515,19 @@ class ApiService {
 
   getExportarTrackerCsvUrl(): string {
     return `${API_BASE_URL}/validacion-taller/exportar-csv`;
+  }
+
+  async descargarValidacionCsv(periodo: { fecha_desde?: string; fecha_hasta?: string }) {
+    const url = new URL(this.getExportarTrackerCsvUrl());
+    for (const [key, value] of Object.entries(periodo)) if (value) url.searchParams.set(key, value);
+    const res = await authFetch(url.toString(), { headers: getAuthHeaders() });
+    if (!res.ok) throw new Error(await extractErrorMessage(res, 'No se pudo exportar el período'));
+    const href = URL.createObjectURL(await res.blob());
+    const link = document.createElement('a');
+    link.href = href;
+    link.download = 'validacion-carbot.csv';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(href), 1000);
   }
 }
 

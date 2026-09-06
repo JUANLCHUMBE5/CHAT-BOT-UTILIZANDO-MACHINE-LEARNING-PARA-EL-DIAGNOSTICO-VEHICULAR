@@ -15,14 +15,14 @@ client = TestClient(app)
 # ==========================================
 
 def test_login_y_obtencion_token_jwt():
-    """T1-AUTH: Valid credentials issue a 2-hour expiring Bearer JWT token."""
+    """T1-AUTH: Credenciales válidas emiten un access token de 30 minutos."""
     response = client.post("/api/v1/auth/login", json={"username": "admin", "password": "carbot2026"})
     assert response.status_code == 200
     data = response.json()
     assert "access_token" in data
     assert "refresh_token" in data
     assert data["token_type"] == "bearer"
-    assert data["expires_in_seconds"] == 7200
+    assert data["expires_in_seconds"] == 30 * 60
     assert data["refresh_expires_in_seconds"] == 604800
 
 
@@ -31,17 +31,18 @@ def test_refresh_renueva_ambos_tokens_sin_password():
         "/api/v1/auth/login",
         json={"username": "admin", "password": "carbot2026"},
     )
-    tokens_iniciales = login_response.json()
+    assert login_response.json()["refresh_token"] is None
+    refresh_anterior = client.cookies.get(settings.refresh_cookie_name)
 
-    response = client.post(
-        "/api/v1/auth/refresh",
-        json={"refresh_token": tokens_iniciales["refresh_token"]},
-    )
+    response = client.post("/api/v1/auth/refresh")
 
     assert response.status_code == 200
     tokens_nuevos = response.json()
     assert tokens_nuevos["access_token"]
-    assert tokens_nuevos["refresh_token"]
+    assert tokens_nuevos["refresh_token"] is None
+    refresh_nuevo = client.cookies.get(settings.refresh_cookie_name)
+    assert refresh_nuevo
+    assert refresh_nuevo != refresh_anterior
     assert tokens_nuevos["refresh_expires_in_seconds"] == 604800
 
 def test_login_credenciales_invalidas():
@@ -87,7 +88,7 @@ def test_listar_y_registrar_mecanicos_api():
         "rol": "mecanico"
     }
     res_post = client.post("/api/v1/mecanicos", json=payload, headers=headers)
-    assert res_post.status_code in (200, 503)
+    assert res_post.status_code in (201, 503)
 
 def test_activar_y_bloquear_mecanico_api():
     """T1-ADMIN: PATCH /api/v1/mecanicos/{id}/activar and /bloquear toggle mechanic states."""

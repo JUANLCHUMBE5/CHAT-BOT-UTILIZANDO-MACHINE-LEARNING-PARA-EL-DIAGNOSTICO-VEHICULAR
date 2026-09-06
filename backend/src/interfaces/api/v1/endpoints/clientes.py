@@ -7,69 +7,24 @@ from datetime import datetime, timezone
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.security import (
-    verificar_jwt_token,
-)
+from src.core.authorization import exigir_gestion_usuarios
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
 from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
 from src.infrastructure.database.repositories.solicitud_acceso_repository import SolicitudAccesoRepository
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
+from src.interfaces.api.v1.dtos.clientes import (
+    AprobarSolicitudResponseDTO,
+    ClienteResponseDTO,
+    RechazarSolicitudDTO,
+    SolicitudAccesoResponseDTO,
+)
 
 router = APIRouter()
 
-
-# DTOs
-class ClienteResponseDTO(BaseModel):
-    id: str
-    nombres: str
-    telefono: str
-    tipo_identificador: str
-    activo: bool
-    bloqueado: bool
-    fecha_registro: str
-    ultima_interaccion: str
-    tiene_solicitud_pendiente: bool = False
-    solicitud_id: Optional[str] = None
-
-
-class SolicitudAccesoResponseDTO(BaseModel):
-    id: str
-    usuario_id: str
-    usuario_nombre: str
-    telefono: str
-    rol_solicitado: str
-    estado: str
-    solicitado_en: str
-    revisado_por: Optional[str] = None
-    revisado_en: Optional[str] = None
-    observaciones: Optional[str] = None
-
-
-class AprobarSolicitudResponseDTO(BaseModel):
-    mensaje: str
-    solicitud_id: str
-    usuario_id: str
-    nuevo_rol: str
-
-
-class RechazarSolicitudDTO(BaseModel):
-    motivo: Optional[str] = None
-
-
-def exigir_rol_administrativo(payload: dict = Depends(verificar_jwt_token)) -> dict:
-    """Asegura que solo un administrador pueda operar el panel."""
-    rol = payload.get("rol", "")
-    if rol not in ("administrador", "admin"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Acceso denegado. Se requiere rol administrativo.",
-        )
-    return payload
 
 # ==========================================
 # RUTAS DE CLIENTES
@@ -78,7 +33,7 @@ def exigir_rol_administrativo(payload: dict = Depends(verificar_jwt_token)) -> d
 @router.get("", response_model=List[ClienteResponseDTO], summary="Listar clientes del taller")
 async def listar_clientes(
     busqueda: Optional[str] = Query(None, description="Búsqueda por nombre o últimos 4 dígitos"),
-    payload: dict = Depends(exigir_rol_administrativo),
+    payload: dict = Depends(exigir_gestion_usuarios),
 ):
     """Lista todos los clientes registrados del taller con su última interacción y estado de solicitud."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -134,7 +89,7 @@ async def listar_clientes(
 @router.patch("/{cliente_id}/bloquear", summary="Bloquear o desbloquear contacto cliente")
 async def toggle_bloquear_cliente(
     cliente_id: str,
-    payload: dict = Depends(exigir_rol_administrativo),
+    payload: dict = Depends(exigir_gestion_usuarios),
 ):
     """Bloquea o desbloquea a un contacto cliente verificando el taller_id."""
     try:
@@ -178,7 +133,7 @@ async def toggle_bloquear_cliente(
 @router.get("/solicitudes/listar", response_model=List[SolicitudAccesoResponseDTO], summary="Listar solicitudes de acceso")
 async def listar_solicitudes_acceso(
     estado: Optional[str] = Query(None, description="Filtro por estado: pendiente, aprobada, rechazada"),
-    payload: dict = Depends(exigir_rol_administrativo),
+    payload: dict = Depends(exigir_gestion_usuarios),
 ):
     """Lista las solicitudes de acceso para el taller autenticado."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -216,7 +171,7 @@ async def listar_solicitudes_acceso(
 @router.post("/solicitudes/{solicitud_id}/aprobar", response_model=AprobarSolicitudResponseDTO, summary="Aprobar solicitud de acceso como mecánico")
 async def aprobar_solicitud_acceso(
     solicitud_id: str,
-    payload: dict = Depends(exigir_rol_administrativo),
+    payload: dict = Depends(exigir_gestion_usuarios),
 ):
     """
     Aprueba la solicitud de acceso:
@@ -350,7 +305,7 @@ async def aprobar_solicitud_acceso(
 async def rechazar_solicitud_acceso(
     solicitud_id: str,
     dto: Optional[RechazarSolicitudDTO] = None,
-    payload: dict = Depends(exigir_rol_administrativo),
+    payload: dict = Depends(exigir_gestion_usuarios),
 ):
     """Rechaza una solicitud de acceso pendiente."""
     try:

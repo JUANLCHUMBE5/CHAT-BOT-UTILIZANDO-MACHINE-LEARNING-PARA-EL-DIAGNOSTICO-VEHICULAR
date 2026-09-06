@@ -98,6 +98,7 @@ export interface SolicitudAcceso {
   revisado_por?: string;
   revisado_en?: string;
   observaciones?: string;
+  motivo_rechazo?: string;
 }
 
 export interface ResumenMetricas {
@@ -111,6 +112,20 @@ export interface ResumenMetricas {
   distribucion_modos: { modo: string; cantidad: number }[];
   actividad_diaria: { fecha: string; cantidad: number }[];
   fallas_frecuentes: { falla: string; cantidad: number }[];
+  colas?: MetricasCola;
+}
+
+export interface MetricasCola {
+  total: number;
+  pendientes: number;
+  procesando: number;
+  fallidos: number;
+  espera_promedio_ms: number;
+  worker_activo: boolean;
+  worker_id?: string;
+  ultima_actividad?: string;
+  por_cola: { cola: string; estado: string; cantidad: number }[];
+  consultado_en: string;
 }
 
 export interface FiltrosDiagnostico {

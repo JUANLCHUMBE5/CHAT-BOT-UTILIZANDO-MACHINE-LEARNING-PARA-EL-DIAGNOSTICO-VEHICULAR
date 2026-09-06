@@ -57,12 +57,25 @@ else {
 }
 
 if (-not (Test-ListeningPort -Port 8000)) {
-    $backendCommand = "& '$backendPython' -m alembic upgrade head; if (`$LASTEXITCODE -eq 0) { & '$backendPython' -m uvicorn main:app --reload --port 8000 }"
+    $backendCommand = "`$env:QUEUE_EMBEDDED_WORKER='false'; & '$backendPython' -m alembic upgrade head; if (`$LASTEXITCODE -eq 0) { & '$backendPython' -m uvicorn main:app --reload --port 8000 }"
     Start-CarBotWindow -Title "CarBot - Backend" -WorkingDirectory $backendRoot -Command $backendCommand
     Write-Host "[OK] Iniciando chatbot y API..." -ForegroundColor Green
 }
 else {
     Write-Host "[OK] Backend ya estaba activo en el puerto 8000." -ForegroundColor Green
+}
+
+$workerActivo = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+    Where-Object { $_.CommandLine -like "*src.application.jobs.worker*" } |
+    Select-Object -First 1
+
+if (-not $workerActivo) {
+    $workerCommand = "`$env:QUEUE_EMBEDDED_WORKER='false'; & '$backendPython' -m src.application.jobs.worker"
+    Start-CarBotWindow -Title "CarBot - Worker de Colas" -WorkingDirectory $backendRoot -Command $workerCommand
+    Write-Host "[OK] Iniciando worker de colas y reintentos..." -ForegroundColor Green
+}
+else {
+    Write-Host "[OK] Worker de colas ya estaba activo." -ForegroundColor Green
 }
 
 if (-not (Test-ListeningPort -Port 5173)) {
@@ -108,7 +121,7 @@ if ($backendReady -and $frontendReady) {
     Write-Host "CarBot está listo." -ForegroundColor Green
     Write-Host "Panel: http://localhost:5173"
     Write-Host "API:   http://localhost:8000/docs"
-    Write-Host "No cierres las ventanas de Backend, Panel Web y Ngrok mientras lo uses."
+    Write-Host "No cierres las ventanas de Backend, Worker, Panel Web y Ngrok mientras lo uses."
 }
 else {
     Write-Warning "Algún servicio no terminó de iniciar. Revisa las ventanas abiertas para ver el error."

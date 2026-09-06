@@ -2,21 +2,23 @@ import hmac
 import uuid
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
-from pydantic import BaseModel, Field
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, Security, status
+from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from src.config import settings
+from src.core.access_token_store import access_token_store
 from src.core.login_attempt_store import login_attempt_store
 from src.core.refresh_token_store import refresh_token_store
 from src.core.security import (
-    JWT_EXPIRATION_SECONDS,
     JWT_REFRESH_EXPIRATION_SECONDS,
     crear_jwt_token,
     crear_refresh_token,
+    decodificar_jwt_acceso,
     generar_password_hash,
+    security_bearer,
     verificar_jwt_token_sin_restriccion,
     verificar_password,
     verificar_refresh_token,
@@ -24,43 +26,16 @@ from src.core.security import (
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.models.catalogs import Usuario
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
+from src.interfaces.api.v1.dtos.auth import (
+    CambiarPasswordDTO,
+    LoginRequestDTO,
+    RefreshTokenDTO,
+    TokenResponseDTO,
+    UserInfoDTO,
+)
 from src.limiter import limiter
 
 router = APIRouter()
-
-
-class LoginRequestDTO(BaseModel):
-    username: str = Field(min_length=1, max_length=100)
-    password: str = Field(min_length=1, max_length=128)
-
-
-class UserInfoDTO(BaseModel):
-    id: Optional[str] = None
-    username: str
-    nombre: str
-    rol: str
-    taller_id: str
-    taller_nombre: str
-    requiere_cambio_password: bool = False
-
-
-class CambiarPasswordDTO(BaseModel):
-    password_actual: str
-    password_nuevo: str = Field(min_length=12, max_length=128)
-
-
-class RefreshTokenDTO(BaseModel):
-    refresh_token: str = Field(min_length=20)
-
-
-class TokenResponseDTO(BaseModel):
-    access_token: str
-    refresh_token: Optional[str] = None
-    token_type: str = "bearer"
-    expires_in_seconds: int = JWT_EXPIRATION_SECONDS
-    refresh_expires_in_seconds: int = JWT_REFRESH_EXPIRATION_SECONDS
-    mensaje: str = "Token válido por 2 horas. Incluir en header: Authorization: Bearer <token>"
-    user: Optional[UserInfoDTO] = None
 
 
 def _guardar_cookie_refresh(response: Response, token: str) -> None:
@@ -86,7 +61,7 @@ def _refresh_compatible(token: str) -> Optional[str]:
     return token if settings.legacy_refresh_token_body else None
 
 
-@router.post("/login", response_model=TokenResponseDTO, summary="Generar Token JWT con validez de 2 horas")
+@router.post("/login", response_model=TokenResponseDTO, summary="Iniciar sesión segura")
 @limiter.limit("5/minute")
 async def login(request: Request, response: Response, payload: LoginRequestDTO):
     """
@@ -411,7 +386,15 @@ async def logout(
     request: Request,
     response: Response,
     payload: Optional[RefreshTokenDTO] = None,
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
 ):
+    if credentials:
+        try:
+            access_token_store.revocar(
+                decodificar_jwt_acceso(credentials.credentials, validar_revocacion=False)
+            )
+        except (HTTPException, ValueError):
+            pass
     refresh_recibido = request.cookies.get(settings.refresh_cookie_name)
     if not refresh_recibido and payload:
         refresh_recibido = payload.refresh_token

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 from pydantic import BaseModel, Field, SecretStr
 
@@ -58,6 +59,21 @@ def _env_csv(name: str, default: tuple[str, ...]) -> tuple[str, ...]:
     if not value:
         return default
     return tuple(item.strip() for item in value.split(",") if item.strip())
+
+
+def _trusted_hosts() -> tuple[str, ...]:
+    """Incluye el dominio público configurado sin abrir hosts arbitrarios."""
+    hosts = ["localhost", "127.0.0.1", "testserver", "test"]
+    for configured_host in _env_csv("TRUSTED_HOSTS", ()):
+        if configured_host not in hosts:
+            hosts.append(configured_host)
+    ngrok_value = os.getenv("NGROK_DOMAIN", "").strip()
+    if ngrok_value:
+        parsed = urlparse(ngrok_value if "://" in ngrok_value else f"//{ngrok_value}")
+        ngrok_host = parsed.hostname
+        if ngrok_host and ngrok_host not in hosts:
+            hosts.append(ngrok_host)
+    return tuple(hosts)
 
 
 class PathConfig(BaseModel):
@@ -112,9 +128,7 @@ class AppSettings(BaseModel):
         default_factory=lambda: _env_csv("CORS_ALLOWED_ORIGINS", ("http://localhost:5173",))
     )
     trusted_hosts: tuple[str, ...] = Field(
-        default_factory=lambda: _env_csv(
-            "TRUSTED_HOSTS", ("localhost", "127.0.0.1", "testserver", "test")
-        )
+        default_factory=_trusted_hosts
     )
     expose_health_details: bool = _env_bool("EXPOSE_HEALTH_DETAILS", default=False)
 
@@ -149,7 +163,7 @@ class AppSettings(BaseModel):
     rate_limit_storage_uri: str = os.getenv("RATE_LIMIT_STORAGE_URI", "memory://")
     refresh_cookie_name: str = os.getenv("REFRESH_COOKIE_NAME", "carbot_refresh")
     refresh_cookie_samesite: str = os.getenv("REFRESH_COOKIE_SAMESITE", "lax").lower()
-    legacy_refresh_token_body: bool = _env_bool("LEGACY_REFRESH_TOKEN_BODY", default=True)
+    legacy_refresh_token_body: bool = _env_bool("LEGACY_REFRESH_TOKEN_BODY", default=False)
     login_max_failed_attempts: int = _env_int("LOGIN_MAX_FAILED_ATTEMPTS", 5)
     login_lockout_seconds: int = _env_int("LOGIN_LOCKOUT_SECONDS", 900)
 
@@ -160,6 +174,13 @@ class AppSettings(BaseModel):
     audio_max_bytes: int = _env_int("AUDIO_MAX_BYTES", 10_485_760)
     audio_enabled: bool = _env_bool("AUDIO_ENABLED", "HABILITAR_AUDIO")
     data_retention_days: int = _env_int("DATA_RETENTION_DAYS", 180)
+    queue_embedded_worker: bool = _env_bool("QUEUE_EMBEDDED_WORKER", default=False)
+    queue_poll_interval_ms: int = _env_int("QUEUE_POLL_INTERVAL_MS", 500)
+    queue_max_pending: int = _env_int("QUEUE_MAX_PENDING", 1000)
+    queue_max_pending_per_taller: int = _env_int("QUEUE_MAX_PENDING_PER_TALLER", 200)
+    queue_job_max_attempts: int = _env_int("QUEUE_JOB_MAX_ATTEMPTS", 4)
+    queue_job_lock_seconds: int = _env_int("QUEUE_JOB_LOCK_SECONDS", 180)
+    queue_payload_retention_days: int = _env_int("QUEUE_PAYLOAD_RETENTION_DAYS", 7)
     model_artifact_url: str = os.getenv("MODEL_ARTIFACT_URL", "")
     model_artifact_sha256: str = os.getenv("MODEL_ARTIFACT_SHA256", "")
     model_pkl_sha256: str = os.getenv("MODEL_PKL_SHA256", "")

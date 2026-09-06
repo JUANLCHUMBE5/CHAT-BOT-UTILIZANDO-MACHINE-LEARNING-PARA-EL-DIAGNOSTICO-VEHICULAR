@@ -15,6 +15,8 @@ class DiagnosticSession:
         self.sintomas: List[str] = []
         self.perfil_vehiculo: Dict[str, Any] = {}
         self.consulta_tecnica_pendiente: Optional[str] = None
+        self.consulta_combustible_pendiente: Optional[str] = None
+        self.modo_falla_combustible: Optional[str] = None
         self.campos_requeridos: List[str] = []
         self.kilometraje_por_aclarar: bool = False
         self.estado: str = "inicio"  # inicio, esperando_clarificacion, completo
@@ -38,9 +40,24 @@ class DiagnosticSession:
         with self._lock:
             self.sintomas = []
             self.consulta_tecnica_pendiente = None
+            self.consulta_combustible_pendiente = None
+            self.modo_falla_combustible = None
             self.campos_requeridos = []
             self.kilometraje_por_aclarar = False
             self.estado = "inicio"
+            self.updated_at = time.time()
+
+    def establecer_consulta_combustible(self, sintoma: str) -> None:
+        with self._lock:
+            self.consulta_combustible_pendiente = sintoma
+            self.modo_falla_combustible = None
+            self.estado = "esperando_combustible"
+            self.updated_at = time.time()
+
+    def establecer_modo_falla_combustible(self, modo: Optional[str]) -> None:
+        with self._lock:
+            if modo:
+                self.modo_falla_combustible = modo
             self.updated_at = time.time()
 
     def establecer_consulta_tecnica(
@@ -73,6 +90,8 @@ class DiagnosticSession:
             return {
                 "perfil_vehiculo": dict(self.perfil_vehiculo),
                 "consulta_tecnica_pendiente": self.consulta_tecnica_pendiente,
+                "consulta_combustible_pendiente": self.consulta_combustible_pendiente,
+                "modo_falla_combustible": self.modo_falla_combustible,
                 "campos_requeridos": list(self.campos_requeridos),
                 "kilometraje_por_aclarar": self.kilometraje_por_aclarar,
                 "estado": self.estado,
@@ -85,6 +104,8 @@ class DiagnosticSession:
             modelo = self.perfil_vehiculo.get("modelo")
             self.marca_modelo = f"{marca} {modelo}" if marca and modelo else None
             self.consulta_tecnica_pendiente = contexto.get("consulta_tecnica_pendiente")
+            self.consulta_combustible_pendiente = contexto.get("consulta_combustible_pendiente")
+            self.modo_falla_combustible = contexto.get("modo_falla_combustible")
             self.campos_requeridos = list(contexto.get("campos_requeridos") or [])
             self.kilometraje_por_aclarar = bool(contexto.get("kilometraje_por_aclarar", False))
             self.estado = str(contexto.get("estado") or "inicio")

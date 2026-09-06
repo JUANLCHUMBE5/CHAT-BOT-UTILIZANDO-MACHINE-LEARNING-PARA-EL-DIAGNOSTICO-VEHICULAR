@@ -95,6 +95,7 @@ class MotorRAG:
                 with open(ruta_arch, "r", encoding="utf-8") as f:
                     contenido = f.read()
                 hash_global.update(contenido.encode("utf-8"))
+                es_fuente_secundaria = ruta_arch.name.startswith("orientacion_secundaria_")
 
                 secciones = re.findall(
                     r"^===\s*(.*?)\s*===\s*$\n(.*?)(?=^===|\Z)",
@@ -112,21 +113,45 @@ class MotorRAG:
 
                     # Buscar metadatos específicos
                     tit_lower = titulo.lower()
+                    url_en_cuerpo = re.search(r"^URL:\s*(\S+)", cuerpo, flags=re.MULTILINE)
                     meta = mapa_metadatos.get(tit_lower, {
                         "id_procedimiento": f"RAG_PROC_{len(self.documentos)+1:03d}",
                         "titulo": titulo,
                         "marca": "Multimarca / Universal",
                         "modelo": "General",
-                        "anio": "2018-2024",
-                        "manual_oem": "Manual General de Procedimientos",
-                        "edicion": "Edición de Taller",
+                        "anio": "No especificado",
+                        "manual_oem": (
+                            "Guía web secundaria GemaCar"
+                            if es_fuente_secundaria
+                            else "Manual General de Procedimientos"
+                        ),
+                        "edicion": (
+                            "Orientación secundaria no validada"
+                            if es_fuente_secundaria
+                            else "Edición de Taller"
+                        ),
                         "pagina": len(self.documentos) + 1,
                         "archivo_fuente": str(ruta_arch.name),
                         "sha256_fragmento": huella,
-                        "estado_validacion": "corpus_preliminar_taller",
+                        "url_referencia": url_en_cuerpo.group(1) if url_en_cuerpo else "",
+                        "tipo_licencia": (
+                            "No declarada"
+                            if es_fuente_secundaria
+                            else "Documentación técnica referencial"
+                        ),
+                        "estado_validacion": (
+                            "fuente_secundaria_no_validada"
+                            if es_fuente_secundaria
+                            else "corpus_preliminar_taller"
+                        ),
                         "auditoria": {
-                            "verificado_documental": True,
+                            "verificado_documental": not es_fuente_secundaria,
                             "auditoria_mecanica_formal_firmada": False,
+                            "observacion": (
+                                "No confirmar piezas sin pruebas físicas y validación mecánica."
+                                if es_fuente_secundaria
+                                else "Corpus preliminar de taller."
+                            ),
                         }
                     })
 
@@ -167,6 +192,9 @@ class MotorRAG:
         """Expande la consulta del usuario incluyendo términos técnicos estandarizados y códigos DTC."""
         consulta_lower = consulta.lower()
         expansiones = []
+        vibracion_al_frenar = "vibr" in consulta_lower and "fren" in consulta_lower
+        if vibracion_al_frenar:
+            expansiones.append("vibracion pedal freno discos deformados durante frenado")
         
         diccionario_dtc = {
             "p0300": "bujias cascabeleo misfire encendido",
@@ -208,6 +236,10 @@ class MotorRAG:
             "chapa": "cerradura chapa pestillo puerta trinquete",
             "cerradura": "chapa cerradura pestillo puerta trinquete",
             "humo blanco": "empaquetadura culata refrigerante motor sobrecalentamiento",
+            "humo negro": "mezcla rica inyectores filtro aire maf map sensor oxigeno",
+            "vibra": "vibracion volante asiento pedal velocidad balanceo alineacion freno soportes",
+            "pierde fuerza": "perdida potencia aceleracion subida combustible aire escape transmision",
+            "pierde potencia": "perdida potencia aceleracion subida combustible aire escape transmision",
             "culata": "empaquetadura culata refrigerante motor sobrecalentamiento",
             "refrigerante": "termostato ventilador fuga refrigerante culata",
             "alternador": "alternador bateria sistema electrico carga bornes",
@@ -215,6 +247,8 @@ class MotorRAG:
         }
         
         for clave, valor in diccionario_dtc.items():
+            if clave == "vibra" and vibracion_al_frenar:
+                continue
             if clave in consulta_lower:
                 expansiones.append(valor)
                 
@@ -290,4 +324,3 @@ class MotorRAG:
         """Busca el procedimiento técnico más relevante (compatibilidad retroactiva)."""
         cuerpo, titulo, _, _ = self.recuperar_procedimiento_con_metadatos(consulta, umbral)
         return cuerpo, titulo
-

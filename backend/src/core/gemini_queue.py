@@ -27,12 +27,17 @@ from typing import Any, Callable, Optional, Tuple
 import requests
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.application.services.confirmacion_diagnostico import instrucciones_confirmacion_whatsapp
 from src.config import settings
 from src.core.logger import logger
 from src.core.sanitizer import redactar_datos_sensibles_para_llm, sanitizar_prompt_usuario
 from src.core.security import cifrar_texto_reversible, descifrar_texto_reversible
 from src.core.services.whatsapp_provider import whatsapp_provider_service
+from src.core.traductor_jerga import normalizar_jerga_peruana
+from src.core.vehicle_profile import extraer_datos_vehiculo
+from src.core.whatsapp_response import formatear_consulta_tecnica_whatsapp
 from src.infrastructure.database.connection import database_configurada, obtener_engine
+from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.cuota_gemini_repository import CuotaGeminiRepository
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
@@ -579,6 +584,8 @@ class GeminiRateLimiter:
         return round(espera, 2)
 
     def asegurar_worker_activo(self):
+        if not settings.queue_embedded_worker:
+            return
         """Activa el worker background en el loop de eventos activo si no está corriendo."""
         if not self._worker_corriendo:
             try:
@@ -792,11 +799,11 @@ class GeminiRateLimiter:
             REGLAS:
             1. Responde directamente y no inventes una avería ni una predicción ML.
             2. Separa la orientación general de las especificaciones exactas del fabricante.
-            3. Si faltan marca, modelo, año, motor o equipo, pide esos datos antes de dar cifras exactas.
+            3. Marca, modelo, año, motor y equipo son opcionales: no bloquees la respuesta. Si faltan, da orientación general y solicítalos solo como ayuda para una cifra exacta.
             4. Con coincidencia documental baja, no inventes potencias, intervalos, capacidades ni requisitos legales.
             5. Para GNV/GLP, remite la configuración exacta al fabricante del equipo y a un centro autorizado.
             6. Para refrigerante, iluminación, lubricantes o repuestos, prioriza el manual del fabricante y la homologación aplicable.
-            7. Responde brevemente con orientación, datos faltantes y una verificación segura.
+            7. Usa como máximo 45 palabras y un solo párrafo. Responde primero lo esencial y no repitas encabezados ni contexto.
             8. No saludes, no llames «colega» al usuario y no repitas la presentación de CarBot.
             9. Los datos del vehículo fueron declarados por el usuario, no verificados por VIN.
             10. Solo llama «especificación exacta» a un dato respaldado por un manual compatible en marca, modelo, año y motor.
@@ -822,7 +829,9 @@ class GeminiRateLimiter:
                     "contents": [{"parts": [{"text": prompt_sistema}]}],
                     "generationConfig": {
                         "temperature": 0.2,
-                        "maxOutputTokens": 1200,
+                        "maxOutputTokens": (
+                            140 if solicitud.tipo_consulta == "consulta_tecnica" else 1200
+                        ),
                     },
                 }
 
@@ -904,7 +913,7 @@ class GeminiRateLimiter:
                     texto_respuesta = (
                         "💡 *Consulta técnica identificada*\n\n"
                         "No encontré una fuente documental suficientemente cercana para dar una cifra exacta. "
-                        "Indica marca, modelo, año, motor y, si aplica, la marca y modelo del equipo. "
+                        "Puedes agregar, si los conoces, marca, modelo, año, motor o equipo; no son obligatorios. "
                         "Verifica la especificación en el manual del fabricante o con un centro autorizado."
                     )
                 else:
@@ -1083,9 +1092,10 @@ class GeminiRateLimiter:
                         if diag:
                             diag.modo_diagnostico = modo_final
                             diag.fuente = fuente_final
-                            diag.conclusion_mecanico = conclusion_final
                             diag.sintesis_llm = texto_respuesta
                             trazabilidad = dict(diag.trazabilidad or {})
+                            if not trazabilidad.get("validacion_tecnica"):
+                                diag.conclusion_mecanico = conclusion_final
                             trazabilidad["gemini"] = {
                                 "usado": bool(metadatos.get("usado")),
                                 "modelo": metadatos.get("modelo") or settings.gemini_model,
@@ -1165,14 +1175,31 @@ class GeminiRateLimiter:
     ) -> str:
         """Crea una salida breve y operativa; el detalle completo queda en PostgreSQL."""
         if solicitud.tipo_consulta == "consulta_tecnica":
-            respuesta = texto_respuesta.strip()
-            if len(respuesta) > 3800:
-                respuesta = respuesta[:3790].rstrip() + "…"
-            return f"💡 *Respuesta técnica CarBot*\n\n{respuesta}"
+            datos_vehiculo = extraer_datos_vehiculo(solicitud.sintoma)
+            modelo_informado = bool(
+                datos_vehiculo.get("modelo")
+                or (
+                    solicitud.marca_modelo
+                    and solicitud.marca_modelo.lower()
+                    not in {"generico", "vehiculo generico"}
+                )
+            )
+            return formatear_consulta_tecnica_whatsapp(
+                texto_respuesta,
+                modelo_informado=modelo_informado,
+            )
 
         confianza = max(0, min(100, int(solicitud.confianza_ml * 100)))
-        sintoma = solicitud.sintoma.lower()
+        sintoma = normalizar_jerga_peruana(solicitud.sintoma)
         es_gas = "gnv" in sintoma or "gas natural" in sintoma or "glp" in sintoma
+        solo_gas = es_gas and any(
+            frase in sintoma
+            for frase in (
+                "solo en gnv", "solo a gnv", "solo con gnv", "solo usando gnv",
+                "solo en glp", "solo a glp", "solo con glp", "solo usando glp",
+                "solo a gas", "solo con gas", "solo usando gas",
+            )
+        )
         hipotesis = solicitud.diagnostico_ml
         describe_patinamiento = (
             ("rpm" in sintoma or "revoluciones" in sintoma)
@@ -1182,8 +1209,24 @@ class GeminiRateLimiter:
             termino in hipotesis.lower() for termino in ("embrague", "clutch", "disco")
         ):
             hipotesis = "Pérdida de potencia bajo carga: diferenciar sistema GNV/GLP y motor"
+        if solo_gas:
+            hipotesis = (
+                "Sistema GNV/GLP bajo carga: posible descalibración o alimentación "
+                "de gas (por confirmar)"
+            )
+        elif confianza < int(settings.diagnostic.confidence_threshold * 100):
+            hipotesis = (
+                "Pérdida de potencia bajo carga: diferenciar sistema GNV/GLP y motor"
+                if es_gas
+                else "Resultado no concluyente: faltan datos y pruebas de confirmación"
+            )
 
-        if es_gas:
+        if solo_gas:
+            primera_prueba = (
+                "Revisar primero la calibración/mapa de inyección de gas y la presión bajo carga; "
+                "después verificar filtros e inyectores. Confirmar comparando con gasolina."
+            )
+        elif es_gas:
             primera_prueba = (
                 "Comparar el comportamiento en gasolina y GNV/GLP bajo carga. "
                 "Si solo falla a gas, revisar presión, filtros, inyectores y calibración."
@@ -1208,6 +1251,7 @@ class GeminiRateLimiter:
             f"Primera prueba: {primera_prueba}\n"
             f"Gravedad: *{gravedad}*.\n"
             "📋 Análisis completo disponible en el panel del taller."
+            f"{instrucciones_confirmacion_whatsapp()}"
         )
 
     async def _despachar_mensaje_proveedor(self, solicitud: SolicitudGeminiEncolada, texto_respuesta: str) -> str:
@@ -1300,6 +1344,17 @@ class GeminiRateLimiter:
                         ),
                         disponible_entrega_en=datetime.now(timezone.utc),
                     )
+                    if solicitud.diagnostico_id:
+                        conversacion = await ConversacionRepository(session).obtener_por_id(
+                            uuid.UUID(solicitud.conversacion_id)
+                        )
+                        if conversacion:
+                            contexto = dict(conversacion.contexto or {})
+                            contexto["validacion_diagnostico"] = {
+                                "diagnostico_id": solicitud.diagnostico_id,
+                                "etapa": "esperando_confirmacion",
+                            }
+                            conversacion.contexto = contexto
                 logger.info(
                     f"[Gemini Worker DB] Segundo mensaje de síntesis guardado en DB para conv {solicitud.conversacion_id[:8]}."
                 )

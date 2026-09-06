@@ -4,40 +4,110 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.core.security import verificar_jwt_administrador
+from src.application.services.trabajos_sistema import ServicioTrabajosSistema
+from src.core.authorization import exigir_gestion_trabajos, exigir_lectura_metricas
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.models.diagnostics import Diagnostico
+from src.infrastructure.database.repositories.trabajo_sistema_repository import TrabajoSistemaRepository
+from src.interfaces.api.v1.dtos.metricas import (
+    MetricasColaResponseDTO,
+    ResumenMetricasResponseDTO,
+    TrabajoFallidoDTO,
+)
 
 router = APIRouter()
 LIMA_TZ = ZoneInfo("America/Lima")
 
 
-class ResumenMetricasResponseDTO(BaseModel):
-    diagnosticos_hoy: int
-    diagnosticos_semana: int
-    diagnosticos_mes: int
-    diagnosticos_realizados: int = 0
-    diagnosticos_pendientes: int = 0
-    porcentaje_confirmados: int
-    tiempo_promedio_ms: int
-    distribucion_modos: List[Dict[str, Any]]
-    actividad_diaria: List[Dict[str, Any]]
-    fallas_frecuentes: List[Dict[str, Any]]
+@router.get("/colas", response_model=MetricasColaResponseDTO, summary="Monitorear colas y worker")
+async def obtener_metricas_colas(payload: dict = Depends(exigir_lectura_metricas)):
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+    taller_uuid = uuid.UUID(payload.get("taller_id", "00000000-0000-0000-0000-000000000001"))
+    async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+        metricas = await ServicioTrabajosSistema(session).metricas(taller_uuid)
+    return MetricasColaResponseDTO(**metricas)
+
+
+@router.post("/trabajos/{trabajo_id}/reintentar", summary="Reintentar un trabajo fallido")
+async def reintentar_trabajo_fallido(
+    trabajo_id: uuid.UUID,
+    payload: dict = Depends(exigir_gestion_trabajos),
+):
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+    taller_uuid = uuid.UUID(payload.get("taller_id", "00000000-0000-0000-0000-000000000001"))
+    async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+        async with session.begin():
+            actualizado = await ServicioTrabajosSistema(session).reintentar(
+                trabajo_id,
+                taller_uuid,
+                payload.get("usuario_id"),
+            )
+    if not actualizado:
+        raise HTTPException(status_code=404, detail="Trabajo fallido no encontrado en este taller.")
+    return {"status": "pendiente", "trabajo_id": str(trabajo_id)}
+
+
+@router.get("/trabajos/fallidos", response_model=List[TrabajoFallidoDTO], summary="Listar trabajos fallidos")
+async def listar_trabajos_fallidos(
+    limite: int = Query(50, ge=1, le=100),
+    payload: dict = Depends(exigir_lectura_metricas),
+):
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+    taller_uuid = uuid.UUID(payload.get("taller_id", "00000000-0000-0000-0000-000000000001"))
+    async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+        trabajos = await TrabajoSistemaRepository(session).listar_fallidos(taller_uuid, limite)
+        return [
+            TrabajoFallidoDTO(
+                id=trabajo.id,
+                tipo=trabajo.tipo,
+                cola=trabajo.cola,
+                intentos=trabajo.intentos,
+                max_intentos=trabajo.max_intentos,
+                error=trabajo.error_ultimo,
+                creado_en=trabajo.creado_en,
+                actualizado_en=trabajo.actualizado_en,
+            )
+            for trabajo in trabajos
+        ]
+
+
+@router.post("/trabajos/reentrenar-modelo", status_code=202, summary="Encolar reentrenamiento controlado")
+async def encolar_reentrenamiento_modelo(payload: dict = Depends(exigir_gestion_trabajos)):
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+    taller_uuid = uuid.UUID(payload.get("taller_id", "00000000-0000-0000-0000-000000000001"))
+    try:
+        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+            async with session.begin():
+                trabajo, creado = await ServicioTrabajosSistema(session).encolar_reentrenamiento(
+                    taller_uuid,
+                    payload.get("usuario_id"),
+                    payload.get("sub"),
+                )
+    except OverflowError as exc:
+        raise HTTPException(status_code=503, detail=str(exc), headers={"Retry-After": "60"}) from exc
+    return {
+        "status": "encolado" if creado else "ya_programado",
+        "trabajo_id": str(trabajo.id),
+    }
 
 
 @router.get("/resumen", response_model=ResumenMetricasResponseDTO, summary="Obtener resumen ejecutivo de métricas del taller")
 async def obtener_resumen_metricas(
+    todo: bool = Query(False, description="Incluir todo el historial cuando no hay fecha inicial"),
     fecha_inicio: Optional[str] = Query(None, description="Fecha de inicio (YYYY-MM-DD)"),
     fecha_fin: Optional[str] = Query(None, description="Fecha de fin (YYYY-MM-DD)"),
-    payload: dict = Depends(verificar_jwt_administrador),
+    payload: dict = Depends(exigir_lectura_metricas),
 ):
     """Ejecuta consultas agregadas SQL en PostgreSQL con filtro opcional de rango de fechas."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -61,7 +131,7 @@ async def obtener_resumen_metricas(
                     pass
             if fecha_fin:
                 try:
-                    dt_fin = datetime.strptime(fecha_fin, "%Y-%m-%d").replace(hour=23, minute=59, second=59, tzinfo=LIMA_TZ)
+                    dt_fin = datetime.strptime(fecha_fin, "%Y-%m-%d").replace(tzinfo=LIMA_TZ) + timedelta(days=1)
                 except ValueError:
                     pass
 
@@ -87,10 +157,10 @@ async def obtener_resumen_metricas(
             filtros_base = [Diagnostico.taller_id == taller_uuid]
             if dt_inicio:
                 filtros_base.append(Diagnostico.creado_en >= dt_inicio)
-            else:
+            elif not todo:
                 filtros_base.append(Diagnostico.creado_en >= inicio_mes)
             if dt_fin:
-                filtros_base.append(Diagnostico.creado_en <= dt_fin)
+                filtros_base.append(Diagnostico.creado_en < dt_fin)
 
             res_mes = await session.execute(
                 select(func.count(Diagnostico.id)).where(*filtros_base)
@@ -137,7 +207,7 @@ async def obtener_resumen_metricas(
 
             # 8. Actividad diaria completando días del rango o semana actual
             start_range = (dt_inicio.date() if dt_inicio else (inicio_hoy - timedelta(days=6)).date())
-            end_range = (dt_fin.date() if dt_fin else inicio_hoy.date())
+            end_range = ((dt_fin - timedelta(days=1)).date() if dt_fin else inicio_hoy.date())
 
             res_actividad = await session.execute(
                 select(

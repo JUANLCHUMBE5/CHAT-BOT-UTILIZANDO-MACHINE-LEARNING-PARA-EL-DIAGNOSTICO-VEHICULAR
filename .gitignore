@@ -53,6 +53,8 @@ Thumbs.db
 # --- Archivos de Auditoría y Agentes ---
 .gemini/
 .agents/
+.codex_tmp/
+/tmp/
 ORIGINAL_REQUEST.md
 TEST_INFRA.md
 TEST_READY.md
@@ -67,6 +69,7 @@ sss/
 # --- Modelos Binarios de ML (>100MB) ---
 machine_learning/models/modelo_diagnostico.pkl
 *.pkl
+machine_learning/models/experimentos/**/*.joblib
 
 # --- Frontend Web Dashboard ---
 frontend/node_modules/

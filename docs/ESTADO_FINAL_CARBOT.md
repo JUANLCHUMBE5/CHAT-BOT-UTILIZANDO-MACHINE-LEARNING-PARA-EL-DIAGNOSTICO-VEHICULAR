@@ -204,7 +204,7 @@ existen árboles de decisión individuales que mostrar.
 ## 9. Autenticación y continuidad de sesión
 
 - Inicio: `POST /api/v1/auth/login`.
-- Access token JWT: dos horas.
+- Access token JWT: 30 minutos; la sesión se renueva con cookie HttpOnly rotativa.
 - Refresh token: siete días.
 - Renovación: `POST /api/v1/auth/refresh`.
 - El frontend reintenta una vez la petición que recibió HTTP 401 después de

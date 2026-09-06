@@ -14,10 +14,10 @@ from src.config import settings
 # HTTP Bearer scheme for Swagger UI & API protection
 security_bearer = HTTPBearer(auto_error=False)
 
-# Configuración JWT por defecto (2 horas de expiración = 120 minutos)
+# Access token breve; el refresh HttpOnly conserva la sesión sin exponer credenciales.
 JWT_SECRET_KEY = settings.jwt_secret_key
 JWT_ALGORITHM = "HS256"
-JWT_EXPIRATION_SECONDS = 2 * 60 * 60  # 2 horas = 7200 segundos
+JWT_EXPIRATION_SECONDS = 30 * 60  # 30 minutos
 JWT_REFRESH_EXPIRATION_SECONDS = 7 * 24 * 60 * 60  # 7 días
 
 def _obtener_jwt_secret() -> str:
@@ -55,7 +55,7 @@ def crear_jwt_token(
     extra_claims: Optional[Dict[str, Any]] = None,
 ) -> str:
     """
-    Genera un token JWT firmado digitalmente con validez exacta de 2 HORAS.
+    Genera un access token JWT firmado digitalmente con validez de 30 minutos.
     Incluye sub, rol, taller_id, usuario_id y claims estándar exp/iat/jti.
     """
     ahora = int(time.time())
@@ -132,21 +132,8 @@ def verificar_refresh_token(token: str) -> Dict[str, Any]:
         )
     return payload
 
-def verificar_jwt_token_sin_restriccion(
-    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
-) -> Dict[str, Any]:
-    """
-    Middleware / Dependencia para verificar la validez y expiración del Token JWT.
-    Lanza HTTP 401 Unauthorized si el token no existe, expiró o fue alterado.
-    """
-    if not credentials:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Falta el encabezado de autorización (Authorization: Bearer <token>).",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    token = credentials.credentials
+def decodificar_jwt_acceso(token: str, *, validar_revocacion: bool = True) -> Dict[str, Any]:
+    """Decodifica un access token y aplica la lista de revocación compartida."""
     try:
         payload = jwt.decode(
             token,
@@ -161,19 +148,45 @@ def verificar_jwt_token_sin_restriccion(
                 detail="Un refresh token no puede utilizarse para acceder a la API.",
                 headers={"WWW-Authenticate": "Bearer"},
             )
+        if validar_revocacion:
+            from src.core.access_token_store import access_token_store
+
+            if access_token_store.esta_revocado(payload):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="La sesión fue cerrada o el token fue revocado.",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
         return payload
-    except jwt.ExpiredSignatureError:
+    except jwt.ExpiredSignatureError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="El token de acceso ha expirado. El panel intentará renovar la sesión automáticamente.",
             headers={"WWW-Authenticate": "Bearer"},
-        )
-    except jwt.InvalidTokenError:
+        ) from exc
+    except jwt.InvalidTokenError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token JWT inválido o firma alterada.",
             headers={"WWW-Authenticate": "Bearer"},
+        ) from exc
+
+
+def verificar_jwt_token_sin_restriccion(
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
+) -> Dict[str, Any]:
+    """
+    Middleware / Dependencia para verificar la validez y expiración del Token JWT.
+    Lanza HTTP 401 Unauthorized si el token no existe, expiró o fue alterado.
+    """
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Falta el encabezado de autorización (Authorization: Bearer <token>).",
+            headers={"WWW-Authenticate": "Bearer"},
         )
+
+    return decodificar_jwt_acceso(credentials.credentials)
 
 
 def verificar_jwt_token(

@@ -1,20 +1,34 @@
+import json
 import time
 import uuid
-from typing import List, Literal, Optional
+from datetime import datetime
+from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.concurrency import run_in_threadpool
-from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
+from src.core.authorization import (
+    exigir_confirmacion_diagnosticos,
+    exigir_creacion_diagnosticos,
+    exigir_lectura_diagnosticos,
+)
 from src.core.gemini_queue import gemini_rate_limiter
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.gestor_diagnostico import ResultadoDiagnostico as DTOInternal
 from src.core.logger import logger
-from src.core.security import anonimizar_identificador, verificar_jwt_administrador
+from src.core.security import anonimizar_identificador
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
+from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
+from src.infrastructure.database.repositories.trabajo_sistema_repository import TrabajoSistemaRepository
+from src.interfaces.api.v1.dtos.diagnosticos import (
+    ActualizarEstadoDTO,
+    EtapaProcesamientoDTO,
+    ItemDiagnosticoDTO,
+    PrediccionMLDTO,
+)
 from src.interfaces.api.v1.schemas import ConsultaDiagnostico, ResultadoDiagnostico
 from src.limiter import limiter
 
@@ -37,58 +51,17 @@ def _es_procedimiento_rag_real(valor: Optional[str]) -> bool:
     return not any(indicador in normalizado for indicador in indicadores_ausencia)
 
 
-class ActualizarEstadoDTO(BaseModel):
-    nuevo_estado: Literal["generado", "en_revision", "confirmado", "descartado"]
-    notas_mecanico: Optional[str] = None
-
-
-class PrediccionMLDTO(BaseModel):
-    orden: int
-    falla: str
-    probabilidad: float
-
-
-class EtapaProcesamientoDTO(BaseModel):
-    clave: str
-    nombre: str
-    estado: str
-    duracion_ms: int = 0
-    detalle: Optional[str] = None
-
-
-class ItemDiagnosticoDTO(BaseModel):
-    id: str
-    sintoma_original: str
-    sintoma_normalizado: str
-    falla_predicha: str
-    confianza: float
-    similitud_rag: float = 0.0
-    modo_diagnostico: str
-    estado: str
-    fuente: str
-    mecanico_id: str
-    mecanico_nombre: str
-    cliente_nombre: str = "Cliente WhatsApp"
-    cliente_telefono: Optional[str] = None
-    placa_vehiculo: str
-    marca_modelo: str
-    fecha_hora: str
-    duracion_ms: int
-    procedimiento_rag: str
-    fuente_manual: Optional[str] = None
-    version_corpus_rag: Optional[str] = None
-    tiempo_gravedad: str
-    sintesis_llm: Optional[str] = None
-    notas_mecanico: Optional[str] = None
-    fecha_confirmacion: Optional[str] = None
-    predicciones_ml: List[PrediccionMLDTO] = Field(default_factory=list)
-    etapas_procesamiento: List[EtapaProcesamientoDTO] = Field(default_factory=list)
-    version_modelo_ml: Optional[str] = None
-    llm_usado: bool = False
-    llm_modelo: Optional[str] = None
-    tokens_entrada: int = 0
-    tokens_salida: int = 0
-    desde_cache: bool = False
+def _fecha_confirmacion_tecnica(diagnostico, trazabilidad: dict) -> Optional[str]:
+    if diagnostico.estado not in {"confirmado", "descartado"}:
+        return None
+    validacion = trazabilidad.get("validacion_tecnica") or {}
+    fecha_iso = validacion.get("validado_en")
+    if fecha_iso:
+        try:
+            return datetime.fromisoformat(str(fecha_iso)).strftime("%Y-%m-%d %H:%M")
+        except ValueError:
+            pass
+    return diagnostico.actualizado_en.strftime("%Y-%m-%d %H:%M") if diagnostico.actualizado_en else None
 
 
 def obtener_gestor_diagnostico(request: Request) -> GestorDiagnostico:
@@ -98,12 +71,70 @@ def obtener_gestor_diagnostico(request: Request) -> GestorDiagnostico:
     return GestorDiagnostico()
 
 
-@router.post("/analizar", response_model=ResultadoDiagnostico, summary="Analizar síntoma vehicular (Requiere Token JWT de 2 horas)")
+@router.post("/analizar-asincrono", status_code=202, summary="Encolar diagnóstico pesado")
+async def analizar_sintoma_asincrono(
+    consulta: ConsultaDiagnostico,
+    token_payload: dict = Depends(exigir_creacion_diagnosticos),
+):
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="El procesamiento asíncrono requiere PostgreSQL.")
+    if not consulta.sintoma.strip():
+        raise HTTPException(status_code=400, detail="El síntoma no puede estar vacío.")
+    taller_id = uuid.UUID(token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001"))
+    payload = {
+        "sintoma": consulta.sintoma,
+        "placa": consulta.placa,
+        "marca_modelo": f"{consulta.marca or ''} {consulta.modelo or ''}".strip(),
+        "session_id": consulta.session_id,
+    }
+    try:
+        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+            async with session.begin():
+                trabajo, _ = await TrabajoSistemaRepository(session).crear_trabajo(
+                    tipo="diagnostico_api",
+                    cola="diagnosticos",
+                    payload=payload,
+                    taller_id=taller_id,
+                    prioridad=70,
+                )
+    except OverflowError as exc:
+        raise HTTPException(status_code=503, detail=str(exc), headers={"Retry-After": "30"}) from exc
+    return {"status": "pendiente", "trabajo_id": str(trabajo.id)}
+
+
+@router.get("/trabajos/{trabajo_id}", summary="Consultar resultado de diagnóstico encolado")
+async def consultar_trabajo_diagnostico(
+    trabajo_id: uuid.UUID,
+    token_payload: dict = Depends(exigir_lectura_diagnosticos),
+):
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+    taller_id = uuid.UUID(token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001"))
+    async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+        trabajo = await TrabajoSistemaRepository(session).obtener_para_taller(trabajo_id, taller_id)
+    if trabajo is None or trabajo.tipo != "diagnostico_api":
+        raise HTTPException(status_code=404, detail="Trabajo no encontrado.")
+    resultado = None
+    if trabajo.resultado_resumen:
+        try:
+            resultado = json.loads(trabajo.resultado_resumen)
+        except ValueError:
+            resultado = {"detalle": trabajo.resultado_resumen}
+    return {
+        "trabajo_id": str(trabajo.id),
+        "estado": trabajo.estado,
+        "intentos": trabajo.intentos,
+        "resultado": resultado,
+        "error": trabajo.error_ultimo if trabajo.estado == "fallido" else None,
+    }
+
+
+@router.post("/analizar", response_model=ResultadoDiagnostico, summary="Analizar síntoma vehicular autenticado")
 @limiter.limit("60/minute")
 async def analizar_sintoma(
     request: Request,
     consulta: ConsultaDiagnostico,
-    token_payload: dict = Depends(verificar_jwt_administrador),
+    token_payload: dict = Depends(exigir_creacion_diagnosticos),
     gestor: GestorDiagnostico = Depends(obtener_gestor_diagnostico),
 ):
     """Endpoint seguro con Autenticación JWT para analizar síntomas vehiculares."""
@@ -115,7 +146,7 @@ async def analizar_sintoma(
         placa_anonima = anonimizar_identificador(consulta.placa or "REST-API")
         logger.info(f"Procesando petición HTTP REST autenticada para Placa: {placa_anonima}")
 
-        marca_modelo = f"{consulta.marca} {consulta.modelo}".strip()
+        marca_modelo = f"{consulta.marca or ''} {consulta.modelo or ''}".strip()
 
         slot_gemini = None
         if settings.gemini_api_key and database_configurada():
@@ -153,13 +184,16 @@ async def analizar_sintoma(
 
 @router.get("/historial", response_model=List[ItemDiagnosticoDTO], summary="Consultar historial de diagnósticos del taller")
 async def consultar_historial(
+    response: Response,
     busqueda: Optional[str] = None,
     estado: Optional[str] = None,
     modo: Optional[str] = None,
     mecanico_id: Optional[uuid.UUID] = None,
-    limite: Optional[int] = Query(None, ge=1, le=1000, description="Límite de registros a retornar"),
+    fecha_desde: Optional[datetime] = None,
+    fecha_hasta: Optional[datetime] = None,
+    limite: Optional[int] = Query(10, ge=1, le=1000, description="Límite de registros a retornar"),
     offset: Optional[int] = Query(0, ge=0, description="Desplazamiento para paginación"),
-    token_payload: dict = Depends(verificar_jwt_administrador),
+    token_payload: dict = Depends(exigir_lectura_diagnosticos),
 ):
     """Retorna la lista de diagnósticos registrados en PostgreSQL filtrando por taller_id y query params."""
     taller_id_str = token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -175,9 +209,21 @@ async def consultar_historial(
                 estado=estado,
                 modo=modo,
                 mecanico_id=mecanico_id,
+                fecha_desde=fecha_desde,
+                fecha_hasta=fecha_hasta,
                 limite=limite,
                 offset=offset or 0,
             )
+            total = await diag_repo.contar_por_taller(
+                taller_id=taller_uuid,
+                busqueda=busqueda,
+                estado=estado,
+                modo=modo,
+                mecanico_id=mecanico_id,
+                fecha_desde=fecha_desde,
+                fecha_hasta=fecha_hasta,
+            )
+            response.headers["X-Total-Count"] = str(total)
             res_items = []
             for d in diag_db_list:
                 placa_str = f"***-{d.vehiculo.placa_ultimos4}" if d.vehiculo and d.vehiculo.placa_ultimos4 else "Sin Placa Registrada"
@@ -296,7 +342,7 @@ async def consultar_historial(
                         tiempo_gravedad=d.conclusion_mecanico or "Sin conclusión registrada",
                         sintesis_llm=d.sintesis_llm,
                         notas_mecanico=d.conclusion_mecanico,
-                        fecha_confirmacion=d.actualizado_en.strftime("%Y-%m-%d %H:%M") if d.actualizado_en else None,
+                        fecha_confirmacion=_fecha_confirmacion_tecnica(d, traza),
                         predicciones_ml=predicciones,
                         etapas_procesamiento=etapas,
                         version_modelo_ml=d.version_modelo_ml,
@@ -316,7 +362,7 @@ async def consultar_historial(
 async def confirmar_diagnostico(
     diagnostico_id: str,
     dto: ActualizarEstadoDTO,
-    token_payload: dict = Depends(verificar_jwt_administrador),
+    token_payload: dict = Depends(exigir_confirmacion_diagnosticos),
 ):
     """Actualiza el estado de validación mecánica en PostgreSQL verificando taller_id y restricciones de enum."""
     taller_id_str = token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -333,6 +379,16 @@ async def confirmar_diagnostico(
             diag.estado = dto.nuevo_estado
             if dto.notas_mecanico:
                 diag.conclusion_mecanico = dto.notas_mecanico
+
+            usuario_id = token_payload.get("usuario_id")
+            await OperacionesRepository(session).registrar_auditoria(
+                accion="confirmar_diagnostico",
+                entidad="diagnostico",
+                entidad_id=diag.id,
+                taller_id=taller_uuid,
+                usuario_id=uuid.UUID(str(usuario_id)) if usuario_id else None,
+                detalles={"estado_nuevo": dto.nuevo_estado},
+            )
 
             await session.commit()
             return {"mensaje": f"Diagnóstico {diagnostico_id} actualizado a {dto.nuevo_estado} en PostgreSQL."}

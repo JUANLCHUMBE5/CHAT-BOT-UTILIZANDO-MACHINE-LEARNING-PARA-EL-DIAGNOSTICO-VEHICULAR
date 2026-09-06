@@ -12,19 +12,28 @@ import re
 import sys
 import tempfile
 import time
+import uuid
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Optional
 from zoneinfo import ZoneInfo
 
 import pandas as pd
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.application.services.validacion_taller import ServicioValidacionTaller, serializar_caso
 from src.config import settings
-from src.core.security import verificar_jwt_administrador
+from src.core.authorization import exigir_gestion_validacion, exigir_lectura_validacion
+from src.infrastructure.database.connection import database_configurada, obtener_engine
+from src.infrastructure.database.repositories.validacion_taller_repository import ValidacionTallerRepository
+from src.interfaces.api.v1.dtos.validacion import (
+    CasoValidacionDTO,
+    CrearCasoValidacionDTO,
+    MetricasValidacionResponseDTO,
+)
 
 router = APIRouter()
 LIMA_TZ = ZoneInfo("America/Lima")
@@ -32,62 +41,15 @@ TRACKER_CSV_PATH = settings.paths.tracker_csv
 _ASYNC_CSV_LOCK = asyncio.Lock()
 DEFAULT_SEED_TALLER_ID = "00000000-0000-0000-0000-000000000001"
 
-FaseEvaluacion = Literal["Pre-test", "Post-test", "Piloto"]
 
-
-class CasoValidacionDTO(BaseModel):
-    item: int
-    fase: str
-    fecha: str
-    placa_enmascarada: str
-    placa_hash: str
-    marca_modelo: str
-    sintoma: str
-    falla_real: str
-    chatbot_prediccion: str
-    campos_completos: int
-    tiempo_diagnostico_minutos: int
-    prediccion_correcta: int
-    taller_id: Optional[str] = None
-    mecanico_id: Optional[str] = None
-    metodo_confirmacion: Optional[str] = "Inspección Visual en Elevador"
-    evidencia_ref: Optional[str] = None
-
-
-class CrearCasoValidacionDTO(BaseModel):
-    fase: FaseEvaluacion = Field(default="Post-test", description="Fase de evaluación: Pre-test, Post-test o Piloto")
-    fecha: Optional[str] = Field(default=None, description="Fecha de atención (YYYY-MM-DD)")
-    placa: str = Field(min_length=3, max_length=15, description="Placa vehicular (será pseudonimizada)")
-    marca_modelo: str = Field(min_length=2, max_length=100, description="Marca y modelo (ej. Toyota Yaris 2020)")
-    sintoma: str = Field(min_length=5, description="Síntoma reportado por el cliente o detectado")
-    falla_real: str = Field(min_length=3, description="Diagnóstico final confirmado por el mecánico")
-    chatbot_prediccion: str = Field(min_length=3, description="Predicción generada por CarBot")
-    campos_completos: int = Field(default=1, ge=0, le=1, description="1 si tiene datos completos, 0 si incompleto")
-    tiempo_diagnostico_minutos: int = Field(ge=1, le=600, description="Tiempo total en minutos del proceso")
-    prediccion_correcta: int = Field(ge=0, le=1, description="1 si el chatbot acertó con la falla real, 0 si no")
-    metodo_confirmacion: Optional[str] = Field(default="Inspección Visual + Escáner OBD", description="Método técnico de comprobación")
-    evidencia_ref: Optional[str] = Field(default=None, description="Referencia a informe o foto de evidencia")
-
-
-class MetricasValidacionResponseDTO(BaseModel):
-    total_casos: int
-    total_aciertos: int
-    total_desaciertos: int
-    tasa_acierto_global_porcentaje: float
-    casos_pretest: int
-    tasa_acierto_pretest_porcentaje: float
-    tiempo_promedio_pretest_min: float
-    casos_posttest: int
-    tasa_acierto_posttest_porcentaje: float
-    tiempo_promedio_posttest_min: float
-    reduccion_tiempo_porcentaje: float
-    distribucion_marcas: List[Dict[str, Any]]
-    top_fallas_reales: List[Dict[str, Any]]
-    nota_metodologica: str = (
-        "Dataset experimental compuesto por simulación de campo (pre-test / post-test) "
-        "y 33 casos de prueba externos de referencia taxonómica (Zenodo)."
-    )
-
+def _uuid_claim(payload: dict, nombre: str, *, obligatorio: bool = True) -> uuid.UUID | None:
+    valor = payload.get(nombre)
+    if not valor and not obligatorio:
+        return None
+    try:
+        return uuid.UUID(str(valor))
+    except (ValueError, TypeError, AttributeError) as exc:
+        raise HTTPException(status_code=401, detail=f"El token contiene un {nombre} inválido.") from exc
 
 def _pseudonimizar_placa(placa_raw: str, secret_key: Optional[str] = None) -> tuple[str, str]:
     """Genera hash HMAC-SHA-256 completo de 64 caracteres con clave secreta y máscara visual."""
@@ -237,6 +199,26 @@ def _filtrar_df_por_taller(df: pd.DataFrame, taller_id_auth: str) -> pd.DataFram
     return df[taller_serie == str(taller_id_auth)]
 
 
+def periodo_validacion(
+    fecha_desde: date | None = Query(None), fecha_hasta: date | None = Query(None)
+) -> tuple[date | None, date | None]:
+    if fecha_desde and fecha_hasta and fecha_desde > fecha_hasta:
+        raise HTTPException(status_code=422, detail="La fecha inicial debe ser anterior a la final.")
+    return fecha_desde, fecha_hasta
+
+
+def _filtrar_periodo(df: pd.DataFrame, periodo: tuple[date | None, date | None]) -> pd.DataFrame:
+    if df.empty:
+        return df
+    fechas = pd.to_datetime(df["fecha"], errors="coerce").dt.date
+    desde, hasta = periodo
+    if desde:
+        df = df[fechas >= desde]
+    if hasta:
+        df = df[fechas.loc[df.index] <= hasta]
+    return df
+
+
 @router.get("", summary="Listar registros del tracker experimental en taller (Aislamiento Multitenant)")
 async def listar_casos_validacion(
     fase: Optional[str] = Query(None, description="Filtrar por fase: Pre-test o Post-test"),
@@ -244,15 +226,29 @@ async def listar_casos_validacion(
     acierto: Optional[int] = Query(None, ge=0, le=1, description="1 acertados, 0 desacertados"),
     busqueda: Optional[str] = Query(None, description="Término de búsqueda libre"),
     skip: int = Query(0, ge=0),
-    limit: int = Query(50, ge=1, le=200),
-    payload: dict = Depends(verificar_jwt_administrador),
+    limit: int = Query(10, ge=1, le=200),
+    periodo: tuple = Depends(periodo_validacion),
+    payload: dict = Depends(exigir_lectura_validacion),
 ):
     taller_id_auth = payload.get("taller_id", DEFAULT_SEED_TALLER_ID)
+    if database_configurada():
+        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+            return await ServicioValidacionTaller(session).listar(
+                _uuid_claim(payload, "taller_id"),
+                fase=fase,
+                marca=marca,
+                acierto=acierto,
+                busqueda=busqueda,
+                skip=skip,
+                limit=limit,
+                fecha_desde=periodo[0],
+                fecha_hasta=periodo[1],
+            )
     df_global = _cargar_df_tracker()
-    df = _filtrar_df_por_taller(df_global, taller_id_auth)
+    df = _filtrar_periodo(_filtrar_df_por_taller(df_global, taller_id_auth), periodo)
 
     if df.empty:
-        return {"total": 0, "casos": []}
+        return {"total": 0, "skip": skip, "limit": limit, "casos": []}
 
     # Aplicar filtros
     if fase:
@@ -273,7 +269,7 @@ async def listar_casos_validacion(
         df = df[mask]
 
     total_filtrado = len(df)
-    df_pagina = df.iloc[::-1].iloc[skip : skip + limit]
+    df_pagina = df.sort_values(["fecha", "item"], kind="stable").iloc[skip : skip + limit]
 
     casos_lista = []
     for r in df_pagina.to_dict(orient="records"):
@@ -318,11 +314,18 @@ async def listar_casos_validacion(
 
 @router.get("/metricas", response_model=MetricasValidacionResponseDTO, summary="Obtener KPIs del seguimiento experimental por taller")
 async def obtener_metricas_validacion(
-    payload: dict = Depends(verificar_jwt_administrador),
+    periodo: tuple = Depends(periodo_validacion),
+    payload: dict = Depends(exigir_lectura_validacion),
 ):
     taller_id_auth = payload.get("taller_id", DEFAULT_SEED_TALLER_ID)
+    if database_configurada():
+        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+            metricas = await ServicioValidacionTaller(session).metricas(
+                _uuid_claim(payload, "taller_id"), *periodo
+            )
+        return MetricasValidacionResponseDTO(**metricas)
     df_global = _cargar_df_tracker()
-    df = _filtrar_df_por_taller(df_global, taller_id_auth)
+    df = _filtrar_periodo(_filtrar_df_por_taller(df_global, taller_id_auth), periodo)
 
     if df.empty:
         return MetricasValidacionResponseDTO(
@@ -375,6 +378,12 @@ async def obtener_metricas_validacion(
 
     return MetricasValidacionResponseDTO(
         total_casos=total_casos,
+        registros_completos_pretest_porcentaje=(
+            round(float(df_pre["campos_completos"].sum()) / casos_pre * 100, 2) if casos_pre else 0.0
+        ),
+        registros_completos_posttest_porcentaje=(
+            round(float(df_post["campos_completos"].sum()) / casos_post * 100, 2) if casos_post else 0.0
+        ),
         total_aciertos=total_aciertos,
         total_desaciertos=total_desaciertos,
         tasa_acierto_global_porcentaje=tasa_global,
@@ -393,8 +402,21 @@ async def obtener_metricas_validacion(
 @router.post("", response_model=CasoValidacionDTO, status_code=201, summary="Registrar nuevo caso en el tracker con escritura atómica")
 async def registrar_caso_validacion(
     dto: CrearCasoValidacionDTO,
-    payload: dict = Depends(verificar_jwt_administrador),
+    payload: dict = Depends(exigir_gestion_validacion),
 ):
+    if database_configurada():
+        enmascarada, p_hash = _pseudonimizar_placa(dto.placa)
+        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+            async with session.begin():
+                caso = await ServicioValidacionTaller(session).crear(
+                    _uuid_claim(payload, "taller_id"),
+                    _uuid_claim(payload, "usuario_id", obligatorio=False),
+                    dto,
+                    enmascarada,
+                    p_hash,
+                )
+            return CasoValidacionDTO(**serializar_caso(caso))
+
     async with _ASYNC_CSV_LOCK:
         try:
             with _bloqueo_archivo_interproceso(TRACKER_CSV_PATH):
@@ -460,11 +482,21 @@ async def registrar_caso_validacion(
 
 @router.get("/exportar-csv", summary="Descargar CSV sanitizado contra inyecciones de fórmulas (Aislamiento Multitenant)")
 async def exportar_tracker_csv(
-    payload: dict = Depends(verificar_jwt_administrador),
+    periodo: tuple = Depends(periodo_validacion),
+    payload: dict = Depends(exigir_lectura_validacion),
 ):
     taller_id_auth = payload.get("taller_id", DEFAULT_SEED_TALLER_ID)
-    df_global = _cargar_df_tracker()
-    df = _filtrar_df_por_taller(df_global, taller_id_auth)
+    if database_configurada():
+        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+            casos = await ValidacionTallerRepository(session).listar_todos(
+                _uuid_claim(payload, "taller_id"), *periodo
+            )
+        filas = [serializar_caso(caso) for caso in casos]
+        df = pd.DataFrame(filas)
+    else:
+        df_global = _cargar_df_tracker()
+        df = _filtrar_periodo(_filtrar_df_por_taller(df_global, taller_id_auth), periodo)
+        df = df.sort_values(["fecha", "item"], kind="stable")
 
     output = io.StringIO()
     writer = csv.writer(output, quoting=csv.QUOTE_MINIMAL)

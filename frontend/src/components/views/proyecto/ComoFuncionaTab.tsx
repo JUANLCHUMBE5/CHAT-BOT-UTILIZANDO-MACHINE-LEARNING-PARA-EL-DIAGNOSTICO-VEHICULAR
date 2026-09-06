@@ -5,7 +5,6 @@ import {
   Cpu,
   BookOpen,
   Sparkles,
-  Zap,
   CheckCircle2,
   Users,
   Car,
@@ -71,48 +70,10 @@ export const ComoFuncionaTab: React.FC = () => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-      {/* Overview Banner */}
-      <div
-        style={{
-          padding: '18px 20px',
-          backgroundColor: '#eff6ff',
-          borderRadius: '12px',
-          border: '1px solid #bfdbfe',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '14px',
-        }}
-      >
-        <div style={{ maxWidth: '780px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-            <Zap size={18} style={{ color: 'var(--primary)' }} />
-            <h3 style={{ fontSize: '15px', fontWeight: 800, color: '#1e3a8a', margin: 0 }}>
-              Arquitectura y Flujo de Diagnóstico CarBot AI
-            </h3>
-          </div>
-          <p style={{ fontSize: '12px', color: '#1e40af', margin: 0, lineHeight: 1.5 }}>
-            CarBot combina un pipeline híbrido: recibe la consulta por <strong>WhatsApp</strong>, infiere una hipótesis con <strong>Machine Learning</strong>, recupera evidencia preliminar mediante <strong>RAG</strong> y, cuando está disponible, usa <strong>Gemini</strong> para redactar la respuesta. Ante un fallo externo emplea un modo degradado local.
-          </p>
-        </div>
-
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <span
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#ffffff',
-              borderRadius: '8px',
-              border: '1px solid #bfdbfe',
-              fontSize: '11px',
-              fontWeight: 700,
-              color: 'var(--primary)',
-            }}
-          >
-            ⚡ Latencia total: ~1.2s
-          </span>
-        </div>
-      </div>
+      {/* Breve descripción */}
+      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 2px 0' }}>
+        Diagnóstico mediante WhatsApp, Machine Learning, RAG y Gemini.
+      </p>
 
       {/* Interactive Step-by-Step Flow Pipeline */}
       <Card style={{ padding: '18px' }}>

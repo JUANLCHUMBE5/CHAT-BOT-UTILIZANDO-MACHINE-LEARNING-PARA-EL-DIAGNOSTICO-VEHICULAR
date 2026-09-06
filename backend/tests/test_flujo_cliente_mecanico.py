@@ -30,6 +30,7 @@ from src.core.security import (
 )
 from src.core.services.webhook_service import WebhookService
 from src.infrastructure.database.connection import database_configurada, obtener_engine
+from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.identidad_whatsapp_repository import IdentidadWhatsAppRepository
 from src.infrastructure.database.repositories.solicitud_acceso_repository import SolicitudAccesoRepository
 from src.infrastructure.database.repositories.taller_repository import TallerRepository
@@ -283,6 +284,34 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico():
     assert "falla_predicha" in res_diagnostico
     assert res_diagnostico["falla_predicha"] is not None
 
+    # 6. Si responde NO, CarBot solicita la falla real y conserva la predicción original.
+    res_no = await service.procesar_mensaje(
+        remitente=tel_mecanico_futuro,
+        meta_message_id=f"msg_no_{uuid.uuid4().hex[:6]}",
+        tipo_mensaje="text",
+        texto_cliente="NO",
+    )
+    assert res_no["status"] == "esperando_falla_real"
+    assert "falla realmente encontrada" in res_no["respuesta"]
+
+    # 7. La corrección queda asociada al mismo diagnóstico, sin ejecutar otro ML/RAG/LLM.
+    falla_real = "Bobina de encendido defectuosa confirmada físicamente"
+    res_correccion = await service.procesar_mensaje(
+        remitente=tel_mecanico_futuro,
+        meta_message_id=f"msg_fix_{uuid.uuid4().hex[:6]}",
+        tipo_mensaje="text",
+        texto_cliente=falla_real,
+    )
+    assert res_correccion["status"] == "validacion_tecnica"
+    assert res_correccion["diagnostico_id"] == res_diagnostico["diagnostico_id"]
+
+    async with AsyncSession(engine, expire_on_commit=False) as session:
+        diagnostico = await DiagnosticoRepository(session).obtener_por_id(
+            uuid.UUID(res_diagnostico["diagnostico_id"])
+        )
+        assert diagnostico.estado == "descartado"
+        assert diagnostico.conclusion_mecanico == falla_real
+
 
 @pytest.mark.anyio
 async def test_aislamiento_multitaller_admin_no_puede_aprobar_otro_taller():
@@ -422,7 +451,7 @@ async def test_panel_promueve_cliente_y_revocacion_lo_regresa_a_cliente():
                 "rol": "mecanico",
             },
         )
-        assert promocion.status_code == 200
+        assert promocion.status_code == 201
         assert promocion.json()["rol"] == "mecanico"
 
         revocacion = await client.patch(

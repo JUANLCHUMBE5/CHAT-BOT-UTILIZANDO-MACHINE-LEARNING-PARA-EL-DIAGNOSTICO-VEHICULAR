@@ -26,7 +26,10 @@ COMBUSTIBLES = {
 
 
 def _normalizar(texto: str) -> str:
-    base = unicodedata.normalize("NFKD", texto.lower())
+    # WhatsApp usa estos caracteres para formato; no deben quedar pegados a
+    # marcas o modelos (por ejemplo, ``_Toyota`` rompe el límite de palabra).
+    sin_formato = re.sub(r"[*_~`]+", " ", texto.lower())
+    base = unicodedata.normalize("NFKD", sin_formato)
     return " ".join(
         "".join(c for c in base if not unicodedata.combining(c)).split()
     )
@@ -116,6 +119,44 @@ def extraer_datos_vehiculo(texto: str) -> dict[str, Any]:
     if kilometraje:
         base = int(re.sub(r"\D", "", kilometraje.group(1)))
         datos["kilometraje"] = base * 1000 if kilometraje.group(2) else base
+
+    return datos
+
+
+def extraer_datos_vehiculo_contextual(
+    texto: str,
+    campos_faltantes: list[str],
+    perfil_actual: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Completa respuestas breves solo cuando el campo esperado es inequívoco."""
+
+    datos = extraer_datos_vehiculo(texto)
+    faltantes = [campo for campo in campos_faltantes if campo not in datos]
+    normalizado = _normalizar(texto).strip(" ,;:.-")
+    perfil = perfil_actual or {}
+
+    if "modelo" in faltantes and perfil.get("marca"):
+        if (
+            re.fullmatch(r"[a-z0-9][a-z0-9 .-]{0,30}", normalizado)
+            and normalizado not in COMBUSTIBLES
+            and not re.fullmatch(r"(?:19|20)\d{2}|\d+(?:[.,]\d+)?", normalizado)
+        ):
+            datos["modelo"] = normalizado.upper()
+
+    if "motor" in faltantes:
+        motor_breve = re.fullmatch(r"(\d{1,4}(?:[.,]\d{1,2})?)\s*(cc|cm3|l|litros?)?", normalizado)
+        if motor_breve:
+            valor = motor_breve.group(1).replace(",", ".")
+            unidad = (motor_breve.group(2) or "L").upper()
+            datos["motor"] = f"{valor} {unidad}"
+
+    if "equipo_gas" in faltantes and len(faltantes) == 1:
+        if (
+            re.fullmatch(r"[a-z][a-z0-9 .-]{2,40}", normalizado)
+            and normalizado not in COMBUSTIBLES
+            and normalizado not in {"no se", "no lo se", "desconocido"}
+        ):
+            datos["equipo_gas"] = normalizado.title()
 
     return datos
 

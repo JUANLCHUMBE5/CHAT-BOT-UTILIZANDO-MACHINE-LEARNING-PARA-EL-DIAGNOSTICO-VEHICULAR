@@ -43,6 +43,7 @@ services:
       POSTGRES_USER: carbot_app
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
       RATE_LIMIT_STORAGE_URI: redis://redis:6379/0
+      QUEUE_EMBEDDED_WORKER: "false"
       ML_ROOT: /app/machine_learning
     env_file:
       - path: .env
@@ -57,6 +58,36 @@ services:
       redis:
         condition: service_healthy
     command: ["sh", "-c", "python -m alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+
+  worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      ENVIRONMENT: development
+      DATABASE_ENABLED: "true"
+      DATABASE_REQUIRED: "true"
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: carbot_db
+      POSTGRES_USER: carbot_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
+      RATE_LIMIT_STORAGE_URI: redis://redis:6379/0
+      QUEUE_EMBEDDED_WORKER: "false"
+      ML_ROOT: /app/machine_learning
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./machine_learning:/app/machine_learning
+    depends_on:
+      api:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["python", "-m", "src.application.jobs.worker"]
 
   test:
     profiles: ["test"]

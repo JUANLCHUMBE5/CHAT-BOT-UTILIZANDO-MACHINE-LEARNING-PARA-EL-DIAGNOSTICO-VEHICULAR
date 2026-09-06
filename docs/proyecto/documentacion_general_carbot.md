@@ -380,7 +380,7 @@ datos están disponibles.
 
 ## 16. Autenticación y permisos
 
-- El access token JWT dura dos horas.
+- El access token JWT dura 30 minutos y el refresh token se rota mediante cookie HttpOnly.
 - El refresh token dura siete días.
 - El frontend intenta renovar automáticamente una sesión expirada.
 - Las renovaciones simultáneas comparten una única petición.

@@ -19,6 +19,7 @@ os.environ["LOCAL_AUTH_PASSWORD"] = "carbot2026"
 import pytest
 
 from src.config import settings
+from src.core.access_token_store import access_token_store
 from src.core.gemini_queue import gemini_rate_limiter
 from src.core.login_attempt_store import login_attempt_store
 from src.core.refresh_token_store import refresh_token_store
@@ -72,7 +73,7 @@ def pytest_sessionstart(session):
         async with engine.begin() as connection:
             await connection.execute(
                 text(
-                    "TRUNCATE TABLE talleres, trabajos_gemini, "
+                    "TRUNCATE TABLE talleres, trabajos_gemini, trabajos_sistema, workers_sistema, "
                     "cuotas_gemini_global RESTART IDENTITY CASCADE"
                 )
             )
@@ -113,6 +114,7 @@ def reset_rate_limiter():
     gemini_rate_limiter.reiniciar()
     login_attempt_store.reiniciar_local()
     refresh_token_store.reiniciar_local()
+    access_token_store.reiniciar_local()
     yield
 
 

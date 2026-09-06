@@ -26,6 +26,12 @@ import requests
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.application.services.confirmacion_diagnostico import (
+    ConfirmacionDiagnosticoWhatsApp,
+    instrucciones_confirmacion_whatsapp,
+    interpretar_confirmacion_whatsapp,
+    interpretar_respuesta_validacion_whatsapp,
+)
 from src.config import settings
 from src.core.gemini_queue import gemini_rate_limiter
 from src.core.gestor_diagnostico import GestorDiagnostico, ResultadoDiagnostico
@@ -109,6 +115,132 @@ class WebhookService:
         except Exception as exc:
             logger.error(f"Error al enviar mensaje vía Meta Graph API: {exc}")
             return False
+
+    @staticmethod
+    async def _procesar_confirmacion_tecnica(
+        confirmacion: ConfirmacionDiagnosticoWhatsApp,
+        usuario: Any,
+        diag_repo: DiagnosticoRepository,
+        operaciones_repo: OperacionesRepository,
+        diagnostico_id: uuid.UUID | None = None,
+    ) -> tuple[str, uuid.UUID | None]:
+        """Actualiza el último diagnóstico del mecánico y deja trazabilidad del canal."""
+
+        if confirmacion.requiere_observacion and not confirmacion.observacion:
+            return (
+                "⚠️ Para descartar el diagnóstico indica la falla encontrada.\n"
+                "Ejemplo: *DESCARTAR: bobina de encendido defectuosa*",
+                None,
+            )
+
+        diagnostico = (
+            await diag_repo.obtener_pendiente_mecanico_por_id(
+                diagnostico_id=diagnostico_id,
+                taller_id=usuario.taller_id,
+                mecanico_id=usuario.id,
+            )
+            if diagnostico_id
+            else await diag_repo.obtener_ultimo_pendiente_mecanico(
+                taller_id=usuario.taller_id,
+                mecanico_id=usuario.id,
+            )
+        )
+        if diagnostico is None:
+            return (
+                "ℹ️ No tienes un diagnóstico pendiente de validación. "
+                "Realiza una nueva consulta y confirma el resultado después de la revisión física.",
+                None,
+            )
+
+        diagnostico.estado = confirmacion.estado
+        observacion = confirmacion.observacion
+        if observacion:
+            diagnostico.conclusion_mecanico = observacion
+        elif confirmacion.estado == "confirmado":
+            diagnostico.conclusion_mecanico = "Falla confirmada físicamente por el mecánico."
+        else:
+            diagnostico.conclusion_mecanico = "Diagnóstico dejado en revisión por el mecánico."
+
+        for hipotesis in diagnostico.hipotesis:
+            if hipotesis.orden != 1:
+                continue
+            if confirmacion.estado == "confirmado":
+                hipotesis.resultado = "confirmada"
+            elif confirmacion.estado == "descartado":
+                hipotesis.resultado = "descartada"
+
+        validado_en = datetime.now(timezone.utc).isoformat()
+        trazabilidad = dict(diagnostico.trazabilidad or {})
+        trazabilidad["validacion_tecnica"] = {
+            "canal": "whatsapp",
+            "estado": confirmacion.estado,
+            "mecanico_id": str(usuario.id),
+            "validado_en": validado_en,
+            "tiene_observacion": bool(observacion),
+        }
+        diagnostico.trazabilidad = trazabilidad
+
+        await operaciones_repo.registrar_auditoria(
+            accion="validar_diagnostico_whatsapp",
+            entidad="diagnostico",
+            entidad_id=diagnostico.id,
+            taller_id=usuario.taller_id,
+            usuario_id=usuario.id,
+            detalles={
+                "estado_nuevo": confirmacion.estado,
+                "canal": "whatsapp",
+                "tiene_observacion": bool(observacion),
+            },
+        )
+
+        referencia = str(diagnostico.id)[:8]
+        if confirmacion.estado == "confirmado":
+            mensaje = f"✅ Diagnóstico *{referencia}* confirmado por el mecánico."
+            if observacion:
+                mensaje += f"\nReparación/observación: {observacion}"
+        elif confirmacion.estado == "descartado":
+            mensaje = (
+                f"❌ Diagnóstico *{referencia}* descartado.\n"
+                f"Falla encontrada: {observacion}"
+            )
+        else:
+            mensaje = f"🟠 Diagnóstico *{referencia}* marcado como en revisión."
+            if observacion:
+                mensaje += f"\nObservación: {observacion}"
+        return mensaje, diagnostico.id
+
+    @staticmethod
+    async def _guardar_respuesta_validacion_outbox(
+        msg_repo: MensajeRepository,
+        conversacion: Any,
+        usuario: Any,
+        meta_message_id: str,
+        respuesta_texto: str,
+        proveedor: str,
+        remitente: str,
+    ) -> None:
+        """Persiste una respuesta del flujo de validación en el outbox durable."""
+
+        await msg_repo.crear_mensaje(
+            conversacion_id=conversacion.id,
+            taller_id=usuario.taller_id,
+            usuario_id=usuario.id,
+            meta_message_id=f"out_{meta_message_id or uuid.uuid4()}",
+            direccion="salida",
+            tipo="texto",
+            texto=respuesta_texto,
+            categoria_cobro="servicio",
+            estado_entrega="pendiente",
+            costo_estimado=(
+                Decimal(str(settings.twilio_message_price_usd))
+                if proveedor == "twilio"
+                else COSTO_META_MENSAJE_SERVICIO_USD
+            ),
+            moneda="USD",
+            proveedor=proveedor,
+            destinatario_cifrado=cifrar_texto_reversible(remitente),
+            disponible_entrega_en=datetime.now(timezone.utc),
+        )
 
     async def procesar_mensaje(
         self,
@@ -384,6 +516,148 @@ class WebhookService:
                         "tiempo_total_ms": round(total_ms, 2),
                     }
 
+                # La validación del mecánico es un flujo conversacional SÍ/NO.
+                # Solo se interpreta una respuesta breve cuando el contexto lo espera.
+                contexto_conversacion = dict(conversacion.contexto or {})
+                flujo_validacion = dict(
+                    contexto_conversacion.get("validacion_diagnostico") or {}
+                )
+                etapa_validacion = flujo_validacion.get("etapa")
+                diagnostico_contexto_id = None
+                try:
+                    if flujo_validacion.get("diagnostico_id"):
+                        diagnostico_contexto_id = uuid.UUID(
+                            str(flujo_validacion["diagnostico_id"])
+                        )
+                except ValueError:
+                    contexto_conversacion.pop("validacion_diagnostico", None)
+                    conversacion.contexto = contexto_conversacion
+                    flujo_validacion = {}
+                    etapa_validacion = None
+
+                confirmacion = None
+                if tipo_mensaje == "text" and etapa_validacion == "esperando_confirmacion":
+                    respuesta_binaria = interpretar_respuesta_validacion_whatsapp(
+                        texto_cliente
+                    )
+                    if respuesta_binaria == "si":
+                        confirmacion = ConfirmacionDiagnosticoWhatsApp(
+                            estado="confirmado"
+                        )
+                    elif respuesta_binaria == "no":
+                        flujo_validacion["etapa"] = "esperando_falla_real"
+                        contexto_conversacion["validacion_diagnostico"] = flujo_validacion
+                        conversacion.contexto = contexto_conversacion
+                        respuesta_texto = (
+                            "❌ Entendido. ¿Cuál fue la falla realmente encontrada "
+                            "después de la revisión física?\n"
+                            "Escríbela brevemente, por ejemplo: *bobina de encendido defectuosa*."
+                        )
+                        await self._guardar_respuesta_validacion_outbox(
+                            msg_repo,
+                            conversacion,
+                            usuario,
+                            meta_message_id,
+                            respuesta_texto,
+                            proveedor,
+                            remitente,
+                        )
+                        await session.commit()
+                        return {
+                            "status": "esperando_falla_real",
+                            "diagnostico_id": (
+                                str(diagnostico_contexto_id)
+                                if diagnostico_contexto_id
+                                else None
+                            ),
+                            "conversacion_id": str(conversacion.id),
+                            "respuesta": respuesta_texto,
+                            "tiempo_total_ms": round(
+                                (time.perf_counter() - inicio) * 1000,
+                                2,
+                            ),
+                        }
+                elif tipo_mensaje == "text" and etapa_validacion == "esperando_falla_real":
+                    falla_real = texto_cliente.strip()[:4000]
+                    if len(falla_real) < 4:
+                        respuesta_texto = (
+                            "⚠️ Indica una falla concreta para registrar la corrección, "
+                            "por ejemplo: *inyector de GNV obstruido*."
+                        )
+                        await self._guardar_respuesta_validacion_outbox(
+                            msg_repo,
+                            conversacion,
+                            usuario,
+                            meta_message_id,
+                            respuesta_texto,
+                            proveedor,
+                            remitente,
+                        )
+                        await session.commit()
+                        return {
+                            "status": "esperando_falla_real",
+                            "diagnostico_id": (
+                                str(diagnostico_contexto_id)
+                                if diagnostico_contexto_id
+                                else None
+                            ),
+                            "conversacion_id": str(conversacion.id),
+                            "respuesta": respuesta_texto,
+                            "tiempo_total_ms": round(
+                                (time.perf_counter() - inicio) * 1000,
+                                2,
+                            ),
+                        }
+                    confirmacion = ConfirmacionDiagnosticoWhatsApp(
+                        estado="descartado",
+                        observacion=falla_real,
+                    )
+
+                # Se conservan los comandos explícitos como compatibilidad.
+                if confirmacion is None:
+                    confirmacion = (
+                        interpretar_confirmacion_whatsapp(texto_cliente)
+                        if tipo_mensaje == "text"
+                        else None
+                    )
+                if confirmacion is not None:
+                    respuesta_texto, diagnostico_confirmado_id = (
+                        await self._procesar_confirmacion_tecnica(
+                            confirmacion,
+                            usuario,
+                            diag_repo,
+                            operaciones_repo,
+                            diagnostico_id=diagnostico_contexto_id,
+                        )
+                    )
+                    if diagnostico_confirmado_id:
+                        contexto_conversacion.pop("validacion_diagnostico", None)
+                        conversacion.contexto = contexto_conversacion
+                    await self._guardar_respuesta_validacion_outbox(
+                        msg_repo,
+                        conversacion,
+                        usuario,
+                        meta_message_id,
+                        respuesta_texto,
+                        proveedor,
+                        remitente,
+                    )
+                    await session.commit()
+                    return {
+                        "status": "validacion_tecnica",
+                        "diagnostico_id": (
+                            str(diagnostico_confirmado_id)
+                            if diagnostico_confirmado_id
+                            else None
+                        ),
+                        "conversacion_id": str(conversacion.id),
+                        "respuesta": respuesta_texto,
+                        "tiempo_total_ms": round(
+                            (time.perf_counter() - inicio) * 1000,
+                            2,
+                        ),
+                    }
+
                 # =========================================================
                 # 7. EJECUTAR DIAGNÓSTICO ML + RAG + GEMINI (SOLO PERSONAL AUTORIZADO)
                 # =========================================================
@@ -424,6 +698,7 @@ class WebhookService:
                             requiere_revision_humana=True,
                             estado_sesion="esperando_clarificacion",
                             modo_diagnostico="esperando_clarificacion",
+                            tipo_consulta="aclaracion",
                         )
                     else:
                         dto = await asyncio.to_thread(
@@ -522,11 +797,21 @@ class WebhookService:
                         f"para {usuario.nombres} en {total_ms:.2f}ms"
                     )
                     return {
-                        "status": "consulta_tecnica" if dto.tipo_consulta == "consulta_tecnica" else "fuera_de_alcance",
+                        "status": (
+                            "consulta_tecnica"
+                            if dto.tipo_consulta == "consulta_tecnica"
+                            else dto.tipo_consulta
+                        ),
                         "conversacion_id": str(conversacion.id),
                         "respuesta": respuesta_texto,
                         "tiempo_total_ms": round(total_ms, 2),
                     }
+
+                if dto.modo_diagnostico != "en_cola_gemini":
+                    respuesta_texto = (
+                        respuesta_texto.rstrip()
+                        + instrucciones_confirmacion_whatsapp()
+                    )
 
                 # =========================================================
                 # 6. ASOCIAR VEHÍCULO (SI APLICA)
@@ -627,6 +912,18 @@ class WebhookService:
                         "tiempo_total_ms": dto.tiempo_total_ms or duracion_ms,
                     },
                 )
+
+                # El diagnóstico se conserva desde que se genera. La respuesta
+                # posterior del mecánico solo determina si fue correcta o incorrecta.
+                # Si Gemini quedó en cola, el worker habilitará la confirmación cuando
+                # persista el resumen final; así un SÍ no confirma el aviso preliminar.
+                if dto.modo_diagnostico != "en_cola_gemini":
+                    contexto_conversacion = dict(conversacion.contexto or {})
+                    contexto_conversacion["validacion_diagnostico"] = {
+                        "diagnostico_id": str(diag.id),
+                        "etapa": "esperando_confirmacion",
+                    }
+                    conversacion.contexto = contexto_conversacion
 
                 if dto.modo_diagnostico == "en_cola_gemini" and dto.solicitud_id:
                     await gemini_rate_limiter.persistir_solicitud_en_sesion(

@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "test:harness": "node tests/harness/routing.harness.js && node tests/harness/profile-edit.harness.js && node tests/harness/security.harness.js",
+    "test:harness": "node tests/harness/routing.harness.js && node tests/harness/profile-edit.harness.js && node tests/harness/security.harness.js && node tests/harness/periodo.harness.js",
     "verify": "npm run lint && npm run build && npm run test:harness",
     "preview": "vite preview"
   },

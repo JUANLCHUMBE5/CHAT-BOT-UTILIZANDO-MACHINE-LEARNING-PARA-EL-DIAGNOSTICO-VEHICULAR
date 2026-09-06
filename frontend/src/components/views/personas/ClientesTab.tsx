@@ -115,7 +115,7 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
               setBusqueda(e.target.value);
               setPaginaActual(1);
             }}
-            placeholder="Buscar por nombre, teléfono o placa..."
+            placeholder="Buscar por nombre o teléfono..."
             style={{
               width: '100%',
               padding: '9px 12px 9px 36px',
@@ -156,7 +156,7 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
           <thead>
             <tr style={{ backgroundColor: 'var(--bg-main)', borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
-              <th style={{ padding: '12px 16px', fontWeight: 600 }}>Cliente</th>
+              <th style={{ padding: '12px 16px', fontWeight: 600 }}>Contacto / Propietario</th>
               <th style={{ padding: '12px 16px', fontWeight: 600 }}>Teléfono / WhatsApp</th>
               <th style={{ padding: '12px 16px', fontWeight: 600 }}>Estado</th>
               <th style={{ padding: '12px 16px', fontWeight: 600 }}>Fecha Registro</th>
@@ -168,14 +168,14 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
             {cargando ? (
               <tr>
                 <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                  Cargando directorio de clientes...
+                  Cargando directorio de contactos y propietarios...
                 </td>
               </tr>
             ) : clientesPaginados.length === 0 ? (
               <tr>
                 <td colSpan={6} style={{ padding: '32px', textAlign: 'center', color: 'var(--text-muted)' }}>
                   <Users size={36} style={{ marginBottom: '8px', opacity: 0.5 }} />
-                  <div>No se encontraron clientes registrados que coincidan con la búsqueda.</div>
+                  <div>No se encontraron contactos o propietarios registrados que coincidan con la búsqueda.</div>
                 </td>
               </tr>
             ) : (
@@ -200,12 +200,12 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
                         <span
                           style={{
                             marginLeft: '8px',
+                            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                            color: '#b45309',
+                            fontSize: '11px',
+                            fontWeight: 600,
                             padding: '2px 6px',
-                            borderRadius: '8px',
-                            fontSize: '10px',
-                            fontWeight: 700,
-                            backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                            color: '#1d4ed8',
+                            borderRadius: '12px',
                           }}
                         >
                           Solicitud Pendiente
@@ -218,21 +218,22 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
                     <td style={{ padding: '12px 16px' }}>
                       <span
                         style={{
-                          padding: '4px 10px',
+                          ...badgeStyle,
+                          padding: '3px 8px',
                           borderRadius: '12px',
                           fontSize: '11px',
                           fontWeight: 600,
-                          ...badgeStyle,
+                          display: 'inline-block',
                         }}
                       >
                         {statusLabel}
                       </span>
                     </td>
-                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>
+                    <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>
                       {cliente.fecha_registro}
                     </td>
-                    <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>
-                      {cliente.ultima_interaccion}
+                    <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>
+                      {cliente.ultima_interaccion || 'Sin interacciones'}
                     </td>
                     <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                       <button
@@ -243,22 +244,21 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
                             accion: cliente.bloqueado ? 'desbloquear' : 'bloquear',
                           })
                         }
+                        title={cliente.bloqueado ? 'Desbloquear contacto' : 'Bloquear contacto'}
                         style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          color: cliente.bloqueado ? '#059669' : '#dc2626',
+                          padding: '6px',
+                          borderRadius: 'var(--radius-sm)',
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '6px',
-                          padding: '6px 12px',
-                          backgroundColor: cliente.bloqueado ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                          color: cliente.bloqueado ? '#047857' : '#b91c1c',
-                          border: 'none',
-                          borderRadius: 'var(--radius-sm)',
-                          fontSize: '12px',
-                          fontWeight: 600,
-                          cursor: 'pointer',
+                          justifyContent: 'center',
+                          transition: 'background-color 0.15s ease',
                         }}
                       >
-                        {cliente.bloqueado ? <Unlock size={14} /> : <Lock size={14} />}
-                        <span>{cliente.bloqueado ? 'Desbloquear' : 'Bloquear'}</span>
+                        {cliente.bloqueado ? <Unlock size={16} /> : <Lock size={16} />}
                       </button>
                     </td>
                   </tr>
@@ -270,59 +270,62 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
       </div>
 
       {/* Pagination Footer */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', padding: '4px 0' }}>
-        <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-          Mostrando {clientesFiltrados.length === 0 ? 0 : (paginaActual - 1) * elementosPorPagina + 1} a{' '}
-          {Math.min(paginaActual * elementosPorPagina, clientesFiltrados.length)} de {clientesFiltrados.length} clientes
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+        <div>
+          Mostrando{' '}
+          <strong>
+            {clientesFiltrados.length === 0 ? 0 : (paginaActual - 1) * elementosPorPagina + 1}
+          </strong>{' '}
+          a{' '}
+          <strong>
+            {Math.min(paginaActual * elementosPorPagina, clientesFiltrados.length)}
+          </strong>{' '}
+          de <strong>{clientesFiltrados.length}</strong> contactos
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <button
             type="button"
             onClick={() => handleCambiarPagina(paginaActual - 1)}
             disabled={paginaActual === 1}
             style={{
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-color)',
+              backgroundColor: '#ffffff',
+              color: paginaActual === 1 ? 'var(--text-muted)' : 'var(--text-main)',
+              cursor: paginaActual === 1 ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              padding: '6px 10px',
-              backgroundColor: '#ffffff',
-              border: '1px solid var(--border-color)',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              cursor: paginaActual === 1 ? 'not-allowed' : 'pointer',
-              opacity: paginaActual === 1 ? 0.5 : 1,
+              gap: '4px',
             }}
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={14} />
             <span>Anterior</span>
           </button>
 
-          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-main)', padding: '0 8px' }}>
+          <span>
             Página {paginaActual} de {totalPaginas}
           </span>
 
           <button
             type="button"
             onClick={() => handleCambiarPagina(paginaActual + 1)}
-            disabled={paginaActual === totalPaginas}
+            disabled={paginaActual >= totalPaginas}
             style={{
+              padding: '6px 12px',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-color)',
+              backgroundColor: '#ffffff',
+              color: paginaActual >= totalPaginas ? 'var(--text-muted)' : 'var(--text-main)',
+              cursor: paginaActual >= totalPaginas ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              padding: '6px 10px',
-              backgroundColor: '#ffffff',
-              border: '1px solid var(--border-color)',
-              borderRadius: 'var(--radius-sm)',
-              fontSize: '13px',
-              color: 'var(--text-secondary)',
-              cursor: paginaActual === totalPaginas ? 'not-allowed' : 'pointer',
-              opacity: paginaActual === totalPaginas ? 0.5 : 1,
+              gap: '4px',
             }}
           >
             <span>Siguiente</span>
-            <ChevronRight size={16} />
+            <ChevronRight size={14} />
           </button>
         </div>
       </div>
@@ -336,8 +339,8 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
           cargando={procesandoAccion}
           title={
             clienteAccionModal.accion === 'bloquear'
-              ? 'Confirmar Bloqueo de Cliente'
-              : 'Confirmar Desbloqueo de Cliente'
+              ? 'Confirmar Bloqueo de Contacto'
+              : 'Confirmar Desbloqueo de Contacto'
           }
           variant={clienteAccionModal.accion === 'bloquear' ? 'danger' : 'success'}
           confirmText={
@@ -351,7 +354,7 @@ export const ClientesTab: React.FC<ClientesTabProps> = ({
               </p>
               {clienteAccionModal.accion === 'bloquear' && (
                 <p style={{ margin: 0, fontSize: '12px', color: '#b91c1c', fontWeight: 500 }}>
-                  Al bloquear este cliente, no podrá enviar mensajes ni realizar consultas de diagnóstico al chatbot de WhatsApp.
+                  El contacto bloqueado no podrá interactuar con CarBot ni solicitar acceso.
                 </p>
               )}
             </div>

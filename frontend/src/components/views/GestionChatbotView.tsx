@@ -10,10 +10,8 @@ import {
 import type {
   Cliente,
   Diagnostico,
-  EstadoDiagnostico,
   Mecanico,
   SolicitudAcceso,
-  UsuarioSesion,
 } from '../../types';
 import { apiService } from '../../services/api';
 import { SolicitudesTab } from './personas/SolicitudesTab';
@@ -24,41 +22,60 @@ import { DiagnosticosView } from './DiagnosticosView';
 export type GestionSubTab = 'solicitudes' | 'mecanicos' | 'clientes' | 'historial';
 
 export interface GestionChatbotViewProps {
-  user: UsuarioSesion | null;
   initialSubTab?: GestionSubTab;
   solicitudes: SolicitudAcceso[];
   cargandoSolicitudes: boolean;
   mecanicos: Mecanico[];
   cargandoMecanicos: boolean;
   diagnosticos: Diagnostico[];
+  totalDiagnosticos: number;
   cargandoDiagnosticos: boolean;
-  onRecargarDatos: () => void;
-  onActualizarEstadoDiagnostico: (id: string, nuevoEstado: EstadoDiagnostico, notas?: string) => Promise<void>;
-  onFiltrarDiagnosticos?: (filtros: { busqueda?: string; estado?: string; modo?: string; mecanico_id?: string }) => Promise<void>;
+  errorSolicitudes?: string | null;
+  errorMecanicos?: string | null;
+  errorDiagnosticos?: string | null;
+  onRecargarSolicitudes: () => void | Promise<void>;
+  onRecargarMecanicos: () => void | Promise<void>;
+  onFiltrarDiagnosticos?: (filtros: {
+    busqueda?: string;
+    estado?: string;
+    modo?: string;
+    mecanico_id?: string;
+    limite?: number;
+    offset?: number;
+    fecha_desde?: string;
+    fecha_hasta?: string;
+  }) => Promise<void>;
   diagnosticoSeleccionadoModal?: Diagnostico | null;
   onCerrarModalDetalle: () => void;
   onAbrirModalDetalle: (diag: Diagnostico) => void;
 }
 
 export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
-  user,
   initialSubTab = 'solicitudes',
   solicitudes,
   cargandoSolicitudes,
   mecanicos,
   cargandoMecanicos,
   diagnosticos,
+  totalDiagnosticos,
   cargandoDiagnosticos,
-  onRecargarDatos,
-  onActualizarEstadoDiagnostico,
+  errorSolicitudes,
+  errorMecanicos,
+  errorDiagnosticos,
+  onRecargarSolicitudes,
+  onRecargarMecanicos,
   onFiltrarDiagnosticos,
   diagnosticoSeleccionadoModal,
   onCerrarModalDetalle,
   onAbrirModalDetalle,
 }) => {
   const [subTab, setSubTab] = useState<GestionSubTab>(initialSubTab);
+  const [filtroMecanicoId, setFiltroMecanicoId] = useState<string>('todos');
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [clientesCargados, setClientesCargados] = useState(false);
   const [cargandoClientes, setCargandoClientes] = useState(false);
+  const [errorCargaClientes, setErrorCargaClientes] = useState<string | null>(null);
+  const [recargaHistorial, setRecargaHistorial] = useState(0);
 
   // Synchronize when initialSubTab prop changes
   useEffect(() => {
@@ -70,48 +87,64 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
   const cargarClientes = useCallback(async () => {
     try {
       setCargandoClientes(true);
+      setErrorCargaClientes(null);
       const lista = await apiService.getClientes();
       setClientes(Array.isArray(lista) ? lista : []);
+      setClientesCargados(true);
     } catch (err) {
-      console.error('Error al cargar clientes:', err);
+      const msg = err instanceof Error ? err.message : 'Error al cargar contactos';
+      setErrorCargaClientes(msg);
+      console.error('Error al cargar contactos:', err);
     } finally {
       setCargandoClientes(false);
     }
   }, []);
 
+  // Carga perezosa de contactos solo cuando se ingresa a la pestaña de contactos
   useEffect(() => {
-    cargarClientes();
-  }, [cargarClientes]);
+    if (subTab === 'clientes' && !clientesCargados && !cargandoClientes) {
+      cargarClientes();
+    }
+  }, [subTab, clientesCargados, cargandoClientes, cargarClientes]);
 
   const handleRecargarTodo = useCallback(async () => {
-    await Promise.all([onRecargarDatos(), cargarClientes()]);
-  }, [onRecargarDatos, cargarClientes]);
+    if (subTab === 'clientes') {
+      await cargarClientes();
+    } else if (subTab === 'solicitudes') {
+      await onRecargarSolicitudes();
+    } else if (subTab === 'mecanicos') {
+      await onRecargarMecanicos();
+    } else {
+      setRecargaHistorial((valor) => valor + 1);
+    }
+  }, [subTab, onRecargarSolicitudes, onRecargarMecanicos, cargarClientes]);
 
   const solicitudesPendientes = solicitudes.filter((s) => s.estado === 'pendiente').length;
   const totalMecanicos = mecanicos.length;
   const totalClientes = clientes.length;
 
   const handleVerConsultasDeMecanico = useCallback((mecanicoId: string) => {
+    setFiltroMecanicoId(mecanicoId);
     setSubTab('historial');
-    if (onFiltrarDiagnosticos) {
-      onFiltrarDiagnosticos({ mecanico_id: mecanicoId });
-    }
-  }, [onFiltrarDiagnosticos]);
+  }, []);
+
+  const errorActivo = subTab === 'solicitudes'
+    ? errorSolicitudes
+    : subTab === 'mecanicos'
+      ? errorMecanicos
+      : subTab === 'historial'
+        ? errorDiagnosticos
+        : null;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {/* Header with Title and Global Refresh */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <SlidersHorizontal size={20} style={{ color: 'var(--primary)' }} />
-            <h1 style={{ fontSize: '19px', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
-              Personas y Diagnósticos
-            </h1>
-          </div>
-          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '3px 0 0 0' }}>
-            Gestión integral de accesos, clientes WhatsApp, equipo de mecánicos e historial clínico de diagnósticos.
-          </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <SlidersHorizontal size={18} style={{ color: 'var(--primary)' }} />
+          <h1 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+            Accesos y Diagnósticos
+          </h1>
         </div>
 
         <button
@@ -121,37 +154,33 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
-            padding: '7px 14px',
+            gap: '5px',
+            padding: '5px 10px',
             backgroundColor: '#ffffff',
             border: '1px solid var(--border-color)',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: '12px',
+            borderRadius: '6px',
+            fontSize: '11px',
             fontWeight: 600,
             cursor: 'pointer',
             color: 'var(--text-secondary)',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
           }}
         >
           <RefreshCw
-            size={14}
+            size={13}
             className={cargandoSolicitudes || cargandoMecanicos || cargandoDiagnosticos || cargandoClientes ? 'animate-spin' : ''}
           />
           <span>Actualizar</span>
         </button>
       </div>
 
-      {/* 4-Tab Segmented Switcher */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-          backgroundColor: '#f1f5f9',
-          padding: '4px',
-          borderRadius: '10px',
-          gap: '4px',
-        }}
-      >
+      {errorActivo && (
+        <div className="inline-error" role="alert">
+          {errorActivo}
+        </div>
+      )}
+
+      {/* 4-Tab Segmented Switcher (2x2 en móvil, 4 columnas en desktop) */}
+      <div className="gestion-subtabs-grid">
         <button
           type="button"
           onClick={() => setSubTab('solicitudes')}
@@ -159,9 +188,9 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            padding: '8px 12px',
-            borderRadius: '7px',
+            gap: '6px',
+            padding: '8px 10px',
+            borderRadius: '8px',
             fontSize: '12px',
             fontWeight: 700,
             border: 'none',
@@ -170,21 +199,20 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
             cursor: 'pointer',
             transition: 'all 0.15s ease',
             boxShadow: subTab === 'solicitudes' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
-            position: 'relative',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Inbox size={15} />
+          <Inbox size={14} />
           <span>Solicitudes</span>
           {solicitudesPendientes > 0 && (
             <span
               style={{
                 backgroundColor: '#ef4444',
                 color: '#ffffff',
-                fontSize: '10px',
+                fontSize: '9.5px',
                 fontWeight: 800,
                 borderRadius: '9999px',
                 padding: '1px 6px',
-                marginLeft: '4px',
               }}
             >
               {solicitudesPendientes}
@@ -199,9 +227,9 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            padding: '8px 12px',
-            borderRadius: '7px',
+            gap: '6px',
+            padding: '8px 10px',
+            borderRadius: '8px',
             fontSize: '12px',
             fontWeight: 700,
             border: 'none',
@@ -210,19 +238,19 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
             cursor: 'pointer',
             transition: 'all 0.15s ease',
             boxShadow: subTab === 'mecanicos' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Wrench size={15} />
+          <Wrench size={14} />
           <span>Mecánicos</span>
           <span
             style={{
               backgroundColor: subTab === 'mecanicos' ? 'var(--primary-light)' : '#e2e8f0',
               color: subTab === 'mecanicos' ? 'var(--primary)' : 'var(--text-muted)',
-              fontSize: '10px',
+              fontSize: '9.5px',
               fontWeight: 700,
               borderRadius: '9999px',
               padding: '1px 6px',
-              marginLeft: '4px',
             }}
           >
             {totalMecanicos}
@@ -236,9 +264,9 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            padding: '8px 12px',
-            borderRadius: '7px',
+            gap: '6px',
+            padding: '8px 10px',
+            borderRadius: '8px',
             fontSize: '12px',
             fontWeight: 700,
             border: 'none',
@@ -247,19 +275,19 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
             cursor: 'pointer',
             transition: 'all 0.15s ease',
             boxShadow: subTab === 'clientes' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+            whiteSpace: 'nowrap',
           }}
         >
-          <Users size={15} />
-          <span>Clientes</span>
+          <Users size={14} />
+          <span>Contactos</span>
           <span
             style={{
               backgroundColor: subTab === 'clientes' ? 'var(--primary-light)' : '#e2e8f0',
               color: subTab === 'clientes' ? 'var(--primary)' : 'var(--text-muted)',
-              fontSize: '10px',
+              fontSize: '9.5px',
               fontWeight: 700,
               borderRadius: '9999px',
               padding: '1px 6px',
-              marginLeft: '4px',
             }}
           >
             {totalClientes}
@@ -268,14 +296,17 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
 
         <button
           type="button"
-          onClick={() => setSubTab('historial')}
+          onClick={() => {
+            setFiltroMecanicoId('todos');
+            setSubTab('historial');
+          }}
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            padding: '8px 12px',
-            borderRadius: '7px',
+            gap: '6px',
+            padding: '8px 10px',
+            borderRadius: '8px',
             fontSize: '12px',
             fontWeight: 700,
             border: 'none',
@@ -284,10 +315,23 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
             cursor: 'pointer',
             transition: 'all 0.15s ease',
             boxShadow: subTab === 'historial' ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+            whiteSpace: 'nowrap',
           }}
         >
-          <FileSearch size={15} />
-          <span>Historial Diagnósticos</span>
+          <FileSearch size={14} />
+          <span>Diagnósticos</span>
+          <span
+            style={{
+              backgroundColor: subTab === 'historial' ? 'var(--primary-light)' : '#e2e8f0',
+              color: subTab === 'historial' ? 'var(--primary)' : 'var(--text-muted)',
+              fontSize: '9.5px',
+              fontWeight: 700,
+              borderRadius: '9999px',
+              padding: '1px 6px',
+            }}
+          >
+            {totalDiagnosticos}
+          </span>
         </button>
       </div>
 
@@ -296,7 +340,7 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
         <SolicitudesTab
           solicitudes={solicitudes}
           cargando={cargandoSolicitudes}
-          onRecargar={handleRecargarTodo}
+          onRecargar={onRecargarSolicitudes}
         />
       )}
 
@@ -305,29 +349,58 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
         <MecanicosAutorizadosTab
           mecanicos={mecanicos}
           cargando={cargandoMecanicos}
-          onRecargar={handleRecargarTodo}
+          onRecargar={onRecargarMecanicos}
           onVerConsultasMecanico={handleVerConsultasDeMecanico}
         />
       )}
 
-      {/* Subtab 3: Clientes Registrados */}
+      {/* Subtab 3: Contactos / Propietarios */}
       {subTab === 'clientes' && (
-        <ClientesTab
-          clientes={clientes}
-          cargando={cargandoClientes}
-          onRecargar={handleRecargarTodo}
-        />
+        <>
+          {errorCargaClientes && (
+            <div
+              style={{
+                backgroundColor: '#fef2f2',
+                color: '#991b1b',
+                border: '1px solid #fecaca',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span>{errorCargaClientes}</span>
+              <button
+                type="button"
+                onClick={cargarClientes}
+                style={{ background: 'none', border: 'none', color: '#991b1b', fontWeight: 700, cursor: 'pointer', fontSize: '11px' }}
+              >
+                Reintentar
+              </button>
+            </div>
+          )}
+          <ClientesTab
+            clientes={clientes}
+            cargando={cargandoClientes}
+            onRecargar={cargarClientes}
+          />
+        </>
       )}
 
       {/* Subtab 4: Historial de Diagnósticos */}
       {subTab === 'historial' && (
         <DiagnosticosView
           diagnosticos={diagnosticos}
+          totalDiagnosticos={totalDiagnosticos}
           cargando={cargandoDiagnosticos}
           mecanicos={mecanicos}
-          currentUser={user}
-          onActualizarEstado={onActualizarEstadoDiagnostico}
+          initialFiltroMecanico={filtroMecanicoId}
+          onFiltroMecanicoSeleccionado={setFiltroMecanicoId}
           onFiltrar={onFiltrarDiagnosticos}
+          error={null}
+          refreshKey={recargaHistorial}
           diagnosticoSeleccionadoModal={diagnosticoSeleccionadoModal}
           onCerrarModalDetalle={onCerrarModalDetalle}
           onAbrirModalDetalle={onAbrirModalDetalle}
