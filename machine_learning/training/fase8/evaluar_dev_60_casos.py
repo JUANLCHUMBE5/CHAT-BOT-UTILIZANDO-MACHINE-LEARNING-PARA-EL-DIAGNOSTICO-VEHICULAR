@@ -5,17 +5,19 @@ sin tocar en ningún momento el conjunto TEST reservado (G1_01-G1_50).
 """
 
 import json
-import numpy as np
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(BASE_DIR))
 sys.path.insert(0, str(BASE_DIR / "backend"))
 
+import joblib
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
 from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema
-import joblib
+
 
 def evaluar_modelo_en_dev(modelo_falla, modelo_sistema, vectorizador, exponente_jerarquico: float = 0.65):
     clases_f = list(modelo_falla.classes_)
@@ -33,8 +35,6 @@ def evaluar_modelo_en_dev(modelo_falla, modelo_sistema, vectorizador, exponente_
         texto = c["sintoma"]
         gt_falla = c["falla_esperada"]
         gt_macro = c["macro_sistema"]
-        dtc = c.get("codigo_dtc")
-
         vec = vectorizador.transform([texto])
         pf = modelo_falla.predict_proba(vec)[0]
         ps = modelo_sistema.predict_proba(vec)[0]

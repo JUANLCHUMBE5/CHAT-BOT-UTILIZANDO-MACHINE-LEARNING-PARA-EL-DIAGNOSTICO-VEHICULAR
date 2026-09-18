@@ -4,6 +4,7 @@ las 7 clases débiles y los principales pares de confusión detectados en la aud
 """
 
 from pathlib import Path
+
 import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent

@@ -4,6 +4,7 @@ Verificación de DEV 60 con el Gestor Oficial de CarBot (Candidata 8.3 Calibrada
 
 import sys
 from pathlib import Path
+
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parents[3]
@@ -13,9 +14,11 @@ BACKEND_DIR = BASE_DIR / "backend"
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from src.core.gestor_diagnostico import GestorDiagnostico
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
 from machine_learning.training.fase8.experimentar_calibracion_dev import calcular_metricas_calibracion
+
+from src.core.gestor_diagnostico import GestorDiagnostico
+
 
 def main():
     g = GestorDiagnostico()

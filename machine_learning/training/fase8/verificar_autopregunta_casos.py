@@ -6,8 +6,9 @@ sys.path.insert(0, str(BASE_DIR))
 sys.path.insert(0, str(BASE_DIR / "backend"))
 
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
-from src.core.gestor_diagnostico import GestorDiagnostico
+
 from src.core.diagnostico.auto_interrogador import evaluar_auto_pregunta_descarte
+from src.core.gestor_diagnostico import GestorDiagnostico
 
 gestor = GestorDiagnostico()
 test_ids = ["DEV_13", "DEV_17", "DEV_18", "DEV_38", "DEV_52"]

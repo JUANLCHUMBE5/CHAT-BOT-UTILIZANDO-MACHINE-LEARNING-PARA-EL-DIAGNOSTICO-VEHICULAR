@@ -13,12 +13,10 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 from src.core.diagnostico.taxonomia_sistemas import (
     DTC_A_SISTEMA,
-    FALLA_A_SISTEMA,
-    obtener_macro_sistema,
 )
 
 

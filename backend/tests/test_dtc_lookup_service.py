@@ -1,7 +1,5 @@
 """Pruebas unitarias para el servicio de consulta de códigos DTC / OBD-II."""
 
-import pytest
-from src.infrastructure.dtc.dtc_lookup_service import DtcLookupService
 from src.infrastructure.container import ServiceContainer
 
 

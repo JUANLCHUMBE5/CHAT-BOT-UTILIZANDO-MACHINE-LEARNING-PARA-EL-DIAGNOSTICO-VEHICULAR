@@ -4,7 +4,8 @@ Genera datos de entrenamiento independientes basados en sintomatología técnica
 Blindaje: Totalmente disjunto del benchmark TEST G1_01-G1_50.
 """
 
-from typing import List, Dict
+from typing import Dict, List
+
 
 def obtener_casos_motor_fase8() -> List[Dict[str, str]]:
     casos = []

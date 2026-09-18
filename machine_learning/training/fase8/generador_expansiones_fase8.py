@@ -4,7 +4,8 @@ Genera ~50 ejemplos realistas por clase para las 13 clases nuevas y clases refor
 Cumple con la regla de NO contaminación con el benchmark TEST G1_01-G1_50.
 """
 
-from typing import List, Dict
+from typing import Dict, List
+
 
 def generar_dataset_expansiones_fase8() -> List[Dict[str, str]]:
     casos = []

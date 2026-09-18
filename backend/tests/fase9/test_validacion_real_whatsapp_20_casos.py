@@ -19,13 +19,12 @@ Ejecuta 20 conversaciones técnicas piloto evaluando:
 
 from __future__ import annotations
 
-import asyncio
 import time
 from typing import Any, Dict, List, Optional
+
 import pytest
 
 from src.core.conversacion.models import (
-    ConversationPhase,
     ConversationState,
     FactState,
     QuestionIntent,
@@ -161,6 +160,7 @@ async def test_caso_02_corto_plazo_5_mensajes(gestor_singleton):
         "con el aire acondicionado encendido",
         "qué reviso primero?",
     ]
+    res = None
     for msg in msgs:
         res = await orq.procesar_turno(session_id=s_id, texto_usuario=msg, gestor_diagnostico=gestor_singleton)
 
@@ -193,7 +193,7 @@ async def test_caso_03_corto_plazo_10_mensajes(gestor_singleton):
         "cuál es el diagnóstico?",
     ]
     for msg in msgs:
-        res = await orq.procesar_turno(session_id=s_id, texto_usuario=msg, gestor_diagnostico=gestor_singleton)
+        await orq.procesar_turno(session_id=s_id, texto_usuario=msg, gestor_diagnostico=gestor_singleton)
 
     st = await repo.get_session(s_id)
     assert st.marca == "Nissan"
@@ -227,7 +227,7 @@ async def test_caso_04_corto_plazo_15_mensajes(gestor_singleton):
         "qué otra cosa puede estar causando la vibración en caliente?",
     ]
     for msg in msgs:
-        res = await orq.procesar_turno(session_id=s_id, texto_usuario=msg, gestor_diagnostico=gestor_singleton)
+        await orq.procesar_turno(session_id=s_id, texto_usuario=msg, gestor_diagnostico=gestor_singleton)
 
     st = await repo.get_session(s_id)
     assert st.marca == "Toyota"
@@ -429,7 +429,7 @@ async def test_casos_13_14_respuestas_cortas(gestor_singleton):
     st13.registrar_pregunta(QuestionIntent.COMPONENTE_REVISADO, "¿Reemplazaste las bujías?")
     await repo.save_session(s_id, st13)
 
-    res14 = await orq.procesar_turno(session_id=s_id, texto_usuario="ya las cambié", gestor_diagnostico=gestor_singleton)
+    await orq.procesar_turno(session_id=s_id, texto_usuario="ya las cambié", gestor_diagnostico=gestor_singleton)
     st14 = await repo.get_session(s_id)
     assert st14.obtener_valor_confirmado("reemplazado_bujías") is not None
 
@@ -444,7 +444,7 @@ async def test_casos_15_16_sinonimos_y_jerga(gestor_singleton):
     s15 = "test_jerga_15"
     await orq.procesar_turno(session_id=s15, texto_usuario="mi carro zapatea", gestor_diagnostico=gestor_singleton)
     await orq.procesar_turno(session_id=s15, texto_usuario="solo en el semáforo", gestor_diagnostico=gestor_singleton)
-    r15 = await orq.procesar_turno(session_id=s15, texto_usuario="cuando acelero mejora", gestor_diagnostico=gestor_singleton)
+    await orq.procesar_turno(session_id=s15, texto_usuario="cuando acelero mejora", gestor_diagnostico=gestor_singleton)
 
     st15 = await repo.get_session(s15)
     assert st15.obtener_valor_confirmado("condicion_operacion") == "detenido en ralentí"

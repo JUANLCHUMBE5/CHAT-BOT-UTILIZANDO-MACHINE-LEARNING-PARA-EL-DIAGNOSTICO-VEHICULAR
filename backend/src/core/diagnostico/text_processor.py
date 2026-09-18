@@ -133,9 +133,9 @@ def procesar_consulta_texto(
 
     if sesion_pendiente and sesion_pendiente.estado in ("esperando_autopregunta", "esperando_aclaracion_sintoma"):
         from src.core.diagnostico.auto_interrogador import (
-            resolver_respuesta_autopregunta,
             es_rechazo_de_opciones,
             generar_pregunta_descarte_secundario,
+            resolver_respuesta_autopregunta,
         )
 
         idx_opt, txt_opt, diag_canonica = resolver_respuesta_autopregunta(

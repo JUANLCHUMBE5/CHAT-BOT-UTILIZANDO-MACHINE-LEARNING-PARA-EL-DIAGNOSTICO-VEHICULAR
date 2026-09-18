@@ -5,18 +5,18 @@ Cumple estrictamente con la Regla 1 de Arquitectura de Tesis:
 - Nivel 2: Linear SVM (CalibratedClassifierCV con LinearSVC) + TF-IDF para las 48 Fallas Canónicas.
 """
 
-import os
-import sys
 import json
+import sys
 import time
-import joblib
-import pandas as pd
-import numpy as np
 from pathlib import Path
+
+import joblib
+import numpy as np
+import pandas as pd
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score, classification_report, f1_score
-from sklearn.model_selection import StratifiedKFold, train_test_split
+from sklearn.metrics import accuracy_score, f1_score
+from sklearn.model_selection import train_test_split
 from sklearn.svm import LinearSVC
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent

@@ -2,13 +2,9 @@
 
 from __future__ import annotations
 
-import csv
-import io
-import json
 from pathlib import Path
-import unicodedata
+
 import pandas as pd
-import joblib
 
 # Mapeo exhaustivo de diagnósticos de taller hacia la taxonomía canónica de 48 clases
 MAPA_DIAGNOSTICO_A_CANONICO_300 = {

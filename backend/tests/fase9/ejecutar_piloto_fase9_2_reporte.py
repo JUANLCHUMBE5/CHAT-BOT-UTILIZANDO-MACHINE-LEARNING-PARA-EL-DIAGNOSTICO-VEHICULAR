@@ -7,14 +7,13 @@ Salida: backend/tests/fase9/resultados_piloto_fase9_2.json
 import asyncio
 import json
 import os
+import sys
 import time
 from typing import Any, Dict, List, Optional
 
-import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from src.core.conversacion.models import (
-    ConversationPhase,
     ConversationState,
     FactState,
     QuestionIntent,
@@ -592,7 +591,7 @@ async def ejecutar_piloto():
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(salida, f, indent=2, ensure_ascii=False)
 
-    print(f"\n[FASE 9.2 COMPLETADA CON ÉXITO]")
+    print("\n[FASE 9.2 COMPLETADA CON ÉXITO]")
     print(f"Total casos: {len(resultados_casos)} | Éxito: {salida['metadata']['tasa_exito']}")
     print(f"Total turnos registrados: {len(collector.trazas)}")
     print(f"Latencia promedio: {salida['metadata']['latencia_promedio_ms']} ms")

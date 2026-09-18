@@ -24,7 +24,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import StratifiedGroupKFold, cross_val_score
 from sklearn.naive_bayes import ComplementNB
-from sklearn.pipeline import FeatureUnion, Pipeline
+from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
 
 matplotlib.use("Agg")

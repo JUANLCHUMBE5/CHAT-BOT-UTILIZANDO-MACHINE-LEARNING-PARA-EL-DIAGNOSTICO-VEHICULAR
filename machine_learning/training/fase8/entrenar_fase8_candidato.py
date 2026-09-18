@@ -6,17 +6,14 @@ Selecciona hiperparámetros evaluando exclusivamente en el conjunto DEV independ
 
 import hashlib
 import json
-import os
 import sys
 import time
 from pathlib import Path
+
 import joblib
-import numpy as np
 import pandas as pd
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score, f1_score
-from sklearn.model_selection import train_test_split
 from sklearn.svm import LinearSVC
 
 BASE_DIR = Path(__file__).resolve().parents[3]
@@ -106,7 +103,7 @@ def entrenar_fase8():
                     mejor_dev_metricas = metricas_dev
 
     print("\n" + "=" * 80)
-    print(f"MEJOR CONFIGURACION SELECCIONADA EN DEV:")
+    print("MEJOR CONFIGURACION SELECCIONADA EN DEV:")
     print(f"  {mejor_config}")
     print(f"  Top-1 ML en DEV: {mejor_dev_metricas['acc_top1']*100:.2f}%")
     print(f"  Top-3 ML en DEV: {mejor_dev_metricas['acc_top3']*100:.2f}%")

@@ -14,15 +14,14 @@ para resolver las confusiones detectadas en el Benchmark V2:
 Regla Estricta: Zero Data Leakage (No copiar los 100 textos del benchmark).
 """
 
-import os
 import sys
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(BASE_DIR))
 
-from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema
 
 DATASET_PATH = BASE_DIR / "machine_learning" / "data" / "dataset_sintomas_limpio.csv"
 

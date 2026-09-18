@@ -10,7 +10,7 @@ import os
 import sys
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 APP_VERSION = "11.4.0"
 ORCHESTRATOR_VERSION = "11.4.0"
@@ -99,4 +99,3 @@ def verificar_paridad_runtime(api_build: Dict[str, Any], worker_build: Dict[str,
         api_build.get("orchestrator_version") == worker_build.get("orchestrator_version")
         and api_build.get("code_build_id") == worker_build.get("code_build_id")
     )
-

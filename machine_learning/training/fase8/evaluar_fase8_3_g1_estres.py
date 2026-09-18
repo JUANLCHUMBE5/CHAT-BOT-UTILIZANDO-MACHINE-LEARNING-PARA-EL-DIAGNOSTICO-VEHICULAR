@@ -9,6 +9,7 @@ import sys
 import time
 import unicodedata
 from pathlib import Path
+
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parents[3]
@@ -21,11 +22,13 @@ SCRIPTS_DIR = BASE_DIR / "scripts"
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
-from ground_truth_50_casos_data import GROUND_TRUTH_50
 from datos_prueba_grupo1 import GRUPO_1_CASOS
+from ground_truth_50_casos_data import GROUND_TRUTH_50
 from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema
-from src.core.gestor_diagnostico import GestorDiagnostico
 from machine_learning.training.fase8.experimentar_calibracion_dev import calcular_metricas_calibracion
+
+from src.core.gestor_diagnostico import GestorDiagnostico
+
 
 def norm(texto: str) -> str:
     if not texto:
@@ -65,7 +68,6 @@ def main():
 
     gestor = GestorDiagnostico()
 
-    mapa_gt = {item["id"]: item for item in GROUND_TRUTH_50}
     mapa_casos = {item["id"]: item["texto"] for item in GRUPO_1_CASOS}
 
     total = len(GROUND_TRUTH_50)
@@ -139,11 +141,12 @@ def main():
 
         # 2. Capa RAG
         t0_rag = time.perf_counter()
-        from src.infrastructure.rag.query_builder import construir_consulta_hibrida
-        from src.infrastructure.rag.relevance_filter import reordenar_candidatos_rag
+        import re
+
         import faiss
 
-        import re
+        from src.infrastructure.rag.query_builder import construir_consulta_hibrida
+        from src.infrastructure.rag.relevance_filter import reordenar_candidatos_rag
         dtcs_encontrados = [m.upper() for m in re.findall(r"\b[PBCU]\d{4}\b", sintoma, re.IGNORECASE)]
 
         c_hib = construir_consulta_hibrida(

@@ -14,12 +14,13 @@ import shutil
 import sys
 import time
 from pathlib import Path
+
 import joblib
 import numpy as np
 import pandas as pd
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.svm import LinearSVC
 
@@ -27,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(BASE_DIR))
 
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
-from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema, TAXONOMIA_MACRO_SISTEMAS
+from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema
 
 DATA_TRAIN = BASE_DIR / "machine_learning" / "data" / "dataset_sintomas_limpio.csv"
 DATA_F7 = BASE_DIR / "machine_learning" / "data" / "dataset_sintomas_fase7_baseline.csv"
@@ -373,7 +374,7 @@ def main():
 
     holdout_res = evaluar_holdout_interno(df)
     mejor_config, clf_f, clf_s, vec, dev_res = evaluar_y_seleccionar_en_dev(df)
-    rep = exportar_artefactos_y_hashes(clf_f, clf_s, vec, mejor_config, holdout_res, dev_res)
+    exportar_artefactos_y_hashes(clf_f, clf_s, vec, mejor_config, holdout_res, dev_res)
 
     print("\n" + "=" * 80)
     print("RESUMEN CONSOLIDADO FASE 8.1:")

@@ -1,18 +1,18 @@
 """Suite de pruebas de integración y regresión para Fase 9.5: Integridad Conversacional."""
 
-import asyncio
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from src.core.intent_classifier import clasificar_intencion_consulta
-from src.core.conversacion.models import ConversationState, FactType
+import pytest
+
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.guardia_contexto import GuardiaContextoDiagnostico
+from src.core.conversacion.models import ConversationState, FactType
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
-from src.core.conversacion.repositorio import InMemoryConversationRepository, PostgresConversationRepository
+from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.gestor_diagnostico import GestorDiagnostico
-from src.core.services.webhook_service import WebhookService, _obtener_lock_conversacion
+from src.core.intent_classifier import clasificar_intencion_consulta
 from src.core.services.webhook.validation_workflow import ValidationWorkflow
+from src.core.services.webhook_service import _obtener_lock_conversacion
 
 
 @pytest.mark.anyio
@@ -90,7 +90,7 @@ async def test_flujo_no_pregunta_discriminante_sin_pop_ciego():
     usuario.taller_id = "taller_123"
 
     with patch("src.infrastructure.database.repositories.diagnostico_repository.DiagnosticoRepository.obtener_pendiente_mecanico_por_id") as mock_diag, \
-         patch("src.infrastructure.database.repositories.mensaje_repository.MensajeRepository.crear_mensaje") as mock_msg:
+         patch("src.infrastructure.database.repositories.mensaje_repository.MensajeRepository.crear_mensaje"):
 
         mock_d = MagicMock()
         mock_d.id = "00000000-0000-0000-0000-000000000001"
@@ -155,7 +155,7 @@ async def test_flujo_no_con_evidencia_inmediata():
     usuario.taller_id = "taller_123"
 
     with patch("src.infrastructure.database.repositories.diagnostico_repository.DiagnosticoRepository.obtener_pendiente_mecanico_por_id") as mock_diag, \
-         patch("src.infrastructure.database.repositories.mensaje_repository.MensajeRepository.crear_mensaje") as mock_msg:
+         patch("src.infrastructure.database.repositories.mensaje_repository.MensajeRepository.crear_mensaje"):
 
         mock_d = MagicMock()
         mock_d.id = "00000000-0000-0000-0000-000000000001"

@@ -7,17 +7,17 @@ from __future__ import annotations
 import os
 import re
 from pathlib import Path
-from typing import Optional, Tuple, List, Dict, Any
+from typing import Optional
 
 import joblib
 import numpy as np
 
 from src.config import settings
-from src.core.logger import logger
 from src.core.diagnostico.taxonomia_sistemas import (
     obtener_macro_sistema,
     obtener_sistema_por_dtc,
 )
+from src.core.logger import logger
 
 
 class ModeloML:

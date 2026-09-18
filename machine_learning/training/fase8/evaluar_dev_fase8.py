@@ -3,6 +3,7 @@
 import json
 import sys
 from pathlib import Path
+
 import numpy as np
 
 RAIZ = Path(__file__).resolve().parents[3]
@@ -13,6 +14,7 @@ if str(RAIZ / "backend") not in sys.path:
 
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
 from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema
+
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.infrastructure.motor_rag import MotorRAG
 

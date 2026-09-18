@@ -9,6 +9,7 @@ import sys
 import time
 import unicodedata
 from pathlib import Path
+
 import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parents[3]
@@ -18,12 +19,14 @@ BACKEND_DIR = BASE_DIR / "backend"
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
+import faiss
 from machine_learning.data.benchmark_test_ciego_100 import BENCHMARK_TEST_CIEGO_100
 from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema
+
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.infrastructure.rag.query_builder import construir_consulta_hibrida
 from src.infrastructure.rag.relevance_filter import reordenar_candidatos_rag
-import faiss
+
 
 def norm(t: str) -> str:
     if not t:

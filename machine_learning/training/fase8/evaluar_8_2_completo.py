@@ -11,11 +11,10 @@ Mide y genera el reporte oficial de:
 
 import hashlib
 import json
-import os
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List
+
 import numpy as np
 
 RAIZ = Path(__file__).resolve().parents[3]
@@ -25,8 +24,9 @@ if str(RAIZ / "backend") not in sys.path:
     sys.path.insert(0, str(RAIZ / "backend"))
 
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
-from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema
+
 from src.core.gestor_diagnostico import GestorDiagnostico
+
 
 def calcular_sha256(ruta: Path) -> str:
     h = hashlib.sha256()
@@ -111,7 +111,6 @@ def evaluar_fase_8_2():
         cid = caso["id"]
         sintoma = caso["sintoma"]
         falla_esperada = caso["falla_esperada"]
-        macro_esperado = caso["macro_sistema"]
         dtc = caso.get("codigo_dtc")
         dtcs = [dtc] if dtc else []
         es_ambiguo = caso.get("es_ambiguo_intencional", False)
@@ -132,9 +131,10 @@ def evaluar_fase_8_2():
 
         # B. RAG Multi-Hit & MRR
         t0_rag = time.perf_counter()
+        import faiss
+
         from src.infrastructure.rag.query_builder import construir_consulta_hibrida
         from src.infrastructure.rag.relevance_filter import reordenar_candidatos_rag
-        import faiss
 
         c_hib = construir_consulta_hibrida(sintoma, pred_sis, pred_top, dtcs)
         c_exp = motor_rag._expandir_consulta(c_hib)
@@ -249,24 +249,24 @@ def evaluar_fase_8_2():
 
     print("\n" + "=" * 80)
     print("RESULTADOS CONSOLIDADOS FASE 8.2 (BENCHMARK DEV - 60 CASOS):")
-    print(f"1. RAG EVALUATION:")
+    print("1. RAG EVALUATION:")
     print(f"   • Hit@1: {pct_hit1}% ({rag_hit1}/{total_casos})  [Meta >= 80%]")
     print(f"   • Hit@3: {pct_hit3}% ({rag_hit3}/{total_casos})  [Meta >= 90%]")
     print(f"   • Hit@5: {pct_hit5}% ({rag_hit5}/{total_casos})")
     print(f"   • MRR:   {mrr}")
-    print(f"\n2. E2E DIAGNOSTIC EVALUATION:")
+    print("\n2. E2E DIAGNOSTIC EVALUATION:")
     print(f"   • E2E Estricto:     {pct_e2e_estricto}% ({e2e_estricto}/{total_casos})  [Meta >= 80%]")
     print(f"   • E2E Diferencial:  {pct_e2e_diferencial}% ({e2e_diferencial}/{total_casos})")
     print(f"   • E2E Incorrecto:   {pct_e2e_incorrecto}% ({e2e_incorrecto}/{total_casos})")
-    print(f"\n3. MATRIZ DE TRANSICIÓN (ML -> E2E):")
+    print("\n3. MATRIZ DE TRANSICIÓN (ML -> E2E):")
     print(f"   (a) ML Top-1 correcto -> E2E correcto:           {ml_top1_a_e2e_correcto}")
     print(f"   (b) ML Top-1 incorrecto -> E2E rescatado:        {ml_top1_inc_a_e2e_rescate} (Rescates por DTC/RAG/Física)")
     print(f"   (c) ML Top-1 correcto -> E2E degradado:          {ml_top1_corr_a_e2e_degradado} (Objetivo: aprox 0)")
     print(f"   (d) ML Top-3 contenía GT pero E2E lo perdió:     {ml_top3_tenia_gt_e2e_perdio}")
-    print(f"\n4. AUTO-INTERROGADOR:")
+    print("\n4. AUTO-INTERROGADOR:")
     print(f"   • Sensibilidad (casos ambiguos detectados):      {sensibilidad_interrogador}% ({ambiguos_detectados}/{ambiguos_verdaderos})")
     print(f"   • Especificidad (casos claros no interrumpidos): {especificidad_interrogador}% ({claros_no_interrumpidos}/{claros_verdaderos})")
-    print(f"\n5. TELEMETRÍA Y LATENCIAS PROMEDIO (ms):")
+    print("\n5. TELEMETRÍA Y LATENCIAS PROMEDIO (ms):")
     print(f"   • Tiempo ML:    {np.mean(tiempos_ml):.2f} ms")
     print(f"   • Tiempo RAG:   {np.mean(tiempos_rag):.2f} ms")
     print(f"   • Tiempo LLM:   {np.mean(tiempos_llm):.2f} ms")

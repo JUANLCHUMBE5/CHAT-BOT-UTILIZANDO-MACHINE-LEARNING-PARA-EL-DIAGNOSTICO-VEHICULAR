@@ -12,7 +12,7 @@ import re
 import sys
 import unicodedata
 from pathlib import Path
-import numpy as np
+
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(BASE_DIR))
 
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
+
 
 def normalizar_texto(texto: str) -> str:
     if not isinstance(texto, str):
@@ -48,7 +49,6 @@ def auditar_contaminacion():
     ruta_train = BASE_DIR / "machine_learning" / "data" / "dataset_sintomas_limpio.csv"
     df_train = pd.read_csv(ruta_train, encoding="utf-8")
     train_textos_raw = df_train["sintoma"].astype(str).tolist()
-    train_fallas = df_train["falla"].astype(str).tolist()
     train_norm = [normalizar_texto(t) for t in train_textos_raw]
     train_tokens = [set(t.split()) for t in train_norm]
     print(f"Total registros en TRAIN: {len(train_norm)}")

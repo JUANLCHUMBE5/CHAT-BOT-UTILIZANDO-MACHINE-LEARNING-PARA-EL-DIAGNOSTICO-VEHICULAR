@@ -8,14 +8,15 @@ import json
 import sys
 import unicodedata
 from pathlib import Path
+
 import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
-from machine_learning.data.benchmark_test_ciego_100 import BENCHMARK_TEST_CIEGO_100
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
+from machine_learning.data.benchmark_test_ciego_100 import BENCHMARK_TEST_CIEGO_100
 from scripts.datos_prueba_grupo1 import GRUPO_1_CASOS
 
 DATA_TRAIN = BASE_DIR / "machine_learning" / "data" / "dataset_sintomas_limpio.csv"

@@ -6,6 +6,7 @@ import json
 import sys
 import unicodedata
 from pathlib import Path
+
 import numpy as np
 
 RAIZ = Path(__file__).resolve().parents[3]
@@ -16,9 +17,10 @@ if str(RAIZ / "scripts") not in sys.path:
 if str(RAIZ / "backend") not in sys.path:
     sys.path.insert(0, str(RAIZ / "backend"))
 
-from ground_truth_50_casos_data import GROUND_TRUTH_50
 from datos_prueba_grupo1 import GRUPO_1_CASOS
+from ground_truth_50_casos_data import GROUND_TRUTH_50
 from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema
+
 from src.core.gestor_diagnostico import GestorDiagnostico
 
 
@@ -50,7 +52,6 @@ def main():
     print("=== Iniciando Auditoría Estricta Fase 8 (G1_01 a G1_50) ===")
     gestor = GestorDiagnostico()
 
-    mapa_gt = {item["id"]: item for item in GROUND_TRUTH_50}
     mapa_casos = {item["id"]: item["texto"] for item in GRUPO_1_CASOS}
 
     total = len(GROUND_TRUTH_50)

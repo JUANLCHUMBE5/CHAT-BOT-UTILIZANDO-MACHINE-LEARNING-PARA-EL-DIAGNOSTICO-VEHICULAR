@@ -5,18 +5,24 @@ Garantiza 0% de solapamiento con DEV (60 casos) y TEST (G1_01-G1_50).
 """
 
 import json
-import pandas as pd
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(BASE_DIR))
 
+from machine_learning.models.taxonomia_sistemas import FALLA_A_SISTEMA, obtener_macro_sistema
 from machine_learning.training.fase8.generador_expansiones_fase8 import generar_dataset_expansiones_fase8
+from machine_learning.training.fase8.generar_casos_chasis_frenos_fase8 import (
+    obtener_casos_chasis_frenos_fase8,
+)
 from machine_learning.training.fase8.generar_casos_motor_fase8 import obtener_casos_motor_fase8
-from machine_learning.training.fase8.generar_casos_chasis_frenos_fase8 import obtener_casos_chasis_frenos_fase8
-from machine_learning.training.fase8.generar_casos_transmision_electrico_fase8 import obtener_casos_transmision_electrico_fase8
-from machine_learning.models.taxonomia_sistemas import obtener_macro_sistema, FALLA_A_SISTEMA
+from machine_learning.training.fase8.generar_casos_transmision_electrico_fase8 import (
+    obtener_casos_transmision_electrico_fase8,
+)
+
 
 def ensamblar():
     ruta_baseline = BASE_DIR / "machine_learning" / "data" / "dataset_sintomas_fase7_baseline.csv"
@@ -68,7 +74,7 @@ def ensamblar():
     assert len(solap_dev) == 0, f"Error: {len(solap_dev)} sintomas de TRAIN colisionan con DEV!"
     assert len(solap_g1) == 0, f"Error: {len(solap_g1)} sintomas de TRAIN colisionan con TEST G1!"
 
-    print(f"Verificación de blindaje completada: 0 colisiones con DEV, 0 colisiones con TEST G1.")
+    print("Verificación de blindaje completada: 0 colisiones con DEV, 0 colisiones con TEST G1.")
     print(f"Total registros finales de entrenamiento para Fase 8: {len(df_final)}")
     print(f"Total clases únicas representadas: {df_final['falla'].nunique()} de {len(FALLA_A_SISTEMA)}")
 

@@ -3,8 +3,8 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 import sys
+
 sys.path.insert(0, str(BASE_DIR))
-from machine_learning.models.taxonomia_sistemas import TAXONOMIA_MACRO_SISTEMAS, FALLA_A_SISTEMA
 
 with open(BASE_DIR / "machine_learning/manuals/metadatos_manuales.json", "r", encoding="utf-8") as f:
     data = json.load(f)

@@ -11,11 +11,12 @@ Guarda artefactos en:
 
 import sys
 from pathlib import Path
+
+import joblib
 import pandas as pd
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
-import joblib
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 if str(BASE_DIR) not in sys.path:

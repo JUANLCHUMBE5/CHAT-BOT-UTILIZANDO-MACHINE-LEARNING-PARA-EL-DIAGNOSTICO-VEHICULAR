@@ -8,7 +8,7 @@ Cumple con las Reglas Metodológicas de Tesis y Fase 6:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 
 def construir_prompt_diagnostico(

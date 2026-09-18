@@ -9,7 +9,7 @@ Ajusta la puntuación de similitud coseno de FAISS utilizando:
 from __future__ import annotations
 
 import unicodedata
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 
 def _normalizar(texto: str) -> str:

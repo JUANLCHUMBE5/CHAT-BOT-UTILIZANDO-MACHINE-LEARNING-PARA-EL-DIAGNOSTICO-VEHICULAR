@@ -27,7 +27,7 @@ for r in filas:
     if e2e:
         c_e2e += 1
 
-print(f"Recalculo desde las 50 filas:")
+print("Recalculo desde las 50 filas:")
 print(f"Top-1 ML:      {c_top1}/50 ({c_top1*2.0:.1f}%)")
 print(f"Top-3 ML:      {c_top3}/50 ({c_top3*2.0:.1f}%)")
 print(f"Macro-Sistema: {c_macro}/50 ({c_macro*2.0:.1f}%)")

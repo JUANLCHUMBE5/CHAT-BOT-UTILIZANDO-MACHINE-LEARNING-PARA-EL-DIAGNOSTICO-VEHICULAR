@@ -371,7 +371,6 @@ def main():
 
     # 3. Mapear sinónimos en metadatos existentes a clases canónicas
     sinonimos_mapeados = 0
-    from machine_learning.models.taxonomia_sistemas import FALLA_A_SISTEMA
 
     MAPEO_REGLAS = {
         "caliper de freno pegado o trabado": "Caliper de freno trabado o mordaza pegada (piston agarrotado)",

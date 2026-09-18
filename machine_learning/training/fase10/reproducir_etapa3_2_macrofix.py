@@ -9,22 +9,17 @@ Objetivo:
 5. Confirmar inmutabilidad posterior.
 """
 
-import sys
 import hashlib
-import json
+import sys
 import time
 from pathlib import Path
-import numpy as np
-import pandas as pd
+
 import joblib
-from sklearn.svm import LinearSVC
+import pandas as pd
 from sklearn.calibration import CalibratedClassifierCV
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.model_selection import StratifiedGroupKFold
-from sklearn.metrics import (
-    accuracy_score,
-    precision_recall_fscore_support,
-    confusion_matrix
-)
+from sklearn.svm import LinearSVC
 
 base_dir = Path('.').resolve()
 if str(base_dir) not in sys.path:

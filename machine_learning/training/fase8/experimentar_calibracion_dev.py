@@ -11,12 +11,13 @@ cumpliendo las metas:
 
 import sys
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
+from scipy.special import expit, logit
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.svm import LinearSVC
-from scipy.special import expit, logit
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 if str(BASE_DIR) not in sys.path:
@@ -71,8 +72,6 @@ def calcular_metricas_calibracion(confianzas: np.ndarray, aciertos: np.ndarray, 
 def evaluar_en_dev(modelo_falla, modelo_sist, vectorizador, temp=1.0, exp_sist=0.65):
     X_dev = [c["sintoma"] for c in CASOS_DEV_60]
     y_dev = [c["falla_esperada"] for c in CASOS_DEV_60]
-    sis_dev = [c["macro_sistema"] for c in CASOS_DEV_60]
-
     X_dev_vec = vectorizador.transform(X_dev)
     probs_falla = modelo_falla.predict_proba(X_dev_vec)
     probs_sist = modelo_sist.predict_proba(X_dev_vec)

@@ -14,9 +14,10 @@ BACKEND_DIR = BASE_DIR / "backend"
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from src.core.gestor_diagnostico import GestorDiagnostico
-from src.core.diagnostico.auto_interrogador import evaluar_auto_pregunta_descarte
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
+
+from src.core.diagnostico.auto_interrogador import evaluar_auto_pregunta_descarte
+from src.core.gestor_diagnostico import GestorDiagnostico
 
 CASOS_DEV_AMBIGUOS_20 = [
     "Mi carro vibra al andar",

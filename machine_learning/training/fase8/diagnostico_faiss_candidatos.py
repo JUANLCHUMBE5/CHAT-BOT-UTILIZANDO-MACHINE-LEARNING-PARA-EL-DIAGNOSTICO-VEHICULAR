@@ -1,13 +1,15 @@
 import sys
 from pathlib import Path
-import numpy as np
+
 import faiss
+import numpy as np
 
 BASE_DIR = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(BASE_DIR))
 sys.path.insert(0, str(BASE_DIR / "backend"))
 
 from machine_learning.data.benchmark_dev_60_casos import CASOS_DEV_60
+
 from src.core.gestor_diagnostico import GestorDiagnostico
 
 gestor = GestorDiagnostico()

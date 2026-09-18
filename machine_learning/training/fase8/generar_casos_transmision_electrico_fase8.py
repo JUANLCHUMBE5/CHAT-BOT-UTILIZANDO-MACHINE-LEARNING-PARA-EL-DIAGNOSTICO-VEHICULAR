@@ -3,7 +3,8 @@ Generador modular de casos independientes de TRANSMISION y ELECTRICO para Fase 8
 Blindaje: Totalmente disjunto del benchmark TEST G1_01-G1_50.
 """
 
-from typing import List, Dict
+from typing import Dict, List
+
 
 def obtener_casos_transmision_electrico_fase8() -> List[Dict[str, str]]:
     casos = []
