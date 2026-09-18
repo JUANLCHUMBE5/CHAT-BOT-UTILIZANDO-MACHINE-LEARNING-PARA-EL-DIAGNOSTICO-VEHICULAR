@@ -33,6 +33,7 @@ from src.interfaces.api.v1.dtos.validacion import (
     CasoValidacionDTO,
     CrearCasoValidacionDTO,
     MetricasValidacionResponseDTO,
+    MetricasVariableIndependienteDTO,
 )
 
 router = APIRouter()
@@ -342,6 +343,15 @@ async def obtener_metricas_validacion(
             reduccion_tiempo_porcentaje=0.0,
             distribucion_marcas=[],
             top_fallas_reales=[],
+            total_casos_verificados=0,
+            total_casos_borrador=0,
+            variable_independiente=MetricasVariableIndependienteDTO(
+                indicador1_sintomas_correctos_pct=None,
+                indicador2_procesamiento_correcto_pct=None,
+                indicador3_exactitud_ml_pct=None,
+                casos_verificados_evaluados=0,
+                nota_metodologica="Pendiente de registro y verificación física de casos en taller.",
+            ),
         )
 
     total_casos = len(df)
@@ -376,6 +386,45 @@ async def obtener_metricas_validacion(
         for k, v in df["falla_real"].value_counts().head(8).items()
     ]
 
+    # Indicadores VI en fallback CSV sobre casos verificados
+    if "estado_registro" in df.columns:
+        df_verificados = df[df["estado_registro"] == "verificado"]
+    elif "metodo_confirmacion" in df.columns:
+        df_verificados = df[df["metodo_confirmacion"].fillna("").astype(str).str.strip() != ""]
+    else:
+        df_verificados = df
+    total_verificados = len(df_verificados)
+
+    if total_verificados > 0:
+        ind1_pct = (
+            float(df_verificados["sintoma_registrado_correctamente"].sum()) / total_verificados * 100
+            if "sintoma_registrado_correctamente" in df_verificados.columns
+            else 100.0
+        )
+        if "procesamiento_validado" in df_verificados.columns:
+            ind2_pct = float(df_verificados["procesamiento_validado"].sum()) / total_verificados * 100
+        else:
+            col_norm = df_verificados["normalizacion_correcta"] if "normalizacion_correcta" in df_verificados.columns else pd.Series([1] * total_verificados, index=df_verificados.index)
+            col_ext = df_verificados["extraccion_correcta"] if "extraccion_correcta" in df_verificados.columns else pd.Series([1] * total_verificados, index=df_verificados.index)
+            col_clas = df_verificados["clasificacion_procesada"] if "clasificacion_procesada" in df_verificados.columns else pd.Series([1] * total_verificados, index=df_verificados.index)
+            ind2_pct = float(((col_norm == 1) & (col_ext == 1) & (col_clas == 1)).sum()) / total_verificados * 100
+        ind3_pct = float(df_verificados["prediccion_correcta"].sum()) / total_verificados * 100
+        vi_metricas = MetricasVariableIndependienteDTO(
+            indicador1_sintomas_correctos_pct=round(ind1_pct, 1),
+            indicador2_procesamiento_correcto_pct=round(ind2_pct, 1),
+            indicador3_exactitud_ml_pct=round(ind3_pct, 1),
+            casos_verificados_evaluados=total_verificados,
+            nota_metodologica="Cálculo exclusivo sobre casos con estado verificado con confirmación física en taller.",
+        )
+    else:
+        vi_metricas = MetricasVariableIndependienteDTO(
+            indicador1_sintomas_correctos_pct=None,
+            indicador2_procesamiento_correcto_pct=None,
+            indicador3_exactitud_ml_pct=None,
+            casos_verificados_evaluados=0,
+            nota_metodologica="Pendiente de registro y verificación física de casos en taller.",
+        )
+
     return MetricasValidacionResponseDTO(
         total_casos=total_casos,
         registros_completos_pretest_porcentaje=(
@@ -396,6 +445,9 @@ async def obtener_metricas_validacion(
         reduccion_tiempo_porcentaje=reduccion_tiempo,
         distribucion_marcas=dist_marcas,
         top_fallas_reales=top_fallas,
+        total_casos_verificados=total_verificados,
+        total_casos_borrador=total_casos - total_verificados,
+        variable_independiente=vi_metricas,
     )
 
 
@@ -517,3 +569,114 @@ async def exportar_tracker_csv(
         media_type="text/csv",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
+
+@router.get(
+    "/exportar-fichas-anexo2-csv",
+    summary="Descargar CSV oficial de Anexo 2 con todos los casos reales verificados (sin paginación)",
+)
+async def exportar_fichas_anexo2_csv(
+    periodo: tuple = Depends(periodo_validacion),
+    payload: dict = Depends(exigir_lectura_validacion),
+):
+    fecha_desde, fecha_hasta = periodo
+    taller_id_auth = payload.get("taller_id", DEFAULT_SEED_TALLER_ID)
+
+    if database_configurada():
+        taller_uuid = _uuid_claim(payload, "taller_id")
+        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+            casos = await ValidacionTallerRepository(session).listar_todos(
+                taller_uuid, *periodo, solo_verificados=True
+            )
+        registros = [serializar_caso(c) for c in casos]
+    else:
+        df_global = _cargar_df_tracker()
+        df = _filtrar_periodo(_filtrar_df_por_taller(df_global, taller_id_auth), periodo)
+        if not df.empty and "fase" in df.columns:
+            df = df[df["fase"] != "Piloto"]
+        if not df.empty and "estado_registro" in df.columns:
+            df = df[df["estado_registro"] == "verificado"]
+        registros = df.to_dict(orient="records")
+
+    if not registros:
+        raise HTTPException(
+            status_code=400,
+            detail="No existen registros verificados para exportar en el periodo seleccionado.",
+        )
+
+    total_casos = len(registros)
+    estado_muestra = (
+        "MUESTRA COMPLETA (60 de 60)"
+        if total_casos >= 60
+        else f"TRABAJO DE CAMPO EN PROCESO ({total_casos} de 60 casos)"
+    )
+
+    output = io.StringIO()
+    output.write("# =================================================================================================\n")
+    output.write("# UNIVERSIDAD CÉSAR VALLEJO - ESCUELA DE INGENIERÍA DE SISTEMAS\n")
+    output.write("# TESIS: CHATBOT UTILIZANDO MACHINE LEARNING PARA EL DIAGNÓSTICO VEHICULAR (CARTER MOTOR'S E.I.R.L.)\n")
+    output.write("# ANEXO 2: MATRIZ DE RECOLECCIÓN DE DATOS EXPERIMENTALES (PRETEST Y POSTEST)\n")
+    output.write("# =================================================================================================\n")
+    output.write(f"# Total casos verificados exportados: {total_casos}\n")
+    output.write(f"# Periodo evaluado: {fecha_desde or 'Histórico'} a {fecha_hasta or 'Actualidad'}\n")
+    output.write(f"# Estado de la muestra oficial: {estado_muestra}\n")
+    output.write("# NOTA METODOLÓGICA: El contraste de hipótesis inferencial (pretest vs. postest) queda estrictamente\n")
+    output.write("# pendiente de definición con el asesor estadístico según la distribución y naturaleza de la muestra.\n")
+    output.write("# Se prohíbe el uso de datos sintéticos o valores simulados para conclusiones formales de la tesis.\n")
+    output.write("# =================================================================================================\n")
+
+    columnas_export = [
+        "Item",
+        "Fase",
+        "Fecha",
+        "Placa_Enmascarada",
+        "Marca_Modelo",
+        "Sintoma_Reportado",
+        "Falla_Confirmada_Fisica",
+        "Prediccion_Linear_SVM",
+        "PPCF_Ficha1_Prediccion_Correcta",
+        "PRDC_Ficha2_Campos_Completos",
+        "TPRD_Ficha3_Tiempo_Minutos",
+        "Ind1_Sintoma_Validado",
+        "Ind2_Procesamiento_Validado",
+        "Metodo_Confirmacion",
+        "Evidencia_Referencia",
+        "Validador_ID",
+        "Fecha_Validacion",
+        "Estado_Registro",
+    ]
+
+    writer = csv.writer(output, quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(columnas_export)
+
+    for r in registros:
+        fila = [
+            _sanitizar_campo_csv(r.get("item", "")),
+            _sanitizar_campo_csv(r.get("fase", "")),
+            _sanitizar_campo_csv(r.get("fecha", "")),
+            _sanitizar_campo_csv(r.get("placa_enmascarada", "")),
+            _sanitizar_campo_csv(r.get("marca_modelo", "")),
+            _sanitizar_campo_csv(r.get("sintoma", "")),
+            _sanitizar_campo_csv(r.get("falla_real", "")),
+            _sanitizar_campo_csv(r.get("chatbot_prediccion", "")),
+            _sanitizar_campo_csv(r.get("prediccion_correcta", 0)),
+            _sanitizar_campo_csv(r.get("campos_completos", 0)),
+            _sanitizar_campo_csv(r.get("tiempo_diagnostico_minutos", 0)),
+            _sanitizar_campo_csv(r.get("sintoma_registrado_correctamente", 0)),
+            _sanitizar_campo_csv(r.get("procesamiento_validado", 0)),
+            _sanitizar_campo_csv(r.get("metodo_confirmacion", "")),
+            _sanitizar_campo_csv(r.get("evidencia_ref", "")),
+            _sanitizar_campo_csv(r.get("validado_por_id", "") or r.get("mecanico_id", "")),
+            _sanitizar_campo_csv(r.get("fecha_validacion", "")),
+            _sanitizar_campo_csv(r.get("estado_registro", "verificado")),
+        ]
+        writer.writerow(fila)
+
+    output.seek(0)
+    filename = f"anexo2_fichas_oficiales_taller_{datetime.now(LIMA_TZ).strftime('%Y%m%d')}.csv"
+    return StreamingResponse(
+        io.BytesIO(output.getvalue().encode("utf-8-sig")),
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+

@@ -1,0 +1,384 @@
+id,clase_objetivo,macro_sistema,nivel_informacion,dtc,es_sintactico,significado,compatible_con_clase
+F10L01_0014,Falla en bujias o bobinas de encendido (misfire),MOTOR,L2,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10L01_0022,Falla en bujias o bobinas de encendido (misfire),MOTOR,L2,P0301,SI,Fallo de encendido detectado en cilindro 1,SI
+F10L01_0026,Falla en bujias o bobinas de encendido (misfire),MOTOR,L3,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10L01_0028,Falla en bujias o bobinas de encendido (misfire),MOTOR,L3,P0302,SI,Fallo de encendido detectado en cilindro 2,SI
+F10L01_0031,Falla en bujias o bobinas de encendido (misfire),MOTOR,L3,P0301,SI,Fallo de encendido detectado en cilindro 1,SI
+F10L01_0033,Falla en bujias o bobinas de encendido (misfire),MOTOR,L3,P0303,SI,Fallo de encendido detectado en cilindro 3,SI
+F10L01_0037,Falla en bujias o bobinas de encendido (misfire),MOTOR,L3,P0304,SI,Fallo de encendido detectado en cilindro 4,SI
+F10L01_0040,Falla en bujias o bobinas de encendido (misfire),MOTOR,L3,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10L01_0145,Falla en sensor de oxigeno o mezcla rica,MOTOR,L2,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10L01_0147,Falla en sensor de oxigeno o mezcla rica,MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10L01_0155,Falla en sensor de oxigeno o mezcla rica,MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10L01_0160,Falla en sensor de oxigeno o mezcla rica,MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L02-0026,Empaque de culata soplado o danado,MOTOR,L3,P0217,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0027,Empaque de culata soplado o danado,MOTOR,L3,P0303,SI,Fallo de encendido detectado en cilindro 3,SI
+F10-L02-0034,Empaque de culata soplado o danado,MOTOR,L3,P0217,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0035,Empaque de culata soplado o danado,MOTOR,L3,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L02-0040,Empaque de culata soplado o danado,MOTOR,L3,P0217,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0053,Falla en termostato o motoventilador de radiador,MOTOR,L2,P0128,SI,Termostato de refrigerante por debajo de temperatura de regulación,SI
+F10-L02-0058,Falla en termostato o motoventilador de radiador,MOTOR,L2,P0128,SI,Termostato de refrigerante por debajo de temperatura de regulación,SI
+F10-L02-0063,Falla en termostato o motoventilador de radiador,MOTOR,L2,P0480,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0066,Falla en termostato o motoventilador de radiador,MOTOR,L3,P0480,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0068,Falla en termostato o motoventilador de radiador,MOTOR,L3,P0128,SI,Termostato de refrigerante por debajo de temperatura de regulación,SI
+F10-L02-0071,Falla en termostato o motoventilador de radiador,MOTOR,L3,P0217,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0072,Falla en termostato o motoventilador de radiador,MOTOR,L3,P0480,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0074,Falla en termostato o motoventilador de radiador,MOTOR,L3,P0128,SI,Termostato de refrigerante por debajo de temperatura de regulación,SI
+F10-L02-0078,Falla en termostato o motoventilador de radiador,MOTOR,L3,P0217,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0079,Falla en termostato o motoventilador de radiador,MOTOR,L3,P0128,SI,Termostato de refrigerante por debajo de temperatura de regulación,SI
+F10-L02-0142,Consumo de aceite por desgaste de anillos o retenes,MOTOR,L2,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L02-0149,Consumo de aceite por desgaste de anillos o retenes,MOTOR,L3,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L02-0153,Consumo de aceite por desgaste de anillos o retenes,MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L02-0178,Baja presion de aceite o bomba de aceite defectuosa,MOTOR,L2,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0186,Baja presion de aceite o bomba de aceite defectuosa,MOTOR,L3,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0188,Baja presion de aceite o bomba de aceite defectuosa,MOTOR,L3,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L02-0195,Baja presion de aceite o bomba de aceite defectuosa,MOTOR,L3,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0014,Faja o cadena de distribucion destensada o con salto de punto,MOTOR,L2,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L03-0026,Faja o cadena de distribucion destensada o con salto de punto,MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L03-0029,Faja o cadena de distribucion destensada o con salto de punto,MOTOR,L3,P0017,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0030,Faja o cadena de distribucion destensada o con salto de punto,MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L03-0034,Faja o cadena de distribucion destensada o con salto de punto,MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L03-0037,Faja o cadena de distribucion destensada o con salto de punto,MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L03-0040,Faja o cadena de distribucion destensada o con salto de punto,MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L03-0052,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L2,P0011,SI,Posición de árbol de levas Banco 1 demasiado avanzado,SI
+F10-L03-0055,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L2,P0012,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0056,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L2,P0014,SI,Posición árbol de levas escape Banco 1 sincronización avanzada,SI
+F10-L03-0058,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L2,P0011,SI,Posición de árbol de levas Banco 1 demasiado avanzado,SI
+F10-L03-0065,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L2,P0011,SI,Posición de árbol de levas Banco 1 demasiado avanzado,SI
+F10-L03-0066,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0011,SI,Posición de árbol de levas Banco 1 demasiado avanzado,SI
+F10-L03-0067,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0012,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0068,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0014,SI,Posición árbol de levas escape Banco 1 sincronización avanzada,SI
+F10-L03-0070,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L03-0073,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0011,SI,Posición de árbol de levas Banco 1 demasiado avanzado,SI
+F10-L03-0074,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0012,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0076,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0011,SI,Posición de árbol de levas Banco 1 demasiado avanzado,SI
+F10-L03-0077,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0012,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0078,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0011,SI,Posición de árbol de levas Banco 1 demasiado avanzado,SI
+F10-L03-0080,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,L3,P0012,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0096,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR,L2,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L03-0103,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR,L2,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L03-0106,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR,L3,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L03-0108,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR,L3,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L03-0113,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR,L3,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L03-0120,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR,L3,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L03-0131,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L2,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0133,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L2,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0134,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L2,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0136,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L2,P0234,SI,Condición de sobrepresión turbo/supercargador (Overboost),SI
+F10-L03-0138,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L2,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0140,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L2,P2563,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0143,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L2,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0145,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L2,P0234,SI,Condición de sobrepresión turbo/supercargador (Overboost),SI
+F10-L03-0146,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0147,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0148,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L3,P0234,SI,Condición de sobrepresión turbo/supercargador (Overboost),SI
+F10-L03-0151,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L3,P2563,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L03-0153,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0154,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0157,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L3,P0234,SI,Condición de sobrepresión turbo/supercargador (Overboost),SI
+F10-L03-0160,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0171,Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,L2,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0174,Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,L2,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0184,Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,L2,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0186,Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0189,Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0193,Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0197,Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L03-0199,Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,L3,P0299,SI,Baja presión de sobrealimentación turbo/supercargador (Underboost),SI
+F10-L04-0013,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L2,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0015,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L2,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L04-0022,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L2,P0521,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0023,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L2,P0011,SI,Posición de árbol de levas Banco 1 demasiado avanzado,SI
+F10-L04-0026,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0027,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L04-0029,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0032,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0521,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0033,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0036,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L04-0037,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L04-0038,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0524,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0040,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L04-0052,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L2,U0109,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0054,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L2,P069E,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0055,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L2,P025A,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0057,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L2,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0062,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L2,U0109,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0065,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L2,P069E,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0066,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,U0109,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0067,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,P025A,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0068,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0069,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,P069E,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0071,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,U0109,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0072,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,P025A,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0073,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,U0109,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0075,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0077,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,U0109,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0079,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,L3,P069E,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0091,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L2,P2463,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0092,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L2,P20EE,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0095,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L2,P2453,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0098,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L2,P2002,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0099,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L2,P204F,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0102,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L2,P2463,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0106,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L3,P2463,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0107,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L3,P20EE,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0109,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L3,P2002,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0111,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L3,P2453,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0113,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L3,P2463,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0114,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L3,P204F,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0117,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L3,P20EE,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0120,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,L3,P2463,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0132,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L2,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0134,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L2,P0093,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0136,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L2,P1229,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0138,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L2,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0140,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L2,P0088,SI,Presión del riel de combustible demasiado alta,SI
+F10-L04-0142,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L2,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0145,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L2,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0146,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0148,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0088,SI,Presión del riel de combustible demasiado alta,SI
+F10-L04-0150,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0151,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0153,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0155,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0157,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0158,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0093,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0159,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0160,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,L3,P0087,SI,Presión del riel de combustible demasiado baja,SI
+F10-L04-0172,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L2,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L04-0173,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L2,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L04-0175,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L2,P0178,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0176,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L2,P0300,SI,Fallo de encendido múltiple / aleatorio detectado,SI
+F10-L04-0179,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L2,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L04-0182,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L2,P0179,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0186,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L04-0187,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L3,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L04-0188,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L3,P0178,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0191,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L04-0193,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L3,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L04-0195,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L3,P0178,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0197,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L3,P0179,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L04-0199,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0012,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L2,P0335,SI,Circuito del sensor CKP de posición de cigüeñal defectuoso,SI
+F10-L05-0014,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L2,P0340,SI,Circuito del sensor CMP de árbol de levas defectuoso,SI
+F10-L05-0016,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L2,P0339,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0018,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L2,P0335,SI,Circuito del sensor CKP de posición de cigüeñal defectuoso,SI
+F10-L05-0020,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L2,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L05-0022,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L2,P0341,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0025,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L2,P0335,SI,Circuito del sensor CKP de posición de cigüeñal defectuoso,SI
+F10-L05-0026,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0335,SI,Circuito del sensor CKP de posición de cigüeñal defectuoso,SI
+F10-L05-0027,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0335,SI,Circuito del sensor CKP de posición de cigüeñal defectuoso,SI
+F10-L05-0028,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0340,SI,Circuito del sensor CMP de árbol de levas defectuoso,SI
+F10-L05-0029,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0016,SI,Correlación de posición cigüeñal y árbol de levas (Banco 1 Sensor A),SI
+F10-L05-0031,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0336,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0032,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0341,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0033,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0335,SI,Circuito del sensor CKP de posición de cigüeñal defectuoso,SI
+F10-L05-0034,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0339,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0035,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0017,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0038,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0335,SI,Circuito del sensor CKP de posición de cigüeñal defectuoso,SI
+F10-L05-0039,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0340,SI,Circuito del sensor CMP de árbol de levas defectuoso,SI
+F10-L05-0040,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L3,P0335,SI,Circuito del sensor CKP de posición de cigüeñal defectuoso,SI
+F10-L05-0052,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L2,P0441,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0054,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L2,P0455,SI,Fuga grande o flujo nulo detectado en sistema EVAP,SI
+F10-L05-0056,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L2,P0442,SI,Fuga pequeña detectada en sistema EVAP,SI
+F10-L05-0058,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L2,P0440,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0059,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L2,P0443,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0061,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L2,P0446,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0063,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L2,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L05-0065,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L2,P0456,SI,Fuga muy pequeña detectada en sistema EVAP,SI
+F10-L05-0066,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0441,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0067,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0455,SI,Fuga grande o flujo nulo detectado en sistema EVAP,SI
+F10-L05-0068,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0071,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0442,SI,Fuga pequeña detectada en sistema EVAP,SI
+F10-L05-0072,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0440,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0073,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0441,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0075,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0456,SI,Fuga muy pequeña detectada en sistema EVAP,SI
+F10-L05-0077,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0443,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0078,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L05-0079,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,L3,P0455,SI,Fuga grande o flujo nulo detectado en sistema EVAP,SI
+F10-L05-0091,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L2,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0094,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L2,P0430,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0098,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L2,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0101,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L2,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0102,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L2,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0104,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L2,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0105,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L2,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0106,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0108,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0111,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0430,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0113,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0114,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0115,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0116,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0117,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0119,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,L3,P0420,SI,Eficiencia del sistema catalizador por debajo del umbral (Banco 1),SI
+F10-L05-0133,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L2,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0136,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L2,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L05-0138,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L2,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0144,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L2,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0146,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0147,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0148,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L3,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L05-0151,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0153,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L3,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L05-0157,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L3,P0172,SI,Sistema demasiado rico (Banco 1),SI
+F10-L05-0159,Falla en regulador de presion de combustible o diafragma roto,MOTOR,L3,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L05-0171,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0172,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0173,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0202,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0174,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0204,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0175,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0202,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0176,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0177,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0202,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0178,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0179,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0204,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0180,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0181,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0202,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0182,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0183,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0204,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0184,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0185,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L2,P0203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0186,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0187,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0188,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0204,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0189,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0202,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0191,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0202,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0192,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0193,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0194,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0204,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0195,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0202,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0196,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0197,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0198,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0204,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0199,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0200,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,L3,P0202,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L05-0213,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L2,P0304,SI,Fallo de encendido detectado en cilindro 4,SI
+F10-L05-0218,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L2,P0304,SI,Fallo de encendido detectado en cilindro 4,SI
+F10-L05-0220,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L2,P0301,SI,Fallo de encendido detectado en cilindro 1,SI
+F10-L05-0225,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L2,P0303,SI,Fallo de encendido detectado en cilindro 3,SI
+F10-L05-0226,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L3,P0303,SI,Fallo de encendido detectado en cilindro 3,SI
+F10-L05-0227,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L3,P0301,SI,Fallo de encendido detectado en cilindro 1,SI
+F10-L05-0229,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L3,P0302,SI,Fallo de encendido detectado en cilindro 2,SI
+F10-L05-0231,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L3,P0301,SI,Fallo de encendido detectado en cilindro 1,SI
+F10-L05-0232,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L3,P0304,SI,Fallo de encendido detectado en cilindro 4,SI
+F10-L05-0233,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L3,P0302,SI,Fallo de encendido detectado en cilindro 2,SI
+F10-L05-0234,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L3,P0303,SI,Fallo de encendido detectado en cilindro 3,SI
+F10-L05-0238,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L3,P0301,SI,Fallo de encendido detectado en cilindro 1,SI
+F10-L06-0092,Falla en servofreno (booster) o linea de vacio,FRENOS,L2,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L06-0101,Falla en servofreno (booster) o linea de vacio,FRENOS,L2,C1246,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0106,Falla en servofreno (booster) o linea de vacio,FRENOS,L3,P0171,SI,Sistema demasiado pobre (Banco 1),SI
+F10-L06-0109,Falla en servofreno (booster) o linea de vacio,FRENOS,L3,P0556,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0112,Falla en servofreno (booster) o linea de vacio,FRENOS,L3,C1246,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0117,Falla en servofreno (booster) o linea de vacio,FRENOS,L3,P0555,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0171,Falla en sensor de velocidad de rueda ABS,FRENOS,L2,C0035,SI,Circuito sensor velocidad rueda delantera izquierda,SI
+F10-L06-0173,Falla en sensor de velocidad de rueda ABS,FRENOS,L2,C0040,SI,Circuito del interruptor del pedal de freno,SI
+F10-L06-0175,Falla en sensor de velocidad de rueda ABS,FRENOS,L2,C0045,SI,Circuito sensor velocidad rueda trasera izquierda,SI
+F10-L06-0178,Falla en sensor de velocidad de rueda ABS,FRENOS,L2,C0050,SI,Circuito sensor velocidad rueda trasera derecha,SI
+F10-L06-0186,Falla en sensor de velocidad de rueda ABS,FRENOS,L3,C0035,SI,Circuito sensor velocidad rueda delantera izquierda,SI
+F10-L06-0188,Falla en sensor de velocidad de rueda ABS,FRENOS,L3,C0040,SI,Circuito del interruptor del pedal de freno,SI
+F10-L06-0190,Falla en sensor de velocidad de rueda ABS,FRENOS,L3,C0045,SI,Circuito sensor velocidad rueda trasera izquierda,SI
+F10-L06-0192,Falla en sensor de velocidad de rueda ABS,FRENOS,L3,C0050,SI,Circuito sensor velocidad rueda trasera derecha,SI
+F10-L06-0193,Falla en sensor de velocidad de rueda ABS,FRENOS,L3,C0035,SI,Circuito sensor velocidad rueda delantera izquierda,SI
+F10-L06-0195,Falla en sensor de velocidad de rueda ABS,FRENOS,L3,C0040,SI,Circuito del interruptor del pedal de freno,SI
+F10-L06-0197,Falla en sensor de velocidad de rueda ABS,FRENOS,L3,C0045,SI,Circuito sensor velocidad rueda trasera izquierda,SI
+F10-L06-0212,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L2,C1391,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0215,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L2,C1203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0218,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L2,C1256,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0222,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L2,C1345,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0225,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L2,C1241,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0226,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1391,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0227,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0229,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1345,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0230,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1391,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0233,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1256,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0234,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1203,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0235,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1241,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0237,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1259,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0240,Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,L3,C1391,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L06-0269,Caliper de freno trabado o mordaza pegada (piston agarrotado),FRENOS,L3,C100D,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0034,Disco de embrague desgastado o patinando,TRANSMISION,L3,P0741,SI,Rendimiento del embrague convertidor de par (TCC atascado en OFF),SI
+F10-L07-0172,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L2,P17BF,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0173,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L2,P0746,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0176,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L2,P0841,SI,Rango/rendimiento sensor de presión de fluido transmisión,SI
+F10-L07-0178,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L2,P0746,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0181,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L2,P189C,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0183,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L2,P0962,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0186,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L3,P17BF,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0187,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L3,P0746,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0188,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L3,P0730,SI,Relación de transmisión incorrecta detectada,SI
+F10-L07-0189,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L3,P0846,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0191,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L3,P0962,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0192,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L3,P176F,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0193,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L3,P0746,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0198,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,L3,P0776,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0212,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L2,P0840,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0217,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L2,P0914,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0221,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L2,P1818,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0226,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L3,P0845,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0228,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L3,P1607,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0229,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L3,P0914,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0231,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L3,P0942,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0232,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L3,P1773,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0233,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L3,P0845,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L07-0235,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,L3,P0840,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L08-0132,Cremallera de direccion asistida con holgura o fuga,SUSPENSION_CHASIS,L2,C1511,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L08-0137,Cremallera de direccion asistida con holgura o fuga,SUSPENSION_CHASIS,L2,C1532,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L08-0147,Cremallera de direccion asistida con holgura o fuga,SUSPENSION_CHASIS,L3,C1511,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L08-0150,Cremallera de direccion asistida con holgura o fuga,SUSPENSION_CHASIS,L3,C1521,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L08-0158,Cremallera de direccion asistida con holgura o fuga,SUSPENSION_CHASIS,L3,C1512,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L08-0184,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),SUSPENSION_CHASIS,L2,C0035,SI,Circuito sensor velocidad rueda delantera izquierda,SI
+F10-L08-0195,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),SUSPENSION_CHASIS,L3,C0040,SI,Circuito del interruptor del pedal de freno,SI
+F10-L09-0017,Alternador defectuoso o placa de diodos quemada,ELECTRICO,L2,P0620,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0022,Alternador defectuoso o placa de diodos quemada,ELECTRICO,L2,P0562,SI,Tensión baja del sistema eléctrico / batería,SI
+F10-L09-0027,Alternador defectuoso o placa de diodos quemada,ELECTRICO,L3,P065B,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0031,Alternador defectuoso o placa de diodos quemada,ELECTRICO,L3,P0563,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0076,Bateria descargada o bornes sulfatados,ELECTRICO,L3,C1551,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0091,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L2,P0A80,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0094,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L2,P0A7F,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0100,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L2,P0A7E,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0106,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L3,P0A80,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0108,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L3,P0A7F,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0111,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L3,P0B3C,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0112,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L3,P0A80,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0114,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L3,P0A6B,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0116,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L3,P0AA6,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0118,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,L3,P0B24,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0136,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L2,P0A78,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0137,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L2,P0A94,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0141,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L2,P0A1B,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0143,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L2,P0A79,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0146,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L3,P0AA6,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0147,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L3,P0A78,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0149,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L3,P0A79,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0150,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L3,P0AA6,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0151,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L3,P0A94,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0154,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L3,P0A78,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0158,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L3,P0AA6,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0158,Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,L3,P0A1B,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0173,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,L2,P0A93,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0176,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,L2,P0A82,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0181,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,L2,P0A93,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0186,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,L3,P0A93,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0187,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,L3,P0A82,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0190,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,L3,P0A93,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0192,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,L3,P0A82,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0195,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,L3,P0A93,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0218,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),ELECTRICO,L2,P0615,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L09-0233,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),ELECTRICO,L3,P0615,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0016,Falla en compresor de aire acondicionado o fuga de gas R134a,CLIMATIZACION,L2,B1422,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0021,Falla en compresor de aire acondicionado o fuga de gas R134a,CLIMATIZACION,L2,B1423,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0030,Falla en compresor de aire acondicionado o fuga de gas R134a,CLIMATIZACION,L3,B1070,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0032,Falla en compresor de aire acondicionado o fuga de gas R134a,CLIMATIZACION,L3,B1423,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0035,Falla en compresor de aire acondicionado o fuga de gas R134a,CLIMATIZACION,L3,P0A1F,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0039,Falla en compresor de aire acondicionado o fuga de gas R134a,CLIMATIZACION,L3,B1422,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0056,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_NEUMATICA,L2,B1300,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0069,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_NEUMATICA,L3,B1312,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0072,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_NEUMATICA,L3,U0199,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0075,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_NEUMATICA,L3,B1335,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0080,Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_NEUMATICA,L3,B1228,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0143,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_NEUMATICA,L2,B1402,SI,Circuito del motor del elevalunas defectuoso,SI
+F10-L10-0150,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_NEUMATICA,L3,B1402,SI,Circuito del motor del elevalunas defectuoso,SI
+F10-L10-0156,Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_NEUMATICA,L3,U0201,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0180,Limpiaparabrisas o motor pluma quemado,CARROCERIA_NEUMATICA,L2,B1130,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0190,Limpiaparabrisas o motor pluma quemado,CARROCERIA_NEUMATICA,L3,B1132,SI,Código OBD-II estándar de subsistema vehicular,SI
+F10-L10-0199,Limpiaparabrisas o motor pluma quemado,CARROCERIA_NEUMATICA,L3,B1150,SI,Código OBD-II estándar de subsistema vehicular,SI

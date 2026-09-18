@@ -1,0 +1,103 @@
+The following is a <SYSTEM_MESSAGE> not actually sent by the user. It is provided by the system as important information to pay attention to.
+
+<SYSTEM_MESSAGE>
+[Message] timestamp=2026-09-17T23:08:07Z sender=fdd8aba2-e8cb-4ee6-9ac2-1677e11162f0/task-2133 priority=MESSAGE_PRIORITY_HIGH content=Task id "fdd8aba2-e8cb-4ee6-9ac2-1677e11162f0/task-2133" finished with result:
+
+				The command exited with code 0.
+				Output:
+				<truncated 157 lines>
+   -5.5% F1 (F8.3:  86.2% -> C1:  80.7%) | Rec:  -6.7% | Faja o cadena de distribucion destensada o con salto de punto (n=30)
+   -5.2% F1 (F8.3:  93.8% -> C1:  88.5%) | Rec:  -9.4% | Cremallera de direccion asistida con holgura o fuga (n=32)
+   -5.2% F1 (F8.3:  94.1% -> C1:  88.9%) | Rec:   0.0% | Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6) (n=18)
+   -4.9% F1 (F8.3:  88.2% -> C1:  83.3%) | Rec:   0.0% | Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet) (n=17)
+   -4.4% F1 (F8.3:  93.3% -> C1:  88.9%) | Rec:  -4.2% | Limpiaparabrisas o motor pluma quemado (n=24)
+   -4.3% F1 (F8.3:  94.7% -> C1:  90.5%) | Rec:   5.0% | Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire) (n=20)
+   -4.1% F1 (F8.3:  89.9% -> C1:  85.7%) | Rec:  -2.8% | Fuga hidraulica o aire en el sistema de frenos (n=36)
+   -3.7% F1 (F8.3:  84.4% -> C1:  80.8%) | Rec:   8.0% | Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos) (n=25)
+   -3.5% F1 (F8.3:  91.2% -> C1:  87.7%) | Rec:   3.1% | Falla en servofreno (booster) o linea de vacio (n=32)
+   -3.4% F1 (F8.3:  82.5% -> C1:  79.1%) | Rec:  -9.3% | Bomba de gasolina quemada o con baja presion (n=43)
+   -3.2% F1 (F8.3:  90.7% -> C1:  87.5%) | Rec:  -4.3% | Desgaste de pastillas y zapatas de freno (n=47)
+   -3.1% F1 (F8.3:  87.5% -> C1:  84.4%) | Rec:  -8.0% | Fuga en mangueras de intercooler o turbocompresor danado (n=25)
+   -2.8% F1 (F8.3:  86.5% -> C1:  83.7%) | Rec:   9.5% | Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430) (n=21)
+   -2.6% F1 (F8.3:  88.3% -> C1:  85.7%) | Rec:  -2.6% | Amortiguadores reventados o bujes de suspension gastados (n=39)
+   -2.3% F1 (F8.3:  92.3% -> C1:  90.0%) | Rec:   0.0% | Falla en regulador de presion de combustible o diafragma roto (n=20)
+   -2.3% F1 (F8.3:  92.9% -> C1:  90.6%) | Rec:  -7.1% | Baja presion de aceite o bomba de aceite defectuosa (n=28)
+   -2.2% F1 (F8.3:  84.2% -> C1:  82.0%) | Rec:   0.0% | Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic) (n=19)
+   -1.7% F1 (F8.3:  90.9% -> C1:  89.2%) | Rec:  -5.1% | Discos de freno alabeados o desgastados (n=39)
+   -1.5% F1 (F8.3:  80.8% -> C1:  79.2%) | Rec:   0.0% | Rodajes de caja mecanica o diferencial gastados (n=26)
+   -1.5% F1 (F8.3:  88.2% -> C1:  86.7%) | Rec:  -4.4% | Cuerpo de aceleracion o valvula IAC sucia (n=45)
+   -1.5% F1 (F8.3:  85.7% -> C1:  84.2%) | Rec:   5.3% | Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups) (n=19)
+   -1.3% F1 (F8.3:  90.2% -> C1:  88.9%) | Rec:   3.6% | Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado (n=28)
+   -1.0% F1 (F8.3:  79.1% -> C1:  78.0%) | Rec:  -5.0% | Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados (n=20)
+   -1.0% F1 (F8.3:  89.5% -> C1:  88.5%) | Rec:  -9.4% | Falla en sensor de oxigeno o mezcla rica (n=53)
+    3.8% F1 (F8.3:  85.7% -> C1:  89.5%) | Rec:  -5.0% | Foco o falla en sistema de refrigeracion de bateria/inversor (EV) (n=20)
+    7.8% F1 (F8.3:  85.7% -> C1:  93.5%) | Rec:  -3.1% | Falla en termostato o motoventilador de radiador (n=32)
+
+Pares de Confusi�n M�s Frecuentes en C1:
+   5 casos: Real: 'Disco de embrague desgastado o patinando' -> Predicho: 'Bomba de gasolina quemada o con baja presion'
+   4 casos: Real: 'Fuga en mangueras de intercooler o turbocompresor danado' -> Predicho: 'Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI'
+   4 casos: Real: 'Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI' -> Predicho: 'Caliper de freno trabado o mordaza pegada (piston agarrotado)'
+   4 casos: Real: 'Alternador defectuoso o placa de diodos quemada' -> Predicho: 'Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)'
+   3 casos: Real: 'Falla en bujias o bobinas de encendido (misfire)' -> Predicho: 'Falla en sensor de posicion de cigue�al (CKP) o arbol de levas (CMP)'
+   3 casos: Real: 'Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados' -> Predicho: 'Falla en bujias o bobinas de encendido (misfire)'
+   3 casos: Real: 'Inyectores sucios o filtro de combustible obstruido' -> Predicho: 'Alternador defectuoso o placa de diodos quemada'
+   3 casos: Real: 'Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)' -> Predicho: 'Falla en servofreno (booster) o linea de vacio'
+   3 casos: Real: 'Empaque de culata soplado o danado' -> Predicho: 'Fuga en mangueras de refrigerante o radiador picado'
+   3 casos: Real: 'Consumo de aceite por desgaste de anillos o retenes' -> Predicho: 'Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados'
+   3 casos: Real: 'Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado' -> Predicho: 'Falla electrica del cierre centralizado o actuador de puerta'
+   3 casos: Real: 'Caliper de freno trabado o mordaza pegada (piston agarrotado)' -> Predicho: 'Desgaste de pastillas y zapatas de freno'
+   3 casos: Real: 'Bateria descargada o bornes sulfatados' -> Predicho: 'Fuga parasita de corriente en reposo (consumo nocturno de bateria)'
+   2 casos: Real: 'Llantas desbalanceadas o desalineadas' -> Predicho: 'Cremallera de direccion asistida con holgura o fuga'
+   2 casos: Real: 'Falla en sensor de oxigeno o mezcla rica' -> Predicho: 'Caliper de freno trabado o mordaza pegada (piston agarrotado)'
+
+Guardando fase10_f83_vs_c1_dev10.csv y fase10_c1_dev10_errors.csv...
+fase10_f83_vs_c1_dev10.csv guardado (1725 filas)
+fase10_c1_dev10_errors.csv guardado (275 filas)
+
+============================================================
+EVALUANDO REGRESIONES SOBRE BENCHMARKS HIST�RICOS
+============================================================
+TEST-100 Hist�rico (n=100):
+  Top1: F8.3 = 79.0% | C1 = 86.0% | DELTA = +7.0%
+  Top3: F8.3 = 94.0% | C1 = 95.0% | DELTA = +1.0%
+  MF1:  F8.3 = 73.8% | C1 = 82.5% | DELTA = +8.7%
+
+DEV-60 Hist�rico (n=60):
+  Top1: F8.3 = 85.0% | C1 = 90.0% | DELTA = +5.0%
+  Top3: F8.3 = 95.0% | C1 = 96.7% | DELTA = +1.7%
+
+G1_ESTRES (n=50):
+  Top1 Aceptable: F8.3 = 90.0% | C1 = 90.0% | DELTA = +0.0%
+
+G2_JERGA (n=50):
+  Top1 Aceptable: F8.3 = 72.0% | C1 = 78.0% | DELTA = +6.0%
+
+FIELD_AVAILABLE (n=32):
+  Top1: F8.3 = 9.4% | C1 = 9.4% | DELTA = +0.0%
+  Top3: F8.3 = 9.4% | C1 = 9.4% | DELTA = +0.0%
+
+--- EVALUACI�N DEL CASO HIST�RICO DE A/C (REGRESI�N) ---
+Caso 1 (Directo: 'Prendo el boton A/C...'):
+  F8.3 -> Top1: 'Falla en compresor de aire acondicionado o fuga de gas R134a' (conf=0.9947, sist=CLIMATIZACION)
+  C1   -> Top1: 'Falla en compresor de aire acondicionado o fuga de gas R134a' (conf=0.9794, sist=CLIMATIZACION)
+  Top3 C1: [np.str_('Falla en compresor de aire acondicionado o fuga de gas R134a'), np.str_('Falla en termostato o motoventilador de radiador'), np.str_('Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)')]
+
+Caso 2 (T�cnico Corolla: 'Toyota Corolla 2017 aire acondicionado no enfria...'):
+  F8.3 -> Top1: 'Falla en compresor de aire acondicionado o fuga de gas R134a' (conf=0.9998, sist=CLIMATIZACION)
+  C1   -> Top1: 'Falla en compresor de aire acondicionado o fuga de gas R134a' (conf=0.9999, sist=nan)
+  Top3 C1: [np.str_('Falla en compresor de aire acondicionado o fuga de gas R134a'), np.str_('Fugas de aire o fallos en el sistema de frenos neum�tico (Camiones)'), np.str_('Bomba de gasolina quemada o con baja presion')]
+
+============================================================
+VERIFICACI�N DE CIERRE Y SEGURIDAD DE TEST10
+============================================================
+TEST10 hash final: 6eaf42bca03d2aad98c8e414bfef541a74a42a0ff605eb4431b34b90cb7d0d0c
+CONFIRMADO: TEST10 permaneci� 100% blindado y cerrado. Predicciones ejecutadas sobre TEST10: 0
+
+Todos los artefactos de m�tricas generados exitosamente.
+================================================================================
+EJECUCI�N COMPLETADA EXITOSAMENTE
+================================================================================
+
+
+Log: file:///C:/Users/leonc/.gemini/antigravity-ide/brain/fdd8aba2-e8cb-4ee6-9ac2-1677e11162f0/.system_generated/tasks/task-2133.log
+</SYSTEM_MESSAGE>

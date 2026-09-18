@@ -1,0 +1,321 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L07-0001,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.0966,0.3628,TRAIN,,NO,
+F10-L07-0002,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.1558,0.2919,LOTE_06,,NO,
+F10-L07-0003,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.1072,0.4361,TRAIN,,NO,
+F10-L07-0004,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.1999,0.2917,TRAIN,,NO,
+F10-L07-0005,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.1514,0.1567,TRAIN,,NO,
+F10-L07-0006,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.1313,0.2473,LOTE_04,,NO,
+F10-L07-0007,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.1016,0.2556,TRAIN,,NO,
+F10-L07-0008,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.1264,0.2026,TRAIN,,NO,
+F10-L07-0009,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.1293,0.2428,TRAIN,,NO,
+F10-L07-0010,Disco de embrague desgastado o patinando,L1,APROBADO,CONFORME,0.049,0.1195,TRAIN,,NO,
+F10-L07-0011,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1842,0.2099,TEST_100,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0012,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1218,0.1094,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0013,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1279,0.1615,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0014,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.2264,0.2038,LOTE_04,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0015,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1238,0.1669,TRAIN,,NO,
+F10-L07-0016,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1084,0.2252,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0017,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.131,0.1891,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0018,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1105,0.2831,LOTE_04,,NO,
+F10-L07-0019,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.0831,0.1101,TRAIN,,NO,
+F10-L07-0020,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1177,0.1411,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0021,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1426,0.0963,TRAIN,,NO,
+F10-L07-0022,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1022,0.1828,TRAIN,,NO,
+F10-L07-0023,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.1192,0.1737,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0024,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.2088,0.2091,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0025,Disco de embrague desgastado o patinando,L2,APROBADO,CONFORME,0.0833,0.1714,G1,,NO,
+F10-L07-0026,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1122,0.1487,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0027,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1158,0.0979,LOTE_06,,NO,
+F10-L07-0028,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1284,0.0868,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0029,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.131,0.0998,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0030,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1407,0.1613,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0031,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1177,0.1374,LOTE_06,,NO,
+F10-L07-0032,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.0777,0.096,LOTE_06,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0033,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1213,0.1497,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0034,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1514,0.1625,TRAIN,P0741,SI,Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+F10-L07-0035,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1481,0.1644,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0036,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.0868,0.0838,LOTE_06,,NO,
+F10-L07-0037,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1254,0.1556,TRAIN,,NO,
+F10-L07-0038,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1312,0.1346,LOTE_06,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0039,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.0857,0.0983,TRAIN,,NO,
+F10-L07-0040,Disco de embrague desgastado o patinando,L3,APROBADO,CONFORME,0.1227,0.0832,TRAIN,,NO,
+F10-L07-0041,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.1785,0.3059,G1,,NO,
+F10-L07-0042,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.2657,0.245,TRAIN,,NO,
+F10-L07-0043,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.182,0.3838,LOTE_06,,NO,
+F10-L07-0044,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.1744,0.2355,TRAIN,,NO,
+F10-L07-0045,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.2031,0.2547,TRAIN,,NO,
+F10-L07-0046,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.1938,0.267,LOTE_03,,NO,
+F10-L07-0047,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.1352,0.3061,TRAIN,,NO,
+F10-L07-0048,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.138,0.5471,TRAIN,,NO,
+F10-L07-0049,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.1344,0.284,TRAIN,,NO,
+F10-L07-0050,Falla en bombin o bomba hidraulica de embrague,L1,APROBADO,CONFORME,0.1185,0.2036,TRAIN,,NO,
+F10-L07-0051,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1739,0.2912,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0052,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1754,0.2171,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L07-0053,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1329,0.2286,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0054,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1163,0.2606,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0055,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1076,0.3779,LOTE_06,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0056,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1381,0.1321,TRAIN,,NO,
+F10-L07-0057,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1177,0.1939,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0058,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1619,0.1668,DEV_60,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0059,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1167,0.1435,TRAIN,,NO,
+F10-L07-0060,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1554,0.1508,TRAIN,,NO,
+F10-L07-0061,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1344,0.2784,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L07-0062,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1318,0.2813,TRAIN,,NO,
+F10-L07-0063,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.3068,0.1556,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0064,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1754,0.1882,TRAIN,,NO,
+F10-L07-0065,Falla en bombin o bomba hidraulica de embrague,L2,APROBADO,CONFORME,0.1455,0.1614,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0066,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1252,0.1369,G1,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L07-0067,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1455,0.1638,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0068,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.0695,0.1865,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0069,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1766,0.1384,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0070,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1669,0.1632,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0071,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1554,0.1196,TRAIN,,NO,
+F10-L07-0072,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1351,0.1246,TRAIN,,NO,
+F10-L07-0073,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1744,0.1659,DEV_60,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0074,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1167,0.1326,LOTE_06,,NO,
+F10-L07-0075,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1163,0.1491,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0076,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.11,0.1287,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0077,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.151,0.1809,TRAIN,,NO,
+F10-L07-0078,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1333,0.1261,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L07-0079,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.1131,0.1181,LOTE_06,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0080,Falla en bombin o bomba hidraulica de embrague,L3,APROBADO,CONFORME,0.0979,0.1183,LOTE_06,,NO,
+F10-L07-0081,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.0821,0.2385,TRAIN,,NO,
+F10-L07-0082,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.3053,0.2443,TRAIN,,NO,
+F10-L07-0083,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.1899,0.3544,TRAIN,,NO,
+F10-L07-0084,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.1448,0.2745,TRAIN,,NO,
+F10-L07-0085,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.1302,0.3274,TRAIN,,NO,
+F10-L07-0086,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.0841,0.2963,TRAIN,,NO,
+F10-L07-0087,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.1502,0.2642,TRAIN,,NO,
+F10-L07-0088,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.23,0.152,LOTE_06,,NO,
+F10-L07-0089,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.2002,0.2061,TRAIN,,NO,
+F10-L07-0090,Falta o degradacion de aceite de caja de cambios,L1,APROBADO,CONFORME,0.1345,0.1029,TRAIN,,NO,
+F10-L07-0091,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.146,0.2408,FIELD_60,,SI,Disco de embrague desgastado o patinando
+F10-L07-0092,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.1154,0.2359,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0093,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.2139,0.1509,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0094,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.0848,0.1123,LOTE_06,,NO,
+F10-L07-0095,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.2089,0.2701,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0096,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.0909,0.3034,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0097,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.1639,0.1943,TRAIN,,NO,
+F10-L07-0098,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.23,0.2357,TRAIN,,NO,
+F10-L07-0099,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.146,0.1344,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0100,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.1066,0.1793,TRAIN,,NO,
+F10-L07-0101,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.1102,0.1361,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0102,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.1575,0.1249,LOTE_04,,SI,Disco de embrague desgastado o patinando
+F10-L07-0103,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.1029,0.1177,TRAIN,,NO,
+F10-L07-0104,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.1241,0.2184,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0105,Falta o degradacion de aceite de caja de cambios,L2,APROBADO,CONFORME,0.0993,0.1387,TEST_100,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0106,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1634,0.1278,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0107,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1177,0.1197,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0108,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.0898,0.0959,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0109,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1575,0.1157,TRAIN,,NO,
+F10-L07-0110,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1349,0.114,LOTE_06,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0111,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1217,0.1312,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0112,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1639,0.1286,TRAIN,,NO,
+F10-L07-0113,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.2002,0.1281,TRAIN,,NO,
+F10-L07-0114,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.0951,0.0842,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0115,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1246,0.1309,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0116,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1266,0.0874,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0117,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.0905,0.1207,TRAIN,,NO,
+F10-L07-0118,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.0957,0.0837,TRAIN,,NO,
+F10-L07-0119,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.1416,0.1181,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0120,Falta o degradacion de aceite de caja de cambios,L3,APROBADO,CONFORME,0.088,0.0881,LOTE_02,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0121,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.1804,0.2453,TRAIN,,NO,
+F10-L07-0122,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.1558,0.2214,LOTE_05,,NO,
+F10-L07-0123,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.1502,0.4375,TRAIN,,NO,
+F10-L07-0124,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.0868,0.1637,TRAIN,,NO,
+F10-L07-0125,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.2043,0.1621,TRAIN,,NO,
+F10-L07-0126,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.1418,0.2375,LOTE_03,,NO,
+F10-L07-0127,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.0779,0.1944,TRAIN,,NO,
+F10-L07-0128,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.2413,0.1462,LOTE_06,,NO,
+F10-L07-0129,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.1286,0.1347,TRAIN,,NO,
+F10-L07-0130,Rodajes de caja mecanica o diferencial gastados,L1,APROBADO,CONFORME,0.2339,0.1437,TEST_100,,NO,
+F10-L07-0131,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.2232,0.3003,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0132,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1346,0.31,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0133,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.2092,0.1327,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L07-0134,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1592,0.1522,LOTE_02,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0135,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.2098,0.1462,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0136,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1583,0.115,LOTE_06,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0137,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1173,0.1266,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L07-0138,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1622,0.1147,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0139,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1144,0.2229,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0140,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1967,0.0935,TRAIN,,NO,
+F10-L07-0141,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.2092,0.1219,TRAIN,,NO,
+F10-L07-0142,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1845,0.1814,TRAIN,,NO,
+F10-L07-0143,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.2339,0.213,TRAIN,,NO,
+F10-L07-0144,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.1181,0.1938,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L07-0145,Rodajes de caja mecanica o diferencial gastados,L2,APROBADO,CONFORME,0.2901,0.1309,TRAIN,,NO,
+F10-L07-0146,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1583,0.1329,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0147,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1801,0.1182,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0148,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1635,0.0856,LOTE_06,,NO,
+F10-L07-0149,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1173,0.1613,DEV_60,,SI,Juntas homocineticas o palieres danados
+F10-L07-0150,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1286,0.1367,LOTE_06,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0151,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.14,0.1826,LOTE_06,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0152,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.2105,0.1272,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0153,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.0825,0.1104,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0154,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.2901,0.1039,LOTE_05,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0155,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1297,0.1143,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0156,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1389,0.1218,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L07-0157,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1094,0.1343,TEST_100,,NO,
+F10-L07-0158,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1082,0.1176,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0159,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1293,0.1114,TRAIN,,NO,
+F10-L07-0160,Rodajes de caja mecanica o diferencial gastados,L3,APROBADO,CONFORME,0.1013,0.1077,LOTE_06,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0161,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.1344,0.3187,TRAIN,,NO,
+F10-L07-0162,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.1753,0.4443,TRAIN,,NO,
+F10-L07-0163,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.1999,0.4165,TRAIN,,NO,
+F10-L07-0164,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.1272,0.2468,LOTE_06,,NO,
+F10-L07-0165,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.1335,0.1573,TRAIN,,NO,
+F10-L07-0166,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.1352,0.1556,TRAIN,,NO,
+F10-L07-0167,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.1196,0.1944,TRAIN,,NO,
+F10-L07-0168,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.3318,0.2421,G2,,NO,
+F10-L07-0169,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.1167,0.2249,TRAIN,,NO,
+F10-L07-0170,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L1,APROBADO,CONFORME,0.2324,0.2595,TRAIN,,NO,
+F10-L07-0171,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1226,0.1677,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0172,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.2105,0.2674,TEST_100,P17BF,SI,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+F10-L07-0173,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1955,0.3459,TRAIN,P0746,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L07-0174,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1698,0.331,TRAIN,,SI,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+F10-L07-0175,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1764,0.1617,TRAIN,,NO,
+F10-L07-0176,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1524,0.2094,TRAIN,P0841,SI,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)
+F10-L07-0177,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1845,0.2294,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0178,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1968,0.2018,TRAIN,P0746,NO,
+F10-L07-0179,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.2197,0.1979,LOTE_06,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0180,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.0951,0.1398,LOTE_03,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0181,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.2324,0.137,TRAIN,P189C,NO,
+F10-L07-0182,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1195,0.1519,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0183,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1955,0.1773,TRAIN,P0962,NO,
+F10-L07-0184,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1293,0.1967,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0185,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L2,APROBADO,CONFORME,0.1344,0.1483,TRAIN,,NO,
+F10-L07-0186,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.2105,0.1299,TEST_100,P17BF,SI,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+F10-L07-0187,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.1377,0.1112,TRAIN,P0746,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0188,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.1197,0.1059,TRAIN,P0730,SI,Disco de embrague desgastado o patinando
+F10-L07-0189,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.1102,0.1319,TRAIN,P0846,NO,
+F10-L07-0190,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.1226,0.1379,TRAIN,,SI,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+F10-L07-0191,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.0889,0.1517,LOTE_05,P0962,NO,
+F10-L07-0192,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.0932,0.1504,TRAIN,P176F,SI,Disco de embrague desgastado o patinando
+F10-L07-0193,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.1968,0.1409,TRAIN,P0746,NO,
+F10-L07-0194,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.0961,0.1606,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0195,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.2197,0.1612,LOTE_06,,SI,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+F10-L07-0196,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.1083,0.1249,LOTE_06,,SI,Disco de embrague desgastado o patinando
+F10-L07-0197,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.0999,0.116,TRAIN,,NO,
+F10-L07-0198,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.1377,0.1703,TRAIN,P0776,NO,
+F10-L07-0199,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.1211,0.116,TRAIN,,NO,
+F10-L07-0200,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,L3,APROBADO,CONFORME,0.0961,0.1213,LOTE_05,,NO,
+F10-L07-0201,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.1105,0.5132,TRAIN,,NO,
+F10-L07-0202,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.2258,0.2556,LOTE_04,,NO,
+F10-L07-0203,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.2247,0.3584,LOTE_04,,NO,
+F10-L07-0204,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.2413,0.2174,TRAIN,,NO,
+F10-L07-0205,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.2271,0.4439,TRAIN,,NO,
+F10-L07-0206,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.3318,0.3046,TRAIN,,NO,
+F10-L07-0207,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.2201,0.2455,FIELD_60,,NO,
+F10-L07-0208,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.1326,0.1193,LOTE_02,,NO,
+F10-L07-0209,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.1043,0.2318,TRAIN,,NO,
+F10-L07-0210,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L1,APROBADO,CONFORME,0.2564,0.2472,TRAIN,,NO,
+F10-L07-0211,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.2247,0.1748,DEV_60,,SI,Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+F10-L07-0212,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.2271,0.1885,TRAIN,P0840,SI,Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+F10-L07-0213,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.1992,0.3384,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0214,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.2258,0.1297,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0215,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.1256,0.2359,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0216,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.1889,0.2172,TRAIN,,NO,
+F10-L07-0217,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.2564,0.2209,TRAIN,P0914,NO,
+F10-L07-0218,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.1341,0.1428,TRAIN,,SI,Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+F10-L07-0219,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.0985,0.2838,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0220,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.1183,0.2881,TRAIN,,NO,
+F10-L07-0221,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.1028,0.1446,LOTE_03,P1818,SI,Disco de embrague desgastado o patinando
+F10-L07-0222,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.0927,0.1405,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0223,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.1418,0.1521,TRAIN,,NO,
+F10-L07-0224,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.1211,0.1192,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0225,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L2,APROBADO,CONFORME,0.0777,0.1259,TRAIN,,NO,
+F10-L07-0226,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.184,0.1335,TRAIN,P0845,SI,Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+F10-L07-0227,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.1057,0.18,LOTE_03,,SI,Disco de embrague desgastado o patinando
+F10-L07-0228,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.1651,0.1245,TRAIN,P1607,NO,
+F10-L07-0229,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.2173,0.1283,TRAIN,P0914,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0230,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.2209,0.1527,LOTE_03,,SI,Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+F10-L07-0231,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.1992,0.1684,TRAIN,P0942,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0232,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.1183,0.0959,TRAIN,P1773,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0233,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.2201,0.1413,FIELD_60,P0845,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0234,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.0892,0.1316,LOTE_04,,SI,Disco de embrague desgastado o patinando
+F10-L07-0235,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.1267,0.1237,TRAIN,P0840,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0236,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.0909,0.2275,TRAIN,,NO,
+F10-L07-0237,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.0707,0.1025,LOTE_03,,NO,
+F10-L07-0238,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.1125,0.0989,TRAIN,,NO,
+F10-L07-0239,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.0975,0.1045,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0240,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),L3,APROBADO,CONFORME,0.1217,0.1423,LOTE_04,,NO,
+F10-L07-0241,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.2294,0.6647,LOTE_06,,NO,
+F10-L07-0242,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.2393,0.2577,LOTE_06,,NO,
+F10-L07-0243,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.2174,0.2249,LOTE_02,,NO,
+F10-L07-0244,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.1883,0.2673,TRAIN,,NO,
+F10-L07-0245,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.2031,0.1465,TRAIN,,NO,
+F10-L07-0246,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.2288,0.3534,TRAIN,,NO,
+F10-L07-0247,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.1983,0.1679,TRAIN,,NO,
+F10-L07-0248,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.184,0.2223,LOTE_06,,NO,
+F10-L07-0249,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.3068,0.235,TRAIN,,NO,
+F10-L07-0250,Desgaste en collarin de empuje o crapodina de embrague,L1,APROBADO,CONFORME,0.2248,0.139,TRAIN,,NO,
+F10-L07-0251,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.2075,0.2778,DEV_60,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0252,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.1625,0.1527,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0253,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.301,0.1589,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0254,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.2454,0.1911,LOTE_02,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0255,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.2088,0.273,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0256,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.1022,0.1729,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0257,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.1304,0.1146,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0258,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.2393,0.1434,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0259,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.1277,0.1553,TRAIN,,NO,
+F10-L07-0260,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.1659,0.1201,LOTE_03,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0261,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.1296,0.22,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0262,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.1376,0.123,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0263,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.2043,0.1229,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0264,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.0882,0.1491,LOTE_05,,SI,Disco de embrague desgastado o patinando
+F10-L07-0265,Desgaste en collarin de empuje o crapodina de embrague,L2,APROBADO,CONFORME,0.1154,0.1254,TRAIN,,NO,
+F10-L07-0266,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.2075,0.1843,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0267,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1582,0.1302,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0268,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1678,0.1182,LOTE_03,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0269,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.0852,0.122,TEST_100,,SI,Disco de embrague desgastado o patinando
+F10-L07-0270,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.2206,0.1557,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0271,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.104,0.1058,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0272,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1134,0.1349,TRAIN,,NO,
+F10-L07-0273,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1847,0.1186,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0274,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1394,0.1718,TRAIN,,NO,
+F10-L07-0275,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.2294,0.2539,LOTE_06,,SI,Disco de embrague desgastado o patinando
+F10-L07-0276,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1482,0.0967,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0277,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1153,0.0964,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L07-0278,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1355,0.1345,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0279,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.1565,0.1201,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0280,Desgaste en collarin de empuje o crapodina de embrague,L3,APROBADO,CONFORME,0.2896,0.203,LOTE_06,,SI,Disco de embrague desgastado o patinando
+F10-L07-0281,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.2408,0.3058,TRAIN,,NO,
+F10-L07-0282,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.2288,0.2034,TRAIN,,NO,
+F10-L07-0283,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.3109,0.2436,TRAIN,,NO,
+F10-L07-0284,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.2477,0.2542,TRAIN,,NO,
+F10-L07-0285,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.264,0.2305,TRAIN,,NO,
+F10-L07-0286,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.3053,0.1901,LOTE_06,,NO,
+F10-L07-0287,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.146,0.2425,TRAIN,,NO,
+F10-L07-0288,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.2408,0.2287,TRAIN,,NO,
+F10-L07-0289,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.1945,0.4591,TRAIN,,NO,
+F10-L07-0290,Rodajes de transmision manual o eje primario gastados,L1,APROBADO,CONFORME,0.2077,0.2034,TRAIN,,NO,
+F10-L07-0291,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.3109,0.28,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0292,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.1803,0.2503,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0293,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.264,0.1277,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0294,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.2003,0.1389,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0295,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.2089,0.1402,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0296,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.1316,0.1897,TRAIN,,NO,
+F10-L07-0297,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.1945,0.2395,LOTE_03,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0298,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.2028,0.1654,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0299,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.3032,0.2022,DEV_60,,SI,Disco de embrague desgastado o patinando
+F10-L07-0300,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.1996,0.1556,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L07-0301,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.229,0.1779,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0302,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.1643,0.183,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0303,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.2139,0.2442,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0304,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.1724,0.1479,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0305,Rodajes de transmision manual o eje primario gastados,L2,APROBADO,CONFORME,0.155,0.1397,TRAIN,,NO,
+F10-L07-0306,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.1846,0.1855,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0307,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.2003,0.131,LOTE_06,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0308,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.14,0.1311,LOTE_06,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0309,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.229,0.131,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0310,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.3032,0.2765,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0311,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.1996,0.111,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0312,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.1643,0.1492,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0313,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.1647,0.1324,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0314,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.1294,0.1143,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L07-0315,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.1119,0.1759,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0316,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.2248,0.0953,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L07-0317,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.1823,0.1132,LOTE_04,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L07-0318,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.159,0.1169,TRAIN,,SI,Desgaste en collarin de empuje o crapodina de embrague
+F10-L07-0319,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.1403,0.1333,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L07-0320,Rodajes de transmision manual o eje primario gastados,L3,APROBADO,CONFORME,0.2896,0.2294,LOTE_06,,SI,Falta o degradacion de aceite de caja de cambios

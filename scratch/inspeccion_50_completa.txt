@@ -1,0 +1,500 @@
+================================================================================
+CASO: G1_01
+Texto: Corolla 2017 en frío prende perfecto, después de 25 minutos empieza a tironear y termina apagándose. En caliente gira motor pero no prende; espero 15 minutos y arranca como si nada. No tengo DTC.
+Macro: MOTOR
+Top-1: Falla en bujias o bobinas de encendido (misfire) (0.658)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Baja presion de aceite o bomba de aceite defectuosa
+Interactivo: False
+Final: Falla en bujias o bobinas de encendido (misfire)
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)
+================================================================================
+CASO: G1_02
+Texto: Yaris 2018 pierde fuerza solo cuando subo cerro con 4 pasajeros. En plano anda normal. Si piso a fondo se ahoga un poco, pero si acelero progresivamente responde mejor.
+Macro: MOTOR
+Top-1: Pendiente de comparar el modo de combustible (0.000)
+Top-2: N/A
+Top-3: N/A
+Interactivo: True
+Turno 2 Final: Consulta fuera del alcance automotriz
+RAG: Procedimiento Estándar OEM
+================================================================================
+CASO: G1_03
+Texto: Kia Rio 2019 mínimo inestable, a veces se apaga en semáforo. Ya limpiaron cuerpo de aceleración y sigue igual. Al prender A/C empeora bastante.
+Macro: MOTOR
+Top-1: Cuerpo de aceleracion o valvula IAC sucia (0.894)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Inyectores sucios o filtro de combustible obstruido
+Interactivo: False
+Final: Cuerpo de aceleracion o valvula IAC sucia
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)
+================================================================================
+CASO: G1_04
+Texto: Sentra 2016 arranca normal, pero cuando calienta comienza a fallar un cilindro. Cambié bujías y bobinas de posición y la falla sigue en el mismo cilindro.
+Macro: MOTOR
+Top-1: Falla en bujias o bobinas de encendido (misfire) (0.820)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Consumo de aceite por desgaste de anillos o retenes
+Interactivo: False
+Final: Falla en bujias o bobinas de encendido (misfire)
+RAG: PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)
+================================================================================
+CASO: G1_05
+Texto: Mazda 3 2018 check parpadea únicamente cuando acelero fuerte. Scanner P0303. En mínimo casi no se siente falla y bujía del cilindro 3 sale húmeda.
+Macro: MOTOR
+Top-1: Falla en bujias o bobinas de encendido (misfire) (0.911)
+Top-2: Inyectores sucios o filtro de combustible obstruido
+Top-3: Cuerpo de aceleracion o valvula IAC sucia
+Interactivo: False
+Final: Falla en bujias o bobinas de encendido (misfire)
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE BOBINAS DE ENCENDIDO COP Y TIEMPO DE QUEMADO DE CHISPA (DTC P0300 A P0304 / TIRONEO BAJO CARGA)
+================================================================================
+CASO: G1_06
+Texto: Corolla 2015 tiene P0171. Ya revisé mangueras visibles y no encuentro fuga. En mínimo los fuel trims se van positivos pero acelerando a 2500 rpm mejoran bastante.
+Macro: MOTOR
+Top-1: Cuerpo de aceleracion o valvula IAC sucia (0.530)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Fuga en mangueras de intercooler o turbocompresor danado
+Interactivo: False
+Final: Cuerpo de aceleracion o valvula IAC sucia
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)
+================================================================================
+CASO: G1_07
+Texto: Hyundai Accent demora en prender únicamente después de cargar gasolina hasta llenar el tanque. Cuando prende huele fuerte a combustible y luego trabaja normal.
+Macro: MOTOR
+Top-1: Auto-pregunta técnica de descarte enviada (0.508)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Inyectores sucios o filtro de combustible obstruido
+Interactivo: True
+Turno 2 Final: Falla en sensor de oxigeno o mezcla rica
+RAG: Procedimiento Estándar OEM
+================================================================================
+CASO: G1_08
+Texto: Motor diésel Common Rail demora en arrancar en las mañanas, después trabaja normal. Un inyector tiene retorno bastante mayor que los otros tres.
+Macro: MOTOR
+Top-1: Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups) (0.932)
+Top-2: Faja o cadena de distribucion destensada o con salto de punto
+Top-3: Falla en termostato o motoventilador de radiador
+Interactivo: False
+Final: Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)
+RAG: PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)
+================================================================================
+CASO: G1_09
+Texto: Toyota prende bien frío, pero caliente demora bastante en arrancar. No hay DTC. Presión de combustible queda dentro de rango y el motor de arranque gira normal.
+Macro: MOTOR
+Top-1: Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups) (0.615)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Falla en bujias o bobinas de encendido (misfire)
+Interactivo: False
+Final: Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)
+RAG: PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)
+================================================================================
+CASO: G1_10
+Texto: Después de cambiar la faja de distribución el carro quedó chancho, tiembla en mínimo y hace explosiones sordas por escape. Antes del trabajo funcionaba normal.
+Macro: MOTOR
+Top-1: Faja o cadena de distribucion destensada o con salto de punto (0.921)
+Top-2: Falla en bujias o bobinas de encendido (misfire)
+Top-3: Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)
+Interactivo: False
+Final: Faja o cadena de distribucion destensada o con salto de punto
+RAG: PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)
+================================================================================
+CASO: G1_11
+Texto: Sentra P0420 vuelve cada dos días después de borrarlo. No hay misfire, consumo normal y el sensor delantero oscila, pero el sensor posterior copia casi la misma señal.
+Macro: MOTOR
+Top-1: Falla en bujias o bobinas de encendido (misfire) (0.731)
+Top-2: Falla en sensor de oxigeno o mezcla rica
+Top-3: Bomba de gasolina quemada o con baja presion
+Interactivo: False
+Final: Falla en bujias o bobinas de encendido (misfire)
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE EFICIENCIA DE CATALIZADOR POR DEBAJO DEL UMBRAL (DTC P0420)
+================================================================================
+CASO: G1_12
+Texto: Toyota P0301. Cambié bujía y bobina del cilindro 1 por las del cilindro 2 pero P0301 continúa. Compresión del cilindro 1 está bastante más baja que los demás.
+Macro: MOTOR
+Top-1: Falla en bujias o bobinas de encendido (misfire) (0.985)
+Top-2: Consumo de aceite por desgaste de anillos o retenes
+Top-3: Inyectores sucios o filtro de combustible obstruido
+Interactivo: False
+Final: Falla en bujias o bobinas de encendido (misfire)
+RAG: PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE)
+================================================================================
+CASO: G1_13
+Texto: Kia con humo negro y consumo alto. Scanner marca mezcla rica. Presión de combustible está por encima de especificación y al retirar la manguera de vacío del regulador aparece gasolina.
+Macro: MOTOR
+Top-1: Falla en sensor de oxigeno o mezcla rica (0.849)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Inyectores sucios o filtro de combustible obstruido
+Interactivo: False
+Final: Falla en sensor de oxigeno o mezcla rica
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)
+================================================================================
+CASO: G1_14
+Texto: Hyundai pierde potencia en alta. Presión de combustible es normal en mínimo pero cae fuerte apenas acelero a fondo. La bomba hace más ruido cuando el tanque está casi vacío.
+Macro: MOTOR
+Top-1: Pendiente de comparar el modo de combustible (0.000)
+Top-2: N/A
+Top-3: N/A
+Interactivo: True
+Turno 2 Final: Consulta fuera del alcance automotriz
+RAG: Procedimiento Estándar OEM
+================================================================================
+CASO: G1_15
+Texto: Motor tiembla y no tiene fuerza, pero no hay check. Al desconectar inyector 2 prácticamente no cambia nada; al desconectar cualquiera de los otros cilindros empeora.
+Macro: MOTOR
+Top-1: Falla en bujias o bobinas de encendido (misfire) (0.745)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)
+Interactivo: False
+Final: Falla en bujias o bobinas de encendido (misfire)
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)
+================================================================================
+CASO: G1_16
+Texto: Pedal de freno se va lentamente hasta abajo mientras estoy detenido. Si bombeo recupera altura. No existe fuga externa y el depósito mantiene nivel.
+Macro: FRENOS
+Top-1: Fuga hidraulica o aire en el sistema de frenos (0.932)
+Top-2: Falla en servofreno (booster) o linea de vacio
+Top-3: Desgaste de pastillas y zapatas de freno
+Interactivo: False
+Final: Fuga hidraulica o aire en el sistema de frenos
+RAG: PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)
+================================================================================
+CASO: G1_17
+Texto: Pedal de freno está durísimo con motor prendido. Apago motor, bombeo varias veces y casi no cambia. Se escucha siseo cerca del booster cuando mantengo el pedal.
+Macro: FRENOS
+Top-1: Falla en servofreno (booster) o linea de vacio (0.965)
+Top-2: Discos de freno alabeados o desgastados
+Top-3: Fuga hidraulica o aire en el sistema de frenos
+Interactivo: False
+Final: Falla en servofreno (booster) o linea de vacio
+RAG: PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)
+================================================================================
+CASO: G1_18
+Texto: Después de manejar 15 minutos la rueda delantera derecha queda hirviendo y el carro comienza a jalar. Lo dejo enfriar y vuelve a rodar libremente.
+Macro: FRENOS
+Top-1: Desgaste de pastillas y zapatas de freno (0.595)
+Top-2: Llantas desbalanceadas o desalineadas
+Top-3: Juntas homocineticas o palieres danados
+Interactivo: False
+Final: Desgaste de pastillas y zapatas de freno
+RAG: PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)
+================================================================================
+CASO: G1_19
+Texto: A 100 km/h no vibra nada mientras acelero. Piso freno suavemente y empieza a temblar el timón; mientras más fuerte freno, más fuerte vibra.
+Macro: SUSPENSION_CHASIS
+Top-1: Llantas desbalanceadas o desalineadas (0.657)
+Top-2: Discos de freno alabeados o desgastados
+Top-3: Falla en servofreno (booster) o linea de vacio
+Interactivo: False
+Final: Llantas desbalanceadas o desalineadas
+RAG: PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)
+================================================================================
+CASO: G1_20
+Texto: Timón vibra entre 85 y 105 km/h sin tocar freno. Ya balancearon las cuatro ruedas dos veces y sigue exactamente igual. Una llanta tiene una pequeña deformación visible.
+Macro: SUSPENSION_CHASIS
+Top-1: Llantas desbalanceadas o desalineadas (0.974)
+Top-2: Juntas homocineticas o palieres danados
+Top-3: Desgaste de pastillas y zapatas de freno
+Interactivo: False
+Final: Llantas desbalanceadas o desalineadas
+RAG: PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)
+================================================================================
+CASO: G1_21
+Texto: ABS entra casi siempre justo antes de detenerme aunque el piso esté seco. No hay rueda bloqueada. Scanner muestra una rueda cayendo a 0 km/h antes que las otras.
+Macro: FRENOS
+Top-1: Falla en sensor de velocidad de rueda ABS (0.761)
+Top-2: Desgaste de pastillas y zapatas de freno
+Top-3: Fuga hidraulica o aire en el sistema de frenos
+Interactivo: False
+Final: Falla en sensor de velocidad de rueda ABS
+RAG: PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE VELOCIDAD ABS Y CILINDRO MAESTRO (DTC C0035 / C0221)
+================================================================================
+CASO: G1_22
+Texto: Después de cambiar pastillas el pedal quedó largo y esponjoso. No hay fugas. Bombeándolo tres veces queda firme, pero después vuelve a bajar.
+Macro: MOTOR
+Top-1: Consulta fuera del alcance automotriz (0.000)
+Top-2: N/A
+Top-3: N/A
+Interactivo: False
+Final: Consulta fuera del alcance automotriz
+RAG: Procedimiento Estándar OEM
+================================================================================
+CASO: G1_23
+Texto: Caja automática en frío demora 4 segundos en enganchar R y luego entra con golpe. En D entra normal. Cuando calienta, reversa mejora bastante.
+Macro: TRANSMISION
+Top-1: Falta o degradacion de aceite de caja de cambios (0.645)
+Top-2: Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+Top-3: Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+Interactivo: False
+Final: Falta o degradacion de aceite de caja de cambios
+RAG: PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)
+================================================================================
+CASO: G1_24
+Texto: Sentra CVT después de 40 minutos en tráfico pierde respuesta y entra en protección. Scanner P0841. Apago 10 minutos y vuelve a trabajar.
+Macro: TRANSMISION
+Top-1: Sobrecalentamiento o solenoides en caja automatica CVT / DSG (0.756)
+Top-2: Inyectores sucios o filtro de combustible obstruido
+Top-3: Bomba de gasolina quemada o con baja presion
+Interactivo: False
+Final: Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+RAG: PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)
+================================================================================
+CASO: G1_25
+Texto: Volkswagen DSG en frío trabaja normal, pero caliente tiembla al salir en primera y demora en enganchar D. No presenta falla de motor.
+Macro: MOTOR
+Top-1: Falla en bujias o bobinas de encendido (misfire) (0.828)
+Top-2: Disco de embrague desgastado o patinando
+Top-3: Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+Interactivo: False
+Final: Falla en bujias o bobinas de encendido (misfire)
+RAG: PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)
+================================================================================
+CASO: G1_26
+Texto: Fiat Dualogic estando en semáforo cambia solo a N, la bomba electrohidráulica trabaja demasiado seguido y algunas veces no permite seleccionar primera.
+Macro: TRANSMISION
+Top-1: Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW) (0.957)
+Top-2: Bomba de gasolina quemada o con baja presion
+Top-3: Falla en bombin o bomba hidraulica de embrague
+Interactivo: False
+Final: Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DEL GRUPO ELECTROHIDRÁULICO Y PRESIÓN DE ACUMULADOR EN TRANSMISIONES ROBOTIZADAS DUALOGIC / I-MOTION / FREECHOICE
+================================================================================
+CASO: G1_27
+Texto: Auto mecánico en cuarta piso a fondo, RPM suben de 2500 a 4500 pero velocidad casi no aumenta. No hay tirones del motor ni check engine.
+Macro: MOTOR
+Top-1: Auto-pregunta técnica de descarte enviada (0.264)
+Top-2: Falla en bujias o bobinas de encendido (misfire)
+Top-3: Bomba de gasolina quemada o con baja presion
+Interactivo: True
+Turno 2 Final: Falla en sensor de oxigeno o mezcla rica
+RAG: Procedimiento Estándar OEM
+================================================================================
+CASO: G1_28
+Texto: Al pisar embrague aparece un ronquido. Suelto pedal y desaparece completamente. Los cambios entran bien y el embrague no patina.
+Macro: TRANSMISION
+Top-1: Falla en bombin o bomba hidraulica de embrague (0.637)
+Top-2: Disco de embrague desgastado o patinando
+Top-3: Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+Interactivo: False
+Final: Falla en bombin o bomba hidraulica de embrague
+RAG: PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS)
+================================================================================
+CASO: G1_29
+Texto: En neutro caja hace un zumbido. Piso embrague y el ruido desaparece. Al soltarlo vuelve inmediatamente aunque el carro esté detenido.
+Macro: TRANSMISION
+Top-1: Falla en bombin o bomba hidraulica de embrague (0.892)
+Top-2: Falta o degradacion de aceite de caja de cambios
+Top-3: Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+Interactivo: False
+Final: Falla en bombin o bomba hidraulica de embrague
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DEL GRUPO ELECTROHIDRÁULICO Y PRESIÓN DE ACUMULADOR EN TRANSMISIONES ROBOTIZADAS DUALOGIC / I-MOTION / FREECHOICE
+================================================================================
+CASO: G1_30
+Texto: Al salir en primera el carro sacude fuerte, pero una vez que embrague queda completamente acoplado ya no vibra. Motor en mínimo trabaja parejo.
+Macro: TRANSMISION
+Top-1: Disco de embrague desgastado o patinando (0.954)
+Top-2: Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)
+Top-3: Bomba de gasolina quemada o con baja presion
+Interactivo: False
+Final: Disco de embrague desgastado o patinando
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DEL GRUPO ELECTROHIDRÁULICO Y PRESIÓN DE ACUMULADOR EN TRANSMISIONES ROBOTIZADAS DUALOGIC / I-MOTION / FREECHOICE
+================================================================================
+CASO: G1_31
+Texto: Después de caer en un hueco el volante quedó torcido y el carro jala a la derecha. No vibra a velocidad y las llantas están correctamente balanceadas.
+Macro: SUSPENSION_CHASIS
+Top-1: Llantas desbalanceadas o desalineadas (0.986)
+Top-2: Amortiguadores reventados o bujes de suspension gastados
+Top-3: Cremallera de direccion asistida con holgura o fuga
+Interactivo: False
+Final: Llantas desbalanceadas o desalineadas
+RAG: PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)
+================================================================================
+CASO: G1_32
+Texto: Al doblar completamente a la izquierda y acelerar despacio suena tac-tac-tac. Si avanzo recto desaparece. En carretera no vibra.
+Macro: SUSPENSION_CHASIS
+Top-1: Juntas homocineticas o palieres danados (0.638)
+Top-2: Llantas desbalanceadas o desalineadas
+Top-3: Cremallera de direccion asistida con holgura o fuga
+Interactivo: False
+Final: Juntas homocineticas o palieres danados
+RAG: PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)
+================================================================================
+CASO: G1_33
+Texto: A 70 km/h aparece zumbido ronco adelante. Al hacer una curva larga hacia la izquierda el ruido disminuye y hacia la derecha aumenta.
+Macro: SUSPENSION_CHASIS
+Top-1: Llantas desbalanceadas o desalineadas (0.936)
+Top-2: Rodajes de caja mecanica o diferencial gastados
+Top-3: Juntas homocineticas o palieres danados
+Interactivo: False
+Final: Llantas desbalanceadas o desalineadas
+RAG: PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DE RODAMIENTOS DE RUEDA / MAZA (ZUMBIDO METÁLICO MODULADO AL VIRAR / PRUEBA DE HOLGURA)
+================================================================================
+CASO: G1_34
+Texto: El carro rebota dos o tres veces después de cada rompemuelle y en carretera se siente flotando. Las llantas tienen presión correcta.
+Macro: SUSPENSION_CHASIS
+Top-1: Llantas desbalanceadas o desalineadas (0.671)
+Top-2: Falla en sensor de oxigeno o mezcla rica
+Top-3: Inyectores sucios o filtro de combustible obstruido
+Interactivo: False
+Final: Llantas desbalanceadas o desalineadas
+RAG: PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)
+================================================================================
+CASO: G1_35
+Texto: Volante tiene juego muerto al centro. En autopista tengo que corregir constantemente, pero no existe vibración y el balanceo está correcto.
+Macro: SUSPENSION_CHASIS
+Top-1: Cremallera de direccion asistida con holgura o fuga (0.955)
+Top-2: Llantas desbalanceadas o desalineadas
+Top-3: Juntas homocineticas o palieres danados
+Interactivo: False
+Final: Cremallera de direccion asistida con holgura o fuga
+RAG: PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)
+================================================================================
+CASO: G1_36
+Texto: Desgasta únicamente el borde interno de ambas llantas delanteras. No vibra y tampoco jala demasiado, pero las llantas nuevas se gastaron rápido.
+Macro: SUSPENSION_CHASIS
+Top-1: Llantas desbalanceadas o desalineadas (0.989)
+Top-2: Juntas homocineticas o palieres danados
+Top-3: Amortiguadores reventados o bujes de suspension gastados
+Interactivo: False
+Final: Llantas desbalanceadas o desalineadas
+RAG: PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)
+================================================================================
+CASO: G1_37
+Texto: Motor calienta solamente en tráfico. En carretera la temperatura vuelve a normal. Cuando está caliente reviso y el electroventilador no entra.
+Macro: MOTOR
+Top-1: Falla en termostato o motoventilador de radiador (0.910)
+Top-2: Falla en bujias o bobinas de encendido (misfire)
+Top-3: Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)
+Interactivo: False
+Final: Falla en termostato o motoventilador de radiador
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)
+================================================================================
+CASO: G1_38
+Texto: Temperatura sube rápido. Manguera superior del radiador está muy caliente y la inferior permanece fría. Ventilador sí funciona.
+Macro: MOTOR
+Top-1: Falla en termostato o motoventilador de radiador (0.706)
+Top-2: Fuga en mangueras de refrigerante o radiador picado
+Top-3: Baja presion de aceite o bomba de aceite defectuosa
+Interactivo: False
+Final: Falla en termostato o motoventilador de radiador
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)
+================================================================================
+CASO: G1_39
+Texto: Consume refrigerante sin gotear al piso. Depósito hace burbujas constantes y las mangueras se ponen durísimas pocos minutos después de arrancar en frío.
+Macro: MOTOR
+Top-1: Auto-pregunta técnica de descarte enviada (0.256)
+Top-2: Faja o cadena de distribucion destensada o con salto de punto
+Top-3: Empaque de culata soplado o danado
+Interactivo: True
+Turno 2 Final: Fuga en mangueras de refrigerante o radiador picado
+RAG: Procedimiento Estándar OEM
+================================================================================
+CASO: G1_40
+Texto: Testigo de aceite parpadea únicamente cuando motor está caliente en mínimo. A 1500 rpm se apaga. Nivel de aceite está correcto.
+Macro: MOTOR
+Top-1: Baja presion de aceite o bomba de aceite defectuosa (0.669)
+Top-2: Cuerpo de aceleracion o valvula IAC sucia
+Top-3: Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)
+Interactivo: False
+Final: Baja presion de aceite o bomba de aceite defectuosa
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)
+================================================================================
+CASO: G1_41
+Texto: En las mañanas hace tac-tac metálico arriba del motor durante 3 minutos. Cuando llega aceite y calienta desaparece por completo. No hay check engine.
+Macro: MOTOR
+Top-1: Baja presion de aceite o bomba de aceite defectuosa (0.530)
+Top-2: Falla en bujias o bobinas de encendido (misfire)
+Top-3: Faja o cadena de distribucion destensada o con salto de punto
+Interactivo: False
+Final: Baja presion de aceite o bomba de aceite defectuosa
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)
+================================================================================
+CASO: G1_42
+Texto: Luces aumentan demasiado de intensidad cuando acelero, ya quemó dos focos y la batería huele raro después de manejar. Medí 16.1 voltios con motor prendido.
+Macro: ELECTRICO
+Top-1: Alternador defectuoso o placa de diodos quemada (0.872)
+Top-2: Falla en sensor de oxigeno o mezcla rica
+Top-3: Inyectores sucios o filtro de combustible obstruido
+Interactivo: False
+Final: Alternador defectuoso o placa de diodos quemada
+RAG: PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)
+================================================================================
+CASO: G1_43
+Texto: P0562 presente. En mínimo tengo 11.9 V y acelerando apenas llega a 12.3 V. Batería fue cambiada hace una semana.
+Macro: ELECTRICO
+Top-1: Bateria descargada o bornes sulfatados (0.793)
+Top-2: Alternador defectuoso o placa de diodos quemada
+Top-3: Cuerpo de aceleracion o valvula IAC sucia
+Interactivo: False
+Final: Bateria descargada o bornes sulfatados
+RAG: PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)
+================================================================================
+CASO: G1_44
+Texto: Giro llave y solo hace clac una vez. Faros mantienen buen brillo y batería mide 12.7 V. Golpeando suavemente el motor de arranque algunas veces prende.
+Macro: ELECTRICO
+Top-1: Bateria descargada o bornes sulfatados (0.882)
+Top-2: Alternador defectuoso o placa de diodos quemada
+Top-3: Fallo en inversor de corriente IGBT o motor electrico (EV)
+Interactivo: False
+Final: Bateria descargada o bornes sulfatados
+RAG: PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)
+================================================================================
+CASO: G1_45
+Texto: Batería nueva se descarga durante la noche. Alternador carga 14.2 V andando. Con carro apagado medí consumo de 650 mA y al retirar un fusible baja a 35 mA.
+Macro: ELECTRICO
+Top-1: Alternador defectuoso o placa de diodos quemada (0.838)
+Top-2: Bateria descargada o bornes sulfatados
+Top-3: Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+Interactivo: False
+Final: Alternador defectuoso o placa de diodos quemada
+RAG: PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)
+================================================================================
+CASO: G1_46
+Texto: Camión carga aire muy lentamente. No escucho fuga grande externa, compresor trabaja todo el tiempo y tarda demasiado en llegar a presión de operación.
+Macro: CARROCERIA_NEUMATICA
+Top-1: Fugas de aire o fallos en el sistema de frenos neumático (Camiones) (0.577)
+Top-2: Falla en termostato o motoventilador de radiador
+Top-3: Falla en compresor de aire acondicionado o fuga de gas R134a
+Interactivo: False
+Final: Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+RAG: PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA DE FRENOS DE AIRE NEUMATICOS EN CAMIONES (FRENO_006 / FRENO_007)
+================================================================================
+CASO: G1_47
+Texto: Camión llega a presión normal pero el secador hace PSSHH cada pocos segundos aunque nadie toque el freno. Después vuelve a cargar y repite.
+Macro: MOTOR
+Top-1: Auto-pregunta técnica de descarte enviada (0.418)
+Top-2: Discos de freno alabeados o desgastados
+Top-3: Bomba de gasolina quemada o con baja presion
+Interactivo: True
+Turno 2 Final: Válvula de freno de aire o secador APS obstruido (Camiones)
+RAG: Procedimiento Estándar OEM
+================================================================================
+CASO: G1_48
+Texto: Camión estacionado pierde presión de un tanque. Se escucha fuga constante por una cámara de freno trasera, pero al pisar el pedal el sonido cambia.
+Macro: MOTOR
+Top-1: Bomba de gasolina quemada o con baja presion (0.656)
+Top-2: Discos de freno alabeados o desgastados
+Top-3: Fuga en mangueras de intercooler o turbocompresor danado
+Interactivo: False
+Final: Bomba de gasolina quemada o con baja presion
+RAG: PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)
+================================================================================
+CASO: G1_49
+Texto: Cliente solo dice: 'cuando calienta se pone pesado, tiembla un poco y a veces se apaga; después de descansar vuelve normal'. No hay scanner conectado ni más datos.
+Macro: MOTOR
+Top-1: Auto-pregunta técnica de descarte enviada (0.376)
+Top-2: Cuerpo de aceleracion o valvula IAC sucia
+Top-3: Bomba de gasolina quemada o con baja presion
+Interactivo: True
+Turno 2 Final: Falla en bujias o bobinas de encendido (misfire)
+RAG: Procedimiento Estándar OEM
+================================================================================
+CASO: G1_50
+Texto: Cliente dice: 'adelante hace cloc, a veces jala y siento algo raro en el timón'. No sabe cuándo empezó, no sabe si ocurre frenando y no hay inspección todavía.
+Macro: SUSPENSION_CHASIS
+Top-1: Llantas desbalanceadas o desalineadas (0.842)
+Top-2: Bateria descargada o bornes sulfatados
+Top-3: Cremallera de direccion asistida con holgura o fuga
+Interactivo: False
+Final: Llantas desbalanceadas o desalineadas
+RAG: PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)

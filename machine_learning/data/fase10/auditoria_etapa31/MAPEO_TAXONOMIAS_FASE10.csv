@@ -1,0 +1,62 @@
+label,en_train_original,en_fase10,en_train10,en_dev10,en_f83,en_c1,en_codigo,macro,cantidad_train_original,cantidad_fase10,cantidad_train10,cantidad_dev10
+Falla en bujias o bobinas de encendido (misfire),SI,SI,SI,SI,SI,SI,SI,MOTOR,301,40,273,68
+Bomba de gasolina quemada o con baja presion,SI,SI,SI,SI,SI,SI,SI,MOTOR,175,40,172,43
+Inyectores sucios o filtro de combustible obstruido,SI,SI,SI,SI,SI,SI,SI,MOTOR,149,40,151,38
+Falla en sensor de oxigeno o mezcla rica,SI,SI,SI,SI,SI,SI,SI,MOTOR,221,40,208,53
+Cuerpo de aceleracion o valvula IAC sucia,SI,SI,SI,SI,SI,SI,SI,MOTOR,184,40,179,45
+Empaque de culata soplado o danado,SI,SI,SI,SI,SI,SI,SI,MOTOR,133,40,139,34
+Falla en termostato o motoventilador de radiador,SI,SI,SI,SI,SI,SI,SI,MOTOR,122,40,130,32
+Fuga en mangueras de refrigerante o radiador picado,SI,SI,SI,SI,SI,SI,SI,MOTOR,75,40,92,23
+Consumo de aceite por desgaste de anillos o retenes,SI,SI,SI,SI,SI,SI,SI,MOTOR,122,40,130,32
+Baja presion de aceite o bomba de aceite defectuosa,SI,SI,SI,SI,SI,SI,SI,MOTOR,102,40,114,28
+Faja o cadena de distribucion destensada o con salto de punto,SI,SI,SI,SI,SI,SI,SI,MOTOR,109,40,119,30
+Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),SI,SI,SI,SI,SI,SI,SI,MOTOR,53,40,74,19
+Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),SI,SI,SI,SI,SI,SI,SI,MOTOR,52,40,74,18
+Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,SI,SI,SI,SI,SI,SI,SI,MOTOR,50,40,72,18
+Fuga en mangueras de intercooler o turbocompresor danado,SI,SI,SI,SI,SI,SI,SI,MOTOR,86,40,101,25
+Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),SI,SI,SI,SI,SI,SI,SI,MOTOR,47,40,70,17
+Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),SI,SI,SI,SI,SI,SI,SI,MOTOR,45,40,68,17
+Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),SI,SI,SI,SI,SI,SI,SI,MOTOR,47,40,69,18
+Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),SI,SI,SI,SI,SI,SI,SI,MOTOR,57,40,78,19
+Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),SI,SI,SI,SI,SI,SI,SI,MOTOR,42,40,66,16
+Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),SI,SI,SI,SI,SI,SI,SI,MOTOR,70,40,88,22
+Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),SI,SI,SI,SI,SI,SI,SI,MOTOR,65,40,84,21
+Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),SI,SI,SI,SI,SI,SI,SI,MOTOR,65,40,84,21
+Falla en regulador de presion de combustible o diafragma roto,SI,SI,SI,SI,SI,SI,SI,MOTOR,62,40,82,20
+Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),SI,SI,SI,SI,SI,SI,SI,MOTOR,62,40,82,20
+Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,SI,SI,SI,SI,SI,SI,SI,MOTOR,62,40,82,20
+Desgaste de pastillas y zapatas de freno,SI,SI,SI,SI,SI,SI,SI,FRENOS,198,40,191,47
+Discos de freno alabeados o desgastados,SI,SI,SI,SI,SI,SI,SI,FRENOS,155,40,156,39
+Falla en servofreno (booster) o linea de vacio,SI,SI,SI,SI,SI,SI,SI,FRENOS,119,40,127,32
+Fuga hidraulica o aire en el sistema de frenos,SI,SI,SI,SI,SI,SI,SI,FRENOS,140,40,144,36
+Falla en sensor de velocidad de rueda ABS,SI,SI,SI,SI,SI,SI,SI,FRENOS,53,40,75,18
+Falla en sistema de frenado regenerativo (EV / Hibridos),SI,SI,SI,SI,SI,SI,SI,FRENOS,56,40,77,19
+Caliper de freno trabado o mordaza pegada (piston agarrotado),SI,SI,SI,SI,SI,SI,SI,FRENOS,62,40,82,20
+Disco de embrague desgastado o patinando,SI,SI,SI,SI,SI,SI,SI,TRANSMISION,116,40,125,31
+Falla en bombin o bomba hidraulica de embrague,SI,SI,SI,SI,SI,SI,SI,TRANSMISION,87,40,102,25
+Falta o degradacion de aceite de caja de cambios,SI,SI,SI,SI,SI,SI,SI,TRANSMISION,96,40,109,27
+Rodajes de caja mecanica o diferencial gastados,SI,SI,SI,SI,SI,SI,SI,TRANSMISION,91,40,105,26
+Sobrecalentamiento o solenoides en caja automatica CVT / DSG,SI,SI,SI,SI,SI,SI,SI,TRANSMISION,98,40,110,28
+Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),SI,SI,SI,SI,SI,SI,SI,TRANSMISION,67,40,85,22
+Desgaste en collarin de empuje o crapodina de embrague,SI,SI,SI,SI,SI,SI,SI,TRANSMISION,62,40,82,20
+Rodajes de transmision manual o eje primario gastados,SI,SI,SI,SI,SI,SI,SI,TRANSMISION,60,40,80,20
+Amortiguadores reventados o bujes de suspension gastados,SI,SI,SI,SI,SI,SI,SI,SUSPENSION_CHASIS,156,40,157,39
+Juntas homocineticas o palieres danados,SI,SI,SI,SI,SI,SI,SI,SUSPENSION_CHASIS,183,40,179,44
+Llantas desbalanceadas o desalineadas,SI,SI,SI,SI,SI,SI,SI,SUSPENSION_CHASIS,203,40,194,49
+Cremallera de direccion asistida con holgura o fuga,SI,SI,SI,SI,SI,SI,SI,SUSPENSION_CHASIS,123,40,131,32
+Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),SI,SI,SI,SI,SI,SI,SI,SUSPENSION_CHASIS,62,40,81,21
+Alternador defectuoso o placa de diodos quemada,SI,SI,SI,SI,SI,SI,SI,ELECTRICO,181,40,176,45
+Bateria descargada o bornes sulfatados,SI,SI,SI,SI,SI,SI,SI,ELECTRICO,217,40,205,52
+Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),SI,SI,SI,SI,SI,SI,SI,ELECTRICO,84,40,99,25
+Fallo en inversor de corriente IGBT o motor electrico (EV),SI,SI,SI,SI,SI,SI,SI,ELECTRICO,92,40,106,26
+Foco o falla en sistema de refrigeracion de bateria/inversor (EV),SI,SI,SI,SI,SI,SI,SI,ELECTRICO,60,40,80,20
+Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),SI,SI,SI,SI,SI,SI,SI,ELECTRICO,62,40,82,20
+Fuga parasita de corriente en reposo (consumo nocturno de bateria),SI,SI,SI,SI,SI,SI,SI,ELECTRICO,61,40,81,20
+Falla en compresor de aire acondicionado o fuga de gas R134a,SI,SI,SI,SI,SI,SI,SI,CLIMATIZACION,101,40,113,28
+Falla electrica del cierre centralizado o actuador de puerta,SI,SI,SI,SI,SI,SI,SI,CARROCERIA_NEUMATICA,102,40,114,28
+"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",SI,SI,SI,SI,SI,SI,SI,CARROCERIA_NEUMATICA,101,40,113,28
+Elevalunas electrico o guaya de alzacristales rota o trabada,SI,SI,SI,SI,SI,SI,SI,CARROCERIA_NEUMATICA,84,40,99,25
+Limpiaparabrisas o motor pluma quemado,SI,SI,SI,SI,SI,SI,SI,CARROCERIA_NEUMATICA,63,40,79,24
+Fugas de aire o fallos en el sistema de frenos neumático (Camiones),SI,SI,SI,SI,SI,SI,SI,CARROCERIA_NEUMATICA,96,40,108,28
+Válvula de freno de aire o secador APS obstruido (Camiones),SI,SI,SI,SI,SI,SI,SI,CARROCERIA_NEUMATICA,80,40,96,24
+Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),SI,SI,SI,SI,SI,SI,SI,CARROCERIA_NEUMATICA,60,40,80,20

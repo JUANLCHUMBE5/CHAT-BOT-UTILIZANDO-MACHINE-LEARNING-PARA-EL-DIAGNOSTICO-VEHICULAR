@@ -26,9 +26,9 @@ export const StatCard: React.FC<StatCardProps> = ({
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         borderRadius: '14px',
-        border: '1px solid hsla(24, 85%, 60%, 0.20)',
+        border: '1px solid var(--border-color, #e2e8f0)',
         padding: '12px 14px',
-        boxShadow: '0 8px 24px -4px rgba(234, 88, 12, 0.10), 0 4px 12px rgba(15, 23, 42, 0.04)',
+        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.05)',
         display: 'flex',
         flexDirection: 'column',
         gap: '6px',
@@ -36,7 +36,6 @@ export const StatCard: React.FC<StatCardProps> = ({
         overflow: 'hidden',
       }}
     >
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3px', background: 'linear-gradient(90deg, #f97316, #ea580c)' }} />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span className="stat-card-title" style={{ fontSize: '11px', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
           {title}

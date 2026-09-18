@@ -1,0 +1,33 @@
+=== PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE ALTO VOLTAJE E INVERSOR EN VEHÍCULOS ELÉCTRICOS E HÍBRIDOS (EV/HEV / DTC P0A80) ===
+Código de Falla Asociado: DTC P0A80 (Reemplazar Paquete Batería HV) / DTC P0A92 (Falla Inversor)
+
+ADVERTENCIA NORMATIVA DE SEGURIDAD (ALTA TENSIÓN > 300V CC):
+El sistema híbrido opera a tensión letal continua. Queda terminantemente prohibida la manipulación de cableado naranja,
+módulo inversor o celdas de tracción sin equipo de protección individual dieléctrico Clase 0 (1,000V) certificado,
+desconexión previa del Service Plug (puente de seguridad) y verificación de tensión residual nula (<12V) con voltímetro CAT III/IV.
+Todo procedimiento invasivo debe ser derivado a personal técnico certificado conforme al manual de taller OEM.
+Modelos Compatibles Frecuentes en Perú: Toyota Prius Gen 3/4, Hyundai Ioniq, BYD E2/Song, Nissan Leaf, Geely Geometry
+Gravedad: Crítica | Tiempo Estimado de Taller: 150 minutos
+Síntomas: Advertencia de sistema híbrido/eléctrico en tablero, caída drástica de autonomía, vehículo no entra en modo READY.
+Instrucciones paso a paso:
+1. ÚNICAMENTE TÉCNICOS CERTIFICADOS CON EPP DE ALTO VOLTAJE (Guantes 1000V Clase 00, careta y botas dieléctricas).
+2. Retire el conector de servicio de alto voltaje (Service Plug) y espere 10 minutos para la descarga de capacitores del inversor.
+3. Compruebe la ausencia de tensión con voltímetro CAT IV 1000V en los terminales del inversor.
+4. Escanee el módulo BMS para medir delta de voltaje por bloques de celdas (Delta Max < 0.2V).
+5. Reemplace el módulo de celdas defectuoso o ejecute balanceo con cargador/descargador inteligente.
+
+=== PROCEDIMIENTO: DIAGNOSTICO DE BATERIA DE ALTO VOLTAJE E INVERSOR EN VEHICULOS ELECTRICOS E HIBRIDOS (ELECTRICO_HV_001 A 004) ===
+Codigo de Falla Asociado: ELECTRICO_HV_001 (Bateria HV / DTC P0A80) / ELECTRICO_HV_002 (Inversor IGBT / DTC P0A1B)
+Modelos Compatibles Frecuentes en Peru: Toyota Prius / Corolla Hybrid, Hyundai Ioniq Hybrid/EV, Kia Niro, BYD Yuan/Song, Nissan Leaf
+Gravedad: Critica (Alta Tension > 200V DC) | Tiempo Estimado de Taller: 120 minutos
+Sintomas: Luz de advertencia de sistema hibrido/EV encendida (Check Hybrid System), ventilador de la bateria HV sonando a maxima velocidad, perdida drastica de autonomia en modo electrico o vehiculo que no pasa a estado READY.
+Manual OEM Referencia: Toyota Hybrid Inverter and Power Management Manual Edición 2020 / Doc ID-HV-INVERT-404, Sección HEV-14, Páginas 120-148
+Motor de Referencia: Toyota THS-II Hybrid Synergy Drive
+Especificaciones Técnicas Certificadas: Voltaje del circuito elevador Boost Converter: 650 V DC (máx) | Aislamiento a chasis del módulo IGBT: > 10 MΩ a 500V DC Megger | Torque pernos de terminales de alta tensión: 8.0 Nm
+Instrucciones paso a paso:
+1. PROTOCOLO DE SEGURIDAD ELECTRICA OBLIGATORIO: Utilizar guantes dielectricos Clase 0 (1000V), gafas de seguridad y retirar la clavija de servicio de alta tension (Service Plug Grip). Esperar 10 minutos para que los condensadores del inversor se descarguen a menos de 5V DC medidos con multimetro CAT III/IV.
+2. Conectar escaner de diagnostico y monitorear el voltaje individual de los bloques de celdas de la bateria de traccion (Block Voltages): la diferencia entre el bloque de mayor y menor voltaje (Delta Voltage) no debe superar los 0.20V.
+3. Si el Delta V supera 0.30V o existe codigo P0A80, desmontar el paquete de bateria HV, limpiar la sulfatacion de los puentes de cobre niquelados de interconexion y equilibrar las celdas debiles en banco de carga/descarga ciclado o reemplazar modulos defectuosos.
+4. Desmontar y limpiar el ventilador de enfriamiento de la bateria HV (Blower Fan) y el ducto de succion eliminando pelusa y polvo acumulado para evitar sobrecalentamiento.
+5. Para fallas en el inversor (ELECTRICO_HV_002) o sobrecalentamiento (ELECTRICO_HV_004): comprobar el flujo de la bomba electrica de agua del circuito del inversor (verificar turbulencia en el deposito de refrigerante dielectrico con el vehiculo encendido) y sustituir la bomba si el rotor magnetico esta frenado.
+6. Reinstalar la clavija de servicio bloqueando el trinquete en tres pasos (empujar, girar palanca y deslizar hacia abajo), borrar codigos de diagnostico y verificar el paso a estado READY sin advertencias en el cuadro de instrumentos.

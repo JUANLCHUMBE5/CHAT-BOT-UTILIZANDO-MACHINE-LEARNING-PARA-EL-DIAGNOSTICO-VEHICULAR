@@ -1,0 +1,83 @@
+{
+  "fecha": "2026-09-15 22:17:16",
+  "fase": "Fase 8 - Candidato",
+  "dataset": {
+    "archivo": "C:\\Users\\leonc\\OneDrive\\Desktop\\CHAT_BOT_MACHINLEARNING\\machine_learning\\data\\dataset_sintomas_limpio.csv",
+    "filas": 6189,
+    "clases": 61,
+    "macro_sistemas": 7,
+    "sha256": "c94d6e7b88ef72ea20f7be1bbb3d5a61484f33d992dcb52c6b285306f1c52626"
+  },
+  "hiperparametros_seleccionados_en_dev": {
+    "max_features": 25000,
+    "class_weight": "balanced",
+    "C": 2.0
+  },
+  "desempeno_benchmark_dev_60_casos": {
+    "n_muestras": 60,
+    "acc_top1": 0.8167,
+    "acc_top3": 0.95,
+    "acc_macro": 0.9667,
+    "brier_score": 0.1234,
+    "ece": 0.1234,
+    "conf_media_aciertos": 0.7726,
+    "conf_media_errores": 0.5678,
+    "accuracy_alta_confianza_gte_80": 1.0,
+    "pct_casos_alta_confianza": 0.45,
+    "bins_calibracion": [
+      {
+        "bin": "(0.20, 0.30]",
+        "count": 1,
+        "accuracy": 1.0,
+        "confidence": 0.2567
+      },
+      {
+        "bin": "(0.30, 0.40]",
+        "count": 1,
+        "accuracy": 0.0,
+        "confidence": 0.3654
+      },
+      {
+        "bin": "(0.40, 0.50]",
+        "count": 2,
+        "accuracy": 1.0,
+        "confidence": 0.4957
+      },
+      {
+        "bin": "(0.50, 0.60]",
+        "count": 11,
+        "accuracy": 0.4545,
+        "confidence": 0.5353
+      },
+      {
+        "bin": "(0.60, 0.70]",
+        "count": 9,
+        "accuracy": 0.6667,
+        "confidence": 0.6516
+      },
+      {
+        "bin": "(0.70, 0.80]",
+        "count": 9,
+        "accuracy": 0.8889,
+        "confidence": 0.7524
+      },
+      {
+        "bin": "(0.80, 0.90]",
+        "count": 15,
+        "accuracy": 1.0,
+        "confidence": 0.8521
+      },
+      {
+        "bin": "(0.90, 1.00]",
+        "count": 12,
+        "accuracy": 1.0,
+        "confidence": 0.9321
+      }
+    ]
+  },
+  "hashes_modelos": {
+    "modelo_diagnostico_pkl": "66b2e7d81199f4b94653d8dcf5a020ffa7734175b72a0ef9c7d79f3cdb99e076",
+    "modelo_sistema_pkl": "b8c4956d781ad6fdd6b7418f7b4d1e0520e5dae31960b61fc640c3e646c7d79b",
+    "vectorizador_tfidf_pkl": "8b8e8c3b3571fe965174bff67faff0ac57aaadccf17d4e40395e4c1ab3273104"
+  }
+}

@@ -1,5 +1,6 @@
 param(
-    [switch]$SinNgrok
+    [switch]$SinNgrok,
+    [switch]$ReiniciarWorker
 )
 
 $ErrorActionPreference = "Stop"
@@ -57,12 +58,20 @@ else {
 }
 
 if (-not (Test-ListeningPort -Port 8000)) {
-    $backendCommand = "`$env:QUEUE_EMBEDDED_WORKER='false'; & '$backendPython' -m alembic upgrade head; if (`$LASTEXITCODE -eq 0) { & '$backendPython' -m uvicorn main:app --reload --port 8000 }"
+    $backendCommand = "`$env:QUEUE_EMBEDDED_WORKER='false'; & '$backendPython' -m alembic upgrade head; & '$backendPython' -m uvicorn main:app --reload --port 8000"
     Start-CarBotWindow -Title "CarBot - Backend" -WorkingDirectory $backendRoot -Command $backendCommand
     Write-Host "[OK] Iniciando chatbot y API..." -ForegroundColor Green
 }
 else {
     Write-Host "[OK] Backend ya estaba activo en el puerto 8000." -ForegroundColor Green
+}
+
+if ($ReiniciarWorker) {
+    Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+        Where-Object { $_.CommandLine -like "*src.application.jobs.worker*" } |
+        ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+    Start-Sleep -Milliseconds 500
+    Write-Host "[OK] Worker anterior detenido para reinicio." -ForegroundColor Yellow
 }
 
 $workerActivo = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |

@@ -98,12 +98,20 @@ export const MecanicosCardsGrid: React.FC<MecanicosCardsGridProps> = ({
                     borderRadius: '6px',
                     fontSize: '9px',
                     fontWeight: 700,
-                    backgroundColor: estaBloqueado ? '#fee2e2' : '#dcfce7',
-                    color: estaBloqueado ? '#b91c1c' : '#15803d',
+                    backgroundColor: estaBloqueado
+                      ? '#fee2e2'
+                      : !m.activo
+                        ? '#f1f5f9'
+                        : '#dcfce7',
+                    color: estaBloqueado
+                      ? '#b91c1c'
+                      : !m.activo
+                        ? '#64748b'
+                        : '#15803d',
                     textTransform: 'uppercase',
                   }}
                 >
-                  {estaBloqueado ? 'Bloqueado' : 'Activo'}
+                  {estaBloqueado ? 'Bloqueado' : (!m.activo ? 'Inactivo' : 'Activo')}
                 </span>
                 <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>
                   📱 {telefonoSeguro}

@@ -62,6 +62,7 @@ TEST_READY.md
 
 # --- Datos operativos y artefactos ajenos al proyecto ---
 machine_learning/data/tracker_diagnosticos.csv
+backend/data/tracker_diagnosticos.csv
 machine_learning/data/evidencias_evaluacion/
 sss/
 

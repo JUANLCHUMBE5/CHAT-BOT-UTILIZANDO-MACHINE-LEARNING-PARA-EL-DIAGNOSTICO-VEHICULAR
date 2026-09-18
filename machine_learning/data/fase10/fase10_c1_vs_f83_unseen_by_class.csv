@@ -1,0 +1,62 @@
+clase,support_unseen,rec_f83,rec_c1,delta_recall,f1_f83,f1_c1,delta_f1,degradacion_relevante
+Alternador defectuoso o placa de diodos quemada,8,1.0,0.625,-0.375,0.6667,0.7692,0.1026,NO
+Amortiguadores reventados o bujes de suspension gastados,8,0.375,0.75,0.375,0.4,0.75,0.35,NO
+Baja presion de aceite o bomba de aceite defectuosa,8,0.75,0.625,-0.125,0.75,0.7143,-0.0357,NO
+Bateria descargada o bornes sulfatados,8,0.5,0.5,0.0,0.2963,0.4706,0.1743,NO
+Bomba de gasolina quemada o con baja presion,8,0.625,0.75,0.125,0.3704,0.6,0.2296,NO
+Caliper de freno trabado o mordaza pegada (piston agarrotado),8,0.625,0.625,0.0,0.5556,0.6667,0.1111,NO
+"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",8,0.5,0.75,0.25,0.6667,0.8,0.1333,NO
+Consumo de aceite por desgaste de anillos o retenes,8,0.625,0.5,-0.125,0.6667,0.5333,-0.1333,NO
+Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),8,0.375,0.75,0.375,0.5455,0.7059,0.1604,NO
+Cremallera de direccion asistida con holgura o fuga,8,0.75,0.75,0.0,0.75,0.75,0.0,NO
+Cuerpo de aceleracion o valvula IAC sucia,8,0.5,0.625,0.125,0.4211,0.5556,0.1345,NO
+Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),8,0.25,0.75,0.5,0.3636,0.6316,0.2679,NO
+Desgaste de pastillas y zapatas de freno,8,0.625,0.75,0.125,0.5263,0.6316,0.1053,NO
+Desgaste en collarin de empuje o crapodina de embrague,8,0.25,0.875,0.625,0.4,0.875,0.475,NO
+Disco de embrague desgastado o patinando,8,0.75,0.625,-0.125,0.6,0.7143,0.1143,NO
+Discos de freno alabeados o desgastados,8,0.5,0.5,0.0,0.5333,0.6154,0.0821,NO
+Elevalunas electrico o guaya de alzacristales rota o trabada,8,0.375,0.75,0.375,0.5455,0.8,0.2545,NO
+Empaque de culata soplado o danado,8,0.0,0.125,0.125,0.0,0.2222,0.2222,NO
+Faja o cadena de distribucion destensada o con salto de punto,8,0.375,0.25,-0.125,0.4286,0.3077,-0.1209,NO
+Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),8,0.625,0.5,-0.125,0.7143,0.5714,-0.1429,NO
+Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),8,0.625,0.625,0.0,0.7692,0.5882,-0.181,SI
+Falla electrica del cierre centralizado o actuador de puerta,8,0.875,0.875,0.0,0.7,0.7778,0.0778,NO
+Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),8,0.75,0.875,0.125,0.8571,0.875,0.0179,NO
+Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,8,1.0,1.0,0.0,0.8421,0.8,-0.0421,NO
+Falla en bombin o bomba hidraulica de embrague,8,0.875,0.875,0.0,0.7,0.9333,0.2333,NO
+Falla en bujias o bobinas de encendido (misfire),8,0.875,0.625,-0.25,0.5385,0.4762,-0.0623,NO
+Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),8,0.625,0.75,0.125,0.7143,0.8,0.0857,NO
+Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),8,0.5,1.0,0.5,0.6667,0.9412,0.2745,NO
+Falla en compresor de aire acondicionado o fuga de gas R134a,8,0.375,0.5,0.125,0.5,0.5714,0.0714,NO
+Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),8,0.75,0.75,0.0,0.8571,0.75,-0.1071,NO
+Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),8,0.75,0.75,0.0,0.75,0.75,0.0,NO
+Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),8,0.25,0.75,0.5,0.4,0.6316,0.2316,NO
+Falla en regulador de presion de combustible o diafragma roto,8,0.75,0.75,0.0,0.8,0.8,0.0,NO
+Falla en sensor de oxigeno o mezcla rica,8,0.75,0.875,0.125,0.5,0.875,0.375,NO
+Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),8,0.375,0.5,0.125,0.4615,0.5714,0.1099,NO
+Falla en sensor de velocidad de rueda ABS,8,0.875,0.875,0.0,0.7778,0.8235,0.0458,NO
+Falla en servofreno (booster) o linea de vacio,8,0.875,1.0,0.125,0.7,0.6667,-0.0333,NO
+Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),8,0.75,0.875,0.125,0.8571,0.8235,-0.0336,NO
+Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),8,0.625,0.625,0.0,0.7692,0.7692,0.0,NO
+Falla en sistema de frenado regenerativo (EV / Hibridos),8,0.375,0.75,0.375,0.5,0.8571,0.3571,NO
+Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),8,0.625,0.625,0.0,0.625,0.625,0.0,NO
+Falla en termostato o motoventilador de radiador,8,0.75,1.0,0.25,0.5455,0.9412,0.3957,NO
+Fallo en inversor de corriente IGBT o motor electrico (EV),8,0.375,0.875,0.5,0.4286,0.7778,0.3492,NO
+Falta o degradacion de aceite de caja de cambios,8,0.875,1.0,0.125,0.8235,0.9412,0.1176,NO
+Foco o falla en sistema de refrigeracion de bateria/inversor (EV),8,0.75,0.625,-0.125,0.6667,0.7143,0.0476,NO
+Fuga en mangueras de intercooler o turbocompresor danado,8,0.5,0.5,0.0,0.5714,0.6154,0.044,NO
+Fuga en mangueras de refrigerante o radiador picado,8,1.0,1.0,0.0,0.7273,0.8,0.0727,NO
+Fuga hidraulica o aire en el sistema de frenos,8,0.375,0.375,0.0,0.4615,0.4615,0.0,NO
+Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),8,0.5,0.875,0.375,0.6154,0.875,0.2596,NO
+Fuga parasita de corriente en reposo (consumo nocturno de bateria),8,0.25,0.75,0.5,0.3636,0.75,0.3864,NO
+Fugas de aire o fallos en el sistema de frenos neumático (Camiones),8,0.625,0.5,-0.125,0.7143,0.5333,-0.181,SI
+Inyectores sucios o filtro de combustible obstruido,8,0.375,0.5,0.125,0.2857,0.4706,0.1849,NO
+Juntas homocineticas o palieres danados,8,0.625,0.625,0.0,0.5882,0.7143,0.1261,NO
+Limpiaparabrisas o motor pluma quemado,8,0.625,0.5,-0.125,0.7692,0.6154,-0.1538,SI
+Llantas desbalanceadas o desalineadas,8,0.625,0.5,-0.125,0.625,0.5714,-0.0536,NO
+Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,8,0.625,0.5,-0.125,0.5263,0.4706,-0.0557,NO
+Rodajes de caja mecanica o diferencial gastados,8,0.375,0.75,0.375,0.375,0.8,0.425,NO
+Rodajes de transmision manual o eje primario gastados,8,0.5,1.0,0.5,0.6667,0.9412,0.2745,NO
+Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),8,0.375,0.75,0.375,0.4286,0.5455,0.1169,NO
+Sobrecalentamiento o solenoides en caja automatica CVT / DSG,8,0.75,0.75,0.0,0.8,0.8571,0.0571,NO
+Válvula de freno de aire o secador APS obstruido (Camiones),8,0.875,1.0,0.125,0.8235,1.0,0.1765,NO

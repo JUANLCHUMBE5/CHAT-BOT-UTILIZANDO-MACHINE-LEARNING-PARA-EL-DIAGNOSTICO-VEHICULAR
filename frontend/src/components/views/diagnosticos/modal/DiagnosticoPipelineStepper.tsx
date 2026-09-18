@@ -28,10 +28,26 @@ export const DiagnosticoPipelineStepper: React.FC<DiagnosticoPipelineStepperProp
             border: '1px solid var(--border-color)',
           }}
         >
-          ⏱️ Latencia Total: <strong>{diagnostico.duracion_ms} ms</strong>
-          {diagnostico.desde_cache ? ' · ⚡ Desde Caché' : ''}
+          ⏱️ Latencia de Consulta Actual: <strong>{diagnostico.duracion_ms} ms</strong>
+          {diagnostico.desde_cache ? ' · ⚡ Servido desde Caché' : ''}
         </span>
       </div>
+
+      {diagnostico.desde_cache && (
+        <div
+          style={{
+            fontSize: '11px',
+            color: '#0369a1',
+            backgroundColor: '#f0f9ff',
+            border: '1px solid #bae6fd',
+            borderRadius: '6px',
+            padding: '6px 10px',
+            marginBottom: '12px',
+          }}
+        >
+          ℹ️ <strong>Consulta resuelta instantáneamente desde Caché.</strong> Las etapas a continuación reflejan la telemetría de la <em>inferencia original registrada</em> ({diagnostico.etapas_procesamiento?.reduce((acc, e) => acc + (e.duracion_ms || 0), 0) || 0} ms), independiente de la latencia actual de consulta ({diagnostico.duracion_ms} ms).
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
         {diagnostico.etapas_procesamiento.map((etapa, index) => {
@@ -40,6 +56,16 @@ export const DiagnosticoPipelineStepper: React.FC<DiagnosticoPipelineStepperProp
           const degradado = etapa.estado === 'degradado';
           const badgeColor = completada ? '#059669' : enCola ? '#d97706' : degradado ? '#e11d48' : '#64748b';
           const badgeBg = completada ? '#ecfdf5' : enCola ? '#fffbeb' : degradado ? '#fff1f2' : '#f8fafc';
+
+          const nombreEtapa = (degradado && etapa.clave === 'llm' && !etapa.nombre.includes('Fallback'))
+            ? 'Síntesis Gemini (Fallback ML+RAG)'
+            : etapa.nombre;
+
+          const detalleEtapa = (degradado && etapa.clave === 'llm')
+            ? (etapa.detalle?.toLowerCase().includes('fallback')
+                ? etapa.detalle
+                : 'Fallback determinista activo: síntesis externa omitida o límite de cuota superado.')
+            : etapa.detalle;
 
           return (
             <div
@@ -77,7 +103,7 @@ export const DiagnosticoPipelineStepper: React.FC<DiagnosticoPipelineStepperProp
                   </span>
                 </div>
                 <strong style={{ fontSize: '12px', color: 'var(--text-main)', display: 'block', lineHeight: 1.3 }}>
-                  {etapa.nombre}
+                  {nombreEtapa}
                 </strong>
               </div>
 
@@ -85,9 +111,9 @@ export const DiagnosticoPipelineStepper: React.FC<DiagnosticoPipelineStepperProp
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                   {etapa.duracion_ms} ms
                 </span>
-                {etapa.detalle && (
+                {detalleEtapa && (
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.3 }}>
-                    {etapa.detalle}
+                    {detalleEtapa}
                   </div>
                 )}
               </div>

@@ -5,9 +5,22 @@ import type { CasoValidacionDTO, MetricasValidacionDTO, CrearCasoValidacionDTO }
 import type { Periodo } from '../utils/periodo';
 
 const vacio = (): CrearCasoValidacionDTO => ({
-  fase: 'Post-test', placa: '', marca_modelo: '', sintoma: '', falla_real: '',
-  chatbot_prediccion: '', campos_completos: -1, tiempo_diagnostico_minutos: 0,
-  prediccion_correcta: -1, metodo_confirmacion: '', evidencia_ref: '',
+  fase: 'Post-test',
+  placa: '',
+  marca_modelo: '',
+  sintoma: '',
+  falla_real: '',
+  chatbot_prediccion: '',
+  campos_completos: -1,
+  tiempo_diagnostico_minutos: 0,
+  prediccion_correcta: -1,
+  metodo_confirmacion: 'Inspección Visual en Elevador',
+  evidencia_ref: '',
+  estado_registro: 'verificado',
+  sintoma_registrado_correctamente: 1,
+  normalizacion_correcta: 1,
+  extraccion_correcta: 1,
+  clasificacion_procesada: 1,
 });
 
 export const useValidacionTaller = () => {
@@ -56,15 +69,17 @@ export const useValidacionTaller = () => {
     return () => { activo = false; };
   }, [periodo, revision]);
 
-  useEffect(() => {
-    const timer = setInterval(() => { if (!document.hidden) setRevision(r => r + 1); }, 30000);
-    return () => clearInterval(timer);
-  }, []);
 
   const handleCrearCaso = async (e: FormEvent) => {
     e.preventDefault(); setError(null); setExitoMensaje(null);
     if (nuevoCaso.campos_completos < 0 || nuevoCaso.prediccion_correcta < 0) {
       setError('Indica el resultado y si el registro está completo.'); return;
+    }
+    if (nuevoCaso.estado_registro === 'verificado') {
+      if (!nuevoCaso.metodo_confirmacion?.trim() || !nuevoCaso.evidencia_ref?.trim()) {
+        setError('Para registrar como caso "Verificado", es obligatorio indicar el método de confirmación física y la referencia de evidencia.');
+        return;
+      }
     }
     try {
       setGuardando(true);
@@ -77,6 +92,10 @@ export const useValidacionTaller = () => {
     try { await apiService.descargarValidacionCsv(periodo); }
     catch (e) { setError(e instanceof Error ? e.message : 'No se pudo exportar'); }
   };
+  const handleDescargarFichasAnexo2Csv = async () => {
+    try { await apiService.descargarFichasAnexo2Csv(periodo); }
+    catch (e) { setError(e instanceof Error ? e.message : 'No se pudo exportar el Anexo 2 oficial'); }
+  };
   return { metricas, casos, totalCasos, cargando, error: error || errorMetricas,
     faseFiltro: filtros.fase, setFaseFiltro: (fase: string) => setFiltros(f => ({ ...f, fase, pagina: 0 })),
     aciertoFiltro: filtros.acierto, setAciertoFiltro: (acierto: string) => setFiltros(f => ({ ...f, acierto, pagina: 0 })),
@@ -84,5 +103,5 @@ export const useValidacionTaller = () => {
     pagina: filtros.pagina, setPagina: (pagina: number) => setFiltros(f => ({ ...f, pagina })),
     totalPaginas: Math.max(1, Math.ceil(totalCasos / limite)), periodo, setPeriodo,
     modalAbierto, setModalAbierto, guardando, exitoMensaje, nuevoCaso, setNuevoCaso,
-    handleCrearCaso, handleDescargarCsv, cargarDatos };
+    handleCrearCaso, handleDescargarCsv, handleDescargarFichasAnexo2Csv, cargarDatos };
 };

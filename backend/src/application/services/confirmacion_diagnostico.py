@@ -86,9 +86,18 @@ def interpretar_respuesta_validacion_whatsapp(texto: str) -> str | None:
         "fue incorrecta",
         "esta mal",
     }
-    if normalizado in respuestas_positivas:
+    # Descartar frases clínicas funcionales ("si tiene chispa...", "no arranca...", etc.)
+    frases_clinicas = (
+        "si tiene", "si hay", "si llega", "si pasa", "si marca", "si bota", "si suena", "si prende", "si arranca",
+        "no tiene", "no hay", "no llega", "no pasa", "no marca", "no bota", "no suena", "no prende", "no arranca",
+    )
+    if any(normalizado.startswith(pref) for pref in frases_clinicas):
+        return None
+
+    import re
+    if normalizado in respuestas_positivas or re.match(r"^(?:si|correcto|correcta)\b[,\s.:;-]+", normalizado):
         return "si"
-    if normalizado in respuestas_negativas:
+    if normalizado in respuestas_negativas or re.match(r"^(?:no|incorrecto|descartado|falso|negativo)\b[,\s.:;-]+", normalizado):
         return "no"
     return None
 

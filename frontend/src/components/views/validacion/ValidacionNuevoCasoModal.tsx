@@ -155,21 +155,108 @@ export const ValidacionNuevoCasoModal: React.FC<ValidacionNuevoCasoModalProps> =
           </div>
         </div>
 
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Estado del Registro (Metodología) *
+            </label>
+            <Select
+              value={nuevoCaso.estado_registro || 'verificado'}
+              onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, estado_registro: e.target.value as 'verificado' | 'borrador' }))}
+              options={[
+                { value: 'verificado', label: 'Verificado (Oficial - Incluido en Tesis)' },
+                { value: 'borrador', label: 'Borrador (Pendiente de Verificación)' },
+              ]}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Método de Confirmación Física *
+            </label>
+            <Input
+              placeholder="Ej. Inspección Visual en Elevador / Scanner OBD-II"
+              value={nuevoCaso.metodo_confirmacion || ''}
+              required={nuevoCaso.estado_registro === 'verificado'}
+              onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, metodo_confirmacion: e.target.value }))}
+            />
+          </div>
+        </div>
+
         <div>
           <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
-            Método de Confirmación
+            Evidencia o Referencia de Taller *
           </label>
           <Input
-            value={nuevoCaso.metodo_confirmacion}
-            onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, metodo_confirmacion: e.target.value }))}
+            placeholder="Ej. Orden de Trabajo OT-2026-042 / Foto de pieza desmontada"
+            value={nuevoCaso.evidencia_ref || ''}
+            required={nuevoCaso.estado_registro === 'verificado'}
+            onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, evidencia_ref: e.target.value }))}
           />
         </div>
 
-        <p style={{ fontSize: 12 }}>Evalúa la completitud según la ficha acordada. El tiempo corresponde al diagnóstico del taller.</p>
-        <label>Evidencia de la revisión
-          <Input value={nuevoCaso.evidencia_ref || ''}
-            onChange={e => onNuevoCasoChange(prev => ({ ...prev, evidencia_ref: e.target.value }))} />
-        </label>
+        {/* Sección de Indicadores de la Variable Independiente (CarBot con ML) */}
+        <div style={{
+          backgroundColor: '#f8fafc',
+          border: '1px solid #e2e8f0',
+          borderRadius: '8px',
+          padding: '12px 14px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px',
+        }}>
+          <div style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-main)' }}>
+            Evaluación Operacional de la Variable Independiente (CarBot con ML)
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                Indicador 1: ¿Síntoma registrado correctamente?
+              </label>
+              <Select
+                value={String(nuevoCaso.sintoma_registrado_correctamente ?? 1)}
+                onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, sintoma_registrado_correctamente: Number(e.target.value) }))}
+                options={[
+                  { value: '1', label: 'Sí (Coincide con relato técnico validado)' },
+                  { value: '0', label: 'No (Incompleto o distorsionado)' },
+                ]}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '4px' }}>
+                Indicador 2: Etapas del Pipeline Procesadas
+              </label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '12px', marginTop: '4px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={nuevoCaso.normalizacion_correcta !== 0}
+                    onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, normalizacion_correcta: e.target.checked ? 1 : 0 }))}
+                  />
+                  <span>Normalización de texto correcta</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={nuevoCaso.extraccion_correcta !== 0}
+                    onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, extraccion_correcta: e.target.checked ? 1 : 0 }))}
+                  />
+                  <span>Extracción técnica correcta</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={nuevoCaso.clasificacion_procesada !== 0}
+                    onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, clasificacion_procesada: e.target.checked ? 1 : 0 }))}
+                  />
+                  <span>Clasificación procesada</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '12px' }}>
           <Button type="button" variant="secondary" onClick={onClose} disabled={guardando}>
             Cancelar

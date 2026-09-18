@@ -7,6 +7,7 @@ El corpus técnico indexado en el subsistema RAG de CarBot (`machine_learning/ma
 - **Propósito**: Asistir al mecánico en la identificación de fallas y pasos de diagnóstico inicial durante el estudio experimental de tesis.
 - **Estado de Validación**: `corpus_preliminar_taller`.
 - **Condición de Uso**: No sustituye el manual de taller oficial del fabricante en reparaciones críticas o componentes de seguridad de alto voltaje. CarBot desacopla la confianza del clasificador ML de la similitud RAG y exige siempre la confirmación del técnico calificado.
+- **Admisión operativa**: El índice FAISS carga exclusivamente los 85 fragmentos registrados en `metadatos_manuales.json`. Las guías web, síntomas y candidatos sin metadatos se excluyen del RAG operativo y solo pueden conservarse como material experimental.
 
 ---
 
@@ -43,3 +44,5 @@ Cada fragmento indexado cuenta con registro en `metadatos_manuales.json`:
 - `codigos_dtc`: Lista normalizada de códigos OBD-II asociados.
 - `manual_oem` / `url_referencia`: Categorización referencial estándar de manuales de taller para consulta técnica.
 - `estado_validacion`: `corpus_preliminar_taller` con bandera de auditoría documental (requiere posterior firma y homologación en taller).
+
+Las incorporaciones futuras requieren revisión documental, validación mecánica y actualización de su hash. Agregar un archivo `.txt` al directorio no provoca su indexación automática.

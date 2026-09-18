@@ -200,7 +200,10 @@ async def recibir_mensaje_meta(
             if tipo_mensaje == "text":
                 texto_cliente = msg.get("text", {}).get("body", "")
                 if len(texto_cliente) > settings.user_text_max_chars:
-                    raise HTTPException(status_code=413, detail="Mensaje de texto demasiado largo.")
+                    logger.warning(
+                        f"[Webhook Meta] Texto de cliente truncado de {len(texto_cliente)} a {settings.user_text_max_chars} caracteres."
+                    )
+                    texto_cliente = texto_cliente[: settings.user_text_max_chars]
             elif tipo_mensaje == "audio":
                 audio_id = msg.get("audio", {}).get("id", "")
             else:
@@ -295,7 +298,10 @@ async def recibir_mensaje_twilio(
     remitente = params_dict.get("From", "whatsapp:+51000000000")
     texto_cliente = params_dict.get("Body", "")
     if len(texto_cliente) > settings.user_text_max_chars:
-        raise HTTPException(status_code=413, detail="Mensaje de texto demasiado largo.")
+        logger.warning(
+            f"[Webhook Twilio] Texto de cliente truncado de {len(texto_cliente)} a {settings.user_text_max_chars} caracteres."
+        )
+        texto_cliente = texto_cliente[: settings.user_text_max_chars]
     media_url = params_dict.get("MediaUrl0", "")
     tipo_mensaje = "audio" if media_url else "text"
     audio_id = media_url if media_url else ""

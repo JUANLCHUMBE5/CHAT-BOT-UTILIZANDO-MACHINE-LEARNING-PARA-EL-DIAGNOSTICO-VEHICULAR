@@ -1,0 +1,84 @@
+==================== G1_11 ====================
+🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bujias o bobinas de encendido (misfire)
+• **Certeza del Modelo:** 73%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **2. Procedimiento Técnico de Reparación (PROCEDIMIENTO: DIAGNÓSTICO DE EFICIENCIA DE CATALIZADOR POR DEBAJO DEL UMBRAL (DTC P0420)):**
+DEFINICIÓN OFICIAL DEL CÓDIGO (OBD-II):
+• Código P0420 (GENERIC): Catalyst System Efficiency Below Threshold Bank 1
+
+Código de Falla Asociado: DTC P0420 / Catalyst System Efficiency Below Threshold (Bank 1)
+Modelos Compatibles Frecuentes en Perú:
+
+==================== G1_12 ====================
+🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bujias o bobinas de encendido (misfire)
+• **Certeza del Modelo:** 98%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **2. Procedimiento Técnico de Reparación (PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE)):**
+DEFINICIÓN OFICIAL DEL CÓDIGO (OBD-II):
+• Código P0301 (GENERIC): Cylinder 1 Misfire Detected
+
+Código de Falla Asociado: DTC P0300 (Fallo de Encendido Múltiple) / DTC P0301-P0304 (Misfire Cilindro Específico)
+Mode
+
+==================== G1_25 ====================
+🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bujias o bobinas de encendido (misfire)
+• **Certeza del Modelo:** 82%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **2. Procedimiento Técnico de Reparación (PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)):**
+Código de Falla Asociado: DTC P0300 (Misfire Múltiple) / P0301 (Misfire Cilindro 1)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Changan Alsvin, Chery Tiggo 2
+Gravedad: Media | Tiempo Estimado de Taller: 45 minut
+
+==================== G1_28 ====================
+🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bombin o bomba hidraulica de embrague
+• **Certeza del Modelo:** 63%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **2. Procedimiento Técnico de Reparación (PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS)):**
+Código de Falla Asociado: DTC P17BF (Protección Sobrecarga Bomba Hidráulica DSG 7v DQ200) / DTC P189C (Restricción por Presión Insuficiente) / DTC P0741
+Modelos Compatibles Frecuentes en Perú: Volkswag
+
+==================== G1_33 ====================
+🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Llantas desbalanceadas o desalineadas
+• **Certeza del Modelo:** 93%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **2. Procedimiento Técnico de Reparación (PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DE RODAMIENTOS DE RUEDA / MAZA (ZUMBIDO METÁLICO MODULADO AL VIRAR / PRUEBA DE HOLGURA)):**
+Codigo de Falla Asociado: Falla Mecánica Pura (Sin Escáner) / Desgaste de Rodamiento de Rueda / Picadura de Pista (Spalling)
+Modelos Compatibles Frecuentes en Peru: Todas las marcas (Universal)
+Gravedad: Media-Alta | Tie
+
+==================== G1_39 ====================
+🤖 🔍 Para precisar la causa del problema de temperatura:
+
+• 1️⃣ Pérdida visible de refrigerante o vapor blanco debajo del capó (Fuga de refrigerante) — 26%
+• 2️⃣ Sonido de cadena floja en la distribución, motor descalibrado o fuera de punto (Cadena / Correa de distribución) — 19%
+• 3️⃣ Consume refrigerante, bota humo blanco espeso o burbujea el depósito de expansión (Empaque de culata) — 14%
+
+👉 *Responde indicando 1, 2 o describiendo brevemente la opción (o describe qué otro síntoma nota si ninguna coincide).*
+
+==================== G1_41 ====================
+🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Baja presion de aceite o bomba de aceite defectuosa
+• **Certeza del Modelo:** 53%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **2. Procedimiento Técnico de Reparación (PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)):**
+Codigo de Falla Asociado: DTC P0335 (Falla en el Circuito del Sensor de Posición de Cigüeñal A) / DTC P0339 (Circuito Intermitente)
+Modelos Compatibles Frecuentes en Peru: Todas las marcas (Universal)
+Gravedad: Critica |
+

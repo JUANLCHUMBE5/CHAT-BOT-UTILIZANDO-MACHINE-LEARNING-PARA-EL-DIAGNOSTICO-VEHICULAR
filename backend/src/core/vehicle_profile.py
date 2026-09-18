@@ -115,7 +115,7 @@ def extraer_datos_vehiculo(texto: str) -> dict[str, Any]:
             if campo not in datos:
                 datos[campo] = "desconocido"
 
-    kilometraje = re.search(r"\b(\d[\d .]*)\s*(mil)?\s*km\b", normalizado)
+    kilometraje = re.search(r"\b(\d[\d .]*)\s*(mil)?\s*km(?!\s*/\s*h|\s*h|\s*por\s*hora)\b", normalizado)
     if kilometraje:
         base = int(re.sub(r"\D", "", kilometraje.group(1)))
         datos["kilometraje"] = base * 1000 if kilometraje.group(2) else base
@@ -165,5 +165,5 @@ def kilometraje_es_ambiguo(texto: str) -> bool:
     """Detecta cifras pequeñas que suelen representar una omisión de «mil»."""
 
     normalizado = _normalizar(texto)
-    coincidencia = re.search(r"\b(?:mas de\s+)?(\d{2,3})\s*km\b", normalizado)
+    coincidencia = re.search(r"\b(?:mas de\s+)?(\d{2,3})\s*km(?!\s*/\s*h|\s*h|\s*por\s*hora)\b", normalizado)
     return bool(coincidencia and int(coincidencia.group(1)) <= 500)

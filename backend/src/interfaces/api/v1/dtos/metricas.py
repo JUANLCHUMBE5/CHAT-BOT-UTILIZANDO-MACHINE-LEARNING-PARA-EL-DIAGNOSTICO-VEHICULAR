@@ -17,6 +17,7 @@ class ResumenMetricasResponseDTO(BaseModel):
     diagnosticos_pendientes: int = 0
     porcentaje_confirmados: int
     tiempo_promedio_ms: int
+    tiempo_inferencia_ml_ms: Optional[int] = None
     distribucion_modos: List[Dict[str, Any]]
     actividad_diaria: List[Dict[str, Any]]
     fallas_frecuentes: List[Dict[str, Any]]

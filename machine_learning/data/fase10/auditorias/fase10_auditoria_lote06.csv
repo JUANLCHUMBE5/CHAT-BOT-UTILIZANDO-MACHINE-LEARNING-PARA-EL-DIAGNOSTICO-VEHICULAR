@@ -1,0 +1,281 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L06-0001,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.539,0.6282,TRAIN,,NO,
+F10-L06-0002,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.2501,0.3475,TRAIN,,NO,
+F10-L06-0003,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.2092,0.2152,TRAIN,,NO,
+F10-L06-0004,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.2806,0.3345,TRAIN,,NO,
+F10-L06-0005,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.1214,0.1553,TRAIN,,NO,
+F10-L06-0006,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.1192,0.2955,TRAIN,,NO,
+F10-L06-0007,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.1335,0.3923,TRAIN,,NO,
+F10-L06-0008,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.2806,0.2124,TRAIN,,NO,
+F10-L06-0009,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.1344,0.3467,TRAIN,,NO,
+F10-L06-0010,Desgaste de pastillas y zapatas de freno,L1,APROBADO,CONFORME,0.1215,0.1157,TRAIN,,NO,
+F10-L06-0011,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1983,0.1857,LOTE_04,,SI,Discos de freno alabeados o desgastados
+F10-L06-0012,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1803,0.4015,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0013,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1165,0.2197,TRAIN,,NO,
+F10-L06-0014,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1446,0.1739,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0015,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1214,0.1431,TRAIN,,NO,
+F10-L06-0016,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1581,0.2271,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0017,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.094,0.1823,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0018,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1969,0.185,TRAIN,,NO,
+F10-L06-0019,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1191,0.1282,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0020,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.2027,0.1725,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0021,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.2105,0.3066,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0022,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.0966,0.1223,TRAIN,,NO,
+F10-L06-0023,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.0926,0.0838,TRAIN,,NO,
+F10-L06-0024,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.0975,0.1193,TRAIN,,NO,
+F10-L06-0025,Desgaste de pastillas y zapatas de freno,L2,APROBADO,CONFORME,0.1538,0.2351,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0026,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1346,0.1123,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0027,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1167,0.1766,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0028,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.2027,0.0965,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0029,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.0973,0.1075,TRAIN,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0030,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1504,0.268,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0031,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1096,0.1096,TRAIN,,NO,
+F10-L06-0032,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.0756,0.1138,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0033,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.209,0.1805,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0034,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1249,0.1004,TRAIN,,NO,
+F10-L06-0035,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1011,0.1562,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0036,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.0974,0.0937,LOTE_04,,NO,
+F10-L06-0037,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1482,0.0852,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0038,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.0896,0.0719,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0039,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1803,0.1311,LOTE_04,,NO,
+F10-L06-0040,Desgaste de pastillas y zapatas de freno,L3,APROBADO,CONFORME,0.1259,0.1669,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0041,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.2529,0.2915,TRAIN,,NO,
+F10-L06-0042,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.2854,0.242,FIELD_60,,NO,
+F10-L06-0043,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.1242,0.1833,TRAIN,,NO,
+F10-L06-0044,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.0989,0.2112,TRAIN,,NO,
+F10-L06-0045,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.1093,0.1187,TRAIN,,NO,
+F10-L06-0046,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.1413,0.131,TEST_100,,NO,
+F10-L06-0047,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.089,0.1661,TRAIN,,NO,
+F10-L06-0048,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.0977,0.1556,TRAIN,,NO,
+F10-L06-0049,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.1952,0.2613,TRAIN,,NO,
+F10-L06-0050,Discos de freno alabeados o desgastados,L1,APROBADO,CONFORME,0.0896,0.1143,TRAIN,,NO,
+F10-L06-0051,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1499,0.2301,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0052,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.0963,0.2976,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0053,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1521,0.1433,TRAIN,,NO,
+F10-L06-0054,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1347,0.182,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0055,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1964,0.0958,TRAIN,,NO,
+F10-L06-0056,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1346,0.1459,FIELD_60,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0057,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.089,0.1715,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0058,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1812,0.2361,LOTE_01,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0059,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1623,0.1925,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0060,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1548,0.3128,DEV_60,,NO,
+F10-L06-0061,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.0725,0.1756,TRAIN,,NO,
+F10-L06-0062,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1411,0.1578,TRAIN,,NO,
+F10-L06-0063,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1972,0.1657,TRAIN,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0064,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1521,0.0996,TRAIN,,NO,
+F10-L06-0065,Discos de freno alabeados o desgastados,L2,APROBADO,CONFORME,0.1278,0.2149,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0066,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1548,0.1245,DEV_60,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0067,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1632,0.1863,TRAIN,,NO,
+F10-L06-0068,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1055,0.1608,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0069,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1964,0.1066,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0070,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1347,0.1474,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0071,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.0974,0.1033,TRAIN,,NO,
+F10-L06-0072,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.0819,0.0936,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0073,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.123,0.1049,LOTE_04,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0074,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1,0.0727,TRAIN,,NO,
+F10-L06-0075,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.2419,0.1425,TRAIN,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0076,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.0799,0.0827,LOTE_04,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0077,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1313,0.1094,LOTE_03,,NO,
+F10-L06-0078,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.0739,0.1508,FIELD_60,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0079,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1385,0.11,DEV_60,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0080,Discos de freno alabeados o desgastados,L3,APROBADO,CONFORME,0.1053,0.1373,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0081,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.1721,0.3232,TRAIN,,NO,
+F10-L06-0082,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.539,0.3396,TRAIN,,NO,
+F10-L06-0083,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.2202,0.4051,TRAIN,,NO,
+F10-L06-0084,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.1766,0.2051,TRAIN,,NO,
+F10-L06-0085,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.2149,0.2682,TRAIN,,NO,
+F10-L06-0086,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.1126,0.1692,TRAIN,,NO,
+F10-L06-0087,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.1474,0.4453,TRAIN,,NO,
+F10-L06-0088,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.1898,0.1945,LOTE_04,,NO,
+F10-L06-0089,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.0884,0.1708,TRAIN,,NO,
+F10-L06-0090,Falla en servofreno (booster) o linea de vacio,L1,APROBADO,CONFORME,0.0788,0.1335,LOTE_05,,NO,
+F10-L06-0091,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.0767,0.137,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0092,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.2103,0.2494,TRAIN,P0171,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L06-0093,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.1826,0.3364,TRAIN,,NO,
+F10-L06-0094,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.1272,0.1563,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0095,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.2584,0.2784,TRAIN,,NO,
+F10-L06-0096,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.1413,0.2257,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0097,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.1813,0.1471,TRAIN,,NO,
+F10-L06-0098,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.1998,0.206,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0099,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.1215,0.1746,LOTE_04,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L06-0100,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.0895,0.2132,LOTE_05,,NO,
+F10-L06-0101,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.1646,0.1668,TRAIN,C1246,NO,
+F10-L06-0102,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.1006,0.1419,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0103,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.0722,0.1588,TRAIN,,NO,
+F10-L06-0104,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.2092,0.2097,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0105,Falla en servofreno (booster) o linea de vacio,L2,APROBADO,CONFORME,0.2584,0.2411,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0106,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.1613,0.2417,TRAIN,P0171,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L06-0107,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.1813,0.1771,TRAIN,,NO,
+F10-L06-0108,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.0902,0.1057,TRAIN,,NO,
+F10-L06-0109,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.1119,0.1505,TRAIN,P0556,NO,
+F10-L06-0110,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.2202,0.1688,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L06-0111,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.1292,0.1236,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0112,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.1646,0.1022,TRAIN,C1246,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0113,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.209,0.1463,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0114,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.0871,0.1263,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0115,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.1145,0.1777,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0116,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.0816,0.1128,LOTE_04,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0117,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.1362,0.1385,LOTE_05,P0555,NO,
+F10-L06-0118,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.0715,0.0802,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0119,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.1586,0.1507,LOTE_04,,NO,
+F10-L06-0120,Falla en servofreno (booster) o linea de vacio,L3,APROBADO,CONFORME,0.0838,0.1271,LOTE_04,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0121,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.2262,0.6353,TRAIN,,NO,
+F10-L06-0122,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.2252,0.2553,LOTE_04,,NO,
+F10-L06-0123,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.1245,0.4014,TRAIN,,NO,
+F10-L06-0124,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.1505,0.2231,TRAIN,,NO,
+F10-L06-0125,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.1294,0.1676,TRAIN,,NO,
+F10-L06-0126,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.2105,0.4319,LOTE_02,,NO,
+F10-L06-0127,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.1733,0.1375,TRAIN,,NO,
+F10-L06-0128,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.1614,0.2551,TRAIN,,NO,
+F10-L06-0129,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.1298,0.1268,LOTE_05,,NO,
+F10-L06-0130,Fuga hidraulica o aire en el sistema de frenos,L1,APROBADO,CONFORME,0.1158,0.142,TRAIN,,NO,
+F10-L06-0131,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.0818,0.3687,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0132,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1012,0.1986,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0133,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1285,0.2497,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0134,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1766,0.2305,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0135,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1441,0.122,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0136,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1236,0.1728,TRAIN,,NO,
+F10-L06-0137,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.0844,0.1375,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0138,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1614,0.1472,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0139,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1098,0.1122,TRAIN,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0140,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.0944,0.144,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0141,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.0853,0.2607,TRAIN,,NO,
+F10-L06-0142,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1436,0.1573,TRAIN,,NO,
+F10-L06-0143,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1092,0.1852,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0144,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.185,0.1257,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0145,Fuga hidraulica o aire en el sistema de frenos,L2,APROBADO,CONFORME,0.1189,0.1232,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0146,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1441,0.1393,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0147,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1292,0.0998,TRAIN,,NO,
+F10-L06-0148,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.059,0.0856,TRAIN,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0149,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1337,0.1592,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0150,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1576,0.1476,TRAIN,,NO,
+F10-L06-0151,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.0975,0.0947,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0152,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.185,0.1074,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0153,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1234,0.1667,TRAIN,,NO,
+F10-L06-0154,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1203,0.1044,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0155,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1127,0.1718,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0156,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1125,0.1276,TRAIN,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0157,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1152,0.1294,LOTE_04,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0158,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1158,0.0897,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0159,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1118,0.1812,LOTE_02,,NO,
+F10-L06-0160,Fuga hidraulica o aire en el sistema de frenos,L3,APROBADO,CONFORME,0.1084,0.1235,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0161,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.2252,0.3341,LOTE_05,,NO,
+F10-L06-0162,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.1839,0.1518,TRAIN,,NO,
+F10-L06-0163,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.3476,0.2072,LOTE_04,,NO,
+F10-L06-0164,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.0812,0.1984,TRAIN,,NO,
+F10-L06-0165,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.1642,0.3325,TRAIN,,NO,
+F10-L06-0166,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.2854,0.242,TRAIN,,NO,
+F10-L06-0167,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.0894,0.1872,TRAIN,,NO,
+F10-L06-0168,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.3476,0.3361,LOTE_04,,NO,
+F10-L06-0169,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.2166,0.1761,LOTE_04,,NO,
+F10-L06-0170,Falla en sensor de velocidad de rueda ABS,L1,APROBADO,CONFORME,0.1027,0.1286,TRAIN,,NO,
+F10-L06-0171,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.0932,0.2186,DEV_60,C0035,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0172,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.0978,0.1717,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0173,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.0977,0.183,TRAIN,C0040,NO,
+F10-L06-0174,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.2166,0.1139,TRAIN,,NO,
+F10-L06-0175,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.1146,0.1379,TRAIN,C0045,SI,Discos de freno alabeados o desgastados
+F10-L06-0176,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.1632,0.1798,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0177,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.1237,0.1702,TRAIN,,NO,
+F10-L06-0178,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.2064,0.2522,LOTE_05,C0050,NO,
+F10-L06-0179,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.1623,0.2581,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0180,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.136,0.1633,TRAIN,,NO,
+F10-L06-0181,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.1003,0.144,TRAIN,,NO,
+F10-L06-0182,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.0902,0.2577,LOTE_05,,NO,
+F10-L06-0183,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.1642,0.1741,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0184,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.1109,0.1825,TRAIN,,NO,
+F10-L06-0185,Falla en sensor de velocidad de rueda ABS,L2,APROBADO,CONFORME,0.0812,0.1356,TRAIN,,NO,
+F10-L06-0186,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.1109,0.0989,TRAIN,C0035,NO,
+F10-L06-0187,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.1146,0.1836,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0188,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.0964,0.1035,TRAIN,C0040,NO,
+F10-L06-0189,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.1102,0.1265,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0190,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.106,0.1086,TRAIN,C0045,NO,
+F10-L06-0191,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.0865,0.1226,TRAIN,,NO,
+F10-L06-0192,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.1207,0.114,TRAIN,C0050,NO,
+F10-L06-0193,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.2402,0.1688,LOTE_04,C0035,NO,
+F10-L06-0194,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.1569,0.2156,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L06-0195,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.1061,0.1522,TRAIN,C0040,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0196,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.0912,0.1606,TRAIN,,NO,
+F10-L06-0197,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.136,0.1453,LOTE_05,C0045,NO,
+F10-L06-0198,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.1052,0.1018,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0199,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.1189,0.133,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0200,Falla en sensor de velocidad de rueda ABS,L3,APROBADO,CONFORME,0.0839,0.1537,LOTE_05,,NO,
+F10-L06-0201,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.1388,0.3311,TRAIN,,NO,
+F10-L06-0202,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.0901,0.1994,TRAIN,,NO,
+F10-L06-0203,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.1575,0.1792,TEST_100,,NO,
+F10-L06-0204,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.1358,0.1367,TRAIN,,NO,
+F10-L06-0205,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.1322,0.2698,TRAIN,,NO,
+F10-L06-0206,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.2436,0.2602,TRAIN,,NO,
+F10-L06-0207,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.0871,0.3717,TRAIN,,NO,
+F10-L06-0208,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.1765,0.2108,TRAIN,,NO,
+F10-L06-0209,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.1575,0.1982,TRAIN,,NO,
+F10-L06-0210,Falla en sistema de frenado regenerativo (EV / Hibridos),L1,APROBADO,CONFORME,0.1551,0.238,LOTE_04,,NO,
+F10-L06-0211,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.0847,0.1692,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L06-0212,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.2095,0.2548,TRAIN,C1391,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0213,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.111,0.168,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0214,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1195,0.2313,TRAIN,,NO,
+F10-L06-0215,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1711,0.1884,TRAIN,C1203,NO,
+F10-L06-0216,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1319,0.2073,TRAIN,,NO,
+F10-L06-0217,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1317,0.1444,FIELD_60,,NO,
+F10-L06-0218,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1765,0.1592,TRAIN,C1256,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0219,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1468,0.1271,TRAIN,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0220,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1224,0.2218,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0221,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1797,0.1598,LOTE_03,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0222,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1505,0.13,TRAIN,C1345,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0223,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1038,0.238,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0224,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.0896,0.1462,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0225,Falla en sistema de frenado regenerativo (EV / Hibridos),L2,APROBADO,CONFORME,0.1634,0.1118,TRAIN,C1241,NO,
+F10-L06-0226,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1126,0.0924,TRAIN,C1391,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0227,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1319,0.1256,TRAIN,C1203,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L06-0228,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1505,0.1246,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0229,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.093,0.0779,TRAIN,C1345,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0230,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.2436,0.1429,LOTE_04,C1391,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0231,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1551,0.1603,TRAIN,,NO,
+F10-L06-0232,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1058,0.134,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L06-0233,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1295,0.1186,TRAIN,C1256,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L06-0234,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1711,0.208,LOTE_04,C1203,NO,
+F10-L06-0235,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1366,0.1377,LOTE_04,C1241,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0236,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1634,0.1117,LOTE_05,,NO,
+F10-L06-0237,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1183,0.0895,TRAIN,C1259,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L06-0238,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.0988,0.0987,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L06-0239,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1057,0.1147,TRAIN,,NO,
+F10-L06-0240,Falla en sistema de frenado regenerativo (EV / Hibridos),L3,APROBADO,CONFORME,0.1221,0.1643,TRAIN,C1391,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0241,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.0975,0.321,TRAIN,,NO,
+F10-L06-0242,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.1309,0.294,LOTE_05,,NO,
+F10-L06-0243,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.1535,0.3497,TRAIN,,NO,
+F10-L06-0244,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.1413,0.1417,TRAIN,,NO,
+F10-L06-0245,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.1589,0.3955,TRAIN,,NO,
+F10-L06-0246,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.0588,0.1251,TRAIN,,NO,
+F10-L06-0247,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.1191,0.2253,TRAIN,,NO,
+F10-L06-0248,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.2278,0.2876,TRAIN,,NO,
+F10-L06-0249,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.2123,0.1903,TRAIN,,NO,
+F10-L06-0250,Caliper de freno trabado o mordaza pegada (piston agarrotado),L1,APROBADO,CONFORME,0.0841,0.0979,TRAIN,,NO,
+F10-L06-0251,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1835,0.2106,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0252,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1983,0.2764,TEST_100,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0253,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1589,0.1626,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0254,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1492,0.1819,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0255,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1648,0.2115,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0256,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.2123,0.2055,LOTE_03,,SI,Discos de freno alabeados o desgastados
+F10-L06-0257,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1153,0.1243,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0258,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.2278,0.1735,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0259,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1294,0.1586,TRAIN,,NO,
+F10-L06-0260,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.201,0.3698,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0261,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.051,0.1446,LOTE_05,,NO,
+F10-L06-0262,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.0629,0.128,TRAIN,,NO,
+F10-L06-0263,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1215,0.1866,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0264,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.084,0.1325,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0265,Caliper de freno trabado o mordaza pegada (piston agarrotado),L2,APROBADO,CONFORME,0.1337,0.1532,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0266,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.0971,0.1018,FIELD_60,,SI,Discos de freno alabeados o desgastados
+F10-L06-0267,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1648,0.1285,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0268,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1286,0.0767,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0269,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.0919,0.0982,TRAIN,C100D,SI,Falla en sensor de velocidad de rueda ABS
+F10-L06-0270,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1535,0.1432,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0271,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.201,0.0967,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0272,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.0903,0.106,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0273,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.172,0.1608,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0274,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1238,0.0787,FIELD_60,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0275,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1195,0.1806,TRAIN,,SI,Desgaste de pastillas y zapatas de freno
+F10-L06-0276,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1324,0.1286,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L06-0277,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.133,0.1135,LOTE_04,,NO,
+F10-L06-0278,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1142,0.1516,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L06-0279,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1383,0.1179,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L06-0280,Caliper de freno trabado o mordaza pegada (piston agarrotado),L3,APROBADO,CONFORME,0.1354,0.091,TRAIN,,NO,

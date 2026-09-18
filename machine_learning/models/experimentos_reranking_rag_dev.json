@@ -1,0 +1,72 @@
+[
+  {
+    "configuracion": {
+      "nombre": "Base_Anterior",
+      "boost_dtc": 3.0,
+      "boost_sis": 1.6,
+      "modo_pen": "estatica",
+      "modo_ml": "fijo"
+    },
+    "hit1_pct": 83.33,
+    "hit3_pct": 90.0,
+    "hit5_pct": 95.0,
+    "mrr": 0.8798,
+    "cumple_metas": true
+  },
+  {
+    "configuracion": {
+      "nombre": "Config_1_Suave",
+      "boost_dtc": 3.2,
+      "boost_sis": 1.6,
+      "modo_pen": "adaptativa_suave",
+      "modo_ml": "fijo"
+    },
+    "hit1_pct": 83.33,
+    "hit3_pct": 90.0,
+    "hit5_pct": 95.0,
+    "mrr": 0.8802,
+    "cumple_metas": true
+  },
+  {
+    "configuracion": {
+      "nombre": "Config_2_Continua",
+      "boost_dtc": 3.5,
+      "boost_sis": 1.65,
+      "modo_pen": "adaptativa_continua",
+      "modo_ml": "proporcional_probabilidad"
+    },
+    "hit1_pct": 83.33,
+    "hit3_pct": 91.67,
+    "hit5_pct": 95.0,
+    "mrr": 0.882,
+    "cumple_metas": true
+  },
+  {
+    "configuracion": {
+      "nombre": "Config_3_Hibrida",
+      "boost_dtc": 3.5,
+      "boost_sis": 1.6,
+      "modo_pen": "adaptativa_suave",
+      "modo_ml": "proporcional_probabilidad"
+    },
+    "hit1_pct": 83.33,
+    "hit3_pct": 91.67,
+    "hit5_pct": 95.0,
+    "mrr": 0.8824,
+    "cumple_metas": true
+  },
+  {
+    "configuracion": {
+      "nombre": "Config_4_AltaDTC",
+      "boost_dtc": 4.0,
+      "boost_sis": 1.55,
+      "modo_pen": "adaptativa_continua",
+      "modo_ml": "proporcional_probabilidad"
+    },
+    "hit1_pct": 83.33,
+    "hit3_pct": 91.67,
+    "hit5_pct": 95.0,
+    "mrr": 0.882,
+    "cumple_metas": true
+  }
+]

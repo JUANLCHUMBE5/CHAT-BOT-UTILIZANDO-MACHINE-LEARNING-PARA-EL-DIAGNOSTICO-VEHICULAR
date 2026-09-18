@@ -1,6 +1,6 @@
-// Datos oficiales del Anexo 2 (Fichas de Registro) de la Tesis UCV 2026
-// Autores: Leon Chumbe, Juan Joel & Poma Cataño, Luisa Leonor
-// Taller: CARTER MOTOR'S E.I.R.L. (Carabayllo)
+// Datos sintéticos de prueba / demostración para validación de interfaz
+// NOTA METODOLÓGICA: Estos datos son de MAQUETA y NO corresponden al trabajo de campo real.
+// Están estrictamente excluidos de los resultados y contrastes de hipótesis oficiales de la tesis.
 
 export interface RegistroTesis {
   item: number;
@@ -16,8 +16,22 @@ export interface RegistroTesis {
   prediccion_correcta: number; // 1: Acierto, 0: Falla
 }
 
-export const REGISTROS_TESIS_60: RegistroTesis[] = [
-  // ================= 30 REGISTROS PRE-TEST (TRADICIONAL / MANUAL) =================
+export const METADATA_TESIS = {
+  titulo: 'Chatbot utilizando machine learning para el diagnóstico vehicular en talleres mecánicos en Carabayllo 2026',
+  autores: 'Leon Chumbe, Juan Joel & Poma Cataño, Luisa Leonor',
+  asesor: 'Por definir con la Escuela de Ingeniería de Sistemas - UCV',
+  sede: "CARTER MOTOR'S E.I.R.L. - Carabayllo",
+  diseno: 'Preexperimental (Pre-test O1 - Tratamiento X - Post-test O2)',
+  muestra_objetivo: 60,
+  muestra_pre: 30,
+  muestra_post: 30,
+  es_demostracion: true,
+  aviso_metodologico:
+    'Trabajo de campo pendiente. Los resultados pretest y postest se calcularán exclusivamente con registros reales recopilados y verificados durante la aplicación de los instrumentos en el taller.',
+};
+
+export const DATOS_SINTETICOS_DEMO_60: RegistroTesis[] = [
+  // ================= 30 REGISTROS PRE-TEST DEMO =================
   { item: 1, fase: 'Pre-test', fecha: '2026-05-01', placa: 'ABC-202', marca_modelo: 'Toyota Yaris', sintoma: 'Pedal de freno esponjoso', falla_real: 'Fuga de líquido de frenos', chatbot_prediccion: 'Bujías desgastadas', campos_completos: 1, tiempo_diagnostico_minutos: 37, prediccion_correcta: 0 },
   { item: 2, fase: 'Pre-test', fecha: '2026-05-02', placa: 'ABC-221', marca_modelo: 'Toyota Yaris', sintoma: 'Pedal de freno esponjoso', falla_real: 'Fuga de líquido de frenos', chatbot_prediccion: 'Fuga de líquido de frenos', campos_completos: 1, tiempo_diagnostico_minutos: 41, prediccion_correcta: 1 },
   { item: 3, fase: 'Pre-test', fecha: '2026-05-03', placa: 'ABC-187', marca_modelo: 'Toyota Yaris', sintoma: 'Chillido agudo al frenar', falla_real: 'Pastillas de freno gastadas', chatbot_prediccion: 'Pastillas de freno gastadas', campos_completos: 1, tiempo_diagnostico_minutos: 32, prediccion_correcta: 1 },
@@ -49,7 +63,7 @@ export const REGISTROS_TESIS_60: RegistroTesis[] = [
   { item: 29, fase: 'Pre-test', fecha: '2026-05-29', placa: 'ABC-135', marca_modelo: 'Toyota Yaris', sintoma: 'Pedal de freno esponjoso', falla_real: 'Fuga de líquido de frenos', chatbot_prediccion: 'Bujías desgastadas', campos_completos: 1, tiempo_diagnostico_minutos: 38, prediccion_correcta: 0 },
   { item: 30, fase: 'Pre-test', fecha: '2026-05-30', placa: 'ABC-781', marca_modelo: 'Toyota Yaris', sintoma: 'Pedal de freno esponjoso', falla_real: 'Fuga de líquido de frenos', chatbot_prediccion: 'Bujías desgastadas', campos_completos: 0, tiempo_diagnostico_minutos: 36, prediccion_correcta: 0 },
 
-  // ================= 30 REGISTROS POST-TEST (CHATBOT CON MACHINE LEARNING) =================
+  // ================= 30 REGISTROS POST-TEST DEMO =================
   { item: 31, fase: 'Post-test', fecha: '2026-06-01', placa: 'XYZ-745', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
   { item: 32, fase: 'Post-test', fecha: '2026-06-02', placa: 'XYZ-430', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 7, prediccion_correcta: 1 },
   { item: 33, fase: 'Post-test', fecha: '2026-06-03', placa: 'XYZ-447', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
@@ -58,35 +72,26 @@ export const REGISTROS_TESIS_60: RegistroTesis[] = [
   { item: 36, fase: 'Post-test', fecha: '2026-06-06', placa: 'XYZ-510', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 8, prediccion_correcta: 1 },
   { item: 37, fase: 'Post-test', fecha: '2026-06-07', placa: 'XYZ-776', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 8, prediccion_correcta: 1 },
   { item: 38, fase: 'Post-test', fecha: '2026-06-08', placa: 'XYZ-926', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 8, prediccion_correcta: 1 },
-  { item: 39, fase: 'Post-test', fecha: '2026-06-09', placa: 'XYZ-707', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 8, prediccion_correcta: 1 },
-  { item: 40, fase: 'Post-test', fecha: '2026-06-10', placa: 'XYZ-541', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Amortiguadores reventados', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 0 },
-  { item: 41, fase: 'Post-test', fecha: '2026-06-11', placa: 'XYZ-609', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 8, prediccion_correcta: 1 },
-  { item: 42, fase: 'Post-test', fecha: '2026-06-12', placa: 'XYZ-180', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
-  { item: 43, fase: 'Post-test', fecha: '2026-06-13', placa: 'XYZ-101', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
-  { item: 44, fase: 'Post-test', fecha: '2026-06-14', placa: 'XYZ-229', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
-  { item: 45, fase: 'Post-test', fecha: '2026-06-15', placa: 'XYZ-829', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Amortiguadores reventados', campos_completos: 1, tiempo_diagnostico_minutos: 11, prediccion_correcta: 0 },
-  { item: 46, fase: 'Post-test', fecha: '2026-06-16', placa: 'XYZ-302', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 7, prediccion_correcta: 1 },
-  { item: 47, fase: 'Post-test', fecha: '2026-06-17', placa: 'XYZ-500', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 12, prediccion_correcta: 1 },
-  { item: 48, fase: 'Post-test', fecha: '2026-06-18', placa: 'XYZ-297', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 7, prediccion_correcta: 1 },
-  { item: 49, fase: 'Post-test', fecha: '2026-06-19', placa: 'XYZ-610', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
-  { item: 50, fase: 'Post-test', fecha: '2026-06-20', placa: 'XYZ-425', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 11, prediccion_correcta: 1 },
-  { item: 51, fase: 'Post-test', fecha: '2026-06-21', placa: 'XYZ-870', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 6, prediccion_correcta: 1 },
-  { item: 52, fase: 'Post-test', fecha: '2026-06-22', placa: 'XYZ-963', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
-  { item: 53, fase: 'Post-test', fecha: '2026-06-23', placa: 'XYZ-588', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 11, prediccion_correcta: 1 },
-  { item: 54, fase: 'Post-test', fecha: '2026-06-24', placa: 'XYZ-740', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
-  { item: 55, fase: 'Post-test', fecha: '2026-06-25', placa: 'XYZ-572', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 13, prediccion_correcta: 1 },
-  { item: 56, fase: 'Post-test', fecha: '2026-06-26', placa: 'XYZ-362', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
-  { item: 57, fase: 'Post-test', fecha: '2026-06-27', placa: 'XYZ-445', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Amortiguadores reventados', campos_completos: 1, tiempo_diagnostico_minutos: 6, prediccion_correcta: 0 },
-  { item: 58, fase: 'Post-test', fecha: '2026-06-28', placa: 'XYZ-996', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
-  { item: 59, fase: 'Post-test', fecha: '2026-06-29', placa: 'XYZ-751', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
-  { item: 60, fase: 'Post-test', fecha: '2026-06-30', placa: 'XYZ-332', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 39, fase: 'Post-test', fecha: '2026-06-09', placa: 'XYZ-741', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 40, fase: 'Post-test', fecha: '2026-06-10', placa: 'XYZ-452', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 11, prediccion_correcta: 1 },
+  { item: 41, fase: 'Post-test', fecha: '2026-06-11', placa: 'XYZ-367', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 42, fase: 'Post-test', fecha: '2026-06-12', placa: 'XYZ-837', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
+  { item: 43, fase: 'Post-test', fecha: '2026-06-13', placa: 'XYZ-977', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 44, fase: 'Post-test', fecha: '2026-06-14', placa: 'XYZ-689', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 45, fase: 'Post-test', fecha: '2026-06-15', placa: 'XYZ-167', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 46, fase: 'Post-test', fecha: '2026-06-16', placa: 'XYZ-646', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 8, prediccion_correcta: 1 },
+  { item: 47, fase: 'Post-test', fecha: '2026-06-17', placa: 'XYZ-519', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
+  { item: 48, fase: 'Post-test', fecha: '2026-06-18', placa: 'XYZ-455', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 49, fase: 'Post-test', fecha: '2026-06-19', placa: 'XYZ-336', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
+  { item: 50, fase: 'Post-test', fecha: '2026-06-20', placa: 'XYZ-869', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Bujías desgastadas', campos_completos: 1, tiempo_diagnostico_minutos: 11, prediccion_correcta: 0 },
+  { item: 51, fase: 'Post-test', fecha: '2026-06-21', placa: 'XYZ-204', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 11, prediccion_correcta: 1 },
+  { item: 52, fase: 'Post-test', fecha: '2026-06-22', placa: 'XYZ-366', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
+  { item: 53, fase: 'Post-test', fecha: '2026-06-23', placa: 'XYZ-401', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 9, prediccion_correcta: 1 },
+  { item: 54, fase: 'Post-test', fecha: '2026-06-24', placa: 'XYZ-881', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 55, fase: 'Post-test', fecha: '2026-06-25', placa: 'XYZ-398', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 56, fase: 'Post-test', fecha: '2026-06-26', placa: 'XYZ-514', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 11, prediccion_correcta: 1 },
+  { item: 57, fase: 'Post-test', fecha: '2026-06-27', placa: 'XYZ-214', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 58, fase: 'Post-test', fecha: '2026-06-28', placa: 'XYZ-386', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 0, tiempo_diagnostico_minutos: 11, prediccion_correcta: 1 },
+  { item: 59, fase: 'Post-test', fecha: '2026-06-29', placa: 'XYZ-205', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Llantas desalineadas', campos_completos: 1, tiempo_diagnostico_minutos: 10, prediccion_correcta: 1 },
+  { item: 60, fase: 'Post-test', fecha: '2026-06-30', placa: 'XYZ-563', marca_modelo: 'Hyundai Accent', sintoma: 'Timón tiembla a alta velocidad', falla_real: 'Llantas desalineadas', chatbot_prediccion: 'Bujías desgastadas', campos_completos: 1, tiempo_diagnostico_minutos: 11, prediccion_correcta: 0 },
 ];
-
-export const METADATA_TESIS = {
-  titulo: 'Chatbot utilizando machine learning para el diagnóstico vehicular en talleres mecánicos en Carabayllo 2026',
-  autores: 'Leon Chumbe, Juan Joel & Poma Cataño, Luisa Leonor',
-  asesor: 'Mgtr. Quiñones Nieto, Yamil Alexander',
-  sede: "CARTER MOTOR'S E.I.R.L. (Carabayllo, Lima)",
-  diseno: 'Preexperimental O1 - X - O2 (Muestra N=60: 30 Pre-test / 30 Post-test)',
-  universidad: 'Universidad César Vallejo — Escuela de Ingeniería de Sistemas',
-};

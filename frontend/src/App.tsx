@@ -41,7 +41,6 @@ const readAdminSession = (): UsuarioSesion | null => {
     if (!saved) return null;
     const parsed = JSON.parse(saved) as UsuarioSesion;
     if (isAdminSession(parsed)) {
-      if (parsed.token) apiService.setAccessToken(parsed.token);
       const safeSession: UsuarioSesion = {
         id: parsed.id,
         username: parsed.username,
@@ -227,6 +226,7 @@ export const App: React.FC = () => {
       return;
     }
     setUser(usuarioSesion);
+    apiService.setAccessToken(usuarioSesion.token || null);
     const safeSession: UsuarioSesion = {
       id: usuarioSesion.id,
       username: usuarioSesion.username,

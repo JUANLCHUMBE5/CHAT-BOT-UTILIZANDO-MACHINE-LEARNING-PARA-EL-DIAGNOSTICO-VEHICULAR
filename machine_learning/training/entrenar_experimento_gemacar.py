@@ -8,12 +8,21 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
-from entrenar_y_comparar_modelos import (
-    error_calibracion_esperado,
-    estimadores,
-    normalizar_grupo,
-    vectorizador,
-)
+
+try:
+    from training.entrenar_y_comparar_modelos import (
+        error_calibracion_esperado,
+        estimadores,
+        normalizar_grupo,
+        vectorizador,
+    )
+except ImportError:
+    from entrenar_y_comparar_modelos import (
+        error_calibracion_esperado,
+        estimadores,
+        normalizar_grupo,
+        vectorizador,
+    )
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import accuracy_score, classification_report, f1_score
 from sklearn.model_selection import StratifiedGroupKFold

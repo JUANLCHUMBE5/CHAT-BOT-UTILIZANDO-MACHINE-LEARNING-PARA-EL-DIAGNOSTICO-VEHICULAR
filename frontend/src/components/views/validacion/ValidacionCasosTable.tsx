@@ -5,8 +5,11 @@ import {
   CheckCircle,
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   Clock,
   RefreshCw,
+  RotateCcw,
   Search,
 } from 'lucide-react';
 import { Card } from '../../common/Card';
@@ -90,6 +93,34 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
             ]}
           />
         </div>
+        {Boolean(busqueda.trim() || faseFiltro || aciertoFiltro) && (
+          <button
+            type="button"
+            onClick={() => {
+              onBusquedaChange('');
+              onFaseFiltroChange('');
+              onAciertoFiltroChange('');
+            }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 12px',
+              borderRadius: '8px',
+              border: '1px solid var(--border-color)',
+              backgroundColor: 'transparent',
+              color: 'var(--text-secondary)',
+              fontSize: '12px',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              height: '38px',
+            }}
+            title="Restablecer filtros"
+          >
+            <RotateCcw size={13} />
+            <span>Limpiar</span>
+          </button>
+        )}
       </div>
 
       {/* Tabla de Registros */}
@@ -237,51 +268,118 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
           <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
             {pagina * 10 + 1}–{pagina * 10 + casos.length} de {totalCasos} · 10 por página
           </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button type="button" onClick={() => onCambiarPagina(0)} disabled={pagina === 0}>Primera</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={() => onCambiarPagina(0)}
+              disabled={pagina === 0}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px',
+                height: '32px',
+                padding: '0 10px',
+                borderRadius: '6px',
+                border: '1px solid var(--border-color)',
+                backgroundColor: '#ffffff',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: pagina === 0 ? 'var(--text-muted)' : 'var(--text-main)',
+                cursor: pagina === 0 ? 'not-allowed' : 'pointer',
+                opacity: pagina === 0 ? 0.45 : 1,
+                transition: 'all 0.15s ease',
+              }}
+              title="Primera página"
+            >
+              <ChevronsLeft size={14} />
+              <span>Primera</span>
+            </button>
+
             <button
               type="button"
               onClick={() => onCambiarPagina(Math.max(0, pagina - 1))}
               aria-label="Página anterior"
               disabled={pagina === 0}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: '32px',
                 height: '32px',
-                borderRadius: 'var(--radius-sm)',
+                borderRadius: '6px',
                 border: '1px solid var(--border-color)',
                 backgroundColor: '#ffffff',
+                color: pagina === 0 ? 'var(--text-muted)' : 'var(--text-main)',
                 cursor: pagina === 0 ? 'not-allowed' : 'pointer',
+                opacity: pagina === 0 ? 0.45 : 1,
+                transition: 'all 0.15s ease',
               }}
+              title="Página anterior"
             >
               <ChevronLeft size={16} />
             </button>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-main)' }}>
-              Pág. {pagina + 1} de {Math.max(1, totalPaginas)}
+
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: 600,
+                color: 'var(--text-secondary)',
+                padding: '0 6px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Página {pagina + 1} de {Math.max(1, totalPaginas)}
             </span>
+
             <button
               type="button"
               onClick={() => onCambiarPagina(pagina + 1)}
               aria-label="Página siguiente"
               disabled={pagina + 1 >= totalPaginas}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: '32px',
                 height: '32px',
-                borderRadius: 'var(--radius-sm)',
+                borderRadius: '6px',
                 border: '1px solid var(--border-color)',
                 backgroundColor: '#ffffff',
+                color: pagina + 1 >= totalPaginas ? 'var(--text-muted)' : 'var(--text-main)',
                 cursor: pagina + 1 >= totalPaginas ? 'not-allowed' : 'pointer',
+                opacity: pagina + 1 >= totalPaginas ? 0.45 : 1,
+                transition: 'all 0.15s ease',
               }}
+              title="Página siguiente"
             >
               <ChevronRight size={16} />
             </button>
-            <button type="button" onClick={() => onCambiarPagina(totalPaginas - 1)}
-              disabled={pagina + 1 >= totalPaginas}>Última</button>
+
+            <button
+              type="button"
+              onClick={() => onCambiarPagina(totalPaginas - 1)}
+              disabled={pagina + 1 >= totalPaginas}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px',
+                height: '32px',
+                padding: '0 10px',
+                borderRadius: '6px',
+                border: '1px solid var(--border-color)',
+                backgroundColor: '#ffffff',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: pagina + 1 >= totalPaginas ? 'var(--text-muted)' : 'var(--text-main)',
+                cursor: pagina + 1 >= totalPaginas ? 'not-allowed' : 'pointer',
+                opacity: pagina + 1 >= totalPaginas ? 0.45 : 1,
+                transition: 'all 0.15s ease',
+              }}
+              title="Última página"
+            >
+              <span>Última</span>
+              <ChevronsRight size={14} />
+            </button>
           </div>
         </div>
       )}

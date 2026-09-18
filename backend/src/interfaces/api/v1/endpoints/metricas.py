@@ -184,7 +184,7 @@ async def obtener_resumen_metricas(
             confirmados_mes = res_conf.scalar() or 0
             pct_confirmados = min(100, int((confirmados_mes / mes_count * 100))) if mes_count > 0 else 0
 
-            # 6. Tiempo promedio de respuesta en ms
+            # 6. Tiempo promedio de respuesta en ms y tiempo de inferencia ML
             res_dur = await session.execute(
                 select(func.avg(Diagnostico.duracion_ms)).where(
                     *filtros_base,
@@ -193,6 +193,15 @@ async def obtener_resumen_metricas(
             )
             avg_dur = res_dur.scalar()
             tiempo_promedio = int(avg_dur) if avg_dur is not None else 0
+
+            res_ml_dur = await session.execute(
+                select(func.avg(Diagnostico.tiempo_inferencia_ml_ms)).where(
+                    *filtros_base,
+                    Diagnostico.tiempo_inferencia_ml_ms.isnot(None),
+                )
+            )
+            avg_ml_dur = res_ml_dur.scalar()
+            tiempo_promedio_ml = int(avg_ml_dur) if avg_ml_dur is not None else None
 
             # 7. Distribución de modos
             res_modos = await session.execute(
@@ -257,6 +266,7 @@ async def obtener_resumen_metricas(
                 diagnosticos_pendientes=pend_count,
                 porcentaje_confirmados=pct_confirmados,
                 tiempo_promedio_ms=tiempo_promedio,
+                tiempo_inferencia_ml_ms=tiempo_promedio_ml,
                 distribucion_modos=distribucion,
                 actividad_diaria=actividad_list,
                 fallas_frecuentes=fallas_list,

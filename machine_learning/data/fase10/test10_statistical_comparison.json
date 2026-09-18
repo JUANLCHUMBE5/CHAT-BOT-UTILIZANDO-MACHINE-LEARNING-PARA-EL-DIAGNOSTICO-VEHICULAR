@@ -1,0 +1,37 @@
+{
+  "paired": {
+    "ambos_correctos": 242,
+    "solo_f83": 16,
+    "solo_c1": 57,
+    "ambos_incorrectos": 51
+  },
+  "mcnemar": {
+    "statistic": 21.9178,
+    "p_value": 2.8458076157811263e-06
+  },
+  "bootstrap_95ci": {
+    "iterations": 5000,
+    "seed": 42,
+    "delta_top1": {
+      "mean": 0.112,
+      "ci_95": [
+        0.0683,
+        0.1557
+      ]
+    },
+    "delta_top3": {
+      "mean": 0.0902,
+      "ci_95": [
+        0.0546,
+        0.1284
+      ]
+    },
+    "delta_macro_f1": {
+      "mean": 0.1079,
+      "ci_95": [
+        0.0643,
+        0.159
+      ]
+    }
+  }
+}

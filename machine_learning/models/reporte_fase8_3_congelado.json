@@ -1,0 +1,102 @@
+{
+  "version": "8.3-FINAL-FROZEN",
+  "fecha_congelamiento": "2026-09-16T19:55:25.715812",
+  "estado": "CONGELADO_INMUTABLE",
+  "hashes_sha256": {
+    "dataset_train": {
+      "archivo": "machine_learning/data/dataset_sintomas_limpio.csv",
+      "sha256": "c94d6e7b88ef72ea20f7be1bbb3d5a61484f33d992dcb52c6b285306f1c52626",
+      "tamano_bytes": 1077865
+    },
+    "benchmark_dev_60": {
+      "archivo": "machine_learning/data/benchmark_dev_60_casos.py",
+      "sha256": "113b5f190758346ab65200daae921b29251871fb842c95f6f2c288750e75592b",
+      "tamano_bytes": 23822
+    },
+    "modelo_diagnostico_falla_prod": {
+      "archivo": "machine_learning/models/modelo_diagnostico.pkl",
+      "sha256": "3d8199595b69bb0176fbb4bb9d7c57b43484f16e6f6baa115660405b76aa13fd",
+      "tamano_bytes": 16697742
+    },
+    "modelo_sistema_prod": {
+      "archivo": "machine_learning/models/modelo_sistema.pkl",
+      "sha256": "22d11492e9576664ee21fcc3dc75e040c2b9f2c5c326ccdef98c602fbc78fc27",
+      "tamano_bytes": 3266416
+    },
+    "vectorizador_tfidf_prod": {
+      "archivo": "machine_learning/models/vectorizador_tfidf.pkl",
+      "sha256": "8b8e8c3b3571fe965174bff67faff0ac57aaadccf17d4e40395e4c1ab3273104",
+      "tamano_bytes": 213118
+    },
+    "modelo_diagnostico_candidata": {
+      "archivo": "machine_learning/models/fase8_candidata/modelo_diagnostico.pkl",
+      "sha256": "3d8199595b69bb0176fbb4bb9d7c57b43484f16e6f6baa115660405b76aa13fd",
+      "tamano_bytes": 16697742
+    },
+    "modelo_sistema_candidata": {
+      "archivo": "machine_learning/models/fase8_candidata/modelo_sistema.pkl",
+      "sha256": "22d11492e9576664ee21fcc3dc75e040c2b9f2c5c326ccdef98c602fbc78fc27",
+      "tamano_bytes": 3266416
+    },
+    "vectorizador_tfidf_candidata": {
+      "archivo": "machine_learning/models/fase8_candidata/vectorizador_tfidf.pkl",
+      "sha256": "8b8e8c3b3571fe965174bff67faff0ac57aaadccf17d4e40395e4c1ab3273104",
+      "tamano_bytes": 213118
+    },
+    "corpus_metadatos_rag": {
+      "archivo": "machine_learning/manuals/metadatos_manuales.json",
+      "sha256": "2f0684477522efb67f2b8fbe0e14e5b39cc31bf01423cbafc621a3bc33d76625",
+      "tamano_bytes": 333734
+    },
+    "indice_faiss": {
+      "archivo": "machine_learning/manuals/indice_faiss.index",
+      "sha256": "757c4b006a8995f484f539b05420cd929b6034f9aba7e845d305a9d3cf631082",
+      "tamano_bytes": 31161821
+    },
+    "adaptador_modelo_ml": {
+      "archivo": "backend/src/infrastructure/modelo_ml.py",
+      "sha256": "014d3e6f6f9f5c5bc5e6223e748566ce6a1ecdb70842df7afc7037c51b6a5eb4",
+      "tamano_bytes": 8022
+    },
+    "motor_rag": {
+      "archivo": "backend/src/infrastructure/motor_rag.py",
+      "sha256": "eaa316a87ecaa1be9b6702d9807d44ae6cb8a87bc4ce7154c83d6fc09c1c5a3c",
+      "tamano_bytes": 28102
+    },
+    "rag_relevance_filter": {
+      "archivo": "backend/src/infrastructure/rag/relevance_filter.py",
+      "sha256": "fa3d6aef13639bc38bfe5a1360e13276912c97bababdf94954fc53ee7e2c49cc",
+      "tamano_bytes": 4416
+    },
+    "auto_interrogador": {
+      "archivo": "backend/src/core/diagnostico/auto_interrogador.py",
+      "sha256": "2e746e498facea34009641c239edf09fbaca1eaaa6771477e666ac2b213be9c2",
+      "tamano_bytes": 32530
+    },
+    "politica_fusion": {
+      "archivo": "backend/src/core/diagnostico/politica_fusion.py",
+      "sha256": "073b97fe07c8891807ac63a23994c42dabb17f71062f7af1469a8627d7789c83",
+      "tamano_bytes": 18602
+    },
+    "prompt_builder": {
+      "archivo": "backend/src/core/diagnostico/prompt_builder.py",
+      "sha256": "e0b26f32f278bb108126a31242f4eacd100308e517b99095fbc0c422090c33d2",
+      "tamano_bytes": 7472
+    },
+    "text_processor": {
+      "archivo": "backend/src/core/diagnostico/text_processor.py",
+      "sha256": "f7075605f6a0e32512cfe24cb5cc4ffb01cf72cc1ca1dd1cba3cbadf77d3216e",
+      "tamano_bytes": 38282
+    },
+    "taxonomia_sistemas": {
+      "archivo": "backend/src/core/diagnostico/taxonomia_sistemas.py",
+      "sha256": "561e95c952effcd002850e484830e0515a2469c152fc7af9933b17e0483f716d",
+      "tamano_bytes": 12419
+    },
+    "gestor_diagnostico": {
+      "archivo": "backend/src/core/gestor_diagnostico.py",
+      "sha256": "66bead052676331496a0e737ebe0ab1e6927027e6e19c73c32a43fbe57752330",
+      "tamano_bytes": 11720
+    }
+  }
+}

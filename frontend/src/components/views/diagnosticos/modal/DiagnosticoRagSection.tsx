@@ -70,7 +70,9 @@ export const DiagnosticoRagSection: React.FC<DiagnosticoRagSectionProps> = ({
             border: '1px solid var(--border-color)',
           }}
         >
-          {diagnostico.procedimiento_rag}
+          {(diagnostico.procedimiento_rag || '')
+            .replace(/tolerancias\s+y\s+especificaciones\s+metrológicas\s+oem:?/gi, 'Valores del procedimiento técnico recuperado:')
+            .replace(/especificaciones\s+metrológicas\s+oem:?/gi, 'valores del procedimiento técnico recuperado:')}
         </pre>
       </div>
 

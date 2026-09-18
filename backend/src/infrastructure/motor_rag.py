@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -46,8 +47,18 @@ SPANISH_STOP_WORDS = [
 class MotorRAG:
     """Clase encargada de indexar y buscar información dentro de los manuales técnicos multimarca utilizando FAISS / Cosine Similarity (RAG)."""
 
-    def __init__(self, manual_path: str = str(settings.paths.manual_file)):
+    def __init__(
+        self,
+        manual_path: str = str(settings.paths.manual_file),
+        rag_version: Optional[str] = None,
+    ):
         self.manual_path = Path(manual_path)
+        raw_version = (
+            rag_version
+            or os.getenv("CARBOT_RAG_VERSION")
+            or getattr(settings.paths, "rag_version", "baseline_f8_3")
+        )
+        self.rag_version_id = str(raw_version).strip().lower()
         self.documentos: List[str] = []
         self.titulos: List[str] = []
         self.metadatos_procedimientos: List[Dict[str, Any]] = []
@@ -56,7 +67,132 @@ class MotorRAG:
         self.corpus_version = "manual-ausente"
         # El corpus actual es referencial/experimental para tesis; FUENTES_Y_VALIDACION.md documenta su estado.
         self.corpus_validado = False
-        self._indexar_manuales_multimarca()
+        self.dtc_service: Optional[Any] = None
+
+        if self.rag_version_id in ("candidate_v1", "v1", "rag_candidato_v1"):
+            self.rag_version = "RAG_CANDIDATO_V1"
+            self._cargar_candidato_v1()
+        else:
+            self.rag_version = "RAG_BASELINE_F8_3"
+            self._indexar_manuales_multimarca()
+
+    def _cargar_candidato_v1(self):
+        """Carga artefactos congelados y auditados de RAG_CANDIDATO_V1."""
+        directorio_manuales = self.manual_path.parent if self.manual_path.is_file() else self.manual_path
+        cand_base = directorio_manuales / "candidates" / "v1"
+        ruta_meta_json = cand_base / "metadata" / "metadatos_schema_v2.json"
+        ruta_indice = cand_base / "indexes" / "indice_faiss_v1.index"
+        ruta_textos = cand_base / "texts"
+        ruta_manifest = cand_base / "manifests" / "corpus_manifest.json"
+
+        if not ruta_meta_json.exists() or not ruta_indice.exists():
+            logger.error(
+                f"Artefactos de RAG_CANDIDATO_V1 incompletos en {cand_base}. Fallback a baseline."
+            )
+            self.rag_version = "RAG_BASELINE_F8_3 (Fallback)"
+            self._indexar_manuales_multimarca()
+            return
+
+        try:
+            with open(ruta_meta_json, "r", encoding="utf-8") as f:
+                lista_meta = json.load(f)
+
+            mapa_metadatos = {}
+            for item in lista_meta:
+                meta_compat = dict(item)
+                proc_id = item.get("doc_id") or item.get("id_procedimiento")
+                meta_compat["id_procedimiento"] = proc_id
+                if "manual_oem" not in meta_compat:
+                    meta_compat["manual_oem"] = item.get("source_title") or item.get("source_id") or "Manual OEM"
+                if "archivo_fuente" not in meta_compat:
+                    meta_compat["archivo_fuente"] = item.get("archivo_fuente") or f"candidates/v1/texts/{proc_id}.txt"
+                tit_norm = item.get("titulo", "").strip().lower()
+                mapa_metadatos[tit_norm] = meta_compat
+
+            archivos_registrados = {
+                str(item.get("archivo_fuente", "")).replace("\\", "/")
+                for item in mapa_metadatos.values()
+                if item.get("archivo_fuente")
+            }
+
+            archivos_a_leer = []
+            if ruta_textos.is_dir():
+                archivos_a_leer = sorted(
+                    ruta
+                    for ruta in ruta_textos.glob("**/*.txt")
+                    if ruta.relative_to(ruta_textos).as_posix() in archivos_registrados
+                )
+            elif ruta_textos.is_file():
+                archivos_a_leer = [ruta_textos]
+
+            vistos = set()
+            hash_global = hashlib.sha256()
+
+            for ruta_arch in archivos_a_leer:
+                with open(ruta_arch, "r", encoding="utf-8") as f:
+                    contenido = f.read()
+                hash_global.update(contenido.encode("utf-8"))
+                secciones = re.findall(
+                    r"^===\s*(.*?)\s*===\s*$\n(.*?)(?=^===|\Z)",
+                    contenido,
+                    flags=re.MULTILINE | re.DOTALL,
+                )
+
+                for titulo, cuerpo in secciones:
+                    titulo = titulo.strip()
+                    cuerpo = cuerpo.strip()
+                    tit_lower = titulo.lower()
+                    if not cuerpo or tit_lower in vistos:
+                        continue
+                    meta = mapa_metadatos.get(tit_lower)
+                    if meta is None:
+                        continue
+                    vistos.add(tit_lower)
+
+                    self.titulos.append(titulo)
+                    self.documentos.append(cuerpo)
+                    self.metadatos_procedimientos.append(meta)
+
+            if ruta_manifest.exists():
+                with open(ruta_manifest, "rb") as mf:
+                    self.corpus_version = hashlib.sha256(mf.read()).hexdigest()[:16]
+            else:
+                self.corpus_version = hash_global.hexdigest()[:16]
+
+            # Vectorizador con vocabulario idéntico al del índice congelado
+            textos_vectorizables = [f"{t}\n{c}" for t, c in zip(self.titulos, self.documentos)]
+            self.vectorizador = TfidfVectorizer(
+                lowercase=True,
+                strip_accents="unicode",
+                stop_words=SPANISH_STOP_WORDS,
+                ngram_range=(1, 2),
+                sublinear_tf=True,
+            )
+            self.vectorizador.fit(textos_vectorizables)
+
+            # Cargar índice FAISS preconstruido y validado
+            if not FAISS_AVAILABLE:
+                raise RuntimeError("faiss-cpu no está instalado.")
+            self.faiss_index = faiss.read_index(str(ruta_indice))
+
+            # Conectar servicio DTC estructurado
+            try:
+                from src.infrastructure.dtc.dtc_lookup_service import DtcLookupService
+                self.dtc_service = DtcLookupService()
+            except Exception as dtc_e:
+                logger.warning(f"No se pudo enlazar DtcLookupService en MotorRAG: {dtc_e}")
+
+            logger.info(
+                f"RAG_CANDIDATO_V1 cargado exitosamente: {len(self.documentos)} procedimientos indexados "
+                f"(Dimensión FAISS: {self.faiss_index.d}, Versión: {self.corpus_version})."
+            )
+        except Exception as e:
+            logger.error(f"Error al cargar RAG_CANDIDATO_V1: {e}. Activando baseline.")
+            self.rag_version = "RAG_BASELINE_F8_3 (Fallback Error)"
+            self.documentos.clear()
+            self.titulos.clear()
+            self.metadatos_procedimientos.clear()
+            self._indexar_manuales_multimarca()
 
     def _indexar_manuales_multimarca(self):
         """Indexa todos los manuales del directorio de manuales y carga metadatos_manuales.json si está disponible."""
@@ -76,10 +212,20 @@ class MotorRAG:
             except Exception as e:
                 logger.warning(f"No se pudo cargar metadatos_manuales.json: {e}")
 
-        # 2. Recopilar todos los archivos .txt de manuales
+        # 2. Indexar solo archivos registrados en el catálogo técnico.
+        # Las guías web y síntomas se conservan fuera del índice operativo.
+        archivos_registrados = {
+            str(item.get("archivo_fuente", "")).replace("\\", "/")
+            for item in mapa_metadatos.values()
+            if item.get("archivo_fuente")
+        }
         archivos_a_leer = []
         if directorio_manuales.exists() and directorio_manuales.is_dir():
-            archivos_a_leer = sorted(list(directorio_manuales.glob("**/*.txt")))
+            archivos_a_leer = sorted(
+                ruta
+                for ruta in directorio_manuales.glob("**/*.txt")
+                if ruta.relative_to(directorio_manuales).as_posix() in archivos_registrados
+            )
         elif self.manual_path.exists():
             archivos_a_leer = [self.manual_path]
 
@@ -95,8 +241,6 @@ class MotorRAG:
                 with open(ruta_arch, "r", encoding="utf-8") as f:
                     contenido = f.read()
                 hash_global.update(contenido.encode("utf-8"))
-                es_fuente_secundaria = ruta_arch.name.startswith("orientacion_secundaria_")
-
                 secciones = re.findall(
                     r"^===\s*(.*?)\s*===\s*$\n(.*?)(?=^===|\Z)",
                     contenido,
@@ -111,49 +255,12 @@ class MotorRAG:
                         continue
                     vistos.add(huella)
 
-                    # Buscar metadatos específicos
+                    # Un fragmento sin metadatos no pertenece al corpus operativo.
                     tit_lower = titulo.lower()
-                    url_en_cuerpo = re.search(r"^URL:\s*(\S+)", cuerpo, flags=re.MULTILINE)
-                    meta = mapa_metadatos.get(tit_lower, {
-                        "id_procedimiento": f"RAG_PROC_{len(self.documentos)+1:03d}",
-                        "titulo": titulo,
-                        "marca": "Multimarca / Universal",
-                        "modelo": "General",
-                        "anio": "No especificado",
-                        "manual_oem": (
-                            "Guía web secundaria GemaCar"
-                            if es_fuente_secundaria
-                            else "Manual General de Procedimientos"
-                        ),
-                        "edicion": (
-                            "Orientación secundaria no validada"
-                            if es_fuente_secundaria
-                            else "Edición de Taller"
-                        ),
-                        "pagina": len(self.documentos) + 1,
-                        "archivo_fuente": str(ruta_arch.name),
-                        "sha256_fragmento": huella,
-                        "url_referencia": url_en_cuerpo.group(1) if url_en_cuerpo else "",
-                        "tipo_licencia": (
-                            "No declarada"
-                            if es_fuente_secundaria
-                            else "Documentación técnica referencial"
-                        ),
-                        "estado_validacion": (
-                            "fuente_secundaria_no_validada"
-                            if es_fuente_secundaria
-                            else "corpus_preliminar_taller"
-                        ),
-                        "auditoria": {
-                            "verificado_documental": not es_fuente_secundaria,
-                            "auditoria_mecanica_formal_firmada": False,
-                            "observacion": (
-                                "No confirmar piezas sin pruebas físicas y validación mecánica."
-                                if es_fuente_secundaria
-                                else "Corpus preliminar de taller."
-                            ),
-                        }
-                    })
+                    meta = mapa_metadatos.get(tit_lower)
+                    if meta is None:
+                        logger.warning("Fragmento RAG omitido por falta de metadatos: %s", titulo)
+                        continue
 
                     self.titulos.append(titulo)
                     self.documentos.append(cuerpo)
@@ -190,7 +297,8 @@ class MotorRAG:
 
     def _expandir_consulta(self, consulta: str) -> str:
         """Expande la consulta del usuario incluyendo términos técnicos estandarizados y códigos DTC."""
-        consulta_lower = consulta.lower()
+        consulta_limpia = str(consulta or "").strip()[:4000]
+        consulta_lower = consulta_limpia.lower()
         expansiones = []
         vibracion_al_frenar = "vibr" in consulta_lower and "fren" in consulta_lower
         if vibracion_al_frenar:
@@ -243,23 +351,198 @@ class MotorRAG:
             "culata": "empaquetadura culata refrigerante motor sobrecalentamiento",
             "refrigerante": "termostato ventilador fuga refrigerante culata",
             "alternador": "alternador bateria sistema electrico carga bornes",
-            "bateria": "bateria alternador voltaje arranque sistema electrico"
+            "bateria": "bateria alternador voltaje arranque sistema electrico",
+            "acople": "direccion asistida electrica eps mdps columna chasquido volante timon",
+            "mariposa": "cuerpo de aceleracion electronico drive-by-wire marcha minima ralenti",
+            "can bus": "red de comunicacion multiplexada can bus terminacion 60 ohms dlc osciloscopio",
+            "can-h": "red can bus alta velocidad terminacion dlc obd2",
+            "evap": "sistema evaporacion emisiones canister valvula purga fuga vacio tanque",
+            "canister": "sistema evaporacion emisiones evap purga vacio tanque combustible",
+            "sensor de oxigeno": "sonda lambda sensor aire combustible a/f banda ancha calefactor",
+            "sensor a/f": "sensor relacion aire combustible banda ancha calefactor mezcla",
+            "ibs": "sensor bateria corriente inteligente carga alternador pilotado",
+            "termostato": "refrigeracion termostato purga temperatura sobrecalentamiento radiador",
+            "p0128": "termostato refrigerante motor temperatura baja refrigeracion",
+            "p0440": "sistema evap emisiones purga canister fuga tanque",
+            "p0442": "sistema evap emisiones purga canister microfuga vacio",
+            "p0455": "sistema evap emisiones purga canister fuga grande tapa tanque",
+            "p0620": "circuito control alternador carga inteligente pilotado",
+            "u0100": "red can bus perdida comunicacion ecm modulo motor",
+            "u0101": "red can bus perdida comunicacion tcm transmision caja",
+            "u0121": "red can bus perdida comunicacion abs frenos modulo",
+            "abs": "modulo abs frenos purga electrovalvulas sensor rueda bomba escaner sangrado",
+            "purgar": "purgado purga sangrado liquido frenos modulo abs aire",
+            "gdi": "inyeccion directa gdi tsi bomba alta presion riel combustible hpfp",
+            "tsi": "inyeccion directa gdi tsi bomba alta presion riel combustible hpfp",
+            "turbo": "turboalimentador wastegate actuador sobrealimentacion intercooler soplido",
+            "intercooler": "turbo sobrealimentacion fuga cañeria aire presion underboost",
+            "dsg": "transmision doble embrague mecatronica dsg dct robotizada k1 k2",
+            "dct": "transmision doble embrague mecatronica dsg dct robotizada k1 k2",
+            "epb": "freno estacionamiento electrico epb servomotor caliper trasero modo servicio",
+            "freno de mano electrico": "freno estacionamiento electrico epb servomotor caliper trasero modo servicio",
+            "haldex": "traccion integral awd haldex acoplador multidisco diferencial trasero",
+            "awd": "traccion integral awd haldex acoplador multidisco diferencial trasero",
+            "sas": "sensor angulo direccion sas calibracion punto cero esp antiderrape",
+            "scv": "valvula reguladora succion scv bomba common rail diesel presion riel",
+            "p0299": "turbo sobrealimentacion baja underboost wastegate fuga intercooler",
+            "p0234": "turbo sobrepresion overboost wastegate actuador regulador",
+            "c1555": "freno estacionamiento electrico epb servomotor caliper motor",
+            "c1260": "sensor angulo direccion sas calibracion punto cero esp",
+            "retorno": "inyectores common rail retorno probetas valvula scv diesel riel bomba",
+            "diesel": "diesel common rail bomba alta presion inyectores scv retorno dpf arranque",
+            "arrancador": "motor de arranque solenoide carbones terminal 50 no da marcha clac seco",
+            "clac": "motor de arranque solenoide clac seco carbones no da marcha terminal 50",
+            "mudo": "motor de arranque solenoide no da marcha clac seco se queda mudo",
+            "no da marcha": "motor de arranque solenoide carbones terminal 50 no da marcha clac seco",
+            "no da arranque": "motor de arranque solenoide carbones terminal 50 no da marcha clac seco",
+            "en caliente": "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica bobina p0335 bomba gasolina",
+            "calienta": "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica bobina p0335 bomba gasolina",
+            "enfrie": "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica bobina p0335",
+            "enfria": "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica bobina p0335",
+            "gira con fuerza": "arrancador operativo no enciende falta chispa pulso inyeccion sensor ckp cigueñal p0335",
+            "no enciende": "sensor ckp cigueñal chispa pulso inyeccion bomba gasolina p0335",
+            "cortaran la corriente": "sensor ckp cigueñal rele principal efi encendido p0335",
+            "corta corriente": "sensor ckp cigueñal rele principal efi encendido p0335",
+            "apaga de golpe": "sensor ckp cigueñal rele principal efi corte encendido p0335",
+            "zumbido": "bomba de combustible tanque zumbido alta presion rampa caudal p0087",
+            "asiento trasero": "bomba de combustible aforador tanque zumbido presion p0087",
+            "asientos de atras": "bomba de combustible aforador tanque zumbido presion p0087",
+            "asientos de atrás": "bomba de combustible aforador tanque zumbido presion p0087",
+            "ahoga": "falta de combustible presion bomba caudal inyectores mezcla pobre p0171 p0087",
+            "tironea": "tironeo perdida potencia combustible bujias bobinas presion caudal p0087 p0300",
+            "tirones": "tironeo perdida potencia combustible bujias bobinas presion caudal p0087 p0300",
+            "bomba de gasolina": "presion combustible riel caida caudal bajo carga tanque p0087",
+            "silbido": "servofreno booster vacio pedal duro fuga linea de vacio multiple admision soplido",
+            "servofreno": "booster servofreno linea de vacio pedal duro fuga vacio diafragma valvula check",
+            "booster": "servofreno booster vacio pedal duro fuga diafragma retencion valvula check",
+            "patina": "disco de embrague desgastado patinando prensa calado en 4ta marcha revoluciones suben sin velocidad",
+            "patinando": "disco de embrague desgastado patinando prensa calado en 4ta marcha revoluciones suben sin velocidad",
+            "asbesto": "disco de embrague desgastado patinando olor a quemado prensa calado",
+            "wub-wub": "rodamiento de maza rodaje de rueda zumbido rodadura ruleman",
+            "wub": "rodamiento de maza rodaje de rueda zumbido rodadura ruleman"
         }
+        
+        # Evitar falsos amigos cuando el motor de arranque sí gira con fuerza
+        arranque_falla = any(x in consulta_lower for x in ["no da arranque", "no da marcha", "no gira el motor", "se queda mudo", "clac seco"])
+        es_zumbido_mecanico = any(x in consulta_lower for x in ["rueda", "maza", "caja", "transmision", "rodamiento", "rodaje", "curva", "embrague"])
         
         for clave, valor in diccionario_dtc.items():
             if clave == "vibra" and vibracion_al_frenar:
+                continue
+            if clave in ["arrancador", "clac", "mudo", "no da marcha", "no da arranque"] and not arranque_falla and "gira con fuerza" in consulta_lower:
+                continue
+            if clave == "zumbido" and es_zumbido_mecanico:
+                if any(x in consulta_lower for x in ["rueda", "maza", "curva"]):
+                    expansiones.append("rodamiento de maza rodaje de rueda zumbido rodadura alabeo")
+                elif any(x in consulta_lower for x in ["caja", "transmision", "embrague", "neutro"]):
+                    expansiones.append("rodajes transmision manual eje primario crapodina collarin zumbido caja")
                 continue
             if clave in consulta_lower:
                 expansiones.append(valor)
                 
         if expansiones:
-            return f"{consulta} {' '.join(expansiones)}"
-        return consulta
+            return f"{consulta_limpia} {' '.join(expansiones)}"
+        return consulta_limpia
+
+    def recuperar_procedimiento_hibrido(
+        self,
+        consulta: str,
+        macro_sistema: Optional[str] = None,
+        top_fallas: Optional[List[Dict[str, Any]]] = None,
+        codigos_dtc: Optional[List[str]] = None,
+        marca: Optional[str] = None,
+        modelo: Optional[str] = None,
+        umbral: float | None = None,
+        k_candidatos: int = 25,
+    ) -> Tuple[str, str, float, Dict[str, Any]]:
+        """Recupera el procedimiento técnico óptimo combinando similitud FAISS con señales de ML y DTC."""
+        if self.faiss_index is None or len(self.documentos) == 0:
+            return "Manual técnico no indexado o ausente.", "Desconocido", 0.0, {}
+
+        umbral_efectivo = settings.diagnostic.rag_min_similarity if umbral is None else umbral
+        try:
+            from src.infrastructure.rag.query_builder import construir_consulta_hibrida
+            from src.infrastructure.rag.relevance_filter import reordenar_candidatos_rag
+
+            consulta_hibrida = construir_consulta_hibrida(
+                consulta_usuario=consulta,
+                macro_sistema=macro_sistema,
+                top_fallas=top_fallas,
+                codigos_dtc=codigos_dtc,
+                marca=marca,
+                modelo=modelo,
+            )
+            consulta_expandida = self._expandir_consulta(consulta_hibrida)
+            consulta_vec = self.vectorizador.transform([consulta_expandida]).toarray().astype(np.float32)
+            faiss.normalize_L2(consulta_vec)
+
+            k_busqueda = min(k_candidatos, len(self.documentos))
+            similitudes, indices = self.faiss_index.search(consulta_vec, k=k_busqueda)
+
+            candidatos = []
+            for k_idx in range(k_busqueda):
+                doc_idx = int(indices[0][k_idx])
+                sim = float(similitudes[0][k_idx])
+                if 0 <= doc_idx < len(self.documentos):
+                    candidatos.append({
+                        "indice": doc_idx,
+                        "titulo": self.titulos[doc_idx],
+                        "documento": self.documentos[doc_idx],
+                        "similitud": sim,
+                        "metadatos": (
+                            self.metadatos_procedimientos[doc_idx]
+                            if doc_idx < len(self.metadatos_procedimientos)
+                            else {}
+                        ),
+                    })
+
+            # Reordenar ponderando por Macro-Sistema ML, códigos DTC y Top-2 de fallas
+            conf_ml_val = None
+            if top_fallas and len(top_fallas) > 0:
+                first_f = top_fallas[0]
+                conf_ml_val = float(first_f.get("probabilidad", 0.70) if isinstance(first_f, dict) else getattr(first_f, "probabilidad", 0.70))
+
+            candidatos_reordenados = reordenar_candidatos_rag(
+                candidatos,
+                macro_sistema=macro_sistema,
+                top_fallas=top_fallas,
+                codigos_dtc=codigos_dtc,
+                confianza_ml=conf_ml_val,
+            )
+
+            if not candidatos_reordenados or candidatos_reordenados[0]["similitud"] < umbral_efectivo:
+                return (
+                    "No se encontró un procedimiento específico en los manuales para esta consulta.",
+                    "Coincidencia baja",
+                    candidatos_reordenados[0]["similitud"] if candidatos_reordenados else 0.0,
+                    {}
+                )
+
+            mejor = candidatos_reordenados[0]
+            return mejor["documento"], mejor["titulo"], mejor["similitud"], mejor["metadatos"]
+        except Exception as e:
+            logger.error(f"Error durante la recuperación híbrida en FAISS: {e}")
+            return "Error al buscar en el manual.", "Error", 0.0, {}
 
     def recuperar_contexto_con_similitud(
-        self, consulta: str, umbral: float | None = None
+        self,
+        consulta: str,
+        umbral: float | None = None,
+        macro_sistema: Optional[str] = None,
+        top_fallas: Optional[List[Dict[str, Any]]] = None,
+        codigos_dtc: Optional[List[str]] = None,
     ) -> tuple[str, str, float]:
-        """Recupera contexto y similitud coseno sin mezclarla con la confianza ML."""
+        """Recupera contexto y similitud coseno con soporte de señales híbridas opcionales."""
+        if macro_sistema or top_fallas or codigos_dtc:
+            doc, tit, sim, _ = self.recuperar_procedimiento_hibrido(
+                consulta=consulta,
+                macro_sistema=macro_sistema,
+                top_fallas=top_fallas,
+                codigos_dtc=codigos_dtc,
+                umbral=umbral,
+            )
+            return doc, tit, sim
+
         if self.faiss_index is None or len(self.documentos) == 0:
             return "Manual tecnico no indexado o ausente.", "Desconocido", 0.0
 
@@ -286,9 +569,27 @@ class MotorRAG:
             return "Error al buscar en el manual.", "Error", 0.0
 
     def recuperar_procedimiento_con_metadatos(
-        self, consulta: str, umbral: float | None = None
+        self,
+        consulta: str,
+        umbral: float | None = None,
+        macro_sistema: Optional[str] = None,
+        top_fallas: Optional[List[Dict[str, Any]]] = None,
+        codigos_dtc: Optional[List[str]] = None,
+        marca: Optional[str] = None,
+        modelo: Optional[str] = None,
     ) -> Tuple[str, str, float, Dict[str, Any]]:
         """Recupera el procedimiento más afín junto con sus metadatos (marca, modelo, edición, página OEM)."""
+        if macro_sistema or top_fallas or codigos_dtc:
+            return self.recuperar_procedimiento_hibrido(
+                consulta=consulta,
+                macro_sistema=macro_sistema,
+                top_fallas=top_fallas,
+                codigos_dtc=codigos_dtc,
+                marca=marca,
+                modelo=modelo,
+                umbral=umbral,
+            )
+
         if self.faiss_index is None or len(self.documentos) == 0:
             return "Manual técnico no indexado o ausente.", "Desconocido", 0.0, {}
 
@@ -324,3 +625,4 @@ class MotorRAG:
         """Busca el procedimiento técnico más relevante (compatibilidad retroactiva)."""
         cuerpo, titulo, _, _ = self.recuperar_procedimiento_con_metadatos(consulta, umbral)
         return cuerpo, titulo
+

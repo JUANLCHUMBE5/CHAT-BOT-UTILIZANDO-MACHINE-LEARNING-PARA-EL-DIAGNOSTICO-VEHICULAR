@@ -14,14 +14,25 @@ import urllib.request
 from pathlib import Path
 
 import pandas as pd
-from preparar_candidatos_zenodo import (
-    COMBINACIONES_AMBIGUAS,
-    DOI,
-    LICENCIA,
-    MAPEO_SEGURO,
-    MD5_ESPERADO,
-)
-from traducir_candidatos_es_peru import TRADUCCIONES_ES_PERU
+
+try:
+    from training.preparar_candidatos_zenodo import (
+        COMBINACIONES_AMBIGUAS,
+        DOI,
+        LICENCIA,
+        MAPEO_SEGURO,
+        MD5_ESPERADO,
+    )
+    from training.traducir_candidatos_es_peru import TRADUCCIONES_ES_PERU
+except ImportError:
+    from preparar_candidatos_zenodo import (
+        COMBINACIONES_AMBIGUAS,
+        DOI,
+        LICENCIA,
+        MAPEO_SEGURO,
+        MD5_ESPERADO,
+    )
+    from traducir_candidatos_es_peru import TRADUCCIONES_ES_PERU
 
 URL_FUENTE = (
     "https://zenodo.org/records/15626055/files/"

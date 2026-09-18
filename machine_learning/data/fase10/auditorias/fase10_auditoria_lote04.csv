@@ -1,0 +1,201 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L04-0001,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.1365,0.3464,TRAIN,,NO,
+F10-L04-0002,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.131,0.2206,LOTE_03,,NO,
+F10-L04-0003,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.0717,0.1608,LOTE_02,,NO,
+F10-L04-0004,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.1304,0.3059,LOTE_02,,NO,
+F10-L04-0005,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.272,0.1883,TRAIN,,NO,
+F10-L04-0006,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.0896,0.2644,LOTE_03,,NO,
+F10-L04-0007,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.113,0.2386,LOTE_03,,NO,
+F10-L04-0008,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.1625,0.2329,TRAIN,,NO,
+F10-L04-0009,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.1245,0.1711,LOTE_03,,NO,
+F10-L04-0010,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L1,APROBADO,CONFORME,0.1012,0.2676,TRAIN,,NO,
+F10-L04-0011,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1779,0.272,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0012,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1348,0.1577,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0013,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.078,0.1351,LOTE_02,P0524,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0014,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.2164,0.1446,LOTE_03,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0015,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1866,0.2519,TRAIN,P0016,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L04-0016,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.132,0.1498,TRAIN,,NO,
+F10-L04-0017,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.129,0.2507,G1,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0018,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1756,0.1942,TRAIN,,NO,
+F10-L04-0019,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1866,0.1323,TRAIN,,NO,
+F10-L04-0020,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1012,0.2376,TRAIN,,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L04-0021,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.0864,0.1328,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0022,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1227,0.2102,TRAIN,P0521,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0023,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.0945,0.2096,LOTE_03,P0011,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L04-0024,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1056,0.1285,TRAIN,,NO,
+F10-L04-0025,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L2,APROBADO,CONFORME,0.1281,0.2234,TRAIN,,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L04-0026,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1779,0.208,TEST_100,P0524,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0027,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1836,0.1333,TRAIN,P0016,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L04-0028,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.132,0.1406,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0029,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1052,0.1596,TRAIN,P0524,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L04-0030,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.2164,0.1728,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0031,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1262,0.2036,TRAIN,,SI,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados
+F10-L04-0032,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1283,0.1165,TRAIN,P0521,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0033,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1276,0.1987,TRAIN,P0524,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0034,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1088,0.1154,LOTE_03,,NO,
+F10-L04-0035,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1348,0.1676,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0036,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.121,0.241,TRAIN,P0016,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L04-0037,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1189,0.139,TRAIN,P0016,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L04-0038,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1016,0.1191,TRAIN,P0524,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L04-0039,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1227,0.1734,TRAIN,,NO,
+F10-L04-0040,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),L3,APROBADO,CONFORME,0.1594,0.1443,TRAIN,P0016,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L04-0041,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.1694,0.2921,TRAIN,,NO,
+F10-L04-0042,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.1329,0.2869,TRAIN,,NO,
+F10-L04-0043,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.1345,0.1757,TRAIN,,NO,
+F10-L04-0044,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.1424,0.2561,TRAIN,,NO,
+F10-L04-0045,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.3209,0.5783,TRAIN,,NO,
+F10-L04-0046,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.1028,0.2809,TRAIN,,NO,
+F10-L04-0047,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.1502,0.22,TRAIN,,NO,
+F10-L04-0048,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.2303,0.1771,TRAIN,,NO,
+F10-L04-0049,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.1257,0.1807,TRAIN,,NO,
+F10-L04-0050,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L1,APROBADO,CONFORME,0.155,0.1233,LOTE_03,,NO,
+F10-L04-0051,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1648,0.1752,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0052,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.3209,0.2721,TRAIN,U0109,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0053,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1329,0.1357,TRAIN,,NO,
+F10-L04-0054,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1336,0.2241,TRAIN,P069E,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0055,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1315,0.2442,TRAIN,P025A,NO,
+F10-L04-0056,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1121,0.1661,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0057,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.2454,0.2317,TRAIN,P0087,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0058,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1592,0.1828,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0059,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.155,0.1726,LOTE_03,,NO,
+F10-L04-0060,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1188,0.1297,FIELD_60,,NO,
+F10-L04-0061,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1202,0.1828,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0062,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1667,0.1887,TRAIN,U0109,NO,
+F10-L04-0063,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1156,0.1437,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L04-0064,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.0834,0.1276,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0065,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L2,APROBADO,CONFORME,0.1336,0.19,TRAIN,P069E,NO,
+F10-L04-0066,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1648,0.1343,TRAIN,U0109,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0067,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1266,0.1217,G1,P025A,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0068,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1156,0.0998,TRAIN,P0087,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0069,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.0981,0.1001,TRAIN,P069E,SI,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)
+F10-L04-0070,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1592,0.1241,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0071,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1448,0.1424,TRAIN,U0109,NO,
+F10-L04-0072,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1125,0.1003,TRAIN,P025A,NO,
+F10-L04-0073,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1473,0.1405,TRAIN,U0109,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0074,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.0905,0.0817,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0075,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1481,0.1735,TRAIN,P0087,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0076,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1299,0.1161,G1,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L04-0077,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1355,0.0935,TRAIN,U0109,NO,
+F10-L04-0078,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1125,0.1283,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0079,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1121,0.147,TRAIN,P069E,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0080,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),L3,APROBADO,CONFORME,0.1088,0.1826,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0081,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.1706,0.187,LOTE_03,,NO,
+F10-L04-0082,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.1357,0.2622,TRAIN,,NO,
+F10-L04-0083,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.272,0.1403,LOTE_02,,NO,
+F10-L04-0084,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.0902,0.1772,TRAIN,,NO,
+F10-L04-0085,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.1303,0.1519,TRAIN,,NO,
+F10-L04-0086,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.1124,0.1843,G1,,NO,
+F10-L04-0087,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.0528,0.1271,TRAIN,,NO,
+F10-L04-0088,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.2154,0.3103,LOTE_03,,NO,
+F10-L04-0089,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.1334,0.1298,TRAIN,,NO,
+F10-L04-0090,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L1,APROBADO,CONFORME,0.0988,0.1853,TRAIN,,NO,
+F10-L04-0091,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1074,0.226,TRAIN,P2463,SI,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)
+F10-L04-0092,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1875,0.3231,TRAIN,P20EE,NO,
+F10-L04-0093,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1303,0.1516,TRAIN,,SI,Empaque de culata soplado o danado
+F10-L04-0094,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.0935,0.1768,TRAIN,,NO,
+F10-L04-0095,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1377,0.2241,LOTE_03,P2453,NO,
+F10-L04-0096,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1191,0.1421,TRAIN,,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L04-0097,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.0902,0.1117,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L04-0098,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1391,0.2527,TRAIN,P2002,SI,Empaque de culata soplado o danado
+F10-L04-0099,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1928,0.2735,TRAIN,P204F,NO,
+F10-L04-0100,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.0949,0.1502,TRAIN,,NO,
+F10-L04-0101,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1733,0.1766,LOTE_01,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L04-0102,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.0988,0.1188,TRAIN,P2463,NO,
+F10-L04-0103,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.0748,0.1291,TRAIN,,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L04-0104,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1346,0.2069,TRAIN,,SI,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)
+F10-L04-0105,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L2,APROBADO,CONFORME,0.1399,0.1487,TRAIN,,NO,
+F10-L04-0106,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1225,0.1875,TRAIN,P2463,SI,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)
+F10-L04-0107,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1928,0.1273,G1,P20EE,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0108,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1113,0.0913,TRAIN,,SI,Empaque de culata soplado o danado
+F10-L04-0109,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1357,0.1185,TRAIN,P2002,SI,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)
+F10-L04-0110,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.2154,0.1289,LOTE_03,,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L04-0111,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1377,0.2172,TRAIN,P2453,NO,
+F10-L04-0112,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.0779,0.0814,LOTE_03,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0113,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1382,0.1365,TRAIN,P2463,NO,
+F10-L04-0114,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.0946,0.0862,TRAIN,P204F,NO,
+F10-L04-0115,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.0987,0.2109,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L04-0116,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1083,0.1227,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L04-0117,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1449,0.13,TRAIN,P20EE,NO,
+F10-L04-0118,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.0787,0.1027,TRAIN,,SI,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)
+F10-L04-0119,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.1145,0.1359,TRAIN,,SI,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)
+F10-L04-0120,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),L3,APROBADO,CONFORME,0.0691,0.1326,TRAIN,P2463,NO,
+F10-L04-0121,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.1488,0.5842,TRAIN,,NO,
+F10-L04-0122,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.2083,0.2737,TRAIN,,NO,
+F10-L04-0123,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.0775,0.3046,LOTE_02,,NO,
+F10-L04-0124,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.0701,0.2485,TRAIN,,NO,
+F10-L04-0125,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.1476,0.258,LOTE_03,,NO,
+F10-L04-0126,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.168,0.3015,TRAIN,,NO,
+F10-L04-0127,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.0997,0.2014,TRAIN,,NO,
+F10-L04-0128,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.2303,0.3768,LOTE_03,,NO,
+F10-L04-0129,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.0498,0.1005,TRAIN,,NO,
+F10-L04-0130,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L1,APROBADO,CONFORME,0.0787,0.1152,TRAIN,,NO,
+F10-L04-0131,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1225,0.1926,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0132,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.2454,0.2919,TRAIN,P0087,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L04-0133,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1509,0.2618,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0134,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1698,0.2202,TRAIN,P0093,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0135,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1215,0.1432,TRAIN,,NO,
+F10-L04-0136,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1341,0.2515,TRAIN,P1229,NO,
+F10-L04-0137,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1502,0.2538,TRAIN,,NO,
+F10-L04-0138,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.2209,0.1884,TRAIN,P0087,NO,
+F10-L04-0139,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.117,0.1144,TRAIN,,NO,
+F10-L04-0140,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1145,0.2045,LOTE_03,P0088,NO,
+F10-L04-0141,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1579,0.1536,LOTE_03,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0142,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1749,0.1059,LOTE_03,P0087,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L04-0143,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.1052,0.2241,TRAIN,,SI,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)
+F10-L04-0144,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.0823,0.1428,TRAIN,,NO,
+F10-L04-0145,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L2,APROBADO,CONFORME,0.0774,0.1114,LOTE_03,P0087,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0146,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1632,0.1348,TRAIN,P0087,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0147,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.0994,0.133,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L04-0148,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.124,0.1691,LOTE_03,P0088,NO,
+F10-L04-0149,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1023,0.1536,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L04-0150,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1488,0.1434,LOTE_03,P0087,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0151,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1632,0.1612,TRAIN,P0087,NO,
+F10-L04-0152,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.117,0.124,TRAIN,,SI,Empaque de culata soplado o danado
+F10-L04-0153,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.2209,0.1882,TRAIN,P0087,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0154,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1197,0.1585,TRAIN,,NO,
+F10-L04-0155,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1283,0.1243,TRAIN,P0087,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0156,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.0977,0.2188,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0157,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1749,0.1909,TRAIN,P0087,NO,
+F10-L04-0158,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1019,0.1852,TRAIN,P0093,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L04-0159,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1022,0.1116,TRAIN,P0087,NO,
+F10-L04-0160,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),L3,APROBADO,CONFORME,0.1341,0.144,LOTE_02,P0087,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0161,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.1694,0.3495,TRAIN,,NO,
+F10-L04-0162,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.1177,0.2262,TRAIN,,NO,
+F10-L04-0163,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.1493,0.3264,LOTE_02,,NO,
+F10-L04-0164,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.1047,0.2992,LOTE_03,,NO,
+F10-L04-0165,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.1476,0.3598,LOTE_03,,NO,
+F10-L04-0166,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.1476,0.2719,TRAIN,,NO,
+F10-L04-0167,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.1735,0.2019,TRAIN,,NO,
+F10-L04-0168,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.2314,0.1409,LOTE_03,,NO,
+F10-L04-0169,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.1396,0.1505,TRAIN,,NO,
+F10-L04-0170,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L1,APROBADO,CONFORME,0.0964,0.1803,TRAIN,,NO,
+F10-L04-0171,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1888,0.4073,TRAIN,,NO,
+F10-L04-0172,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.124,0.1575,TEST_100,P0171,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0173,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1429,0.2508,TRAIN,P0172,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L04-0174,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1756,0.2172,TRAIN,,NO,
+F10-L04-0175,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.2231,0.1084,TRAIN,P0178,NO,
+F10-L04-0176,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1696,0.1406,LOTE_03,P0300,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L04-0177,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.0863,0.1717,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L04-0178,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.2022,0.1906,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L04-0179,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1088,0.1994,TRAIN,P0171,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L04-0180,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1735,0.1872,TRAIN,,SI,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga)
+F10-L04-0181,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1154,0.1446,TRAIN,,NO,
+F10-L04-0182,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.2058,0.1801,TRAIN,P0179,NO,
+F10-L04-0183,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.0938,0.1307,LOTE_01,,NO,
+F10-L04-0184,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1125,0.0808,FIELD_60,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0185,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L2,APROBADO,CONFORME,0.1696,0.1501,TRAIN,,NO,
+F10-L04-0186,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1017,0.1279,TEST_100,P0172,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L04-0187,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1088,0.1289,TRAIN,P0171,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L04-0188,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.2231,0.1068,TRAIN,P0178,NO,
+F10-L04-0189,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1888,0.1638,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L04-0190,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1396,0.2316,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L04-0191,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.0976,0.123,TRAIN,P0172,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0192,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1125,0.1322,FIELD_60,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0193,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.2314,0.1216,LOTE_03,P0171,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0194,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1295,0.1702,LOTE_03,,NO,
+F10-L04-0195,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.2058,0.1008,LOTE_03,P0178,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L04-0196,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1042,0.1522,DEV_60,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L04-0197,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.121,0.1076,TRAIN,P0179,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L04-0198,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1046,0.1643,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L04-0199,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.0976,0.1769,TRAIN,P0172,SI,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)
+F10-L04-0200,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),L3,APROBADO,CONFORME,0.1479,0.1355,TRAIN,,SI,Bomba de gasolina quemada o con baja presion

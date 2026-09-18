@@ -18,11 +18,29 @@ DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
         "vapor blanco consume refrigerante posible empaque de culata",
     ),
     (
+        r"\b(?:pasta|grasa|color|parece)\s+(?:como\s+)?caf[eé]\s+con\s+leche\b|"
+        r"\b(?:mayonesa|nata|crema)\s+(?:en\s+la\s+tapa|en\s+el\s+aceite|pegada)\b|"
+        r"\baceite\s+(?:lechoso|emulsionado|blanquecino|con\s+agua)\b|"
+        r"\bcaf[eé]\s+con\s+leche\b",
+        "aceite de motor parece leche con cafe chocolatada se mezcla el agua con el aceite",
+    ),
+    (
+        r"\bmangueras?\s+(?:[a-z]+\s+)*(?:duras?|infladas?|hinchadas?|como\s+piedra)\b|"
+        r"\bburbujeo\s+(?:violento\s+)?(?:en\s+el\s+dep[oó]sito|en\s+el\s+radiador)\b|"
+        r"\bburbujas\s+en\s+el\s+(?:dep[oó]sito|refrigerante|radiador)\b",
+        "el radiador bota burbujas con el motor encendido y consume agua",
+    ),
+    (
+        r"\bhumo\s+blanco\s+(?:espeso|denso)?\s*(?:y\s+)?dulce\b",
+        "sale bastante humo blanco espeso por el tubo de escape bota vapor blanco",
+    ),
+    (
         r"\bp\s*0*300\b",
         "codigo p0300 de falla de encendido multiple misfire en cilindros, revisar bujias o bobinas",
     ),
     (r"\bg\s*[.\-]?\s*n\s*[.\-]?\s*[bv]\b|\b(?:gnb|gnev|genebe)\b", "gnv"),
     (r"\bg\s*[.\-]?\s*l\s*[.\-]?\s*[bp]\b|\b(?:glb|gelepe)\b", "glp"),
+    (r"\bgas licuado(?: de petr[oó]leo)?\b|\b(?:autogas|propano)\b", "glp"),
     (r"\b(?:menjar|menejar|manegar)\b", "manejar"),
     (r"\bvibraci[oó]n(?:es)?\b", "vibracion"),
     (
@@ -84,8 +102,10 @@ DICCIONARIO_JERGA_PERUANA: tuple[tuple[str, str], ...] = (
     (r"\bzapatea\b", "vibracion por desbalanceo o discos de freno alabeados"),
     (r"\bzapateo\b", "vibracion en freno o aceleracion"),
     (r"\bbota vapor\b", "sobrecalentamiento y expulsion de refrigerante"),
-    (r"\bcalienta feo\b", "sobrecalentamiento de motor"),
-    (r"\bclac clac\b", "ruido clac clac en junta homocinetica o palier"),
+    (r"\b(?:taca\s*taca|traque\s*traque|clac\s*clac|cla\s*cla)\b", "chasquido clac clac en junta homocinetica o palier"),
+    (r"\b(?:doblar|doblo|giro|girar|doblando|girando)\s+(?:en\s+u|todo\s+el\s+tim[oó]n|el\s+tim[oó]n\s+a\s+tope)\b", "girar el timon a tope en curva cerrada palier"),
+    (r"\b(?:grasa\s+negra|grasa\s+botada|grasa\s+esparcida)\b", "fuga de grasa por fuelle roto de palier o junta homocinetica"),
+    (r"\b(?:fuelle|guardapolvo)\s+(?:roto|rajado|abierto|picado)\b", "fuelle roto de junta homocinetica con perdida de grasa"),
     (r"\bpedal esponjoso\b", "pedal de freno esponjoso por aire o fuga hidraulica"),
     (r"\bpedal largo\b", "recorrido excesivo del pedal de freno"),
     (r"\bchillido de faja\b", "chillido de faja de accesorios"),

@@ -384,3 +384,73 @@ def test_mecanico_no_puede_acceder_validacion(auth_headers_mecanico):
 
     resp_csv = client.get("/api/v1/validacion-taller/exportar-csv", headers=auth_headers_mecanico)
     assert resp_csv.status_code == 403
+
+
+def test_exportar_fichas_anexo2_csv_vacio(mock_tracker_csv, auth_headers_admin_taller2):
+    """Verifica que si no hay casos verificados para el taller o periodo se devuelve HTTP 400."""
+    resp = client.get(
+        "/api/v1/validacion-taller/exportar-fichas-anexo2-csv?fecha_desde=2099-01-01",
+        headers=auth_headers_admin_taller2,
+    )
+    assert resp.status_code == 400
+    assert "No existen registros verificados" in resp.json()["detail"]
+
+
+def test_exportar_fichas_anexo2_csv_exito(mock_tracker_csv, auth_headers_admin_taller1):
+    """Verifica la exportación oficial del Anexo 2 con trazabilidad de tesis y UTF-8 BOM."""
+    # Registrar un caso verificado con método y evidencia
+    caso_payload = {
+        "fase": "Post-test",
+        "fecha": "2026-09-12",
+        "placa": "ABC-123",
+        "marca_modelo": "Toyota Yaris 2020",
+        "sintoma": "Chirrido al frenar",
+        "falla_real": "Pastillas desgastadas",
+        "chatbot_prediccion": "Pastillas desgastadas",
+        "campos_completos": 1,
+        "tiempo_diagnostico_minutos": 15,
+        "prediccion_correcta": 1,
+        "metodo_confirmacion": "Inspección Visual en Elevador",
+        "evidencia_ref": "OT-2026-050",
+        "estado_registro": "verificado",
+        "sintoma_registrado_correctamente": 1,
+        "normalizacion_correcta": 1,
+        "extraccion_correcta": 1,
+        "clasificacion_procesada": 1,
+    }
+    post_resp = client.post("/api/v1/validacion-taller", json=caso_payload, headers=auth_headers_admin_taller1)
+    assert post_resp.status_code == 201
+
+    resp = client.get(
+        "/api/v1/validacion-taller/exportar-fichas-anexo2-csv",
+        headers=auth_headers_admin_taller1,
+    )
+    assert resp.status_code == 200
+    assert resp.headers["content-type"].startswith("text/csv")
+    content = resp.content.decode("utf-8-sig")
+
+    # Verificar encabezados formales de Tesis UCV
+    assert "UNIVERSIDAD CÉSAR VALLEJO" in content
+    assert "ANEXO 2: MATRIZ DE RECOLECCIÓN DE DATOS EXPERIMENTALES" in content
+    assert "CARTER MOTOR'S E.I.R.L." in content
+    assert "NOTA METODOLÓGICA" in content
+    assert "contraste de hipótesis inferencial" in content
+    assert "Se prohíbe el uso de datos sintéticos" in content
+    assert "Ficha1_Prediccion_Correcta" in content
+    assert "Inspección Visual en Elevador" in content
+    assert "OT-2026-050" in content
+
+
+def test_metricas_incluyen_variable_independiente(mock_tracker_csv, auth_headers_admin_taller1):
+    """Verifica que las métricas contengan la estructura de la Variable Independiente."""
+    resp = client.get("/api/v1/validacion-taller/metricas", headers=auth_headers_admin_taller1)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "variable_independiente" in data
+    vi = data["variable_independiente"]
+    assert "indicador1_sintomas_correctos_pct" in vi
+    assert "indicador2_procesamiento_correcto_pct" in vi
+    assert "indicador3_exactitud_ml_pct" in vi
+    assert "casos_verificados_evaluados" in vi
+    assert "nota_metodologica" in vi
+

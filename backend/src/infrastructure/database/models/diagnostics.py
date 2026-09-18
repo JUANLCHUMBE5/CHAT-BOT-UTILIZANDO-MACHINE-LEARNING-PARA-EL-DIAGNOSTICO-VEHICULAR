@@ -90,6 +90,7 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         String(20), nullable=False, default="generado", server_default=text("'generado'")
     )
     duracion_ms: Mapped[int | None] = mapped_column(Integer)
+    tiempo_inferencia_ml_ms: Mapped[int | None] = mapped_column(Integer)
     conclusion_mecanico: Mapped[str | None] = mapped_column(Text)
     sintesis_llm: Mapped[str | None] = mapped_column(Text)
     version_modelo_ml: Mapped[str | None] = mapped_column(String(80))

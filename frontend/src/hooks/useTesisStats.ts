@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { REGISTROS_TESIS_60 } from '../data/fichasTesisData';
+import { DATOS_SINTETICOS_DEMO_60 } from '../data/fichasTesisData';
 
 export type FichaTipo = 'ficha1' | 'ficha2' | 'ficha3';
 export type FaseTipo = 'post' | 'pre' | 'contraste';
@@ -9,8 +9,8 @@ export const useTesisStats = () => {
   const [fichaActiva, setFichaActiva] = useState<FichaTipo>('ficha1');
   const [faseActiva, setFaseActiva] = useState<FaseTipo>('post');
 
-  const preCasos = REGISTROS_TESIS_60.filter((c) => c.fase === 'Pre-test');
-  const postCasos = REGISTROS_TESIS_60.filter((c) => c.fase === 'Post-test');
+  const preCasos = DATOS_SINTETICOS_DEMO_60.filter((c) => c.fase === 'Pre-test');
+  const postCasos = DATOS_SINTETICOS_DEMO_60.filter((c) => c.fase === 'Post-test');
   const casosVisibles = faseActiva === 'pre' ? preCasos : postCasos;
 
   // Ficha 1: PPCF
@@ -44,7 +44,7 @@ export const useTesisStats = () => {
       preDetalle: `${prePPCFCount} de ${preCasos.length} predicciones correctas`,
       postDetalle: `${postPPCFCount} de ${postCasos.length} predicciones correctas`,
       mejora: `+${(postPPCFPct - prePPCFPct).toFixed(2)}% de incremento de exactitud`,
-      hipotesis: 'HE1: El chatbot con ML mejora significativamente la predicción de fallas vehiculares (p < 0.001)',
+      hipotesis: 'HE1: El chatbot con ML mejora significativamente la predicción de fallas vehiculares (prueba inferencial pendiente)',
       unidad: '%',
     },
     ficha2: {
@@ -59,7 +59,7 @@ export const useTesisStats = () => {
       preDetalle: `${prePRDCCount} de ${preCasos.length} con 8 campos completos`,
       postDetalle: `${postPRDCCount} de ${postCasos.length} con 8 campos completos`,
       mejora: `+${(postPRDCPct - prePRDCPct).toFixed(2)}% de incremento en calidad de datos`,
-      hipotesis: 'HE2: El chatbot con ML mejora significativamente el control de información diagnóstica (p < 0.001)',
+      hipotesis: 'HE2: El chatbot con ML mejora significativamente el control de información diagnóstica (prueba inferencial pendiente)',
       unidad: '%',
     },
     ficha3: {
@@ -74,7 +74,7 @@ export const useTesisStats = () => {
       preDetalle: `Suma: ${preTPRDSuma.toFixed(1)} min en 30 atenciones`,
       postDetalle: `Suma: ${postTPRDSuma.toFixed(1)} min en 30 atenciones`,
       mejora: `-${(preTPRDProm - postTPRDProm).toFixed(2)} min/auto (${(((preTPRDProm - postTPRDProm) / preTPRDProm) * 100).toFixed(1)}% ahorro de tiempo)`,
-      hipotesis: 'HE3: El chatbot con ML reduce significativamente el tiempo de atención del diagnóstico vehicular (p < 0.001)',
+      hipotesis: 'HE3: El chatbot con ML reduce significativamente el tiempo de atención del diagnóstico vehicular (prueba inferencial pendiente)',
       unidad: ' min',
     },
   }[fichaActiva];
@@ -87,7 +87,7 @@ export const useTesisStats = () => {
 
   const exportarCSV = () => {
     const headers = ['Item', 'Fase', 'Fecha', 'Placa', 'Marca_Modelo', 'Sintoma', 'Falla_Real', 'Chatbot_Prediccion', 'Campos_Completos', 'Tiempo_Minutos', 'Prediccion_Correcta'];
-    const rows = REGISTROS_TESIS_60.map((r) => [
+    const rows = DATOS_SINTETICOS_DEMO_60.map((r) => [
       r.item,
       r.fase,
       r.fecha,

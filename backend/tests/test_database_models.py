@@ -18,9 +18,12 @@ TABLAS_ESPERADAS = {
     "solicitudes_acceso",
     "talleres",
     "trabajos_gemini",
+    "trabajos_sistema",
     "uso_api",
     "usuarios",
+    "validaciones_taller",
     "vehiculos",
+    "workers_sistema",
 }
 
 
@@ -64,7 +67,7 @@ def test_alembic_tiene_una_sola_revision_head():
     scripts = ScriptDirectory.from_config(config)
 
     assert len(scripts.get_heads()) == 1
-    assert scripts.get_current_head() == "20260816_01"
+    assert scripts.get_current_head() == "20260912_01"
 
 
 def test_hash_persistencia_normaliza_telefono_y_placa():

@@ -120,7 +120,7 @@ export const GestionChatbotView: React.FC<GestionChatbotViewProps> = ({
   }, [subTab, onRecargarSolicitudes, onRecargarMecanicos, cargarClientes]);
 
   const solicitudesPendientes = solicitudes.filter((s) => s.estado === 'pendiente').length;
-  const totalMecanicos = mecanicos.length;
+  const totalMecanicos = mecanicos.filter((m) => m.activo && !m.bloqueado).length;
   const totalClientes = clientes.length;
 
   const handleVerConsultasDeMecanico = useCallback((mecanicoId: string) => {

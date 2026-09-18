@@ -1,0 +1,11 @@
+{
+  "candidate": "F10-C1",
+  "sha256": {
+    "vectorizador_c1": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+    "modelo_diagnostico_c1": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+    "modelo_sistema_c1": "a43932e3c077b981f0c75f86ebedc2d3effb19554fb11055203d11842d73fd71",
+    "configuracion_c1": "8894457488708b6f4438dd66ee1c32ada183a22df5035c61702b76d404055f21"
+  },
+  "fecha": "2026-09-17T18:07:37Z",
+  "estado": "CANDIDATE_ONLY"
+}

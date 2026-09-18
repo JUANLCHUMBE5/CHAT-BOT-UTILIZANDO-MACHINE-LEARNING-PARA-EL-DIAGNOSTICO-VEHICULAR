@@ -13,7 +13,7 @@ export const useMecanicosAutorizados = ({
   onRecargar,
 }: UseMecanicosAutorizadosProps) => {
   const [busqueda, setBusqueda] = useState('');
-  const [filtroEstado, setFiltroEstado] = useState<'todos' | 'activos' | 'bloqueados'>('todos');
+  const [filtroEstado, setFiltroEstado] = useState<'todos' | 'activos' | 'bloqueados' | 'inactivos'>('activos');
 
   // Feedback notifications
   const [notificacionError, setNotificacionError] = useState<string | null>(null);
@@ -41,12 +41,14 @@ export const useMecanicosAutorizados = ({
 
       if (filtroEstado === 'activos') return m.activo && !m.bloqueado;
       if (filtroEstado === 'bloqueados') return m.bloqueado;
+      if (filtroEstado === 'inactivos') return !m.activo && !m.bloqueado;
       return true;
     });
   }, [mecanicos, busqueda, filtroEstado]);
 
   const totalActivos = mecanicos.filter((m) => m.activo && !m.bloqueado).length;
   const totalBloqueados = mecanicos.filter((m) => m.bloqueado).length;
+  const totalInactivos = mecanicos.filter((m) => !m.activo && !m.bloqueado).length;
 
   const handleToggleBloquear = async () => {
     if (!confirmBloquearModal) return;
@@ -109,6 +111,7 @@ export const useMecanicosAutorizados = ({
     mecanicosFiltrados,
     totalActivos,
     totalBloqueados,
+    totalInactivos,
     handleToggleBloquear,
     handleRevocarAcceso,
   };

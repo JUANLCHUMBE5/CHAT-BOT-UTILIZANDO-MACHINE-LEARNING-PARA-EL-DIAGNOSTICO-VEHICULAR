@@ -11,6 +11,7 @@ from sqlalchemy import (
     Date,
     DateTime,
     ForeignKey,
+    Identity,
     Integer,
     String,
     Text,
@@ -27,9 +28,9 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
 
     item: Mapped[int] = mapped_column(
         BigInteger,
+        Identity(start=1),
         nullable=False,
         index=True,
-        server_default=text("nextval('validaciones_taller_item_seq'::regclass)"),
     )
     origen_clave: Mapped[str | None] = mapped_column(String(64), unique=True)
     taller_id: Mapped[uuid.UUID] = mapped_column(
@@ -51,6 +52,19 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
     prediccion_correcta: Mapped[int] = mapped_column(Integer, nullable=False, index=True)
     metodo_confirmacion: Mapped[str | None] = mapped_column(String(500))
     evidencia_ref: Mapped[str | None] = mapped_column(String(500))
+    estado_registro: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="borrador", server_default=text("'borrador'")
+    )
+    sintoma_registrado_correctamente: Mapped[int | None] = mapped_column(Integer)
+    validado_por_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("usuarios.id", ondelete="SET NULL"), index=True
+    )
+    fecha_validacion: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    normalizacion_correcta: Mapped[int | None] = mapped_column(Integer)
+    extraccion_correcta: Mapped[int | None] = mapped_column(Integer)
+    clasificacion_procesada: Mapped[int | None] = mapped_column(Integer)
+    procesamiento_validado: Mapped[int | None] = mapped_column(Integer)
+    tiempo_inferencia_ml_ms: Mapped[int | None] = mapped_column(Integer)
     creado_en: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
@@ -59,6 +73,7 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
         CheckConstraint("fase IN ('Pre-test', 'Post-test', 'Piloto')", name="fase_valida"),
         CheckConstraint("campos_completos IN (0, 1)", name="campos_completos_binario"),
         CheckConstraint("prediccion_correcta IN (0, 1)", name="prediccion_correcta_binaria"),
+        CheckConstraint("estado_registro IN ('borrador', 'verificado', 'excluido')", name="chk_validaciones_taller_estado_registro"),
         CheckConstraint(
             "tiempo_diagnostico_minutos BETWEEN 1 AND 600",
             name="tiempo_diagnostico_valido",

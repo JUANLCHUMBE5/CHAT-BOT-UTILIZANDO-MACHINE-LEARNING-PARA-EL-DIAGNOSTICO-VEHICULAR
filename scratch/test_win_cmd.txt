@@ -1,0 +1,1 @@
+backendPython: C:\Users\leonc\OneDrive\Desktop\CHAT_BOT_MACHINLEARNING\.venv\Scripts\python.exe

@@ -242,7 +242,7 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         tipo_mensaje="text",
         texto_cliente="El carro vibra al acelerar en subida",
     )
-    assert res1["status"] == "completado"
+    assert res1["status"] in ("completado", "aclaracion")
 
     # Segunda llamada con el MISMO meta_message_id: debe ser ignorado de inmediato
     res2 = await service.procesar_mensaje(

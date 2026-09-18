@@ -22,6 +22,7 @@ from sklearn.metrics import accuracy_score, classification_report, f1_score
 from sklearn.model_selection import StratifiedGroupKFold
 from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.svm import LinearSVC
+
 from training.entrenar_y_comparar_modelos import (
     error_calibracion_esperado,
     normalizar_grupo,

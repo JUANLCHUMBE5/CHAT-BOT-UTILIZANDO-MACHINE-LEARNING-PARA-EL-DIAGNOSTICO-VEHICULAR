@@ -1,0 +1,201 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L08-0001,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.3083,0.3621,TRAIN,,NO,
+F10-L08-0002,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.1179,0.1987,TRAIN,,NO,
+F10-L08-0003,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.1535,0.198,LOTE_02,,NO,
+F10-L08-0004,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.1846,0.2562,TRAIN,,NO,
+F10-L08-0005,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.1695,0.1696,TEST_100,,NO,
+F10-L08-0006,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.0931,0.3203,LOTE_07,,NO,
+F10-L08-0007,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.1503,0.2362,TRAIN,,NO,
+F10-L08-0008,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.2403,0.2598,LOTE_07,,NO,
+F10-L08-0009,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.2873,0.2523,TRAIN,,NO,
+F10-L08-0010,Amortiguadores reventados o bujes de suspension gastados,L1,APROBADO,CONFORME,0.3012,0.3313,TRAIN,,NO,
+F10-L08-0011,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.2026,0.2201,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0012,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1179,0.2718,TEST_100,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0013,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1789,0.1594,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0014,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1028,0.1465,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L08-0015,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1846,0.1797,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0016,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1382,0.1118,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0017,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.0969,0.1374,FIELD_60,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0018,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1,0.1998,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0019,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.2479,0.1652,LOTE_06,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0020,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1109,0.1382,DEV_60,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0021,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.086,0.1003,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0022,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.0958,0.1212,TEST_100,,NO,
+F10-L08-0023,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.0732,0.1079,TRAIN,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L08-0024,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1701,0.134,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0025,Amortiguadores reventados o bujes de suspension gastados,L2,APROBADO,CONFORME,0.1244,0.1476,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0026,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.0925,0.1051,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0027,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1053,0.0991,LOTE_07,,SI,Discos de freno alabeados o desgastados
+F10-L08-0028,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1029,0.1063,TRAIN,,NO,
+F10-L08-0029,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1513,0.109,LOTE_07,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0030,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.2531,0.1709,LOTE_06,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0031,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1243,0.1407,LOTE_07,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0032,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1701,0.0988,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L08-0033,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1669,0.1905,TEST_100,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0034,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1109,0.0915,LOTE_06,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0035,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.0725,0.0875,LOTE_06,,SI,Falla en sensor de velocidad de rueda ABS
+F10-L08-0036,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.0852,0.13,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0037,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.0648,0.1317,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0038,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1831,0.1512,LOTE_07,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0039,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1029,0.0929,TRAIN,,NO,
+F10-L08-0040,Amortiguadores reventados o bujes de suspension gastados,L3,APROBADO,CONFORME,0.1071,0.1316,LOTE_07,,NO,
+F10-L08-0041,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.3728,0.3445,DEV_60,,NO,
+F10-L08-0042,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.1929,0.3292,TRAIN,,NO,
+F10-L08-0043,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.2873,0.3114,TRAIN,,NO,
+F10-L08-0044,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.1843,0.2153,TRAIN,,NO,
+F10-L08-0045,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.1503,0.2948,LOTE_01,,NO,
+F10-L08-0046,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.1579,0.1859,TRAIN,,NO,
+F10-L08-0047,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.1407,0.2325,LOTE_07,,NO,
+F10-L08-0048,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.1061,0.2723,TRAIN,,NO,
+F10-L08-0049,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.0888,0.2307,TRAIN,,NO,
+F10-L08-0050,Juntas homocineticas o palieres danados,L1,APROBADO,CONFORME,0.2093,0.2229,LOTE_03,,NO,
+F10-L08-0051,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1843,0.1841,TEST_100,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0052,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1243,0.1437,LOTE_07,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0053,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1385,0.4797,LOTE_07,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0054,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1844,0.2515,G1,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0055,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1424,0.1471,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0056,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.3728,0.2753,DEV_60,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0057,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1261,0.172,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0058,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1129,0.1359,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L08-0059,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1182,0.1766,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0060,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1256,0.1435,LOTE_07,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L08-0061,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1608,0.2189,G1,,SI,Discos de freno alabeados o desgastados
+F10-L08-0062,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1164,0.1427,TRAIN,,NO,
+F10-L08-0063,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.0806,0.2552,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0064,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1256,0.158,LOTE_07,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0065,Juntas homocineticas o palieres danados,L2,APROBADO,CONFORME,0.1844,0.2859,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0066,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.1365,0.1019,LOTE_07,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0067,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.1424,0.116,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0068,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.1315,0.1805,LOTE_07,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0069,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.3198,0.2064,DEV_60,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0070,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.1438,0.1455,LOTE_07,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0071,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.154,0.1742,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L08-0072,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.2758,0.2008,DEV_60,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L08-0073,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.0935,0.1093,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0074,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.1164,0.1054,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0075,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.1182,0.1174,LOTE_06,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L08-0076,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.122,0.1125,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0077,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.1222,0.0884,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0078,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.0799,0.147,TRAIN,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L08-0079,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.0859,0.1278,DEV_60,,SI,Disco de embrague desgastado o patinando
+F10-L08-0080,Juntas homocineticas o palieres danados,L3,APROBADO,CONFORME,0.1438,0.0918,LOTE_07,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0081,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.1276,0.2891,TRAIN,,NO,
+F10-L08-0082,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.1233,0.5688,TRAIN,,NO,
+F10-L08-0083,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.2696,0.3664,TRAIN,,NO,
+F10-L08-0084,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.0946,0.1729,TRAIN,,NO,
+F10-L08-0085,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.1047,0.2256,TRAIN,,NO,
+F10-L08-0086,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.1064,0.2084,G2,,NO,
+F10-L08-0087,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.1785,0.3876,TRAIN,,NO,
+F10-L08-0088,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.1064,0.2595,TRAIN,,NO,
+F10-L08-0089,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.1639,0.1741,TRAIN,,NO,
+F10-L08-0090,Llantas desbalanceadas o desalineadas,L1,APROBADO,CONFORME,0.0931,0.1162,TRAIN,,NO,
+F10-L08-0091,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.2026,0.1847,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L08-0092,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1571,0.2536,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0093,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1647,0.1436,TEST_100,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0094,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1161,0.3073,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0095,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1445,0.3687,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0096,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1736,0.1661,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0097,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1385,0.1043,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L08-0098,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1381,0.1039,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0099,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1131,0.2082,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0100,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1647,0.2176,LOTE_06,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0101,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1204,0.1742,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0102,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.184,0.1522,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0103,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.0657,0.1769,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0104,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.1047,0.1227,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0105,Llantas desbalanceadas o desalineadas,L2,APROBADO,CONFORME,0.0796,0.1456,TRAIN,,NO,
+F10-L08-0106,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.098,0.1486,TEST_100,,SI,Discos de freno alabeados o desgastados
+F10-L08-0107,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1203,0.177,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0108,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.082,0.087,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0109,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1535,0.1482,LOTE_07,,SI,Discos de freno alabeados o desgastados
+F10-L08-0110,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1736,0.2171,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0111,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1281,0.1227,LOTE_06,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0112,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1396,0.132,LOTE_07,,SI,Discos de freno alabeados o desgastados
+F10-L08-0113,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.2214,0.2125,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0114,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.0846,0.1114,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0115,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1438,0.0982,LOTE_07,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0116,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.0907,0.2224,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0117,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1009,0.1076,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0118,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.0957,0.0754,LOTE_03,,SI,Discos de freno alabeados o desgastados
+F10-L08-0119,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1351,0.1015,LOTE_06,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0120,Llantas desbalanceadas o desalineadas,L3,APROBADO,CONFORME,0.1669,0.1577,LOTE_06,,SI,Juntas homocineticas o palieres danados
+F10-L08-0121,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.108,0.1592,TRAIN,,NO,
+F10-L08-0122,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.1152,0.2181,LOTE_03,,NO,
+F10-L08-0123,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.1084,0.267,TRAIN,,NO,
+F10-L08-0124,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.3083,0.1908,TRAIN,,NO,
+F10-L08-0125,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.069,0.2988,LOTE_04,,NO,
+F10-L08-0126,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.0854,0.1203,TRAIN,,NO,
+F10-L08-0127,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.162,0.194,TRAIN,,NO,
+F10-L08-0128,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.0999,0.2625,TRAIN,,NO,
+F10-L08-0129,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.1452,0.2035,LOTE_07,,NO,
+F10-L08-0130,Cremallera de direccion asistida con holgura o fuga,L1,APROBADO,CONFORME,0.1658,0.2371,TRAIN,,NO,
+F10-L08-0131,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1278,0.3817,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L08-0132,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1896,0.1643,TRAIN,C1511,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0133,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1789,0.2267,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0134,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.0915,0.2208,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0135,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1609,0.176,LOTE_06,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0136,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.178,0.2111,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0137,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.0963,0.1611,TRAIN,C1532,SI,Alternador defectuoso o placa de diodos quemada
+F10-L08-0138,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1429,0.1989,TRAIN,,SI,Falla en bombin o bomba hidraulica de embrague
+F10-L08-0139,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1119,0.1479,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0140,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1719,0.1715,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0141,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1149,0.231,G1,,NO,
+F10-L08-0142,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1603,0.2573,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0143,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1198,0.2195,TRAIN,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L08-0144,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.1429,0.1609,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0145,Cremallera de direccion asistida con holgura o fuga,L2,APROBADO,CONFORME,0.0994,0.1353,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0146,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1278,0.1596,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L08-0147,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1896,0.0867,TRAIN,C1511,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0148,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.2214,0.1604,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0149,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1766,0.1271,LOTE_07,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0150,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.0892,0.0948,TRAIN,C1521,SI,Bateria descargada o bornes sulfatados
+F10-L08-0151,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1719,0.0922,LOTE_07,,SI,Juntas homocineticas o palieres danados
+F10-L08-0152,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1831,0.1115,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0153,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.2403,0.1537,LOTE_07,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0154,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1026,0.1206,LOTE_05,,NO,
+F10-L08-0155,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.0899,0.0736,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0156,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1159,0.1242,TEST_100,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0157,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1198,0.1365,LOTE_07,,SI,Falta o degradacion de aceite de caja de cambios
+F10-L08-0158,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1002,0.1274,LOTE_06,C1512,SI,Falla en sensor de velocidad de rueda ABS
+F10-L08-0159,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.1122,0.1355,TRAIN,,SI,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+F10-L08-0160,Cremallera de direccion asistida con holgura o fuga,L3,APROBADO,CONFORME,0.184,0.0973,LOTE_07,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0161,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.1797,0.432,LOTE_07,,NO,
+F10-L08-0162,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.1761,0.1861,TRAIN,,NO,
+F10-L08-0163,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.1535,0.1941,TRAIN,,NO,
+F10-L08-0164,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.1235,0.1729,TRAIN,,NO,
+F10-L08-0165,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.0686,0.191,TRAIN,,NO,
+F10-L08-0166,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.1579,0.2568,TRAIN,,NO,
+F10-L08-0167,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.0733,0.1928,LOTE_07,,NO,
+F10-L08-0168,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.1474,0.1401,LOTE_07,,NO,
+F10-L08-0169,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.1868,0.2307,TRAIN,,NO,
+F10-L08-0170,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L1,APROBADO,CONFORME,0.1407,0.2293,TRAIN,,NO,
+F10-L08-0171,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.208,0.3364,TEST_100,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0172,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1746,0.2448,LOTE_07,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L08-0173,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1012,0.1125,FIELD_60,,SI,Juntas homocineticas o palieres danados
+F10-L08-0174,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.14,0.2389,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0175,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1322,0.1757,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0176,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1746,0.1866,TRAIN,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0177,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1145,0.1643,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0178,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1746,0.2447,TRAIN,,SI,Discos de freno alabeados o desgastados
+F10-L08-0179,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1868,0.1735,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0180,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.208,0.3471,TRAIN,,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L08-0181,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.0727,0.1434,TRAIN,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L08-0182,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.0918,0.2556,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0183,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.0984,0.1773,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0184,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1341,0.1429,TRAIN,C0035,SI,Falla en sensor de velocidad de rueda ABS
+F10-L08-0185,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L2,APROBADO,CONFORME,0.1096,0.2073,TRAIN,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0186,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1438,0.1517,LOTE_07,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0187,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1315,0.1583,TRAIN,,SI,Juntas homocineticas o palieres danados
+F10-L08-0188,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1492,0.1276,LOTE_06,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0189,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.2058,0.2036,LOTE_07,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L08-0190,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1669,0.181,LOTE_07,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0191,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1396,0.1311,LOTE_07,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0192,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1474,0.1614,LOTE_07,,SI,Llantas desbalanceadas o desalineadas
+F10-L08-0193,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1222,0.1231,LOTE_07,,SI,Juntas homocineticas o palieres danados
+F10-L08-0194,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.0737,0.2319,LOTE_07,,SI,Amortiguadores reventados o bujes de suspension gastados
+F10-L08-0195,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1341,0.1779,LOTE_06,C0040,SI,Falla en sensor de velocidad de rueda ABS
+F10-L08-0196,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.098,0.1972,LOTE_07,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L08-0197,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1513,0.1364,LOTE_07,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L08-0198,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.0856,0.1166,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L08-0199,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1292,0.1237,LOTE_06,,SI,Desgaste de pastillas y zapatas de freno
+F10-L08-0200,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),L3,APROBADO,CONFORME,0.1492,0.151,LOTE_06,,SI,Llantas desbalanceadas o desalineadas

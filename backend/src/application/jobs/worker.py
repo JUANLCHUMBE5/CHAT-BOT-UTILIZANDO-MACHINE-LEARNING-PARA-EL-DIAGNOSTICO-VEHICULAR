@@ -11,6 +11,8 @@ from src.infrastructure.database.connection import cerrar_conexion, comprobar_co
 
 async def main() -> None:
     await comprobar_conexion()
+    from src.core.version import registrar_startup_log
+    registrar_startup_log("worker")
     worker = SystemWorker()
     gemini_rate_limiter.iniciar_worker()
     try:

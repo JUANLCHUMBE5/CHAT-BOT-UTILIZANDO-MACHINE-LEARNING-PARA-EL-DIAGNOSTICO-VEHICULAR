@@ -1,0 +1,34 @@
+{
+  "benchmark": "V4_CIEGO_100_CASOS",
+  "fecha": "2026-09-15 20:50:52",
+  "tabla_ablacion": [
+    {
+      "arquitectura": "A) Solo ML (Linear SVM)",
+      "correctitud": 85.0,
+      "relevancia_tecnica": "— (Sin Manuales)",
+      "groundedness": "— (Sin Sustento)",
+      "latencia_ms": 7.43
+    },
+    {
+      "arquitectura": "B) ML + RAG Base (FAISS simple)",
+      "correctitud": 85.0,
+      "relevancia_tecnica": "68.0%",
+      "groundedness": "48.0%",
+      "latencia_ms": 9.21
+    },
+    {
+      "arquitectura": "C) ML + DTC + RAG Multiseñal",
+      "correctitud": 85.0,
+      "relevancia_tecnica": "74.0%",
+      "groundedness": "74.0%",
+      "latencia_ms": 11.94
+    },
+    {
+      "arquitectura": "D) ML + DTC + RAG + LLM (CarBot)",
+      "correctitud": 85.0,
+      "relevancia_tecnica": "74.0%",
+      "groundedness": "74.0%",
+      "latencia_ms": 15.14
+    }
+  ]
+}

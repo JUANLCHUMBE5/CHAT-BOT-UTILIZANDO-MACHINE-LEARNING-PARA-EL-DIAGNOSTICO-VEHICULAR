@@ -6,7 +6,6 @@ Revises: 20260807_03
 
 from alembic import op
 
-
 revision = "20260807_04"
 down_revision = "20260807_03"
 branch_labels = None

@@ -1,0 +1,62 @@
+clase_objetivo,macro_sistema_canonico
+Falla en bujias o bobinas de encendido (misfire),MOTOR
+Bomba de gasolina quemada o con baja presion,MOTOR
+Inyectores sucios o filtro de combustible obstruido,MOTOR
+Falla en sensor de oxigeno o mezcla rica,MOTOR
+Cuerpo de aceleracion o valvula IAC sucia,MOTOR
+Empaque de culata soplado o danado,MOTOR
+Falla en termostato o motoventilador de radiador,MOTOR
+Fuga en mangueras de refrigerante o radiador picado,MOTOR
+Consumo de aceite por desgaste de anillos o retenes,MOTOR
+Baja presion de aceite o bomba de aceite defectuosa,MOTOR
+Faja o cadena de distribucion destensada o con salto de punto,MOTOR
+Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR
+Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR
+Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR
+Fuga en mangueras de intercooler o turbocompresor danado,MOTOR
+Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR
+Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR
+Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR
+Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR
+Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR
+Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR
+Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR
+Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR
+Falla en regulador de presion de combustible o diafragma roto,MOTOR
+Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR
+Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR
+Desgaste de pastillas y zapatas de freno,FRENOS
+Discos de freno alabeados o desgastados,FRENOS
+Falla en servofreno (booster) o linea de vacio,FRENOS
+Fuga hidraulica o aire en el sistema de frenos,FRENOS
+Falla en sensor de velocidad de rueda ABS,FRENOS
+Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS
+Caliper de freno trabado o mordaza pegada (piston agarrotado),FRENOS
+Disco de embrague desgastado o patinando,TRANSMISION
+Falla en bombin o bomba hidraulica de embrague,TRANSMISION
+Falta o degradacion de aceite de caja de cambios,TRANSMISION
+Rodajes de caja mecanica o diferencial gastados,TRANSMISION
+Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION
+Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION
+Desgaste en collarin de empuje o crapodina de embrague,TRANSMISION
+Rodajes de transmision manual o eje primario gastados,TRANSMISION
+Amortiguadores reventados o bujes de suspension gastados,SUSPENSION_CHASIS
+Juntas homocineticas o palieres danados,SUSPENSION_CHASIS
+Llantas desbalanceadas o desalineadas,SUSPENSION_CHASIS
+Cremallera de direccion asistida con holgura o fuga,SUSPENSION_CHASIS
+Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),SUSPENSION_CHASIS
+Alternador defectuoso o placa de diodos quemada,ELECTRICO
+Bateria descargada o bornes sulfatados,ELECTRICO
+Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO
+Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO
+Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO
+Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),ELECTRICO
+Fuga parasita de corriente en reposo (consumo nocturno de bateria),ELECTRICO
+Falla en compresor de aire acondicionado o fuga de gas R134a,CLIMATIZACION
+Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_NEUMATICA
+"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_NEUMATICA
+Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_NEUMATICA
+Limpiaparabrisas o motor pluma quemado,CARROCERIA_NEUMATICA
+Fugas de aire o fallos en el sistema de frenos neumático (Camiones),CARROCERIA_NEUMATICA
+Válvula de freno de aire o secador APS obstruido (Camiones),CARROCERIA_NEUMATICA
+Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),CARROCERIA_NEUMATICA

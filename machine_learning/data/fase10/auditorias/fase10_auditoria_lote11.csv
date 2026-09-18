@@ -1,0 +1,121 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L11-0001,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.1244,0.2805,TRAIN,,NO,
+F10-L11-0002,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.1942,0.347,TRAIN,,NO,
+F10-L11-0003,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.1008,0.2349,LOTE_02,,NO,
+F10-L11-0004,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.2234,0.2944,TRAIN,,NO,
+F10-L11-0005,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.1545,0.2039,TRAIN,,NO,
+F10-L11-0006,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.108,0.1651,TRAIN,,NO,
+F10-L11-0007,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.1556,0.2317,TRAIN,,NO,
+F10-L11-0008,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.2242,0.199,TRAIN,,NO,
+F10-L11-0009,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.1141,0.1855,TRAIN,,NO,
+F10-L11-0010,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L1,APROBADO,CONFORME,0.0812,0.219,LOTE_06,,NO,
+F10-L11-0011,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1371,0.27,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L11-0012,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.108,0.2371,TRAIN,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0013,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1405,0.1371,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0014,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1186,0.1239,TRAIN,,NO,
+F10-L11-0015,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.0907,0.1253,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L11-0016,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1325,0.2133,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0017,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.0968,0.2431,TRAIN,,NO,
+F10-L11-0018,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1317,0.2784,TRAIN,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0019,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1304,0.1066,TRAIN,,NO,
+F10-L11-0020,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.177,0.1672,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0021,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.0981,0.1943,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L11-0022,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.0794,0.1123,TEST_100,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0023,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1679,0.1449,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0024,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1102,0.1972,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L11-0025,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L2,APROBADO,CONFORME,0.1152,0.0979,TRAIN,,NO,
+F10-L11-0026,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.1145,0.1323,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0027,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.1405,0.0962,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0028,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.0885,0.142,TRAIN,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0029,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.1371,0.1257,TRAIN,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L11-0030,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.0911,0.1087,LOTE_06,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0031,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.0988,0.1608,LOTE_10,,NO,
+F10-L11-0032,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.1224,0.1185,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L11-0033,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.1046,0.1141,TRAIN,,NO,
+F10-L11-0034,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.0793,0.1172,LOTE_04,,NO,
+F10-L11-0035,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.177,0.1432,TRAIN,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0036,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.1679,0.1025,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0037,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.0657,0.1157,LOTE_07,,NO,
+F10-L11-0038,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.1614,0.1485,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0039,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.0763,0.1374,TRAIN,,NO,
+F10-L11-0040,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),L3,APROBADO,CONFORME,0.1224,0.0889,LOTE_07,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0041,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.2234,0.2534,TRAIN,,NO,
+F10-L11-0042,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.3057,0.2685,TRAIN,,NO,
+F10-L11-0043,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.1658,0.1904,TRAIN,,NO,
+F10-L11-0044,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.1267,0.4356,LOTE_09,,NO,
+F10-L11-0045,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.1244,0.1834,TRAIN,,NO,
+F10-L11-0046,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.2555,0.1984,TRAIN,,NO,
+F10-L11-0047,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.1113,0.2276,TRAIN,,NO,
+F10-L11-0048,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.1917,0.3707,TRAIN,,NO,
+F10-L11-0049,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.3057,0.2158,TRAIN,,NO,
+F10-L11-0050,Válvula de freno de aire o secador APS obstruido (Camiones),L1,APROBADO,CONFORME,0.0525,0.1819,TRAIN,,NO,
+F10-L11-0051,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1917,0.2387,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0052,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.0936,0.1483,TRAIN,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0053,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.2023,0.1988,TRAIN,,NO,
+F10-L11-0054,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1484,0.1796,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0055,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1526,0.1549,TRAIN,,NO,
+F10-L11-0056,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.0716,0.1359,TRAIN,,NO,
+F10-L11-0057,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1484,0.1854,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0058,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1601,0.1554,TRAIN,,NO,
+F10-L11-0059,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1281,0.1479,LOTE_04,,NO,
+F10-L11-0060,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1545,0.1513,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0061,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1121,0.1802,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0062,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1464,0.1748,TRAIN,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0063,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.4175,0.1457,TRAIN,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0064,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.1566,0.151,TRAIN,,NO,
+F10-L11-0065,Válvula de freno de aire o secador APS obstruido (Camiones),L2,APROBADO,CONFORME,0.085,0.1755,LOTE_04,,NO,
+F10-L11-0066,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.0984,0.2038,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0067,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.0936,0.0902,TRAIN,,NO,
+F10-L11-0068,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1614,0.1922,TRAIN,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0069,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.0729,0.1788,LOTE_10,,NO,
+F10-L11-0070,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.2023,0.1689,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0071,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1056,0.1491,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0072,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1228,0.0975,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0073,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1561,0.0989,LOTE_06,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L11-0074,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1153,0.1394,TRAIN,,NO,
+F10-L11-0075,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1538,0.1686,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0076,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.0894,0.0932,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0077,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.0946,0.1435,TRAIN,,NO,
+F10-L11-0078,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1179,0.143,TRAIN,,NO,
+F10-L11-0079,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1538,0.1082,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0080,Válvula de freno de aire o secador APS obstruido (Camiones),L3,APROBADO,CONFORME,0.1074,0.1034,DEV_60,,SI,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+F10-L11-0081,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.1026,0.1725,TRAIN,,NO,
+F10-L11-0082,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.4175,0.1859,LOTE_06,,NO,
+F10-L11-0083,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.1102,0.2446,TRAIN,,NO,
+F10-L11-0084,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.095,0.1283,LOTE_08,,NO,
+F10-L11-0085,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.2242,0.3325,TRAIN,,NO,
+F10-L11-0086,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.1925,0.4482,TRAIN,,NO,
+F10-L11-0087,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.1299,0.1343,TRAIN,,NO,
+F10-L11-0088,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.2555,0.1994,TRAIN,,NO,
+F10-L11-0089,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.1573,0.1726,TRAIN,,NO,
+F10-L11-0090,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L1,APROBADO,CONFORME,0.1333,0.1687,TRAIN,,NO,
+F10-L11-0091,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1523,0.1975,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0092,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.119,0.2226,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0093,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1184,0.1901,DEV_60,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L11-0094,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1412,0.1854,TRAIN,,NO,
+F10-L11-0095,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1925,0.1542,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0096,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1072,0.1149,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0097,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1258,0.1475,TRAIN,,NO,
+F10-L11-0098,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1298,0.1937,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0099,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1138,0.1036,TRAIN,,NO,
+F10-L11-0100,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.142,0.1387,TRAIN,,NO,
+F10-L11-0101,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.13,0.2491,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0102,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.0848,0.1661,TRAIN,,NO,
+F10-L11-0103,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.1482,0.1078,LOTE_06,,SI,Fuga hidraulica o aire en el sistema de frenos
+F10-L11-0104,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.0777,0.0955,LOTE_10,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0105,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L2,APROBADO,CONFORME,0.0836,0.1522,TRAIN,,NO,
+F10-L11-0106,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.119,0.1729,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0107,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1117,0.1686,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0108,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1122,0.1248,TRAIN,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L11-0109,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1345,0.1105,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0110,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.082,0.1313,LOTE_06,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0111,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1372,0.1382,TRAIN,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0112,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.0956,0.1054,LOTE_08,,NO,
+F10-L11-0113,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1066,0.1054,TRAIN,,NO,
+F10-L11-0114,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.142,0.1134,LOTE_08,,NO,
+F10-L11-0115,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1482,0.0858,LOTE_06,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0116,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1258,0.1182,LOTE_06,,SI,Válvula de freno de aire o secador APS obstruido (Camiones)
+F10-L11-0117,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1261,0.0889,LOTE_09,,NO,
+F10-L11-0118,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1372,0.0953,TRAIN,,SI,Fugas de aire o fallos en el sistema de frenos neumático (Camiones)
+F10-L11-0119,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.0917,0.0997,LOTE_09,,SI,Caliper de freno trabado o mordaza pegada (piston agarrotado)
+F10-L11-0120,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),L3,APROBADO,CONFORME,0.1345,0.114,LOTE_07,,NO,

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import date
+from datetime import date, datetime
 from typing import Any
 
 from sqlalchemy import func, or_, select
@@ -28,6 +28,7 @@ class ValidacionTallerRepository:
         limit: int = 10,
         fecha_desde: date | None = None,
         fecha_hasta: date | None = None,
+        estado_registro: str | None = None,
     ) -> tuple[int, list[ValidacionTaller]]:
         filtros: list[Any] = [ValidacionTaller.taller_id == taller_id]
         if fecha_desde:
@@ -36,6 +37,8 @@ class ValidacionTallerRepository:
             filtros.append(ValidacionTaller.fecha <= fecha_hasta)
         if fase:
             filtros.append(func.lower(ValidacionTaller.fase) == fase.strip().lower())
+        if estado_registro:
+            filtros.append(ValidacionTaller.estado_registro == estado_registro)
         if marca:
             filtros.append(ValidacionTaller.marca_modelo.ilike(f"%{marca.strip()}%"))
         if acierto is not None:
@@ -67,7 +70,10 @@ class ValidacionTallerRepository:
     async def resumen_por_fase(
         self, taller_id: uuid.UUID, fecha_desde: date | None = None, fecha_hasta: date | None = None
     ) -> list[dict[str, Any]]:
-        filtros = [ValidacionTaller.taller_id == taller_id]
+        filtros = [
+            ValidacionTaller.taller_id == taller_id,
+            ValidacionTaller.estado_registro == "verificado",
+        ]
         if fecha_desde:
             filtros.append(ValidacionTaller.fecha >= fecha_desde)
         if fecha_hasta:
@@ -81,8 +87,63 @@ class ValidacionTallerRepository:
         ).where(*filtros).group_by(ValidacionTaller.fase)
         return [dict(row) for row in (await self.session.execute(stmt)).mappings().all()]
 
-    async def listar_todos(
+    async def metricas_variable_independiente(
         self, taller_id: uuid.UUID, fecha_desde: date | None = None, fecha_hasta: date | None = None
+    ) -> dict[str, Any]:
+        """Cálculo riguroso de los 3 indicadores de la Variable Independiente sobre registros verificados."""
+        filtros = [
+            ValidacionTaller.taller_id == taller_id,
+            ValidacionTaller.estado_registro == "verificado",
+        ]
+        if fecha_desde:
+            filtros.append(ValidacionTaller.fecha >= fecha_desde)
+        if fecha_hasta:
+            filtros.append(ValidacionTaller.fecha <= fecha_hasta)
+
+        stmt = select(
+            func.count().label("total_verificados"),
+            func.count(ValidacionTaller.sintoma_registrado_correctamente).label("sintomas_evaluados"),
+            func.sum(ValidacionTaller.sintoma_registrado_correctamente).label("sintomas_correctos"),
+            func.count(ValidacionTaller.procesamiento_validado).label("proc_evaluados"),
+            func.sum(ValidacionTaller.procesamiento_validado).label("proc_correctos"),
+            func.count(ValidacionTaller.prediccion_correcta).label("predicciones_evaluadas"),
+            func.sum(ValidacionTaller.prediccion_correcta).label("predicciones_correctas"),
+        ).where(*filtros)
+
+        row = (await self.session.execute(stmt)).mappings().one_or_none()
+        if not row or not row["total_verificados"]:
+            return {
+                "casos_verificados": 0,
+                "porcentaje_sintomas_correctos": None,
+                "porcentaje_datos_procesados_correctos": None,
+                "exactitud_modelo_validada": None,
+            }
+
+        s_eval = int(row["sintomas_evaluados"] or 0)
+        s_corr = int(row["sintomas_correctos"] or 0)
+        pct_sintomas = round((s_corr / s_eval) * 100, 2) if s_eval > 0 else None
+
+        p_eval = int(row["proc_evaluados"] or 0)
+        p_corr = int(row["proc_correctos"] or 0)
+        pct_proc = round((p_corr / p_eval) * 100, 2) if p_eval > 0 else None
+
+        pred_eval = int(row["predicciones_evaluadas"] or 0)
+        pred_corr = int(row["predicciones_correctas"] or 0)
+        exactitud = round((pred_corr / pred_eval) * 100, 2) if pred_eval > 0 else None
+
+        return {
+            "casos_verificados": int(row["total_verificados"]),
+            "porcentaje_sintomas_correctos": pct_sintomas,
+            "porcentaje_datos_procesados_correctos": pct_proc,
+            "exactitud_modelo_validada": exactitud,
+        }
+
+    async def listar_todos(
+        self,
+        taller_id: uuid.UUID,
+        fecha_desde: date | None = None,
+        fecha_hasta: date | None = None,
+        solo_verificados: bool = False,
     ) -> list[ValidacionTaller]:
         stmt = (
             select(ValidacionTaller)
@@ -93,12 +154,20 @@ class ValidacionTallerRepository:
             stmt = stmt.where(ValidacionTaller.fecha >= fecha_desde)
         if fecha_hasta:
             stmt = stmt.where(ValidacionTaller.fecha <= fecha_hasta)
+        if solo_verificados:
+            stmt = stmt.where(
+                ValidacionTaller.estado_registro == "verificado",
+                ValidacionTaller.fase != "Piloto",
+            )
         return list((await self.session.execute(stmt)).scalars().all())
 
     async def distribuciones(
         self, taller_id: uuid.UUID, fecha_desde: date | None = None, fecha_hasta: date | None = None
     ) -> dict[str, list[dict[str, Any]]]:
-        filtros = [ValidacionTaller.taller_id == taller_id]
+        filtros = [
+            ValidacionTaller.taller_id == taller_id,
+            ValidacionTaller.estado_registro == "verificado",
+        ]
         if fecha_desde:
             filtros.append(ValidacionTaller.fecha >= fecha_desde)
         if fecha_hasta:
@@ -132,6 +201,15 @@ class ValidacionTallerRepository:
         prediccion_correcta: int,
         metodo_confirmacion: str | None,
         evidencia_ref: str | None,
+        estado_registro: str = "borrador",
+        sintoma_registrado_correctamente: int | None = None,
+        validado_por_id: uuid.UUID | None = None,
+        fecha_validacion: datetime | None = None,
+        normalizacion_correcta: int | None = None,
+        extraccion_correcta: int | None = None,
+        clasificacion_procesada: int | None = None,
+        procesamiento_validado: int | None = None,
+        tiempo_inferencia_ml_ms: int | None = None,
     ) -> ValidacionTaller:
         caso = ValidacionTaller(
             taller_id=taller_id,
@@ -149,6 +227,15 @@ class ValidacionTallerRepository:
             prediccion_correcta=prediccion_correcta,
             metodo_confirmacion=metodo_confirmacion,
             evidencia_ref=evidencia_ref,
+            estado_registro=estado_registro,
+            sintoma_registrado_correctamente=sintoma_registrado_correctamente,
+            validado_por_id=validado_por_id,
+            fecha_validacion=fecha_validacion,
+            normalizacion_correcta=normalizacion_correcta,
+            extraccion_correcta=extraccion_correcta,
+            clasificacion_procesada=clasificacion_procesada,
+            procesamiento_validado=procesamiento_validado,
+            tiempo_inferencia_ml_ms=tiempo_inferencia_ml_ms,
         )
         self.session.add(caso)
         await self.session.flush()

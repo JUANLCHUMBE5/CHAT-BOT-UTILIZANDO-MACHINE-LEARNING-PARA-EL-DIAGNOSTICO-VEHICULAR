@@ -1,0 +1,62 @@
+clase,macro_sistema,support,precision_f83,recall_f83,f1_f83,precision_c1,recall_c1,f1_c1,delta_recall,delta_f1
+Alternador defectuoso o placa de diodos quemada,ELECTRICO,45,0.8491,1.0,0.9184,0.675,0.6,0.6353,-0.4,-0.2831
+Amortiguadores reventados o bujes de suspension gastados,SUSPENSION_CHASIS,39,0.8947,0.8718,0.8831,0.8684,0.8462,0.8571,-0.0256,-0.026
+Baja presion de aceite o bomba de aceite defectuosa,MOTOR,28,0.9286,0.9286,0.9286,0.96,0.8571,0.9057,-0.0714,-0.0229
+Bateria descargada o bornes sulfatados,ELECTRICO,52,0.7619,0.9231,0.8348,0.878,0.6923,0.7742,-0.2308,-0.0606
+Bomba de gasolina quemada o con baja presion,MOTOR,43,0.7407,0.9302,0.8247,0.75,0.8372,0.7912,-0.093,-0.0335
+Caliper de freno trabado o mordaza pegada (piston agarrotado),FRENOS,20,0.7727,0.85,0.8095,0.625,0.75,0.6818,-0.1,-0.1277
+"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",CARROCERIA_NEUMATICA,28,1.0,0.8214,0.902,0.9231,0.8571,0.8889,0.0357,-0.0131
+Consumo de aceite por desgaste de anillos o retenes,MOTOR,32,0.9355,0.9062,0.9206,0.8125,0.8125,0.8125,-0.0938,-0.1081
+Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),MOTOR,21,1.0,0.7619,0.8649,0.8182,0.8571,0.8372,0.0952,-0.0277
+Cremallera de direccion asistida con holgura o fuga,SUSPENSION_CHASIS,32,0.9375,0.9375,0.9375,0.931,0.8438,0.8852,-0.0938,-0.0523
+Cuerpo de aceleracion o valvula IAC sucia,MOTOR,45,0.8542,0.9111,0.8817,0.8667,0.8667,0.8667,-0.0444,-0.0151
+Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),ELECTRICO,25,0.95,0.76,0.8444,0.7778,0.84,0.8077,0.08,-0.0368
+Desgaste de pastillas y zapatas de freno,FRENOS,47,0.88,0.9362,0.9072,0.8571,0.8936,0.875,-0.0426,-0.0322
+Desgaste en collarin de empuje o crapodina de embrague,TRANSMISION,20,1.0,0.7,0.8235,0.8947,0.85,0.8718,0.15,0.0483
+Disco de embrague desgastado o patinando,TRANSMISION,31,0.8286,0.9355,0.8788,0.7857,0.7097,0.7458,-0.2258,-0.133
+Discos de freno alabeados o desgastados,FRENOS,39,0.9211,0.8974,0.9091,0.9429,0.8462,0.8919,-0.0513,-0.0172
+Elevalunas electrico o guaya de alzacristales rota o trabada,CARROCERIA_NEUMATICA,25,1.0,0.8,0.8889,0.9565,0.88,0.9167,0.08,0.0278
+Empaque de culata soplado o danado,MOTOR,34,0.963,0.7647,0.8525,1.0,0.7647,0.8667,0.0,0.0142
+Faja o cadena de distribucion destensada o con salto de punto,MOTOR,30,0.8929,0.8333,0.8621,0.8519,0.7667,0.807,-0.0667,-0.0551
+Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),MOTOR,17,0.9333,0.8235,0.875,0.8462,0.6471,0.7333,-0.1765,-0.1417
+Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),MOTOR,18,1.0,0.8333,0.9091,0.7778,0.7778,0.7778,-0.0556,-0.1313
+Falla electrica del cierre centralizado o actuador de puerta,CARROCERIA_NEUMATICA,28,0.8182,0.9643,0.8852,0.7931,0.8214,0.807,-0.1429,-0.0782
+Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),CARROCERIA_NEUMATICA,20,1.0,0.9,0.9474,0.8636,0.95,0.9048,0.05,-0.0426
+Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,MOTOR,18,0.8571,1.0,0.9231,0.7368,0.7778,0.7568,-0.2222,-0.1663
+Falla en bombin o bomba hidraulica de embrague,TRANSMISION,25,0.8276,0.96,0.8889,0.9231,0.96,0.9412,0.0,0.0523
+Falla en bujias o bobinas de encendido (misfire),MOTOR,68,0.859,0.9853,0.9178,0.8116,0.8235,0.8175,-0.1618,-0.1003
+Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),TRANSMISION,22,0.95,0.8636,0.9048,0.9091,0.9091,0.9091,0.0455,0.0043
+Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),MOTOR,20,1.0,0.8,0.8889,0.9091,1.0,0.9524,0.2,0.0635
+Falla en compresor de aire acondicionado o fuga de gas R134a,CLIMATIZACION,28,0.9583,0.8214,0.8846,0.9231,0.8571,0.8889,0.0357,0.0043
+Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),MOTOR,18,1.0,0.8889,0.9412,0.8889,0.8889,0.8889,0.0,-0.0523
+Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),MOTOR,17,0.8824,0.8824,0.8824,0.7895,0.8824,0.8333,0.0,-0.049
+Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),ELECTRICO,20,1.0,0.7,0.8235,0.6429,0.9,0.75,0.2,-0.0735
+Falla en regulador de presion de combustible o diafragma roto,MOTOR,20,0.9474,0.9,0.9231,0.9,0.9,0.9,0.0,-0.0231
+Falla en sensor de oxigeno o mezcla rica,MOTOR,53,0.8361,0.9623,0.8947,0.902,0.8679,0.8846,-0.0943,-0.0101
+Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,22,0.8947,0.7727,0.8293,0.6957,0.7273,0.7111,-0.0455,-0.1182
+Falla en sensor de velocidad de rueda ABS,FRENOS,18,0.85,0.9444,0.8947,0.8947,0.9444,0.9189,0.0,0.0242
+Falla en servofreno (booster) o linea de vacio,FRENOS,32,0.8611,0.9688,0.9118,0.7805,1.0,0.8767,0.0312,-0.0351
+Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),MOTOR,16,1.0,0.875,0.9333,0.7895,0.9375,0.8571,0.0625,-0.0762
+Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),MOTOR,21,1.0,0.8571,0.9231,1.0,0.8571,0.9231,0.0,0.0
+Falla en sistema de frenado regenerativo (EV / Hibridos),FRENOS,19,0.9333,0.7368,0.8235,0.8947,0.8947,0.8947,0.1579,0.0712
+Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),MOTOR,19,0.8421,0.8421,0.8421,0.8,0.8421,0.8205,0.0,-0.0216
+Falla en termostato o motoventilador de radiador,MOTOR,32,0.7895,0.9375,0.8571,0.9667,0.9062,0.9355,-0.0312,0.0783
+Fallo en inversor de corriente IGBT o motor electrico (EV),ELECTRICO,26,0.875,0.8077,0.84,0.8571,0.9231,0.8889,0.1154,0.0489
+Falta o degradacion de aceite de caja de cambios,TRANSMISION,27,0.9286,0.963,0.9455,0.9286,0.963,0.9455,0.0,0.0
+Foco o falla en sistema de refrigeracion de bateria/inversor (EV),ELECTRICO,20,0.8182,0.9,0.8571,0.9444,0.85,0.8947,-0.05,0.0376
+Fuga en mangueras de intercooler o turbocompresor danado,MOTOR,25,0.913,0.84,0.875,0.95,0.76,0.8444,-0.08,-0.0306
+Fuga en mangueras de refrigerante o radiador picado,MOTOR,23,0.7931,1.0,0.8846,0.7692,0.8696,0.8163,-0.1304,-0.0683
+Fuga hidraulica o aire en el sistema de frenos,FRENOS,36,0.9394,0.8611,0.8986,0.8824,0.8333,0.8571,-0.0278,-0.0414
+Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),MOTOR,19,0.9375,0.7895,0.8571,0.8421,0.8421,0.8421,0.0526,-0.015
+Fuga parasita de corriente en reposo (consumo nocturno de bateria),ELECTRICO,20,0.9333,0.7,0.8,0.75,0.9,0.8182,0.2,0.0182
+Fugas de aire o fallos en el sistema de frenos neumático (Camiones),CARROCERIA_NEUMATICA,28,0.9615,0.8929,0.9259,0.8519,0.8214,0.8364,-0.0714,-0.0896
+Inyectores sucios o filtro de combustible obstruido,MOTOR,38,0.7674,0.8684,0.8148,0.7,0.7368,0.7179,-0.1316,-0.0969
+Juntas homocineticas o palieres danados,SUSPENSION_CHASIS,44,0.9111,0.9318,0.9213,0.9167,0.75,0.825,-0.1818,-0.0963
+Limpiaparabrisas o motor pluma quemado,CARROCERIA_NEUMATICA,24,1.0,0.875,0.9333,0.9524,0.8333,0.8889,-0.0417,-0.0444
+Llantas desbalanceadas o desalineadas,SUSPENSION_CHASIS,49,0.9388,0.9388,0.9388,0.8913,0.8367,0.8632,-0.102,-0.0756
+Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,20,0.7391,0.85,0.7907,0.7619,0.8,0.7805,-0.05,-0.0102
+Rodajes de caja mecanica o diferencial gastados,TRANSMISION,26,0.8077,0.8077,0.8077,0.7778,0.8077,0.7925,0.0,-0.0152
+Rodajes de transmision manual o eje primario gastados,TRANSMISION,20,1.0,0.8,0.8889,0.8696,1.0,0.9302,0.2,0.0413
+Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),SUSPENSION_CHASIS,21,0.8421,0.7619,0.8,0.5588,0.9048,0.6909,0.1429,-0.1091
+Sobrecalentamiento o solenoides en caja automatica CVT / DSG,TRANSMISION,28,0.963,0.9286,0.9455,0.7879,0.9286,0.8525,0.0,-0.093
+Válvula de freno de aire o secador APS obstruido (Camiones),CARROCERIA_NEUMATICA,24,0.92,0.9583,0.9388,0.96,1.0,0.9796,0.0417,0.0408

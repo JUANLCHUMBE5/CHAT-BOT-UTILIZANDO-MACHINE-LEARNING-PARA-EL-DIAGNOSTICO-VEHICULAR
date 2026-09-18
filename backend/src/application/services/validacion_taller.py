@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import date
+from datetime import date, datetime, timezone
 from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,7 +15,7 @@ from src.interfaces.api.v1.dtos.validacion import CrearCasoValidacionDTO
 
 
 def resumir_fases(grupos: list[dict[str, Any]]) -> dict[str, Any]:
-    """Resumen descriptivo; no presume mejora ni significancia estadística."""
+    """Resumen descriptivo sobre casos verificados; no presume mejora ni significancia estadística."""
     fases = {g["fase"]: g for g in grupos}
     pre = fases.get("Pre-test", {})
     post = fases.get("Post-test", {})
@@ -65,6 +65,15 @@ def serializar_caso(caso: ValidacionTaller) -> dict[str, Any]:
         "mecanico_id": str(caso.mecanico_id) if caso.mecanico_id else None,
         "metodo_confirmacion": caso.metodo_confirmacion,
         "evidencia_ref": caso.evidencia_ref,
+        "estado_registro": caso.estado_registro,
+        "sintoma_registrado_correctamente": caso.sintoma_registrado_correctamente,
+        "validado_por_id": str(caso.validado_por_id) if caso.validado_por_id else None,
+        "fecha_validacion": caso.fecha_validacion.isoformat() if caso.fecha_validacion else None,
+        "normalizacion_correcta": caso.normalizacion_correcta,
+        "extraccion_correcta": caso.extraccion_correcta,
+        "clasificacion_procesada": caso.clasificacion_procesada,
+        "procesamiento_validado": caso.procesamiento_validado,
+        "tiempo_inferencia_ml_ms": caso.tiempo_inferencia_ml_ms,
     }
 
 
@@ -91,6 +100,29 @@ class ServicioValidacionTaller:
         placa_hash: str,
     ) -> ValidacionTaller:
         fecha_caso = date.fromisoformat(dto.fecha) if dto.fecha else date.today()
+        
+        # Validación de reglas de negocio para estado verificado
+        estado = dto.estado_registro
+        if estado == "verificado":
+            if not dto.metodo_confirmacion or not dto.evidencia_ref:
+                estado = "borrador"
+
+        # Procesamiento validado requiere cumplimiento de las 3 fases si están registradas
+        proc_val = dto.procesamiento_validado
+        if proc_val is None and (
+            dto.normalizacion_correcta is not None
+            and dto.extraccion_correcta is not None
+            and dto.clasificacion_procesada is not None
+        ):
+            proc_val = 1 if (
+                dto.normalizacion_correcta == 1
+                and dto.extraccion_correcta == 1
+                and dto.clasificacion_procesada == 1
+            ) else 0
+
+        fecha_val = datetime.now(timezone.utc) if estado == "verificado" else None
+        validado_por = usuario_id if estado == "verificado" else None
+
         caso = await self.repo.crear(
             taller_id=taller_id,
             mecanico_id=usuario_id,
@@ -107,13 +139,22 @@ class ServicioValidacionTaller:
             prediccion_correcta=dto.prediccion_correcta,
             metodo_confirmacion=dto.metodo_confirmacion or "Inspección Visual",
             evidencia_ref=dto.evidencia_ref,
+            estado_registro=estado,
+            sintoma_registrado_correctamente=dto.sintoma_registrado_correctamente,
+            validado_por_id=validado_por,
+            fecha_validacion=fecha_val,
+            normalizacion_correcta=dto.normalizacion_correcta,
+            extraccion_correcta=dto.extraccion_correcta,
+            clasificacion_procesada=dto.clasificacion_procesada,
+            procesamiento_validado=proc_val,
+            tiempo_inferencia_ml_ms=dto.tiempo_inferencia_ml_ms,
         )
         await OperacionesRepository(self.session).registrar_auditoria(
             accion="crear_validacion_taller",
             entidad="validacion_taller",
             taller_id=taller_id,
             usuario_id=usuario_id,
-            detalles={"item": caso.item, "fase": caso.fase},
+            detalles={"item": caso.item, "fase": caso.fase, "estado_registro": caso.estado_registro},
         )
         return caso
 
@@ -121,7 +162,10 @@ class ServicioValidacionTaller:
         self, taller_id: uuid.UUID, fecha_desde: date | None = None, fecha_hasta: date | None = None
     ) -> dict[str, Any]:
         grupos = await self.repo.resumen_por_fase(taller_id, fecha_desde, fecha_hasta)
+        metricas_vi = await self.repo.metricas_variable_independiente(taller_id, fecha_desde, fecha_hasta)
+        distribuciones = await self.repo.distribuciones(taller_id, fecha_desde, fecha_hasta)
         return {
             **resumir_fases(grupos),
-            **await self.repo.distribuciones(taller_id, fecha_desde, fecha_hasta),
+            **metricas_vi,
+            **distribuciones,
         }

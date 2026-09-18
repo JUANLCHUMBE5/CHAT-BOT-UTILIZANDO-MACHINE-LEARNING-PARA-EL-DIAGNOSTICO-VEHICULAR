@@ -1,0 +1,21 @@
+{
+  "candidate_version": "RAG_CANDIDATO_V1",
+  "dimension": 32708,
+  "document_count": 239,
+  "chunk_count": 239,
+  "FAISS_ntotal": 239,
+  "index_hash": "a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",
+  "metadata_hash": "af5c5edebdebbdbe7f97c488dad274c306e4782fb4c273cfab2e42e531c2e2b3",
+  "manifest_hash": "a0fce3dc39bb6344388a18cc6f2a10d8298d5d47ae1f365e4ae226eab1b16bba",
+  "vectorizer_config": {
+    "lowercase": true,
+    "strip_accents": "unicode",
+    "stop_words": "SPANISH_STOP_WORDS (138 terms)",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "sublinear_tf": true
+  },
+  "tests_status": "VALIDATED"
+}

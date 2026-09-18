@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Literal, Optional
 from pydantic import AliasChoices, BaseModel, Field
 
 FaseEvaluacion = Literal["Pre-test", "Post-test", "Piloto"]
+EstadoRegistro = Literal["borrador", "verificado", "excluido"]
 
 
 class CasoValidacionDTO(BaseModel):
@@ -26,6 +27,15 @@ class CasoValidacionDTO(BaseModel):
     mecanico_id: Optional[str] = None
     metodo_confirmacion: Optional[str] = "Inspección Visual en Elevador"
     evidencia_ref: Optional[str] = None
+    estado_registro: str = "borrador"
+    sintoma_registrado_correctamente: Optional[int] = None
+    validado_por_id: Optional[str] = None
+    fecha_validacion: Optional[str] = None
+    normalizacion_correcta: Optional[int] = None
+    extraccion_correcta: Optional[int] = None
+    clasificacion_procesada: Optional[int] = None
+    procesamiento_validado: Optional[int] = None
+    tiempo_inferencia_ml_ms: Optional[int] = None
 
 
 class CrearCasoValidacionDTO(BaseModel):
@@ -45,6 +55,21 @@ class CrearCasoValidacionDTO(BaseModel):
     prediccion_correcta: int = Field(ge=0, le=1)
     metodo_confirmacion: Optional[str] = Field(default="Inspección Visual + Escáner OBD", max_length=500)
     evidencia_ref: Optional[str] = Field(default=None, max_length=500)
+    estado_registro: EstadoRegistro = Field(default="borrador")
+    sintoma_registrado_correctamente: Optional[int] = Field(default=None, ge=0, le=1)
+    normalizacion_correcta: Optional[int] = Field(default=None, ge=0, le=1)
+    extraccion_correcta: Optional[int] = Field(default=None, ge=0, le=1)
+    clasificacion_procesada: Optional[int] = Field(default=None, ge=0, le=1)
+    procesamiento_validado: Optional[int] = Field(default=None, ge=0, le=1)
+    tiempo_inferencia_ml_ms: Optional[int] = Field(default=None, ge=0)
+
+
+class MetricasVariableIndependienteDTO(BaseModel):
+    indicador1_sintomas_correctos_pct: Optional[float] = None
+    indicador2_procesamiento_correcto_pct: Optional[float] = None
+    indicador3_exactitud_ml_pct: Optional[float] = None
+    casos_verificados_evaluados: int = 0
+    nota_metodologica: str = "Cálculo exclusivo sobre casos con estado verificado con confirmación física en taller."
 
 
 class MetricasValidacionResponseDTO(BaseModel):
@@ -61,9 +86,16 @@ class MetricasValidacionResponseDTO(BaseModel):
     tasa_acierto_posttest_porcentaje: float
     tiempo_promedio_posttest_min: float
     reduccion_tiempo_porcentaje: float
+    casos_verificados: int = 0
+    total_casos_verificados: int = 0
+    total_casos_borrador: int = 0
+    porcentaje_sintomas_correctos: Optional[float] = None
+    porcentaje_datos_procesados_correctos: Optional[float] = None
+    exactitud_modelo_validada: Optional[float] = None
+    variable_independiente: Optional[MetricasVariableIndependienteDTO] = None
     distribucion_marcas: List[Dict[str, Any]]
     top_fallas_reales: List[Dict[str, Any]]
     nota_metodologica: str = (
         "Comparación descriptiva de registros guardados por taller y período. "
-        "Los casos Piloto se excluyen de los indicadores pre-test y post-test."
+        "Los casos Piloto y en borrador se excluyen de los indicadores oficiales pre-test y post-test."
     )

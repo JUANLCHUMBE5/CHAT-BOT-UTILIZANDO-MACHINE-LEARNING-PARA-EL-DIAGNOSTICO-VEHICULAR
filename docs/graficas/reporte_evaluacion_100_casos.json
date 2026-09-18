@@ -1,0 +1,2540 @@
+{
+  "grupo_1": {
+    "nombre": "1MER GRUPO (Flota Real Taller)",
+    "total": 50,
+    "promedio_confianza": 0.46857,
+    "min_confianza": 0.172,
+    "max_confianza": 0.8161,
+    "casos_ge_80": 2,
+    "casos_ge_70": 6,
+    "casos_ge_60": 10,
+    "prom_t_ml": 7.919937999831745,
+    "prom_t_rag": 1.8809780001174659,
+    "resultados": [
+      {
+        "idx": 1,
+        "caso": "Tengo un Yaris 2018, el motor tiembla bastante en mínimo y cuando acelero pierde fuerza. Me sale P0301.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.397,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.397
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.1743
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1396
+          }
+        ],
+        "similitud_rag": 0.1556,
+        "titulo_rag": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+        "dtc_detectados": [
+          "P0301: Cylinder 1 Misfire Detected"
+        ],
+        "t_ml_ms": 13.19,
+        "t_rag_ms": 2.7
+      },
+      {
+        "idx": 2,
+        "caso": "Corolla 2017, está fallando en ralentí y se siente como si trabajara en 3 cilindros. Check prendido.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.5292,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.5292
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.1849
+          },
+          {
+            "falla": "Falla en servofreno (booster) o linea de vacio",
+            "probabilidad": 0.052
+          }
+        ],
+        "similitud_rag": 0.0755,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.1,
+        "t_rag_ms": 1.82
+      },
+      {
+        "idx": 3,
+        "caso": "Kia Rio 2019, da tirones cuando acelero y el motor cabecea en mínimo.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.3506,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.3506
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.2388
+          },
+          {
+            "falla": "Disco de embrague desgastado o patinando",
+            "probabilidad": 0.0785
+          }
+        ],
+        "similitud_rag": 0.1387,
+        "titulo_rag": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.6,
+        "t_rag_ms": 1.99
+      },
+      {
+        "idx": 4,
+        "caso": "Hyundai Accent 2016, cambié bujías pero sigue temblando y perdiendo potencia cuando acelero.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.2474,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.2474
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.2199
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1851
+          }
+        ],
+        "similitud_rag": 0.1046,
+        "titulo_rag": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.67,
+        "t_rag_ms": 1.88
+      },
+      {
+        "idx": 5,
+        "caso": "Nissan Versa 2018, en frío prende bien pero después empieza a fallar y tironear el motor.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.4862,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.4862
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.2583
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.038
+          }
+        ],
+        "similitud_rag": 0.1313,
+        "titulo_rag": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.91,
+        "t_rag_ms": 1.78
+      },
+      {
+        "idx": 6,
+        "caso": "Toyota Etios 2019 no arranca, tablero prende débil y cuando doy contacto solo suena clic clic.",
+        "falla_top1": "Bateria descargada o bornes sulfatados",
+        "confianza_top1": 0.7343,
+        "top_fallas": [
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.7343
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0772
+          },
+          {
+            "falla": "Falla en servofreno (booster) o linea de vacio",
+            "probabilidad": 0.0299
+          }
+        ],
+        "similitud_rag": 0.0663,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.64,
+        "t_rag_ms": 1.73
+      },
+      {
+        "idx": 7,
+        "caso": "Kia Picanto 2018, batería aparentemente está buena pero en las mañanas le cuesta bastante arrancar.",
+        "falla_top1": "Bateria descargada o bornes sulfatados",
+        "confianza_top1": 0.2856,
+        "top_fallas": [
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.2856
+          },
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.1845
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1257
+          }
+        ],
+        "similitud_rag": 0.0685,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.06,
+        "t_rag_ms": 1.97
+      },
+      {
+        "idx": 8,
+        "caso": "Hyundai Accent 2017, se prende batería en tablero y las luces bajan de intensidad cuando está en mínimo.",
+        "falla_top1": "Alternador defectuoso o placa de diodos quemada",
+        "confianza_top1": 0.6369,
+        "top_fallas": [
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.6369
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.1597
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0705
+          }
+        ],
+        "similitud_rag": 0.091,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.84,
+        "t_rag_ms": 2.09
+      },
+      {
+        "idx": 9,
+        "caso": "Corolla 2015, tengo P0562 y el voltaje cae cuando prendo luces y aire acondicionado.",
+        "falla_top1": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+        "confianza_top1": 0.3462,
+        "top_fallas": [
+          {
+            "falla": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+            "probabilidad": 0.3462
+          },
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.3001
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0441
+          }
+        ],
+        "similitud_rag": 0.1642,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+        "dtc_detectados": [
+          "P0562: System Voltage Low"
+        ],
+        "t_ml_ms": 7.71,
+        "t_rag_ms": 1.69
+      },
+      {
+        "idx": 10,
+        "caso": "Nissan Sentra 2016, batería nueva pero después de manejar un rato se descarga y ya no vuelve a arrancar.",
+        "falla_top1": "Alternador defectuoso o placa de diodos quemada",
+        "confianza_top1": 0.5664,
+        "top_fallas": [
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.5664
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1256
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0637
+          }
+        ],
+        "similitud_rag": 0.0824,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.32,
+        "t_rag_ms": 1.93
+      },
+      {
+        "idx": 11,
+        "caso": "Yaris 2017, cuando freno a 80 o 90 el timón comienza a vibrar fuerte.",
+        "falla_top1": "Discos de freno alabeados o desgastados",
+        "confianza_top1": 0.5146,
+        "top_fallas": [
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.5146
+          },
+          {
+            "falla": "Juntas homocineticas o palieres danados",
+            "probabilidad": 0.1699
+          },
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.1655
+          }
+        ],
+        "similitud_rag": 0.158,
+        "titulo_rag": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.64,
+        "t_rag_ms": 1.93
+      },
+      {
+        "idx": 12,
+        "caso": "Kia Rio 2020, pedal de freno está esponjoso y tengo que pisarlo casi hasta el fondo para que frene.",
+        "falla_top1": "Fuga hidraulica o aire en el sistema de frenos",
+        "confianza_top1": 0.8003,
+        "top_fallas": [
+          {
+            "falla": "Fuga hidraulica o aire en el sistema de frenos",
+            "probabilidad": 0.8003
+          },
+          {
+            "falla": "Falla en servofreno (booster) o linea de vacio",
+            "probabilidad": 0.0465
+          },
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.0295
+          }
+        ],
+        "similitud_rag": 0.1791,
+        "titulo_rag": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.74,
+        "t_rag_ms": 1.74
+      },
+      {
+        "idx": 13,
+        "caso": "Hyundai Elantra 2018, escucho chillido adelante cada vez que freno.",
+        "falla_top1": "Desgaste de pastillas y zapatas de freno",
+        "confianza_top1": 0.5613,
+        "top_fallas": [
+          {
+            "falla": "Desgaste de pastillas y zapatas de freno",
+            "probabilidad": 0.5613
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.1373
+          },
+          {
+            "falla": "Consumo de aceite por desgaste de anillos o retenes",
+            "probabilidad": 0.0315
+          }
+        ],
+        "similitud_rag": 0.1109,
+        "titulo_rag": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.94,
+        "t_rag_ms": 2.08
+      },
+      {
+        "idx": 14,
+        "caso": "Corolla 2016, al frenar se va un poco hacia la derecha y siento que una rueda queda frenada.",
+        "falla_top1": "Desgaste de pastillas y zapatas de freno",
+        "confianza_top1": 0.5239,
+        "top_fallas": [
+          {
+            "falla": "Desgaste de pastillas y zapatas de freno",
+            "probabilidad": 0.5239
+          },
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.1793
+          },
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.0827
+          }
+        ],
+        "similitud_rag": 0.0748,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.94,
+        "t_rag_ms": 1.82
+      },
+      {
+        "idx": 15,
+        "caso": "Nissan Versa 2019, después de cambiar pastillas el pedal sigue largo, ya revisé que no haya fuga visible.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.2051,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.2051
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.127
+          },
+          {
+            "falla": "Fuga hidraulica o aire en el sistema de frenos",
+            "probabilidad": 0.0797
+          }
+        ],
+        "similitud_rag": 0.0769,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.8,
+        "t_rag_ms": 1.76
+      },
+      {
+        "idx": 16,
+        "caso": "Toyota Corolla 2014 se está calentando, depósito hace burbujas y está botando refrigerante.",
+        "falla_top1": "Fuga en mangueras de refrigerante o radiador picado",
+        "confianza_top1": 0.3648,
+        "top_fallas": [
+          {
+            "falla": "Fuga en mangueras de refrigerante o radiador picado",
+            "probabilidad": 0.3648
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.1794
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.063
+          }
+        ],
+        "similitud_rag": 0.1098,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.61,
+        "t_rag_ms": 1.95
+      },
+      {
+        "idx": 17,
+        "caso": "Kia Rio 2016, temperatura sube cuando estoy en tráfico pero cuando avanzo vuelve a bajar.",
+        "falla_top1": "Falla en termostato o motoventilador de radiador",
+        "confianza_top1": 0.5702,
+        "top_fallas": [
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.5702
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1854
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.061
+          }
+        ],
+        "similitud_rag": 0.0414,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.58,
+        "t_rag_ms": 1.93
+      },
+      {
+        "idx": 18,
+        "caso": "Hyundai Accent 2015, está consumiendo aceite y sale humo azul cuando acelero.",
+        "falla_top1": "Consumo de aceite por desgaste de anillos o retenes",
+        "confianza_top1": 0.7896,
+        "top_fallas": [
+          {
+            "falla": "Consumo de aceite por desgaste de anillos o retenes",
+            "probabilidad": 0.7896
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.0518
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0351
+          }
+        ],
+        "similitud_rag": 0.1288,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE LA VÁLVULA PCV Y SOBREPRESIÓN EN EL CÁRTER (FUGAS DE ACEITE POR RETENES / CONSUMO DE ACEITE)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.73,
+        "t_rag_ms": 1.7
+      },
+      {
+        "idx": 19,
+        "caso": "Yaris 2013, prende testigo de aceite cuando está caliente y en mínimo, al acelerar se apaga.",
+        "falla_top1": "Cuerpo de aceleracion o valvula IAC sucia",
+        "confianza_top1": 0.4738,
+        "top_fallas": [
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.4738
+          },
+          {
+            "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+            "probabilidad": 0.262
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.1298
+          }
+        ],
+        "similitud_rag": 0.2341,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.52,
+        "t_rag_ms": 1.72
+      },
+      {
+        "idx": 20,
+        "caso": "Nissan Sentra 2015, escucho golpeteo arriba del motor cuando calienta, parece taqué.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.172,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.172
+          },
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.1525
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1083
+          }
+        ],
+        "similitud_rag": 0.2411,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.71,
+        "t_rag_ms": 1.83
+      },
+      {
+        "idx": 21,
+        "caso": "Toyota Yaris mecánico, acelero pero el carro no avanza como debería y las revoluciones se disparan.",
+        "falla_top1": "Disco de embrague desgastado o patinando",
+        "confianza_top1": 0.4184,
+        "top_fallas": [
+          {
+            "falla": "Disco de embrague desgastado o patinando",
+            "probabilidad": 0.4184
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.1437
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.126
+          }
+        ],
+        "similitud_rag": 0.089,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.83,
+        "t_rag_ms": 1.97
+      },
+      {
+        "idx": 22,
+        "caso": "Kia Rio 2017 mecánico, cuesta meter primera y retroceso con el motor prendido, apagado entran normal.",
+        "falla_top1": "Falla en bombin o bomba hidraulica de embrague",
+        "confianza_top1": 0.604,
+        "top_fallas": [
+          {
+            "falla": "Falla en bombin o bomba hidraulica de embrague",
+            "probabilidad": 0.604
+          },
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.0732
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.061
+          }
+        ],
+        "similitud_rag": 0.0926,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.68,
+        "t_rag_ms": 1.77
+      },
+      {
+        "idx": 23,
+        "caso": "Hyundai Accent 2016, pedal de embrague se fue al fondo y ya no regresa solo.",
+        "falla_top1": "Falla en bombin o bomba hidraulica de embrague",
+        "confianza_top1": 0.7808,
+        "top_fallas": [
+          {
+            "falla": "Falla en bombin o bomba hidraulica de embrague",
+            "probabilidad": 0.7808
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.0413
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.036
+          }
+        ],
+        "similitud_rag": 0.1703,
+        "titulo_rag": "PROCEDIMIENTO: PURGA Y REEMPLAZO DEL BOMBÍN Y CILINDRO MAESTRO DE EMBRAGUE HYUNDAI ACCENT (DTC MANUAL / PEDAL DURO O PEGADO AL PISO)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.89,
+        "t_rag_ms": 1.73
+      },
+      {
+        "idx": 24,
+        "caso": "Corolla mecánico 2015, cuando suelto embrague tiembla todo el carro al salir.",
+        "falla_top1": "Disco de embrague desgastado o patinando",
+        "confianza_top1": 0.2611,
+        "top_fallas": [
+          {
+            "falla": "Disco de embrague desgastado o patinando",
+            "probabilidad": 0.2611
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.1727
+          },
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.1415
+          }
+        ],
+        "similitud_rag": 0.0757,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.54,
+        "t_rag_ms": 2.02
+      },
+      {
+        "idx": 25,
+        "caso": "Nissan Versa 2018, escucho ruido cuando piso el embrague y desaparece cuando lo suelto.",
+        "falla_top1": "Falla en bombin o bomba hidraulica de embrague",
+        "confianza_top1": 0.4385,
+        "top_fallas": [
+          {
+            "falla": "Falla en bombin o bomba hidraulica de embrague",
+            "probabilidad": 0.4385
+          },
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.1272
+          },
+          {
+            "falla": "Disco de embrague desgastado o patinando",
+            "probabilidad": 0.074
+          }
+        ],
+        "similitud_rag": 0.07,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.71,
+        "t_rag_ms": 1.73
+      },
+      {
+        "idx": 26,
+        "caso": "Yaris 2018, golpea adelante cuando paso rompemuelles y pistas con huecos.",
+        "falla_top1": "Amortiguadores reventados o bujes de suspension gastados",
+        "confianza_top1": 0.6178,
+        "top_fallas": [
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.6178
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.0972
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.0631
+          }
+        ],
+        "similitud_rag": 0.0712,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.83,
+        "t_rag_ms": 1.77
+      },
+      {
+        "idx": 27,
+        "caso": "Kia Rio 2019, el carro rebota demasiado después de pasar un bache y siento inestable la parte trasera.",
+        "falla_top1": "Amortiguadores reventados o bujes de suspension gastados",
+        "confianza_top1": 0.5448,
+        "top_fallas": [
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.5448
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.1801
+          },
+          {
+            "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+            "probabilidad": 0.0316
+          }
+        ],
+        "similitud_rag": 0.0541,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.68,
+        "t_rag_ms": 1.81
+      },
+      {
+        "idx": 28,
+        "caso": "Hyundai Accent 2017, cuando doblo completamente suena tac tac tac en la rueda delantera.",
+        "falla_top1": "Juntas homocineticas o palieres danados",
+        "confianza_top1": 0.4762,
+        "top_fallas": [
+          {
+            "falla": "Juntas homocineticas o palieres danados",
+            "probabilidad": 0.4762
+          },
+          {
+            "falla": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+            "probabilidad": 0.1424
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.1155
+          }
+        ],
+        "similitud_rag": 0.0777,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.67,
+        "t_rag_ms": 1.81
+      },
+      {
+        "idx": 29,
+        "caso": "Corolla 2016, tengo ruido seco adelante al pasar huecos, ya revisé las llantas y están bien.",
+        "falla_top1": "Amortiguadores reventados o bujes de suspension gastados",
+        "confianza_top1": 0.5874,
+        "top_fallas": [
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.5874
+          },
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.095
+          },
+          {
+            "falla": "Desgaste de pastillas y zapatas de freno",
+            "probabilidad": 0.0745
+          }
+        ],
+        "similitud_rag": 0.043,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.9,
+        "t_rag_ms": 1.73
+      },
+      {
+        "idx": 30,
+        "caso": "Nissan Sentra 2017, a velocidad alta siento que el carro flota y se mueve demasiado.",
+        "falla_top1": "Discos de freno alabeados o desgastados",
+        "confianza_top1": 0.2091,
+        "top_fallas": [
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.2091
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1735
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.1277
+          }
+        ],
+        "similitud_rag": 0.0594,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.61,
+        "t_rag_ms": 1.68
+      },
+      {
+        "idx": 31,
+        "caso": "Toyota Yaris 2019, timón vibra entre 90 y 110 km/h pero cuando bajo velocidad desaparece.",
+        "falla_top1": "Llantas desbalanceadas o desalineadas",
+        "confianza_top1": 0.8161,
+        "top_fallas": [
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.8161
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.0246
+          },
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.0205
+          }
+        ],
+        "similitud_rag": 0.1023,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.88,
+        "t_rag_ms": 1.87
+      },
+      {
+        "idx": 32,
+        "caso": "Kia Rio 2018, el carro se va hacia la izquierda aunque mantenga el timón derecho.",
+        "falla_top1": "Llantas desbalanceadas o desalineadas",
+        "confianza_top1": 0.5894,
+        "top_fallas": [
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.5894
+          },
+          {
+            "falla": "Juntas homocineticas o palieres danados",
+            "probabilidad": 0.1911
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.0422
+          }
+        ],
+        "similitud_rag": 0.0781,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.67,
+        "t_rag_ms": 2.03
+      },
+      {
+        "idx": 33,
+        "caso": "Hyundai Accent 2020, desgaste de llanta delantera por la parte interna, las demás están normales.",
+        "falla_top1": "Llantas desbalanceadas o desalineadas",
+        "confianza_top1": 0.4361,
+        "top_fallas": [
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.4361
+          },
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.0914
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.0728
+          }
+        ],
+        "similitud_rag": 0.0564,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.99,
+        "t_rag_ms": 1.8
+      },
+      {
+        "idx": 34,
+        "caso": "Corolla 2017, después de caer en un hueco quedó el timón medio chueco para andar recto.",
+        "falla_top1": "Llantas desbalanceadas o desalineadas",
+        "confianza_top1": 0.5577,
+        "top_fallas": [
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.5577
+          },
+          {
+            "falla": "Juntas homocineticas o palieres danados",
+            "probabilidad": 0.1304
+          },
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.1011
+          }
+        ],
+        "similitud_rag": 0.046,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.99,
+        "t_rag_ms": 1.79
+      },
+      {
+        "idx": 35,
+        "caso": "Nissan Versa 2018, cambié llantas y ahora tengo vibración fuerte en carretera, en ciudad casi no se siente.",
+        "falla_top1": "Llantas desbalanceadas o desalineadas",
+        "confianza_top1": 0.4138,
+        "top_fallas": [
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.4138
+          },
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.1483
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0864
+          }
+        ],
+        "similitud_rag": 0.0865,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.75,
+        "t_rag_ms": 1.99
+      },
+      {
+        "idx": 36,
+        "caso": "Yaris 2016, demora en arrancar y cuando acelero fuerte se queda sin fuerza como si faltara gasolina.",
+        "falla_top1": "Bomba de gasolina quemada o con baja presion",
+        "confianza_top1": 0.4478,
+        "top_fallas": [
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.4478
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.1963
+          },
+          {
+            "falla": "Disco de embrague desgastado o patinando",
+            "probabilidad": 0.1481
+          }
+        ],
+        "similitud_rag": 0.0625,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.04,
+        "t_rag_ms": 2.14
+      },
+      {
+        "idx": 37,
+        "caso": "Kia Rio 2017, motor gira pero no prende, revisé chispa y sí tiene.",
+        "falla_top1": "Bomba de gasolina quemada o con baja presion",
+        "confianza_top1": 0.4514,
+        "top_fallas": [
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.4514
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.3139
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.0646
+          }
+        ],
+        "similitud_rag": 0.0833,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.37,
+        "t_rag_ms": 2.0
+      },
+      {
+        "idx": 38,
+        "caso": "Hyundai Accent 2018, cuando piso a fondo pierde potencia pero manejando suave funciona normal.",
+        "falla_top1": "Bomba de gasolina quemada o con baja presion",
+        "confianza_top1": 0.2844,
+        "top_fallas": [
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.2844
+          },
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.1779
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.1352
+          }
+        ],
+        "similitud_rag": 0.0762,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.91,
+        "t_rag_ms": 2.01
+      },
+      {
+        "idx": 39,
+        "caso": "Corolla 2015, en subida se queda sin fuerza y a veces se apaga, tanque tiene gasolina.",
+        "falla_top1": "Bomba de gasolina quemada o con baja presion",
+        "confianza_top1": 0.5162,
+        "top_fallas": [
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.5162
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.2865
+          },
+          {
+            "falla": "Disco de embrague desgastado o patinando",
+            "probabilidad": 0.1093
+          }
+        ],
+        "similitud_rag": 0.21,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.14,
+        "t_rag_ms": 2.02
+      },
+      {
+        "idx": 40,
+        "caso": "Nissan Sentra 2016, la bomba hace bastante ruido y el carro demora en prender por las mañanas.",
+        "falla_top1": "Bomba de gasolina quemada o con baja presion",
+        "confianza_top1": 0.5509,
+        "top_fallas": [
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.5509
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0655
+          },
+          {
+            "falla": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+            "probabilidad": 0.0458
+          }
+        ],
+        "similitud_rag": 0.0681,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.9,
+        "t_rag_ms": 1.92
+      },
+      {
+        "idx": 41,
+        "caso": "Toyota Yaris 2017, check engine prendido, ralentí inestable y consumo de gasolina aumentó bastante.",
+        "falla_top1": "Falla en sensor de oxigeno o mezcla rica",
+        "confianza_top1": 0.5197,
+        "top_fallas": [
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.5197
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.0952
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.093
+          }
+        ],
+        "similitud_rag": 0.0753,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.54,
+        "t_rag_ms": 2.03
+      },
+      {
+        "idx": 42,
+        "caso": "Kia Rio 2019, cuando acelero demora en responder y a veces se apaga llegando al semáforo.",
+        "falla_top1": "Cuerpo de aceleracion o valvula IAC sucia",
+        "confianza_top1": 0.6668,
+        "top_fallas": [
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.6668
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.1071
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.057
+          }
+        ],
+        "similitud_rag": 0.2247,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.34,
+        "t_rag_ms": 1.91
+      },
+      {
+        "idx": 43,
+        "caso": "Hyundai Accent 2016, motor inestable en mínimo pero cuando acelero trabaja mejor.",
+        "falla_top1": "Inyectores sucios o filtro de combustible obstruido",
+        "confianza_top1": 0.2077,
+        "top_fallas": [
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.2077
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.2073
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1586
+          }
+        ],
+        "similitud_rag": 0.0961,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.11,
+        "t_rag_ms": 1.91
+      },
+      {
+        "idx": 44,
+        "caso": "Corolla 2018, check prendido y el carro está gastando más combustible de lo normal, no siento otra falla fuerte.",
+        "falla_top1": "Falla en sensor de oxigeno o mezcla rica",
+        "confianza_top1": 0.7104,
+        "top_fallas": [
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.7104
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0612
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.0373
+          }
+        ],
+        "similitud_rag": 0.0587,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.66,
+        "t_rag_ms": 1.87
+      },
+      {
+        "idx": 45,
+        "caso": "Nissan Versa 2017, al encender en frío las RPM suben y bajan solas durante unos minutos.",
+        "falla_top1": "Faja o cadena de distribucion destensada o con salto de punto",
+        "confianza_top1": 0.2103,
+        "top_fallas": [
+          {
+            "falla": "Faja o cadena de distribucion destensada o con salto de punto",
+            "probabilidad": 0.2103
+          },
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.1659
+          },
+          {
+            "falla": "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)",
+            "probabilidad": 0.0866
+          }
+        ],
+        "similitud_rag": 0.1456,
+        "titulo_rag": "PROCEDIMIENTO: CALIBRACIÓN Y REAPRENDIZAJE DE MARCHA MÍNIMA EN CUERPO DE ACELERACIÓN ELECTRÓNICO (DRIVE-BY-WIRE / TAC / ETCS-I)",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.18,
+        "t_rag_ms": 1.71
+      },
+      {
+        "idx": 46,
+        "caso": "Corolla 2016, no tiene fuerza, tiembla y a veces demora en arrancar. No tengo scanner ahorita.",
+        "falla_top1": "Falla electrica del cierre centralizado o actuador de puerta",
+        "confianza_top1": 0.2787,
+        "top_fallas": [
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.2787
+          },
+          {
+            "falla": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+            "probabilidad": 0.1654
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1259
+          }
+        ],
+        "similitud_rag": 0.0489,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.29,
+        "t_rag_ms": 1.96
+      },
+      {
+        "idx": 47,
+        "caso": "Yaris 2018 llegó con check prendido, cliente dice que se apaga de vez en cuando y consume más gasolina.",
+        "falla_top1": "Cuerpo de aceleracion o valvula IAC sucia",
+        "confianza_top1": 0.3122,
+        "top_fallas": [
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.3122
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.2183
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.182
+          }
+        ],
+        "similitud_rag": 0.1979,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.63,
+        "t_rag_ms": 1.72
+      },
+      {
+        "idx": 48,
+        "caso": "Kia Rio 2017, tengo vibración fuerte cuando acelero pero parado el motor trabaja normal.",
+        "falla_top1": "Discos de freno alabeados o desgastados",
+        "confianza_top1": 0.2197,
+        "top_fallas": [
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.2197
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.2189
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.1684
+          }
+        ],
+        "similitud_rag": 0.0994,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.57,
+        "t_rag_ms": 1.72
+      },
+      {
+        "idx": 49,
+        "caso": "Hyundai Accent 2015, cliente dice que escucha golpe adelante cuando frena y también cuando pasa huecos.",
+        "falla_top1": "Amortiguadores reventados o bujes de suspension gastados",
+        "confianza_top1": 0.3827,
+        "top_fallas": [
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.3827
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.1557
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0944
+          }
+        ],
+        "similitud_rag": 0.054,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.48,
+        "t_rag_ms": 1.8
+      },
+      {
+        "idx": 50,
+        "caso": "Nissan Sentra 2018, pierde fuerza después de manejar unos 20 minutos, lo apago un rato y vuelve a trabajar normal.",
+        "falla_top1": "Bomba de gasolina quemada o con baja presion",
+        "confianza_top1": 0.363,
+        "top_fallas": [
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.363
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.2191
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0882
+          }
+        ],
+        "similitud_rag": 0.0633,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.98,
+        "t_rag_ms": 1.81
+      }
+    ]
+  },
+  "grupo_2": {
+    "nombre": "2DO GRUPO (Sintomatología Clínica Diversa)",
+    "total": 50,
+    "promedio_confianza": 0.706824,
+    "min_confianza": 0.328,
+    "max_confianza": 0.8934,
+    "casos_ge_80": 17,
+    "casos_ge_70": 31,
+    "casos_ge_60": 37,
+    "prom_t_ml": 7.883484000194585,
+    "prom_t_rag": 1.8769939997582696,
+    "resultados": [
+      {
+        "idx": 1,
+        "caso": "El motor tiembla bien feo cuando estoy detenido en el semáforo y al acelerar pierde fuerza. Se nota más cuando ya está caliente. Tiene el código P0300.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.8366,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.8366
+          },
+          {
+            "falla": "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)",
+            "probabilidad": 0.0244
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.0155
+          }
+        ],
+        "similitud_rag": 0.176,
+        "titulo_rag": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+        "dtc_detectados": [
+          "P0300: Random/Multiple Cylinder Misfire Detected"
+        ],
+        "t_ml_ms": 7.97,
+        "t_rag_ms": 1.82
+      },
+      {
+        "idx": 2,
+        "caso": "Arranca bien en frío, pero cuando lo uso, lo apago y al rato quiero prenderlo otra vez, le cuesta muchísimo o no quiere agarrar. Y sale un olor fuerte a gasolina.",
+        "falla_top1": "Inyectores sucios o filtro de combustible obstruido",
+        "confianza_top1": 0.328,
+        "top_fallas": [
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.328
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.27
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0751
+          }
+        ],
+        "similitud_rag": 0.087,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.81,
+        "t_rag_ms": 1.75
+      },
+      {
+        "idx": 3,
+        "caso": "Mientras voy manejando las luces del tablero se ponen súper tenues y a veces el radio se reinicia solo.",
+        "falla_top1": "Alternador defectuoso o placa de diodos quemada",
+        "confianza_top1": 0.7251,
+        "top_fallas": [
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.7251
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.1701
+          },
+          {
+            "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+            "probabilidad": 0.0109
+          }
+        ],
+        "similitud_rag": 0.0909,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.97,
+        "t_rag_ms": 1.8
+      },
+      {
+        "idx": 4,
+        "caso": "Cuando freno desde más de 90 km/h el volante y el pedal vibran fuerte, se siente como si temblara todo.",
+        "falla_top1": "Discos de freno alabeados o desgastados",
+        "confianza_top1": 0.8503,
+        "top_fallas": [
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.8503
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0163
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0162
+          }
+        ],
+        "similitud_rag": 0.1502,
+        "titulo_rag": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.74,
+        "t_rag_ms": 1.76
+      },
+      {
+        "idx": 5,
+        "caso": "En el tráfico la temperatura se sube bastante y el ventilador del radiador nunca prende.",
+        "falla_top1": "Falla en termostato o motoventilador de radiador",
+        "confianza_top1": 0.8267,
+        "top_fallas": [
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.8267
+          },
+          {
+            "falla": "Empaque de culata soplado o danado",
+            "probabilidad": 0.0545
+          },
+          {
+            "falla": "Fuga en mangueras de refrigerante o radiador picado",
+            "probabilidad": 0.0184
+          }
+        ],
+        "similitud_rag": 0.1181,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE ELECTROVENTILADOR CON MÓDULO DE CONTROL ELECTRÓNICO PWM (MOTOVENTILADOR NO ENCIENDE / DTC P0480)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.78,
+        "t_rag_ms": 1.66
+      },
+      {
+        "idx": 6,
+        "caso": "El embrague está patinando. Cuando acelero fuerte en tercera o cuarta, suben las revoluciones pero el carro no avanza igual.",
+        "falla_top1": "Disco de embrague desgastado o patinando",
+        "confianza_top1": 0.6047,
+        "top_fallas": [
+          {
+            "falla": "Disco de embrague desgastado o patinando",
+            "probabilidad": 0.6047
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.0957
+          },
+          {
+            "falla": "Falla en bombin o bomba hidraulica de embrague",
+            "probabilidad": 0.0911
+          }
+        ],
+        "similitud_rag": 0.0662,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.2,
+        "t_rag_ms": 2.0
+      },
+      {
+        "idx": 7,
+        "caso": "Cada vez que giro el volante hasta el fondo para estacionar, se escucha un clic o chasquido en la rueda delantera.",
+        "falla_top1": "Juntas homocineticas o palieres danados",
+        "confianza_top1": 0.5761,
+        "top_fallas": [
+          {
+            "falla": "Juntas homocineticas o palieres danados",
+            "probabilidad": 0.5761
+          },
+          {
+            "falla": "Desgaste de pastillas y zapatas de freno",
+            "probabilidad": 0.1065
+          },
+          {
+            "falla": "Fuga hidraulica o aire en el sistema de frenos",
+            "probabilidad": 0.0858
+          }
+        ],
+        "similitud_rag": 0.0654,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.05,
+        "t_rag_ms": 2.06
+      },
+      {
+        "idx": 8,
+        "caso": "El volante vibra solo cuando voy entre 95 y 115 km/h. En otras velocidades no se siente.",
+        "falla_top1": "Llantas desbalanceadas o desalineadas",
+        "confianza_top1": 0.8503,
+        "top_fallas": [
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.8503
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0177
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0109
+          }
+        ],
+        "similitud_rag": 0.0883,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.78,
+        "t_rag_ms": 1.76
+      },
+      {
+        "idx": 9,
+        "caso": "Sale humo blanco constante por el escape, tiene olor dulce y el refrigerante baja aunque no veo fugas.",
+        "falla_top1": "Empaque de culata soplado o danado",
+        "confianza_top1": 0.5851,
+        "top_fallas": [
+          {
+            "falla": "Empaque de culata soplado o danado",
+            "probabilidad": 0.5851
+          },
+          {
+            "falla": "Fuga en mangueras de refrigerante o radiador picado",
+            "probabilidad": 0.3255
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0167
+          }
+        ],
+        "similitud_rag": 0.2163,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.96,
+        "t_rag_ms": 1.76
+      },
+      {
+        "idx": 10,
+        "caso": "Se me apaga el carro en los semáforos. Luego arranca normal sin problema.",
+        "falla_top1": "Cuerpo de aceleracion o valvula IAC sucia",
+        "confianza_top1": 0.7351,
+        "top_fallas": [
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.7351
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0453
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.0449
+          }
+        ],
+        "similitud_rag": 0.0468,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.77,
+        "t_rag_ms": 1.69
+      },
+      {
+        "idx": 11,
+        "caso": "Tiene el Check Engine con código P0301 y se siente que un cilindro está fallando, vibra feo.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.5527,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.5527
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.2868
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.0405
+          }
+        ],
+        "similitud_rag": 0.1483,
+        "titulo_rag": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+        "dtc_detectados": [
+          "P0301: Cylinder 1 Misfire Detected"
+        ],
+        "t_ml_ms": 7.97,
+        "t_rag_ms": 1.89
+      },
+      {
+        "idx": 12,
+        "caso": "Cuando acelero fuerte se ahoga un segundo y después pega un jalón. Se nota más cuando el tanque está por la mitad o menos.",
+        "falla_top1": "Bomba de gasolina quemada o con baja presion",
+        "confianza_top1": 0.7227,
+        "top_fallas": [
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.7227
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.1045
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0614
+          }
+        ],
+        "similitud_rag": 0.1441,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA POBRE / RICA Y ANÁLISIS DE DATOS EN VIVO STFT & LTFT (DTC P0171 / P0172)",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.0,
+        "t_rag_ms": 2.03
+      },
+      {
+        "idx": 13,
+        "caso": "Al girar la llave solo hace un click y no arranca. Las luces del tablero sí prenden normal.",
+        "falla_top1": "Bateria descargada o bornes sulfatados",
+        "confianza_top1": 0.7718,
+        "top_fallas": [
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.7718
+          },
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.1501
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0125
+          }
+        ],
+        "similitud_rag": 0.1363,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO ELECTROMECÁNICO DEL MOTOR DE ARRANQUE, SOLENOIDE Y CAÍDA DE TENSIÓN EN TERMINAL 50 (SIN ESCÁNER / CLAC SECO)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.87,
+        "t_rag_ms": 1.69
+      },
+      {
+        "idx": 14,
+        "caso": "El pedal de freno se siente blando y si lo mantengo apretado se va hundiendo solito.",
+        "falla_top1": "Fuga hidraulica o aire en el sistema de frenos",
+        "confianza_top1": 0.6686,
+        "top_fallas": [
+          {
+            "falla": "Fuga hidraulica o aire en el sistema de frenos",
+            "probabilidad": 0.6686
+          },
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.0709
+          },
+          {
+            "falla": "Falla en servofreno (booster) o linea de vacio",
+            "probabilidad": 0.0673
+          }
+        ],
+        "similitud_rag": 0.1827,
+        "titulo_rag": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.06,
+        "t_rag_ms": 1.87
+      },
+      {
+        "idx": 15,
+        "caso": "En las mañanas al arrancar se escucha un ruido fuerte de cadena por unos segundos y después se quita.",
+        "falla_top1": "Faja o cadena de distribucion destensada o con salto de punto",
+        "confianza_top1": 0.8596,
+        "top_fallas": [
+          {
+            "falla": "Faja o cadena de distribucion destensada o con salto de punto",
+            "probabilidad": 0.8596
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.0179
+          },
+          {
+            "falla": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+            "probabilidad": 0.0098
+          }
+        ],
+        "similitud_rag": 0.0661,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.22,
+        "t_rag_ms": 2.23
+      },
+      {
+        "idx": 16,
+        "caso": "El aire acondicionado enfría bien al principio, pero después de unos 10 minutos ya no enfría casi nada.",
+        "falla_top1": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+        "confianza_top1": 0.7565,
+        "top_fallas": [
+          {
+            "falla": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+            "probabilidad": 0.7565
+          },
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.0823
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0219
+          }
+        ],
+        "similitud_rag": 0.112,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE VÁLVULA DE EXPANSIÓN TÉRMICA Y FILTRO DESECANTE DE A/C (DTC B1008 / FALTA DE ENFRÍAMIENTO / PRESIONES ANORMALES)",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.03,
+        "t_rag_ms": 1.89
+      },
+      {
+        "idx": 17,
+        "caso": "La dirección está muy pesada cuando voy despacio, sobre todo al estacionar. En carretera mejora un poco.",
+        "falla_top1": "Cremallera de direccion asistida con holgura o fuga",
+        "confianza_top1": 0.7182,
+        "top_fallas": [
+          {
+            "falla": "Cremallera de direccion asistida con holgura o fuga",
+            "probabilidad": 0.7182
+          },
+          {
+            "falla": "Juntas homocineticas o palieres danados",
+            "probabilidad": 0.039
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0355
+          }
+        ],
+        "similitud_rag": 0.0788,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.22,
+        "t_rag_ms": 2.58
+      },
+      {
+        "idx": 18,
+        "caso": "Se escucha un aullido que va aumentando con la velocidad y se pone más fuerte cuando doblo.",
+        "falla_top1": "Rodajes de caja mecanica o diferencial gastados",
+        "confianza_top1": 0.6655,
+        "top_fallas": [
+          {
+            "falla": "Rodajes de caja mecanica o diferencial gastados",
+            "probabilidad": 0.6655
+          },
+          {
+            "falla": "Juntas homocineticas o palieres danados",
+            "probabilidad": 0.1455
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0354
+          }
+        ],
+        "similitud_rag": 0.0619,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.4,
+        "t_rag_ms": 2.18
+      },
+      {
+        "idx": 19,
+        "caso": "Sale un olor fuerte a huevo podrido cuando acelero y se prendió el Check Engine.",
+        "falla_top1": "Falla en sensor de oxigeno o mezcla rica",
+        "confianza_top1": 0.7039,
+        "top_fallas": [
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.7039
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.1393
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0276
+          }
+        ],
+        "similitud_rag": 0.117,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE EFICIENCIA DE CATALIZADOR POR DEBAJO DEL UMBRAL (DTC P0420)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.9,
+        "t_rag_ms": 1.91
+      },
+      {
+        "idx": 20,
+        "caso": "Cada vez que freno el carro se va solo hacia un lado.",
+        "falla_top1": "Desgaste de pastillas y zapatas de freno",
+        "confianza_top1": 0.4846,
+        "top_fallas": [
+          {
+            "falla": "Desgaste de pastillas y zapatas de freno",
+            "probabilidad": 0.4846
+          },
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.2913
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.03
+          }
+        ],
+        "similitud_rag": 0.0927,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.18,
+        "t_rag_ms": 1.78
+      },
+      {
+        "idx": 21,
+        "caso": "El ralentí está muy inestable, sube y baja solo, y a veces casi se apaga cuando estoy detenido.",
+        "falla_top1": "Cuerpo de aceleracion o valvula IAC sucia",
+        "confianza_top1": 0.756,
+        "top_fallas": [
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.756
+          },
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.1396
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0169
+          }
+        ],
+        "similitud_rag": 0.2216,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.73,
+        "t_rag_ms": 1.94
+      },
+      {
+        "idx": 22,
+        "caso": "Al girar la llave no pasa absolutamente nada. Ni luces, ni click, ni nada.",
+        "falla_top1": "Bateria descargada o bornes sulfatados",
+        "confianza_top1": 0.8488,
+        "top_fallas": [
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.8488
+          },
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.0144
+          },
+          {
+            "falla": "Fallo en inversor de corriente IGBT o motor electrico (EV)",
+            "probabilidad": 0.0108
+          }
+        ],
+        "similitud_rag": 0.1619,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE VELOCIDAD ABS Y CILINDRO MAESTRO (DTC C0035 / C0221)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.81,
+        "t_rag_ms": 2.09
+      },
+      {
+        "idx": 23,
+        "caso": "Sale humo azul cuando acelero y el motor está consumiendo aceite.",
+        "falla_top1": "Consumo de aceite por desgaste de anillos o retenes",
+        "confianza_top1": 0.7555,
+        "top_fallas": [
+          {
+            "falla": "Consumo de aceite por desgaste de anillos o retenes",
+            "probabilidad": 0.7555
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.1211
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0244
+          }
+        ],
+        "similitud_rag": 0.1258,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE LA VÁLVULA PCV Y SOBREPRESIÓN EN EL CÁRTER (FUGAS DE ACEITE POR RETENES / CONSUMO DE ACEITE)",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.28,
+        "t_rag_ms": 2.04
+      },
+      {
+        "idx": 24,
+        "caso": "En carretera a velocidad constante el motor tironea y a veces se apaga solo el aire acondicionado.",
+        "falla_top1": "Cuerpo de aceleracion o valvula IAC sucia",
+        "confianza_top1": 0.4102,
+        "top_fallas": [
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.4102
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.2945
+          },
+          {
+            "falla": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+            "probabilidad": 0.197
+          }
+        ],
+        "similitud_rag": 0.15,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.47,
+        "t_rag_ms": 1.82
+      },
+      {
+        "idx": 25,
+        "caso": "Cada vez que freno se escucha un chillido agudo, aunque frene suavecito.",
+        "falla_top1": "Desgaste de pastillas y zapatas de freno",
+        "confianza_top1": 0.7419,
+        "top_fallas": [
+          {
+            "falla": "Desgaste de pastillas y zapatas de freno",
+            "probabilidad": 0.7419
+          },
+          {
+            "falla": "Falla en servofreno (booster) o linea de vacio",
+            "probabilidad": 0.1124
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0318
+          }
+        ],
+        "similitud_rag": 0.1181,
+        "titulo_rag": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.58,
+        "t_rag_ms": 1.71
+      },
+      {
+        "idx": 26,
+        "caso": "Cuando suelto el acelerador el motor se queda acelerado varios segundos y después baja.",
+        "falla_top1": "Cuerpo de aceleracion o valvula IAC sucia",
+        "confianza_top1": 0.8385,
+        "top_fallas": [
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.8385
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.0392
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.03
+          }
+        ],
+        "similitud_rag": 0.0951,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.84,
+        "t_rag_ms": 1.8
+      },
+      {
+        "idx": 27,
+        "caso": "Se escucha un zumbido bien fuerte que viene del tanque de la gasolina, sobre todo al acelerar.",
+        "falla_top1": "Bomba de gasolina quemada o con baja presion",
+        "confianza_top1": 0.7956,
+        "top_fallas": [
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.7956
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.0436
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.0211
+          }
+        ],
+        "similitud_rag": 0.0992,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.45,
+        "t_rag_ms": 1.73
+      },
+      {
+        "idx": 28,
+        "caso": "El carro falla solo cuando llueve o hay mucha humedad. En seco funciona normal.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.8461,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.8461
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0221
+          },
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.0163
+          }
+        ],
+        "similitud_rag": 0.0549,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.12,
+        "t_rag_ms": 1.84
+      },
+      {
+        "idx": 29,
+        "caso": "Al pasar topes o baches se siente un golpeteo fuerte en la parte delantera.",
+        "falla_top1": "Amortiguadores reventados o bujes de suspension gastados",
+        "confianza_top1": 0.7748,
+        "top_fallas": [
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.7748
+          },
+          {
+            "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+            "probabilidad": 0.0429
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0244
+          }
+        ],
+        "similitud_rag": 0.0818,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.49,
+        "t_rag_ms": 1.93
+      },
+      {
+        "idx": 30,
+        "caso": "Las luces delanteras y las del tablero parpadean de forma rara mientras manejo.",
+        "falla_top1": "Alternador defectuoso o placa de diodos quemada",
+        "confianza_top1": 0.6104,
+        "top_fallas": [
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.6104
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.2859
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0078
+          }
+        ],
+        "similitud_rag": 0.0656,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.63,
+        "t_rag_ms": 1.76
+      },
+      {
+        "idx": 31,
+        "caso": "Tiene el código P0171 de mezcla pobre y el carro se siente sin fuerza.",
+        "falla_top1": "Falla en sensor de oxigeno o mezcla rica",
+        "confianza_top1": 0.3802,
+        "top_fallas": [
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.3802
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.234
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.1185
+          }
+        ],
+        "similitud_rag": 0.1662,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA POBRE / RICA Y ANÁLISIS DE DATOS EN VIVO STFT & LTFT (DTC P0171 / P0172)",
+        "dtc_detectados": [
+          "P0171: System Too Lean Bank 1"
+        ],
+        "t_ml_ms": 8.15,
+        "t_rag_ms": 2.37
+      },
+      {
+        "idx": 32,
+        "caso": "Se escucha un tic-tic metálico en el motor, más fuerte cuando está frío.",
+        "falla_top1": "Baja presion de aceite o bomba de aceite defectuosa",
+        "confianza_top1": 0.7397,
+        "top_fallas": [
+          {
+            "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+            "probabilidad": 0.7397
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0359
+          },
+          {
+            "falla": "Falta o degradacion de aceite de caja de cambios",
+            "probabilidad": 0.0246
+          }
+        ],
+        "similitud_rag": 0.0523,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.72,
+        "t_rag_ms": 1.76
+      },
+      {
+        "idx": 33,
+        "caso": "Se prendió la luz de la batería en el tablero mientras iba manejando.",
+        "falla_top1": "Alternador defectuoso o placa de diodos quemada",
+        "confianza_top1": 0.8064,
+        "top_fallas": [
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.8064
+          },
+          {
+            "falla": "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)",
+            "probabilidad": 0.0592
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0284
+          }
+        ],
+        "similitud_rag": 0.0933,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.87,
+        "t_rag_ms": 1.75
+      },
+      {
+        "idx": 34,
+        "caso": "El pedal de freno está muy duro y el carro casi no quiere frenar.",
+        "falla_top1": "Falla en servofreno (booster) o linea de vacio",
+        "confianza_top1": 0.5884,
+        "top_fallas": [
+          {
+            "falla": "Falla en servofreno (booster) o linea de vacio",
+            "probabilidad": 0.5884
+          },
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.2591
+          },
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.0317
+          }
+        ],
+        "similitud_rag": 0.1161,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE LA BOMBA DE VACÍO MECÁNICA / TÁNDEM EN MOTORES DIESEL Y GDI (PEDAL DE FRENO DURO COMO PIEDRA)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.64,
+        "t_rag_ms": 1.81
+      },
+      {
+        "idx": 35,
+        "caso": "Después de prenderlo se calienta muy rápido, la aguja sube de golpe.",
+        "falla_top1": "Falla en termostato o motoventilador de radiador",
+        "confianza_top1": 0.6231,
+        "top_fallas": [
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.6231
+          },
+          {
+            "falla": "Fuga en mangueras de refrigerante o radiador picado",
+            "probabilidad": 0.1113
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.055
+          }
+        ],
+        "similitud_rag": 0.2648,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.66,
+        "t_rag_ms": 1.98
+      },
+      {
+        "idx": 36,
+        "caso": "Sale humo negro por el escape y está gastando mucha gasolina.",
+        "falla_top1": "Falla en sensor de oxigeno o mezcla rica",
+        "confianza_top1": 0.8323,
+        "top_fallas": [
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.8323
+          },
+          {
+            "falla": "Empaque de culata soplado o danado",
+            "probabilidad": 0.0481
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.0153
+          }
+        ],
+        "similitud_rag": 0.1476,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y LIMPIEZA DE SENSORES DE FLUJO DE AIRE MAF Y PRESIÓN MAP (DTC P0100 / P0106)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.98,
+        "t_rag_ms": 1.74
+      },
+      {
+        "idx": 37,
+        "caso": "Al pasar topes se siente un golpe seco en la parte de adelante.",
+        "falla_top1": "Amortiguadores reventados o bujes de suspension gastados",
+        "confianza_top1": 0.8495,
+        "top_fallas": [
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.8495
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.0255
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0132
+          }
+        ],
+        "similitud_rag": 0.0801,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.65,
+        "t_rag_ms": 1.85
+      },
+      {
+        "idx": 38,
+        "caso": "El motor falla de forma intermitente, pero solo cuando ya está bien caliente.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.8561,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.8561
+          },
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.0149
+          },
+          {
+            "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+            "probabilidad": 0.0116
+          }
+        ],
+        "similitud_rag": 0.2739,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.79,
+        "t_rag_ms": 1.88
+      },
+      {
+        "idx": 39,
+        "caso": "Tiene código de sensor de detonación y a veces se siente como cascabeleo.",
+        "falla_top1": "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)",
+        "confianza_top1": 0.5655,
+        "top_fallas": [
+          {
+            "falla": "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)",
+            "probabilidad": 0.5655
+          },
+          {
+            "falla": "Falla en sensor de velocidad de rueda ABS",
+            "probabilidad": 0.1448
+          },
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.1356
+          }
+        ],
+        "similitud_rag": 0.1497,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE DETONACIÓN (KNOCK SENSOR) Y RETARDO DE CHISPA (DTC P0325 / P0328 / CASCABELEO SEVERO)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.94,
+        "t_rag_ms": 1.91
+      },
+      {
+        "idx": 40,
+        "caso": "Huele fuerte a azufre cuando acelero.",
+        "falla_top1": "Falla en sensor de oxigeno o mezcla rica",
+        "confianza_top1": 0.4615,
+        "top_fallas": [
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.4615
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.2856
+          },
+          {
+            "falla": "Consumo de aceite por desgaste de anillos o retenes",
+            "probabilidad": 0.0711
+          }
+        ],
+        "similitud_rag": 0.0495,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.67,
+        "t_rag_ms": 1.65
+      },
+      {
+        "idx": 41,
+        "caso": "El motor se queda en altas revoluciones varios segundos después de soltar el acelerador.",
+        "falla_top1": "Cuerpo de aceleracion o valvula IAC sucia",
+        "confianza_top1": 0.8628,
+        "top_fallas": [
+          {
+            "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+            "probabilidad": 0.8628
+          },
+          {
+            "falla": "Disco de embrague desgastado o patinando",
+            "probabilidad": 0.0235
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.017
+          }
+        ],
+        "similitud_rag": 0.112,
+        "titulo_rag": "PROCEDIMIENTO: CALIBRACIÓN Y REAPRENDIZAJE DE MARCHA MÍNIMA EN CUERPO DE ACELERACIÓN ELECTRÓNICO (DRIVE-BY-WIRE / TAC / ETCS-I)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.96,
+        "t_rag_ms": 1.75
+      },
+      {
+        "idx": 42,
+        "caso": "Al arrancar en frío se escucha el ruido de la cadena más tiempo de lo normal.",
+        "falla_top1": "Faja o cadena de distribucion destensada o con salto de punto",
+        "confianza_top1": 0.7986,
+        "top_fallas": [
+          {
+            "falla": "Faja o cadena de distribucion destensada o con salto de punto",
+            "probabilidad": 0.7986
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0924
+          },
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.0112
+          }
+        ],
+        "similitud_rag": 0.1184,
+        "titulo_rag": "PROCEDIMIENTO: CAMBIO Y CALIBRACIÓN DE CORREA O CADENA DE DISTRIBUCIÓN (DTC P0016 / P0017)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.79,
+        "t_rag_ms": 2.01
+      },
+      {
+        "idx": 43,
+        "caso": "La dirección se siente floja y el carro no mantiene bien la línea recta.",
+        "falla_top1": "Amortiguadores reventados o bujes de suspension gastados",
+        "confianza_top1": 0.5848,
+        "top_fallas": [
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.5848
+          },
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.1633
+          },
+          {
+            "falla": "Cremallera de direccion asistida con holgura o fuga",
+            "probabilidad": 0.0548
+          }
+        ],
+        "similitud_rag": 0.1059,
+        "titulo_rag": "PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y PUNTO CERO (DTC C1203 / C1210 / VOLANTE DESVIADO)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.77,
+        "t_rag_ms": 1.93
+      },
+      {
+        "idx": 44,
+        "caso": "La vibración se siente más en el asiento que en el volante a cierta velocidad.",
+        "falla_top1": "Llantas desbalanceadas o desalineadas",
+        "confianza_top1": 0.8674,
+        "top_fallas": [
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.8674
+          },
+          {
+            "falla": "Cremallera de direccion asistida con holgura o fuga",
+            "probabilidad": 0.0123
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0113
+          }
+        ],
+        "similitud_rag": 0.0894,
+        "titulo_rag": "Coincidencia baja",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.09,
+        "t_rag_ms": 1.79
+      },
+      {
+        "idx": 45,
+        "caso": "Cuando acelero de golpe se ahoga un momento y después responde con un jalón.",
+        "falla_top1": "Inyectores sucios o filtro de combustible obstruido",
+        "confianza_top1": 0.6453,
+        "top_fallas": [
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.6453
+          },
+          {
+            "falla": "Bomba de gasolina quemada o con baja presion",
+            "probabilidad": 0.1425
+          },
+          {
+            "falla": "Consumo de aceite por desgaste de anillos o retenes",
+            "probabilidad": 0.0428
+          }
+        ],
+        "similitud_rag": 0.1535,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA POBRE / RICA Y ANÁLISIS DE DATOS EN VIVO STFT & LTFT (DTC P0171 / P0172)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.73,
+        "t_rag_ms": 1.7
+      },
+      {
+        "idx": 46,
+        "caso": "Tiene falla de un solo cilindro con código P030X y se siente la vibración.",
+        "falla_top1": "Falla en bujias o bobinas de encendido (misfire)",
+        "confianza_top1": 0.8388,
+        "top_fallas": [
+          {
+            "falla": "Falla en bujias o bobinas de encendido (misfire)",
+            "probabilidad": 0.8388
+          },
+          {
+            "falla": "Falla en sensor de oxigeno o mezcla rica",
+            "probabilidad": 0.0507
+          },
+          {
+            "falla": "Llantas desbalanceadas o desalineadas",
+            "probabilidad": 0.0191
+          }
+        ],
+        "similitud_rag": 0.102,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SOPORTES DE MOTOR Y CAJA DE CAMBIOS (TACOS DE MOTOR / VIBRACIÓN EN NEUTRO Y GOLPE AL ACELERAR)",
+        "dtc_detectados": [],
+        "t_ml_ms": 8.05,
+        "t_rag_ms": 1.8
+      },
+      {
+        "idx": 47,
+        "caso": "Sale humo blanco con olor dulce y el refrigerante baja aunque no hay fugas afuera.",
+        "falla_top1": "Empaque de culata soplado o danado",
+        "confianza_top1": 0.5512,
+        "top_fallas": [
+          {
+            "falla": "Empaque de culata soplado o danado",
+            "probabilidad": 0.5512
+          },
+          {
+            "falla": "Fuga en mangueras de refrigerante o radiador picado",
+            "probabilidad": 0.3387
+          },
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.0333
+          }
+        ],
+        "similitud_rag": 0.1912,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.94,
+        "t_rag_ms": 2.03
+      },
+      {
+        "idx": 48,
+        "caso": "Al girar la llave no responde nada, ni siquiera las luces del tablero.",
+        "falla_top1": "Bateria descargada o bornes sulfatados",
+        "confianza_top1": 0.5642,
+        "top_fallas": [
+          {
+            "falla": "Bateria descargada o bornes sulfatados",
+            "probabilidad": 0.5642
+          },
+          {
+            "falla": "Alternador defectuoso o placa de diodos quemada",
+            "probabilidad": 0.2882
+          },
+          {
+            "falla": "Elevalunas electrico o guaya de alzacristales rota o trabada",
+            "probabilidad": 0.0759
+          }
+        ],
+        "similitud_rag": 0.1314,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO ELECTROMECÁNICO DEL MOTOR DE ARRANQUE, SOLENOIDE Y CAÍDA DE TENSIÓN EN TERMINAL 50 (SIN ESCÁNER / CLAC SECO)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.78,
+        "t_rag_ms": 1.69
+      },
+      {
+        "idx": 49,
+        "caso": "Al frenar desde alta velocidad vibra mucho el volante y el pedal.",
+        "falla_top1": "Discos de freno alabeados o desgastados",
+        "confianza_top1": 0.8934,
+        "top_fallas": [
+          {
+            "falla": "Discos de freno alabeados o desgastados",
+            "probabilidad": 0.8934
+          },
+          {
+            "falla": "Inyectores sucios o filtro de combustible obstruido",
+            "probabilidad": 0.0103
+          },
+          {
+            "falla": "Amortiguadores reventados o bujes de suspension gastados",
+            "probabilidad": 0.0086
+          }
+        ],
+        "similitud_rag": 0.1771,
+        "titulo_rag": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.92,
+        "t_rag_ms": 1.76
+      },
+      {
+        "idx": 50,
+        "caso": "La temperatura del motor casi no sube y el calefactor no calienta casi nada.",
+        "falla_top1": "Falla en termostato o motoventilador de radiador",
+        "confianza_top1": 0.8321,
+        "top_fallas": [
+          {
+            "falla": "Falla en termostato o motoventilador de radiador",
+            "probabilidad": 0.8321
+          },
+          {
+            "falla": "Elevalunas electrico o guaya de alzacristales rota o trabada",
+            "probabilidad": 0.0237
+          },
+          {
+            "falla": "Fuga hidraulica o aire en el sistema de frenos",
+            "probabilidad": 0.0211
+          }
+        ],
+        "similitud_rag": 0.2406,
+        "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+        "dtc_detectados": [],
+        "t_ml_ms": 7.78,
+        "t_rag_ms": 1.92
+      }
+    ]
+  }
+}

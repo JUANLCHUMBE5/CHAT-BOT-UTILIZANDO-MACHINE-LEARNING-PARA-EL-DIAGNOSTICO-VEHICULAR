@@ -36,6 +36,7 @@ class DiagnosticoRepository:
         similitud_rag: Optional[float | Decimal] = None,
         estado: str = "generado",
         duracion_ms: Optional[int] = None,
+        tiempo_inferencia_ml_ms: Optional[int] = None,
         conclusion_mecanico: Optional[str] = None,
         sintesis_llm: Optional[str] = None,
         diagnostico_id: Optional[uuid.UUID] = None,
@@ -65,6 +66,7 @@ class DiagnosticoRepository:
             modo_diagnostico=modo_diagnostico,
             estado=estado,
             duracion_ms=duracion_ms,
+            tiempo_inferencia_ml_ms=tiempo_inferencia_ml_ms,
             conclusion_mecanico=conclusion_mecanico,
             sintesis_llm=sintesis_llm,
             version_modelo_ml=version_modelo_ml,
@@ -230,7 +232,7 @@ class DiagnosticoRepository:
                 )
             )
 
-        stmt = stmt.order_by(Diagnostico.creado_en.asc(), Diagnostico.id.asc())
+        stmt = stmt.order_by(Diagnostico.creado_en.desc(), Diagnostico.id.desc())
         if offset > 0:
             stmt = stmt.offset(offset)
         if limite is not None and limite > 0:

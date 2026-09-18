@@ -52,6 +52,8 @@ export interface MecanicoUpdateDTO {
 
 export type MecanicoResponseDTO = Mecanico;
 
+export type EstadoRegistro = 'borrador' | 'verificado' | 'excluido';
+
 export interface CasoValidacionDTO {
   item: number;
   fase: string;
@@ -69,6 +71,15 @@ export interface CasoValidacionDTO {
   mecanico_id?: string;
   metodo_confirmacion?: string;
   evidencia_ref?: string;
+  estado_registro?: EstadoRegistro;
+  sintoma_registrado_correctamente?: number;
+  validado_por_id?: string;
+  fecha_validacion?: string;
+  normalizacion_correcta?: number;
+  extraccion_correcta?: number;
+  clasificacion_procesada?: number;
+  procesamiento_validado?: number;
+  tiempo_inferencia_ml_ms?: number;
 }
 
 export interface CrearCasoValidacionDTO {
@@ -84,6 +95,19 @@ export interface CrearCasoValidacionDTO {
   prediccion_correcta: number;
   metodo_confirmacion?: string;
   evidencia_ref?: string;
+  estado_registro?: EstadoRegistro;
+  sintoma_registrado_correctamente?: number;
+  normalizacion_correcta?: number;
+  extraccion_correcta?: number;
+  clasificacion_procesada?: number;
+}
+
+export interface MetricasVariableIndependienteDTO {
+  indicador1_sintomas_correctos_pct: number | null;
+  indicador2_procesamiento_correcto_pct: number | null;
+  indicador3_exactitud_ml_pct: number | null;
+  casos_verificados_evaluados: number;
+  nota_metodologica: string;
 }
 
 export interface MetricasValidacionDTO {
@@ -103,6 +127,9 @@ export interface MetricasValidacionDTO {
   distribucion_marcas: { marca: string; conteo: number }[];
   top_fallas_reales: { falla: string; conteo: number }[];
   nota_metodologica?: string;
+  total_casos_verificados?: number;
+  total_casos_borrador?: number;
+  variable_independiente?: MetricasVariableIndependienteDTO;
 }
 
 export interface AprobarSolicitudResponseDTO {

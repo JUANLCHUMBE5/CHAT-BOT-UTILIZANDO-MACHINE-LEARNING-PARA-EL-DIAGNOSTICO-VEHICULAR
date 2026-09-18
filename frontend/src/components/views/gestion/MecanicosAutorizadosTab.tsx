@@ -37,6 +37,7 @@ export const MecanicosAutorizadosTab: React.FC<MecanicosAutorizadosTabProps> = (
     mecanicosFiltrados,
     totalActivos,
     totalBloqueados,
+    totalInactivos,
     handleToggleBloquear,
     handleRevocarAcceso,
   } = useMecanicosAutorizados({ mecanicos, onRecargar });
@@ -179,6 +180,24 @@ export const MecanicosAutorizadosTab: React.FC<MecanicosAutorizadosTabProps> = (
                 }}
               >
                 Bloqueados ({totalBloqueados})
+              </button>
+            )}
+            {totalInactivos > 0 && (
+              <button
+                type="button"
+                onClick={() => setFiltroEstado('inactivos')}
+                style={{
+                  padding: '5px 8px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  borderRadius: '6px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  backgroundColor: filtroEstado === 'inactivos' ? '#64748b' : 'var(--bg-subtle)',
+                  color: filtroEstado === 'inactivos' ? '#ffffff' : 'var(--text-secondary)',
+                }}
+              >
+                Inactivos ({totalInactivos})
               </button>
             )}
           </div>

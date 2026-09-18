@@ -1,0 +1,2 @@
+defect_id,case_id,category,severity,component,description,expected,observed,reproducible,suspected_cause,requires_fix,notes
+DEF_F11_001,CASE_014,GRUPO_B_L1_AMBIGUO,P2,AUTO_INTERROGADOR,Consulta ambigua no generó auto-pregunta explícita,"Preguntar si es chirrido metálico, zumbido o vibración",Desgaste de pastillas y zapatas de freno,SI,Threshold o heurística de ambigüedad,SI,

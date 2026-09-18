@@ -50,14 +50,12 @@ def test_fuente_gemacar_rechaza_un_texto_distinto(tmp_path):
         verificar_fuente(fuente, "fallas_comunes")
 
 
-def test_rag_indexa_gemacar_como_fuente_secundaria_no_validada():
+def test_rag_excluye_gemacar_del_indice_operativo():
     motor = MotorRAG()
 
-    _, titulo, similitud, metadatos = motor.recuperar_procedimiento_con_metadatos(
-        "el auto vibra al frenar", umbral=0.25
+    assert len(motor.documentos) == len(motor.metadatos_procedimientos) >= 180
+    assert not any("GemaCar" in item.get("manual_oem", "") for item in motor.metadatos_procedimientos)
+    assert all(
+        item["estado_validacion"] == "corpus_preliminar_taller"
+        for item in motor.metadatos_procedimientos
     )
-
-    assert titulo == "ORIENTACION SECUNDARIA NO VALIDADA: VIBRACION AL FRENAR"
-    assert similitud >= 0.25
-    assert metadatos["estado_validacion"] == "fuente_secundaria_no_validada"
-    assert metadatos["auditoria"]["verificado_documental"] is False

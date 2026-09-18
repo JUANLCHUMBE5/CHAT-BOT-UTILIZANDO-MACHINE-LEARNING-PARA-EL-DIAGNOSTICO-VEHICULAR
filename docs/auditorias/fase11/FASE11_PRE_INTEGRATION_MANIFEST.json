@@ -1,0 +1,110 @@
+{
+  "fase": "FASE 11",
+  "etapa": "ETAPA 1 - PRE-INTEGRACION CANDIDATO C1",
+  "timestamp": "2026-09-17T23:58:00Z",
+  "estado_produccion_actual": "F8.3_BASELINE_ACTIVO",
+  "configuracion_actual": {
+    "modelo_falla": "machine_learning/models/modelo_diagnostico.pkl",
+    "modelo_falla_sha256": "3d8199595b69bb0176fbb4bb9d7c57b43484f16e6f6baa115660405b76aa13fd",
+    "modelo_falla_clases": 48,
+    "modelo_macro": "machine_learning/models/modelo_sistema.pkl",
+    "modelo_macro_sha256": "22d11492e9576664ee21fcc3dc75e040c2b9f2c5c326ccdef98c602fbc78fc27",
+    "modelo_macro_clases": 7,
+    "vectorizador": "machine_learning/models/vectorizador_tfidf.pkl",
+    "vectorizador_sha256": "8b8e8c3b3571fe965174bff67faff0ac57aaadccf17d4e40395e4c1ab3273104",
+    "calibrador": "CalibratedClassifierCV(base_estimator=LinearSVC, method=sigmoid)",
+    "variables_entorno_intervinientes": [
+      "MODEL_VERSION",
+      "MODEL_PKL_PATH",
+      "VECTORIZER_PKL_PATH",
+      "MODELO_SISTEMA_PKL_PATH",
+      "MODEL_PKL_SHA256",
+      "VECTORIZER_PKL_SHA256",
+      "ML_ROOT"
+    ],
+    "servicios_dependientes": [
+      "ServiceContainer (Singleton DI)",
+      "ModeloML (Infrastructure Adapter)",
+      "GestorDiagnostico (Core Application Service)",
+      "WebhookService (WhatsApp / Meta / Twilio Inbound)",
+      "DiagnosticoEndpoints (FastAPI REST Router)",
+      "SystemWorker (Background Diagnostics Worker)"
+    ]
+  },
+  "archivos_registrados": [
+    {
+      "nombre": "modelo_diagnostico.pkl",
+      "ruta_produccion_original": "machine_learning/models/modelo_diagnostico.pkl",
+      "ruta_respaldo_inmutable": "machine_learning/models/fase8_3_frozen/modelo_diagnostico.pkl",
+      "sha256": "3d8199595b69bb0176fbb4bb9d7c57b43484f16e6f6baa115660405b76aa13fd",
+      "bytes": 16697742
+    },
+    {
+      "nombre": "modelo_sistema.pkl",
+      "ruta_produccion_original": "machine_learning/models/modelo_sistema.pkl",
+      "ruta_respaldo_inmutable": "machine_learning/models/fase8_3_frozen/modelo_sistema.pkl",
+      "sha256": "22d11492e9576664ee21fcc3dc75e040c2b9f2c5c326ccdef98c602fbc78fc27",
+      "bytes": 3266416
+    },
+    {
+      "nombre": "vectorizador_tfidf.pkl",
+      "ruta_produccion_original": "machine_learning/models/vectorizador_tfidf.pkl",
+      "ruta_respaldo_inmutable": "machine_learning/models/fase8_3_frozen/vectorizador_tfidf.pkl",
+      "sha256": "8b8e8c3b3571fe965174bff67faff0ac57aaadccf17d4e40395e4c1ab3273104",
+      "bytes": 213118
+    },
+    {
+      "nombre": "modelo_diagnostico.pkl",
+      "ruta": "machine_learning/models/fase8_candidata/modelo_diagnostico.pkl",
+      "sha256": "3d8199595b69bb0176fbb4bb9d7c57b43484f16e6f6baa115660405b76aa13fd",
+      "bytes": 16697742
+    },
+    {
+      "nombre": "modelo_sistema.pkl",
+      "ruta": "machine_learning/models/fase8_candidata/modelo_sistema.pkl",
+      "sha256": "22d11492e9576664ee21fcc3dc75e040c2b9f2c5c326ccdef98c602fbc78fc27",
+      "bytes": 3266416
+    },
+    {
+      "nombre": "vectorizador_tfidf.pkl",
+      "ruta": "machine_learning/models/fase8_candidata/vectorizador_tfidf.pkl",
+      "sha256": "8b8e8c3b3571fe965174bff67faff0ac57aaadccf17d4e40395e4c1ab3273104",
+      "bytes": 213118
+    },
+    {
+      "nombre": "config.py",
+      "ruta": "backend/src/config.py",
+      "sha256": "d7c6158ef1bab5df439fad1101cac10c3667bac4eb197be5f850fae146d2628f",
+      "bytes": 12249
+    },
+    {
+      "nombre": "modelo_ml.py",
+      "ruta": "backend/src/infrastructure/modelo_ml.py",
+      "sha256": "014d3e6f6f9f5c5bc5e6223e748566ce6a1ecdb70842df7afc7037c51b6a5eb4",
+      "bytes": 8022
+    },
+    {
+      "nombre": "container.py",
+      "ruta": "backend/src/infrastructure/container.py",
+      "sha256": "c2f3cf79c3deca3bfc8a50b08ef14a1f779f60407bea82af8082b1440e24b257",
+      "bytes": 1530
+    },
+    {
+      "nombre": "gestor_diagnostico.py",
+      "ruta": "backend/src/core/gestor_diagnostico.py",
+      "sha256": "66bead052676331496a0e737ebe0ab1e6927027e6e19c73c32a43fbe57752330",
+      "bytes": 11720
+    },
+    {
+      "nombre": "taxonomia_sistemas.py",
+      "ruta": "backend/src/core/diagnostico/taxonomia_sistemas.py",
+      "sha256": "561e95c952effcd002850e484830e0515a2469c152fc7af9933b17e0483f716d",
+      "bytes": 12419
+    }
+  ],
+  "mecanismo_rollback": {
+    "disponible": true,
+    "estrategia": "Configuracion explicita MODEL_VERSION=F8.3 o restauracion directa desde machine_learning/models/fase8_3_frozen/",
+    "directorio_respaldo_inmutable": "machine_learning/models/fase8_3_frozen/"
+  }
+}

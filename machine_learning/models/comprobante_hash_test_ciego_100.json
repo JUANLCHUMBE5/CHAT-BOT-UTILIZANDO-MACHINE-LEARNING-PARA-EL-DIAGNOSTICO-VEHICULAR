@@ -1,0 +1,10 @@
+{
+  "benchmark": "TEST_FINAL_CIEGO_100",
+  "archivo": "machine_learning/data/benchmark_test_ciego_100.py",
+  "sha256": "7bad715300fbba12d33aaff8d929b616753bcec5a93be4c6c6daa0f2eb60f913",
+  "total_casos": 100,
+  "solapamiento_train": 0,
+  "solapamiento_dev": 0,
+  "solapamiento_g1": 0,
+  "estado": "GROUND_TRUTH_FIJADO_A_PRIORI"
+}

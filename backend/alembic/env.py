@@ -6,17 +6,17 @@ import asyncio
 from logging.config import fileConfig
 from pathlib import Path
 
-from alembic import context
 from dotenv import load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+from alembic import context
+
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
+from src.infrastructure.database import models  # noqa: F401,E402
 from src.infrastructure.database.base import Base  # noqa: E402
 from src.infrastructure.database.connection import construir_url_postgresql  # noqa: E402
-from src.infrastructure.database import models  # noqa: F401,E402
-
 
 config = context.config
 if config.config_file_name is not None:

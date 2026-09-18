@@ -1,0 +1,56 @@
+{
+  "fase": "FASE 11",
+  "etapa": "ETAPA 1 - VERIFICACION DE CARGA ACTIVA",
+  "timestamp": "2026-09-18T00:05:00Z",
+  "candidato_activo": "C1",
+  "estado_integracion": "INTEGRACION_C1_EXITOSA",
+  "configuracion": {
+    "model_version": "C1_FASE10_FINAL",
+    "model_algorithm": "Linear SVM calibrado + TF-IDF",
+    "vectorizador_path": "machine_learning/models/c1_fase10_final/vectorizador_c1.pkl",
+    "modelo_falla_path": "machine_learning/models/c1_fase10_final/modelo_diagnostico_c1.pkl",
+    "modelo_sistema_path": "machine_learning/models/c1_fase10_final/modelo_sistema_c1_macrofix.pkl"
+  },
+  "verificacion_hashes": {
+    "vectorizador": {
+      "archivo": "vectorizador_c1.pkl",
+      "sha256": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+      "sha256_esperado": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+      "coincide": true,
+      "bytes": 264089
+    },
+    "modelo_falla": {
+      "archivo": "modelo_diagnostico_c1.pkl",
+      "sha256": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+      "sha256_esperado": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+      "coincide": true,
+      "bytes": 23710300
+    },
+    "modelo_macro": {
+      "archivo": "modelo_sistema_c1_macrofix.pkl",
+      "sha256": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
+      "sha256_esperado": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
+      "coincide": true,
+      "bytes": 4532678
+    }
+  },
+  "introspeccion_clases": {
+    "total_clases_falla": 61,
+    "total_clases_macro": 7,
+    "clases_macro_lista": [
+      "CARROCERIA_NEUMATICA",
+      "CLIMATIZACION",
+      "ELECTRICO",
+      "FRENOS",
+      "MOTOR",
+      "SUSPENSION_CHASIS",
+      "TRANSMISION"
+    ],
+    "todas_en_taxonomia": true
+  },
+  "rollback": {
+    "disponible": true,
+    "comando": "set MODEL_VERSION=F8.3 (o unset)",
+    "respaldo_inmutable": "machine_learning/models/fase8_3_frozen/"
+  }
+}

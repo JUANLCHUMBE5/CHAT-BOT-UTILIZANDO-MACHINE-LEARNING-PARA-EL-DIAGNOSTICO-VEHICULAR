@@ -75,6 +75,9 @@ async def lifespan(app: FastAPI):
     app.state.gestor_diagnostico = GestorDiagnostico()
     logger.info("¡Instancia global Singleton cargada exitosamente!")
 
+    from src.core.version import registrar_startup_log
+    registrar_startup_log("api", puerto=8000)
+
     # Iniciar worker background para la cola real de Gemini
     system_worker = None
     system_worker_task = None
@@ -165,6 +168,14 @@ async def agregar_request_id(request: Request, call_next):
 # Incluir las rutas modulares versionadas bajo /api/v1
 app.include_router(api_router, prefix="/api/v1")
 
+
+@app.get("/api/v1/sistema/version", tags=["Sistema"])
+def get_sistema_version():
+    """Retorna la versión, build ID determinista y telemetría en runtime de la API."""
+    from src.core.version import obtener_telemetria_proceso
+    return obtener_telemetria_proceso("api")
+
+
 @app.get("/")
 def read_root():
     return {
@@ -218,6 +229,8 @@ async def health_ready(request: Request):
     contenido = {"status": "ready" if listo else "not_ready"}
     if not settings.is_production or settings.expose_health_details:
         contenido["componentes"] = componentes
+        from src.core.version import obtener_telemetria_proceso
+        contenido["fingerprint"] = obtener_telemetria_proceso("api")
     return JSONResponse(
         status_code=200 if listo else 503,
         content=contenido,

@@ -1,7 +1,11 @@
 """Regresiones de experiencia conversacional y salida breve para WhatsApp."""
 
+import pytest
+
+from src.core.fuel_context_parser import extraer_contexto_combustible
 from src.core.gemini_queue import GeminiRateLimiter, SolicitudGeminiEncolada
 from src.core.gestor_diagnostico import GestorDiagnostico
+from src.core.traductor_jerga import normalizar_jerga_peruana
 from src.core.vehicle_profile import (
     extraer_datos_vehiculo,
     extraer_datos_vehiculo_contextual,
@@ -57,6 +61,57 @@ def test_contexto_multiturno_une_dato_gnv_sin_arrastrar_consulta_nueva(monkeypat
 
     gestor.procesar_consulta_texto("la puerta no abre con el control", session_id="sesion-gnv")
     assert "pierde fuerza" not in capturados[-1]
+
+
+@pytest.mark.parametrize(
+    ("mensaje", "combustible", "modo"),
+    [
+        ("solo GLP", "GLP", "solo_gas"),
+        ("SOLO GLP", "GLP", "solo_gas"),
+        ("solo GLP nomás", "GLP", "solo_gas"),
+        ("solo GLP y gasolina bien", "GLP", "solo_gas"),
+        ("solo con gas", "GLP", "solo_gas"),
+        ("gas licuado de petróleo", "GLP", None),
+        ("GLP}", "GLP", None),
+    ],
+)
+def test_parser_combustible_acepta_respuestas_breves_de_whatsapp(
+    mensaje, combustible, modo
+):
+    texto_normalizado = normalizar_jerga_peruana(mensaje)
+
+    resultado = extraer_contexto_combustible(texto_normalizado, "GLP")
+
+    assert resultado == (combustible, modo)
+
+
+def test_contexto_multiturno_procesa_solo_glp_sin_bucle(monkeypatch):
+    gestor = GestorDiagnostico()
+    capturados = []
+    monkeypatch.setattr(
+        gestor.modelo_ml,
+        "predecir_top_fallas",
+        lambda texto, limite=3: [
+            {"falla": capturados.append(texto) or "falla de alimentación", "probabilidad": 0.75}
+        ],
+    )
+    monkeypatch.setattr(
+        gestor,
+        "_generar_respuesta_con_metadatos",
+        lambda **kwargs: ("respuesta", {"usado": False, "modo": "diagnostico_degradado_ml_rag"}),
+    )
+
+    primero = gestor.procesar_consulta_texto(
+        "pierde fuerza en subida y se apaga", session_id="regresion-solo-glp"
+    )
+    segundo = gestor.procesar_consulta_texto("GLP", session_id="regresion-solo-glp")
+    tercero = gestor.procesar_consulta_texto("SOLO GLP", session_id="regresion-solo-glp")
+
+    assert primero.estado_sesion == "esperando_combustible"
+    assert segundo.estado_sesion == "esperando_combustible"
+    assert tercero.estado_sesion == "completado"
+    assert "Combustible confirmado: GLP" in capturados[-1]
+    assert "solo usando GLP" in capturados[-1]
 
 
 def test_consulta_tecnica_no_exige_marca_modelo_ni_anio():
@@ -274,3 +329,36 @@ def test_resumen_solo_gnv_muestra_calibracion_como_prioridad():
     assert "posible descalibración" in resumen
     assert "Revisar primero la calibración" in resumen
     assert "por confirmar" in resumen
+
+
+def test_cambio_de_tema_desde_esperando_combustible_a_frenos_no_pide_gasolina(monkeypatch):
+    gestor = GestorDiagnostico()
+    monkeypatch.setattr(
+        gestor,
+        "_generar_respuesta_con_metadatos",
+        lambda **kwargs: ("Diagnóstico emitido", {"usado": False, "modo": "completo_ml_rag_llm"}),
+    )
+
+    # 1. Una consulta anterior sobre pérdida de potencia pone la sesión en esperando_combustible
+    primero = gestor.procesar_consulta_texto(
+        "pierde fuerza en subida y se aguanta", session_id="sesion-cambio-tema"
+    )
+    assert primero.estado_sesion == "esperando_combustible"
+    assert "GNV" in primero.respuesta_texto
+
+    # 2. El usuario cambia drásticamente de tema reportando falla de pedal de freno
+    mensaje_frenos = (
+        "tengo un susto tremendo con los frenos: cuando voy manejando y freno normal o de golpe, "
+        "el carro se detiene bien. El problema es cuando me quedo parado esperando la luz verde... "
+        "siento clarito cómo el pedal se va hundiendo despacito, despacito, hasta que llega al fondo... "
+        "el tachito del líquido de frenos tiene el nivel completo"
+    )
+    resultado = gestor.procesar_consulta_texto(mensaje_frenos, session_id="sesion-cambio-tema")
+
+    # Debe salir inmediatamente de la espera de combustible y clasificar la avería de frenos
+    assert resultado.estado_sesion != "esperando_combustible"
+    assert resultado.tipo_consulta == "diagnostico"
+    assert "GNV" not in resultado.respuesta_texto
+    assert "Fuga hidraulica o aire en el sistema de frenos" in resultado.diagnostico_ml
+    assert resultado.confianza_ml > 0.5
+

@@ -85,8 +85,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   useEffect(() => {
     consultarSalud();
-    const timer = setInterval(consultarSalud, 20000);
-    return () => clearInterval(timer);
   }, [consultarSalud]);
 
   const handleQuickRange = (preset: 'hoy' | '7dias' | 'esteMes') => {

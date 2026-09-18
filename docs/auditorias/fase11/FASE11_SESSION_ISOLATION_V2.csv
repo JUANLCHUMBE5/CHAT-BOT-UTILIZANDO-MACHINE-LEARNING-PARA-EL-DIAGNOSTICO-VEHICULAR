@@ -1,0 +1,4 @@
+case_id,session_A,session_B,contaminacion_detectada,resultado
+CASE_107,f11_v2_case_107_usuario_a,f11_v2_case_107_usuario_b,NO,AISLADO_CORRECTO
+CASE_108,f11_v2_case_108_usuario_1,f11_v2_case_108_usuario_2,NO,AISLADO_CORRECTO
+CASE_109,f11_v2_case_109_taller_1,f11_v2_case_109_taller_2,NO,AISLADO_CORRECTO

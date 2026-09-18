@@ -313,9 +313,9 @@ CATALOGO_TAXONOMIA: Dict[str, FallaVehicularEstandar] = {
         codigo="ELECTRICO_002",
         sistema="Sistema Eléctrico y Carga",
         falla_principal="Bateria descargada o bornes sulfatados",
-        posibles_causas=["Batería cumplió vida útil", "Consumo parásito en reposo", "Bornes con óxido"],
+        posibles_causas=["Batería descargada o degradada", "Carbones o escobillas de arranque desgastados al límite", "Contactos internos del solenoide fogueados o quemados", "Bornes o cables de potencia sulfatados o flojos"],
         severidad="media",
-        tiempo_estimado_min=20,
+        tiempo_estimado_min=30,
         urgencia="Media"
     ),
 
@@ -479,6 +479,9 @@ MAPA_UNIFICACION_ETIQUETAS: Dict[str, str] = {
     "Alternador defectuoso o placa de diodos quemada": "ELECTRICO_001",
     "Bateria descargada o arrancador defectuoso": "ELECTRICO_002",
     "Motor de arrancador / solenoide pegado": "ELECTRICO_002",
+    "Bateria descargada o bornes sulfatados": "ELECTRICO_002",
+    "Falla en bateria, bornes o circuito del motor de arranque (solenoide/carbones)": "ELECTRICO_002",
+    "Falla en motor de arranque o carbones gastados": "ELECTRICO_002",
     
     # Frenos
     "Pastillas de freno desgastadas": "FRENO_001",

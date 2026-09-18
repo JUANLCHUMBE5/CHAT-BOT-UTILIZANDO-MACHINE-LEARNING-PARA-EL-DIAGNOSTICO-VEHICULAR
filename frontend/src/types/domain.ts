@@ -113,6 +113,7 @@ export interface ResumenMetricas {
   actividad_diaria: { fecha: string; cantidad: number }[];
   fallas_frecuentes: { falla: string; cantidad: number }[];
   colas?: MetricasCola;
+  tiempo_inferencia_ml_ms?: number | null;
 }
 
 export interface MetricasCola {

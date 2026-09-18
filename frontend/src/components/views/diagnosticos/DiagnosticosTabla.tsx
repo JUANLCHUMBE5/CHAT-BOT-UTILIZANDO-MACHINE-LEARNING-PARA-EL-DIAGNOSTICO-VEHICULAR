@@ -3,6 +3,8 @@ import {
   AlertCircle,
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   MessageSquare,
   RefreshCw,
 } from 'lucide-react';
@@ -335,52 +337,118 @@ export const DiagnosticosTabla: React.FC<DiagnosticosTablaProps> = ({
             <span>por página</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button type="button" onClick={() => onCambiarPagina(1)} disabled={paginaActual <= 1}>Primera</button>
-            <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-              Página {paginaActual} de {totalPaginas}
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={() => onCambiarPagina(1)}
+              disabled={paginaActual <= 1}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px',
+                height: '32px',
+                padding: '0 10px',
+                borderRadius: '6px',
+                border: '1px solid var(--border-color)',
+                backgroundColor: '#ffffff',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: paginaActual <= 1 ? 'var(--text-muted)' : 'var(--text-main)',
+                cursor: paginaActual <= 1 ? 'not-allowed' : 'pointer',
+                opacity: paginaActual <= 1 ? 0.45 : 1,
+                transition: 'all 0.15s ease',
+              }}
+              title="Primera página"
+            >
+              <ChevronsLeft size={14} />
+              <span>Primera</span>
+            </button>
+
             <button
               type="button"
               onClick={() => onCambiarPagina(paginaActual - 1)}
               aria-label="Página anterior"
               disabled={paginaActual <= 1}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: '32px',
                 height: '32px',
-                borderRadius: 'var(--radius-sm)',
+                borderRadius: '6px',
                 border: '1px solid var(--border-color)',
                 backgroundColor: '#ffffff',
                 color: paginaActual <= 1 ? 'var(--text-muted)' : 'var(--text-main)',
                 cursor: paginaActual <= 1 ? 'not-allowed' : 'pointer',
+                opacity: paginaActual <= 1 ? 0.45 : 1,
+                transition: 'all 0.15s ease',
               }}
+              title="Página anterior"
             >
               <ChevronLeft size={16} />
             </button>
+
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: 600,
+                color: 'var(--text-secondary)',
+                padding: '0 6px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Página {paginaActual} de {totalPaginas}
+            </span>
+
             <button
               type="button"
               onClick={() => onCambiarPagina(paginaActual + 1)}
               aria-label="Página siguiente"
               disabled={paginaActual >= totalPaginas}
               style={{
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: '32px',
                 height: '32px',
-                borderRadius: 'var(--radius-sm)',
+                borderRadius: '6px',
                 border: '1px solid var(--border-color)',
                 backgroundColor: '#ffffff',
                 color: paginaActual >= totalPaginas ? 'var(--text-muted)' : 'var(--text-main)',
                 cursor: paginaActual >= totalPaginas ? 'not-allowed' : 'pointer',
+                opacity: paginaActual >= totalPaginas ? 0.45 : 1,
+                transition: 'all 0.15s ease',
               }}
+              title="Página siguiente"
             >
               <ChevronRight size={16} />
             </button>
-            <button type="button" onClick={() => onCambiarPagina(totalPaginas)} disabled={paginaActual >= totalPaginas}>Última</button>
+
+            <button
+              type="button"
+              onClick={() => onCambiarPagina(totalPaginas)}
+              disabled={paginaActual >= totalPaginas}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px',
+                height: '32px',
+                padding: '0 10px',
+                borderRadius: '6px',
+                border: '1px solid var(--border-color)',
+                backgroundColor: '#ffffff',
+                fontSize: '12px',
+                fontWeight: 600,
+                color: paginaActual >= totalPaginas ? 'var(--text-muted)' : 'var(--text-main)',
+                cursor: paginaActual >= totalPaginas ? 'not-allowed' : 'pointer',
+                opacity: paginaActual >= totalPaginas ? 0.45 : 1,
+                transition: 'all 0.15s ease',
+              }}
+              title="Última página"
+            >
+              <span>Última</span>
+              <ChevronsRight size={14} />
+            </button>
           </div>
         </div>
       )}
