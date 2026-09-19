@@ -1,0 +1,16 @@
+﻿﻿ranking,ground_truth,predicho,frecuencia,casos_ids
+1,Disco de embrague desgastado o patinando,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),1,STRESS_07
+2,Cuerpo de aceleracion o valvula IAC sucia,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),1,STRESS_08
+3,Falla en bujias o bobinas de encendido (misfire),Pendiente de comparar el modo de combustible,1,STRESS_11
+4,Bomba de gasolina quemada o con baja presion,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),1,STRESS_12
+5,Bateria descargada o bornes sulfatados,Auto-pregunta técnica de descarte enviada,1,STRESS_22
+6,Llantas desbalanceadas o desalineadas,Consulta Ambigua / Datos Faltantes,1,STRESS_23
+7,Inyectores sucios o filtro de combustible obstruido,Falla en bujias o bobinas de encendido (misfire),1,STRESS_24
+8,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),Bomba de gasolina quemada o con baja presion,1,STRESS_25
+9,Falla en bujias o bobinas de encendido (misfire),Inyectores sucios o filtro de combustible obstruido,1,STRESS_29
+10,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),Auto-pregunta técnica de descarte enviada,1,STRESS_30
+11,Falla en sensor de oxigeno o mezcla rica,Cuerpo de aceleracion o valvula IAC sucia,1,STRESS_32
+12,Falla en sensor de oxigeno o mezcla rica,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,1,STRESS_43
+13,Llantas desbalanceadas o desalineadas,Discos de freno alabeados o desgastados,1,STRESS_44
+14,Falla en bujias o bobinas de encendido (misfire),Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,1,STRESS_47
+15,Disco de embrague desgastado o patinando,Rodajes de transmision manual o eje primario gastados,1,STRESS_50
