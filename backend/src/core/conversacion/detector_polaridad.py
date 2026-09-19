@@ -58,8 +58,8 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     ),
     (
         "funcionamiento irregular / misfire",
-        re.compile(r"\b(misfire|ratea|cabecea|tironea|jalonea)\b", re.IGNORECASE),
-        re.compile(r"\b(no\s+(?:ratea|cabecea|tironea|jalonea|falla\s+el\s+motor))\b", re.IGNORECASE),
+        re.compile(r"\b(misfire|ratea|cabecea|tironea|jalonea|cascabelea|cascabeleo|pistonea|pistoneo|detonaci[oó]n)\b", re.IGNORECASE),
+        re.compile(r"\b(no\s+(?:ratea|cabecea|tironea|jalonea|cascabelea|falla\s+el\s+motor))\b", re.IGNORECASE),
     ),
     (
         "humo blanco / ebullición refrigerante",
@@ -80,7 +80,7 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
         "ruido anómalo",
         re.compile(
             r"\b(suena\s+feo|ruido\s+extr[aá]ño|traqueteo|traquetea|sonajero|golpeteo|chillido|chirrido|zumbido|"
-            r"zumba|golpe(?:\s+en|\s+seco|\s+delantero)?|golpea|crujido|a[uú]lla|sonido)\b",
+            r"zumba|(?<!\bde\s)golpe(?:\s+en|\s+seco|\s+delantero)?|golpea|crujido|a[uú]lla|sonido)\b",
             re.IGNORECASE,
         ),
         re.compile(
@@ -91,7 +91,13 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     ),
     (
         "anomalía en frenos",
-        re.compile(r"\b(frena\s+raro|frenos\s+raros|frena\s+mal|freno\s+raro|anomal[ií]a\s+en\s+frenos)\b", re.IGNORECASE),
+        re.compile(
+            r"\b(frena\s+raro|frenos\s+raros|frena\s+mal|freno\s+raro|anomal[ií]a\s+en\s+frenos|"
+            r"pedal(?:\s+de\s+freno)?\s+(?:(?:se\s+siente|est[aá]|se\s+puso|queda)\s+)?(?:muy\s+)?esponjoso|"
+            r"pedal(?:\s+de\s+freno)?\s+(?:(?:se\s+)?(?:va\s+al\s+fondo|hunde|al\s+fondo|bajo|largo|blando))|"
+            r"frena\s+largo|sin\s+frenos?)\b",
+            re.IGNORECASE,
+        ),
         re.compile(r"\b(frena\s+bien|frena\s+normal|no\s+frena\s+mal)\b", re.IGNORECASE),
     ),
     (

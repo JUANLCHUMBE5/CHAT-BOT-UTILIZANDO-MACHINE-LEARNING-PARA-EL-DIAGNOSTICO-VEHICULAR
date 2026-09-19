@@ -108,12 +108,9 @@ class DiagnosticPersister:
         # 2. Agregar instrucciones de confirmación solo si no quedó en cola y no hay pregunta diagnóstica pendiente
         respuesta_texto = dto.respuesta_texto
         tiene_pregunta_activa = bool(
-            respuesta_texto
-            and (
-                respuesta_texto.rstrip().endswith("?")
-                or getattr(dto, "es_pregunta", False)
-                or getattr(dto, "modo_diagnostico", "") == "esperando_clarificacion"
-            )
+            getattr(dto, "es_pregunta", False)
+            or getattr(dto, "modo_diagnostico", "") in ("esperando_clarificacion", "aclaracion")
+            or getattr(dto, "tipo_consulta", "") == "aclaracion"
         )
         if dto.modo_diagnostico != "en_cola_gemini" and not tiene_pregunta_activa:
             respuesta_texto = (

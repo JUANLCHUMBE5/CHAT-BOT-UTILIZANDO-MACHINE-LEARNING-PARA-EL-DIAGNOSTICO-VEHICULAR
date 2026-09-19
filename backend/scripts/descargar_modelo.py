@@ -7,6 +7,7 @@ El ZIP debe contener exactamente `modelo_diagnostico.pkl` y
 from __future__ import annotations
 
 import hashlib
+import hmac
 import io
 import zipfile
 from pathlib import Path
@@ -27,7 +28,7 @@ def _sha256_archivo(ruta: Path) -> str:
 
 
 def _verificar_archivo(ruta: Path, esperado: str) -> None:
-    if esperado and not hashlib.compare_digest(_sha256_archivo(ruta), esperado.lower()):
+    if esperado and not hmac.compare_digest(_sha256_archivo(ruta), esperado.lower()):
         raise RuntimeError(f"El SHA-256 del artefacto {ruta.name} no coincide.")
 
 
@@ -45,7 +46,7 @@ def asegurar_artefactos_modelo() -> bool:
     respuesta.raise_for_status()
     contenido = respuesta.content
     digest = hashlib.sha256(contenido).hexdigest()
-    if not hashlib.compare_digest(digest.lower(), settings.model_artifact_sha256.lower()):
+    if not hmac.compare_digest(digest.lower(), settings.model_artifact_sha256.lower()):
         raise RuntimeError("El SHA-256 del artefacto ML no coincide.")
 
     with zipfile.ZipFile(io.BytesIO(contenido)) as archivo:
@@ -62,7 +63,7 @@ def asegurar_artefactos_modelo() -> bool:
                 else settings.vectorizer_pkl_sha256
             )
             digest_archivo = hashlib.sha256(datos).hexdigest()
-            if esperado and not hashlib.compare_digest(digest_archivo, esperado.lower()):
+            if esperado and not hmac.compare_digest(digest_archivo, esperado.lower()):
                 raise RuntimeError(f"El SHA-256 interno de {requerido} no coincide.")
             (destino / requerido).write_bytes(datos)
     return True

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import unicodedata
 from typing import Optional, Tuple
 
@@ -116,11 +117,19 @@ class CompatibilidadPreguntas:
     @staticmethod
     def dominio_pregunta(intent: QuestionIntent, texto: str) -> str:
         txt = _normalizar(texto)
+        if intent == QuestionIntent.CODIGO_DTC:
+            return "GENERAL"
+        if intent == QuestionIntent.CONDICION_OPERACION and "ralenti" in txt and "freno" in txt:
+            return "GENERAL"
+        if intent == QuestionIntent.PRESENCIA_RUIDO and any(k in txt for k in ("ruido anomalo", "precisar la falla")):
+            return "GENERAL"
         if any(k in txt for k in ("reversa", "transmision", "caja", "atf", "acople", "embrague")):
             return "TRANSMISION"
         if any(k in txt for k in ("freno", "frenar", "pedal esponjoso", "pastilla", "disco")):
             return "FRENOS"
-        if any(k in txt for k in ("aire acondicionado", "compresor", "a c", "clima", "enfria", "r134a")):
+        if any(k in txt for k in ("aire acondicionado", "compresor", "clima", "enfria", "r134a")) or bool(
+            re.search(r"\ba/?c\b", txt)
+        ):
             return "CLIMATIZACION"
         if any(k in txt for k in ("suspension", "amortiguador", "bache", "rotula", "bujes", "trapecio")):
             return "SUSPENSION"
@@ -256,6 +265,22 @@ class CompatibilidadPreguntas:
             if not pertinente_obd:
                 return False, motivo_obd
 
+        compatibles = {
+            "ARRANQUE": {"ELECTRICO"},
+            "ELECTRICO": {"ARRANQUE"},
+        }
+
+        # Descarte inmediato si el subsistema de la pregunta no pertenece ni es compatible con el dominio activo
+        if dominio != "DESCONOCIDO" and dominio_pregunta not in ("GENERAL", "DESCONOCIDO"):
+            if dominio_pregunta != dominio and dominio_pregunta not in compatibles.get(dominio, set()):
+                if intent == QuestionIntent.TEMPERATURA_APARICION:
+                    if not (dominio == "ARRANQUE" and dominio_pregunta == "MARCHA_MOTOR"):
+                        if cls.diferencial_justifica_temperatura(estado, dominio):
+                            return False, "INCOMPATIBLE_REDACCION_DOMINIO"
+                        return False, "INCOMPATIBLE_DOMINIO"
+                else:
+                    return False, "INCOMPATIBLE_DOMINIO"
+
         # 0.2 Compuerta clínica de evidencia por subsistema (Fase 11.4.1)
         # Una pregunta de un subsistema específico no puede presentarse si el caso activo carece totalmente de evidencia
         if dominio_pregunta not in ("GENERAL", "DESCONOCIDO"):
@@ -277,10 +302,6 @@ class CompatibilidadPreguntas:
                 return False, "INCOMPATIBLE_REDACCION_DOMINIO"
             return False, "INCOMPATIBLE_DOMINIO"
 
-        compatibles = {
-            "ARRANQUE": {"ELECTRICO"},
-            "ELECTRICO": {"ARRANQUE"},
-        }
         if dominio_pregunta in compatibles.get(dominio, set()):
             return True, None
         return False, "INCOMPATIBLE_DOMINIO"

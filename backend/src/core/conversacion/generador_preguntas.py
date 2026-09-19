@@ -334,6 +334,13 @@ class GeneradorPreguntas:
             opc = ["Detenido en ralentí", "Al acelerar bajo carga", "Al frenar"]
             candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 75))
 
+        if estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and cls.puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
+            txt_sensorial = (
+                "Para precisar la falla: ¿se percibe algún ruido anómalo (como cascabeleo, chillido o golpeteo), humo o vibración?"
+            )
+            opc_sensorial = ["Ruido anómalo evidente", "Humo o vibración", "Ningún ruido ni humo"]
+            candidatas.append((txt_sensorial, opc_sensorial, QuestionIntent.PRESENCIA_RUIDO, 55))
+
         # 2b. Preguntas propias del dominio detectado.
         dominio = CompatibilidadPreguntas.dominio_actual(estado)
         if dominio == "TRANSMISION":
@@ -355,7 +362,15 @@ class GeneradorPreguntas:
                     80,
                 ))
         elif dominio == "FRENOS":
-            if cls.puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
+            mensajes_txt = " ".join(estado.historial_mensajes_usuario).lower()
+            tiene_vibracion = any(
+                k in mensajes_txt
+                for k in ("vibra", "vibracion", "vibración", "tiembla", "trepida", "alabeo", "zapate")
+            ) or any(
+                any(k in str(h.valor).lower() for k in ("vibra", "tiembla", "trepida", "zapate"))
+                for h in estado.hechos.values()
+            )
+            if tiene_vibracion and cls.puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
                 candidatas.append((
                     "Al frenar, ¿la vibración se siente principalmente en el volante, en el pedal o en todo el vehículo?",
                     ["En el volante", "En el pedal", "En todo el vehículo"],

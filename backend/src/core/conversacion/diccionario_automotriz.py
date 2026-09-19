@@ -59,7 +59,7 @@ PATRONES_CONDICION: List[Tuple[re.Pattern, str, str]] = [
     ),
     (
         re.compile(
-            r"\b(al\s+acelerar|cuando\s+acelero|pisando\s+el\s+acelerador|en\s+subida|en\s+cuesta|bajo\s+carga)\b",
+            r"\b(al\s+acelerar|cuando\s+acelero|pisando\s+el\s+acelerador|en\s+subida|en\s+cuesta|bajo\s+carga|al\s+subir(\s+pendientes?)?|subiendo(\s+pendientes?)?|en\s+pendientes?)\b",
             re.IGNORECASE,
         ),
         "condicion_operacion",

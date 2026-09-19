@@ -176,6 +176,13 @@ class SegmentadorCasos:
         if estado.estado_operativo in (EstadoOperativo.MARCHA, EstadoOperativo.RALENTI):
             return SubsistemaVehicular.MARCHA_MOTOR
 
+        # 4. Por dominio_probable si está registrado
+        if getattr(estado, "dominio_probable", None):
+            dom = str(estado.dominio_probable).strip().upper()
+            for sub in SubsistemaVehicular:
+                if sub.value == dom or sub.name == dom:
+                    return sub
+
         return SubsistemaVehicular.DESCONOCIDO
 
     @classmethod
@@ -369,7 +376,11 @@ class SegmentadorCasos:
         subsistema_actual = cls.detectar_subsistema_texto(texto_usuario)
 
         caso_ya_diagnosticado = bool(estado.fase == ConversationPhase.RESULTADO or estado.top3_actual)
-        if caso_ya_diagnosticado and subsistema_actual != SubsistemaVehicular.DESCONOCIDO:
+        if (
+            caso_ya_diagnosticado
+            and subsistema_actual != SubsistemaVehicular.DESCONOCIDO
+            and subsistema_previo != SubsistemaVehicular.DESCONOCIDO
+        ):
             if subsistema_actual != subsistema_previo:
                 if cls.es_nueva_queja_principal(texto_usuario):
                     return TransicionCasoResultado(

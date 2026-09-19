@@ -200,7 +200,9 @@ class TechnicalDiagnosticWorkflow:
                 modo_diagnostico="inicio",
                 tipo_consulta="saludo" if es_saludo else "reinicio",
             )
-        elif res_turno.get("es_pregunta") or decision in ("PREGUNTAR", "PLAN_B"):
+        elif decision in ("PREGUNTAR", "PLAN_B") or (
+            res_turno.get("es_pregunta") and decision not in ("DIAGNOSTICAR", "DIFERENCIAL", "DETALLE", "CONCLUSION_TECNICA")
+        ):
             return ResultadoDiagnostico(
                 respuesta_texto=res_turno["respuesta_texto"],
                 diagnostico_ml="Aclaración técnica / Auto-interrogador",

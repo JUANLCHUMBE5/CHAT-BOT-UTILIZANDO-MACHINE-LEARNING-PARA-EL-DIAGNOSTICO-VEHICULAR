@@ -64,6 +64,27 @@ class EvaluadorSuficiencia:
         if tiene_chasquido and tiene_luces_bat:
             return True, "Evidencia fuerte: Chasquido de solenoide con batería/luces encendidas o atenuadas"
 
+        mensajes_completos = " ".join(estado.historial_mensajes_usuario).lower()
+        if any(w in valores_sintomas or w in mensajes_completos for w in ("esponjoso", "se va al fondo", "se hunde")) and any(
+            w in valores_sintomas or w in mensajes_completos for w in ("freno", "frenar", "frenado", "pedal")
+        ):
+            return True, "Evidencia fuerte: Anomalía hidráulica en pedal de freno (esponjoso / se hunde)"
+
+        tiene_cascabeleo = any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("cascabelea", "cascabeleo", "pistonea", "pistoneo", "detonacion", "detonación")
+        )
+        tiene_potencia = any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("pierde potencia", "falta de fuerza", "sin fuerza", "se chupa", "no jala", "pérdida de potencia", "perdida de potencia")
+        )
+        tiene_carga = any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("subida", "pendiente", "subir pendientes", "bajo carga")
+        )
+        if tiene_cascabeleo and (tiene_potencia or tiene_carga):
+            return True, "Evidencia fuerte: Cascabeleo / detonación en aceleración o pendientes"
+
         return False, ""
 
     @classmethod

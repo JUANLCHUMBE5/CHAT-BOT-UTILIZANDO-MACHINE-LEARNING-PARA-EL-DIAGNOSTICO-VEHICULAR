@@ -94,11 +94,14 @@ def interpretar_respuesta_validacion_whatsapp(texto: str) -> str | None:
     if any(normalizado.startswith(pref) for pref in frases_clinicas):
         return None
 
-    import re
-    if normalizado in respuestas_positivas or re.match(r"^(?:si|correcto|correcta)\b[,\s.:;-]+", normalizado):
+    if normalizado in respuestas_positivas:
         return "si"
-    if normalizado in respuestas_negativas or re.match(r"^(?:no|incorrecto|descartado|falso|negativo)\b[,\s.:;-]+", normalizado):
+    if normalizado in respuestas_negativas:
         return "no"
+    if re.match(r"^(?:no\s*[,:;\-]|(?:negativo|descartado|falso|no es|no fue|descartar)\b)", normalizado):
+        return "no"
+    if re.match(r"^(?:si\s*[,:;\-]|(?:fue correcto|fue correcta|esta bien)\b)", normalizado):
+        return "si"
     return None
 
 

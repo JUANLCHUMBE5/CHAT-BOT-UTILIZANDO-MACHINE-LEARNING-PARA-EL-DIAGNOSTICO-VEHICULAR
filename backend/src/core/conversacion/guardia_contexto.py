@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.core.conversacion.extractor_hechos import ExtractorHechos
-from src.core.conversacion.models import ConversationState, FactType
+from src.core.conversacion.models import ConversationState, FactState, FactType
 from src.core.conversacion.sintetizador_consulta import SintetizadorConsulta
 from src.core.logger import logger
 
@@ -60,7 +60,8 @@ class GuardiaContextoDiagnostico:
         ExtractorHechos.extraer_y_actualizar(temp_state, mensaje_actual)
         sintomas_mensaje = [
             f.valor for f in temp_state.hechos.values()
-            if f.categoria == "sintoma" or f.tipo == FactType.SINTOMA
+            if (f.categoria == "sintoma" or f.tipo == FactType.SINTOMA)
+            and f.estado == FactState.CONFIRMADO
         ]
 
         if not sintomas_mensaje:

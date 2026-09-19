@@ -95,7 +95,7 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
     texto_limpio = texto.strip().lower()
     words = texto_limpio.split()
 
-    if "vibracion" in texto_limpio and not any(
+    if any(v in texto_limpio for v in ("vibracion", "vibración", "vibraciones", "vibra")) and not any(
         detalle in texto_limpio
         for detalle in (
             "freno",

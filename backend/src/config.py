@@ -203,8 +203,14 @@ class AppSettings(BaseModel):
     queue_payload_retention_days: int = _env_int("QUEUE_PAYLOAD_RETENTION_DAYS", 7)
     model_artifact_url: str = os.getenv("MODEL_ARTIFACT_URL", "")
     model_artifact_sha256: str = os.getenv("MODEL_ARTIFACT_SHA256", "")
-    model_pkl_sha256: str = os.getenv("MODEL_PKL_SHA256", "")
-    vectorizer_pkl_sha256: str = os.getenv("VECTORIZER_PKL_SHA256", "")
+    model_pkl_sha256: str = os.getenv(
+        "MODEL_PKL_SHA256",
+        "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+    )
+    vectorizer_pkl_sha256: str = os.getenv(
+        "VECTORIZER_PKL_SHA256",
+        "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+    )
     model_version: str = os.getenv("MODEL_VERSION", "C1_FASE10_FINAL")
     model_algorithm: str = os.getenv(
         "MODEL_ALGORITHM", "Linear SVM calibrado + TF-IDF"

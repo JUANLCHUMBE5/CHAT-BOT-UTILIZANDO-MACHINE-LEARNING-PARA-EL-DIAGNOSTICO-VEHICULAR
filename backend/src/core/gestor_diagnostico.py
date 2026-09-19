@@ -188,6 +188,7 @@ class GestorDiagnostico:
         slot_gemini_preconcedido: Optional[bool] = None,
         diferir_encolado_persistente: bool = False,
         diagnostico_forzado: Optional[str] = None,
+        orquestado: bool = False,
     ) -> ResultadoDiagnostico:
         """
         Flujo tripartito secuencial THREAD-SAFE para consultas de texto:
@@ -211,6 +212,7 @@ class GestorDiagnostico:
             slot_gemini_preconcedido=slot_gemini_preconcedido,
             diferir_encolado_persistente=diferir_encolado_persistente,
             diagnostico_forzado=diagnostico_forzado,
+            orquestado=orquestado,
         )
 
     def procesar_consulta_audio(self, audio_id: str, datos_audio_vector: Optional[np.ndarray] = None) -> str:

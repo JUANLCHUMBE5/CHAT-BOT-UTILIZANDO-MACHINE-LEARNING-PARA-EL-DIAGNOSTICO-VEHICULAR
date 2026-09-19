@@ -106,6 +106,8 @@ class MotorRAG:
                     meta_compat["manual_oem"] = item.get("source_title") or item.get("source_id") or "Manual OEM"
                 if "archivo_fuente" not in meta_compat:
                     meta_compat["archivo_fuente"] = item.get("archivo_fuente") or f"candidates/v1/texts/{proc_id}.txt"
+                if "estado_validacion" not in meta_compat:
+                    meta_compat["estado_validacion"] = item.get("estado_validacion", "corpus_preliminar_taller")
                 tit_norm = item.get("titulo", "").strip().lower()
                 mapa_metadatos[tit_norm] = meta_compat
 

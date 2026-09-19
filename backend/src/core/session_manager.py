@@ -28,6 +28,7 @@ class DiagnosticSession:
         self.ultimas_hipotesis_diferenciales: List[str] = []
         self.campos_requeridos: List[str] = []
         self.kilometraje_por_aclarar: bool = False
+        self.contexto: Dict[str, Any] = {}
         self.estado: str = "inicio"  # inicio, esperando_clarificacion, esperando_autopregunta, completo
         self.created_at: float = time.time()
         self.updated_at: float = time.time()
@@ -44,6 +45,9 @@ class DiagnosticSession:
 
     def obtener_sintoma_completo(self) -> str:
         with self._lock:
+            texto_sintomas = " ".join(self.sintomas).strip()
+            if texto_sintomas:
+                return texto_sintomas
             tiene_sintomas = any(
                 h.categoria == "sintoma" and h.estado.value == "CONFIRMADO"
                 for h in self.conversation_state.hechos.values()
@@ -51,7 +55,7 @@ class DiagnosticSession:
             sintetizado = SintetizadorConsulta.sintetizar(self.conversation_state)
             if tiene_sintomas and sintetizado and sintetizado != "Consulta vehicular técnica general":
                 return sintetizado
-            return " ".join(self.sintomas).strip()
+            return ""
 
     def reiniciar(self):
         with self._lock:

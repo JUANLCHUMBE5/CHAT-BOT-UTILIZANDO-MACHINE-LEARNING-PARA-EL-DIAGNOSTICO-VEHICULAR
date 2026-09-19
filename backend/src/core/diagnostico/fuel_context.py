@@ -31,6 +31,7 @@ def es_perdida_potencia_bajo_carga(texto: str) -> bool:
 
     sintomas = (
         "pierde fuerza", "pierde potencia", "perdida de fuerza", "perdida de potencia",
+        "pérdida de fuerza", "pérdida de potencia",
         "sin fuerza", "se aguanta", "no acelera", "no responde al acelerar",
         "tirones al acelerar", "tironea al acelerar", "jalonea al acelerar",
     )

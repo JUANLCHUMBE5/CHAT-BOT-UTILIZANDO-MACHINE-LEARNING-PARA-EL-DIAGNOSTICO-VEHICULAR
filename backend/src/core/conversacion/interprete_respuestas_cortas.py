@@ -315,6 +315,16 @@ class InterpreteRespuestasCortas:
                     campo = "medicion_voltaje"
                     tipo_med = "voltaje_bateria"
                     contexto_med = "bateria"
+                elif intent_str == QuestionIntent.MEDICION_VOLTAJE.value or "voltaje" in texto_preg or "multimetro" in texto_preg:
+                    campo = "medicion_voltaje"
+                    unidad = "V"
+                    tipo_med = "voltaje_bateria"
+                    contexto_med = "bateria"
+                elif intent_str == QuestionIntent.MEDICION_PRESION.value or "presion" in texto_preg or "manometro" in texto_preg:
+                    campo = "medicion_presion"
+                    unidad = "PSI"
+                    tipo_med = "presion_combustible"
+                    contexto_med = "riel_inyeccion"
                 else:
                     campo = f"medicion_{unidad.lower()}"
                     tipo_med = "medicion_tecnica"

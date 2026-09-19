@@ -338,6 +338,11 @@ class ValidationWorkflow:
                     "era ", "fue ", "encontre ", "encontré ", "solucionado con ", "cambie ", "cambié ",
                     "se cambio ", "se cambió ", "descartar:", "descartar "
                 )
+            ) or bool(
+                re.search(
+                    r"\b(defectuos[ao]|dañad[ao]|rot[ao]|quemad[ao]|cruzad[ao]|suci[ao]|obstruid[ao]|tapado|tapada|rajad[ao]|gastad[ao]|desgastad[ao]|vencid[ao]|en\s+corto|cortocircuito)\b",
+                    texto_norm,
+                )
             )
 
             # Filtrar evidencia espuria (teléfonos, secuencias numéricas sin contenido automotriz)

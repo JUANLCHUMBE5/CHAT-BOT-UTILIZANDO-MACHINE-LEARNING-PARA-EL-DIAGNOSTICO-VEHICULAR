@@ -449,6 +449,7 @@ class OrquestadorConversacion:
                 session_id=session_id,
                 proveedor=proveedor,
                 diagnostico_forzado=falla_diag,
+                orquestado=True,
             )
             top3_ml_raw = None
             if getattr(dto_resultado, "predicciones_ml", None):
@@ -469,7 +470,11 @@ class OrquestadorConversacion:
                 nueva_evidencia=texto_limpio if hechos_extraidos else None,
             )
 
-            if not (es_evidencia_duplicada and estado.top3_actual):
+            tiene_descartada_en_top3 = any(
+                h.get("falla", "").strip().lower() in {d.strip().lower() for d in estado.hipotesis_descartadas}
+                for h in estado.top3_actual
+            )
+            if not (es_evidencia_duplicada and estado.top3_actual and not tiene_descartada_en_top3):
                 estado.top3_actual = hipotesis_final_presentada or top3_ml_raw or []
                 if hipotesis_final_presentada:
                     estado.falla_principal = hipotesis_final_presentada[0]["falla"]

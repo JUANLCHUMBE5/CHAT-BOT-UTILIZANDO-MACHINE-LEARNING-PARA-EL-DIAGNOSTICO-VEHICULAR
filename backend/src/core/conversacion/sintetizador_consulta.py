@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import List
 
 from src.core.conversacion.models import ConversationState, FactState
@@ -42,9 +43,20 @@ class SintetizadorConsulta:
                     vistos_sintomas.add(v)
                     sintomas_confirmados.append(v)
 
+        temp = estado.obtener_valor_confirmado("temperatura")
+
         if sintomas_confirmados:
             sintomas_str = ", ".join(sintomas_confirmados)
             partes.append(f"presenta {sintomas_str}")
+        elif estado.historial_mensajes_usuario:
+            msg_base = estado.historial_mensajes_usuario[0]
+            if temp == "caliente":
+                msg_base = re.sub(r"\b(?:cuando\s+est[aá]\s+)?fr[ií]o\b", "", msg_base, flags=re.IGNORECASE)
+            elif temp == "frío":
+                msg_base = re.sub(r"\b(?:cuando\s+est[aá]\s+)?caliente\b", "", msg_base, flags=re.IGNORECASE)
+            msg_base = re.sub(r"\s+", " ", msg_base).strip()
+            if msg_base:
+                partes.append(msg_base)
 
         # 3. Condición de operación
         condicion = estado.obtener_valor_confirmado("condicion_operacion")
@@ -55,7 +67,6 @@ class SintetizadorConsulta:
                 partes.append(f"cuando está {condicion}")
 
         # 4. Condición de temperatura
-        temp = estado.obtener_valor_confirmado("temperatura")
         if temp:
             partes.append(f"ocurre en {temp}")
 

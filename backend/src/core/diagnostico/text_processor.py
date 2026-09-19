@@ -110,6 +110,7 @@ def procesar_consulta_texto(
     slot_gemini_preconcedido: Optional[bool] = None,
     diferir_encolado_persistente: bool = False,
     diagnostico_forzado: Optional[str] = None,
+    orquestado: bool = False,
 ) -> ResultadoDiagnostico:
     """
     Flujo tripartito secuencial THREAD-SAFE para consultas de texto:
@@ -243,6 +244,10 @@ def procesar_consulta_texto(
             )
             texto_normalizado = f"{pregunta_original} {contexto_combustible}".strip()
             sesion_pendiente.reiniciar()
+            sesion_pendiente.estado = "en_proceso"
+            sesion_pendiente.actualizar_perfil({"combustible": combustible_confirmado})
+            sesion_pendiente.establecer_modo_falla_combustible(modo_falla)
+            sesion_pendiente.agregar_sintoma(texto_normalizado)
 
     if sesion_pendiente and sesion_pendiente.estado == "esperando_datos_vehiculo":
         sesion_pendiente.campos_requeridos = []
@@ -342,9 +347,11 @@ def procesar_consulta_texto(
                 )
 
             es_nuevo = es_cambio_explicito or (
-                tiene_sintomas_reales
+                (
+                    tiene_sintomas_reales
+                    or (sesion_anterior and getattr(sesion_anterior, "estado", "") in ("completo", "completado"))
+                )
                 and not gestor._es_continuacion_contextual(texto_normalizado)
-                and len(texto_normalizado.split()) >= 12
             )
             if sesion_anterior and es_nuevo:
                 if es_cambio_explicito:
@@ -380,6 +387,7 @@ def procesar_consulta_texto(
     )
     if (
         clave_sesion
+        and not orquestado
         and gestor._es_perdida_potencia_bajo_carga(texto_evaluar)
         and not tiene_dtc
         and not tiene_componente_especifico
@@ -388,10 +396,16 @@ def procesar_consulta_texto(
         combustible_confirmado = (
             combustible_detectado or sesion_combustible.perfil_vehiculo.get("combustible")
         )
+        modo_confirmado = modo_falla_combustible or sesion_combustible.modo_falla_combustible
         if combustible_detectado:
             sesion_combustible.actualizar_perfil({"combustible": combustible_detectado})
-        if not combustible_confirmado or not modo_falla_combustible:
-            sesion_combustible.establecer_consulta_combustible(texto_evaluar)
+        if modo_falla_combustible:
+            sesion_combustible.establecer_modo_falla_combustible(modo_falla_combustible)
+        if not combustible_confirmado or not modo_confirmado:
+            consulta_orig = (
+                sesion_combustible.sintomas[0] if sesion_combustible.sintomas else texto_evaluar
+            )
+            sesion_combustible.establecer_consulta_combustible(consulta_orig)
             return gestor._resultado_solicitud_combustible(
                 sesion_combustible, combustible_confirmado
             )
