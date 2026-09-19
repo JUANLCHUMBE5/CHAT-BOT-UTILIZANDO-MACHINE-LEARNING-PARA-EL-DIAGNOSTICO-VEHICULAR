@@ -35,12 +35,27 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         texto_filtrado += " falla motor de arranque solenoide carbones terminal 50 no da marcha clac seco arrancador pegado"
 
     # 2. Descarte de freno en vibraciones de velocidad (Balanceo / Alineación de ruedas)
-    descarte_freno = any(
+    # Solo aplica cuando la vibración ocurre sin frenar ('vibra sin frenar') o se niega el freno ('no vibra al frenar').
+    # NUNCA debe aplicar si el usuario afirma que vibra al frenar o que 'sin frenar no vibra'.
+    afirma_freno = any(
         p in limpio for p in (
-            "no vibra al frenar", "al frenar no tiembla", "no tiembla al frenar",
-            "frenos no son", "sin frenar", "no al frenar"
+            "vibra al frenar", "tiembla al frenar", "al frenar vibra", "cuando frena vibra",
+            "cuando freno vibra", "al pisar el pedal de freno", "al pisar el freno", "cuando frena",
+            "al frenar"
         )
-    )
+    ) and not any(p in limpio for p in ("no vibra al frenar", "al frenar no vibra", "al frenar no tiembla"))
+
+    sin_frenar_no_vibra = bool(re.search(r"\bsin\s+frenar\s+(?:no\s+vibra|no\s+siente|no\s+pasa)\b", limpio))
+
+    descarte_freno = False
+    if not afirma_freno and not sin_frenar_no_vibra:
+        descarte_freno = any(
+            p in limpio for p in (
+                "no vibra al frenar", "al frenar no tiembla", "no tiembla al frenar",
+                "frenos no son", "frenos descartados", "vibra sin frenar", "tiembla sin frenar",
+                "sin pisar el freno vibra"
+            )
+        )
     if descarte_freno:
         texto_filtrado = re.sub(r"\bfren(?:o|os|ar|ada)\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado = re.sub(r"\bdisco(?:s)?\b", " ", texto_filtrado, flags=re.IGNORECASE)
@@ -71,10 +86,11 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         p in limpio for p in (
             "apenas piso el freno", "al pisar el freno", "piso el freno para", "vibra al frenar",
             "tiembla al frenar", "sacude al frenar", "zapatea al frenar", "pedal tiembla",
-            "pedal del freno tiembla", "patea el pie", "pedal me patea", "sacudirse de lado a lado"
+            "pedal del freno tiembla", "patea el pie", "pedal me patea", "sacudirse de lado a lado",
+            "al frenar", "cuando frena", "cuando freno", "al pisar el pedal de freno"
         )
-    )
-    if vibracion_frenado and any(f in limpio for f in ("freno", "pedal")):
+    ) and not any(p in limpio for p in ("no vibra al frenar", "al frenar no vibra", "al frenar no tiembla"))
+    if (vibracion_frenado or sin_frenar_no_vibra) and any(f in limpio for f in ("freno", "frenar", "pedal")):
         texto_filtrado += " discos de freno alabeados desgastados deformados alabeo variacion espesor dtv reloj comparador vibracion pedal volante al frenar"
 
     return texto_filtrado

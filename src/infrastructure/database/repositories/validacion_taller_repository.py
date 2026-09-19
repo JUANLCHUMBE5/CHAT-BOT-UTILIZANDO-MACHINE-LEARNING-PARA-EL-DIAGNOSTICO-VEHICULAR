@@ -21,6 +21,7 @@ class ValidacionTallerRepository:
         taller_id: uuid.UUID,
         *,
         fase: str | None = None,
+        tipo_registro: str | None = None,
         marca: str | None = None,
         acierto: int | None = None,
         busqueda: str | None = None,
@@ -37,6 +38,8 @@ class ValidacionTallerRepository:
             filtros.append(ValidacionTaller.fecha <= fecha_hasta)
         if fase:
             filtros.append(func.lower(ValidacionTaller.fase) == fase.strip().lower())
+        if tipo_registro:
+            filtros.append(ValidacionTaller.tipo_registro == tipo_registro)
         if estado_registro:
             filtros.append(ValidacionTaller.estado_registro == estado_registro)
         if marca:
@@ -61,7 +64,7 @@ class ValidacionTallerRepository:
         stmt = (
             select(ValidacionTaller)
             .where(*filtros)
-            .order_by(ValidacionTaller.fecha.asc(), ValidacionTaller.item.asc(), ValidacionTaller.id.asc())
+            .order_by(ValidacionTaller.fecha.desc(), ValidacionTaller.item.desc(), ValidacionTaller.id.desc())
             .offset(skip)
             .limit(limit)
         )
@@ -73,6 +76,7 @@ class ValidacionTallerRepository:
         filtros = [
             ValidacionTaller.taller_id == taller_id,
             ValidacionTaller.estado_registro == "verificado",
+            ValidacionTaller.tipo_registro.in_(("THESIS_PRETEST", "THESIS_POSTTEST")),
         ]
         if fecha_desde:
             filtros.append(ValidacionTaller.fecha >= fecha_desde)
@@ -94,6 +98,7 @@ class ValidacionTallerRepository:
         filtros = [
             ValidacionTaller.taller_id == taller_id,
             ValidacionTaller.estado_registro == "verificado",
+            ValidacionTaller.tipo_registro.in_(("THESIS_PRETEST", "THESIS_POSTTEST")),
         ]
         if fecha_desde:
             filtros.append(ValidacionTaller.fecha >= fecha_desde)
@@ -144,19 +149,23 @@ class ValidacionTallerRepository:
         fecha_desde: date | None = None,
         fecha_hasta: date | None = None,
         solo_verificados: bool = False,
+        tipo_registro: str | None = None,
     ) -> list[ValidacionTaller]:
         stmt = (
             select(ValidacionTaller)
             .where(ValidacionTaller.taller_id == taller_id)
-            .order_by(ValidacionTaller.fecha, ValidacionTaller.item, ValidacionTaller.id)
+            .order_by(ValidacionTaller.fecha.desc(), ValidacionTaller.item.desc(), ValidacionTaller.id.desc())
         )
         if fecha_desde:
             stmt = stmt.where(ValidacionTaller.fecha >= fecha_desde)
         if fecha_hasta:
             stmt = stmt.where(ValidacionTaller.fecha <= fecha_hasta)
+        if tipo_registro:
+            stmt = stmt.where(ValidacionTaller.tipo_registro == tipo_registro)
         if solo_verificados:
             stmt = stmt.where(
                 ValidacionTaller.estado_registro == "verificado",
+                ValidacionTaller.tipo_registro.in_(("THESIS_PRETEST", "THESIS_POSTTEST")),
                 ValidacionTaller.fase != "Piloto",
             )
         return list((await self.session.execute(stmt)).scalars().all())
@@ -167,6 +176,7 @@ class ValidacionTallerRepository:
         filtros = [
             ValidacionTaller.taller_id == taller_id,
             ValidacionTaller.estado_registro == "verificado",
+            ValidacionTaller.tipo_registro.in_(("THESIS_PRETEST", "THESIS_POSTTEST")),
         ]
         if fecha_desde:
             filtros.append(ValidacionTaller.fecha >= fecha_desde)
@@ -194,14 +204,25 @@ class ValidacionTallerRepository:
         placa_hash: str,
         marca_modelo: str,
         sintoma: str,
+        descripcion_sintoma: str | None,
+        vehiculo_anio: int | None,
+        vehiculo_kilometraje: int | None,
+        vehiculo_combustible: str | None,
+        vehiculo_transmision: str | None,
         falla_real: str,
         chatbot_prediccion: str,
+        sistema_afectado_probable: str | None,
         campos_completos: int,
+        cantidad_campos_completos: int,
+        detalles_campos: dict[str, Any],
         tiempo_diagnostico_minutos: int,
         prediccion_correcta: int,
         metodo_confirmacion: str | None,
         evidencia_ref: str | None,
         estado_registro: str = "borrador",
+        tipo_registro: str = "THESIS_POSTTEST",
+        conversacion_id: uuid.UUID | None = None,
+        diagnostico_id: uuid.UUID | None = None,
         sintoma_registrado_correctamente: int | None = None,
         validado_por_id: uuid.UUID | None = None,
         fecha_validacion: datetime | None = None,
@@ -220,14 +241,25 @@ class ValidacionTallerRepository:
             placa_hash=placa_hash,
             marca_modelo=marca_modelo,
             sintoma=sintoma,
+            descripcion_sintoma=descripcion_sintoma,
+            vehiculo_anio=vehiculo_anio,
+            vehiculo_kilometraje=vehiculo_kilometraje,
+            vehiculo_combustible=vehiculo_combustible,
+            vehiculo_transmision=vehiculo_transmision,
             falla_real=falla_real,
             chatbot_prediccion=chatbot_prediccion,
+            sistema_afectado_probable=sistema_afectado_probable,
             campos_completos=campos_completos,
+            cantidad_campos_completos=cantidad_campos_completos,
+            detalles_campos=detalles_campos,
             tiempo_diagnostico_minutos=tiempo_diagnostico_minutos,
             prediccion_correcta=prediccion_correcta,
             metodo_confirmacion=metodo_confirmacion,
             evidencia_ref=evidencia_ref,
             estado_registro=estado_registro,
+            tipo_registro=tipo_registro,
+            conversacion_id=conversacion_id,
+            diagnostico_id=diagnostico_id,
             sintoma_registrado_correctamente=sintoma_registrado_correctamente,
             validado_por_id=validado_por_id,
             fecha_validacion=fecha_validacion,

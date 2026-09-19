@@ -252,8 +252,8 @@ DIRECTRICES_MECANICAS: list[DirectrizTaller] = [
         subcomponente="Cuerpo de aceleración / IAC",
         requiere_escaner=True,
         prueba_sugerida=(
-            "Limpieza de carbonilla en garganta y mariposa de aceleración, prueba de actuador de ralentí "
-            "y procedimiento de reaprendizaje de marcha mínima con escáner."
+            "Inspección visual de sedimentos/carbonilla en garganta y mariposa de aceleración, "
+            "prueba de accionamiento del actuador IAC y verificación del porcentaje de apertura de TPS con escáner."
         ),
         dtc_frecuente="P0505",
         es_mecanica_pura=False,

@@ -10,6 +10,8 @@ CATEGORIAS_INDEPENDIENTES = (
     "sintoma",
     "sistema",
     "condicion",
+    "ubicacion",
+    "polaridad",
     "comportamiento",
     "cambio_accion",
     "temperatura",
@@ -20,6 +22,7 @@ CATEGORIAS_INDEPENDIENTES = (
     "modificador",
     "vehiculo",
     "inspeccion",
+    "inspeccion_pendiente",
 )
 
 
@@ -84,6 +87,13 @@ class EvaluadorSuficiencia:
         )
         if tiene_cascabeleo and (tiene_potencia or tiene_carga):
             return True, "Evidencia fuerte: Cascabeleo / detonación en aceleración o pendientes"
+
+        # 5. Vibración localizada al frenar
+        tiene_vib = any(h.categoria == "sintoma" and "vibrac" in h.valor.lower() for h in hechos_confirmados) or "vibr" in valores_sintomas or "vibr" in mensajes_completos
+        tiene_freno = any("fren" in h.valor.lower() for h in hechos_confirmados if h.categoria == "condicion") or "fren" in mensajes_completos
+        tiene_ubica = any(h.categoria == "ubicacion" for h in hechos_confirmados) or any(w in mensajes_completos for w in ("volante", "timon", "timón", "pedal"))
+        if tiene_vib and tiene_freno and tiene_ubica and len(estado.historial_mensajes_usuario) >= 2:
+            return True, "Evidencia fuerte: Vibración al frenar localizada con disparador verificado"
 
         return False, ""
 

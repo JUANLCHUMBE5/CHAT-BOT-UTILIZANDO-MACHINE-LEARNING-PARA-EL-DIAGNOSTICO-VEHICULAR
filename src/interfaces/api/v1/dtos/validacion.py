@@ -18,9 +18,17 @@ class CasoValidacionDTO(BaseModel):
     placa_hash: str
     marca_modelo: str
     sintoma: str
+    descripcion_sintoma: Optional[str] = None
+    vehiculo_anio: Optional[int] = None
+    vehiculo_kilometraje: Optional[int] = None
+    vehiculo_combustible: Optional[str] = None
+    vehiculo_transmision: Optional[str] = None
     falla_real: str
     chatbot_prediccion: str
+    sistema_afectado_probable: Optional[str] = None
     campos_completos: int
+    cantidad_campos_completos: int = 0
+    detalles_campos: Optional[Dict[str, Any]] = None
     tiempo_diagnostico_minutos: int
     prediccion_correcta: int
     taller_id: Optional[str] = None
@@ -28,6 +36,9 @@ class CasoValidacionDTO(BaseModel):
     metodo_confirmacion: Optional[str] = "Inspección Visual en Elevador"
     evidencia_ref: Optional[str] = None
     estado_registro: str = "borrador"
+    tipo_registro: Optional[str] = "THESIS_POSTTEST"
+    conversacion_id: Optional[str] = None
+    diagnostico_id: Optional[str] = None
     sintoma_registrado_correctamente: Optional[int] = None
     validado_por_id: Optional[str] = None
     fecha_validacion: Optional[str] = None
@@ -44,18 +55,27 @@ class CrearCasoValidacionDTO(BaseModel):
     placa: str = Field(min_length=3, max_length=15)
     marca_modelo: str = Field(min_length=2, max_length=100)
     sintoma: str = Field(min_length=5, max_length=2000)
+    descripcion_sintoma: Optional[str] = Field(default=None, max_length=2000)
+    vehiculo_anio: Optional[int] = Field(default=None, ge=1950, le=2100)
+    vehiculo_kilometraje: Optional[int] = Field(default=None, ge=0)
+    vehiculo_combustible: Optional[str] = Field(default=None, max_length=30)
+    vehiculo_transmision: Optional[str] = Field(default=None, max_length=30)
     falla_real: str = Field(min_length=3, max_length=1000)
     # Mantiene compatibilidad con registros existentes; en pre-test representa la hipótesis manual.
     chatbot_prediccion: str = Field(
         min_length=3, max_length=1000,
         validation_alias=AliasChoices("prediccion_inicial", "chatbot_prediccion"),
     )
+    sistema_afectado_probable: Optional[str] = Field(default=None, max_length=80)
     campos_completos: int = Field(ge=0, le=1)
     tiempo_diagnostico_minutos: int = Field(ge=1, le=600)
     prediccion_correcta: int = Field(ge=0, le=1)
     metodo_confirmacion: Optional[str] = Field(default="Inspección Visual + Escáner OBD", max_length=500)
     evidencia_ref: Optional[str] = Field(default=None, max_length=500)
     estado_registro: EstadoRegistro = Field(default="borrador")
+    tipo_registro: Optional[Literal["DEVELOPMENT", "REGRESSION", "THESIS_PRETEST", "THESIS_POSTTEST"]] = None
+    conversacion_id: Optional[str] = None
+    diagnostico_id: Optional[str] = None
     sintoma_registrado_correctamente: Optional[int] = Field(default=None, ge=0, le=1)
     normalizacion_correcta: Optional[int] = Field(default=None, ge=0, le=1)
     extraccion_correcta: Optional[int] = Field(default=None, ge=0, le=1)

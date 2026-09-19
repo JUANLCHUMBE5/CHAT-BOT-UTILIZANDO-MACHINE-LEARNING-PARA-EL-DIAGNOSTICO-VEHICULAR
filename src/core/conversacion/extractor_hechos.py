@@ -577,10 +577,49 @@ class ExtractorHechos:
                 h_c = estado.registrar_hecho("condicion_operacion", "al dar arranque en frío", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
                 hechos_extraidos.append(h_c.to_dict())
 
+        # 9b. Extracción de hechos de ubicación, velocidad, comportamiento y polaridad (Fase 11.5)
+        if re.search(r"\b(en\s+el\s+volante|en\s+el\s+tim[oó]n|en\s+la\s+direcci[oó]n|volante|tim[oó]n)\b", texto_l):
+            h = estado.registrar_hecho("ubicacion_sintoma", "en el volante", categoria="ubicacion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+        if re.search(r"\b(en\s+el\s+pedal|pedal\s+de\s+freno)\b", texto_l):
+            if re.search(r"\b(no\s+siento|casi\s+no|sin\s+vibraci[oó]n|no\s+vibra|apenas)\b", texto_l):
+                h = estado.registrar_hecho("vibracion_pedal", "mínima o nula", categoria="polaridad", estado=FactState.AUSENTE_NEGADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+                hechos_extraidos.append(h.to_dict())
+        if re.search(r"\b(resto\s+del\s+veh[ií]culo|carrocer[ií]a|asiento|todo\s+el\s+carro|todo\s+el\s+veh[ií]culo)\b", texto_l):
+            if re.search(r"\b(no\s+vibra|tampoco\s+vibra|sin\s+vibraci[oó]n|no\s+se\s+siente)\b", texto_l):
+                h = estado.registrar_hecho("vibracion_carroceria", "ausente", categoria="polaridad", estado=FactState.AUSENTE_NEGADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+                hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(a\s+(?:una\s+)?velocidad\s+media\s+o\s+alta|a\s+alta\s+velocidad|en\s+carretera\s+a\s+velocidad|a\s+cierta\s+velocidad|a\s+m[aá]s\s+de\s+\d+)\b", texto_l):
+            h = estado.registrar_hecho("condicion_velocidad", "a velocidad media o alta", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(sin\s+frenar\s+(?:no\s+siente|no\s+vibra|no\s+pasa)|al\s+no\s+frenar\s+no|si\s+no\s+freno\s+no)\b", texto_l):
+            h = estado.registrar_hecho("falla_sin_frenar", "no vibra sin frenar", categoria="polaridad", estado=FactState.AUSENTE_NEGADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(todav[ií]a\s+no\s+he\s+revisado\s+el\s+veh[ií]culo|a[uú]n\s+no\s+se\s+ha\s+revisado|no\s+he\s+revisado\s+nada)\b", texto_l):
+            h = estado.registrar_hecho("inspeccion_vehiculo", "no revisado aún en taller", categoria="inspeccion_pendiente", estado=FactState.NO_REVISADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(gira\s+(?:con\s+)?buena\s+velocidad|gira\s+r[aá]pido|gira\s+normal)\b", texto_l):
+            h = estado.registrar_hecho("giro_motor", "gira rápido con buena velocidad", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        # Disparador específico de pedal de freno
+        if re.search(r"\b((?:cuando|al)\s+(?:piso|pisa|se\s+pisa)\s+el\s+(?:pedal\s+de\s+)?freno|pisar\s+el\s+(?:pedal\s+de\s+)?freno)\b", texto_l):
+            h_pedal_freno = estado.registrar_hecho("condicion_operacion", "al pisar el pedal de freno", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h_pedal_freno.to_dict())
+
         # 10. Inferencia contextual de EstadoOperativo y detección de contradicciones (Fase 9.6 y 9.10)
         res_op = cls.inferir_estado_operativo(estado, texto_usuario)
         nuevo_estado_op, es_conflicto = res_op[0], res_op[1]
         estado.estado_operativo = nuevo_estado_op
+
+        if nuevo_estado_op == EstadoOperativo.FRENADO and not estado.obtener_hecho("condicion_operacion"):
+            h_freno = estado.registrar_hecho("condicion_operacion", "al frenar", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h_freno.to_dict())
+
         if es_conflicto:
             h = estado.registrar_hecho(
                 "conflicto_operativo",
@@ -616,8 +655,8 @@ class ExtractorHechos:
             or PATRON_DEMORA_ARRANQUE.search(texto_l)
         )
         frenado_actual = bool(
-            re.search(r"\b(al\s+frenar|frenando|cuando\s+freno|pedal\s+de\s+freno|al\s+pisar\s+el\s+freno)\b", texto_l)
-            and not DetectorPolaridad.es_condicion_negada(r"\b(al\s+frenar|frenando|cuando\s+freno|al\s+pisar\s+el\s+freno)\b", texto_l)
+            re.search(r"\b(al\s+frenar|frenando|cuando\s+fren[ao]|frena(ndo)?|pedal\s+de\s+freno|al\s+pisar\s+el\s+(?:pedal\s+de\s+)?freno)\b", texto_l)
+            and not DetectorPolaridad.es_condicion_negada(r"\b(al\s+frenar|frenando|cuando\s+fren[ao]|al\s+pisar\s+el\s+(?:pedal\s+de\s+)?freno|frena)\b", texto_l)
         )
         ralenti_actual = bool(
             re.search(r"\b(en\s+ralent[ií]|en\s+el\s+sem[aá]foro|detenido(\s+en\s+ralent[ií])?|en\s+neutro|parado\s+esperando)\b", texto_l)

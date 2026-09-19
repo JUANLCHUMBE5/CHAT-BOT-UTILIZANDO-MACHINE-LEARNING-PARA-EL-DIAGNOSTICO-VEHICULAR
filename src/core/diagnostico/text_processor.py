@@ -443,21 +443,22 @@ def procesar_consulta_texto(
             diferir_encolado_persistente=diferir_encolado_persistente,
         )
 
-    es_ambigua, mensaje_aclaracion = gestor._es_consulta_ambigua(texto_evaluar)
-    if es_ambigua:
-        if clave_sesion:
-            gestor.session_manager.obtener_o_crear_sesion(clave_sesion).estado = "esperando_clarificacion"
-        return ResultadoDiagnostico(
-            respuesta_texto=mensaje_aclaracion,
-            diagnostico_ml="Consulta Ambigua / Datos Faltantes",
-            confianza_ml=0.0,
-            contexto_manual="",
-            titulo_manual="",
-            requiere_revision_humana=True,
-            estado_sesion="esperando_clarificacion",
-            modo_diagnostico="esperando_clarificacion",
-            tipo_consulta="aclaracion",
-        )
+    if not orquestado and not diagnostico_forzado:
+        es_ambigua, mensaje_aclaracion = gestor._es_consulta_ambigua(texto_evaluar)
+        if es_ambigua:
+            if clave_sesion:
+                gestor.session_manager.obtener_o_crear_sesion(clave_sesion).estado = "esperando_clarificacion"
+            return ResultadoDiagnostico(
+                respuesta_texto=mensaje_aclaracion,
+                diagnostico_ml="Consulta Ambigua / Datos Faltantes",
+                confianza_ml=0.0,
+                contexto_manual="",
+                titulo_manual="",
+                requiere_revision_humana=True,
+                estado_sesion="esperando_clarificacion",
+                modo_diagnostico="esperando_clarificacion",
+                tipo_consulta="aclaracion",
+            )
 
     if tipo_consulta == "fuera_de_alcance":
         if clave_sesion:

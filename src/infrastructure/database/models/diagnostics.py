@@ -96,6 +96,9 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     version_modelo_ml: Mapped[str | None] = mapped_column(String(80))
     version_corpus_rag: Mapped[str | None] = mapped_column(String(80))
     trazabilidad: Mapped[dict[str, Any] | None] = mapped_column(JSONType)
+    tipo_registro: Mapped[str] = mapped_column(
+        String(30), nullable=False, default="DEVELOPMENT", server_default=text("'DEVELOPMENT'")
+    )
 
     taller: Mapped["Taller"] = relationship(back_populates="diagnosticos")
     mecanico: Mapped["Usuario"] = relationship(back_populates="diagnosticos")
@@ -123,6 +126,10 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         CheckConstraint(
             "modo_diagnostico IN ('completo_ml_rag_llm', 'diagnostico_degradado_ml_rag', 'en_cola_gemini', 'audio_espectral', 'saludo', 'baja_confianza', 'esperando_clarificacion')",
             name="modo_diagnostico_valido",
+        ),
+        CheckConstraint(
+            "tipo_registro IN ('DEVELOPMENT', 'REGRESSION', 'THESIS_PRETEST', 'THESIS_POSTTEST')",
+            name="chk_diagnosticos_tipo_registro",
         ),
     )
 
