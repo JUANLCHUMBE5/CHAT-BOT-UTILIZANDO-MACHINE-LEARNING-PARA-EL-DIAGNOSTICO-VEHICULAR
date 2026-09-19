@@ -1,0 +1,3966 @@
+{
+  "metadata": {
+    "fase": "9.2",
+    "descripcion": "Validación Real de Memoria Conversacional en WhatsApp (20 Casos Piloto)",
+    "total_casos": 20,
+    "casos_exitosos": 20,
+    "tasa_exito": "100.0%",
+    "total_turnos": 69,
+    "latencia_promedio_ms": 576.78,
+    "latencia_min_ms": 0.06,
+    "latencia_max_ms": 4679.15,
+    "hash_modelo_diagnostico": "3D8199595B69BB0176FBB4BB9D7C57B43484F16E6F6BAA115660405B76AA13FD",
+    "hash_indice_faiss": "757C4B006A8995F484F539B05420CD929B6034F9ABA7E845D305A9D3CF631082"
+  },
+  "resumen_casos": [
+    {
+      "caso": "CASO_01",
+      "titulo": "Flujo Progresivo Obligatorio (Toyota Yaris 2015)",
+      "turnos": 6,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_02",
+      "titulo": "Memoria Corto Plazo 5 Mensajes (Chevrolet Sail 2018)",
+      "turnos": 5,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_03",
+      "titulo": "Memoria Corto Plazo 10 Mensajes (Nissan Sentra 2019)",
+      "turnos": 10,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Discos de freno alabeados o desgastados"
+    },
+    {
+      "caso": "CASO_04",
+      "titulo": "Memoria Corto Plazo 15 Mensajes (Toyota Corolla 2016)",
+      "turnos": 15,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Bomba de gasolina quemada o con baja presion"
+    },
+    {
+      "caso": "CASO_05",
+      "titulo": "Persistencia Temporal & TTL (1800 s)",
+      "turnos": 2,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_06",
+      "titulo": "Persistencia tras Reinicio de Backend (Postgres JSONB)",
+      "turnos": 3,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Baja presion de aceite o bomba de aceite defectuosa"
+    },
+    {
+      "caso": "CASO_07",
+      "titulo": "Aislamiento Multiusuario (Usuario A: Hilux)",
+      "turnos": 2,
+      "exito": true,
+      "decision_final": "OK",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_08",
+      "titulo": "Aislamiento Multiusuario (Usuario B: Kia Rio)",
+      "turnos": 2,
+      "exito": true,
+      "decision_final": "OK",
+      "top1": null
+    },
+    {
+      "caso": "CASO_09",
+      "titulo": "Reset Explícito ('nuevo diagnóstico')",
+      "turnos": 3,
+      "exito": true,
+      "decision_final": "REINICIO",
+      "top1": "Limpieza total de contexto"
+    },
+    {
+      "caso": "CASO_10",
+      "titulo": "Reset por Cambio de Vehículo ('otro carro')",
+      "turnos": 2,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": null
+    },
+    {
+      "caso": "CASO_11",
+      "titulo": "Corrección de Hechos Clínicos (frío -> caliente)",
+      "turnos": 2,
+      "exito": true,
+      "decision_final": "PREGUNTAR",
+      "top1": null
+    },
+    {
+      "caso": "CASO_12",
+      "titulo": "Memoria Semántica de Preguntas (Anti-repetición)",
+      "turnos": 3,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_13",
+      "titulo": "Respuesta Corta Contextual ('caliente')",
+      "turnos": 2,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_14",
+      "titulo": "Respuesta Corta Contextual ('ya las cambié')",
+      "turnos": 3,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_15",
+      "titulo": "Jerga Taller 1 ('zapatea' + 'semáforo')",
+      "turnos": 3,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_16",
+      "titulo": "Jerga Taller 2 ('chanchea' + 'se aguanta')",
+      "turnos": 2,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_17",
+      "titulo": "Escape de Bucle de Repreguntas (Anti-loop 3 'no sé')",
+      "turnos": 4,
+      "exito": true,
+      "decision_final": "DIFERENCIAL",
+      "top1": "Top-3 Diferencial forzado"
+    },
+    {
+      "caso": "CASO_18",
+      "titulo": "Avería Mecánica Pura (Sin sugerencia de DTC)",
+      "turnos": 1,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Discos de freno alabeados o desgastados"
+    },
+    {
+      "caso": "CASO_19",
+      "titulo": "Código DTC Presente (Sin interrupción por combustible)",
+      "turnos": 1,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Falla en bujias o bobinas de encendido (misfire)"
+    },
+    {
+      "caso": "CASO_20",
+      "titulo": "Falla Eléctrica con Modificadores (Luces + A/C)",
+      "turnos": 2,
+      "exito": true,
+      "decision_final": "DIAGNOSTICAR",
+      "top1": "Bateria descargada o bornes sulfatados"
+    }
+  ],
+  "trazas_detalladas": [
+    {
+      "session_id": "pilot_01_yaris",
+      "case_id": "CASO_01",
+      "turn_id": 1,
+      "mensaje_original": "Tengo un Toyota Yaris 2015",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Toyota",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Tengo un Toyota Yaris 2015",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "anio",
+          "valor": "2015",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Tengo un Toyota Yaris 2015",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Yaris",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Tengo un Toyota Yaris 2015",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2015",
+          "modelo=Yaris"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris año 2015.",
+      "question_intent": "CONDICION_OPERACION",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 6.19
+    },
+    {
+      "session_id": "pilot_01_yaris",
+      "case_id": "CASO_01",
+      "turn_id": 2,
+      "mensaje_original": "tiembla",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "tiembla",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2015",
+          "modelo=Yaris",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris año 2015. presenta vibración.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "¿El problema aparece en frío (primer arranque de la mañana) o únicamente después de que el motor alcanza su temperatura de trabajo normal?",
+      "latencia_total_ms": 0.46
+    },
+    {
+      "session_id": "pilot_01_yaris",
+      "case_id": "CASO_01",
+      "turn_id": 3,
+      "mensaje_original": "cuando estoy parado en el semáforo",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "condicion_operacion",
+          "valor": "detenido en ralentí",
+          "estado": "CONFIRMADO",
+          "turno_origen": 3,
+          "confianza": 1.0,
+          "texto_crudo": "cuando estoy parado en el semáforo",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 3,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2015",
+          "modelo=Yaris",
+          "sintoma_vibración=vibración",
+          "condicion_operacion=detenido en ralentí"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris año 2015. presenta vibración. cuando está detenido en ralentí.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.879
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.079
+        },
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "prob": 0.042
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 88%\n2. Cuerpo de aceleracion o valvula IAC sucia — 8%\n3. Falla en termostato o motoventilador de radiador — 4%\n\n🛠️ *Primero r...",
+      "latencia_total_ms": 4679.15
+    },
+    {
+      "session_id": "pilot_01_yaris",
+      "case_id": "CASO_01",
+      "turn_id": 4,
+      "mensaje_original": "cuando acelero mejora",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 3,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "evolucion_accion",
+          "valor": "mejora al acelerar",
+          "estado": "CONFIRMADO",
+          "turno_origen": 4,
+          "confianza": 1.0,
+          "texto_crudo": "cuando acelero mejora",
+          "categoria": "cambio_accion",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 4,
+        "num_hechos": 6,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2015",
+          "modelo=Yaris",
+          "sintoma_vibración=vibración",
+          "condicion_operacion=detenido en ralentí",
+          "evolucion_accion=mejora al acelerar"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris año 2015. presenta vibración. cuando está detenido en ralentí. mejora al acelerar.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.973
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.033
+        },
+        {
+          "falla": "Falla en sensor de oxigeno o mezcla rica",
+          "prob": 0.017
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 97%\n2. Cuerpo de aceleracion o valvula IAC sucia — 3%\n3. Falla en sensor de oxigeno o mezcla rica — 2%\n\n🛠️ *Primero revisa:* ...",
+      "latencia_total_ms": 3212.0
+    },
+    {
+      "session_id": "pilot_01_yaris",
+      "case_id": "CASO_01",
+      "turn_id": 5,
+      "mensaje_original": "las bujías ya las cambié",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 4,
+        "num_hechos": 6,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "reemplazado_bujías",
+          "valor": "bujías reemplazado(a)",
+          "estado": "CONFIRMADO",
+          "turno_origen": 5,
+          "confianza": 1.0,
+          "texto_crudo": "las bujías ya las cambié",
+          "categoria": "antecedente",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 5,
+        "num_hechos": 7,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2015",
+          "modelo=Yaris",
+          "sintoma_vibración=vibración",
+          "condicion_operacion=detenido en ralentí",
+          "evolucion_accion=mejora al acelerar",
+          "reemplazado_bujías=bujías reemplazado(a)"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris año 2015. presenta vibración. cuando está detenido en ralentí. mejora al acelerar. antecedente: bujías reemplazado(a).",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.973
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.033
+        },
+        {
+          "falla": "Falla en sensor de oxigeno o mezcla rica",
+          "prob": 0.017
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 97%\n2. Cuerpo de aceleracion o valvula IAC sucia — 3%\n3. Falla en sensor de oxigeno o mezcla rica — 2%\n\n🛠️ *Primero revisa:* ...",
+      "latencia_total_ms": 7.83
+    },
+    {
+      "session_id": "pilot_01_yaris",
+      "case_id": "CASO_01",
+      "turn_id": 6,
+      "mensaje_original": "entonces qué puede ser?",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 5,
+        "num_hechos": 7,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "puede ser reportado",
+          "estado": "AMBIGUO",
+          "turno_origen": 5,
+          "confianza": 0.5,
+          "texto_crudo": "entonces qué puede ser?",
+          "categoria": "ambiguo",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 6,
+        "num_hechos": 8,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2015",
+          "modelo=Yaris",
+          "sintoma_vibración=vibración",
+          "condicion_operacion=detenido en ralentí",
+          "evolucion_accion=mejora al acelerar",
+          "reemplazado_bujías=bujías reemplazado(a)"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris año 2015. presenta vibración. cuando está detenido en ralentí. mejora al acelerar. antecedente: bujías reemplazado(a).",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.973
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.033
+        },
+        {
+          "falla": "Falla en sensor de oxigeno o mezcla rica",
+          "prob": 0.017
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 97%\n2. Cuerpo de aceleracion o valvula IAC sucia — 3%\n3. Falla en sensor de oxigeno o mezcla rica — 2%\n\n🛠️ *Primero revisa:* ...",
+      "latencia_total_ms": 4.69
+    },
+    {
+      "session_id": "pilot_02_sail",
+      "case_id": "CASO_02",
+      "turn_id": 1,
+      "mensaje_original": "Chevrolet Sail 2018",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Chevrolet",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Chevrolet Sail 2018",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "anio",
+          "valor": "2018",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Chevrolet Sail 2018",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Sail",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Chevrolet Sail 2018",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Chevrolet Sail",
+        "hechos_confirmados": [
+          "marca=Chevrolet",
+          "anio=2018",
+          "modelo=Sail"
+        ]
+      },
+      "consulta_consolidada": "Chevrolet Sail año 2018.",
+      "question_intent": "CONDICION_OPERACION",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 0.92
+    },
+    {
+      "session_id": "pilot_02_sail",
+      "case_id": "CASO_02",
+      "turn_id": 2,
+      "mensaje_original": "pierde fuerza",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Chevrolet Sail"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "sintoma_pérdida_de_potencia",
+          "valor": "pérdida de potencia",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "pierde fuerza",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Chevrolet Sail",
+        "hechos_confirmados": [
+          "marca=Chevrolet",
+          "anio=2018",
+          "modelo=Sail",
+          "sintoma_pérdida_de_potencia=pérdida de potencia"
+        ]
+      },
+      "consulta_consolidada": "Chevrolet Sail año 2018. presenta pérdida de potencia.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "¿El problema aparece en frío (primer arranque de la mañana) o únicamente después de que el motor alcanza su temperatura de trabajo normal?",
+      "latencia_total_ms": 0.43
+    },
+    {
+      "session_id": "pilot_02_sail",
+      "case_id": "CASO_02",
+      "turn_id": 3,
+      "mensaje_original": "en subida",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Chevrolet Sail"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "condicion_operacion",
+          "valor": "al acelerar bajo carga",
+          "estado": "CONFIRMADO",
+          "turno_origen": 3,
+          "confianza": 1.0,
+          "texto_crudo": "en subida",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 3,
+        "num_hechos": 5,
+        "vehiculo": "Chevrolet Sail",
+        "hechos_confirmados": [
+          "marca=Chevrolet",
+          "anio=2018",
+          "modelo=Sail",
+          "sintoma_pérdida_de_potencia=pérdida de potencia",
+          "condicion_operacion=al acelerar bajo carga"
+        ]
+      },
+      "consulta_consolidada": "Chevrolet Sail año 2018. presenta pérdida de potencia. cuando está al acelerar bajo carga.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.574
+        },
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.277
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.149
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bomba de gasolina quemada o con baja presion — 57%\n2. Falla en bujias o bobinas de encendido (misfire) — 28%\n3. Inyectores sucios o filtro de combustible obstruido — 15%\n\n🛠️ *P...",
+      "latencia_total_ms": 4375.17
+    },
+    {
+      "session_id": "pilot_02_sail",
+      "case_id": "CASO_02",
+      "turn_id": 4,
+      "mensaje_original": "con el aire acondicionado encendido",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 3,
+        "num_hechos": 5,
+        "vehiculo": "Chevrolet Sail"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "modificador_ac",
+          "valor": "A/C encendido",
+          "estado": "CONFIRMADO",
+          "turno_origen": 4,
+          "confianza": 1.0,
+          "texto_crudo": "con el aire acondicionado encendido",
+          "categoria": "modificador",
+          "tipo": "MODIFICADOR"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 4,
+        "num_hechos": 6,
+        "vehiculo": "Chevrolet Sail",
+        "hechos_confirmados": [
+          "marca=Chevrolet",
+          "anio=2018",
+          "modelo=Sail",
+          "sintoma_pérdida_de_potencia=pérdida de potencia",
+          "condicion_operacion=al acelerar bajo carga",
+          "modificador_ac=A/C encendido"
+        ]
+      },
+      "consulta_consolidada": "Chevrolet Sail año 2018. presenta pérdida de potencia. cuando está al acelerar bajo carga. con A/C encendido.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.631
+        },
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.24
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.129
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 63%\n2. Bomba de gasolina quemada o con baja presion — 24%\n3. Inyectores sucios o filtro de combustible obstruido — 13%\n\n🛠️ *P...",
+      "latencia_total_ms": 3340.6
+    },
+    {
+      "session_id": "pilot_02_sail",
+      "case_id": "CASO_02",
+      "turn_id": 5,
+      "mensaje_original": "qué reviso primero?",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 4,
+        "num_hechos": 6,
+        "vehiculo": "Chevrolet Sail"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 5,
+        "num_hechos": 6,
+        "vehiculo": "Chevrolet Sail",
+        "hechos_confirmados": [
+          "marca=Chevrolet",
+          "anio=2018",
+          "modelo=Sail",
+          "sintoma_pérdida_de_potencia=pérdida de potencia",
+          "condicion_operacion=al acelerar bajo carga",
+          "modificador_ac=A/C encendido"
+        ]
+      },
+      "consulta_consolidada": "Chevrolet Sail año 2018. presenta pérdida de potencia. cuando está al acelerar bajo carga. con A/C encendido.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.631
+        },
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.24
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.129
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 63%\n2. Bomba de gasolina quemada o con baja presion — 24%\n3. Inyectores sucios o filtro de combustible obstruido — 13%\n\n🛠️ *P...",
+      "latencia_total_ms": 4.47
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 1,
+      "mensaje_original": "Nissan Sentra 2019",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Nissan",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra 2019",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "anio",
+          "valor": "2019",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra 2019",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Sentra",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra 2019",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019.",
+      "question_intent": "CONDICION_OPERACION",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 1.0
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 2,
+      "mensaje_original": "tiene un ruido raro",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 3,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "¿El problema aparece en frío (primer arranque de la mañana) o únicamente después de que el motor alcanza su temperatura de trabajo normal?",
+      "latencia_total_ms": 0.38
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 3,
+      "mensaje_original": "adelante al frenar",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 3,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "condicion_operacion",
+          "valor": "al frenar",
+          "estado": "CONFIRMADO",
+          "turno_origen": 3,
+          "confianza": 1.0,
+          "texto_crudo": "adelante al frenar",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "condicion_operacion",
+          "valor": "al frenar",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "adelante al frenar",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 3,
+        "num_hechos": 4,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019. cuando está al frenar.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para mayor precisión: ¿se ha conectado un escáner automotriz OBD-II o el tablero muestra encendido el testigo Check Engine?",
+      "latencia_total_ms": 0.6
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 4,
+      "mensaje_original": "es como un chillido",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 3,
+        "num_hechos": 4,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "sintoma_ruido_anómalo",
+          "valor": "ruido anómalo",
+          "estado": "CONFIRMADO",
+          "turno_origen": 4,
+          "confianza": 1.0,
+          "texto_crudo": "es como un chillido",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 4,
+        "num_hechos": 5,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar",
+          "sintoma_ruido_anómalo=ruido anómalo"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019. presenta ruido anómalo. cuando está al frenar.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.589
+        },
+        {
+          "falla": "Falla en servofreno (booster) o linea de vacio",
+          "prob": 0.267
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.144
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Discos de freno alabeados o desgastados — 59%\n2. Falla en servofreno (booster) o linea de vacio — 27%\n3. Desgaste de pastillas y zapatas de freno — 14%\n\n🛠️ *Primero revisa:* al...",
+      "latencia_total_ms": 4650.24
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 5,
+      "mensaje_original": "solo cuando el disco calienta",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 4,
+        "num_hechos": 5,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 5,
+          "confianza": 1.0,
+          "texto_crudo": "solo cuando el disco calienta",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 5,
+        "num_hechos": 6,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar",
+          "sintoma_ruido_anómalo=ruido anómalo",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019. presenta ruido anómalo. cuando está al frenar. ocurre en caliente.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.448
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.359
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.193
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Discos de freno alabeados o desgastados — 45%\n2. Baja presion de aceite o bomba de aceite defectuosa — 36%\n3. Desgaste de pastillas y zapatas de freno — 19%\n\n🛠️ *Primero revisa...",
+      "latencia_total_ms": 4112.74
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 6,
+      "mensaje_original": "ya revisé las pastillas",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 5,
+        "num_hechos": 6,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 6,
+        "num_hechos": 6,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar",
+          "sintoma_ruido_anómalo=ruido anómalo",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019. presenta ruido anómalo. cuando está al frenar. ocurre en caliente.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.448
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.359
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.193
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Discos de freno alabeados o desgastados — 45%\n2. Baja presion de aceite o bomba de aceite defectuosa — 36%\n3. Desgaste de pastillas y zapatas de freno — 19%\n\n🛠️ *Primero revisa...",
+      "latencia_total_ms": 4.11
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 7,
+      "mensaje_original": "están nuevas",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 6,
+        "num_hechos": 6,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 7,
+        "num_hechos": 6,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar",
+          "sintoma_ruido_anómalo=ruido anómalo",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019. presenta ruido anómalo. cuando está al frenar. ocurre en caliente.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.448
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.359
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.193
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Discos de freno alabeados o desgastados — 45%\n2. Baja presion de aceite o bomba de aceite defectuosa — 36%\n3. Desgaste de pastillas y zapatas de freno — 19%\n\n🛠️ *Primero revisa...",
+      "latencia_total_ms": 4.52
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 8,
+      "mensaje_original": "no vibra el pedal",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 7,
+        "num_hechos": 6,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 8,
+          "confianza": 1.0,
+          "texto_crudo": "no vibra el pedal",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 8,
+        "num_hechos": 7,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar",
+          "sintoma_ruido_anómalo=ruido anómalo",
+          "temperatura=caliente",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019. presenta ruido anómalo, vibración. cuando está al frenar. ocurre en caliente.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.727
+        },
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.177
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.095
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Discos de freno alabeados o desgastados — 73%\n2. Falla en bujias o bobinas de encendido (misfire) — 18%\n3. Desgaste de pastillas y zapatas de freno — 10%\n\n🛠️ *Primero revisa:* ...",
+      "latencia_total_ms": 3187.86
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 9,
+      "mensaje_original": "el líquido está a nivel",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 8,
+        "num_hechos": 7,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 9,
+        "num_hechos": 7,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar",
+          "sintoma_ruido_anómalo=ruido anómalo",
+          "temperatura=caliente",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019. presenta ruido anómalo, vibración. cuando está al frenar. ocurre en caliente.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.727
+        },
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.177
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.095
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Discos de freno alabeados o desgastados — 73%\n2. Falla en bujias o bobinas de encendido (misfire) — 18%\n3. Desgaste de pastillas y zapatas de freno — 10%\n\n🛠️ *Primero revisa:* ...",
+      "latencia_total_ms": 4.45
+    },
+    {
+      "session_id": "pilot_03_sentra",
+      "case_id": "CASO_03",
+      "turn_id": 10,
+      "mensaje_original": "cuál es el diagnóstico?",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 9,
+        "num_hechos": 7,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 10,
+        "num_hechos": 7,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2019",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar",
+          "sintoma_ruido_anómalo=ruido anómalo",
+          "temperatura=caliente",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra año 2019. presenta ruido anómalo, vibración. cuando está al frenar. ocurre en caliente.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.727
+        },
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.177
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.095
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Discos de freno alabeados o desgastados — 73%\n2. Falla en bujias o bobinas de encendido (misfire) — 18%\n3. Desgaste de pastillas y zapatas de freno — 10%\n\n🛠️ *Primero revisa:* ...",
+      "latencia_total_ms": 13.2
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 1,
+      "mensaje_original": "Toyota Corolla 2016",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Toyota",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Corolla 2016",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "anio",
+          "valor": "2016",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Corolla 2016",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Corolla",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Corolla 2016",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016.",
+      "question_intent": "CONDICION_OPERACION",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 0.47
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 2,
+      "mensaje_original": "falla el motor",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016.",
+      "question_intent": "TEMPERATURA_APARICION",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "¿El problema aparece en frío (primer arranque de la mañana) o únicamente después de que el motor alcanza su temperatura de trabajo normal?",
+      "latencia_total_ms": 0.31
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 3,
+      "mensaje_original": "tiembla en mínimo",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 3,
+          "confianza": 1.0,
+          "texto_crudo": "tiembla en mínimo",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 3,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016. presenta vibración.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para mayor precisión: ¿se ha conectado un escáner automotriz OBD-II o el tablero muestra encendido el testigo Check Engine?",
+      "latencia_total_ms": 0.43
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 4,
+      "mensaje_original": "en frío arranca bien",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 3,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "frío",
+          "estado": "CONFIRMADO",
+          "turno_origen": 4,
+          "confianza": 1.0,
+          "texto_crudo": "en frío arranca bien",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 4,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=frío"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016. presenta vibración. ocurre en frío.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.607
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "prob": 0.165
+        },
+        {
+          "falla": "Falta o degradacion de aceite de caja de cambios",
+          "prob": 0.105
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 61%\n2. Llantas desbalanceadas o desalineadas — 17%\n3. Falta o degradacion de aceite de caja de cambios — 11%\n\n🛠️ *Primero rev...",
+      "latencia_total_ms": 41.56
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 5,
+      "mensaje_original": "cuando calienta empieza a fallar",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 4,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 5,
+          "confianza": 1.0,
+          "texto_crudo": "cuando calienta empieza a fallar",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 5,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016. presenta vibración. ocurre en caliente.",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.607
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "prob": 0.256
+        },
+        {
+          "falla": "Falta o degradacion de aceite de caja de cambios",
+          "prob": 0.138
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 61%\n2. Llantas desbalanceadas o desalineadas — 26%\n3. Falta o degradacion de aceite de caja de cambios — 14%\n\n🛠️ *Primero rev...",
+      "latencia_total_ms": 3719.91
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 6,
+      "mensaje_original": "las bujías son nuevas",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 5,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "reemplazado_bujías",
+          "valor": "bujías reemplazado(a)",
+          "estado": "CONFIRMADO",
+          "turno_origen": 6,
+          "confianza": 1.0,
+          "texto_crudo": "las bujías son nuevas",
+          "categoria": "antecedente",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "componente_reemplazado_reciente",
+          "valor": "componente reemplazado(a)",
+          "estado": "CONFIRMADO",
+          "turno_origen": 5,
+          "confianza": 1.0,
+          "texto_crudo": "las bujías son nuevas",
+          "categoria": "antecedente",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 6,
+        "num_hechos": 7,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016. presenta vibración. ocurre en caliente. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.751
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.162
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "prob": 0.087
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 75%\n2. Baja presion de aceite o bomba de aceite defectuosa — 16%\n3. Llantas desbalanceadas o desalineadas — 9%\n\n🛠️ *Primero r...",
+      "latencia_total_ms": 3987.44
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 7,
+      "mensaje_original": "las bobinas ya las revisé",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 6,
+        "num_hechos": 7,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 7,
+        "num_hechos": 7,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016. presenta vibración. ocurre en caliente. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.751
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.162
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "prob": 0.087
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 75%\n2. Baja presion de aceite o bomba de aceite defectuosa — 16%\n3. Llantas desbalanceadas o desalineadas — 9%\n\n🛠️ *Primero r...",
+      "latencia_total_ms": 3.12
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 8,
+      "mensaje_original": "no bota ningún código",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 7,
+        "num_hechos": 7,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 8,
+        "num_hechos": 7,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016. presenta vibración. ocurre en caliente. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.751
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.162
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "prob": 0.087
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 75%\n2. Baja presion de aceite o bomba de aceite defectuosa — 16%\n3. Llantas desbalanceadas o desalineadas — 9%\n\n🛠️ *Primero r...",
+      "latencia_total_ms": 3.49
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 9,
+      "mensaje_original": "la presión de gasolina está en 45 psi",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 8,
+        "num_hechos": 7,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "combustible",
+          "valor": "Gasolina",
+          "estado": "CONFIRMADO",
+          "turno_origen": 9,
+          "confianza": 1.0,
+          "texto_crudo": "la presión de gasolina está en 45 psi",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "medicion",
+          "valor": "45 psi",
+          "estado": "CONFIRMADO",
+          "turno_origen": 9,
+          "confianza": 1.0,
+          "texto_crudo": "la presión de gasolina está en 45 psi",
+          "categoria": "medicion",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 9,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)",
+          "combustible=Gasolina",
+          "medicion=45 psi"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016 a Gasolina. presenta vibración. ocurre en caliente. medición 45 psi. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.388
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.398
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.214
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bomba de gasolina quemada o con baja presion — 39%\n2. Baja presion de aceite o bomba de aceite defectuosa — 40%\n3. Inyectores sucios o filtro de combustible obstruido — 21%\n\n🛠️...",
+      "latencia_total_ms": 3535.28
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 10,
+      "mensaje_original": "limpiamos los inyectores",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 9,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 10,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)",
+          "combustible=Gasolina",
+          "medicion=45 psi"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016 a Gasolina. presenta vibración. ocurre en caliente. medición 45 psi. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.388
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.398
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.214
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bomba de gasolina quemada o con baja presion — 39%\n2. Baja presion de aceite o bomba de aceite defectuosa — 40%\n3. Inyectores sucios o filtro de combustible obstruido — 21%\n\n🛠️...",
+      "latencia_total_ms": 3.56
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 11,
+      "mensaje_original": "no hay fuga de vacío",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 10,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 11,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)",
+          "combustible=Gasolina",
+          "medicion=45 psi"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016 a Gasolina. presenta vibración. ocurre en caliente. medición 45 psi. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.388
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.398
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.214
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bomba de gasolina quemada o con baja presion — 39%\n2. Baja presion de aceite o bomba de aceite defectuosa — 40%\n3. Inyectores sucios o filtro de combustible obstruido — 21%\n\n🛠️...",
+      "latencia_total_ms": 3.35
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 12,
+      "mensaje_original": "el filtro de aire está limpio",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 11,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 12,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)",
+          "combustible=Gasolina",
+          "medicion=45 psi"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016 a Gasolina. presenta vibración. ocurre en caliente. medición 45 psi. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.388
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.398
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.214
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bomba de gasolina quemada o con baja presion — 39%\n2. Baja presion de aceite o bomba de aceite defectuosa — 40%\n3. Inyectores sucios o filtro de combustible obstruido — 21%\n\n🛠️...",
+      "latencia_total_ms": 4.06
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 13,
+      "mensaje_original": "el sensor de oxígeno oscila bien",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 12,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 13,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)",
+          "combustible=Gasolina",
+          "medicion=45 psi"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016 a Gasolina. presenta vibración. ocurre en caliente. medición 45 psi. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.388
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.398
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.214
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bomba de gasolina quemada o con baja presion — 39%\n2. Baja presion de aceite o bomba de aceite defectuosa — 40%\n3. Inyectores sucios o filtro de combustible obstruido — 21%\n\n🛠️...",
+      "latencia_total_ms": 3.02
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 14,
+      "mensaje_original": "compresión está en 160 parejo",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 13,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 14,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)",
+          "combustible=Gasolina",
+          "medicion=45 psi"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016 a Gasolina. presenta vibración. ocurre en caliente. medición 45 psi. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.388
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.398
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.214
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bomba de gasolina quemada o con baja presion — 39%\n2. Baja presion de aceite o bomba de aceite defectuosa — 40%\n3. Inyectores sucios o filtro de combustible obstruido — 21%\n\n🛠️...",
+      "latencia_total_ms": 4.9
+    },
+    {
+      "session_id": "pilot_04_corolla",
+      "case_id": "CASO_04",
+      "turn_id": 15,
+      "mensaje_original": "qué otra cosa puede estar causando la vibración en caliente?",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 14,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 15,
+          "confianza": 1.0,
+          "texto_crudo": "qué otra cosa puede estar causando la vibración en caliente?",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 15,
+          "confianza": 1.0,
+          "texto_crudo": "qué otra cosa puede estar causando la vibración en caliente?",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 15,
+        "num_hechos": 9,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2016",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "componente_reemplazado_reciente=componente reemplazado(a)",
+          "reemplazado_bujías=bujías reemplazado(a)",
+          "combustible=Gasolina",
+          "medicion=45 psi"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla año 2016 a Gasolina. presenta vibración. ocurre en caliente. medición 45 psi. antecedente: componente reemplazado(a), bujías reemplazado(a).",
+      "question_intent": "CODIGO_DTC",
+      "Top-3": [
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.388
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.398
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.214
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bomba de gasolina quemada o con baja presion — 39%\n2. Baja presion de aceite o bomba de aceite defectuosa — 40%\n3. Inyectores sucios o filtro de combustible obstruido — 21%\n\n🛠️...",
+      "latencia_total_ms": 4.7
+    },
+    {
+      "session_id": "pilot_05_ttl",
+      "case_id": "CASO_05",
+      "turn_id": 1,
+      "mensaje_original": "Toyota Yaris 2015, tiembla en ralentí",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Toyota",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris 2015, tiembla en ralentí",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "anio",
+          "valor": "2015",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris 2015, tiembla en ralentí",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Yaris",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris 2015, tiembla en ralentí",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "condicion_operacion",
+          "valor": "detenido en ralentí",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris 2015, tiembla en ralentí",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris 2015, tiembla en ralentí",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2015",
+          "modelo=Yaris",
+          "condicion_operacion=detenido en ralentí",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris año 2015. presenta vibración. cuando está detenido en ralentí.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.879
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.079
+        },
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "prob": 0.042
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 88%\n2. Cuerpo de aceleracion o valvula IAC sucia — 8%\n3. Falla en termostato o motoventilador de radiador — 4%\n\n🛠️ *Primero r...",
+      "latencia_total_ms": 3.66
+    },
+    {
+      "session_id": "pilot_05_ttl",
+      "case_id": "CASO_05",
+      "turn_id": 2,
+      "mensaje_original": "también me di cuenta que solo pasa caliente",
+      "estado_recuperado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "también me di cuenta que solo pasa caliente",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 6,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "anio=2015",
+          "modelo=Yaris",
+          "condicion_operacion=detenido en ralentí",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris año 2015. presenta vibración. cuando está detenido en ralentí. ocurre en caliente.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.815
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.12
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.065
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 81%\n2. Baja presion de aceite o bomba de aceite defectuosa — 12%\n3. Cuerpo de aceleracion o valvula IAC sucia — 6%\n\n🛠️ *Prime...",
+      "latencia_total_ms": 47.29
+    },
+    {
+      "session_id": "00000000-0000-0000-0000-000000000099",
+      "case_id": "CASO_06",
+      "turn_id": 1,
+      "mensaje_original": "Nissan Versa 2018",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Nissan",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Versa 2018",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "anio",
+          "valor": "2018",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Versa 2018",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Versa",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Versa 2018",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Nissan Versa",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2018",
+          "modelo=Versa"
+        ]
+      },
+      "consulta_consolidada": "Nissan Versa año 2018.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 220.17
+    },
+    {
+      "session_id": "00000000-0000-0000-0000-000000000099",
+      "case_id": "CASO_06",
+      "turn_id": 2,
+      "mensaje_original": "se apaga cuando calienta",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Nissan Versa"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "se apaga cuando calienta",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_apagado_de_motor",
+          "valor": "apagado de motor",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "se apaga cuando calienta",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 5,
+        "vehiculo": "Nissan Versa",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2018",
+          "modelo=Versa",
+          "temperatura=caliente",
+          "sintoma_apagado_de_motor=apagado de motor"
+        ]
+      },
+      "consulta_consolidada": "Nissan Versa año 2018. presenta apagado de motor. ocurre en caliente.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.606
+        },
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.256
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.138
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Baja presion de aceite o bomba de aceite defectuosa — 61%\n2. Falla en bujias o bobinas de encendido (misfire) — 26%\n3. Inyectores sucios o filtro de combustible obstruido — 14%...",
+      "latencia_total_ms": 60.14
+    },
+    {
+      "session_id": "00000000-0000-0000-0000-000000000099",
+      "case_id": "CASO_06",
+      "turn_id": 3,
+      "mensaje_original": "y demora en volver a prender",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 5,
+        "vehiculo": "Nissan Versa"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 3,
+        "num_hechos": 5,
+        "vehiculo": "Nissan Versa",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "anio=2018",
+          "modelo=Versa",
+          "temperatura=caliente",
+          "sintoma_apagado_de_motor=apagado de motor"
+        ]
+      },
+      "consulta_consolidada": "Nissan Versa año 2018. presenta apagado de motor. ocurre en caliente.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.606
+        },
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.256
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.138
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Baja presion de aceite o bomba de aceite defectuosa — 61%\n2. Falla en bujias o bobinas de encendido (misfire) — 26%\n3. Inyectores sucios o filtro de combustible obstruido — 14%...",
+      "latencia_total_ms": 9.93
+    },
+    {
+      "session_id": "pilot_user_A_toyota",
+      "case_id": "CASO_07",
+      "turn_id": 1,
+      "mensaje_original": "Toyota Hilux, vibra en ralentí",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Toyota",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Hilux, vibra en ralentí",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Hilux",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Hilux, vibra en ralentí",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "condicion_operacion",
+          "valor": "detenido en ralentí",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Hilux, vibra en ralentí",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Hilux, vibra en ralentí",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Hilux",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Hilux",
+          "condicion_operacion=detenido en ralentí",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Toyota Hilux. presenta vibración. cuando está detenido en ralentí.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.879
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.079
+        },
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "prob": 0.042
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 88%\n2. Cuerpo de aceleracion o valvula IAC sucia — 8%\n3. Falla en termostato o motoventilador de radiador — 4%\n\n🛠️ *Primero r...",
+      "latencia_total_ms": 51.33
+    },
+    {
+      "session_id": "pilot_user_B_kia",
+      "case_id": "CASO_08",
+      "turn_id": 1,
+      "mensaje_original": "Kia Rio, no arranca",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Kia",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Kia Rio, no arranca",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Rio",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Kia Rio, no arranca",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_motor_no_arranca",
+          "valor": "motor no arranca",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Kia Rio, no arranca",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Kia Rio",
+        "hechos_confirmados": [
+          "marca=Kia",
+          "modelo=Rio",
+          "sintoma_motor_no_arranca=motor no arranca"
+        ]
+      },
+      "consulta_consolidada": "Kia Rio. presenta motor no arranca.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 0.27
+    },
+    {
+      "session_id": "pilot_user_A_toyota",
+      "case_id": "CASO_07",
+      "turn_id": 2,
+      "mensaje_original": "solo cuando pongo D",
+      "estado_recuperado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Hilux"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Hilux",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Hilux",
+          "condicion_operacion=detenido en ralentí",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Toyota Hilux. presenta vibración. cuando está detenido en ralentí.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.879
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.079
+        },
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "prob": 0.042
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 88%\n2. Cuerpo de aceleracion o valvula IAC sucia — 8%\n3. Falla en termostato o motoventilador de radiador — 4%\n\n🛠️ *Primero r...",
+      "latencia_total_ms": 3.78
+    },
+    {
+      "session_id": "pilot_user_B_kia",
+      "case_id": "CASO_08",
+      "turn_id": 2,
+      "mensaje_original": "da arranque pero no enciende",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Kia Rio"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "sintoma_motor_no_arranca",
+          "valor": "motor no arranca",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "da arranque pero no enciende",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 3,
+        "vehiculo": "Kia Rio",
+        "hechos_confirmados": [
+          "marca=Kia",
+          "modelo=Rio",
+          "sintoma_motor_no_arranca=motor no arranca"
+        ]
+      },
+      "consulta_consolidada": "Kia Rio. presenta motor no arranca.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "¿El problema aparece en frío (primer arranque de la mañana) o únicamente después de que el motor alcanza su temperatura de trabajo normal?",
+      "latencia_total_ms": 0.38
+    },
+    {
+      "session_id": "pilot_reset_session",
+      "case_id": "CASO_09",
+      "turn_id": 1,
+      "mensaje_original": "Toyota Yaris, vibra en ralentí",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Toyota",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris, vibra en ralentí",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Yaris",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris, vibra en ralentí",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "condicion_operacion",
+          "valor": "detenido en ralentí",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris, vibra en ralentí",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris, vibra en ralentí",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Yaris",
+          "condicion_operacion=detenido en ralentí",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris. presenta vibración. cuando está detenido en ralentí.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.879
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.079
+        },
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "prob": 0.042
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 88%\n2. Cuerpo de aceleracion o valvula IAC sucia — 8%\n3. Falla en termostato o motoventilador de radiador — 4%\n\n🛠️ *Primero r...",
+      "latencia_total_ms": 54.85
+    },
+    {
+      "session_id": "pilot_reset_session",
+      "case_id": "CASO_09",
+      "turn_id": 2,
+      "mensaje_original": "nuevo diagnóstico",
+      "estado_recuperado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": "None None",
+        "hechos_confirmados": []
+      },
+      "consulta_consolidada": "",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "REINICIO",
+      "respuesta": "🚗 *Caso finalizado.* He limpiado la memoria para registrar un nuevo vehículo.\n\n¿Cuál es la marca, modelo y la falla o síntoma que presenta el nuevo auto?",
+      "latencia_total_ms": 0.06
+    },
+    {
+      "session_id": "pilot_reset_session",
+      "case_id": "CASO_09",
+      "turn_id": 3,
+      "mensaje_original": "Nissan Sentra, suena al girar la dirección",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": "None None"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Nissan",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra, suena al girar la dirección",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Sentra",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra, suena al girar la dirección",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "condicion_operacion",
+          "valor": "al doblar la dirección",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra, suena al girar la dirección",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_ruido_anómalo",
+          "valor": "ruido anómalo",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra, suena al girar la dirección",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "modelo=Sentra",
+          "condicion_operacion=al doblar la dirección",
+          "sintoma_ruido_anómalo=ruido anómalo"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra. presenta ruido anómalo. cuando está al doblar la dirección.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Cremallera de direccion asistida con holgura o fuga",
+          "prob": 0.916
+        },
+        {
+          "falla": "Juntas homocineticas o palieres danados",
+          "prob": 0.055
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "prob": 0.029
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Cremallera de direccion asistida con holgura o fuga — 92%\n2. Juntas homocineticas o palieres danados — 6%\n3. Llantas desbalanceadas o desalineadas — 3%\n\n🛠️ *Primero revisa:* in...",
+      "latencia_total_ms": 42.13
+    },
+    {
+      "session_id": "pilot_reset_session",
+      "case_id": "CASO_10",
+      "turn_id": 4,
+      "mensaje_original": "otro carro",
+      "estado_recuperado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Nissan Sentra"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": "None None",
+        "hechos_confirmados": []
+      },
+      "consulta_consolidada": "",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "REINICIO",
+      "respuesta": "🚗 *Caso finalizado.* He limpiado la memoria para registrar un nuevo vehículo.\n\n¿Cuál es la marca, modelo y la falla o síntoma que presenta el nuevo auto?",
+      "latencia_total_ms": 0.07
+    },
+    {
+      "session_id": "pilot_reset_session",
+      "case_id": "CASO_10",
+      "turn_id": 5,
+      "mensaje_original": "Honda Civic 2017 no enciende",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": "None None"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Honda",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Honda Civic 2017 no enciende",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "anio",
+          "valor": "2017",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Honda Civic 2017 no enciende",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Civic",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Honda Civic 2017 no enciende",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_motor_no_arranca",
+          "valor": "motor no arranca",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Honda Civic 2017 no enciende",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Honda Civic",
+        "hechos_confirmados": [
+          "marca=Honda",
+          "anio=2017",
+          "modelo=Civic",
+          "sintoma_motor_no_arranca=motor no arranca"
+        ]
+      },
+      "consulta_consolidada": "Honda Civic año 2017. presenta motor no arranca.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 0.52
+    },
+    {
+      "session_id": "pilot_11_corr",
+      "case_id": "CASO_11",
+      "turn_id": 1,
+      "mensaje_original": "Toyota Yaris falla cuando está frío",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Toyota",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris falla cuando está frío",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Yaris",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Yaris falla cuando está frío",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 2,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Yaris"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 0.34
+    },
+    {
+      "session_id": "pilot_11_corr",
+      "case_id": "CASO_11",
+      "turn_id": 2,
+      "mensaje_original": "me equivoqué, es cuando está caliente",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 2,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "me equivoqué, es cuando está caliente",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Yaris",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris. ocurre en caliente.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para mayor precisión: ¿se ha conectado un escáner automotriz OBD-II o el tablero muestra encendido el testigo Check Engine?",
+      "latencia_total_ms": 1.55
+    },
+    {
+      "session_id": "pilot_12_interrogator",
+      "case_id": "CASO_12",
+      "turn_id": 2,
+      "mensaje_original": "caliente",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "caliente",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "caliente",
+          "categoria": "temperatura",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Yaris",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris. presenta vibración. ocurre en caliente.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.722
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.181
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.097
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 72%\n2. Baja presion de aceite o bomba de aceite defectuosa — 18%\n3. Inyectores sucios o filtro de combustible obstruido — 10%...",
+      "latencia_total_ms": 48.78
+    },
+    {
+      "session_id": "pilot_12_interrogator",
+      "case_id": "CASO_12",
+      "turn_id": 3,
+      "mensaje_original": "y cuando piso el acelerador empareja",
+      "estado_recuperado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Yaris"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 3,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Yaris",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Yaris",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Toyota Yaris. presenta vibración. ocurre en caliente.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.722
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.181
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.097
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 72%\n2. Baja presion de aceite o bomba de aceite defectuosa — 18%\n3. Inyectores sucios o filtro de combustible obstruido — 10%...",
+      "latencia_total_ms": 4.98
+    },
+    {
+      "session_id": "pilot_short_ans",
+      "case_id": "CASO_13",
+      "turn_id": 2,
+      "mensaje_original": "caliente",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 3,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "caliente",
+          "categoria": "temperatura",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "temperatura",
+          "valor": "caliente",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "caliente",
+          "categoria": "temperatura",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla. presenta vibración. ocurre en caliente.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.729
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.176
+        },
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.095
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 73%\n2. Baja presion de aceite o bomba de aceite defectuosa — 18%\n3. Discos de freno alabeados o desgastados — 10%\n\n🛠️ *Primer...",
+      "latencia_total_ms": 50.66
+    },
+    {
+      "session_id": "pilot_short_ans",
+      "case_id": "CASO_14",
+      "turn_id": 3,
+      "mensaje_original": "ya las cambié",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Corolla"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "reemplazado_bujías",
+          "valor": "bujías reemplazado(a)",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "ya las cambié",
+          "categoria": "antecedente",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 3,
+        "num_hechos": 5,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Corolla",
+          "sintoma_vibración=vibración",
+          "temperatura=caliente",
+          "reemplazado_bujías=bujías reemplazado(a)"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla. presenta vibración. ocurre en caliente. antecedente: bujías reemplazado(a).",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.729
+        },
+        {
+          "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+          "prob": 0.176
+        },
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.095
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 73%\n2. Baja presion de aceite o bomba de aceite defectuosa — 18%\n3. Discos de freno alabeados o desgastados — 10%\n\n🛠️ *Primer...",
+      "latencia_total_ms": 3.89
+    },
+    {
+      "session_id": "pilot_jerga_15",
+      "case_id": "CASO_15",
+      "turn_id": 1,
+      "mensaje_original": "mi carro zapatea",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "mi carro zapatea",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 1,
+        "vehiculo": "None None",
+        "hechos_confirmados": [
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "presenta vibración.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 0.57
+    },
+    {
+      "session_id": "pilot_jerga_15",
+      "case_id": "CASO_15",
+      "turn_id": 2,
+      "mensaje_original": "solo en el semáforo",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 1,
+        "vehiculo": "None None"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "condicion_operacion",
+          "valor": "detenido en ralentí",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "solo en el semáforo",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "condicion_operacion",
+          "valor": "detenido en ralentí",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "solo en el semáforo",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 2,
+        "vehiculo": "None None",
+        "hechos_confirmados": [
+          "sintoma_vibración=vibración",
+          "condicion_operacion=detenido en ralentí"
+        ]
+      },
+      "consulta_consolidada": "presenta vibración. cuando está detenido en ralentí.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "¿El problema aparece en frío (primer arranque de la mañana) o únicamente después de que el motor alcanza su temperatura de trabajo normal?",
+      "latencia_total_ms": 0.87
+    },
+    {
+      "session_id": "pilot_jerga_15",
+      "case_id": "CASO_15",
+      "turn_id": 3,
+      "mensaje_original": "cuando acelero mejora",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 2,
+        "vehiculo": "None None"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "evolucion_accion",
+          "valor": "mejora al acelerar",
+          "estado": "CONFIRMADO",
+          "turno_origen": 3,
+          "confianza": 1.0,
+          "texto_crudo": "cuando acelero mejora",
+          "categoria": "cambio_accion",
+          "tipo": "CONDICION"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 3,
+        "num_hechos": 3,
+        "vehiculo": "None None",
+        "hechos_confirmados": [
+          "sintoma_vibración=vibración",
+          "condicion_operacion=detenido en ralentí",
+          "evolucion_accion=mejora al acelerar"
+        ]
+      },
+      "consulta_consolidada": "presenta vibración. cuando está detenido en ralentí. mejora al acelerar.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.964
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.033
+        },
+        {
+          "falla": "Falla en sensor de oxigeno o mezcla rica",
+          "prob": 0.017
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 96%\n2. Cuerpo de aceleracion o valvula IAC sucia — 3%\n3. Falla en sensor de oxigeno o mezcla rica — 2%\n\n🛠️ *Primero revisa:* ...",
+      "latencia_total_ms": 43.07
+    },
+    {
+      "session_id": "pilot_jerga_16",
+      "case_id": "CASO_16",
+      "turn_id": 1,
+      "mensaje_original": "Toyota Hilux chanchea en subida",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Toyota",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Hilux chanchea en subida",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Hilux",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Hilux chanchea en subida",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "condicion_operacion",
+          "valor": "al acelerar bajo carga",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Hilux chanchea en subida",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_pérdida_de_potencia",
+          "valor": "pérdida de potencia",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Hilux chanchea en subida",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Hilux",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Hilux",
+          "condicion_operacion=al acelerar bajo carga",
+          "sintoma_pérdida_de_potencia=pérdida de potencia"
+        ]
+      },
+      "consulta_consolidada": "Toyota Hilux. presenta pérdida de potencia. cuando está al acelerar bajo carga.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.735
+        },
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.172
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.093
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 74%\n2. Bomba de gasolina quemada o con baja presion — 17%\n3. Inyectores sucios o filtro de combustible obstruido — 9%\n\n🛠️ *Pr...",
+      "latencia_total_ms": 53.08
+    },
+    {
+      "session_id": "pilot_jerga_16",
+      "case_id": "CASO_16",
+      "turn_id": 2,
+      "mensaje_original": "se aguanta cuando lo piso",
+      "estado_recuperado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Hilux"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "sintoma_pérdida_de_potencia",
+          "valor": "pérdida de potencia",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "se aguanta cuando lo piso",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Hilux",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Hilux",
+          "condicion_operacion=al acelerar bajo carga",
+          "sintoma_pérdida_de_potencia=pérdida de potencia"
+        ]
+      },
+      "consulta_consolidada": "Toyota Hilux. presenta pérdida de potencia. cuando está al acelerar bajo carga.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.735
+        },
+        {
+          "falla": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.172
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.093
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 74%\n2. Bomba de gasolina quemada o con baja presion — 17%\n3. Inyectores sucios o filtro de combustible obstruido — 9%\n\n🛠️ *Pr...",
+      "latencia_total_ms": 5.25
+    },
+    {
+      "session_id": "pilot_loop_escape",
+      "case_id": "CASO_17",
+      "turn_id": 1,
+      "mensaje_original": "mi auto falla",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 0,
+        "vehiculo": "None None",
+        "hechos_confirmados": []
+      },
+      "consulta_consolidada": "mi auto falla",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 0.32
+    },
+    {
+      "session_id": "pilot_loop_escape",
+      "case_id": "CASO_17",
+      "turn_id": 2,
+      "mensaje_original": "no sé",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 0,
+        "vehiculo": "None None"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "condicion_operacion",
+          "valor": "no determinado / no se fijó",
+          "estado": "DESCONOCIDO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "no sé",
+          "categoria": "desconocido",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 1,
+        "vehiculo": "None None",
+        "hechos_confirmados": []
+      },
+      "consulta_consolidada": "no sé",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "¿El problema aparece en frío (primer arranque de la mañana) o únicamente después de que el motor alcanza su temperatura de trabajo normal?",
+      "latencia_total_ms": 1.01
+    },
+    {
+      "session_id": "pilot_loop_escape",
+      "case_id": "CASO_17",
+      "turn_id": 3,
+      "mensaje_original": "ni idea",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 2,
+        "num_hechos": 1,
+        "vehiculo": "None None"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "temperatura",
+          "valor": "no determinado / no se fijó",
+          "estado": "DESCONOCIDO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "ni idea",
+          "categoria": "desconocido",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 3,
+        "num_hechos": 2,
+        "vehiculo": "None None",
+        "hechos_confirmados": []
+      },
+      "consulta_consolidada": "ni idea",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para mayor precisión: ¿se ha conectado un escáner automotriz OBD-II o el tablero muestra encendido el testigo Check Engine?",
+      "latencia_total_ms": 0.71
+    },
+    {
+      "session_id": "pilot_loop_escape",
+      "case_id": "CASO_17",
+      "turn_id": 4,
+      "mensaje_original": "tampoco sé",
+      "estado_recuperado": {
+        "fase": "RESULTADO",
+        "turno": 3,
+        "num_hechos": 2,
+        "vehiculo": "None None"
+      },
+      "hechos_nuevos": [],
+      "estado_actualizado": {
+        "fase": "RESULTADO",
+        "turno": 4,
+        "num_hechos": 2,
+        "vehiculo": "None None",
+        "hechos_confirmados": []
+      },
+      "consulta_consolidada": "tampoco sé",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "DIFERENCIAL",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Consulta Ambigua / Datos Faltantes — 0%\n\n🛠️ *Primero revisa:* inspección física directa del componente y sus conexiones principales en taller.\n\n¿Has podido verificar este punto...",
+      "latencia_total_ms": 2.14
+    },
+    {
+      "session_id": "pilot_mecanica_pura",
+      "case_id": "CASO_18",
+      "turn_id": 1,
+      "mensaje_original": "Nissan Sentra vibra fuerte el volante a 80 km/h al frenar suavemente, disco alabeado o desbalanceo",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Nissan",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra vibra fuerte el volante a 80 km/h al frenar suavemente, disco alabeado o desbalanceo",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Sentra",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra vibra fuerte el volante a 80 km/h al frenar suavemente, disco alabeado o desbalanceo",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "condicion_operacion",
+          "valor": "al frenar",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra vibra fuerte el volante a 80 km/h al frenar suavemente, disco alabeado o desbalanceo",
+          "categoria": "condicion",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Nissan Sentra vibra fuerte el volante a 80 km/h al frenar suavemente, disco alabeado o desbalanceo",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Nissan Sentra",
+        "hechos_confirmados": [
+          "marca=Nissan",
+          "modelo=Sentra",
+          "condicion_operacion=al frenar",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Nissan Sentra. presenta vibración. cuando está al frenar.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "prob": 0.911
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.058
+        },
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.031
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Discos de freno alabeados o desgastados — 91%\n2. Desgaste de pastillas y zapatas de freno — 6%\n3. Falla en bujias o bobinas de encendido (misfire) — 3%\n\n🛠️ *Primero revisa:* al...",
+      "latencia_total_ms": 56.46
+    },
+    {
+      "session_id": "pilot_dtc_presente",
+      "case_id": "CASO_19",
+      "turn_id": 1,
+      "mensaje_original": "Toyota Corolla motor tiembla y bota código P0301 en escáner",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Toyota",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Corolla motor tiembla y bota código P0301 en escáner",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Corolla",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Corolla motor tiembla y bota código P0301 en escáner",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "dtc_P0301",
+          "valor": "P0301",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Corolla motor tiembla y bota código P0301 en escáner",
+          "categoria": "dtc",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Toyota Corolla motor tiembla y bota código P0301 en escáner",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "RECOLECTANDO",
+        "turno": 1,
+        "num_hechos": 4,
+        "vehiculo": "Toyota Corolla",
+        "hechos_confirmados": [
+          "marca=Toyota",
+          "modelo=Corolla",
+          "dtc_P0301=P0301",
+          "sintoma_vibración=vibración"
+        ]
+      },
+      "consulta_consolidada": "Toyota Corolla. presenta vibración. código de escáner P0301.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.768
+        },
+        {
+          "falla": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.15
+        },
+        {
+          "falla": "Falla en sensor de oxigeno o mezcla rica",
+          "prob": 0.081
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 77%\n2. Inyectores sucios o filtro de combustible obstruido — 15%\n3. Falla en sensor de oxigeno o mezcla rica — 8%\n\n🛠️ *Primer...",
+      "latencia_total_ms": 53.69
+    },
+    {
+      "session_id": "pilot_electrica_mod",
+      "case_id": "CASO_20",
+      "turn_id": 1,
+      "mensaje_original": "Kia Rio 2017 tiembla y se apaga",
+      "estado_recuperado": {
+        "fase": "INICIO",
+        "turno": 0,
+        "num_hechos": 0,
+        "vehiculo": null
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "marca",
+          "valor": "Kia",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Kia Rio 2017 tiembla y se apaga",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "anio",
+          "valor": "2017",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Kia Rio 2017 tiembla y se apaga",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "modelo",
+          "valor": "Rio",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Kia Rio 2017 tiembla y se apaga",
+          "categoria": "vehiculo",
+          "tipo": "CONDICION"
+        },
+        {
+          "campo": "sintoma_vibración",
+          "valor": "vibración",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Kia Rio 2017 tiembla y se apaga",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        },
+        {
+          "campo": "sintoma_apagado_de_motor",
+          "valor": "apagado de motor",
+          "estado": "CONFIRMADO",
+          "turno_origen": 1,
+          "confianza": 1.0,
+          "texto_crudo": "Kia Rio 2017 tiembla y se apaga",
+          "categoria": "sintoma",
+          "tipo": "SINTOMA"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 5,
+        "vehiculo": "Kia Rio",
+        "hechos_confirmados": [
+          "marca=Kia",
+          "anio=2017",
+          "modelo=Rio",
+          "sintoma_vibración=vibración",
+          "sintoma_apagado_de_motor=apagado de motor"
+        ]
+      },
+      "consulta_consolidada": "Kia Rio año 2017. presenta vibración, apagado de motor.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [],
+      "decision": "PREGUNTAR",
+      "respuesta": "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?",
+      "latencia_total_ms": 0.49
+    },
+    {
+      "session_id": "pilot_electrica_mod",
+      "case_id": "CASO_20",
+      "turn_id": 2,
+      "mensaje_original": "ocurre cuando prendo las luces altas y el aire acondicionado",
+      "estado_recuperado": {
+        "fase": "ACLARANDO",
+        "turno": 1,
+        "num_hechos": 5,
+        "vehiculo": "Kia Rio"
+      },
+      "hechos_nuevos": [
+        {
+          "campo": "modificador_ac",
+          "valor": "A/C encendido",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "ocurre cuando prendo las luces altas y el aire acondicionado",
+          "categoria": "modificador",
+          "tipo": "MODIFICADOR"
+        },
+        {
+          "campo": "modificador_luces",
+          "valor": "luces tenues o encendidas",
+          "estado": "CONFIRMADO",
+          "turno_origen": 2,
+          "confianza": 1.0,
+          "texto_crudo": "ocurre cuando prendo las luces altas y el aire acondicionado",
+          "categoria": "modificador",
+          "tipo": "MODIFICADOR"
+        }
+      ],
+      "estado_actualizado": {
+        "fase": "DIAGNOSTICANDO",
+        "turno": 2,
+        "num_hechos": 7,
+        "vehiculo": "Kia Rio",
+        "hechos_confirmados": [
+          "marca=Kia",
+          "anio=2017",
+          "modelo=Rio",
+          "sintoma_vibración=vibración",
+          "sintoma_apagado_de_motor=apagado de motor",
+          "modificador_ac=A/C encendido",
+          "modificador_luces=luces tenues o encendidas"
+        ]
+      },
+      "consulta_consolidada": "Kia Rio año 2017. presenta vibración, apagado de motor. con A/C encendido, luces tenues o encendidas.",
+      "question_intent": "SIN_PREGUNTA",
+      "Top-3": [
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "prob": 0.56
+        },
+        {
+          "falla": "Alternador defectuoso o placa de diodos quemada",
+          "prob": 0.206
+        },
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.171
+        }
+      ],
+      "decision": "DIAGNOSTICAR",
+      "respuesta": "🔧 *Posibles causas*\n\n1. Bateria descargada o bornes sulfatados — 56%\n2. Alternador defectuoso o placa de diodos quemada — 21%\n3. Falla en bujias o bobinas de encendido (misfire) — 17%\n\n🛠️ *Primero rev...",
+      "latencia_total_ms": 48.59
+    }
+  ]
+}

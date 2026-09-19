@@ -1,0 +1,27 @@
+=== PROCEDIMIENTO: MANTENIMIENTO Y CAMBIO DE FLUIDO ATF/CVT EN TRANSMISIÓN AUTOMÁTICA (DTC P0700 / P0730) ===
+Código de Falla Asociado: DTC P0700 (Control Transmisión) / DTC P0730 (Relación Engranaje Incorrecta)
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla (CVT/AT), Hyundai Elantra/Tucson, Nissan Sentra (CVT NS-2/NS-3), Honda Civic
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Golpeteo o demora al enganchar Drive/Reverse, patinamiento entre marchas o código P0730 registrado.
+Instrucciones paso a paso:
+1. Caliente la transmisión hasta que el fluido ATF/CVT alcance entre 45°C y 60°C (verifique con escáner).
+2. Eleve el auto sobre una superficie totalmente plana. Retire el tapón de drenaje del cárter de la caja y recolecte el fluido usado.
+3. Retire los pernos del cárter de transmisión y desmontelo.
+4. Limpie la viruta metálica atrapada en los imanes del fondo del cárter.
+5. Sustituya el filtro interno de malla o fieltro de la transmisión y coloque un empaque de cárter nuevo.
+6. Rellene con fluido especificado por fabricante OEM (Toyota WS, Nissan NS-3, Hyundai SP-IV).
+7. Calibre el nivel exacto usando la varilla o el perno rebosadero de nivel a la temperatura de prueba.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841) ===
+Código de Falla Asociado: DTC P0700 (Control Transmisión) / DTC P0701 (Control Transmisión CVT fuera de Rango) / DTC P0841 (Sensor Presión Fluido Transmisión CVT) / DTC P0746
+Modelos Compatibles Frecuentes en Perú: Nissan Sentra B17/B18 (CVT Jatco JF015E/JF011E), Nissan Versa/Kicks
+Gravedad: Crítica | Tiempo Estimado de Taller: 120 minutos
+Síntomas: Zumbido o silbido metálico al acelerar, sobrecalentamiento de caja automática CVT en carretera, el auto no acelera al pisar el pedal (patinamiento de poleas), demora en enganchar Drive.
+Instrucciones paso a paso:
+1. Realizar diagnóstico con escáner e inspeccionar el contador de degradación de aceite CVT (CVT Oil Deterioration Date).
+2. Medir presiones de línea en puertos de prueba hidráulicos con manómetro (Presión primaria y secundaria: 0.5 a 4.5 MPa). Presión baja indica solenoide de control de presión trabado o desgaste en poleas variadoras.
+3. Levantar vehículo en plano, retirar el tapón de drenaje y desmontar el cárter de aluminio de la caja CVT.
+4. Retirar y limpiar los imanes de retención de virutas. Si existen limallas gruesas de acero brillante, la correa metálica de empuje (Bosch belt) o los conos de las poleas presentan descascaramiento y requieren reparado general.
+5. Reemplazar el filtro interno de succión de la bomba (filtro metálico/malla) y el filtro de papel tipo cartucho del enfriador de aceite CVT.
+6. Limpiar la superficie de acople, instalar empaque nuevo de cárter y apretar pernos cruzados a 10 Nm.
+7. Llenar con fluido especificado OEM (Nissan NS-3, Toyota FE, Honda HCF-2). NUNCA usar fluido ATF convencional. Calibrar nivel a 45°C por el perno rebosadero y reiniciar el contador de degradación con el escáner.

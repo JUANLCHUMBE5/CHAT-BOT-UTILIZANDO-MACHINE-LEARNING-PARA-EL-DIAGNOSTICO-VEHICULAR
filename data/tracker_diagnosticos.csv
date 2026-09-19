@@ -1,0 +1,61 @@
+item,fase,fecha,placa,marca_modelo,sintoma,falla_real,chatbot_prediccion,campos_completos,tiempo_diagnostico_minutos,prediccion_correcta
+1,Pre-test,2026-05-01,ABC-202,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Bujias desgastadas,1,37,0
+2,Pre-test,2026-05-02,ABC-221,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,41,1
+3,Pre-test,2026-05-03,ABC-187,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,32,1
+4,Pre-test,2026-05-04,ABC-443,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Bujias desgastadas,1,35,0
+5,Pre-test,2026-05-05,ABC-291,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Bujias desgastadas,0,35,0
+6,Pre-test,2026-05-06,ABC-610,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,32,1
+7,Pre-test,2026-05-07,ABC-882,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,0,35,1
+8,Pre-test,2026-05-08,ABC-931,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,0,27,1
+9,Pre-test,2026-05-09,ABC-746,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,31,1
+10,Pre-test,2026-05-10,ABC-664,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,39,1
+11,Pre-test,2026-05-11,ABC-554,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,0,33,1
+12,Pre-test,2026-05-12,ABC-661,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,29,1
+13,Pre-test,2026-05-13,ABC-489,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,24,1
+14,Pre-test,2026-05-14,ABC-369,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,29,1
+15,Pre-test,2026-05-15,ABC-561,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,29,1
+16,Pre-test,2026-05-16,ABC-437,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,27,1
+17,Pre-test,2026-05-17,ABC-316,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,36,1
+18,Pre-test,2026-05-18,ABC-164,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,33,1
+19,Pre-test,2026-05-19,ABC-228,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,37,1
+20,Pre-test,2026-05-20,ABC-774,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Bujias desgastadas,0,39,0
+21,Pre-test,2026-05-21,ABC-589,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,36,1
+22,Pre-test,2026-05-22,ABC-132,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,39,1
+23,Pre-test,2026-05-23,ABC-827,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,37,1
+24,Pre-test,2026-05-24,ABC-838,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,0,26,1
+25,Pre-test,2026-05-25,ABC-868,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,31,1
+26,Pre-test,2026-05-26,ABC-991,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,36,1
+27,Pre-test,2026-05-27,ABC-842,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,1,31,1
+28,Pre-test,2026-05-28,ABC-330,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Fuga de liquido de frenos,0,37,1
+29,Pre-test,2026-05-29,ABC-135,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Bujias desgastadas,1,38,0
+30,Pre-test,2026-05-30,ABC-781,Toyota Yaris,Pedal de freno esponjoso,Fuga de liquido de frenos,Bujias desgastadas,0,36,0
+31,Post-test,2026-06-01,XYZ-745,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,9,1
+32,Post-test,2026-06-02,XYZ-430,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,7,1
+33,Post-test,2026-06-03,XYZ-447,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,9,1
+34,Post-test,2026-06-04,XYZ-382,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,10,1
+35,Post-test,2026-06-05,XYZ-727,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,8,1
+36,Post-test,2026-06-06,XYZ-510,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,8,1
+37,Post-test,2026-06-07,XYZ-776,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,8,1
+38,Post-test,2026-06-08,XYZ-926,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,8,1
+39,Post-test,2026-06-09,XYZ-707,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,8,1
+40,Post-test,2026-06-10,XYZ-541,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Amortiguadores reventados,1,9,0
+41,Post-test,2026-06-11,XYZ-609,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,8,1
+42,Post-test,2026-06-12,XYZ-180,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,10,1
+43,Post-test,2026-06-13,XYZ-101,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,9,1
+44,Post-test,2026-06-14,XYZ-229,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,10,1
+45,Post-test,2026-06-15,XYZ-829,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Amortiguadores reventados,1,11,0
+46,Post-test,2026-06-16,XYZ-302,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,7,1
+47,Post-test,2026-06-17,XYZ-500,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,12,1
+48,Post-test,2026-06-18,XYZ-297,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,7,1
+49,Post-test,2026-06-19,XYZ-610,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,9,1
+50,Post-test,2026-06-20,XYZ-425,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,11,1
+51,Post-test,2026-06-21,XYZ-870,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,6,1
+52,Post-test,2026-06-22,XYZ-963,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,10,1
+53,Post-test,2026-06-23,XYZ-588,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,11,1
+54,Post-test,2026-06-24,XYZ-740,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,9,1
+55,Post-test,2026-06-25,XYZ-572,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,13,1
+56,Post-test,2026-06-26,XYZ-362,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,10,1
+57,Post-test,2026-06-27,XYZ-445,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Amortiguadores reventados,1,6,0
+58,Post-test,2026-06-28,XYZ-996,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,10,1
+59,Post-test,2026-06-29,XYZ-751,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,9,1
+60,Post-test,2026-06-30,XYZ-332,Hyundai Accent,Timon tiembla a alta velocidad,Llantas desalineadas,Llantas desalineadas,1,10,1

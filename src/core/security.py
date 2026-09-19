@@ -1,0 +1,358 @@
+import hashlib
+import hmac
+import os
+import time
+import uuid
+from typing import Any, Dict, Literal, Optional
+
+import jwt
+from fastapi import HTTPException, Security, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+
+from src.config import settings
+
+# HTTP Bearer scheme for Swagger UI & API protection
+security_bearer = HTTPBearer(auto_error=False)
+
+# Access token breve; el refresh HttpOnly conserva la sesión sin exponer credenciales.
+JWT_SECRET_KEY = settings.jwt_secret_key
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRATION_SECONDS = 30 * 60  # 30 minutos
+JWT_REFRESH_EXPIRATION_SECONDS = 7 * 24 * 60 * 60  # 7 días
+
+def _obtener_jwt_secret() -> str:
+    if not settings.jwt_secret_key:
+        raise RuntimeError("JWT_SECRET_KEY es obligatoria para emitir tokens.")
+    return settings.jwt_secret_key
+
+def generar_password_hash(password: str) -> str:
+    """Genera un hash criptográfico seguro con PBKDF2-HMAC-SHA256 (600,000 iteraciones + salt OWASP)."""
+    salt = os.urandom(16)
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 600_000)
+    return f"pbkdf2_sha256$600000${salt.hex()}${key.hex()}"
+
+def verificar_password(password: str, stored_hash: Optional[str]) -> bool:
+    """Verifica una contraseña contra su hash PBKDF2 almacenado. Rechaza hashes nulos o malformados."""
+    if not stored_hash or "$" not in stored_hash:
+        return False
+    try:
+        parts = stored_hash.split("$")
+        if len(parts) != 4 or parts[0] != "pbkdf2_sha256":
+            return False
+        iterations = int(parts[1])
+        salt = bytes.fromhex(parts[2])
+        expected_key = parts[3]
+        key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, iterations)
+        return hmac.compare_digest(key.hex(), expected_key)
+    except Exception:
+        return False
+
+def crear_jwt_token(
+    sub: str = "taller_mecanico",
+    rol: str = "administrador",
+    taller_id: Optional[str] = None,
+    usuario_id: Optional[str] = None,
+    extra_claims: Optional[Dict[str, Any]] = None,
+) -> str:
+    """
+    Genera un access token JWT firmado digitalmente con validez de 30 minutos.
+    Incluye sub, rol, taller_id, usuario_id y claims estándar exp/iat/jti.
+    """
+    ahora = int(time.time())
+    payload = {
+        "sub": sub,
+        "rol": rol,
+        "taller_id": taller_id or "00000000-0000-0000-0000-000000000001",
+        "usuario_id": usuario_id or str(uuid.uuid4()),
+        "iat": ahora,
+        "exp": ahora + JWT_EXPIRATION_SECONDS,
+        "iss": settings.jwt_issuer,
+        "aud": settings.jwt_audience,
+        "jti": str(uuid.uuid4()),
+        "token_type": "access",
+    }
+    if extra_claims:
+        payload.update(extra_claims)
+        
+    token = jwt.encode(payload, _obtener_jwt_secret(), algorithm=JWT_ALGORITHM)
+    return token
+
+
+def crear_refresh_token(
+    sub: str,
+    rol: str,
+    taller_id: Optional[str] = None,
+    usuario_id: Optional[str] = None,
+    extra_claims: Optional[Dict[str, Any]] = None,
+) -> str:
+    """Emite un token exclusivo para renovar la sesión sin reenviar la contraseña."""
+    ahora = int(time.time())
+    payload: Dict[str, Any] = {
+        "sub": sub,
+        "rol": rol,
+        "taller_id": taller_id or "00000000-0000-0000-0000-000000000001",
+        "usuario_id": usuario_id or str(uuid.uuid4()),
+        "iat": ahora,
+        "exp": ahora + JWT_REFRESH_EXPIRATION_SECONDS,
+        "iss": settings.jwt_issuer,
+        "aud": settings.jwt_audience,
+        "jti": str(uuid.uuid4()),
+        "token_type": "refresh",
+    }
+    if extra_claims:
+        payload.update(extra_claims)
+    return jwt.encode(payload, _obtener_jwt_secret(), algorithm=JWT_ALGORITHM)
+
+
+def verificar_refresh_token(token: str) -> Dict[str, Any]:
+    """Valida firma, vigencia y uso específico de un refresh token."""
+    try:
+        payload = jwt.decode(
+            token,
+            _obtener_jwt_secret(),
+            algorithms=[JWT_ALGORITHM],
+            issuer=settings.jwt_issuer,
+            audience=settings.jwt_audience,
+        )
+    except jwt.ExpiredSignatureError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="La sesión extendida expiró. Inicie sesión nuevamente.",
+        ) from exc
+    except jwt.InvalidTokenError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Refresh token inválido o alterado.",
+        ) from exc
+
+    if payload.get("token_type") != "refresh":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Se requiere un refresh token válido.",
+        )
+    return payload
+
+def decodificar_jwt_acceso(token: str, *, validar_revocacion: bool = True) -> Dict[str, Any]:
+    """Decodifica un access token y aplica la lista de revocación compartida."""
+    try:
+        payload = jwt.decode(
+            token,
+            _obtener_jwt_secret(),
+            algorithms=[JWT_ALGORITHM],
+            issuer=settings.jwt_issuer,
+            audience=settings.jwt_audience,
+        )
+        if payload.get("token_type", "access") != "access":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Un refresh token no puede utilizarse para acceder a la API.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        if validar_revocacion:
+            from src.core.access_token_store import access_token_store
+
+            if access_token_store.esta_revocado(payload):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="La sesión fue cerrada o el token fue revocado.",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+        return payload
+    except jwt.ExpiredSignatureError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="El token de acceso ha expirado. El panel intentará renovar la sesión automáticamente.",
+            headers={"WWW-Authenticate": "Bearer"},
+        ) from exc
+    except jwt.InvalidTokenError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token JWT inválido o firma alterada.",
+            headers={"WWW-Authenticate": "Bearer"},
+        ) from exc
+
+
+def verificar_jwt_token_sin_restriccion(
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
+) -> Dict[str, Any]:
+    """
+    Middleware / Dependencia para verificar la validez y expiración del Token JWT.
+    Lanza HTTP 401 Unauthorized si el token no existe, expiró o fue alterado.
+    """
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Falta el encabezado de autorización (Authorization: Bearer <token>).",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    return decodificar_jwt_acceso(credentials.credentials)
+
+
+def verificar_jwt_token(
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
+) -> Dict[str, Any]:
+    """Bloquea el resto de la API hasta cambiar una contraseña temporal."""
+    payload = verificar_jwt_token_sin_restriccion(credentials)
+    if payload.get("requiere_cambio_password"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Debe cambiar la contraseña temporal antes de utilizar el sistema.",
+        )
+    return payload
+
+
+def verificar_jwt_administrador(
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_bearer),
+) -> Dict[str, Any]:
+    """Autoriza exclusivamente cuentas administrativas para usar el panel web/API."""
+    payload = verificar_jwt_token(credentials)
+    if payload.get("rol") not in {"administrador", "admin"}:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="El panel web es exclusivo para administradores. Los mecánicos operan mediante WhatsApp.",
+        )
+    return payload
+
+def verificar_firma_meta(raw_body: bytes, signature_header: Optional[str]) -> bool:
+    """
+    Valida la firma criptográfica X-Hub-Signature-256 proveniente de Meta Cloud API (WhatsApp).
+    Falla CERRADO (devuelve False) si el secreto de la app o el encabezado de firma no existen.
+    """
+    app_secret = settings.meta_app_secret
+    if not app_secret:
+        # Modo estricto / Falla cerrado: No permitir sin secreto configurado
+        return False
+        
+    if not signature_header or not signature_header.startswith("sha256="):
+        return False
+        
+    expected_sig = signature_header.split("sha256=")[1]
+    calculated_sig = hmac.new(
+        app_secret.encode('utf-8'),
+        raw_body,
+        hashlib.sha256
+    ).hexdigest()
+    
+    return hmac.compare_digest(expected_sig, calculated_sig)
+
+def verificar_firma_twilio(url: str, params: Dict[str, Any], signature_header: Optional[str]) -> bool:
+    """
+    Valida la firma criptográfica X-Twilio-Signature enviada por solicitudes de Twilio.
+    Algoritmo: HMAC-SHA1 codificado en Base64 sobre la URL + parámetros POST ordenados alfabéticamente.
+    """
+    auth_token = settings.twilio_auth_token
+    if not auth_token or not signature_header:
+        return False
+
+    import base64
+    # Construir cadena de firma: URL + claves y valores ordenados por clave
+    s = url
+    for key in sorted(params.keys()):
+        # Si la lista tiene múltiples valores, tomar el primero o concatenar
+        val = params[key]
+        val_str = val[0] if isinstance(val, list) else str(val)
+        s += f"{key}{val_str}"
+
+    mac = hmac.new(auth_token.encode('utf-8'), s.encode('utf-8'), hashlib.sha1)
+    calculated_sig = base64.b64encode(mac.digest()).decode('utf-8').strip()
+
+    return hmac.compare_digest(calculated_sig, signature_header.strip())
+
+def anonimizar_identificador(identificador: str) -> str:
+    """
+    Pseudonimiza de forma segura placas o números telefónicos usando HMAC-SHA256 con sal/secreto de privacidad.
+    Protege la privacidad (GDPR / LDP) impidiendo ataques por fuerza bruta o listas precalculadas.
+    Ejemplo: 'ABC-123' -> 'PLACA_a8f9c10b12c3' | '51987654321' -> 'TEL_3f7b19a08e1d'
+    """
+    if not identificador or identificador in ("SIN-PLACA", "DESCONOCIDO", "REST-API", "WAPP-01"):
+        return identificador
+        
+    val_limpio = identificador.strip()
+    secret = settings.privacy_secret_key
+    
+    h = hmac.new(
+        secret.encode('utf-8'),
+        val_limpio.encode('utf-8'),
+        hashlib.sha256
+    ).hexdigest()[:12]
+
+    if val_limpio.isdigit() or val_limpio.startswith("whatsapp:") or val_limpio.startswith("+"):
+        prefix = "TEL_"
+    elif val_limpio.startswith("sess") or val_limpio.startswith("SESS"):
+        prefix = "SESS_"
+    else:
+        prefix = "PLACA_"
+        
+    return f"{prefix}{h}"
+
+
+def hash_identificador_persistencia(
+    identificador: str,
+    tipo: Literal["telefono", "placa", "wa_id", "user_id"] = "telefono",
+) -> str:
+    """Genera el HMAC-SHA256 completo usado para búsquedas seguras en PostgreSQL."""
+
+    if not identificador or not str(identificador).strip():
+        raise ValueError("El identificador no puede estar vacío.")
+
+    id_str = str(identificador).strip()
+    if tipo in ("telefono", "wa_id"):
+        normalizado = "".join(caracter for caracter in id_str if caracter.isdigit())
+        if not normalizado:
+            # Si no hay dígitos (ej. wa_id alfanumérico), usar cadena limpia
+            normalizado = "".join(caracter for caracter in id_str if caracter.isalnum() or caracter in ("_", "-"))
+    elif tipo == "placa":
+        normalizado = "".join(
+            caracter for caracter in id_str.upper() if caracter.isalnum()
+        )
+    elif tipo == "user_id":
+        normalizado = "".join(caracter for caracter in id_str if caracter.isalnum() or caracter in ("_", "-", "."))
+    else:
+        raise ValueError("Tipo de identificador no soportado.")
+
+    if not normalizado:
+        raise ValueError("El identificador no contiene caracteres válidos.")
+
+    secret = settings.privacy_secret_key
+    if not secret:
+        raise RuntimeError("PRIVACY_SECRET_KEY es obligatoria para persistir identificadores.")
+
+    return hmac.new(
+        secret.encode("utf-8"),
+        f"{tipo}:{normalizado}".encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+
+def _obtener_fernet_cipher():
+    """Genera la instancia Fernet derivada de PRIVACY_SECRET_KEY."""
+    import base64
+
+    from cryptography.fernet import Fernet
+
+    secret = settings.privacy_secret_key
+    key_bytes = hashlib.sha256(secret.encode("utf-8")).digest()
+    fernet_key = base64.urlsafe_b64encode(key_bytes)
+    return Fernet(fernet_key)
+
+
+def cifrar_texto_reversible(texto: str) -> str:
+    """Cifra un dato sensible de forma reversible (para que el worker de la cola pueda despachar)."""
+    if not texto:
+        return ""
+    cipher = _obtener_fernet_cipher()
+    return cipher.encrypt(texto.encode("utf-8")).decode("utf-8")
+
+
+def descifrar_texto_reversible(cifrado: str) -> str:
+    """Descifra el dato sensible en memoria al momento del despacho del mensaje."""
+    if not cifrado:
+        return ""
+    from cryptography.fernet import InvalidToken
+
+    try:
+        cipher = _obtener_fernet_cipher()
+        return cipher.decrypt(cifrado.encode("utf-8")).decode("utf-8")
+    except InvalidToken as exc:
+        raise ValueError("No se pudo descifrar el remitente del trabajo Gemini.") from exc

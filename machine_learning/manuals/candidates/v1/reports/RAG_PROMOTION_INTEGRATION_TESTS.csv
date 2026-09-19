@@ -1,0 +1,18 @@
+test_id,scenario,layer,expected,actual,status,severity
+INT_001,Robustez de Entrada: EMPTY_QUERY,CandidateRAGHarness,No crash / respuesta estructurada,Recuperados 3 candidatos sin excepción.,PASS,INFO
+INT_002,Robustez de Entrada: MALFORMED_INPUT,CandidateRAGHarness,No crash / respuesta estructurada,Recuperados 3 candidatos sin excepción.,PASS,INFO
+INT_003,Robustez de Entrada: UNICODE_ACCENTS,CandidateRAGHarness,No crash / respuesta estructurada,Recuperados 3 candidatos sin excepción.,PASS,INFO
+INT_004,Robustez de Entrada: WHATSAPP_TYPOS,CandidateRAGHarness,No crash / respuesta estructurada,Recuperados 3 candidatos sin excepción.,PASS,INFO
+INT_005,Robustez de Entrada: SQL_INJECTION,CandidateRAGHarness,No crash / respuesta estructurada,Recuperados 3 candidatos sin excepción.,PASS,INFO
+INT_006,Escenario E2E: A_AC_NO_ENFRIA,Retrieval & Relevance Reranking,Macro-sistema=CLIMATIZACION,Top1=PROCEDIMIENTO: DIAGNÓSTICO DE CONDENSADO | Sys=CLIMATIZACION,PASS,INFO
+INT_007,Escenario E2E: B_ARRANQUE_FRIO,Retrieval & Relevance Reranking,Macro-sistema=ELECTRICO,Top1=PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTA | Sys=ELECTRICO,PASS,INFO
+INT_008,Escenario E2E: C_VIBRACION_ACELERAR,Retrieval & Relevance Reranking,Macro-sistema=SUSPENSION_CHASIS,Top1=PROCEDIMIENTO: MEDICIÓN DE ALABEO CON RE | Sys=SUSPENSION_CHASIS,PASS,INFO
+INT_009,Escenario E2E: D_FUGA_REFRIGERANTE,Retrieval & Relevance Reranking,Macro-sistema=MOTOR,Top1=PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO | Sys=MOTOR,PASS,INFO
+INT_010,Escenario E2E: E_FRENOS,Retrieval & Relevance Reranking,Macro-sistema=FRENOS,Top1=PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO | Sys=FRENOS,PASS,INFO
+INT_011,Escenario E2E: F_EV_HV,Retrieval & Relevance Reranking,Macro-sistema=ELECTRICO,Top1=PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE | Sys=ELECTRICO,PASS,INFO
+INT_012,Escenario E2E: G_DTC_EXPLICITO,Retrieval & Relevance Reranking,Macro-sistema=MOTOR,Top1=PROCEDIMIENTO: DIAGNÓSTICO DE CONTRAPRES | Sys=MOTOR,PASS,INFO
+INT_013,Escenario E2E: H_SIN_DTC,Retrieval & Relevance Reranking,Macro-sistema=TRANSMISION,Top1=PROCEDIMIENTO: DIAGNÓSTICO DE PATINAMIEN | Sys=TRANSMISION,PASS,INFO
+INT_014,Escenario E2E: I_TRANSMISION,Retrieval & Relevance Reranking,Macro-sistema=TRANSMISION,Top1=PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A  | Sys=TRANSMISION,PASS,INFO
+INT_015,Escenario E2E: J_SESION_TALLER,Retrieval & Relevance Reranking,Macro-sistema=FRENOS,Top1=PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y  | Sys=FRENOS,PASS,INFO
+INT_016,Caso Histórico A/C (Ralentí vs Carretera),Knowledge Retrieval & Workshop Chain,"Top1 A/C Condensador/Flujo, sin presiones fijas, con orientación a motoventilador",Top1=PROCEDIMIENTO: DIAGNÓSTICO DE CONDENSADOR Y F | AirflowLogic=True | SafePSI=True,PASS,INFO
+INT_017,Regresión Fase 11.3: 52 PSI permanece PSI,Traductor Jerga / Estado Conversacional,52 PSI preserva unidad de presión (no voltaje),Normalizado: 'la presion de riel marca 52 psi con manometro',PASS,INFO

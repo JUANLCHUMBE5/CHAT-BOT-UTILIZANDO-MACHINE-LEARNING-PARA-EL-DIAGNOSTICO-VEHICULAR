@@ -1,0 +1,39 @@
+{
+  "modelo": "modelo_sistema_c1_macrofix.pkl",
+  "timestamp": "2026-09-17T23:28:43Z",
+  "arquitectura": "LinearSVC(C=1.0, class_weight='balanced') + CalibratedClassifierCV(method='isotonic', cv=5)",
+  "vectorizador_utilizado": "vectorizador_c1.pkl",
+  "vectorizador_hash": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+  "sha256": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
+  "train_dataset": "train10_v1_1_macrofix.csv",
+  "train_dataset_hash": "71d67e1109e9de0cafa86640d9fd04045b6809f912d342eb706f836d114c326c",
+  "n_train": 6904,
+  "n_dev": 1725,
+  "classes": [
+    "CARROCERIA_NEUMATICA",
+    "CLIMATIZACION",
+    "ELECTRICO",
+    "FRENOS",
+    "MOTOR",
+    "SUSPENSION_CHASIS",
+    "TRANSMISION"
+  ],
+  "n_classes": 7,
+  "metricas_dev10": {
+    "accuracy": 0.9646,
+    "macro_precision": 0.9609,
+    "macro_recall": 0.9388,
+    "macro_f1": 0.949,
+    "weighted_f1": 0.9644
+  },
+  "metricas_por_source": {
+    "original": {
+      "n": 1237,
+      "accuracy": 0.9854
+    },
+    "sintetico": {
+      "n": 488,
+      "accuracy": 0.9119
+    }
+  }
+}

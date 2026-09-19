@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-09-17T23:45:28Z",
+  "archivos": [
+    {
+      "archivo": "machine_learning/training/fase10/final_candidate/C1/vectorizador_c1.pkl",
+      "sha256": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+      "bytes": 264089
+    },
+    {
+      "archivo": "machine_learning/training/fase10/final_candidate/C1/modelo_diagnostico_c1.pkl",
+      "sha256": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+      "bytes": 23710300
+    },
+    {
+      "archivo": "machine_learning/training/fase10/final_candidate/C1/modelo_sistema_c1_macrofix.pkl",
+      "sha256": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
+      "bytes": 4532678
+    },
+    {
+      "archivo": "machine_learning/training/fase10/final_candidate/C1/metadata_c1_macrofix.json",
+      "sha256": "c1ac4a528ee759316480691f4cf05b29c5d28829964d25a7d27ab239e80a084e",
+      "bytes": 1134
+    }
+  ]
+}

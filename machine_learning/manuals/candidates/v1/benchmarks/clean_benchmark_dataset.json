@@ -1,0 +1,1439 @@
+{
+  "benchmark_name": "RAG_CLEAN_EVAL_SUBSET",
+  "total_queries": 115,
+  "classes_covered": 61,
+  "queries": [
+    {
+      "query_id": "BENCH_001",
+      "query": "Golpeteo seco cloc-cloc en tren delantero al pasar baches, rebote excesivo de carrocería",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 1,
+      "expected_class_name": "Alternador defectuoso o placa de diodos quemada",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_002",
+      "query": "siento que la camioneta rebota mucho como barco en badenes y golpea la suspension",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 1,
+      "expected_class_name": "Alternador defectuoso o placa de diodos quemada",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_003",
+      "query": "Testigo de presión de aceite titila en ralentí en caliente, presión hidrostática cae a 4 PSI",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [
+        "P0524"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 2,
+      "expected_class_name": "Amortiguadores reventados o bujes de suspension gastados",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_004",
+      "query": "se prende la aceitera cuando calienta el motor en semaforos y suena un taqueteo feo",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 2,
+      "expected_class_name": "Amortiguadores reventados o bujes de suspension gastados",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_005",
+      "query": "Voltaje en reposo 10.5V, sulfatación en borne positivo, no retiene carga tras reposo nocturno",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "STARTUP",
+      "is_safety": false,
+      "expected_class_id": 3,
+      "expected_class_name": "Baja presion de aceite o bomba de aceite defectuosa",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_006",
+      "query": "no arranca en las mananas solo hace click rapido y las luces del tablero se bajan todas",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "STARTUP",
+      "is_safety": false,
+      "expected_class_id": 3,
+      "expected_class_name": "Baja presion de aceite o bomba de aceite defectuosa",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_007",
+      "query": "Presión en riel de combustible en cero, no se escucha zumbido de bomba al colocar contacto",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0087"
+      ],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": false,
+      "expected_class_id": 4,
+      "expected_class_name": "Bateria descargada o bornes sulfatados",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_008",
+      "query": "el carro gira y gira pero no enciende para nada parece que no le llega gasolina",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": false,
+      "expected_class_id": 4,
+      "expected_class_name": "Bateria descargada o bornes sulfatados",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_009",
+      "query": "Rueda delantera derecha humea con olor a pastilla quemada, vehículo se carga hacia un lado al rodar",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 5,
+      "expected_class_name": "Bomba de gasolina quemada o con baja presion",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_010",
+      "query": "un aro delantero se calienta que quema y frena frenado el carro se jala a la derecha",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 5,
+      "expected_class_name": "Bomba de gasolina quemada o con baja presion",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_012",
+      "query": "la puerta del chofer se quedo atorada y la llave gira en falso no suelta el seguro",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 6,
+      "expected_class_name": "Caliper de freno trabado o mordaza pegada (piston agarrotado)",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_013",
+      "query": "Consumo de 1 litro de aceite cada 800 km, humo azulado constante por el escape al acelerar",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 7,
+      "expected_class_name": "Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_014",
+      "query": "bota humo azul por el escape cuando acelero fuerte y se come el aceite rapidisimo",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 7,
+      "expected_class_name": "Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_015",
+      "query": "Código P0420 activo, baja eficiencia en sensor de oxígeno post-catalizador Banco 1",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0420"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 8,
+      "expected_class_name": "Consumo de aceite por desgaste de anillos o retenes",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_016",
+      "query": "tengo check engine prendido me escanearon y salio catalizador tapado pierde fuerza en subida",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 8,
+      "expected_class_name": "Consumo de aceite por desgaste de anillos o retenes",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_017",
+      "query": "Juego muerto excesivo en el volante, fuga de líquido hidráulico rojo por fuelles de dirección",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 9,
+      "expected_class_name": "Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_018",
+      "query": "la direccion timon tiene juego y gotea aceite de direccion por la cremallera",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 9,
+      "expected_class_name": "Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_019",
+      "query": "Ralentí inestable oscila entre 500 y 1200 RPM, motor se cala al frenar en detenciones",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0505"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 10,
+      "expected_class_name": "Cremallera de direccion asistida con holgura o fuga",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_020",
+      "query": "en minimo el motor tiembla y se apaga solito cuando freno en las esquinas",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 10,
+      "expected_class_name": "Cremallera de direccion asistida con holgura o fuga",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_021",
+      "query": "Triángulo rojo maestro activo en Prius, código P0A80 reemplazo de paquete de batería híbrida",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0A80"
+      ],
+      "confusion_group": "EV_HV",
+      "is_safety": true,
+      "expected_class_id": 11,
+      "expected_class_name": "Cuerpo de aceleracion o valvula IAC sucia",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_022",
+      "query": "en el tablero sale aviso de revisar sistema hibrido y el ventilador de atras sopla a full",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "EV_HV",
+      "is_safety": true,
+      "expected_class_id": 11,
+      "expected_class_name": "Cuerpo de aceleracion o valvula IAC sucia",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_023",
+      "query": "Chirrido metálico agudo de fricción al aplicar pedal de freno, espesor de material menor a 2mm",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "BRAKES",
+      "is_safety": false,
+      "expected_class_id": 12,
+      "expected_class_name": "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_024",
+      "query": "suena un chillido fuerte cada vez que toco el freno parece que roza metal con metal",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "BRAKES",
+      "is_safety": false,
+      "expected_class_id": 12,
+      "expected_class_name": "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_025",
+      "query": "Zumbido tipo rozamiento que desaparece totalmente al pisar el pedal de embrague a fondo",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 13,
+      "expected_class_name": "Desgaste de pastillas y zapatas de freno",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_026",
+      "query": "suena como un grillo en la caja cuando suelto el embrague y cuando lo piso se quita",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 13,
+      "expected_class_name": "Desgaste de pastillas y zapatas de freno",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_027",
+      "query": "El motor revoluciona en 3ra marcha pero la velocidad no incrementa proporcionalmente",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 14,
+      "expected_class_name": "Desgaste en collarin de empuje o crapodina de embrague",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_028",
+      "query": "acelero a fondo ruge el motor pero el carro avanza lentito el embrague patina",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 14,
+      "expected_class_name": "Desgaste en collarin de empuje o crapodina de embrague",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_029",
+      "query": "Vibración intensa en el pedal de freno y volante al frenar a velocidades superiores a 80 km/h",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "BRAKES",
+      "is_safety": false,
+      "expected_class_id": 15,
+      "expected_class_name": "Disco de embrague desgastado o patinando",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_030",
+      "query": "cuando voy rapido en autopista y freno el timon y el pedal tiemblan un monton",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "BRAKES",
+      "is_safety": false,
+      "expected_class_id": 15,
+      "expected_class_name": "Disco de embrague desgastado o patinando",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_032",
+      "query": "se cayo el vidrio de la puerta sono un crujido y ya no levanta con el boton",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 16,
+      "expected_class_name": "Discos de freno alabeados o desgastados",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_033",
+      "query": "Burbujas continuas en vaso de expansión de refrigerante, aceite color café con leche en bayoneta",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 17,
+      "expected_class_name": "Elevalunas electrico o guaya de alzacristales rota o trabada",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_034",
+      "query": "el refrigerante hierve y se paso el agua al aceite salio como chocolate la varilla",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 17,
+      "expected_class_name": "Elevalunas electrico o guaya de alzacristales rota o trabada",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_036",
+      "query": "suena como cadena suelta al encender en las mananas y tiene check engine prendido",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 18,
+      "expected_class_name": "Empaque de culata soplado o danado",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_037",
+      "query": "Obstrucción de chupador de aceite por desprendimiento de hilos de correa bañada en aceite",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0011"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 19,
+      "expected_class_name": "Faja o cadena de distribucion destensada o con salto de punto",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_038",
+      "query": "motor ford dragon perdio presion de aceite dicen que se deshizo la faja humeda en el carter",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 19,
+      "expected_class_name": "Faja o cadena de distribucion destensada o con salto de punto",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_039",
+      "query": "Pérdida de potencia y tironeo bajo carga por carbonilla acumulada en válvulas de admisión GDI",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0300"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 20,
+      "expected_class_name": "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_040",
+      "query": "el carro gdi pierde pique en alta y me dicen que necesita descarbonizado de valvulas",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 20,
+      "expected_class_name": "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_041",
+      "query": "Actuador de cierre centralizado no responde al telemando en puerta trasera izquierda",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 21,
+      "expected_class_name": "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_042",
+      "query": "con la alarma bajan 3 seguros pero una puerta de atras no traba se queda abierta",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 21,
+      "expected_class_name": "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_043",
+      "query": "Cámara de freno Maxi-Brake bloqueada por resorte vencido, camión arrastrando eje trasero",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRUCK",
+      "is_safety": true,
+      "expected_class_id": 22,
+      "expected_class_name": "Falla electrica del cierre centralizado o actuador de puerta",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_044",
+      "query": "el camion pesado se quedo amarrado de atras no suelta el freno de resorte de aire",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRUCK",
+      "is_safety": true,
+      "expected_class_id": 22,
+      "expected_class_name": "Falla electrica del cierre centralizado o actuador de puerta",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_045",
+      "query": "Falta de sobrealimentación, actuador electrónico de wastegate VGT trabado en posición abierta",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0299"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 23,
+      "expected_class_name": "Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_046",
+      "query": "motor tsi entra en modo emergencia y no tiene nada de fuerza codigo p0299 baja presion turbo",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 23,
+      "expected_class_name": "Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_048",
+      "query": "el pedal del embrague se fue hasta el fondo y no regresa no puedo meter ningun cambio",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 24,
+      "expected_class_name": "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_049",
+      "query": "Tironeo fuerte bajo aceleración, código DTC P0301 fallo de encendido cilindro 1 registrado",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0301"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 25,
+      "expected_class_name": "Falla en bombin o bomba hidraulica de embrague",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_050",
+      "query": "el motor tiembla horrible al acelerar como si anduviera en 3 cilindros bujias o bobina",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 25,
+      "expected_class_name": "Falla en bombin o bomba hidraulica de embrague",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_051",
+      "query": "Falla en actuador electrohidráulico Dualogic / I-Motion, código de presión baja en acumulador",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P1773"
+      ],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 26,
+      "expected_class_name": "Falla en bujias o bobinas de encendido (misfire)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_052",
+      "query": "la caja automatizada salta a neutro sola en marcha y sale averia de transmision",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 26,
+      "expected_class_name": "Falla en bujias o bobinas de encendido (misfire)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_053",
+      "query": "Circuito abierto en inyector número 3 DTC P0203, pulso de inyección ausente con punta lógica",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0203"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 27,
+      "expected_class_name": "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_054",
+      "query": "falla cilindro 3 y el mecanico comprobo que no le llega corriente al enchufe del inyector",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 27,
+      "expected_class_name": "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_055",
+      "query": "Presiones de baja y alta anómalas en A/C, clutch electromagnético no acopla al pulsar botón",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "B1010"
+      ],
+      "confusion_group": "AC",
+      "is_safety": false,
+      "expected_class_id": 28,
+      "expected_class_name": "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_057",
+      "query": "Luz DPF encendida, saturación de hollín sobre 85%, regeneración forzada bloqueada",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P2463"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 29,
+      "expected_class_name": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+      "expected_macro": "CLIMATIZACION"
+    },
+    {
+      "query_id": "BENCH_058",
+      "query": "en el tablero sale aviso de filtro de particulas diesel dpf tapado y no deja acelerar",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 29,
+      "expected_class_name": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+      "expected_macro": "CLIMATIZACION"
+    },
+    {
+      "query_id": "BENCH_059",
+      "query": "Módulo FSCM recalentado no envía modulación PWM a la bomba de tanque en vehículo Ford",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "U0109"
+      ],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": false,
+      "expected_class_id": 30,
+      "expected_class_name": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_060",
+      "query": "se apaga de la nada el auto y el modulo de control de la bomba de gasolina esta hirviendo",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": false,
+      "expected_class_id": 30,
+      "expected_class_name": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_061",
+      "query": "Al girar la llave se escucha un clac único metálico pero el motor de combustión no gira",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "STARTUP",
+      "is_safety": false,
+      "expected_class_id": 31,
+      "expected_class_name": "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_062",
+      "query": "le doy arranque hace clac en seco y no gira nada la bateria esta cargada carbones de marcha",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "STARTUP",
+      "is_safety": false,
+      "expected_class_id": 31,
+      "expected_class_name": "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_063",
+      "query": "Presión en riel excede especificación, combustible presente en manguera de vacío del regulador",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [
+        "P0172"
+      ],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": false,
+      "expected_class_id": 32,
+      "expected_class_name": "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_064",
+      "query": "el escape huele a gasolina cruda y saca bujias negras el regulador de presion esta roto",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": false,
+      "expected_class_id": 32,
+      "expected_class_name": "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_065",
+      "query": "Sensor de oxígeno Banco 1 Sensor 1 congelado en 0.9V mezcla excesivamente rica DTC P0131",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0131"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 33,
+      "expected_class_name": "Falla en regulador de presion de combustible o diafragma roto",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_066",
+      "query": "humo negro por el tubo de escape gasta mucho combustible sensor de oxigeno marcando mal",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 33,
+      "expected_class_name": "Falla en regulador de presion de combustible o diafragma roto",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_067",
+      "query": "Corte repentino de motor en caliente, señal de sensor CKP inductivo intermitente en osciloscopio",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0335"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 34,
+      "expected_class_name": "Falla en sensor de oxigeno o mezcla rica",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_068",
+      "query": "cuando calienta el motor se apaga de golpe y hasta que no enfria 20 minutos no vuelve a encender ckp",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 34,
+      "expected_class_name": "Falla en sensor de oxigeno o mezcla rica",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_070",
+      "query": "se prendio el foco amarillo de abs en el tablero y el scanner marca sensor de rueda roto",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "BRAKES",
+      "is_safety": false,
+      "expected_class_id": 35,
+      "expected_class_name": "Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_072",
+      "query": "el pedal de freno se puso durisimo como una tabla cuesta un mundo frenar el carro",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "BRAKES",
+      "is_safety": false,
+      "expected_class_id": 36,
+      "expected_class_name": "Falla en sensor de velocidad de rueda ABS",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_073",
+      "query": "Dificultad de arranque y relación estequiométrica errónea en sistema Bi-combustible etanol/gasolina",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0178"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 37,
+      "expected_class_name": "Falla en servofreno (booster) o linea de vacio",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_074",
+      "query": "carro bi combustible no reconoce mezcla de combustible y tose mucho al prender",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 37,
+      "expected_class_name": "Falla en servofreno (booster) o linea de vacio",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_075",
+      "query": "Código DTC P0442 fuga menor en sistema EVAP, válvula de purga de canister atascada abierta",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0442"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 38,
+      "expected_class_name": "Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_076",
+      "query": "olor fuerte a vapores de gasolina cerca del tanque y check engine prendido con valvula de purga",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 38,
+      "expected_class_name": "Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_077",
+      "query": "Transición brusca entre frenado regenerativo y fricción hidráulica en híbrido Toyota DTC C1203",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "C1203"
+      ],
+      "confusion_group": "EV_HV",
+      "is_safety": true,
+      "expected_class_id": 39,
+      "expected_class_name": "Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_078",
+      "query": "en el hibrido al frenar despacio da un jaloneo raro como si frenara en dos golpes regenerativo",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "EV_HV",
+      "is_safety": true,
+      "expected_class_id": 39,
+      "expected_class_name": "Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_079",
+      "query": "Desfase en árbol de levas de admisión VVT DTC P0011, solenoide OCV trabado con barniz de aceite",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0011"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 40,
+      "expected_class_name": "Falla en sistema de frenado regenerativo (EV / Hibridos)",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_080",
+      "query": "el motor cascabelea en bajas revoluciones y pierde fuerza falla en sistema vvt-i solenoide sucio",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 40,
+      "expected_class_name": "Falla en sistema de frenado regenerativo (EV / Hibridos)",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_081",
+      "query": "Temperatura de motor sube a zona roja en tráfico detenido, motoventilador no enciende en velocidad alta",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [
+        "P0217"
+      ],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 41,
+      "expected_class_name": "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_082",
+      "query": "el carro calienta y bota vapor cuando me paro en el trafico pero corriendo en pista baja temperatura",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 41,
+      "expected_class_name": "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_083",
+      "query": "Vehículo eléctrico no pasa a READY, código DTC P0A1B rendimiento de inversor de tracción IGBT",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0A1B"
+      ],
+      "confusion_group": "EV_HV",
+      "is_safety": true,
+      "expected_class_id": 42,
+      "expected_class_name": "Falla en termostato o motoventilador de radiador",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_084",
+      "query": "el carro hibrido o electrico no prende en ready y marca falla en el inversor de corriente",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "EV_HV",
+      "is_safety": true,
+      "expected_class_id": 42,
+      "expected_class_name": "Falla en termostato o motoventilador de radiador",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_085",
+      "query": "Zumbido agudo en caja automática, aceite ATF negro con olor a quemado y partículas metálicas",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 43,
+      "expected_class_name": "Fallo en inversor de corriente IGBT o motor electrico (EV)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_086",
+      "query": "la caja patea al meter d o r y el aceite salio negro requemado con olor a quemado",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 43,
+      "expected_class_name": "Fallo en inversor de corriente IGBT o motor electrico (EV)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_087",
+      "query": "Bomba eléctrica de refrigeración de electrónica de potencia inverter inoperativa DTC P0A93",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0A93"
+      ],
+      "confusion_group": "EV_HV",
+      "is_safety": true,
+      "expected_class_id": 44,
+      "expected_class_name": "Falta o degradacion de aceite de caja de cambios",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_088",
+      "query": "el deposito chico de enfriamiento del inversor hibrido no tiene turbulencia y recalienta",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "EV_HV",
+      "is_safety": true,
+      "expected_class_id": 44,
+      "expected_class_name": "Falta o degradacion de aceite de caja de cambios",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_089",
+      "query": "Silbido agudo tipo fuga de aire a presión bajo carga en turbo diésel, pérdida notable de empuje",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 45,
+      "expected_class_name": "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_090",
+      "query": "cuando acelero se oye un soplido fuerte como aire que se escapa por una manguera del turbo",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 45,
+      "expected_class_name": "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_091",
+      "query": "Charco de refrigerante verde bajo el parachoques delantero, fisura en tanque plástico de radiador",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 46,
+      "expected_class_name": "Fuga en mangueras de intercooler o turbocompresor danado",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_092",
+      "query": "bota agua verde por adelante y baja el nivel del deposito todas las semanas radiador picado",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 46,
+      "expected_class_name": "Fuga en mangueras de intercooler o turbocompresor danado",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_093",
+      "query": "Pedal de freno se va al fondo lentamente al mantenerlo pisado en detención en pendiente",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "BRAKES",
+      "is_safety": true,
+      "expected_class_id": 47,
+      "expected_class_name": "Fuga en mangueras de refrigerante o radiador picado",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_094",
+      "query": "piso el freno en una bajada y se va hundiendo despacito hasta el piso como esponjoso",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "BRAKES",
+      "is_safety": true,
+      "expected_class_id": 47,
+      "expected_class_name": "Fuga en mangueras de refrigerante o radiador picado",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_095",
+      "query": "Presión en riel diésel no alcanza 250 bar durante arranque en Hilux DTC P0087 riel Common Rail",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0087"
+      ],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": true,
+      "expected_class_id": 48,
+      "expected_class_name": "Fuga hidraulica o aire en el sistema de frenos",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_096",
+      "query": "camioneta petrolera toyota hilux demora un monton en arrancar common rail presion baja en riel",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": true,
+      "expected_class_id": 48,
+      "expected_class_name": "Fuga hidraulica o aire en el sistema de frenos",
+      "expected_macro": "FRENOS"
+    },
+    {
+      "query_id": "BENCH_097",
+      "query": "Consumo parásito de 350 mA en reposo con vehículo bloqueado, descarga de batería en 24 horas",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "STARTUP",
+      "is_safety": false,
+      "expected_class_id": 49,
+      "expected_class_name": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_098",
+      "query": "si dejo el carro parado dos dias amanece totalmente muerto sin nada de bateria fuga de corriente",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "STARTUP",
+      "is_safety": false,
+      "expected_class_id": 49,
+      "expected_class_name": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_099",
+      "query": "Pérdida de presión en manómetro de aire circuito primario de camión, silbido en racores de freno",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRUCK",
+      "is_safety": true,
+      "expected_class_id": 50,
+      "expected_class_name": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_100",
+      "query": "el camion pierde aire por las canerias de frenos en la noche descarga los tanques",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRUCK",
+      "is_safety": true,
+      "expected_class_id": 50,
+      "expected_class_name": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+      "expected_macro": "ELECTRICO"
+    },
+    {
+      "query_id": "BENCH_101",
+      "query": "Inyectores de gasolina con caudal disparejo en banco de pruebas, filtro de línea colmatado",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": false,
+      "expected_class_id": 51,
+      "expected_class_name": "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_102",
+      "query": "jalonea en alta y cuando acelero parece que se ahoga inyectores sucios o filtro tapado",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "COMBUSTIBLE",
+      "is_safety": false,
+      "expected_class_id": 51,
+      "expected_class_name": "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_103",
+      "query": "Chasquido clac-clac-clac continuo en rueda delantera al doblar el volante cerrado acelerando",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 52,
+      "expected_class_name": "Inyectores sucios o filtro de combustible obstruido",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_104",
+      "query": "suena un trac trac trac clarito en la llanta delantera cuando giro toda la curva acelerando palier",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 52,
+      "expected_class_name": "Inyectores sucios o filtro de combustible obstruido",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_105",
+      "query": "Brazos limpiaparabrisas no se mueven en ninguna velocidad, motor pluma no recibe alimentación",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 53,
+      "expected_class_name": "Juntas homocineticas o palieres danados",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_106",
+      "query": "prendo las plumas del parabrisas y no se mueven nada lloviendo y se quedaron paradas",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 53,
+      "expected_class_name": "Juntas homocineticas o palieres danados",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_107",
+      "query": "Vibración rítmica en la carrocería entre 90 y 110 km/h que desaparece al reducir velocidad",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 54,
+      "expected_class_name": "Limpiaparabrisas o motor pluma quemado",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_108",
+      "query": "a 100 por hora tiembla todo el piso y el asiento pero el timon esta quieto balanceo de llantas",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 54,
+      "expected_class_name": "Limpiaparabrisas o motor pluma quemado",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_109",
+      "query": "Compresión de cilindro 2 en 60 PSI, prueba de fugas indica escape de aire por la admisión",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 55,
+      "expected_class_name": "Llantas desbalanceadas o desalineadas",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_110",
+      "query": "mecanico midio compresion de motor y un cilindro no tiene nada de presion valvula doblada",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 55,
+      "expected_class_name": "Llantas desbalanceadas o desalineadas",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_111",
+      "query": "Zumbido continuo en caja de cambios mecánica que cambia de tono al acelerar y desacelerar",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 56,
+      "expected_class_name": "Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_112",
+      "query": "la caja manual tiene un zumbido como turbina en marcha rodamiento de caja o corona zumba",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 56,
+      "expected_class_name": "Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados",
+      "expected_macro": "MOTOR"
+    },
+    {
+      "query_id": "BENCH_113",
+      "query": "Ruido de arrastre en eje primario de transmisión manual en neutro que desaparece al pisar embrague",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 57,
+      "expected_class_name": "Rodajes de caja mecanica o diferencial gastados",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_114",
+      "query": "en neutro la caja hace un ruido ronco suelto y cuando piso el embrague se silencia eje de entrada",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 57,
+      "expected_class_name": "Rodajes de caja mecanica o diferencial gastados",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_115",
+      "query": "Zumbido tipo avión u oscilación sorda que aumenta en curvas hacia un lado específico de la rueda",
+      "language_type": "WORKSHOP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 58,
+      "expected_class_name": "Rodajes de transmision manual o eje primario gastados",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_116",
+      "query": "suena un zumbido feo en la rueda izquierda que aumenta mientras mas rapido voy como rodaje roto",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "VIBRATION",
+      "is_safety": false,
+      "expected_class_id": 58,
+      "expected_class_name": "Rodajes de transmision manual o eje primario gastados",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_117",
+      "query": "Aviso de sobrecalentamiento de transmisión CVT / DSG, patinamiento de variador DTC P0841",
+      "language_type": "TECHNICAL",
+      "has_dtc": true,
+      "dtc_codes": [
+        "P0841"
+      ],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 59,
+      "expected_class_name": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_118",
+      "query": "caja cvt se calienta en subidas de carretera pierde traccion solenoides o aceite degradado",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRANSMISSION",
+      "is_safety": false,
+      "expected_class_id": 59,
+      "expected_class_name": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+      "expected_macro": "SUSPENSION_CHASIS"
+    },
+    {
+      "query_id": "BENCH_119",
+      "query": "Válvula de freno o cartucho secador de aire APS saturado de aceite en sistema neumático de camión",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRUCK",
+      "is_safety": true,
+      "expected_class_id": 60,
+      "expected_class_name": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_120",
+      "query": "la valvula de descarga del camion escupe aceite con agua y los tanques de aire estan llenos de humedad",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "TRUCK",
+      "is_safety": true,
+      "expected_class_id": 60,
+      "expected_class_name": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+      "expected_macro": "TRANSMISION"
+    },
+    {
+      "query_id": "BENCH_121",
+      "query": "Falla vehicular en sistema CARROCERIA_NEUMATICA correspondiente a Válvula de freno de aire o secador APS obstruido (Camiones)",
+      "language_type": "TECHNICAL",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 61,
+      "expected_class_name": "Válvula de freno de aire o secador APS obstruido (Camiones)",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "query_id": "BENCH_122",
+      "query": "consulta de cliente en taller mecanico sobre problema de Válvula de freno de aire o secador APS obstruido (Camiones)",
+      "language_type": "COLLOQUIAL_WHATSAPP",
+      "has_dtc": false,
+      "dtc_codes": [],
+      "confusion_group": "NONE",
+      "is_safety": false,
+      "expected_class_id": 61,
+      "expected_class_name": "Válvula de freno de aire o secador APS obstruido (Camiones)",
+      "expected_macro": "CARROCERIA_NEUMATICA"
+    }
+  ]
+}

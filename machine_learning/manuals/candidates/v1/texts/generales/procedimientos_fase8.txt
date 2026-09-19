@@ -1,0 +1,537 @@
+=== PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO Y OSCILOGRAMA DE SENSORES CKP Y CMP (DTC P0335 / P0336 / P0340) ===
+
+Código de Falla Asociado: P0335, P0336, P0340
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+
+ADVERTENCIA DE SEGURIDAD CRÍTICA (CIRCUITO COMMON RAIL > 1,600 BAR):
+El riel y cañerías de inyección diésel operan a presiones extremas de hasta 1,600 a 2,200 bar.
+Riesgo grave de inyección subcutánea de combustible y corte tisular.
+NUNCA palpar cañerías ni buscar fugas con la mano mientras el motor esté en marcha o durante el arranque.
+Seguir estrictamente el procedimiento OEM del fabricante para la despresurización segura del circuito antes de desmontar cañerías.
+Síntomas: El motor gira con fuerza al dar arranque pero no enciende; se apaga súbitamente tras calentarse durante 15 a 20 minutos de marcha y vuelve a arrancar una vez frío.
+Instrucciones paso a paso:
+1. Conecte el osciloscopio automotriz en el pin de señal del sensor CKP y coloque la pinza de masa en tierra de motor.
+2. Dé arranque y verifique la forma de onda: si es sensor inductivo de 2 pines, compruebe amplitud pico a pico entre 0.8V y 3.5V AC con el diente faltante nítido; si es sensor Hall de 3 pines, compruebe onda cuadrada de 0V a 5V DC.
+3. Mida la resistencia interna de la bobina captadora en frío con multímetro: rango nominal de 850 a 1250 Ohmios. Si el valor es infinito o está abierto, sustituya el sensor.
+4. Si la falla solo ocurre en caliente, aplique calor moderado con pistola térmica (máx 90°C) al cuerpo del sensor mientras monitorea la resistencia: una apertura súbita o caída a 0V confirma corte por fatiga térmica.
+5. Inspeccione el entrehierro (air gap) entre la punta del sensor y la rueda fónica reluctora (tolerancia OEM: 0.5 a 1.2 mm).
+6. Verifique la ausencia de virutas metálicas adheridas al imán permanente del sensor y apriete el perno de fijación a 10 Nm.
+Tolerancias y especificaciones metrológicas OEM: Resistencia inductiva: 850 - 1250 Ohms a 20°C. Amplitud mínima en marcha de arranque: 0.8V pico a pico. Tensión de alimentación Hall: 5.0V ± 0.2V o 12.0V de batería. Entrehierro: 0.5 mm a 1.2 mm.
+
+=== PROCEDIMIENTO: PRUEBA DE ESTANQUEIDAD POR PRESIÓN/HUMO Y CONTROL DE VÁLVULA DE PURGA EVAP (DTC P0440 / P0442 / P0455) ===
+
+Código de Falla Asociado: P0440, P0442, P0455
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla, Hyundai Tucson, Kia Sportage, Nissan Sentra, Ford EcoSport, Honda Civic
+Gravedad: Media | Tiempo Estimado de Taller: 50 minutos
+Síntomas: Luz Check Engine encendida con códigos de fuga de vapor de combustible, olor a gasolina cerca del tanque o ralenti inestable tras repostar.
+Instrucciones paso a paso:
+1. Conecte el escáner y active el cierre de la válvula de ventilación del cánister (Canister Vent Valve) en el menú de pruebas activas.
+2. Conecte la máquina generadora de humo EVAP con gas inerte o aire a baja presión en el puerto de servicio verde con válvula Schrader inversa.
+3. Presurice el sistema a 1.0 psi (0.07 bar / 28 inH2O) con el manómetro de caudal; observe la esfera del flujómetro: debe descender a cero absoluto.
+4. Si la esfera no desciende, proyecte luz ultravioleta para detectar salida de humo en la tapa del tanque de combustible, racores del cánister de carbón activado o cañerías del chasis.
+5. Desmonte la válvula solenoide de purga EVAP en el múltiple de admisión; aplique vacío manual con bomba Mityvac (debe retener 15 inHg desenergizada sin fugas).
+6. Aplique 12V de batería a los terminales de la válvula de purga: debe conmutar abriendo el paso inmediatamente y emitir un chasquido limpio. Mida resistencia eléctrica nominal: 26 a 32 Ohmios.
+Tolerancias y especificaciones metrológicas OEM: Presión de prueba EVAP: 1.0 psi (0.07 bar). Flujo de fuga admisible: < 0.020 pulgadas para P0442; > 0.040 pulgadas para P0455. Resistencia solenoide purga: 26 a 32 Ohms a 20°C. Vacío de retención: 15 inHg.
+
+=== PROCEDIMIENTO: MEDICIÓN DE CONTRAPRESIÓN DE ESCAPE Y EFICIENCIA CATALÍTICA DE BANCADA (DTC P0420 / P0430) ===
+
+Código de Falla Asociado: P0420, P0430
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Elantra, Kia Cerato, Nissan Versa/Kicks, Honda CR-V, Changan CS35
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+
+ADVERTENCIA DE SEGURIDAD CRÍTICA (CIRCUITO COMMON RAIL > 1,600 BAR):
+El riel y cañerías de inyección diésel operan a presiones extremas de hasta 1,600 a 2,200 bar.
+Riesgo grave de inyección subcutánea de combustible y corte tisular.
+NUNCA palpar cañerías ni buscar fugas con la mano mientras el motor esté en marcha o durante el arranque.
+Seguir estrictamente el procedimiento OEM del fabricante para la despresurización segura del circuito antes de desmontar cañerías.
+Síntomas: Pérdida progresiva de potencia en pendientes o altas RPM, testigo Check Engine permanente, olor sulfuroso (huevo podrido) y calentamiento excesivo bajo la cabina.
+Instrucciones paso a paso:
+1. Conecte el escáner y grafique simultáneamente los voltajes de la Sonda Lambda Bancada 1 Sensor 1 (pre-catalizador) y Sensor 2 (post-catalizador) a 2500 RPM a temperatura de operación (85°C - 95°C).
+2. Evalúe la señal post-catalizador: si el Sensor 2 oscila rápidamente entre 0.1V y 0.9V al ritmo del Sensor 1, el monolito cerámico ha perdido su capacidad de almacenamiento de oxígeno (cerio degradado).
+3. En un catalizador eficiente, la señal del Sensor 2 debe mantenerse estable y plana entre 0.60V y 0.75V con el vehículo en velocidad de crucero sostenida.
+4. Para descartar obstrucción física o taponamiento por carbonilla/aceite, retire la sonda de oxígeno anterior (Sensor 1) y enrosque el manómetro de contrapresión de escape.
+5. Arranque el motor: la contrapresión en ralentí debe ser menor a 1.25 psi (0.08 bar).
+6. Acelere a 2500 RPM constantes: la contrapresión no debe superar 2.5 psi (0.17 bar). Mediciones superiores a 3.0 psi confirman rotura o fundición del sustrato cerámico.
+Tolerancias y especificaciones metrológicas OEM: Contrapresión en ralentí: < 1.25 psi (0.08 bar). Contrapresión a 2500 RPM: < 2.5 psi (0.17 bar). Voltaje sensor O2 post-cat nominal: 0.60V a 0.75V DC estable. Temperatura salida catalizador vs entrada: salida debe estar entre 25°C y 50°C más caliente que la entrada.
+
+=== PROCEDIMIENTO: MEDICIÓN DE PRESIÓN DE RIEL DE COMBUSTIBLE Y PRUEBA DE ESTANQUEIDAD DE REGULADOR DE PRESIÓN (DTC P0171 / P0172) ===
+
+Código de Falla Asociado: P0171, P0172
+Modelos Compatibles Frecuentes en Perú: Nissan Sentra/Versa, Toyota Corolla, Hyundai Accent, Volkswagen Gol/Vento, Chevrolet Aveo/Optra
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Arranque prolongado tras reposo, humo negro con bujías ahumadas o mezcla excesivamente pobre, olor intenso a gasolina en la manguera de vacío del múltiple.
+Instrucciones paso a paso:
+1. Conecte un manómetro de glicerina automotriz de 0-100 psi en el puerto Schrader del riel de inyectores con adaptador roscado.
+2. Ponga en contacto (IGN ON) y verifique la presión de cebado de la bomba de gasolina.
+3. Encienda el motor en ralentí: la presión de riel debe marcar entre 3.0 y 3.5 bar (43.5 a 50.8 psi) con la manguera de compensación de vacío conectada al múltiple.
+4. Desconecte la manguera de vacío del regulador de presión: la presión de riel debe subir instantáneamente entre 0.5 y 0.7 bar (alcanzando 3.8 a 4.2 bar / 55 a 61 psi). Si la presión no varía, el resorte o pistón del regulador está trabado.
+5. Inspeccione el interior de la manguera de vacío desconectada: si gotea combustible o huele a gasolina líquida, el diafragma elastomérico del regulador está perforado y succiona combustible directamente a la admisión.
+6. Realice la prueba de estanqueidad (leak-down): apague el motor y espere 10 minutos. La presión residual no debe caer por debajo de 2.0 bar (29 psi). Una caída rápida con diafragma sano indica válvula check de bomba o inyector goteando.
+Tolerancias y especificaciones metrológicas OEM: Presión ralentí con vacío: 3.0 a 3.5 bar (43.5 - 50.8 psi). Presión sin vacío: 3.8 a 4.2 bar (55.1 - 60.9 psi). Caída de presión residual máxima en 10 min: < 0.5 bar. Fuga en línea de vacío: 0 ml (absolutamente seca).
+
+=== PROCEDIMIENTO: COMPROBACIÓN DE CIRCUITO ELÉCTRICO, RESISTENCIA Y PULSO DE INYECTORES DE GASOLINA (DTC P0201 A P0208) ===
+
+Código de Falla Asociado: P0201, P0202, P0203, P0204
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Sentra, Chevrolet Onix/Sail, Ford Fiesta
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Fallo de cilindro permanente e inconfundible (misfire en cilindro específico), temblor violento del motor, código DTC de circuito abierto en inyector específico tras haber reemplazado bujías y bobinas.
+Instrucciones paso a paso:
+1. Desconecte el conector hembra del arnés eléctrico del inyector del cilindro reportado por el escáner.
+2. Mida con multímetro en escala de ohmios la resistencia entre los dos terminales del inyector: rango nominal a 20°C: 11.5 a 14.5 Ohmios para inyectores de alta impedancia (Saturados). Si marca circuito abierto (OL) o menor a 5 Ohms, sustituya el inyector.
+3. Conecte una lámpara de prueba Noid Light específica en el conector del arnés y dé arranque: la luz debe destellar con frecuencia regular.
+4. Si la luz no destella, mida tensión en el pin de alimentación del arnés con switch abierto: debe registrar voltaje de batería (12.4V a 12.8V provisto por relé EFI/Main).
+5. Conecte el canal del osciloscopio en el pin de control por masa de la ECU: verifique el tiempo de saturación (2.0 a 3.2 ms en ralentí) y el pico inductivo de descarga de la bobina (debe situarse entre 45V y 75V sin recorte ni fugas).
+6. Compruebe la continuidad del cable de pulso hacia el pin correspondiente de la ECU del motor para descartar falso contacto o cable cortado en el mazo del vano motor.
+Tolerancias y especificaciones metrológicas OEM: Resistencia de bobina del inyector: 11.5 a 14.5 Ohms a 20°C (alta impedancia) o 1.8 a 3.0 Ohms (baja impedancia con resistor). Pico de colapso inductivo en oscilograma: 45V a 75V DC. Tensión de alimentación: > 12.0V DC. Tiempo de inyección en ralentí caliente: 2.0 a 3.2 ms.
+
+=== PROCEDIMIENTO: PRUEBA METROLÓGICA DE COMPRESIÓN EN SECO/HÚMEDO Y DIAGNÓSTICO DE FUGA NEUMÁTICA DE CILINDROS (DTC P0300 A P0304) ===
+
+Código de Falla Asociado: P0300, P0301, P0302, P0303, P0304
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Etios, Hyundai Grand i10, Kia Picanto, Nissan Versa, Chevrolet Sail, Suzuki Celerio
+Gravedad: Crítica | Tiempo Estimado de Taller: 75 minutos
+Síntomas: Misfire persistente en un cilindro pese a tener bujía, bobina e inyector nuevos; ralentí irregular tipo 'cojeo', soplido de compresión por la admisión o escape y pérdida notable de potencia.
+Instrucciones paso a paso:
+1. Caliente el motor a temperatura normal de funcionamiento (85°C), desactive la bomba de combustible (retirando fusible/relé EFI) y retire todas las bujías.
+2. Enrosque el compresómetro con acople de rosca cónica en el cilindro 1, abra completamente la mariposa de aceleración (WOT) y dé marcha continua durante 4 a 5 ciclos de compresión.
+3. Repita la medición en todos los cilindros: el valor nominal debe situarse entre 150 y 190 psi en motores a gasolina. La variación máxima admisible entre el cilindro de mayor y menor presión es del 10% (máximo 15 psi).
+4. Si un cilindro marca compresión deficiente (< 120 psi), vierta 5 a 10 ml de aceite de motor limpio por el orificio de la bujía (prueba húmeda) y repita la medición.
+5. Análisis de la prueba húmeda: si la compresión sube significativamente (+30 a +50 psi), la causa es desgaste de anillos o rayado en la camisa del cilindro. Si la compresión permanece invariablemente baja, el defecto se localiza en válvulas pisadas, quemadas o empaque de culata.
+6. Ejecute la prueba de fuga de cilindro (Cylinder Leak-Down Test) a 90 psi con el pistón en Punto Muerto Superior (PMS) en fase de compresión: escuche el escape de aire en el tubo de escape (válvula de escape dañada), cuerpo de aceleración (válvula de admisión pisada/quemada) o tapón de aceite (anillos gastados).
+Tolerancias y especificaciones metrológicas OEM: Presión de compresión nominal: 150 a 190 psi (10.3 a 13.1 bar). Límite mínimo de servicio: 120 psi (8.3 bar). Desbalance máximo entre cilindros: 10% o 15 psi. Fuga en prueba Leak-Down admisible: < 15% (normal), 15-30% (desgaste moderado), > 40% (falla crítica estructural).
+
+=== PROCEDIMIENTO: REVISIÓN DE GUÍAS DESLIZANTES, PISTÓN AGARROTADO Y RETRACCIÓN HIDRÁULICA DE CÁLIPER DE FRENO ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent/Elantra, Kia Rio/Cerato, Nissan Versa/Sentra, Chery Tiggo 2, Changan Alsvin
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Rueda delantera o trasera excesivamente caliente con olor a ferodo quemado tras circular, el auto tira hacia un lado al rodar en línea recta o el consumo de combustible se eleva súbitamente.
+Instrucciones paso a paso:
+1. Eleve el vehículo y gire la rueda sospechosa con la mano: debe completar un mínimo de 3 a 4 vueltas libres sin resistencia de frenado parásito.
+2. Mida con pirómetro infrarrojo la temperatura en el centro de los discos de freno de ambos lados del mismo eje: una disparidad térmica mayor a 25°C confirma arrastre mecánico o hidráulico.
+3. Desmonte la rueda y retire los dos pernos guías pasadores de la mordaza de freno.
+4. Compruebe el deslizamiento manual de los pernos guías: deben deslizarse suavemente sin juego excesivo ni agarrotamiento por óxido. Si están pegados, límpielos a fondo con solvente y lubrique con grasa de silicona sintética para frenos (tolerante a 200°C).
+5. Inspeccione el guardapolvo de goma del pistón del cáliper: si presenta cortes, fisuras o humedad de líquido de frenos, el pistón acumula óxido en su falda cromada.
+6. Con la herramienta de retracción de pistones, empuje el pistón hacia adentro: la retracción debe ser continua y uniforme con un torque manual moderado (< 15 Nm). Si requiere esfuerzo excesivo o no retrocede, desarme el cáliper, pula el pistón o instale un kit de sellos y guardapolvos nuevos.
+Tolerancias y especificaciones metrológicas OEM: Diferencia de temperatura entre discos de un mismo eje: < 25°C tras prueba de carretera. Juego axial de pernos guías: 0.05 a 0.15 mm. Arrastre parásito: mínimo 3 giros completos libres de rueda al impulsarla manualmente. Torque pernos guías de cáliper: 25 a 35 Nm.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO ACÚSTICO DIFERENCIAL Y SUSTITUCIÓN DE COLLARÍN DE EMPUJE O CRAPODINA HIDRÁULICA DE EMBRAGUE ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Hilux/Yaris, Hyundai Accent/i10, Kia Rio/Picanto, Nissan Versa/Tiida, Chevrolet Sail, Suzuki Swift
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 180 minutos
+Síntomas: Chillido o zumbido metálico agudo que se produce ÚNICAMENTE al pisar el pedal de embrague para cambiar de marcha y desaparece por completo al soltar el pedal.
+Instrucciones paso a paso:
+1. Realice la prueba acústica diferencial en ralentí con el vehículo detenido en neutro:
+   a. Motor en marcha con pedal de embrague totalmente suelto: ausencia de chillido confirma que los rodajes del eje primario de la caja no son el origen primario del ruido agudo.
+   b. Pise lentamente el pedal de embrague: en el instante en que el collarín entra en contacto con el diafragma del plato de presión (punto de inicio de desenganche), el zumbido o chillido aparece de inmediato. Esto certifica desgaste y resecamiento de la pista de bolas del collarín o crapodina concéntrica.
+2. En cajas con crapodina hidráulica (CSC - Concentric Slave Cylinder), revise además la campana de embrague en su unión inferior con el motor: la presencia de gotas de líquido de frenos DOT 4 confirma fuga por el retén interno de la crapodina.
+3. Desmonte la caja de cambios desacoplando semiejes, palancas de cambio y soporte posterior de motor.
+4. Retire el collarín de empuje gastado de la horquilla o desmonte los 3 pernos de sujeción de la crapodina hidráulica en la pared frontal de la transmisión.
+5. Inspeccione las puntas del diafragma del plato de presión: si presentan surcos o desgaste por fricción excesiva con el collarín trabado, sustituya el kit completo de embrague (plato, disco y collarín).
+6. Aplique una capa microscópica de grasa de bisulfuro de molibdeno (MoS2) en la guía de deslizamiento de la campana y monte el rodamiento nuevo.
+Tolerancias y especificaciones metrológicas OEM: Prueba acústica: ruido presente exclusivamente con pedal pisado bajo carga axial. Desgaste en puntas de diafragma: < 0.5 mm de profundidad. Purga de crapodina hidráulica: libre de burbujas a 1.5 bar de presión. Par de apriete pernos crapodina: 10 a 12 Nm.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE RUIDO EN TREN DE ENGRANAJES, INSPECCIÓN DE IMÁN COLECTOR Y SUSTITUCIÓN DE RODAJES DE EJE PRIMARIO ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent/i10, Kia Rio, Nissan Sentra B13/Tiida, Volkswagen Gol, Chevrolet Aveo
+Gravedad: Alta | Tiempo Estimado de Taller: 240 minutos
+Síntomas: Zumbido continuo y sordo ('roce de rolinera') en la transmisión con el motor encendido en neutro que DESAPARECE instantáneamente al pisar el pedal de embrague hasta el fondo.
+Instrucciones paso a paso:
+1. Realice la prueba de desacople cinemático en taller: mantenga el motor encendido en neutro con pedal suelto y escuche el zumbido sordo proveniente de la carcasa de la caja.
+2. Pise a fondo el pedal de embrague y espere 3 segundos a que el eje primario de entrada se detenga: si el ruido desaparece de inmediato, la falla radica inequívocamente en los rodamientos de entrada/primario de la caja de cambios y no en el motor ni en el collarín.
+3. Drene el aceite de transmisión manual (valvolina 75W-90 o 80W-90) en un recipiente limpio e inspeccione el imán del tapón de drenaje.
+4. Compruebe la acumulación de virutas metálicas escamosas o lodo ferroso plateado: evidencia directa de fatiga por desprendimiento (spalling/pitting) en las pistas de rodadura y rodillos cónicos.
+5. Desmonte y abra las carcasas de la transmisión manual en banco de trabajo limpio.
+6. Inspeccione con reloj comparador el juego axial y radial de los rodamientos de bolas y rodillos cilíndricos del eje de entrada (máximo 0.03 mm).
+7. Extraiga los rodamientos desgastados con extractor de tres garras y prensa hidráulica; monte rodamientos nuevos calentando la pista interna a 80°C para calce suave sin golpes.
+8. Rellene con aceite de transmisión que cumpla rigurosamente la norma API GL-4 especificada por el fabricante.
+Tolerancias y especificaciones metrológicas OEM: Juego radial de rodamientos de eje primario: < 0.03 mm. Viscosidad de aceite: SAE 75W-85 o 75W-90 API GL-4 (evitar GL-5 en transmisiones con sincronizadores de bronce/latón). Par de apriete tapón de drenaje: 35 a 45 Nm.
+
+=== PROCEDIMIENTO: MEDICIÓN DE ALABEO CON RELOJ COMPARADOR Y REEMPLAZO DE RODAMIENTO DE MAZA DE RUEDA ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent/Elantra, Kia Rio/Sportage, Nissan Versa/Sentra, Honda Civic, Chevrolet Cruze
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Zumbido grave y progresivo tipo turbina o motor de avión ('whirring') que se incrementa proporcionalmente con la velocidad (> 40 km/h) y cambia de intensidad al tomar curvas o balancear el volante.
+Instrucciones paso a paso:
+1. Realice la prueba dinámica de transferencia de peso en carretera segura: al tomar una curva hacia la derecha, el peso carga la rueda izquierda; si el zumbido se amplifica bruscamente, el rodamiento defectuoso es el izquierdo (y viceversa).
+2. En el taller, levante el vehículo en el elevador con las 4 ruedas suspendidas. Arranque el motor, engrane marcha hasta 60 km/h y apague el motor dejando rodar en neutro.
+3. Utilice un estetoscopio de mecánico apoyado directamente en la mangueta de la suspensión cercana a la maza de cada rueda para identificar el sonido de aspereza y rodadura picada.
+4. Pruebe con la mano apoyada en el resorte de suspensión mientras gira la rueda libremente: se percibe una micro-vibración distintiva provocada por las pistas de bolas picadas.
+5. Retire la rueda, mordaza de freno y disco de freno para exponer la maza.
+6. Fije un reloj comparador centesimal magnético a la mangueta y apoye el palpador en la cara de acople de la maza de rueda: gire 360° y verifique que el alabeo axial no supere 0.03 mm y el juego radial sea inferior a 0.05 mm.
+7. Si la unidad es tipo rodamiento prensado (Gen 1/2), desmonte la mangueta y use prensa hidráulica con tubos guía exactos. Si es maza sellada completa de 4 pernos (Gen 3), retire los pernos y sustituya el conjunto apretando la tuerca central de espiga al torque especificado (180 a 240 Nm con chaveta de seguridad).
+Tolerancias y especificaciones metrológicas OEM: Alabeo axial máximo de maza: 0.03 mm (0.0012 in). Juego radial máximo de rodamiento: 0.05 mm. Torque tuerca de espiga de palier: 180 a 240 Nm según fabricante. Torque pernos de mangueta: 80 a 110 Nm.
+
+=== PROCEDIMIENTO: COMPROBACIÓN DE CAÍDA DE TENSIÓN EN TERMINALES 30/50, CONTACTOS DE SOLENOIDE Y LONGITUD DE CARBONES EN MOTOR DE ARRANQUE ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Hilux, Hyundai Accent/Tucson, Kia Rio/Sportage, Nissan Versa/Frontier, Chevrolet Sail, Suzuki Grand Vitara
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Al girar la llave de encendido a posición START, solo se escucha un fuerte 'clac' seco metálico en el vano motor pero el motor térmico no gira en lo absoluto; en ocasiones arranca tras darle golpes leves a la carcasa del arrancador.
+Instrucciones paso a paso:
+1. Conecte el multímetro en bornes de batería: compruebe voltaje de reposo (> 12.5V). Pida a un asistente girar la llave a START mientras monitorea el voltaje.
+2. Si la batería cae por debajo de 9.6V con luces del tablero atenuándose drásticamente, la batería está descargada o en cortocircuito interno. Si la batería se mantiene firme por encima de 12.0V y solo suena el 'clac' seco, la batería está sana y el defecto radica en el motor de arranque.
+3. Mida la caída de tensión en el terminal 50 del solenoide (señal de ignición START): debe registrar al menos 10.5V DC con la llave accionada. Si hay menos de 9.0V, revise el relé de arranque y el switch de encendido.
+4. Mida la caída de tensión en el cable positivo entre el borne (+) de la batería y el perno terminal 30 del solenoide durante el intento de arranque: no debe exceder 0.5V.
+5. Mida la caída de tensión por masa entre la carcasa del arrancador y el borne (-) de la batería: no debe exceder 0.2V.
+6. Si las tensiones 30 y 50 son correctas y hay un clac seco pero el inducido no gira, desmonte el arrancador y revise los contactos de fuerza de cobre del solenoide (fogueados/carbonizados) y la longitud de las escobillas/carbones (si la longitud es inferior a 7.0 mm o los resortes no tienen tensión, sustituya la placa portacarbones).
+Tolerancias y especificaciones metrológicas OEM: Tensión en terminal 50 durante START: > 10.5V DC. Caída de tensión máxima en cable positivo (+): 0.5V DC. Caída máxima en masa (-): 0.2V DC. Longitud límite de desgaste de carbones: 7.0 mm (mínimo de servicio, longitud nueva: 14.0 mm). Resistencia bobina de atracción solenoide: 0.3 a 0.5 Ohms; retención: 0.8 a 1.2 Ohms.
+
+=== PROCEDIMIENTO: MEDICIÓN DE CONSUMO PARÁSITO EN REPOSO MEDIANTE CAÍDA DE MILIVOLTIOS EN FUSIBLES Y AISLAMIENTO DE CIRCUITOS (DTC P0562) ===
+
+Código de Falla Asociado: P0562
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla/Rav4, Hyundai Santa Fe/Tucson, Kia Sorento, Nissan X-Trail, Ford Explorer, BMW Serie 3, Audi A4
+Gravedad: Alta | Tiempo Estimado de Taller: 75 minutos
+Síntomas: La batería amanece completamente descargada tras dejar el auto estacionado durante la noche o el fin de semana; el alternador y la batería nueva están comprobados pero la descarga nocturna persiste.
+Instrucciones paso a paso:
+1. Simule el cierre de todas las puertas, capó y maletero bloqueando manualmente los pestillos con un destornillador para que los interruptores de cortesía registren puertas cerradas.
+2. Cierre el vehículo con el telemando y espere de 20 a 30 minutos sin tocar ningún interruptor para que todas las computadoras (BCM, ECU, Gateway) entren en modo de reposo profundo (Sleep Mode).
+3. Conecte una pinza amperimétrica digital de precisión para corriente continua (rango miliamperios DC) en el cable negativo de la batería.
+4. Compruebe la corriente de fuga total en reposo: el valor nominal estandarizado para un vehículo moderno debe ser inferior a 0.050 A (50 mA). Mediciones superiores a 0.080 A confirman drenaje anómalo de batería.
+5. Para no despertar las computadoras desconectando fusibles, utilice la técnica de caída de milivoltios (mV): coloque las dos puntas finas del multímetro digital en los dos puertos de prueba expuestos en el lomo de cada fusible tipo cuchilla.
+6. Consulte la tabla estándar de resistencia de fusibles (Autodata/PowerProbe): cualquier lectura superior a 0.2 mV en un fusible de 10A o 15A revela circulación activa de corriente constante.
+7. Aísle el circuito consumidor (frecuentemente módulos de rastreo GPS aftermarket, amplificadores de audio, módulo Bluetooth colgado, o diodo de avalancha del alternador en fuga inversa hacia masa).
+Tolerancias y especificaciones metrológicas OEM: Consumo parásito admisible en reposo (Sleep Mode): < 50 mA (0.050 A). Límite de advertencia de taller: 50 a 80 mA. Fuga crítica inaceptable: > 100 mA (descarga una batería de 60Ah en 3 días). Tiempo de espera para reposo profundo de redes CAN: 20 a 40 minutos.
+
+=== PROCEDIMIENTO: INSPECCIÓN DE CÁMARA DOBLE COMBINADA MAXI-BRAKE, VÁLVULA DE RETENCIÓN Y RESORTE DE FRENOS DE AIRE (CAMIONES) ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Volvo FH/FM, Scania R/G, Mercedes-Benz Actros/Atego, Freightliner Cascadia/M2, Hino 500, Isuzu Forward
+Gravedad: Crítica | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Una rueda del eje de tracción permanece frenada o arrastrando con sobrecalentamiento del tambor; el camión no inicia la marcha o pierde presión de aire en el circuito del freno de estacionamiento de resorte.
+Instrucciones paso a paso:
+1. Estacione el camión en piso nivelado, coloque calzos de seguridad en las ruedas delanteras y arranque el motor hasta alcanzar la presión de corte del compresor (120 a 130 psi / 8.5 a 9.0 bar en ambos tanques de servicio).
+2. Libere la válvula manual de freno de mano de cabina (botón amarillo Push-Pull): debe enviar aire a mínimo 90 psi hacia la cámara de estacionamiento de resorte para comprimir el resorte helicoidal de potencia.
+3. Conecte un manómetro en el puerto de prueba de la cámara combinada Tipo 30/30 de la rueda con arrastre: compruebe que reciba al menos 90 psi constantes. Si la presión es baja, inspeccione la válvula moduladora de estacionamiento (válvula de control manual) y la válvula de escape rápido.
+4. Si la presión neumática es correcta (95-100 psi) pero la rueda sigue bloqueada, aplique solución jabonosa en el orificio de venteo y sellos del vástago de la cámara: la formación continua de burbujas evidencia rotura del diafragma interno del resorte de parqueo.
+5. Para mover el vehículo por emergencia de forma segura en taller, utilice el tornillo mecánico de destrabado (caging bolt) en la parte trasera de la cámara: enrosque con llave de 19mm hasta comprimir mecánicamente el resorte.
+6. ATENCIÓN: NUNCA intente abrir o desarmar la cámara del resorte de estacionamiento sin equipo especializado de seguridad debido al riesgo mortal por descompresión súbita del resorte. Sustituya la cámara de freno combinada completa.
+Tolerancias y especificaciones metrológicas OEM: Presión mínima de liberación de resorte Maxi-Brake: 90 psi (6.2 bar). Presión de trabajo estándar en tanques: 120 - 130 psi (8.3 - 9.0 bar). Carrera del actuador de freno (slack adjuster): 1.5 a 2.0 pulgadas (38 a 50 mm). Fuga neumática máxima en sistema completo: < 2.0 psi por minuto con pedal de servicio pisado.
+
+=== PROCEDIMIENTO: VERIFICACIÓN DE PRESIÓN HIDRÁULICA, JUEGO AXIAL DE CREMALLERA Y SUSTITUCIÓN DE RETENES DE DIRECCIÓN ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla/Hilux, Hyundai Accent/Tucson, Kia Sportage, Nissan Sentra, Chevrolet Sail, Ford Ranger
+Gravedad: Alta | Tiempo Estimado de Taller: 120 minutos
+Síntomas: Golpeteo seco o 'clonck' metálico al pasar por baches o adoquines, holgura excesiva en el volante, pérdida constante de líquido ATF de dirección asistida con fuelles de dirección inflados de aceite.
+Instrucciones paso a paso:
+1. Con el vehículo apoyado sobre sus ruedas en la fosa o elevador de 4 columnas, solicite a un asistente balancear el volante enérgica y rítmicamente 10° a cada lado.
+2. Sujete con la mano la barra de acoplamiento y el buje guía lateral de la cremallera: identifique si existe golpeteo radial o movimiento entre la barra dentada y la carcasa.
+3. Desmonte las abrazaderas de los fuelles guardapolvo de la cremallera: si derrama líquido de dirección hidráulica, los retenes radiales de alta presión de teflón y nitrilo han fallado por desgaste o picaduras en el vástago cromado.
+4. Verifique el tornillo de regulación de precarga del empujador de la cremallera: ajuste con llave hexagonal de 1/8 a 1/4 de vuelta para eliminar holgura sin causar dureza en el retorno automático del volante.
+5. En direcciones hidráulicas convencionales, conecte el manómetro de prueba de presión hidráulica (0-2000 psi) con llave de paso entre la bomba y la cremallera: compruebe la presión máxima con la dirección a tope (1000 a 1400 psi) durante máximo 5 segundos.
+6. Si la cremallera presenta surcos u holgura en los dientes centrales de mayor uso, monte cremallera rectificada o nueva y calibre la convergencia en alineadora láser a 0°00' ± 0°05'.
+Tolerancias y especificaciones metrológicas OEM: Presión de alivio en bomba hidráulica a tope de giro: 70 a 95 bar (1000 a 1400 psi). Juego axial admisible en vástago de cremallera: < 0.20 mm. Fuga en fuelles: 0 gotas de aceite (sellado hermético total). Par de precarga del tornillo ajustador: 10 Nm más retroceso de 25° a 30°.
+
+=== PROCEDIMIENTO: PRUEBA DE RETENCIÓN DE PRESIÓN EN BOMBA PRINCIPAL Y SANGRADO A PRESIÓN DE LÍQUIDO DE FRENOS DOT 4 (DTC C0040) ===
+
+Código de Falla Asociado: C0040
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Onix, Chery Tiggo 2
+Gravedad: Crítica | Tiempo Estimado de Taller: 50 minutos
+Síntomas: El pedal de freno se siente blando, esponjoso, se va lentamente hasta el piso al mantenerlo presionado en un semáforo o requiere 'bombear' para frenar eficazmente.
+Instrucciones paso a paso:
+1. Realice la prueba estática de retención del cilindro maestro (bomba de freno): encienda el motor, pise el pedal de freno con fuerza constante de aproximadamente 25 a 30 kg y manténgalo inmóvil durante 30 segundos.
+2. Si el pedal cede progresivamente hacia el fondo sin que existan fugas visibles exteriores en mangueras, racores ni cáliper, los sellos primario o secundario (copas de goma) del cilindro maestro sufren bypass interno de líquido.
+3. Inspeccione visualmente los 4 flexibles de freno de goma: busque deformaciones, ampollas ('huevos') o fisuras que expandan la manguera bajo presión hidráulica.
+4. Conecte un equipo de purga y sangrado neumático a presión regulado a 1.0 - 1.5 bar en la boca del depósito del cilindro maestro con líquido de frenos DOT 4 nuevo.
+5. Purgue en orden secuencial inverso al cilindro maestro abriendo los niples de purga con manguera transparente sumergida en frasco de recolección hasta observar líquido 100% libre de microburbujas y contaminantes.
+6. Si el vehículo cuenta con módulo ABS, realice el ciclo automatizado de purga electrónica con escáner para expulsar el aire atrapado en las válvulas solenoides de retorno del bloque hidráulico HCU.
+Tolerancias y especificaciones metrológicas OEM: Presión de sangrado presurizado: 1.0 a 1.5 bar (15 a 22 psi). Descenso de pedal en prueba de retención: 0 mm en 30 segundos continuos. Punto de ebullición húmedo mínimo DOT 4: > 155°C. Par de apriete niples de purga: 8 a 12 Nm.
+
+=== PROCEDIMIENTO: LIMPIEZA DE MARIPOSA ELECTRÓNICA, PRUEBA DE RESISTENCIA DEL MOTOR TPS/IAC Y REAPRENDIZAJE DE RALENTÍ (DTC P0505 / P0506 / P0507) ===
+
+Código de Falla Asociado: P0505, P0506, P0507
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Nissan Versa/Sentra, Hyundai Accent, Kia Rio, Suzuki Swift, Honda Fit
+Gravedad: Media | Tiempo Estimado de Taller: 40 minutos
+Síntomas: Ralentí inestable que oscila (sube y baja entre 500 y 1500 RPM), el motor se apaga súbitamente al frenar en semáforos o encender el aire acondicionado, aceleración lenta desde parado.
+Instrucciones paso a paso:
+1. Desconecte el borne negativo de la batería y retire el ducto de aire de admisión que conecta la caja del filtro con el cuerpo de aceleración.
+2. Desmonte los 4 pernos de sujeción del cuerpo de aceleración para retirarlo del múltiple de admisión sin forzar el plato de mariposa.
+3. Rocíe limpiador específico para cuerpos de aceleración (Throttle Body Cleaner) en una toalla de microfibra limpia y retire cuidadosamente la carbonilla aceitosa acumulada en el perímetro del venturi y bordes del obturador.
+4. En cuerpos de mariposa motorizada (Drive-by-Wire), mida con multímetro la resistencia de las pistas del sensor TPS dual (TPS 1 y TPS 2): verifique que la suma de voltajes de ambas pistas arroje 5.0V constantes en todo el recorrido sin saltos de tensión.
+5. Reemplace la junta O-ring de sellado con el múltiple de admisión y apriete los pernos en cruz a 10 Nm.
+6. Reconecte la batería y ejecute el procedimiento de reaprendizaje de ralentí (Idle Air Volume Learn) mediante escáner o procedimiento manual (ciclo IGN ON / OFF con pedal de acelerador según especificación OEM) hasta estabilizar el ralentí en 650 - 750 RPM con A/C apagado.
+Tolerancias y especificaciones metrológicas OEM: Ralentí nominal en caliente (85°C): 700 ± 50 RPM sin carga; 800 ± 50 RPM con A/C encendido. Voltaje TPS 1 en ralentí: 0.6V a 0.9V DC; TPS 2: 4.1V a 4.4V DC (Suma TPS 1 + TPS 2 = 5.0V ± 0.2V). Resistencia motor DC mariposa: 2.0 a 6.0 Ohms.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE FUGA EN SISTEMA DE ENFRIAMIENTO Y PRUEBA DE PRESIÓN DE RADIADOR Y MANGUERAS (DTC P0128) ===
+
+Código de Falla Asociado: P0128
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Aveo, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Nivel de refrigerante desciende constantemente en el depósito de expansión, charco verdoso/rosado bajo el radiador y temperatura que se eleva en tráfico.
+Instrucciones paso a paso:
+1. Con el motor frío, retire la tapa del radiador o del depósito presurizado.
+2. Instale el probador neumático de tapones y radiadores con el adaptador bayoneta/roscado.
+3. Bombee presión manual hasta 15 a 18 psi (1.0 a 1.2 bar, sin exceder el tarado de la tapa de fábrica).
+4. Observe el manómetro durante 10 minutos: una caída de más de 1 psi certifica fuga externa o interna.
+5. Proyecte lámpara ultravioleta o inspeccione visualmente el panel de aluminio del radiador, tanques plásticos laterales y abrazaderas de mangueras superior e inferior.
+6. Reemplace mangueras resecas o radiador picado, llene con refrigerante OAT/HOAT al 50% y purgue el aire en ralentí con calefacción encendida.
+Tolerancias y especificaciones metrológicas OEM: Presión de prueba de estanqueidad: 15 a 18 psi (1.0 a 1.2 bar). Caída admisible: < 0.5 psi en 10 min. Concentración de etilenglicol: 50/50 (punto de congelación -37°C / ebullición 108°C a 1 atm).
+
+=== PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DE CONSUMO DE ACEITE, ENDOSCOPÍA Y SUSTITUCIÓN DE RETENES DE VÁLVULA ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Elantra, Kia Cerato, Nissan Sentra, Chevrolet Cruze, Volkswagen Golf
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Humo azulado por el escape en aceleraciones bruscas o tras retenciones largas en bajada; consumo de aceite superior a 1 litro cada 1,500 km con bujías aceitadas.
+Instrucciones paso a paso:
+1. Realice la prueba de aceleración tras ralentí prolongado: deje el motor 5 minutos en ralentí y dé una acelerada a fondo a 3500 RPM. Una bocanada espesa de humo azul confirma paso de aceite por los retenes/sellos de guía de válvulas endurecidos.
+2. Introduzca una cámara endoscópica de taller por el orificio de la bujía para inspeccionar la cabeza del pistón y las paredes de los cilindros.
+3. Inspeccione las paredes del cilindro: la ausencia del bruñido cruzado helicoidal (honing) o la presencia de rayaduras longitudinales certifica desgaste de anillos raspadores de aceite.
+4. Mida la compresión en seco y húmedo para aislar desgaste de cilindro vs sellos superiores.
+5. Desmonte la tapa de balancines para acceder a los resortes de válvulas; con útil neumático de presión de aire en la bujía, comprima el resorte y sustituya los retenes de vástago de válvula de vitón sin desmontar la culata.
+6. Si el cilindro presenta ovalización superior a 0.05 mm, planifique rectificación y anillado de motor.
+Tolerancias y especificaciones metrológicas OEM: Consumo de aceite admisible OEM: < 0.3 L por cada 1,000 km. Ovalización máxima de cilindro: 0.05 mm. Espesor de retén de válvula: labio elástico sin cristalización ni fisuras térmicas.
+
+=== PROCEDIMIENTO: DESCARBONIZACIÓN QUÍMICA Y MECÁNICA DE VÁLVULAS DE ADMISIÓN EN MOTORES DE INYECCIÓN DIRECTA GDI / TSI ===
+
+Código de Falla Asociado: P0300
+Modelos Compatibles Frecuentes en Perú: Hyundai Tucson GDI, Kia Sportage GDI, Volkswagen Golf/Tiguan TSI, Ford Focus EcoBoost, Mazda CX-5 SkyActiv-G
+Gravedad: Alta | Tiempo Estimado de Taller: 150 minutos
+Síntomas: Tirones y titubeos en frío, ralentí tembloroso, códigos de misfire aleatorio (P0300) y pérdida de respuesta en aceleración baja/media.
+Instrucciones paso a paso:
+1. Desmonte el múltiple de admisión para exponer los puertos y las partes posteriores de las válvulas de admisión.
+2. Inspeccione visualmente o con endoscopio: la acumulación de costras gruesas de carbón aceitoso petrificado en los vástagos de válvulas confirma la patología típica GDI (falta de lavado de gasolina en admisión).
+3. Gire el cigüeñal manualmente hasta verificar que las válvulas de admisión del cilindro a limpiar estén completamente cerradas (fase de compresión).
+4. Aplique el proceso de microgranallado con cáscara de nuez triturada (Walnut Blasting) a 80 psi acoplando el adaptador de succión y aspiradora industrial en el puerto de admisión.
+5. Aspire meticulosamente todos los residuos de carbonilla y cáscara de nuez de la cavidad.
+6. Verifique con boroscopio que el vástago y asiento de válvula hayan recuperado el brillo metálico original.
+7. Repita la operación en los demás cilindros girando el motor secuencialmente, instale empaques nuevos de múltiple y borre códigos adaptativos de combustible.
+Tolerancias y especificaciones metrológicas OEM: Presión de granallado de cáscara de nuez: 70 a 90 psi (4.8 a 6.2 bar). Grano abrasivo: malla 18/24. Sellado hermético de válvula en prueba de solvente: 0 gotas filtradas hacia la cámara en 2 minutos.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE ACTUADOR ELECTRÓNICO DE TURBOALIMENTADOR Y CONTROL DE WASTEGATE VGT (DTC P0299 / P0234) ===
+
+Código de Falla Asociado: P0299, P0234
+Modelos Compatibles Frecuentes en Perú: Volkswagen Golf/Jetta TSI, Audi A3/A4 TFSI, Seat León TSI, BMW Serie 1/3 TwinPower, Mercedes-Benz A200 CGI
+Gravedad: Crítica | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Pérdida súbita de potencia con entrada en modo emergencia (Limp Mode), luz de EPC encendida y código P0299 (Baja Presión de Sobrealimentación / Underboost).
+Instrucciones paso a paso:
+1. Conecte el escáner y acceda al menú de adaptaciones del módulo del motor (Engine Control Module - 01).
+2. Ejecute la prueba de actuador electrónico de sobrealimentación (V465) monitoreando el voltaje del sensor de posición de la varilla wastegate.
+3. Verifique el voltaje del sensor con el actuador totalmente cerrado (límite inferior: 3.5V a 3.9V) y totalmente abierto (límite superior: 0.8V a 1.2V).
+4. Inspeccione físicamente el vástago de accionamiento y el eje de la compuerta wastegate en la caracola de escape: compruebe si existe juego radial u holgura por desgaste que impida el cierre hermético.
+5. Conecte una bomba manual de vacío/presión o verifique el movimiento motorizado: debe desplazarse sin puntos duros ni trabamientos en todo su recorrido de 12 mm.
+6. Si la varilla tiene juego o el motorreductor interno tiene engranajes plásticos desdentados, sustituya el servomotor del actuador o instale el kit de calibración de varilla wastegate y ejecute el aprendizaje de topes con escáner.
+Tolerancias y especificaciones metrológicas OEM: Voltaje de sensor de posición con wastegate cerrada: 3.50V a 3.90V DC. Voltaje con wastegate abierta: 0.90V a 1.20V DC. Carrera libre del actuador: 10 a 12 mm. Presión máxima de sobrealimentación nominal: 1.0 a 1.4 bar sobre presión barométrica.
+
+=== PROCEDIMIENTO: INSPECCIÓN DE CORREA DE DISTRIBUCIÓN BAÑADA EN ACEITE Y LIMPIEZA DE COLADOR DE BOMBA (FORD 1.0 DRAGON / GM ECOTEC) ===
+
+Código de Falla Asociado: P0016, P0524
+Modelos Compatibles Frecuentes en Perú: Ford EcoSport / Fiesta / Focus 1.0L EcoBoost (Dragon 3 cil), Chevrolet Onix / Tracker 1.0L / 1.2L Turbo
+Gravedad: Crítica | Tiempo Estimado de Taller: 180 minutos
+Síntomas: Testigo de presión de aceite encendido intermitentemente en caliente, ruido de golpeteo de taqués hidráulicos o aviso de falla en motor por desprendimiento de caucho.
+Instrucciones paso a paso:
+1. Retire el tapón de llenado de aceite del motor y con una linterna o herramienta de galga de espesor inspeccione el lomo de la correa bañada en aceite (Wet Belt).
+2. Compruebe si el lomo de la correa presenta deshilachado, hinchamiento o agrietamiento visible.
+3. Drene el aceite de motor y desmonte el cárter inferior de aceite.
+4. Inspeccione el colador o chupador de la bomba de aceite: la presencia de restos de hilachas y trozos de caucho desprendidos que obstruyen la malla confirma la degradación de la correa húmeda por uso de aceite incorrecto.
+5. Limpie a fondo el cárter, el colador de la bomba y la válvula de alivio de presión de aceite.
+6. Desmonte la distribución completa y sustituya la correa dentada húmeda, tensor y la correa de la bomba de aceite.
+7. Rellene estrictamente con el aceite sintético homologado por el fabricante con certificación específica contra hidrólisis de caucho (Ford WSS-M2C948-B o GM dexos1 Gen 3 SAE 0W-20 / 5W-20).
+Tolerancias y especificaciones metrológicas OEM: Ancho nominal de la correa húmeda: 16.0 mm (límite por hinchamiento: > 16.8 mm requiere reemplazo inmediato). Presión de aceite en ralentí caliente (85°C): > 1.3 bar (19 psi); a 2000 RPM: > 2.5 bar (36 psi). Especificación de aceite obligatoria: WSS-M2C948-B / dexos1 Gen 3.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DEL MÓDULO CONTROLADOR DE BOMBA DE COMBUSTIBLE FSCM / PEM (DTC P069E / U0109) ===
+
+Código de Falla Asociado: P069E, U0109
+Modelos Compatibles Frecuentes en Perú: Chevrolet Cruze, Malibu, Equinox, Ford Fusion, Escape, F-150, Lincoln MKZ
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: El motor no arranca o se apaga en marcha como si le faltara combustible; la bomba de gasolina en el tanque no recibe alimentación pese a que el relé principal está activo.
+Instrucciones paso a paso:
+1. Conecte el escáner y revise códigos en la pasarela de control: DTC P069E (Módulo de Control de Bomba solicitó Check Engine) o U0109 (Pérdida de Comunicación con FSCM).
+2. Localice físicamente el módulo FSCM/PEM (frecuentemente montado en el chasis trasero bajo el asiento o cerca del tanque expuesto a salpicaduras).
+3. Desconecte el arnés del FSCM e inspeccione los pines: busque corrosión verde, terminales quemados por exceso de amperaje o sulfatación en las líneas de masa.
+4. Mida la tensión de alimentación en el pin principal de batería (B+) del arnés con multímetro: debe medir > 12.4V.
+5. Conecte el osciloscopio en los cables de salida hacia la bomba de gasolina y dé marcha: verifique la señal PWM modulada por ancho de pulsos.
+6. Si el módulo no genera señal PWM de salida teniendo alimentación y red CAN operativas, o la carcasa de aluminio presenta grietas con ingreso de agua, sustituya el módulo FSCM y programe el VIN/calibración con escáner.
+Tolerancias y especificaciones metrológicas OEM: Tensión de alimentación B+ en FSCM: > 12.0V DC. Frecuencia señal PWM de salida: 100 a 250 Hz según marca. Ciclo de trabajo PWM nominal en ralentí: 35% a 50% (proporcional a presión objetivo de 3.5 bar). Resistencia de red CAN en pines 60 Ohms.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REGENERACIÓN DE FILTRO DE PARTÍCULAS DPF / FAP Y SISTEMA DE UREA ADBLUE DEF (DTC P2002 / P20EE) ===
+
+Código de Falla Asociado: P2002, P20EE
+Modelos Compatibles Frecuentes en Perú: Toyota Hilux 1GD/2GD, Ford Ranger 3.2 Puma, Volkswagen Amarok TDI, Nissan Navara, Isuzu D-Max
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Testigo de DPF parpadeando, aviso de bloqueo de arranque en X km por AdBlue, falta severa de fuerza y humo blanquecino/acre.
+Instrucciones paso a paso:
+1. Conecte el escáner y lea el valor de masa de hollín (Soot Mass) y masa de cenizas (Ash Mass) en gramos acumulados en el DPF.
+2. Revise la lectura del sensor de presión diferencial del DPF: en ralentí debe registrar entre 5 y 15 mbar (0.5 a 1.5 kPa); a 2500 RPM sin carga debe ser inferior a 60 mbar.
+3. Si la presión supera 100 mbar en ralentí, el panal cerámico de carburo de silicio está saturado de hollín.
+4. En sistemas SCR con urea AdBlue/DEF, retire el inyector dosificador de urea del tubo de escape e inspeccione la tobera: la cristalización blanca de sales de urea solidificada obstruye la pulverización.
+5. Limpie los cristales de urea con agua caliente desmineralizada (nunca usar solventes químicos que ataquen el inyector piezoeléctrico).
+6. Verifique la calidad y concentración del AdBlue con un refractómetro óptico automotriz (debe marcar exactamente 32.5% de concentración de urea pura).
+7. Ejecute el ciclo de regeneración forzada de DPF en taller estacionario garantizando temperatura de gases superior a 600°C hasta reducir la masa de hollín a < 5 gramos.
+Tolerancias y especificaciones metrológicas OEM: Presión diferencial DPF en ralentí: 5 a 15 mbar (0.5 a 1.5 kPa); límite máximo admisible saturado: 45 mbar. Concentración DEF / AdBlue: 32.5% ± 0.7% según norma ISO 22241. Masa de hollín tras regeneración: < 5 g.
+
+=== PROCEDIMIENTO: MEDICIÓN DE RETORNO DE INYECTORES Y CONTROL DE PRESIÓN COMMON RAIL DIESEL (DTC P0087 / P0088) ===
+
+Código de Falla Asociado: P0087, P0088
+Modelos Compatibles Frecuentes en Perú: Toyota Hilux/Hiace, Ford Ranger TDCi, Nissan Frontier YD25, Mitsubishi L200 DI-D, Isuzu D-Max, Fuso Canter
+Gravedad: Crítica | Tiempo Estimado de Taller: 75 minutos
+
+ADVERTENCIA DE SEGURIDAD CRITICA (CIRCUITO COMMON RAIL > 1,600 BAR):
+El riel y canerias de inyeccion diesel operan a presiones extremas de 1,600 a 2,200 bar.
+Riesgo grave de inyeccion subcutanea de combustible y corte tisular.
+NUNCA palpar canerias ni buscar fugas con la mano mientras el motor este en marcha o durante el arranque.
+Seguir estrictamente el procedimiento OEM del fabricante para la despresurizacion segura del circuito antes de desmontar canerias.
+Síntomas: El motor tarda mucho en arrancar en frío o caliente, se apaga súbitamente al acelerar a fondo bajo carga en subidas y registra DTC P0087 (Baja Presión de Riel).
+Instrucciones paso a paso:
+1. Conecte el escáner y grafique simultáneamente la Presión Deseada de Riel (Rail Pressure Target) vs Presión Real de Riel (Rail Pressure Actual).
+2. En marcha de arranque, la presión real debe alcanzar al menos 250 a 300 bar en menos de 2 segundos para que la ECU habilite la inyección.
+3. Si no alcanza 250 bar, realice la prueba de retorno de inyectores con probetas graduadas: desconecte las mangueras de retorno de los 4 inyectores y acople los tubos calibrados del kit de probetas.
+4. Dé marcha continua durante 15 segundos o mantenga el motor en ralentí durante 2 minutos: mida el volumen de diésel retornado por cada inyector.
+5. Tolerancia de retorno: el volumen de fuga por retorno no debe exceder 25 a 35 ml por inyector en 2 minutos. Si un inyector llena la probeta el doble que los demás, su válvula de control de retorno está erosionada, descargando la presión de riel al tanque.
+6. Inspeccione la válvula reguladora de succión (SCV) en la bomba de alta presión: verifique que la resistencia sea de 1.8 a 2.4 Ohmios y que no tenga limallas en su microfiltro de entrada.
+Tolerancias y especificaciones metrológicas OEM: Presión mínima de riel para arranque: 250 bar (3,600 psi). Presión máxima a plena carga: 1,600 a 2,000 bar. Retorno máximo admisible por inyector en 2 min: < 35 ml. Resistencia de válvula SCV: 1.8 a 2.4 Ohms a 20°C.
+
+=== PROCEDIMIENTO: CALIBRACIÓN Y RECONOCIMIENTO DE MEZCLA DE COMBUSTIBLE EN MOTORES FLEX / BI-COMBUSTIBLE (ETANOL/GASOLINA) ===
+
+Código de Falla Asociado: P0171, P0172
+Modelos Compatibles Frecuentes en Perú: Fiat Palio/Strada/Argo Flex, Volkswagen Gol/Fox TotalFlex, Chevrolet Onix/Prisma Flex, Renault Sandero Hi-Flex
+Gravedad: Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Dificultad severa de arranque matutino con temperaturas templadas/frías tras cambiar de tipo de combustible; ralentí inestable y consumo disparatado por estimación errónea de etanol (A/F descalibrado).
+Instrucciones paso a paso:
+1. Conecte el escáner y consulte en datos en vivo el parámetro de Relación A/F Aprendida (Air-Fuel Ratio) o Porcentaje Estimado de Etanol (Alcohol Content %).
+2. Evalúe el valor: si el tanque tiene gasolina pura (E22/E25 en Sudamérica), el valor A/F debe situarse entre 12.8 y 13.2; si tiene etanol hidratado puro (E100), debe marcar 9.0 a 9.2.
+3. Si el parámetro marca etanol alto (ej. 85%) teniendo gasolina en el tanque, la ECU inyectará 30% más combustible, ahogando el motor y generando fallas de arranque.
+4. En vehículos sin sensor físico de composición de combustible (Sonda Lambda Virtual AF), ejecute el procedimiento de Reset de Parámetros Autoadaptativos de Combustible (AF Reset) con el escáner.
+5. Seleccione manualmente el combustible real cargado en el menú de funciones especiales o fuerce el aprendizaje en carretera circulando 10 km a velocidad constante sin apagar el motor.
+6. Compruebe el funcionamiento del sistema de partida en frío (tanquecito auxiliar de gasolina o precalentadores de inyectores en el riel).
+Tolerancias y especificaciones metrológicas OEM: Relación estequiométrica Gasolina comercial: 13.0:1 a 13.5:1. Relación Etanol E100: 9.0:1. Resistencia de precalentadores de inyector Flex: 0.8 a 1.5 Ohms. Tiempo mínimo de rodaje para re-aprendizaje: 10 a 15 km continuos.
+
+=== PROCEDIMIENTO: INSPECCIÓN DE ESPESOR Y SUSTITUCIÓN DE PASTILLAS Y ZAPATAS DE FRENO (CHILLIDO / C0035) ===
+
+Código de Falla Asociado: C0035
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Onix, Suzuki Swift
+Gravedad: Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Chillido agudo metálico al frenar (indicador de desgaste mecánico rozando el disco), pedal de freno con mayor recorrido y disminución de espesor de fricción.
+Instrucciones paso a paso:
+1. Eleve el vehículo y desmonte las ruedas para acceder a las mordazas de freno.
+2. Mida con calibre de espesores de freno el material de fricción útil de las pastillas interiores y exteriores.
+3. Límite de servicio: si el espesor de la pastilla es menor o igual a 3.0 mm (o la lengüeta metálica avisadora roza el disco), sustituya inmediatamente el juego de pastillas.
+4. Retire los pernos de la mordaza, limpie el portapastillas con cepillo de alambre y Brake Cleaner.
+5. Aplique grasa de freno sintética en las guías metálicas de las placas antirruido (shims).
+6. Instale pastillas cerámicas o semimetálicas nuevas, purgue el exceso de líquido en el depósito y asiente las pastillas con 10 frenadas suaves de 50 a 10 km/h sin paradas bruscas.
+Tolerancias y especificaciones metrológicas OEM: Espesor nuevo de pastilla: 10.0 a 12.0 mm. Límite de desgaste crítico: 3.0 mm (mínimo absoluto de seguridad: 2.0 mm). Espesor mínimo de zapatas traseras: 1.5 mm. Par de apriete pernos de mordaza: 30 a 35 Nm.
+
+=== PROCEDIMIENTO: COMPROBACIÓN DE VACÍO, VÁLVULA CHECK Y RETENCIÓN DEL SERVOFRENO BOOSTER ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Hilux/Yaris, Hyundai Tucson/Accent, Kia Rio/Sportage, Nissan Sentra, Chevrolet Sail
+Gravedad: Crítica | Tiempo Estimado de Taller: 45 minutos
+Síntomas: El pedal de freno se siente extremadamente duro como una piedra, la distancia de frenado se duplica y al pisar el freno se escucha un soplido continuo de aire (chisteo) bajo el tablero.
+Instrucciones paso a paso:
+1. Realice la prueba funcional clásica de taller: con el motor apagado, pise el pedal de freno 4 a 5 veces para agotar el vacío residual (el pedal debe ponerse muy duro y subir de nivel).
+2. Mantenga el pedal pisado a fondo con fuerza constante y arranque el motor: el pedal debe ceder suavemente y bajar aproximadamente 1.5 a 2.5 cm. Si el pedal no baja nada, no hay asistencia de servofreno.
+3. Conecte un vacuómetro en la manguera de alimentación proveniente del múltiple de admisión o de la bomba de vacío mecánica (en motores diésel): la lectura debe registrar entre 18 y 22 inHg (pulgadas de mercurio) con el motor en ralentí.
+4. Retire la válvula check antirretorno de la manguera de vacío: sople por ambos extremos; debe permitir el paso en una sola dirección hacia el motor. Si pasa aire en ambos sentidos o está trabada, reemplácela.
+5. Realice la prueba de estanqueidad del diafragma: apague el motor y espere 5 minutos sin pisar el pedal; luego pise el pedal: debe disponer de al menos 2 frenadas suaves con asistencia antes de ponerse rígido.
+6. Si al pisar el pedal con motor encendido se escucha soplido continuo en los pedales y el motor tiende a apagarse o sube de RPM (ingreso de aire parásito), el diafragma interno del booster está roto; sustituya el servofreno completo.
+Tolerancias y especificaciones metrológicas OEM: Vacío nominal de motor en ralentí: 18 a 22 inHg (0.6 a 0.75 bar). Pérdida de vacío admisible del booster apagado: < 1.0 inHg en 5 minutos. Descenso de pedal al encender motor: 15 a 25 mm.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE FRENADO REGENERATIVO Y SERVOFRENO ELECTROHIDRÁULICO (EV / HÍBRIDOS) ===
+
+Código de Falla Asociado: C1256, C1345
+Modelos Compatibles Frecuentes en Perú: Toyota Prius, Corolla Hybrid, RAV4 Hybrid, Hyundai Ioniq, Kia Niro, Nissan Leaf, BYD Song Plus
+Gravedad: Crítica | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Testigo de freno regenerativo encendido, mensaje de advertencia en el cuadro digital, frenado áspero o transición discontinua entre la retención del motor eléctrico y el frenado por fricción.
+Instrucciones paso a paso:
+1. Conecte el escáner y revise códigos en el módulo de control de frenos (Skid Control ECU / Brake Actuator): verifique DTCs C1256 (Baja Presión en Acumulador) o C1345 (Falta de Aprendizaje de Válvula Lineal).
+2. Monitoree el sensor de presión del acumulador hidráulico de alta presión: el valor estándar debe mantenerse entre 14.5 y 18.0 MPa (145 a 180 bar).
+3. Al abrir la puerta del conductor con vehículo apagado, la bomba eléctrica de frenos debe encenderse durante 5 a 12 segundos para presurizar el acumulador; si la bomba opera continuamente cada 30 segundos, el acumulador tiene fuga interna de nitrógeno.
+4. Verifique la señal de los dos sensores de carrera del pedal de freno (Stroke Sensor 1 y Stroke Sensor 2): compruebe linealidad de 0.5V a 4.5V sin desfase entre ambos canales.
+5. Ejecute el procedimiento de aprendizaje de punto cero de la válvula solenoide lineal (Linear Valve Offset Calibration) y aprendizaje del sensor de carrera mediante el escáner.
+6. Compruebe la comunicación de par regenerativo entre la ECU de frenos y el inversor híbrido a través de la red CAN de chasis.
+Tolerancias y especificaciones metrológicas OEM: Presión estándar de acumulador de freno electrohidráulico: 14.5 a 18.0 MPa (145 a 180 bar). Tiempo de presurización de bomba eléctrica: 5 a 12 segundos. Tensión sensor de carrera en reposo: 0.8V a 1.2V; a fondo: 3.8V a 4.4V.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO HIDRÁULICO Y REEMPLAZO DE BOMBA Y BOMBÍN ESCLAVO DE EMBRAGUE ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Hilux, Hyundai Accent/Elantra, Kia Rio/Cerato, Nissan Tiida/Versa, Chevrolet Sail, Suzuki Grand Vitara
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: El pedal de embrague se queda pegado en el piso sin regresar o tiene juego muerto excesivo; resulta imposible engranar la primera marcha o reversa con el motor encendido.
+Instrucciones paso a paso:
+1. Inspeccione visualmente el nivel de líquido en el depósito compartido o independiente de embrague (DOT 3 / DOT 4).
+2. Revise el interior de la cabina bajo la pedalera: observe la varilla de empuje del cilindro maestro (bomba de embrague); si hay goteo aceitoso sobre la alfombra, los retenes primarios del émbolo han colapsado.
+3. Levante el capó e inspeccione el cilindro esclavo (bombín de embrague) montado en la carcasa de la caja de cambios: desplace el guardapolvo de goma; si derrama líquido, el retén del bombín está reventado.
+4. En bombines de embrague mecánicos exteriores, compruebe el desplazamiento de la horquilla al pisar el pedal: el recorrido lineal mínimo debe ser de 12 a 15 mm.
+5. Reemplace la bomba o bombín defectuoso y conecte el tubo hidráulico con arandelas de cobre nuevas.
+6. Purgue el circuito hidráulico con purgador de presión a 1.0 bar o mediante método de bombeo manual conectando manguera transparente sumergida en frasco con líquido hasta eliminar el 100% del aire.
+Tolerancias y especificaciones metrológicas OEM: Carrera mínima de empuje de horquilla de embrague: 12 a 15 mm. Recorrido muerto del pedal: 5 a 15 mm. Presión de purga recomendada: 1.0 bar (15 psi). Descenso de nivel admisible en 6 meses: 0 ml.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE SALUD (SOH), DELTA DE VOLTAJE Y RESISTENCIA DE BATERÍA DE ALTO VOLTAJE (EV / HÍBRIDOS - DTC P0A80) ===
+
+Código de Falla Asociado: P0A80, P0A7F
+Modelos Compatibles Frecuentes en Perú: Toyota Prius Gen 2/3/4, Camry Hybrid, RAV4 Hybrid, Lexus CT200h, Hyundai Ioniq Hybrid, Nissan Leaf
+Gravedad: Crítica | Tiempo Estimado de Taller: 120 minutos
+Síntomas: Testigo Check Hybrid System encendido, ventilador de batería soplando ruidosamente al máximo en el asiento posterior, la batería pasa de llena a vacía en cuestión de segundos en el tablero digital.
+Instrucciones paso a paso:
+1. ADVERTENCIA DE SEGURIDAD: Colóquese guantes dieléctricos certificados Clase 0 (1000V) y retire la clavija de servicio de alta tensión (Service Plug) antes de intervenir físicamente.
+2. Conecte el escáner y acceda a la ECU de Control de Batería de Tracción (Hybrid Battery Live Data).
+3. Monitoree los voltajes individuales de los 14 a 28 bloques de celdas (Cell Block Voltages) en ralentí y bajo aceleración forzada en modo D con freno pisado (Stall Test suave).
+4. Calcule la diferencia máxima de voltaje (Delta V) entre el bloque con mayor y menor tensión: en una batería sana el Delta V debe ser menor a 0.20V (0.10V ideal).
+5. Si el Delta V supera 0.30V o 0.40V de forma constante, la ECU activa el DTC P0A80 (Reemplazar Paquete de Batería Híbrida) debido a celdas NiMH/Li-ion desbalanceadas o con alta resistencia interna.
+6. Revise el conducto y el motor del ventilador de refrigeración de la batería: limpie el filtro antipelusas y la turbina de enfriamiento de pelos y polvo que provocan sobrecalentamiento térmico.
+7. Si se realiza balanceo en banco, ciclar cada módulo individual comprobando que la capacidad remanente supere el 70% de los 6500 mAh nominales.
+Tolerancias y especificaciones metrológicas OEM: Delta V máximo admisible entre bloques: < 0.20V DC en reposo; < 0.30V bajo carga. Estado de Salud (State of Health - SOH) mínimo admisible: > 70%. Resistencia interna de bloque: < 0.025 Ohms. Aislamiento chasis-alta tensión: > 500 MOhm a 500V DC.
+
+=== PROCEDIMIENTO: COMPROBACIÓN DE AISLAMIENTO, MÓDULO DE POTENCIA IGBT Y MOTOR GENERADOR ELÉCTRICO MG1/MG2 (EV / HÍBRIDOS) ===
+
+Código de Falla Asociado: P0A1B, P0A78
+Modelos Compatibles Frecuentes en Perú: Toyota Prius, RAV4 Hybrid, Hyundai Kona EV, Ioniq 5, Nissan Leaf, BYD Dolphin/Yuan Plus, Tesla Model 3
+Gravedad: Crítica | Tiempo Estimado de Taller: 120 minutos
+Síntomas: El vehículo no pasa a modo READY, mensaje de avería grave del sistema de propulsión eléctrica, olor a quemado electrónico en la unidad inversora y códigos de módulo de potencia IGBT.
+Instrucciones paso a paso:
+1. Desconecte la batería de 12V y retire el enchufe de servicio de alta tensión (Service Plug); espere 10 minutos para la descarga de los condensadores de filtrado del inversor.
+2. Con multímetro calibrado en DC 1000V, verifique tensión cero (0.0V) en los bornes de entrada del inversor.
+3. Realice la prueba de resistencia de aislamiento (Megóhmetro / Hipot Tester a 500V DC) entre cada fase (U, V, W) del motor generador eléctrico y la masa del chasis: el valor debe superar 100 Megohmios (infinito). Mediciones inferiores a 10 MOhm confirman cortocircuito en el bobinado estatórico.
+4. Mida con miliohmiómetro la resistencia entre fases U-V, V-W, W-U: deben ser idénticas con una variación menor al 2% (ej. 0.15 Ohms ± 0.003).
+5. Mida con multímetro en prueba de diodos la caída de tensión directa e inversa de los transistores de potencia IGBT del inversor: debe medir entre 0.35V y 0.45V en sentido directo y OL en sentido inverso.
+6. Si un transistor IGBT marca cortocircuito (0.00V en ambos sentidos), sustituya el módulo IPM (Intelligent Power Module) o el inversor completo.
+Tolerancias y especificaciones metrológicas OEM: Resistencia de aislamiento a masa: > 100 Megaohmios (a 500V DC). Desbalance de resistencia entre fases U, V, W: < 2%. Caída de tensión directa diodo flyback IGBT: 0.35V a 0.45V DC. Tensión residual de condensadores tras 10 min: 0.0V DC.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA ELÉCTRICA Y CIRCUITO DE REFRIGERACIÓN DE INVERSOR Y BATERÍA (EV / HÍBRIDOS) ===
+
+Código de Falla Asociado: P0A0D, P0C73
+Modelos Compatibles Frecuentes en Perú: Toyota Prius, Corolla Hybrid, Lexus CT200h, Hyundai Ioniq EV/Hybrid, Kia Niro, BYD Song Plus
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Alarma de sobrecalentamiento del sistema híbrido/EV en tablero, potencia reducida automáticamente para proteger el inversor y ausencia de turbulencia en el depósito de refrigerante del inversor.
+Instrucciones paso a paso:
+1. Encienda el vehículo en modo IG-ON o READY y retire la tapa del depósito de refrigerante específico del inversor (circuito independiente del motor de combustión).
+2. Observe el interior del depósito: debe apreciarse una turbulencia y remolino constante de líquido rosa/azul indicando que la bomba eléctrica de agua está recirculando activamente el caudal.
+3. Si el líquido está inmóvil como un espejo, la electrobomba de agua auxiliar del inversor está quemada o trabada.
+4. Mida con multímetro la tensión de alimentación en el conector de 3 pines de la electrobomba de agua: debe recibir 12V de ignición y tierra firme.
+5. Verifique la señal de retroalimentación de RPM del motor sin escobillas (Brushless) con osciloscopio: compruebe frecuencia proporcional a la orden de la ECU.
+6. Reemplace la bomba de agua del inversor, rellene con refrigerante premezclado de larga duración (Super Long Life Coolant) y realice el purgado con escáner activando la bomba en modo de servicio.
+Tolerancias y especificaciones metrológicas OEM: Temperatura máxima admisible del módulo IGBT en régimen continuo: < 65°C (alerta a > 80°C). Caudal mínimo de bomba eléctrica de inversor: 8 a 10 litros por minuto. Tensión de alimentación: 12.0V a 14.2V DC.
+
+=== PROCEDIMIENTO: REPARACIÓN, SINCRONIZACIÓN Y ALINEACIÓN DE MECANISMO DE CERRADURA Y PESTILLO DE PUERTA ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent/i10, Kia Rio/Picanto, Nissan Versa, Chevrolet Sail/Onix, Changan Alsvin, Chery Tiggo
+Gravedad: Baja-Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: La puerta del auto rebota al intentar cerrarla, requiere un portazo fuerte para trabar o la manija exterior se siente dura y no abre el seguro mecánico.
+Instrucciones paso a paso:
+1. Inspeccione la contraplaca o perno de cerradura (striker) fijado al pilar B o C de la carrocería: verifique si los pernos cónicos Torx están flojos o si el perno está desalineado hacia arriba o abajo.
+2. Compruebe las marcas de roce en la mandíbula plástica del trinquete de la cerradura: debe entrar centrado perfectamente en el eje del perno de impacto.
+3. Si el trinquete mecánico no retiene el perno en el segundo clic de seguridad, desmonte la cerradura de la puerta retirando los 3 tornillos Torx T30 del canto.
+4. Limpie la suciedad petrificada y polvo de tierra del trinquete con solvente desengrasante dieléctrico.
+5. Aplique lubricante blanco de litio o grasa sintética PTFE en todos los resortes de trinquete y levas basculantes.
+6. Regule la posición de la contraplaca aflojando los tornillos y desplazándola milimétricamente hasta lograr un cierre suave con un empuje de un solo dedo.
+Tolerancias y especificaciones metrológicas OEM: Alineación vertical y horizontal de contraplaca: centrado ± 1.0 mm. Esfuerzo de cierre de puerta: < 15 N (cierre suave con impulso manual leve). Par de apriete tornillos Torx T30 de cerradura: 10 a 14 Nm.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE VÁLVULA DE CUATRO VÍAS, SECADOR DE AIRE APS Y REGULADOR DE PRESIÓN NEUMÁTICO (CAMIONES) ===
+
+Código de Falla Asociado: Inspección Mecánica / Sin DTC Electrónico
+Modelos Compatibles Frecuentes en Perú: Volvo FH/FM, Scania Serie R/G, Mercedes-Benz Actros, Freightliner Cascadia, International ProStar, Hino 500
+Gravedad: Crítica | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Expulsión continua de agua emulsionada por la válvula de descarga del secador, calderines de aire llenos de condensación y tardanza excesiva (> 10 min) en cargar presión del circuito neumático.
+Instrucciones paso a paso:
+1. Con el camión detenido y calzado, abra las válvulas manuales de purga de drenaje de los calderines primario, secundario y húmedo.
+2. Si descarga agua abundante con restos de aceite, el cartucho desecante del secador de aire (Air Processing Unit - APU / APS) ha agotado su capacidad de absorción de zeolita.
+3. Conecte manómetros en los puertos de prueba de los circuitos 21, 22, 23 y 24 de la válvula de protección de cuatro vías (Four-Circuit Protection Valve).
+4. Arranque el motor y compruebe las presiones de apertura de cada circuito: los circuitos de frenos de servicio (21 y 22) deben priorizarse y abrir a 6.8 - 7.2 bar; el circuito de estacionamiento/remolque (23) y accesorios (24) deben abrir a 7.5 bar.
+5. Si un circuito no carga mientras los demás sí, desmonte la válvula de 4 vías y revise si hay diafragmas o resortes rotos o canales taponados por carbonilla del compresor.
+6. Desmonte el cartucho desecante del secador con llave de cadena, limpie el pistón de purga y la resistencia calefactora de 24V contra congelamiento, e instale un cartucho coalescente nuevo con junta tórica engrasada.
+Tolerancias y especificaciones metrológicas OEM: Presión de corte del regulador de aire: 12.0 a 12.5 bar (174 a 181 psi). Presión de regeneración: descarga de 0.5 bar. Humedad en calderines: 0 gotas de agua tras jornada de trabajo con secador operativo. Presión de apertura circuitos de servicio: 6.8 a 7.2 bar.

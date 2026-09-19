@@ -1,0 +1,7 @@
+ABLACION,DESCRIPCION,N_QUERIES,HIT_1_PCT,HIT_3_PCT,HIT_5_PCT,MRR,MACRO_ACC_PCT,DELTA_MRR_VS_BASE,INTERPRETACION_TECNICA
+A0_BASELINE,Baseline F8.3 original congelado,122,67.21,68.85,72.95,0.6884,83.61,+0.0000,Punto de partida canónico
+A1_METADATA,Corrección semántica de metadatos (10 procs),122,68.85,70.49,74.59,0.7048,83.61,+0.0164,"Elimina falsas atribuciones de VVT, A/C, EVAP, TPMS, DSG"
+A2_SCHEMA,Adopción de Schema V2 y Manifiesto Posicional,122,69.67,70.49,74.59,0.7093,83.61,+0.0209,Estandarización estructural sin cambio de texto
+A3_CONTENT,Inyección de contenido aprobado (Seguridad + A/C cualitativo),122,70.49,72.13,76.23,0.7216,83.61,+0.0332,Fortalece retrieval de A/C y seguridad pasiva
+A4_DTC,"Servicio relacional DTC_LOOKUP (18,805 códigos)",122,70.49,72.13,76.23,0.7216,83.61,+0.0332,Normalización y resolución exacta de DTCs
+A5_CANDIDATO_FINAL,RAG Candidato V1 Integrado,122,70.49,72.13,76.23,0.7216,83.61,+0.0332,Configuración completa del candidato
