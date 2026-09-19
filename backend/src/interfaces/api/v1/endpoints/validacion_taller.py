@@ -24,7 +24,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.application.services.validacion_taller import ServicioValidacionTaller, serializar_caso
+from src.application.services.validacion_taller import (
+    ServicioValidacionTaller,
+    calcular_detalles_campos_ficha2,
+    construir_datos_generales_vehiculo,
+    serializar_caso,
+)
 from src.config import settings
 from src.core.authorization import exigir_gestion_validacion, exigir_lectura_validacion
 from src.infrastructure.database.connection import database_configurada, obtener_engine
@@ -181,7 +186,10 @@ def _cargar_df_tracker() -> pd.DataFrame:
         return pd.DataFrame(
             columns=[
                 "item", "fase", "fecha", "placa", "placa_hash", "marca_modelo", "sintoma",
-                "falla_real", "chatbot_prediccion", "campos_completos",
+                "descripcion_sintoma", "vehiculo_anio", "vehiculo_kilometraje",
+                "vehiculo_combustible", "vehiculo_transmision",
+                "falla_real", "chatbot_prediccion", "sistema_afectado_probable",
+                "campos_completos", "cantidad_campos_completos", "detalles_campos",
                 "tiempo_diagnostico_minutos", "prediccion_correcta",
                 "taller_id", "mecanico_id", "metodo_confirmacion", "evidencia_ref"
             ]
@@ -223,6 +231,8 @@ def _filtrar_periodo(df: pd.DataFrame, periodo: tuple[date | None, date | None])
 @router.get("", summary="Listar registros del tracker experimental en taller (Aislamiento Multitenant)")
 async def listar_casos_validacion(
     fase: Optional[str] = Query(None, description="Filtrar por fase: Pre-test o Post-test"),
+    tipo_registro: Optional[str] = Query(None, description="Filtrar por tipo: DEVELOPMENT, REGRESSION, THESIS_PRETEST, THESIS_POSTTEST"),
+    estado_registro: Optional[str] = Query(None, description="Filtrar por estado: verificado o borrador"),
     marca: Optional[str] = Query(None, description="Filtrar por marca/modelo"),
     acierto: Optional[int] = Query(None, ge=0, le=1, description="1 acertados, 0 desacertados"),
     busqueda: Optional[str] = Query(None, description="Término de búsqueda libre"),
@@ -237,6 +247,8 @@ async def listar_casos_validacion(
             return await ServicioValidacionTaller(session).listar(
                 _uuid_claim(payload, "taller_id"),
                 fase=fase,
+                tipo_registro=tipo_registro,
+                estado_registro=estado_registro,
                 marca=marca,
                 acierto=acierto,
                 busqueda=busqueda,
@@ -254,6 +266,10 @@ async def listar_casos_validacion(
     # Aplicar filtros
     if fase:
         df = df[df["fase"].astype(str).str.lower() == fase.strip().lower()]
+    if tipo_registro and "tipo_registro" in df.columns:
+        df = df[df["tipo_registro"] == tipo_registro]
+    if estado_registro and "estado_registro" in df.columns:
+        df = df[df["estado_registro"] == estado_registro]
     if marca:
         df = df[df["marca_modelo"].astype(str).str.contains(marca.strip(), case=False, na=False)]
     if acierto is not None:
@@ -270,7 +286,7 @@ async def listar_casos_validacion(
         df = df[mask]
 
     total_filtrado = len(df)
-    df_pagina = df.sort_values(["fecha", "item"], kind="stable").iloc[skip : skip + limit]
+    df_pagina = df.sort_values(["fecha", "item"], ascending=False, kind="stable").iloc[skip : skip + limit]
 
     casos_lista = []
     for r in df_pagina.to_dict(orient="records"):
@@ -293,15 +309,25 @@ async def listar_casos_validacion(
                 placa_hash=p_hash,
                 marca_modelo=str(r.get("marca_modelo", "")),
                 sintoma=str(r.get("sintoma", "")),
+                descripcion_sintoma=str(r.get("descripcion_sintoma", "")) if pd.notna(r.get("descripcion_sintoma")) else None,
+                vehiculo_anio=int(r.get("vehiculo_anio")) if pd.notna(r.get("vehiculo_anio")) else None,
+                vehiculo_kilometraje=int(r.get("vehiculo_kilometraje")) if pd.notna(r.get("vehiculo_kilometraje")) else None,
+                vehiculo_combustible=str(r.get("vehiculo_combustible", "")) if pd.notna(r.get("vehiculo_combustible")) else None,
+                vehiculo_transmision=str(r.get("vehiculo_transmision", "")) if pd.notna(r.get("vehiculo_transmision")) else None,
                 falla_real=str(r.get("falla_real", "")),
                 chatbot_prediccion=str(r.get("chatbot_prediccion", "")),
-                campos_completos=int(r.get("campos_completos", 1)),
+                campos_completos=int(r.get("campos_completos")) if pd.notna(r.get("campos_completos")) else 1,
+                cantidad_campos_completos=int(r.get("cantidad_campos_completos")) if pd.notna(r.get("cantidad_campos_completos")) else (8 if (int(r.get("campos_completos")) if pd.notna(r.get("campos_completos")) else 1) else 0),
+                detalles_campos=r.get("detalles_campos") if isinstance(r.get("detalles_campos"), dict) else None,
                 tiempo_diagnostico_minutos=int(r.get("tiempo_diagnostico_minutos", 0)),
                 prediccion_correcta=int(r.get("prediccion_correcta", 0)),
                 taller_id=str(r.get("taller_id", taller_id_auth)),
                 mecanico_id=str(r.get("mecanico_id", payload.get("usuario_id", ""))),
                 metodo_confirmacion=str(r.get("metodo_confirmacion", "Inspección Visual")),
                 evidencia_ref=str(r.get("evidencia_ref", "")) if pd.notna(r.get("evidencia_ref")) else None,
+                tipo_registro=str(r.get("tipo_registro", "THESIS_POSTTEST")),
+                conversacion_id=str(r.get("conversacion_id", "")) if pd.notna(r.get("conversacion_id")) else None,
+                diagnostico_id=str(r.get("diagnostico_id", "")) if pd.notna(r.get("diagnostico_id")) else None,
             )
         )
 
@@ -479,6 +505,25 @@ async def registrar_caso_validacion(
                 mecanico_id = payload.get("usuario_id", payload.get("sub", ""))
 
                 enmascarada, p_hash = _pseudonimizar_placa(dto.placa)
+                sistema_probable = (dto.sistema_afectado_probable or dto.chatbot_prediccion).strip()
+                descripcion_sintoma = (dto.descripcion_sintoma or "").strip()
+                datos_generales_vehiculo = construir_datos_generales_vehiculo(
+                    marca_modelo=dto.marca_modelo,
+                    anio=dto.vehiculo_anio,
+                    kilometraje=dto.vehiculo_kilometraje,
+                    combustible=dto.vehiculo_combustible,
+                    transmision=dto.vehiculo_transmision,
+                )
+                campos_completos, cantidad_campos, detalles_campos = calcular_detalles_campos_ficha2(
+                    codigo_registro=siguiente_item,
+                    fecha_atencion=fecha_hoy,
+                    datos_generales_vehiculo=datos_generales_vehiculo,
+                    sintomas_reportados=dto.sintoma,
+                    descripcion_sintoma=descripcion_sintoma,
+                    sistema_afectado_probable=sistema_probable,
+                    diagnostico_confirmado=dto.falla_real,
+                    tiempo_atencion_minutos=dto.tiempo_diagnostico_minutos,
+                )
 
                 nuevo_registro = {
                     "item": siguiente_item,
@@ -488,9 +533,17 @@ async def registrar_caso_validacion(
                     "placa_hash": p_hash,
                     "marca_modelo": dto.marca_modelo.strip(),
                     "sintoma": dto.sintoma.strip(),
+                    "descripcion_sintoma": descripcion_sintoma,
+                    "vehiculo_anio": dto.vehiculo_anio,
+                    "vehiculo_kilometraje": dto.vehiculo_kilometraje,
+                    "vehiculo_combustible": (dto.vehiculo_combustible or "").strip(),
+                    "vehiculo_transmision": (dto.vehiculo_transmision or "").strip(),
                     "falla_real": dto.falla_real.strip(),
                     "chatbot_prediccion": dto.chatbot_prediccion.strip(),
-                    "campos_completos": dto.campos_completos,
+                    "sistema_afectado_probable": sistema_probable,
+                    "campos_completos": campos_completos,
+                    "cantidad_campos_completos": cantidad_campos,
+                    "detalles_campos": detalles_campos,
                     "tiempo_diagnostico_minutos": dto.tiempo_diagnostico_minutos,
                     "prediccion_correcta": dto.prediccion_correcta,
                     "taller_id": taller_id,
@@ -520,9 +573,17 @@ async def registrar_caso_validacion(
             placa_hash=p_hash,
             marca_modelo=dto.marca_modelo.strip(),
             sintoma=dto.sintoma.strip(),
+            descripcion_sintoma=descripcion_sintoma or None,
+            vehiculo_anio=dto.vehiculo_anio,
+            vehiculo_kilometraje=dto.vehiculo_kilometraje,
+            vehiculo_combustible=(dto.vehiculo_combustible or "").strip() or None,
+            vehiculo_transmision=(dto.vehiculo_transmision or "").strip() or None,
             falla_real=dto.falla_real.strip(),
             chatbot_prediccion=dto.chatbot_prediccion.strip(),
-            campos_completos=dto.campos_completos,
+            sistema_afectado_probable=sistema_probable,
+            campos_completos=campos_completos,
+            cantidad_campos_completos=cantidad_campos,
+            detalles_campos=detalles_campos,
             tiempo_diagnostico_minutos=dto.tiempo_diagnostico_minutos,
             prediccion_correcta=dto.prediccion_correcta,
             taller_id=taller_id,
@@ -632,10 +693,24 @@ async def exportar_fichas_anexo2_csv(
         "Placa_Enmascarada",
         "Marca_Modelo",
         "Sintoma_Reportado",
+        "Descripcion_Sintoma",
+        "Vehiculo_Anio",
+        "Vehiculo_Kilometraje",
+        "Vehiculo_Combustible",
+        "Vehiculo_Transmision",
         "Falla_Confirmada_Fisica",
         "Prediccion_Linear_SVM",
         "PPCF_Ficha1_Prediccion_Correcta",
         "PRDC_Ficha2_Campos_Completos",
+        "Ficha2_Cantidad_Campos_Completos",
+        "Ficha2_Campo1_Codigo_Registro",
+        "Ficha2_Campo2_Fecha_Atencion",
+        "Ficha2_Campo3_Datos_Generales_Vehiculo",
+        "Ficha2_Campo4_Sintomas_Reportados",
+        "Ficha2_Campo5_Descripcion_Sintoma",
+        "Ficha2_Campo6_Sistema_Afectado_Probable",
+        "Ficha2_Campo7_Diagnostico_Confirmado",
+        "Ficha2_Campo8_Tiempo_Atencion_Registrado",
         "TPRD_Ficha3_Tiempo_Minutos",
         "Ind1_Sintoma_Validado",
         "Ind2_Procesamiento_Validado",
@@ -650,6 +725,11 @@ async def exportar_fichas_anexo2_csv(
     writer.writerow(columnas_export)
 
     for r in registros:
+        detalles = r.get("detalles_campos") if isinstance(r.get("detalles_campos"), dict) else {}
+        def campo_completo(clave: str) -> str:
+            campo = detalles.get(clave) if isinstance(detalles.get(clave), dict) else {}
+            return "1" if campo.get("completo") else "0"
+
         fila = [
             _sanitizar_campo_csv(r.get("item", "")),
             _sanitizar_campo_csv(r.get("fase", "")),
@@ -657,10 +737,24 @@ async def exportar_fichas_anexo2_csv(
             _sanitizar_campo_csv(r.get("placa_enmascarada", "")),
             _sanitizar_campo_csv(r.get("marca_modelo", "")),
             _sanitizar_campo_csv(r.get("sintoma", "")),
+            _sanitizar_campo_csv(r.get("descripcion_sintoma", "")),
+            _sanitizar_campo_csv(r.get("vehiculo_anio", "")),
+            _sanitizar_campo_csv(r.get("vehiculo_kilometraje", "")),
+            _sanitizar_campo_csv(r.get("vehiculo_combustible", "")),
+            _sanitizar_campo_csv(r.get("vehiculo_transmision", "")),
             _sanitizar_campo_csv(r.get("falla_real", "")),
             _sanitizar_campo_csv(r.get("chatbot_prediccion", "")),
             _sanitizar_campo_csv(r.get("prediccion_correcta", 0)),
             _sanitizar_campo_csv(r.get("campos_completos", 0)),
+            _sanitizar_campo_csv(r.get("cantidad_campos_completos", 0)),
+            _sanitizar_campo_csv(campo_completo("campo_1")),
+            _sanitizar_campo_csv(campo_completo("campo_2")),
+            _sanitizar_campo_csv(campo_completo("campo_3")),
+            _sanitizar_campo_csv(campo_completo("campo_4")),
+            _sanitizar_campo_csv(campo_completo("campo_5")),
+            _sanitizar_campo_csv(campo_completo("campo_6")),
+            _sanitizar_campo_csv(campo_completo("campo_7")),
+            _sanitizar_campo_csv(campo_completo("campo_8")),
             _sanitizar_campo_csv(r.get("tiempo_diagnostico_minutos", 0)),
             _sanitizar_campo_csv(r.get("sintoma_registrado_correctamente", 0)),
             _sanitizar_campo_csv(r.get("procesamiento_validado", 0)),
@@ -679,4 +773,3 @@ async def exportar_fichas_anexo2_csv(
         media_type="text/csv",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
-

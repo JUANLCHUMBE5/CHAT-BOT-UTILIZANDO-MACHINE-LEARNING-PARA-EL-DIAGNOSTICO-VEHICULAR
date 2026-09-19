@@ -14,6 +14,8 @@ export async function getCasosValidacion(params?: {
   fecha_desde?: string;
   fecha_hasta?: string;
   fase?: string;
+  tipo_registro?: string;
+  estado_registro?: string;
   marca?: string;
   acierto?: number;
   busqueda?: string;
@@ -24,6 +26,8 @@ export async function getCasosValidacion(params?: {
   if (params?.fecha_desde) url.searchParams.set('fecha_desde', params.fecha_desde);
   if (params?.fecha_hasta) url.searchParams.set('fecha_hasta', params.fecha_hasta);
   if (params?.fase) url.searchParams.append('fase', params.fase);
+  if (params?.tipo_registro) url.searchParams.append('tipo_registro', params.tipo_registro);
+  if (params?.estado_registro) url.searchParams.append('estado_registro', params.estado_registro);
   if (params?.marca) url.searchParams.append('marca', params.marca);
   if (params?.acierto !== undefined) url.searchParams.append('acierto', String(params.acierto));
   if (params?.busqueda) url.searchParams.append('busqueda', params.busqueda);

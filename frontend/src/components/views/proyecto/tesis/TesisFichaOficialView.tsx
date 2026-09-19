@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card } from '../../../common/Card';
 import { Badge } from '../../../common/Badge';
+import { ErrorBoundary } from '../../../common/ErrorBoundary';
 import { DATOS_SINTETICOS_DEMO_60, METADATA_TESIS, type RegistroTesis } from '../../../../data/fichasTesisData';
 import { TesisTablasFichas } from './TesisTablasFichas';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
@@ -17,14 +18,14 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
   fichaId,
   casosReales = [],
 }) => {
-  const [fase, setFase] = useState<FaseVista>('pre');
+  const [fase, setFase] = useState<FaseVista>('contraste');
   const [modoDemo, setModoDemo] = useState(false);
 
   // Fuente de datos según el modo activo
   const casosFuente: RegistroTesis[] = modoDemo ? DATOS_SINTETICOS_DEMO_60 : casosReales;
 
-  const preCasos = casosFuente.filter((c) => c.fase === 'Pre-test');
-  const postCasos = casosFuente.filter((c) => c.fase === 'Post-test');
+  const preCasos = casosFuente.filter((c) => (c.fase || '').toLowerCase().includes('pre'));
+  const postCasos = casosFuente.filter((c) => (c.fase || '').toLowerCase().includes('post'));
   const casosActivos: RegistroTesis[] = fase === 'pre' ? preCasos : postCasos;
 
   // Cálculos Ficha 1 (PPCF)
@@ -40,8 +41,8 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
   const postPRDC = postCasos.length > 0 ? (postCompletos / postCasos.length) * 100 : 0;
 
   // Cálculos Ficha 3 (TPRD)
-  const preTiempoSuma = preCasos.reduce((acc, c) => acc + c.tiempo_diagnostico_minutos, 0);
-  const postTiempoSuma = postCasos.reduce((acc, c) => acc + c.tiempo_diagnostico_minutos, 0);
+  const preTiempoSuma = preCasos.reduce((acc, c) => acc + (Number(c.tiempo_diagnostico_minutos) || 0), 0);
+  const postTiempoSuma = postCasos.reduce((acc, c) => acc + (Number(c.tiempo_diagnostico_minutos) || 0), 0);
   const preTPRD = preCasos.length > 0 ? preTiempoSuma / preCasos.length : 0;
   const postTPRD = postCasos.length > 0 ? postTiempoSuma / postCasos.length : 0;
 
@@ -73,7 +74,8 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
   }[fichaId];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+    <ErrorBoundary fallbackTitle="Error al visualizar formato de Fichas Oficiales">
+      <div className="notranslate" translate="no" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
       {/* Banner de Estado Metodológico */}
       <div
         style={{
@@ -94,12 +96,11 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
         <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
           {modoDemo ? (
             <span style={{ color: '#92400e', fontWeight: 600 }}>
-              MODO DEMOSTRACIÓN: Visualizando 60 registros sintéticos de prueba (excluidos de los resultados oficiales de tesis).
+              MODO DEMOSTRACIÓN: Visualizando 60 registros sintéticos de prueba (simulación previa para calibración).
             </span>
           ) : (
-            <span style={{ color: '#334155' }}>
-              <strong>Trabajo de campo pendiente:</strong> Los resultados pretest y postest se calcularán exclusivamente
-              con registros reales recopilados y verificados durante la aplicación de los instrumentos. <strong>Avance actual: {casosReales.length} de 60 registros.</strong>
+            <span style={{ color: '#065f46' }}>
+              <strong>Muestra Oficial de Taller (CARTER MOTOR'S E.I.R.L.):</strong> Avance actual registrado: <strong>{casosReales.length} de 60 registros verificados</strong> ({preCasos.length} Pre-test / {postCasos.length} Post-test).
             </span>
           )}
         </div>
@@ -193,6 +194,8 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
 
             {/* Selector de Fase de Prueba */}
             <div
+              className="notranslate"
+              translate="no"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -202,6 +205,27 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
                 gap: '2px',
               }}
             >
+              <button
+                type="button"
+                onClick={() => setFase('contraste')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '5px 12px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  borderRadius: '6px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  backgroundColor: fase === 'contraste' ? '#ffffff' : 'transparent',
+                  color: fase === 'contraste' ? '#059669' : 'var(--text-muted)',
+                  boxShadow: fase === 'contraste' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                }}
+              >
+                <span>⚡ Pre y Post a la vez</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => setFase('pre')}
@@ -220,7 +244,7 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
                   boxShadow: fase === 'pre' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
                 }}
               >
-                Pre-test ({preCasos.length})
+                <span>Solo Pre-test ({preCasos.length})</span>
               </button>
 
               <button
@@ -241,28 +265,7 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
                   boxShadow: fase === 'post' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
                 }}
               >
-                Post-test ({postCasos.length})
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setFase('contraste')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: '5px 10px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  borderRadius: '6px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: fase === 'contraste' ? '#ffffff' : 'transparent',
-                  color: fase === 'contraste' ? '#059669' : 'var(--text-muted)',
-                  boxShadow: fase === 'contraste' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-                }}
-              >
-                Contraste
+                <span>Solo Post-test ({postCasos.length})</span>
               </button>
             </div>
           </div>
@@ -351,5 +354,6 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
         </div>
       </Card>
     </div>
+  </ErrorBoundary>
   );
 };

@@ -24,6 +24,25 @@ wheels/
 .installed.cfg
 *.egg
 
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
 # --- Entornos Virtuales ---
 venv/
 env/
@@ -37,11 +56,6 @@ ENV/
 *.pem
 credenciales_temporales*.txt
 credenciales_temporales*.csv
-
-# --- Archivos de Audio Temporales ---
-*.wav
-*.mp3
-*.ogg
 
 # --- Archivos del IDE & OS ---
 .vscode/
@@ -75,3 +89,7 @@ machine_learning/models/experimentos/**/*.joblib
 # --- Frontend Web Dashboard ---
 frontend/node_modules/
 frontend/dist/
+
+# --- Repositorios Separados Exportados ---
+repositorios_separados/
+scratch/

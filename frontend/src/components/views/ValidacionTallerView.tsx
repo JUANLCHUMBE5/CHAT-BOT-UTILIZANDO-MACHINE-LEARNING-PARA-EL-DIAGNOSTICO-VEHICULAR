@@ -32,6 +32,7 @@ export const ValidacionTallerView: React.FC = () => {
   const {
     metricas,
     casos,
+    casosVerificados,
     totalCasos,
     cargando,
     error,
@@ -59,7 +60,9 @@ export const ValidacionTallerView: React.FC = () => {
   } = useValidacionTaller();
 
   // Mapeo de casos reales desde la API a la interfaz de registros de tesis
-  const casosRealesTesis: RegistroTesis[] = casos.map((c) => ({
+  // Utiliza la lista completa de casos verificados (no solo la página de 10 de la tabla)
+  const fuenteCasosTesis = casosVerificados && casosVerificados.length > 0 ? casosVerificados : casos;
+  const casosRealesTesis: RegistroTesis[] = fuenteCasosTesis.map((c) => ({
     item: c.item,
     fase: c.fase === 'Pre-test' ? 'Pre-test' : 'Post-test',
     fecha: c.fecha,
@@ -76,7 +79,7 @@ export const ValidacionTallerView: React.FC = () => {
   const casosPretest = metricas?.casos_pretest ?? 0;
   const casosPosttest = metricas?.casos_posttest ?? 0;
   const tieneDatosAmbasFases = casosPretest > 0 && casosPosttest > 0;
-  const totalVerificados = metricas?.total_casos_verificados ?? metricas?.total_casos ?? 0;
+  const totalVerificados = metricas?.total_casos_verificados || metricas?.casos_verificados || metricas?.total_casos || casosRealesTesis.length || 0;
 
   const dataGraficaReal = tieneDatosAmbasFases && metricas ? [
     {

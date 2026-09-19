@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
   Calendar,
   CheckCircle2,
   Clock,
   FileText,
   RefreshCw,
-  Server,
   Zap,
-  RotateCw,
 } from 'lucide-react';
 import {
   Bar,
@@ -25,7 +23,6 @@ import { DateRangeModal } from '../common/DateRangeModal';
 import { StatCard } from '../common/StatCard';
 import type { ResumenMetricas } from '../../types';
 import { getModoLabel } from '../../utils/modos';
-import { apiService } from '../../services/api';
 
 interface DashboardViewProps {
   metricas: ResumenMetricas | null;
@@ -70,23 +67,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
 
-  // Estado de componentes de salud del sistema
-  const [salud, setSalud] = useState<{
-    status: 'ready' | 'not_ready' | 'offline' | 'checking';
-    componentes?: Record<string, unknown>;
-  }>({ status: 'checking' });
-  const [reintentando, setReintentando] = useState(false);
-  const [mensajeReintento, setMensajeReintento] = useState<string | null>(null);
-
-  const consultarSalud = useCallback(async () => {
-    const res = await apiService.getHealthReady();
-    setSalud({ status: res.status, componentes: res.componentes });
-  }, []);
-
-  useEffect(() => {
-    consultarSalud();
-  }, [consultarSalud]);
-
   const handleQuickRange = (preset: 'hoy' | '7dias' | 'esteMes') => {
     setActivePreset(preset);
     const hoy = new Date();
@@ -118,34 +98,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     setFechaInicio('');
     setFechaFin('');
     onFiltrarMetricas?.();
-  };
-
-  const handleReintentarTodosFallidos = async () => {
-    setReintentando(true);
-    setMensajeReintento(null);
-    try {
-      const fallidos = await apiService.getTrabajosFallidos(20);
-      if (!fallidos || fallidos.length === 0) {
-        setMensajeReintento('No hay consultas fallidas pendientes de reintentar.');
-      } else {
-        let exitos = 0;
-        for (const t of fallidos) {
-          try {
-            await apiService.reintentarTrabajoFallido(t.id);
-            exitos++;
-          } catch {
-            // continuar con los demás
-          }
-        }
-        setMensajeReintento(`${exitos} trabajo(s) reenviados a la cola de procesamiento.`);
-        onFiltrarMetricas?.(fechaInicio || undefined, fechaFin || undefined);
-      }
-    } catch {
-      setMensajeReintento('No se pudieron reintentar los trabajos.');
-    } finally {
-      setReintentando(false);
-      setTimeout(() => setMensajeReintento(null), 5000);
-    }
   };
 
   if (cargando && !metricas) {
@@ -222,90 +174,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         onApply={handleApplyCustomRange}
         onReset={handleResetFiltro}
       />
-
-      {/* Resumen operativo: estado general y cola en un solo bloque */}
-      <Card style={{ padding: '11px 14px', backgroundColor: '#ffffff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Server size={15} style={{ color: 'var(--primary)' }} />
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-main)' }}>
-              Estado de CarBot
-            </span>
-          </div>
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '4px',
-              fontSize: '10.5px',
-              fontWeight: 700,
-              padding: '2px 7px',
-              borderRadius: '9999px',
-              backgroundColor: salud.status === 'ready' ? '#dcfce7' : '#fee2e2',
-              color: salud.status === 'ready' ? '#15803d' : '#b91c1c',
-            }}
-          >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: salud.status === 'ready' ? '#16a34a' : '#dc2626' }} />
-            {salud.status === 'checking'
-              ? 'Verificando sistema'
-              : salud.status === 'ready'
-                ? 'Sistema operativo'
-                : 'Sistema con alertas'}
-          </span>
-        </div>
-
-        {metricas.colas && (
-          <div style={{ marginTop: '9px', paddingTop: '9px', borderTop: '1px solid var(--border-color)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-              <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                Cola: <strong>{metricas.colas.pendientes}</strong> pendientes
-              </span>
-              <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                <strong>{metricas.colas.procesando}</strong> procesando
-              </span>
-              <span style={{ fontSize: '11px', color: metricas.colas.fallidos ? '#dc2626' : 'var(--text-secondary)' }}>
-                <strong>{metricas.colas.fallidos}</strong> fallidos
-              </span>
-              {metricas.colas.espera_promedio_ms > 0 && (
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                  Espera: <strong>{formatTiempoPromedio(metricas.colas.espera_promedio_ms)}</strong>
-                </span>
-              )}
-            </div>
-
-            {metricas.colas.fallidos > 0 && (
-              <button
-                type="button"
-                onClick={handleReintentarTodosFallidos}
-                disabled={reintentando}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '4px 10px',
-                  backgroundColor: '#fee2e2',
-                  border: '1px solid #fca5a5',
-                  borderRadius: '5px',
-                  color: '#b91c1c',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                }}
-              >
-                <RotateCw size={12} className={reintentando ? 'animate-spin' : ''} />
-                <span>{reintentando ? 'Reintentando...' : 'Reintentar fallidos'}</span>
-              </button>
-            )}
-          </div>
-          {mensajeReintento && (
-            <div style={{ fontSize: '11px', color: 'var(--primary)', marginTop: '4px', fontWeight: 600 }}>
-              {mensajeReintento}
-            </div>
-          )}
-          </div>
-        )}
-      </Card>
 
       {/* 4 Stat Cards Operativas Reales (2x2 en móvil) */}
       <div className="stat-grid-mobile" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px' }}>

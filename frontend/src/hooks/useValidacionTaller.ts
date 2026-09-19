@@ -9,9 +9,15 @@ const vacio = (): CrearCasoValidacionDTO => ({
   placa: '',
   marca_modelo: '',
   sintoma: '',
+  descripcion_sintoma: '',
+  vehiculo_anio: undefined,
+  vehiculo_kilometraje: undefined,
+  vehiculo_combustible: '',
+  vehiculo_transmision: '',
   falla_real: '',
   chatbot_prediccion: '',
-  campos_completos: -1,
+  sistema_afectado_probable: '',
+  campos_completos: 1,
   tiempo_diagnostico_minutos: 0,
   prediccion_correcta: -1,
   metodo_confirmacion: 'Inspección Visual en Elevador',
@@ -26,6 +32,7 @@ const vacio = (): CrearCasoValidacionDTO => ({
 export const useValidacionTaller = () => {
   const [metricas, setMetricas] = useState<MetricasValidacionDTO | null>(null);
   const [casos, setCasos] = useState<CasoValidacionDTO[]>([]);
+  const [casosVerificados, setCasosVerificados] = useState<CasoValidacionDTO[]>([]);
   const [totalCasos, setTotalCasos] = useState(0);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -60,6 +67,24 @@ export const useValidacionTaller = () => {
     return () => { activo = false; clearTimeout(timer); };
   }, [filtros, periodo, revision]);
 
+  // Casos completos verificados de ambas fases para Fichas Anexo 2 (hasta 100 casos sin corte de paginación)
+  useEffect(() => {
+    let activo = true;
+    apiService.getCasosValidacion({ ...periodo, estado_registro: 'verificado', limit: 100 })
+      .then(res => {
+        if (activo) {
+          const tesis = (res.casos || []).filter(
+            c => c.tipo_registro === 'THESIS_PRETEST' || c.tipo_registro === 'THESIS_POSTTEST' || c.fase === 'Pre-test' || c.fase === 'Post-test'
+          );
+          setCasosVerificados(tesis);
+        }
+      })
+      .catch(() => {
+        if (activo) setCasosVerificados([]);
+      });
+    return () => { activo = false; };
+  }, [periodo, revision]);
+
   // Agregados del período completo; cambiar de página no vuelve a calcularlos.
   useEffect(() => {
     let activo = true;
@@ -72,7 +97,7 @@ export const useValidacionTaller = () => {
 
   const handleCrearCaso = async (e: FormEvent) => {
     e.preventDefault(); setError(null); setExitoMensaje(null);
-    if (nuevoCaso.campos_completos < 0 || nuevoCaso.prediccion_correcta < 0) {
+    if (nuevoCaso.prediccion_correcta < 0) {
       setError('Indica el resultado y si el registro está completo.'); return;
     }
     if (nuevoCaso.estado_registro === 'verificado') {
@@ -96,7 +121,7 @@ export const useValidacionTaller = () => {
     try { await apiService.descargarFichasAnexo2Csv(periodo); }
     catch (e) { setError(e instanceof Error ? e.message : 'No se pudo exportar el Anexo 2 oficial'); }
   };
-  return { metricas, casos, totalCasos, cargando, error: error || errorMetricas,
+  return { metricas, casos, casosVerificados, totalCasos, cargando, error: error || errorMetricas,
     faseFiltro: filtros.fase, setFaseFiltro: (fase: string) => setFiltros(f => ({ ...f, fase, pagina: 0 })),
     aciertoFiltro: filtros.acierto, setAciertoFiltro: (acierto: string) => setFiltros(f => ({ ...f, acierto, pagina: 0 })),
     busqueda: filtros.busqueda, setBusqueda: (busqueda: string) => setFiltros(f => ({ ...f, busqueda, pagina: 0 })),

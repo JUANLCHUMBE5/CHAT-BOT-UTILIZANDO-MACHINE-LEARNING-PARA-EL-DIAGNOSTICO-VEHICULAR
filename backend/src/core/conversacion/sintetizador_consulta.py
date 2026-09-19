@@ -58,7 +58,12 @@ class SintetizadorConsulta:
             if msg_base:
                 partes.append(msg_base)
 
-        # 3. Condición de operación
+        # 2b. Ubicación del síntoma
+        ubica = estado.obtener_valor_confirmado("ubicacion_sintoma")
+        if ubica:
+            partes.append(ubica)
+
+        # 3. Condición de operación / disparador
         condicion = estado.obtener_valor_confirmado("condicion_operacion")
         if condicion:
             if condicion.lower().startswith(("al ", "en ", "deja ", "cuando ")):
@@ -66,16 +71,43 @@ class SintetizadorConsulta:
             else:
                 partes.append(f"cuando está {condicion}")
 
+        # 3b. Condición de velocidad
+        vel = estado.obtener_valor_confirmado("condicion_velocidad")
+        if vel:
+            partes.append(vel)
+
+        # 3c. Comportamiento de arranque / giro motor
+        giro = estado.obtener_valor_confirmado("giro_motor")
+        if giro:
+            partes.append(f"el motor {giro}")
+
         # 4. Condición de temperatura
         if temp:
             partes.append(f"ocurre en {temp}")
 
-        # 5. Evolución y respuesta a acciones
+        # 5. Hechos negativos relevantes de polaridad clínica
+        falla_sin_freno = estado.obtener_hecho("falla_sin_frenar")
+        if falla_sin_freno and falla_sin_freno.estado == FactState.AUSENTE_NEGADO:
+            partes.append("sin frenar no vibra")
+        vib_pedal = estado.obtener_hecho("vibracion_pedal")
+        if vib_pedal and vib_pedal.estado == FactState.AUSENTE_NEGADO:
+            partes.append("en pedal casi no siente vibración")
+        vib_carroc = estado.obtener_hecho("vibracion_carroceria")
+        if vib_carroc and vib_carroc.estado == FactState.AUSENTE_NEGADO:
+            partes.append("resto del vehículo no vibra")
+        func_mot = estado.obtener_hecho("funcionamiento_motor")
+        if func_mot:
+            partes.append("una vez que logra encender el motor funciona normal")
+        testigo = estado.obtener_hecho("sintoma_testigo_check_engine")
+        if testigo and testigo.estado == FactState.AUSENTE_NEGADO:
+            partes.append("sin testigos de advertencia en el tablero")
+
+        # 6. Evolución y respuesta a acciones
         evol = estado.obtener_valor_confirmado("evolucion_accion")
         if evol:
             partes.append(evol)
 
-        # 6. Códigos DTC confirmados
+        # 7. Códigos DTC confirmados
         dtcs = [
             h.valor for h in estado.hechos.values()
             if h.categoria == "dtc" and h.estado == FactState.CONFIRMADO
@@ -83,7 +115,7 @@ class SintetizadorConsulta:
         if dtcs:
             partes.append(f"código de escáner {', '.join(dtcs)}")
 
-        # 7. Mediciones técnicas confirmadas
+        # 8. Mediciones técnicas confirmadas
         meds = [
             h.valor for h in estado.hechos.values()
             if h.categoria == "medicion" and h.estado == FactState.CONFIRMADO
@@ -91,7 +123,7 @@ class SintetizadorConsulta:
         if meds:
             partes.append(f"medición {', '.join(meds)}")
 
-        # 7.1 Modificadores ambientales o eléctricos
+        # 8.1 Modificadores ambientales o eléctricos
         mods = [
             h.valor for h in estado.hechos.values()
             if h.categoria == "modificador" and h.estado == FactState.CONFIRMADO
@@ -103,14 +135,21 @@ class SintetizadorConsulta:
             if mods:
                 partes.append(f"con {', '.join(mods)}")
 
-
-        # 8. Antecedentes y componentes descartados
+        # 9. Antecedentes y componentes descartados
         descartes = [
             h.valor for h in estado.hechos.values()
             if h.categoria in ("componente_descartado", "antecedente") and h.estado == FactState.CONFIRMADO
         ]
         if descartes:
             partes.append(f"antecedente: {', '.join(descartes)}")
+
+        # 10. Inspecciones pendientes reportadas
+        no_rev = [
+            h.valor for h in estado.hechos.values()
+            if h.estado == FactState.NO_REVISADO
+        ]
+        if no_rev:
+            partes.append(f"pendiente revisar: {', '.join(no_rev)}")
 
         # Si no hubo hechos estructurados, usar el último mensaje limpio como salvaguarda
         if not partes:

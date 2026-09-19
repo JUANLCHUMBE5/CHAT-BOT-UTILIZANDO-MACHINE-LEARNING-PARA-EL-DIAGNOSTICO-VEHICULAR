@@ -187,6 +187,8 @@ export class ApiService {
     fecha_desde?: string;
     fecha_hasta?: string;
     fase?: string;
+    tipo_registro?: string;
+    estado_registro?: string;
     marca?: string;
     acierto?: number;
     busqueda?: string;

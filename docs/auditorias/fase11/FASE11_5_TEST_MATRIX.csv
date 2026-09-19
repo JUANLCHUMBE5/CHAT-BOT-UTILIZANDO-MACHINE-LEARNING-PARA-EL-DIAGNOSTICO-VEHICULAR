@@ -1,0 +1,26 @@
+test_id,area,input,expected,actual,status,root_layer
+TM-11.5-01,ML_INTEGRITY,"vectorizador_c1.pkl SHA-256","060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7","060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",PASS,MACHINE_LEARNING
+TM-11.5-02,ML_INTEGRITY,"modelo_diagnostico_c1.pkl SHA-256","24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c","24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",PASS,MACHINE_LEARNING
+TM-11.5-03,ML_INTEGRITY,"modelo_sistema_c1_macrofix.pkl SHA-256","dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c","dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",PASS,MACHINE_LEARNING
+TM-11.5-04,RAG_INTEGRITY,"indice_faiss_v1.index SHA-256","a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40","a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",PASS,RAG_INDEX
+TM-11.5-05,RAG_INTEGRITY,"metadatos_manuales_v1.json SHA-256","8b4244713cfdc2f59af66b4e43bea8532196366ee5b53a98721e96ca6c781dbb","8b4244713cfdc2f59af66b4e43bea8532196366ee5b53a98721e96ca6c781dbb",PASS,RAG_METADATA
+TM-11.5-06,POLARIDAD,"cuando frena vibra el volante pero sin frenar no vibra",es_condicion_negada(frena)==False,False,PASS,CONVERSACION_POLARIDAD
+TM-11.5-07,POLARIDAD,"el pedal de freno no vibra en ningun momento",es_condicion_negada(pedal)==True,True,PASS,CONVERSACION_POLARIDAD
+TM-11.5-08,HECHOS_EXTRAIDOS,"Se siente principalmente en el volante. En el pedal casi no siento vibracion",volante=True AND pedal_vibra=False,volante=True AND pedal_vibra=False,PASS,CONVERSACION_EXTRACCION
+TM-11.5-09,SUFICIENCIA,"Caso B tras Turno 3 con localizacion y gatillo definidos",es_suficiente==True,True,PASS,CONVERSACION_SUFICIENCIA
+TM-11.5-10,SINTETIZADOR,"Caso B estado con volante solo al frenar a velocidad alta","sintoma: vibracion en volante solo al frenar...","sintoma: vibracion en volante solo al frenar...",PASS,CONVERSACION_SINTESIS
+TM-11.5-11,SEMANTIC_PURIFIER,"vibracion en volante solo al frenar a velocidad media sin frenar no vibra",Conserva terminos de freno y discos alabeados,Conserva terminos de freno y discos alabeados,PASS,DIAGNOSTICO_PURIFIER
+TM-11.5-12,C1_INFERENCE,"Caso B sintesis turno 3 al clasificador C1",Top 1 Discos de freno alabeados (>90%),Discos de freno alabeados (94.9%),PASS,MACHINE_LEARNING
+TM-11.5-13,AMBIGUITY_GUARD,"Consulta sintetizada por orquestador (orquestado=True)",No colapsar a Consulta Ambigua 0%,Prediccion ML C1 emitida con exito,PASS,DIAGNOSTICO_TEXT_PROCESSOR
+TM-11.5-14,DIRECTRICES_MEC,"COMBUSTIBLE_003 prueba sugerida",Inspeccion o medicion antes de desmontar/limpiar,"inspección visual de carbonilla en mariposa...",PASS,TAXONOMIA_DIRECTRICES
+TM-11.5-15,DIRECTRICES_MEC,"FRENO_001 prueba sugerida",Medicion metrologica con reloj comparador o micrometro,"medición con reloj comparador...",PASS,TAXONOMIA_DIRECTRICES
+TM-11.5-16,CASO_A_SINTESIS,"demora en encender por las mananas una vez que enciende motor funciona normal",Conserva demora encender y piezas pendientes,"demora bastante en encender... pendiente_revision:...",PASS,CONVERSACION_SINTESIS
+TM-11.5-17,THESIS_ISOLATION,"Dataset mixto (3 DEVELOPMENT, 2 PRETEST, 2 POSTTEST)",DEVELOPMENT excluido al 100% de resumen_por_fase,Pre-test=2 Post-test=2 Development=0,PASS,APPLICATION_VALIDACION
+TM-11.5-18,THESIS_METRICS,"Pre-test: 2 casos 1 acierto (50%), Post-test: 2 casos 2 aciertos (100%)",PPCF_pre=50.0% PPCF_post=100.0%,PPCF_pre=50.0% PPCF_post=100.0%,PASS,APPLICATION_VALIDACION
+TM-11.5-19,THESIS_METRICS,"Zero division handling en PPCF RDC TPRD con 0 registros",None o 0.0% sin excepcion matematica,0.0% sin excepciones en calculo,PASS,APPLICATION_VALIDACION
+TM-11.5-20,DATABASE_SCHEMA,"Alembic migration 20260919_01_separacion_fases_tesis",tipo_registro, conversacion_id, diagnostico_id agregados,Columnas y Check constraints aplicados en PostgreSQL,PASS,DATABASE_MIGRATION
+TM-11.5-21,API_ENDPOINTS,"GET /api/v1/validaciones-taller con filtro tipo_registro=THESIS_POSTTEST",Retorna solo registros de la fase indicada,Filtro aplicado y orden cronologico descendente respetado,PASS,INTERFACES_API
+TM-11.5-22,API_SECURITY,"GET /api/v1/validaciones-taller/exportar CSV injection attack",Sanitizacion de prefijos =, +, -, @,Prefijos neutralizados con comilla simple segura,PASS,INTERFACES_API
+TM-11.5-23,FRONTEND_BUILD,"npm run build en cliente React Vite",0 errores de TypeScript y empaquetado exitoso,Built in 776ms con 0 errores,PASS,FRONTEND_UI
+TM-11.5-24,FRONTEND_HARNESS,"npm run test:harness",100% de pruebas de integracion frontend pasando,Suites passing con 0 fallos,PASS,FRONTEND_HARNESS
+TM-11.5-25,WORKER_RUNTIME,"Reinicio de worker en segundo plano (PID 7092)",APP_VERSION=11.5.0 ORCHESTRATOR_VERSION=11.5.0,Daemon activo ejecutando codigo actualizado,PASS,APPLICATION_JOBS

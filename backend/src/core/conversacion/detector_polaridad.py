@@ -147,12 +147,26 @@ class DetectorPolaridad:
 
     @staticmethod
     def es_condicion_negada(condicion_regex: str, texto: str) -> bool:
-        """Determina si la condición aparece subordinada inmediatamente a una negación."""
+        """Determina si TODAS las apariciones de la condición están negadas.
+
+        Si existe al menos una aparición positiva y no negada (por ejemplo 'cuando frena el carro vibra'),
+        la condición NO se considera negada, aun si concurre con una cláusula como 'sin frenar no vibra'.
+        """
+        hay_positiva = False
+        hay_negada = False
         for m in re.finditer(condicion_regex, texto, re.IGNORECASE):
-            resto = texto[m.end():]
-            if re.match(r"^\s*,?\s*no\b", resto, re.IGNORECASE):
-                return True
-        return False
+            inicio = m.start()
+            fin = m.end()
+            pre = texto[max(0, inicio - 6):inicio].lower()
+            resto = texto[fin:]
+            if "sin " in pre or re.match(r"^\s*,?\s*no\b", resto, re.IGNORECASE):
+                hay_negada = True
+            else:
+                hay_positiva = True
+
+        if hay_positiva:
+            return False
+        return hay_negada
 
     @classmethod
     def extraer_sintomas(cls, texto: str) -> List[Tuple[str, str, FactState]]:

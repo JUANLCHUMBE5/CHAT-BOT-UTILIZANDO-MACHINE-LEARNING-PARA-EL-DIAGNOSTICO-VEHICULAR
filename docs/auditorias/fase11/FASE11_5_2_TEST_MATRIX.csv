@@ -1,0 +1,19 @@
+test_id,area,input,expected,actual,status,root_layer
+F11_5_2_001,Migracion,Alembic upgrade head,Revision 20260919_03 aplicada,carbot_db y carbot_test en 20260919_03,PASS,Database
+F11_5_2_002,Schema,information_schema validaciones_taller,8 columnas nuevas/trazabilidad presentes,columnas presentes en PostgreSQL,PASS,Database
+F11_5_2_003,Ficha2,8 campos completos,cantidad=8 campos_completos=1,cantidad=8 campos_completos=1,PASS,Service
+F11_5_2_004,Ficha2,7 campos completos,cantidad=7 campos_completos=0,cantidad=7 campos_completos=0,PASS,Service
+F11_5_2_005,Ficha2,1 campo completo,cantidad=1 campos_completos=0,cantidad=1 campos_completos=0,PASS,Service
+F11_5_2_006,Ficha2,0 campos completos,cantidad=0 campos_completos=0,cantidad=0 campos_completos=0,PASS,Service
+F11_5_2_007,Ficha2,"sintoma presente, descripcion vacia",campo4=true campo5=false,campo4=true campo5=false,PASS,Service
+F11_5_2_008,Ficha2,datos vehiculo sin anio,campo3=false,campo3=false,PASS,Service
+F11_5_2_009,Persistencia,caso DEVELOPMENT PRE-SIM-001,guardar y recuperar columna por columna,PostgreSQL y GET service coinciden,PASS,Repository
+F11_5_2_010,Aislamiento,caso DEVELOPMENT verificado,no cambia metricas oficiales,total oficial=0 en taller temporal,PASS,Service
+F11_5_2_011,Ficha1 PPCF,"PRE 4/2 correctos, POST 4/3 correctos",50.00 y 75.00,50.00 y 75.00,PASS,Service
+F11_5_2_012,Ficha2 RDC,"PRE 4/2 completos, POST 4/3 completos",50.00 y 75.00,50.00 y 75.00,PASS,Service
+F11_5_2_013,Ficha3 TPRD,"PRE 20 30 40 50, POST 10 15 20 15",35.00 y 15.00,35.00 y 15.00,PASS,Service
+F11_5_2_014,CSV,recalculo desde CSV fixtures,PPCF/RDC/TPRD reconstruibles,valores coinciden,PASS,Export
+F11_5_2_015,CSV Security,"=,+,-,@",prefijo apostrofe,prefijo apostrofe,PASS,Export
+F11_5_2_016,ML/RAG Hashes,5 artefactos congelados,SHA-256 MATCH,5/5 MATCH,PASS,Artifacts
+F11_5_2_017,Frontend,npm run verify,lint build harness OK,OK,PASS,Frontend
+F11_5_2_018,Advertencia muestra,consulta tipo_registro THESIS_*,no modificar automaticamente,1930 THESIS_POSTTEST borrador existentes reportados,WARN,Database

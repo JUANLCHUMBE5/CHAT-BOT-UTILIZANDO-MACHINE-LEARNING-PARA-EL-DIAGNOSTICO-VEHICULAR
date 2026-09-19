@@ -74,6 +74,58 @@ export const ValidacionNuevoCasoModal: React.FC<ValidacionNuevoCasoModalProps> =
           />
         </div>
 
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Año del vehículo *
+            </label>
+            <Input
+              type="number"
+              min={1950}
+              max={2100}
+              placeholder="Ej. 2020"
+              value={nuevoCaso.vehiculo_anio ? String(nuevoCaso.vehiculo_anio) : ''}
+              required
+              onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, vehiculo_anio: e.target.value ? Number(e.target.value) : undefined }))}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Kilometraje aproximado *
+            </label>
+            <Input
+              type="number"
+              min={0}
+              placeholder="Ej. 85000"
+              value={nuevoCaso.vehiculo_kilometraje !== undefined ? String(nuevoCaso.vehiculo_kilometraje) : ''}
+              required
+              onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, vehiculo_kilometraje: e.target.value ? Number(e.target.value) : undefined }))}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Tipo de combustible *
+            </label>
+            <Input
+              placeholder="Ej. Gasolina / GLP / GNV"
+              value={nuevoCaso.vehiculo_combustible || ''}
+              required
+              onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, vehiculo_combustible: e.target.value }))}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Tipo de transmisión *
+            </label>
+            <Input
+              placeholder="Ej. Mecánica / Automática"
+              value={nuevoCaso.vehiculo_transmision || ''}
+              required
+              onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, vehiculo_transmision: e.target.value }))}
+            />
+          </div>
+        </div>
+
         <div>
           <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
             Síntoma *
@@ -82,6 +134,18 @@ export const ValidacionNuevoCasoModal: React.FC<ValidacionNuevoCasoModalProps> =
             placeholder="Ej. Chillido metálico al frenar a baja velocidad"
             value={nuevoCaso.sintoma}
             onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, sintoma: e.target.value }))}
+            required
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+            Descripción del síntoma *
+          </label>
+          <Input
+            placeholder="Ej. El volante vibra solo al frenar a velocidad media"
+            value={nuevoCaso.descripcion_sintoma || ''}
+            onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, descripcion_sintoma: e.target.value }))}
             required
           />
         </div>
@@ -100,6 +164,17 @@ export const ValidacionNuevoCasoModal: React.FC<ValidacionNuevoCasoModalProps> =
           </div>
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
+              Sistema afectado probable *
+            </label>
+            <Input
+              placeholder="Ej. Frenos / Motor / Transmisión"
+              value={nuevoCaso.sistema_afectado_probable || ''}
+              onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, sistema_afectado_probable: e.target.value }))}
+              required
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
               Falla Real Confirmada *
             </label>
             <Input
@@ -111,7 +186,7 @@ export const ValidacionNuevoCasoModal: React.FC<ValidacionNuevoCasoModalProps> =
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
               ¿Fue Acierto?
@@ -137,20 +212,6 @@ export const ValidacionNuevoCasoModal: React.FC<ValidacionNuevoCasoModalProps> =
               required
               value={String(nuevoCaso.tiempo_diagnostico_minutos)}
               onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, tiempo_diagnostico_minutos: Number(e.target.value) }))}
-            />
-          </div>
-          <div>
-            <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
-              Completitud
-            </label>
-            <Select
-              value={String(nuevoCaso.campos_completos)}
-              onChange={(e) => onNuevoCasoChange((prev) => ({ ...prev, campos_completos: Number(e.target.value) }))}
-              options={[
-                { value: '-1', label: 'Revisar registro' },
-                { value: '1', label: 'Completo (1)' },
-                { value: '0', label: 'Incompleto (0)' },
-              ]}
             />
           </div>
         </div>

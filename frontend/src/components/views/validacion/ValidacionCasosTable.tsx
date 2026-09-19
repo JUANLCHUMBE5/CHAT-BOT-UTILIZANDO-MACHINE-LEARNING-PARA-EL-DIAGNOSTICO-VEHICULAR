@@ -48,6 +48,7 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
   onCambiarPagina,
 }) => {
   const [seleccionado, setSeleccionado] = useState<CasoValidacionDTO | null>(null);
+  const contarCampos = (caso: CasoValidacionDTO) => caso.cantidad_campos_completos ?? (caso.campos_completos ? 8 : 0);
   return (
     <Card style={{ padding: 0, overflow: 'hidden' }}>
       {/* Barra de Filtros */}
@@ -388,18 +389,37 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
         {seleccionado && <dl style={{ overflowWrap: 'anywhere' }}>
           {[
             ['Fecha y fase', `${seleccionado.fecha} · ${seleccionado.fase}`],
+            ['Tipo de registro', seleccionado.tipo_registro || 'THESIS_POSTTEST'],
             ['Vehículo', `${seleccionado.placa_enmascarada} · ${seleccionado.marca_modelo}`],
+            ['Año / km / combustible / transmisión', `${seleccionado.vehiculo_anio || 's/r'} · ${seleccionado.vehiculo_kilometraje ?? 's/r'} km · ${seleccionado.vehiculo_combustible || 's/r'} · ${seleccionado.vehiculo_transmision || 's/r'}`],
             ['Síntoma', seleccionado.sintoma],
+            ['Descripción del síntoma', seleccionado.descripcion_sintoma || 'Sin registrar'],
             [seleccionado.fase === 'Pre-test' ? 'Hipótesis del mecánico' : 'Predicción del chatbot', seleccionado.chatbot_prediccion],
             ['Falla comprobada', seleccionado.falla_real],
             ['Resultado', seleccionado.prediccion_correcta ? 'Correcto' : 'Incorrecto'],
+            ['Campos Ficha 2', `${contarCampos(seleccionado)}/8`],
             ['Registro', seleccionado.campos_completos ? 'Completo (declarado por evaluador)' : 'Incompleto'],
             ['Tiempo diagnóstico', `${seleccionado.tiempo_diagnostico_minutos} min`],
             ['Método de confirmación', seleccionado.metodo_confirmacion || 'Sin registrar'],
             ['Evidencia', seleccionado.evidencia_ref || 'Sin registrar'],
+            ...(seleccionado.conversacion_id ? [['ID Conversación WhatsApp', seleccionado.conversacion_id]] : []),
+            ...(seleccionado.diagnostico_id ? [['ID Diagnóstico CarBot', seleccionado.diagnostico_id]] : []),
           ].map(([label, valor]) => <div key={label} style={{ marginBottom: 12 }}>
             <dt style={{ fontWeight: 600 }}>{label}</dt><dd style={{ margin: '4px 0' }}>{valor}</dd>
           </div>)}
+          {seleccionado.detalles_campos && (
+            <div style={{ marginTop: 12 }}>
+              <dt style={{ fontWeight: 700, marginBottom: 8 }}>Detalle auditable Ficha 2</dt>
+              {Object.entries(seleccionado.detalles_campos).map(([clave, campo]) => (
+                <dd key={clave} style={{ margin: '4px 0', display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+                  <span>{campo.nombre}</span>
+                  <strong style={{ color: campo.completo ? '#047857' : '#dc2626' }}>
+                    {campo.completo ? 'Completo' : 'Incompleto'}
+                  </strong>
+                </dd>
+              ))}
+            </div>
+          )}
         </dl>}
       </Modal>
     </Card>

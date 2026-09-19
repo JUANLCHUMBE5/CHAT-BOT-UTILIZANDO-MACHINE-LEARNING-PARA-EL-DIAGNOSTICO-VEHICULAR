@@ -12,8 +12,8 @@ import time
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
-APP_VERSION = "11.4.0"
-ORCHESTRATOR_VERSION = "11.4.0"
+APP_VERSION = "11.5.0"
+ORCHESTRATOR_VERSION = "11.5.0"
 
 _START_TIME = datetime.now(timezone.utc).isoformat()
 _START_TIMESTAMP = time.time()
@@ -36,6 +36,8 @@ def _generar_code_build_id() -> str:
         os.path.join(os.path.dirname(__file__), "conversacion", "gestor_plan_b.py"),
         os.path.join(os.path.dirname(__file__), "conversacion", "interprete_respuestas_cortas.py"),
         os.path.join(os.path.dirname(__file__), "conversacion", "detector_polaridad.py"),
+        os.path.join(os.path.dirname(__file__), "conversacion", "sintetizador_consulta.py"),
+        os.path.join(os.path.dirname(__file__), "conversacion", "suficiencia_informacion.py"),
     ]
     for ruta in archivos_clave:
         if os.path.exists(ruta):
