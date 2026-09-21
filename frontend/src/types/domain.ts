@@ -44,6 +44,7 @@ export interface Diagnostico {
   placa_vehiculo: string;
   marca_modelo: string;
   fecha_hora: string;
+  conversacion_id?: string;
   duracion_ms: number;
   procedimiento_rag: string;
   fuente_manual?: string;

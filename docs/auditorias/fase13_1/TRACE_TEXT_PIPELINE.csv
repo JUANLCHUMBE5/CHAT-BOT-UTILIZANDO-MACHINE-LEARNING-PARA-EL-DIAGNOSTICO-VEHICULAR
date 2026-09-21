@@ -1,0 +1,15 @@
+input_original,semantic_output,slang_output,processed_output,warnings
+cuando freno me tiembla el timón,cuando freno me tiembla el timón,cuando freno me tiembla el timón,cuando freno me tiembla el timón,NONE
+en caliente gira pero no prende,en caliente gira pero no prende,en caliente gira pero no prende,en caliente gira pero no prende,NONE
+se queda sin fuerza subiendo y bota humo negro,se queda sin fuerza subiendo y bota humo negro por mezcla rica o combustion incompleta,se queda sin fuerza subiendo y bota humo negro por mezcla rica o combustion incompleta,se queda sin fuerza subiendo y bota humo negro por mezcla rica o combustion incompleta,NONE
+la batería es nueva pero se prende el testigo y se descarga,la batería es nueva pero se prende el testigo y se descarga,la batería es nueva pero se prende el testigo y se descarga,la batería es nueva pero se prende el testigo y se descarga,NONE
+el carro cascabelea y falla en mínimo,el carro preignicion o falla de bujias por cascabeleo y falla en mínimo,el carro preignicion o falla de bujias por cascabeleo y falla en mínimo,el carro preignicion o falla de bujias por cascabeleo y falla en mínimo,NONE
+Se presenta vibración en el volante durante frenado desde velocidad media.,se presenta vibracion en el volante durante frenado desde velocidad media.,se presenta vibracion en el volante durante frenado desde velocidad media.,se presenta vibracion en el volante durante frenado desde velocidad media.,NONE
+Cuando piso el freno me tiembla el timón.,cuando piso el freno me tiembla el timón.,cuando piso el freno me tiembla el timón.,cuando piso el freno me tiembla el timón.,NONE
+no prende,no prende,no prende,no prende,NONE
+pierde fuerza,pierde fuerza,pierde fuerza,pierde fuerza,NONE
+suena raro,suena raro,suena raro,suena raro,NONE
+se calienta,se calienta,se calienta,se calienta,NONE
+motor a gasolina pero inyectores common rail diesel con fuga de combustible,motor a gasolina pero inyectores common rail diesel con fuga de combustible,motor a gasolina pero inyectores common rail diesel con fuga de combustible,motor a gasolina pero inyectores common rail diesel con fuga de combustible,NONE
+batería tiene fuerza y faros prenden pero solo hace clac al dar arranque,  tiene fuerza y faros prenden pero solo hace clac al dar arranque falla motor de arranque solenoide carbones terminal 50 no da marcha clac seco arrancador pegado,batería tiene fuerza y faros prenden pero solo hace clac al dar arranque,  tiene fuerza y faros prenden pero solo hace clac al dar arranque falla motor de arranque solenoide carbones terminal 50 no da marcha clac seco arrancador pegado,NONE
+cambié bujías y bobinas pero sigue temblando en mínimo,cambié bujías y bobinas pero sigue temblando en mínimo,cambié bujías y bobinas pero sigue temblando en mínimo,cambié bujías y bobinas pero sigue temblando en mínimo,NONE

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Clock, Sparkles } from 'lucide-react';
+import { BookOpen, Sparkles } from 'lucide-react';
 import type { Diagnostico } from '../../../../types';
 
 interface DiagnosticoRagSectionProps {
@@ -10,157 +10,140 @@ export const DiagnosticoRagSection: React.FC<DiagnosticoRagSectionProps> = ({
   diagnostico,
 }) => {
   return (
-    <>
-      {/* Section 2: Evidencia Recuperada por RAG */}
-      <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '18px', backgroundColor: '#ffffff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div
-              style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '6px',
-                backgroundColor: '#f0fdf4',
-                color: '#16a34a',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <BookOpen size={16} />
-            </div>
-            <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
-              2. Evidencia Recuperada por RAG (Manuales Técnicos)
-            </h4>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      {/* 1. Evidencia y Similitud RAG */}
+      <div
+        style={{
+          border: '1px solid var(--border-color)',
+          borderRadius: '10px',
+          padding: '12px 14px',
+          backgroundColor: '#ffffff',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '6px',
+            flexWrap: 'wrap',
+            gap: '6px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <BookOpen size={15} style={{ color: '#16a34a' }} />
+            <strong style={{ fontSize: '12.5px', color: 'var(--text-main)' }}>
+              Evidencia RAG · Manuales de Taller OEM
+            </strong>
           </div>
           {diagnostico.similitud_rag !== undefined && (
             <span
               style={{
-                fontSize: '12px',
-                fontWeight: 600,
-                padding: '3px 10px',
+                fontSize: '11px',
+                fontWeight: 700,
+                padding: '2px 8px',
                 borderRadius: '12px',
                 backgroundColor: diagnostico.similitud_rag > 0 ? '#ecfdf5' : '#f1f5f9',
                 color: diagnostico.similitud_rag > 0 ? '#059669' : '#64748b',
                 border: `1px solid ${diagnostico.similitud_rag > 0 ? '#a7f3d0' : '#e2e8f0'}`,
               }}
             >
-              Similitud RAG: <strong>{diagnostico.similitud_rag}%</strong>
+              Similitud: <strong>{diagnostico.similitud_rag}%</strong>
             </span>
           )}
         </div>
 
         {diagnostico.fuente_manual && (
-          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px', fontStyle: 'italic' }}>
-            Referencia documental: {diagnostico.fuente_manual}
+          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontStyle: 'italic' }}>
+            Referencia: {diagnostico.fuente_manual}
           </div>
         )}
 
-        <pre
-          style={{
-            fontSize: '13px',
-            fontFamily: 'inherit',
-            whiteSpace: 'pre-wrap',
-            backgroundColor: 'var(--bg-subtle)',
-            padding: '14px',
-            borderRadius: '8px',
-            color: 'var(--text-main)',
-            lineHeight: 1.5,
-            margin: 0,
-            border: '1px solid var(--border-color)',
-          }}
-        >
-          {(diagnostico.procedimiento_rag || '')
-            .replace(/tolerancias\s+y\s+especificaciones\s+metrológicas\s+oem:?/gi, 'Valores del procedimiento técnico recuperado:')
-            .replace(/especificaciones\s+metrológicas\s+oem:?/gi, 'valores del procedimiento técnico recuperado:')}
-        </pre>
-      </div>
-
-      {/* Section 3: Tiempo Estimado y Gravedad */}
-      <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '18px', backgroundColor: '#ffffff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <div
-            style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '6px',
-              backgroundColor: '#fffbeb',
-              color: '#d97706',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Clock size={16} />
-          </div>
-          <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
-            3. Tiempo Estimado y Gravedad
-          </h4>
-        </div>
         <div
           style={{
-            fontSize: '13px',
-            color: 'var(--text-secondary)',
+            fontSize: '11.5px',
+            whiteSpace: 'pre-wrap',
             backgroundColor: 'var(--bg-subtle)',
-            padding: '12px 14px',
-            borderRadius: '8px',
+            padding: '10px 12px',
+            borderRadius: '6px',
+            color: 'var(--text-main)',
+            lineHeight: 1.45,
+            maxHeight: '170px',
+            overflowY: 'auto',
             border: '1px solid var(--border-color)',
-            lineHeight: 1.5,
+            fontFamily: 'inherit',
           }}
         >
-          {diagnostico.tiempo_gravedad}
+          {(diagnostico.procedimiento_rag || 'Sin procedimiento complementario recuperado.')
+            .replace(/tolerancias\s+y\s+especificaciones\s+metrológicas\s+oem:?/gi, 'Valores técnicos del procedimiento:')
+            .replace(/especificaciones\s+metrológicas\s+oem:?/gi, 'valores técnicos:')}
         </div>
       </div>
 
-      {/* Section 4: Síntesis Técnica Gemini (si existe) */}
+      {/* 2. Síntesis Gemini o Fallback Determinista */}
       {diagnostico.sintesis_llm && (
-        <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '18px', backgroundColor: '#ffffff' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div
-                style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '6px',
-                  backgroundColor: '#faf5ff',
-                  color: '#9333ea',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Sparkles size={16} />
-              </div>
-              <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
-                4. Síntesis Técnica de Gemini
-              </h4>
+        <div
+          style={{
+            border: '1px solid var(--border-color)',
+            borderRadius: '10px',
+            padding: '12px 14px',
+            backgroundColor: '#ffffff',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '6px',
+              flexWrap: 'wrap',
+              gap: '6px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Sparkles size={15} style={{ color: '#9333ea' }} />
+              <strong style={{ fontSize: '12.5px', color: 'var(--text-main)' }}>
+                Síntesis Técnica Generativa (LLM)
+              </strong>
             </div>
-            <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
               Modelo: <strong>{diagnostico.llm_modelo || 'Gemini-1.5-Flash'}</strong>
             </span>
           </div>
 
           <div
             style={{
-              fontSize: '13px',
+              fontSize: '11.5px',
               whiteSpace: 'pre-wrap',
               color: 'var(--text-secondary)',
-              lineHeight: 1.55,
-              backgroundColor: 'var(--bg-subtle)',
-              padding: '14px',
-              borderRadius: '8px',
-              border: '1px solid var(--border-color)',
+              lineHeight: 1.45,
+              backgroundColor: '#faf5ff',
+              padding: '10px 12px',
+              borderRadius: '6px',
+              border: '1px solid #f3e8ff',
+              maxHeight: '120px',
+              overflowY: 'auto',
             }}
           >
             {diagnostico.sintesis_llm}
           </div>
 
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid var(--border-color)', fontSize: '11px', color: 'var(--text-muted)' }}>
-            <span>📥 Tokens Entrada: <strong>{diagnostico.tokens_entrada}</strong></span>
-            <span>📤 Tokens Salida: <strong>{diagnostico.tokens_salida}</strong></span>
+          <div
+            style={{
+              display: 'flex',
+              gap: '12px',
+              marginTop: '6px',
+              paddingTop: '6px',
+              borderTop: '1px solid var(--border-color)',
+              fontSize: '10.5px',
+              color: 'var(--text-muted)',
+            }}
+          >
+            <span>Tokens Entrada: <strong>{diagnostico.tokens_entrada}</strong></span>
+            <span>Tokens Salida: <strong>{diagnostico.tokens_salida}</strong></span>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };

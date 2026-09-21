@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card } from '../../common/Card';
 import type { MetricasValidacionDTO } from '../../../types/api';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValidacionDTO | null }) {
   const [modoDemo, setModoDemo] = useState(false);
@@ -10,6 +10,7 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
   const preReal = metricas?.casos_pretest ?? 0;
   const postReal = metricas?.casos_posttest ?? 0;
   const totalReales = preReal + postReal;
+  const pilotoReal = metricas?.casos_piloto ?? 0;
 
   // Valores de maqueta / demo sintética (estrictamente aislados)
   const filasDemo = [
@@ -66,37 +67,80 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
 
   return (
     <Card>
-      {/* Banner Metodológico Obligatorio */}
+      {/* Banner Metodológico Compacto */}
       <div
         style={{
-          padding: '10px 14px',
+          padding: '8px 14px',
           borderRadius: '8px',
-          marginBottom: '14px',
+          marginBottom: '12px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
-          backgroundColor: modoDemo ? '#fffbeb' : '#f8fafc',
-          border: modoDemo ? '1px solid #fde68a' : '1px solid #e2e8f0',
+          backgroundColor: '#f8fafc',
+          border: '1px solid #e2e8f0',
         }}
       >
-        {modoDemo ? (
-          <AlertCircle size={18} style={{ color: '#d97706', flexShrink: 0 }} />
-        ) : (
-          <CheckCircle2 size={18} style={{ color: '#059669', flexShrink: 0 }} />
-        )}
-        <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
-          {modoDemo ? (
-            <span style={{ color: '#92400e', fontWeight: 600 }}>
-              MODO DEMOSTRACIÓN ACTIVO: Los valores y 60 casos mostrados son datos sintéticos de prueba y están
-              estrictamente excluidos de los resultados oficiales de la tesis.
-            </span>
-          ) : (
-            <span style={{ color: '#334155' }}>
-              <strong>Trabajo de campo en curso:</strong> Los resultados pretest y postest se calcularán
-              exclusivamente con registros reales recopilados y verificados durante la aplicación de los
-              instrumentos. <strong>Avance actual: {totalReales} de 60 registros.</strong>
-            </span>
-          )}
+        <CheckCircle2 size={16} style={{ color: '#059669', flexShrink: 0 }} />
+        <div style={{ fontSize: '12px', color: '#334155' }}>
+          <strong>Trabajo de campo pendiente.</strong> Los resultados pretest y postest se calcularán exclusivamente con registros reales recopilados y verificados durante la aplicación de los instrumentos. <strong>Avance actual: {totalReales} de 60 registros.</strong>
+        </div>
+      </div>
+
+      {/* Contadores Separados: Piloto vs Muestra Oficial */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+          gap: '10px',
+          marginBottom: '14px',
+        }}
+      >
+        <div style={{ backgroundColor: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '10px 12px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, color: '#92400e', textTransform: 'uppercase' }}>
+            Piloto
+          </div>
+          <div style={{ fontSize: '18px', fontWeight: 800, color: '#b45309', marginTop: '2px' }}>
+            {pilotoReal} registros
+          </div>
+          <div style={{ fontSize: '10.5px', color: '#78350f', marginTop: '2px' }}>
+            Prueba independiente
+          </div>
+        </div>
+
+        <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '10px 12px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>
+            Oficial: Pre-test
+          </div>
+          <div style={{ fontSize: '18px', fontWeight: 800, color: '#15803d', marginTop: '2px' }}>
+            {preReal} / 30
+          </div>
+          <div style={{ fontSize: '10.5px', color: '#166534', marginTop: '2px' }}>
+            Diagnóstico Tradicional
+          </div>
+        </div>
+
+        <div style={{ backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '10px 12px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, color: '#1e40af', textTransform: 'uppercase' }}>
+            Oficial: Post-test
+          </div>
+          <div style={{ fontSize: '18px', fontWeight: 800, color: '#1d4ed8', marginTop: '2px' }}>
+            {postReal} / 30
+          </div>
+          <div style={{ fontSize: '10.5px', color: '#1e40af', marginTop: '2px' }}>
+            Asistido por CarBot ML
+          </div>
+        </div>
+
+        <div style={{ backgroundColor: '#faf5ff', border: '1px solid #e9d5ff', borderRadius: '8px', padding: '10px 12px' }}>
+          <div style={{ fontSize: '11px', fontWeight: 700, color: '#6b21a8', textTransform: 'uppercase' }}>
+            Muestra Oficial Total
+          </div>
+          <div style={{ fontSize: '18px', fontWeight: 800, color: '#7e22ce', marginTop: '2px' }}>
+            {totalReales} / 60
+          </div>
+          <div style={{ fontSize: '10.5px', color: '#6b21a8', marginTop: '2px' }}>
+            Meta de Investigación
+          </div>
         </div>
       </div>
 
@@ -232,8 +276,8 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
                         {deltaTexto} {unidadTexto}
                       </span>
                     ) : (
-                      <span style={{ color: 'var(--text-muted)', fontSize: '11.5px' }}>
-                        Pendiente de completar ambas fases
+                      <span style={{ color: 'var(--text-muted)', fontSize: '13px', fontWeight: 600 }}>
+                        —
                       </span>
                     )}
                   </td>
@@ -243,9 +287,6 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
           </tbody>
         </table>
       </div>
-      <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '12px', marginBottom: 0 }}>
-        * Cálculo consolidado sobre registros válidos del período evaluado en el taller CARTER MOTOR'S E.I.R.L.
-      </p>
     </Card>
   );
 }

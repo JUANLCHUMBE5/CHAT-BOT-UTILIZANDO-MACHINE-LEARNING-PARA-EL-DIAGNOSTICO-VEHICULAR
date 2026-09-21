@@ -176,31 +176,55 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
                 >
                   <td style={{ padding: '12px 16px' }}>
                     <button type="button" onClick={() => setSeleccionado(caso)}
-                      style={{ display: 'block', marginBottom: 8, cursor: 'pointer', border: 0, background: 'none', color: 'var(--primary)', padding: 0, fontWeight: 600 }}>
+                      style={{ display: 'block', marginBottom: 6, cursor: 'pointer', border: 0, background: 'none', color: 'var(--primary)', padding: 0, fontWeight: 600 }}>
                       Ver registro #{caso.item}
                     </button>
-                    <div style={{ fontSize: 12, marginBottom: 8 }}>{caso.fecha}</div>
-                    <span
-                      style={{
-                        padding: '3px 8px',
-                        borderRadius: '10px',
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        backgroundColor: caso.fase === 'Post-test' ? '#eff6ff' : '#f1f5f9',
-                        color: caso.fase === 'Post-test' ? '#1d4ed8' : '#475569',
-                        border: `1px solid ${caso.fase === 'Post-test' ? '#bfdbfe' : '#e2e8f0'}`,
-                      }}
-                    >
-                      {caso.fase}
-                    </span>
+                    <div style={{ fontSize: '11.5px', color: '#64748b', marginBottom: '6px' }}>{caso.fecha}</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                      <span
+                        style={{
+                          padding: '2px 6px',
+                          borderRadius: '8px',
+                          fontSize: '10.5px',
+                          fontWeight: 700,
+                          backgroundColor: caso.fase === 'Post-test' ? '#eff6ff' : '#f1f5f9',
+                          color: caso.fase === 'Post-test' ? '#1d4ed8' : '#475569',
+                          border: `1px solid ${caso.fase === 'Post-test' ? '#bfdbfe' : '#e2e8f0'}`,
+                        }}
+                      >
+                        {caso.fase}
+                      </span>
+                      {caso.tipo_registro === 'PILOT' && (
+                        <span style={{ padding: '2px 6px', borderRadius: '8px', fontSize: '10.5px', fontWeight: 700, backgroundColor: '#fffbeb', color: '#92400e', border: '1px solid #fde68a' }}>
+                          PILOTO
+                        </span>
+                      )}
+                      {(caso.tipo_registro === 'THESIS_PRETEST' || caso.tipo_registro === 'THESIS_POSTTEST') && (
+                        <span style={{ padding: '2px 6px', borderRadius: '8px', fontSize: '10.5px', fontWeight: 700, backgroundColor: '#fef2f2', color: '#991b1b', border: '1px solid #fecaca' }}>
+                          OFICIAL
+                        </span>
+                      )}
+                      {(!caso.tipo_registro || caso.tipo_registro === 'DEVELOPMENT') && (
+                        <span style={{ padding: '2px 6px', borderRadius: '8px', fontSize: '10.5px', fontWeight: 700, backgroundColor: '#f8fafc', color: '#64748b', border: '1px solid #cbd5e1' }}>
+                          DEV
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Car size={14} style={{ color: 'var(--text-muted)' }} />
                       <strong style={{ color: 'var(--text-main)' }}>{caso.placa_enmascarada || '—'}</strong>
                     </div>
-                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginTop: '2px' }}>
                       {caso.marca_modelo}
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                      {[
+                        caso.vehiculo_anio ? `Año ${caso.vehiculo_anio}` : null,
+                        caso.vehiculo_kilometraje !== undefined && caso.vehiculo_kilometraje !== null ? `${caso.vehiculo_kilometraje.toLocaleString()} km` : null,
+                        caso.vehiculo_combustible || null,
+                      ].filter(Boolean).join(' • ') || '—'}
                     </div>
                   </td>
                   <td style={{ padding: '12px 16px', maxWidth: '200px' }}>
@@ -389,7 +413,7 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
         {seleccionado && <dl style={{ overflowWrap: 'anywhere' }}>
           {[
             ['Fecha y fase', `${seleccionado.fecha} · ${seleccionado.fase}`],
-            ['Tipo de registro', seleccionado.tipo_registro || 'THESIS_POSTTEST'],
+            ['Tipo de registro', seleccionado.tipo_registro || 'DEVELOPMENT'],
             ['Vehículo', `${seleccionado.placa_enmascarada} · ${seleccionado.marca_modelo}`],
             ['Año / km / combustible / transmisión', `${seleccionado.vehiculo_anio || 's/r'} · ${seleccionado.vehiculo_kilometraje ?? 's/r'} km · ${seleccionado.vehiculo_combustible || 's/r'} · ${seleccionado.vehiculo_transmision || 's/r'}`],
             ['Síntoma', seleccionado.sintoma],
@@ -399,11 +423,12 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
             ['Resultado', seleccionado.prediccion_correcta ? 'Correcto' : 'Incorrecto'],
             ['Campos Ficha 2', `${contarCampos(seleccionado)}/8`],
             ['Registro', seleccionado.campos_completos ? 'Completo (declarado por evaluador)' : 'Incompleto'],
-            ['Tiempo diagnóstico', `${seleccionado.tiempo_diagnostico_minutos} min`],
+            ['Tiempo diagnóstico (metodológico)', `${seleccionado.tiempo_diagnostico_minutos} min`],
             ['Método de confirmación', seleccionado.metodo_confirmacion || 'Sin registrar'],
             ['Evidencia', seleccionado.evidencia_ref || 'Sin registrar'],
             ...(seleccionado.conversacion_id ? [['ID Conversación WhatsApp', seleccionado.conversacion_id]] : []),
             ...(seleccionado.diagnostico_id ? [['ID Diagnóstico CarBot', seleccionado.diagnostico_id]] : []),
+            ...(seleccionado.duracion_sistema_segundos !== undefined && seleccionado.duracion_sistema_segundos !== null ? [['Duración telemetría técnica', `${seleccionado.duracion_sistema_segundos}s`]] : []),
           ].map(([label, valor]) => <div key={label} style={{ marginBottom: 12 }}>
             <dt style={{ fontWeight: 600 }}>{label}</dt><dd style={{ margin: '4px 0' }}>{valor}</dd>
           </div>)}

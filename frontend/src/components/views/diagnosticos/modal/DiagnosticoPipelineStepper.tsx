@@ -10,46 +10,67 @@ export const DiagnosticoPipelineStepper: React.FC<DiagnosticoPipelineStepperProp
   diagnostico,
 }) => {
   return (
-    <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '18px', backgroundColor: '#ffffff' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Cpu size={18} style={{ color: 'var(--primary)' }} />
-          <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
-            Trazabilidad del Pipeline de Procesamiento
-          </h4>
+    <div
+      style={{
+        border: '1px solid var(--border-color)',
+        borderRadius: '10px',
+        padding: '10px 12px',
+        backgroundColor: '#ffffff',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '8px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Cpu size={15} style={{ color: '#2563eb' }} />
+          <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-main)' }}>
+            Pipeline de Procesamiento en Cascada
+          </span>
         </div>
         <span
           style={{
-            fontSize: '12px',
-            color: 'var(--text-muted)',
-            backgroundColor: 'var(--bg-subtle)',
-            padding: '4px 10px',
-            borderRadius: '20px',
-            border: '1px solid var(--border-color)',
+            fontSize: '10.5px',
+            color: '#1e40af',
+            backgroundColor: '#eff6ff',
+            padding: '2px 8px',
+            borderRadius: '12px',
+            fontWeight: 600,
+            border: '1px solid #bfdbfe',
           }}
         >
-          ⏱️ Latencia de Consulta Actual: <strong>{diagnostico.duracion_ms} ms</strong>
-          {diagnostico.desde_cache ? ' · ⚡ Servido desde Caché' : ''}
+          ⏱️ {diagnostico.duracion_ms} ms {diagnostico.desde_cache ? '· Caché' : ''}
         </span>
       </div>
 
       {diagnostico.desde_cache && (
         <div
           style={{
-            fontSize: '11px',
+            fontSize: '10.5px',
             color: '#0369a1',
             backgroundColor: '#f0f9ff',
             border: '1px solid #bae6fd',
             borderRadius: '6px',
-            padding: '6px 10px',
-            marginBottom: '12px',
+            padding: '4px 8px',
+            marginBottom: '8px',
           }}
         >
-          ℹ️ <strong>Consulta resuelta instantáneamente desde Caché.</strong> Las etapas a continuación reflejan la telemetría de la <em>inferencia original registrada</em> ({diagnostico.etapas_procesamiento?.reduce((acc, e) => acc + (e.duracion_ms || 0), 0) || 0} ms), independiente de la latencia actual de consulta ({diagnostico.duracion_ms} ms).
+          ⚡ Servido desde memoria caché.
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
+      {/* Grid de 4 etapas en 1 sola fila horizontal */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '6px',
+        }}
+      >
         {diagnostico.etapas_procesamiento.map((etapa, index) => {
           const completada = etapa.estado === 'completado';
           const enCola = etapa.estado === 'en_cola';
@@ -57,65 +78,85 @@ export const DiagnosticoPipelineStepper: React.FC<DiagnosticoPipelineStepperProp
           const badgeColor = completada ? '#059669' : enCola ? '#d97706' : degradado ? '#e11d48' : '#64748b';
           const badgeBg = completada ? '#ecfdf5' : enCola ? '#fffbeb' : degradado ? '#fff1f2' : '#f8fafc';
 
-          const nombreEtapa = (degradado && etapa.clave === 'llm' && !etapa.nombre.includes('Fallback'))
-            ? 'Síntesis Gemini (Fallback ML+RAG)'
-            : etapa.nombre;
-
-          const detalleEtapa = (degradado && etapa.clave === 'llm')
-            ? (etapa.detalle?.toLowerCase().includes('fallback')
-                ? etapa.detalle
-                : 'Fallback determinista activo: síntesis externa omitida o límite de cuota superado.')
-            : etapa.detalle;
+          const nombreCorto =
+            etapa.clave === 'normalizacion'
+              ? 'Normalización'
+              : etapa.clave === 'ml'
+              ? 'Linear SVM'
+              : etapa.clave === 'rag'
+              ? 'RAG Manuales'
+              : etapa.clave === 'llm'
+              ? (degradado ? 'Fallback ML+RAG' : 'Síntesis Gemini')
+              : etapa.nombre;
 
           return (
             <div
               key={`${etapa.clave}-${index}`}
               style={{
-                padding: '12px 14px',
-                borderRadius: '10px',
+                padding: '6px 8px',
+                borderRadius: '8px',
                 backgroundColor: badgeBg,
                 border: `1px solid ${badgeColor}30`,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                minHeight: '64px',
               }}
             >
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span
-                    style={{
-                      width: '22px',
-                      height: '22px',
-                      borderRadius: '50%',
-                      backgroundColor: badgeColor,
-                      color: '#ffffff',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                    }}
-                  >
-                    {index + 1}
-                  </span>
-                  <span style={{ fontSize: '10px', fontWeight: 700, color: badgeColor, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    {etapa.estado.replace('_', ' ')}
-                  </span>
-                </div>
-                <strong style={{ fontSize: '12px', color: 'var(--text-main)', display: 'block', lineHeight: 1.3 }}>
-                  {nombreEtapa}
-                </strong>
-              </div>
-
-              <div style={{ marginTop: '8px', paddingTop: '6px', borderTop: `1px dashed ${badgeColor}25` }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+                <span
+                  style={{
+                    width: '18px',
+                    height: '18px',
+                    borderRadius: '50%',
+                    backgroundColor: badgeColor,
+                    color: '#ffffff',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                  }}
+                >
+                  {index + 1}
+                </span>
+                <span
+                  style={{
+                    fontSize: '9px',
+                    fontWeight: 700,
+                    color: badgeColor,
+                    textTransform: 'uppercase',
+                  }}
+                >
                   {etapa.duracion_ms} ms
                 </span>
-                {detalleEtapa && (
-                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px', lineHeight: 1.3 }}>
-                    {detalleEtapa}
-                  </div>
-                )}
+              </div>
+
+              <div>
+                <strong
+                  style={{
+                    fontSize: '11px',
+                    color: 'var(--text-main)',
+                    display: 'block',
+                    lineHeight: 1.2,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                  title={etapa.nombre}
+                >
+                  {nombreCorto}
+                </strong>
+                <span
+                  style={{
+                    fontSize: '9.5px',
+                    color: badgeColor,
+                    fontWeight: 600,
+                    textTransform: 'capitalize',
+                  }}
+                >
+                  {etapa.estado.replace('_', ' ')}
+                </span>
               </div>
             </div>
           );

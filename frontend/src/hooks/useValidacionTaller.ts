@@ -22,7 +22,8 @@ const vacio = (): CrearCasoValidacionDTO => ({
   prediccion_correcta: -1,
   metodo_confirmacion: 'Inspección Visual en Elevador',
   evidencia_ref: '',
-  estado_registro: 'verificado',
+  estado_registro: 'borrador',
+  tipo_registro: 'DEVELOPMENT',
   sintoma_registrado_correctamente: 1,
   normalizacion_correcta: 1,
   extraccion_correcta: 1,
@@ -74,7 +75,7 @@ export const useValidacionTaller = () => {
       .then(res => {
         if (activo) {
           const tesis = (res.casos || []).filter(
-            c => c.tipo_registro === 'THESIS_PRETEST' || c.tipo_registro === 'THESIS_POSTTEST' || c.fase === 'Pre-test' || c.fase === 'Post-test'
+            c => (c.tipo_registro === 'THESIS_PRETEST' || c.tipo_registro === 'THESIS_POSTTEST') && c.estado_registro === 'verificado'
           );
           setCasosVerificados(tesis);
         }

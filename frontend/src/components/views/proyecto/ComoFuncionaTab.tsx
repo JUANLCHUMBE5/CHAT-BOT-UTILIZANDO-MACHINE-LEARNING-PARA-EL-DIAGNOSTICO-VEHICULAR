@@ -252,7 +252,7 @@ export const ComoFuncionaTab: React.FC = () => {
                 </span>
               </div>
               <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '11px', lineHeight: 1.4 }}>
-                Único usuario con acceso al panel web. Aprueba o bloquea mecánicos, audita el historial de diagnósticos, valida confirmaciones clínicas y consulta métricas de tesis e investigación.
+                Único usuario con acceso al panel web. Aprueba o bloquea mecánicos, audita el historial de diagnósticos, valida confirmaciones técnicas en taller y consulta métricas de tesis e investigación.
               </p>
             </div>
           </div>

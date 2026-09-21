@@ -22,6 +22,7 @@
 | Contribución y calidad | `CONTRIBUTING.md` |
 | Manual técnico | `docs/manual_tecnico_chatbot.md` |
 | Defensa de tesis | `docs/guia_defensa_tesis.md` |
+| Metodología de desarrollo (SCRUM + CRISP-DM) para Anexos | `docs/anexos/ANEXO_METODOLOGIA_DESARROLLO_SCRUM_CRISP_DM.md` |
 
 ## Evidencias generadas automáticamente
 

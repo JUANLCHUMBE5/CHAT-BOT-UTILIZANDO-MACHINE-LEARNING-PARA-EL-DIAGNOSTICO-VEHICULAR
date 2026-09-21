@@ -92,6 +92,21 @@ export const DiagnosticosTabla: React.FC<DiagnosticosTablaProps> = ({
                   d.placa_vehiculo.trim() !== '' &&
                   !d.placa_vehiculo.toLowerCase().includes('sin placa');
 
+                const tieneMarca = Boolean(
+                  d.marca_modelo &&
+                  d.marca_modelo.trim() !== '' &&
+                  !d.marca_modelo.toLowerCase().includes('no registrado')
+                );
+
+                const textoMin = (d.sintoma_original || '').toLowerCase();
+                const marcaTexto = textoMin.includes('hyundai accent')
+                  ? 'Hyundai Accent'
+                  : textoMin.includes('kia rio')
+                  ? 'Kia Rio'
+                  : textoMin.includes('toyota yaris')
+                  ? 'Toyota Yaris'
+                  : null;
+
                 return (
                   <tr
                     key={d.id}
@@ -109,14 +124,14 @@ export const DiagnosticosTabla: React.FC<DiagnosticosTablaProps> = ({
                           style={{
                             width: '28px',
                             height: '28px',
-                            borderRadius: '6px',
-                            backgroundColor: '#f1f5f9',
-                            color: '#475569',
+                            borderRadius: '50%',
+                            backgroundColor: '#f0fdf4',
+                            color: '#16a34a',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
-                            border: '1px solid #e2e8f0',
+                            border: '1px solid #bbf7d0',
                           }}
                         >
                           <MessageSquare size={13} />
@@ -135,20 +150,40 @@ export const DiagnosticosTabla: React.FC<DiagnosticosTablaProps> = ({
                     </td>
 
                     {/* Vehículo */}
-                    <td style={{ padding: '10px 14px' }}>
+                    <td style={{ padding: '10px 14px', whiteSpace: 'nowrap' }}>
                       {tienePlaca ? (
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
-                          <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '12.5px' }}>
+                          <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '12px' }}>
                             {d.placa_vehiculo}
                           </span>
-                          {d.marca_modelo && !d.marca_modelo.toLowerCase().includes('no registrado') && (
+                          {tieneMarca && (
                             <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
                               {d.marca_modelo}
                             </span>
                           )}
                         </div>
+                      ) : tieneMarca ? (
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '12px' }}>
+                            {d.marca_modelo}
+                          </span>
+                          <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                            Sin placa
+                          </span>
+                        </div>
+                      ) : marcaTexto ? (
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '12px' }}>
+                            {marcaTexto}
+                          </span>
+                          <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                            En consulta
+                          </span>
+                        </div>
                       ) : (
-                        <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>—</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '11.5px', fontStyle: 'italic' }}>
+                          Consulta general
+                        </span>
                       )}
                     </td>
 

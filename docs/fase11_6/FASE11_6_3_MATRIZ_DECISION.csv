@@ -1,0 +1,21 @@
+id,causa,corregir_ahora,reentrenamiento_futuro,ambiguedad,riesgo_sobreajuste,recomendacion
+BLIND_01,DATASET / REENTRENAMIENTO,NO,SI,B) Plausible con >=2 diagnosticos,Alto,Reentrenar dataset incorporando pares de prueba de retorno common rail diesel
+BLIND_05,DATASET / REENTRENAMIENTO,NO,SI,A) Inequivoco,Medio,Reentrenar dataset con terminos metrologicos de deteccion quimica de CO2/bromotimol
+BLIND_07,TF-IDF / SVM,NO,SI,A) Inequivoco,Medio,Reentrenar dataset con muestras de obturador conico IAC atascado por lodo/carbon
+BLIND_09,GROUND TRUTH DISCUTIBLE,NO,NO,D) Ground Truth mal definido,Bajo,Mantener prediccion de CarBot (cadena destensada); corregir Ground Truth en benchmark
+BLIND_18,DATASET / REENTRENAMIENTO,NO,SI,A) Inequivoco,Medio,Reentrenar dataset para asociar sobrecalentamiento asimetrico y balata quemada con caliper trabado
+BLIND_22,AMBIGÜEDAD LEGÍTIMA,NO,NO,C) Informacion insuficiente,Alto,No parchar por codigo; mantener en protocolo de clarificacion starter vs bateria
+BLIND_24,AMBIGÜEDAD LEGÍTIMA,NO,NO,C) Informacion insuficiente,Alto,Mantener filtro de suficiencia diagnostica (fuera de alcance / pedir detalles)
+BLIND_25,AMBIGÜEDAD LEGÍTIMA,NO,NO,B) Plausible con >=2 diagnosticos,Alto,Mantener diagnostico diferencial en Top-3 (rodamiento presente como Top-2)
+BLIND_26,AMBIGÜEDAD LEGÍTIMA,NO,NO,C) Informacion insuficiente,Bajo,Mantener generacion automatica de pregunta aclaratoria sobre vibracion en minimo
+BLIND_27,AMBIGÜEDAD LEGÍTIMA,NO,SI,C) Informacion insuficiente,Medio,Desambiguar en reentrenamiento el homonimo 'seguro' (certeza vs actuador de puerta)
+BLIND_29,AMBIGÜEDAD LEGÍTIMA,NO,NO,C) Informacion insuficiente,Alto,Mantener politica de abstencion ante perdida lenta de refrigerante sin sintomas
+BLIND_30,AMBIGÜEDAD LEGÍTIMA,NO,NO,C) Informacion insuficiente,Alto,Mantener como consulta ambigua; formular pregunta aclaratoria sobre ubicacion del olor
+BLIND_31,DTC / TAXONOMÍA,NO,SI,B) Plausible con >=2 diagnosticos,Medio,Reentrenar SVM para asociar P0304 a encendido/misfire salvo prueba de compresion baja
+BLIND_38,POLÍTICA DE FUSIÓN,SI,NO,A) Inequivoco,Muy Bajo,Unica correccion arquitectonica valida: jerarquia estricta de DTC de chasis C0000-C9999 sobre motor
+BLIND_43,TF-IDF / SVM,NO,SI,B) Plausible con >=2 diagnosticos,Medio,Reentrenar dataset con perdida subita de potencia en carretera asociada a bomba de combustible
+BLIND_45,TF-IDF / SVM,NO,SI,A) Inequivoco,Alto,No agregar heuristica de pedal esponjoso; reentrenar balance lexico entre booster y circuito hidraulico
+BLIND_46,POLÍTICA DE FUSIÓN,NO,SI,A) Inequivoco,Alto,No parchar con regex de presion; reentrenar discriminacion de datos de manometro en dataset
+BLIND_47,TF-IDF / SVM,NO,SI,A) Inequivoco,Alto,No crear regla numerica de RPM; reentrenar semantica de divergencia velocimetro/tacometro como embrague
+BLIND_48,POLÍTICA DE FUSIÓN,NO,NO,A) Inequivoco,Alto,No anular regla P0171; documentar interaccion de prueba de spray de vacio para siguiente version mayor
+BLIND_50,TF-IDF / SVM,NO,SI,B) Plausible con >=2 diagnosticos,Medio,Reentrenar dataset con recalentamiento bajo carga sin perdida de liquido (termostato vs culata)

@@ -1,0 +1,73 @@
+{
+  "version": "CARBOT_PRECAMPO_FROZEN",
+  "fase": "FASE_11_6_4",
+  "fecha_congelamiento": "2026-09-19",
+  "dictamen_final": "APTO_PARA_PILOTO_CONTROLADO",
+  "hashes_sha256": {
+    "vectorizador_tfidf": {
+      "ruta_relativa": "machine_learning/models/c1_fase10_final/vectorizador_c1.pkl",
+      "sha256": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+      "tamano_bytes": 264089
+    },
+    "modelo_svm_diagnostico": {
+      "ruta_relativa": "machine_learning/models/c1_fase10_final/modelo_diagnostico_c1.pkl",
+      "sha256": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+      "tamano_bytes": 23710300
+    },
+    "modelo_macro_sistema": {
+      "ruta_relativa": "machine_learning/models/c1_fase10_final/modelo_sistema_c1_macrofix.pkl",
+      "sha256": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
+      "tamano_bytes": 4532678
+    },
+    "metadata_modelo_c1": {
+      "ruta_relativa": "machine_learning/models/c1_fase10_final/metadata_c1_macrofix.json",
+      "sha256": "c1ac4a528ee759316480691f4cf05b29c5d28829964d25a7d27ab239e80a084e",
+      "tamano_bytes": 1134
+    },
+    "indice_faiss_rag": {
+      "ruta_relativa": "machine_learning/manuals/candidates/v1/indexes/indice_faiss_v1.index",
+      "sha256": "a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",
+      "tamano_bytes": 31268893
+    },
+    "metadatos_procedimientos_rag": {
+      "ruta_relativa": "machine_learning/manuals/candidates/v1/metadata/metadatos_schema_v2.json",
+      "sha256": "af5c5edebdebbdbe7f97c488dad274c306e4782fb4c273cfab2e42e531c2e2b3",
+      "tamano_bytes": 523538
+    },
+    "corpus_manifest_rag": {
+      "ruta_relativa": "machine_learning/manuals/candidates/v1/manifests/corpus_manifest.json",
+      "sha256": "a0fce3dc39bb6344388a18cc6f2a10d8298d5d47ae1f365e4ae226eab1b16bba",
+      "tamano_bytes": 152096
+    },
+    "politica_fusion": {
+      "ruta_relativa": "backend/src/core/diagnostico/politica_fusion.py",
+      "sha256": "219e730083c6739837de4cc5a3fb968624784c1624ef7b4503c9d34fe78b72f8",
+      "tamano_bytes": 24308
+    },
+    "taxonomia_sistemas": {
+      "ruta_relativa": "backend/src/core/diagnostico/taxonomia_sistemas.py",
+      "sha256": "72042cd6bf49855c548024e36b6adcbf16be29ed1a07560988dc544678d92831",
+      "tamano_bytes": 12477
+    },
+    "semantic_purifier": {
+      "ruta_relativa": "backend/src/core/diagnostico/semantic_purifier.py",
+      "sha256": "ffdf60e370f6f92e51a0ce3ec27beb3e66a654afd6fbe76c1a5198e9b7d6379d",
+      "tamano_bytes": 6186
+    },
+    "text_processor": {
+      "ruta_relativa": "backend/src/core/diagnostico/text_processor.py",
+      "sha256": "66367147e1246525e07c0bf5764596df75512dc8cebaf32b200560083d7ce673",
+      "tamano_bytes": 43119
+    },
+    "traductor_jerga": {
+      "ruta_relativa": "backend/src/core/traductor_jerga.py",
+      "sha256": "c582fec573d0142491ad82ac7d227911966e1eed35c803311e9d9995a904c6a2",
+      "tamano_bytes": 7977
+    },
+    "motor_rag": {
+      "ruta_relativa": "backend/src/infrastructure/motor_rag.py",
+      "sha256": "47773d39c9944de00dd348eb88f984a004c794086536fa18ccdaa389872cccb9",
+      "tamano_bytes": 34604
+    }
+  }
+}

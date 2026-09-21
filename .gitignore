@@ -93,3 +93,12 @@ frontend/dist/
 # --- Repositorios Separados Exportados ---
 repositorios_separados/
 scratch/
+
+# --- Datos masivos, experimentales y repositorios externos clonados ---
+machine_learning/data/fuentes_abiertas/*/
+!machine_learning/data/fuentes_abiertas/normalizado/
+machine_learning/data/fuentes_abiertas/fallas_vehiculares/
+machine_learning/manuals/sandbox_rag_experimental/
+machine_learning/experimentos/
+*.index
+

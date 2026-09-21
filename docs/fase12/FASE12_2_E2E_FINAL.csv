@@ -1,0 +1,6 @@
+﻿escenario,tipo_registro,fase,diagnostico_vinculado,inmutabilidad_prediccion,resultado,detalle
+A_PRETEST_TRADICIONAL,DEVELOPMENT,Pre-test,NO (Sin CarBot),N/A,EXITO,Registrado como DEVELOPMENT sin diagnostico_id. No incrementa muestra oficial.
+B_POSTTEST_VINCULADO_CARBOT,PILOT,Post-test,SI (30dd1569-7813-4a9b-bcec-d8ba88af4a4c),VERIFICADA (Sobrescribe texto adulterado con predicción del modelo),EXITO,Hereda conversacion_id y tiempo_inferencia_ml_ms. Predicción original inmutable.
+C_REGISTRO_PILOTO_EXPLICITO,PILOT,Post-test,NO,N/A,EXITO,Contador de piloto incrementado (22). Totalmente aislado de muestra oficial.
+D_BLINDAJE_REGISTRO_OFICIAL,RECHAZADO (THESIS_* incoherente),Cruce Pre/Post,N/A,N/A,EXITO (BLOQUEADO),El backend rechaza con ValueError cualquier intento incoherente de registrar muestra oficial.
+E_AISLAMIENTO_Y_CONTADOR_OFICIAL,VERIFICACION POSTGRESQL,Pretest + Posttest,N/A,N/A,EXITO,Muestra oficial veridicamente preservada en 0/60 casos tras pruebas E2E en DEVELOPMENT y PILOT.

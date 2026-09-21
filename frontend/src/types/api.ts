@@ -53,6 +53,7 @@ export interface MecanicoUpdateDTO {
 export type MecanicoResponseDTO = Mecanico;
 
 export type EstadoRegistro = 'borrador' | 'verificado' | 'excluido';
+export type TipoRegistro = 'DEVELOPMENT' | 'REGRESSION' | 'THESIS_PRETEST' | 'THESIS_POSTTEST' | 'PILOT';
 
 export interface CasoValidacionDTO {
   item: number;
@@ -80,7 +81,7 @@ export interface CasoValidacionDTO {
   metodo_confirmacion?: string;
   evidencia_ref?: string;
   estado_registro?: EstadoRegistro;
-  tipo_registro?: 'DEVELOPMENT' | 'REGRESSION' | 'THESIS_PRETEST' | 'THESIS_POSTTEST';
+  tipo_registro?: TipoRegistro;
   conversacion_id?: string | null;
   diagnostico_id?: string | null;
   sintoma_registrado_correctamente?: number;
@@ -91,6 +92,9 @@ export interface CasoValidacionDTO {
   clasificacion_procesada?: number;
   procesamiento_validado?: number;
   tiempo_inferencia_ml_ms?: number;
+  inicio_sistema_at?: string | null;
+  fin_sistema_at?: string | null;
+  duracion_sistema_segundos?: number | null;
 }
 
 export interface CrearCasoValidacionDTO {
@@ -113,13 +117,17 @@ export interface CrearCasoValidacionDTO {
   metodo_confirmacion?: string;
   evidencia_ref?: string;
   estado_registro?: EstadoRegistro;
-  tipo_registro?: 'DEVELOPMENT' | 'REGRESSION' | 'THESIS_PRETEST' | 'THESIS_POSTTEST';
+  tipo_registro?: TipoRegistro;
   conversacion_id?: string | null;
   diagnostico_id?: string | null;
   sintoma_registrado_correctamente?: number;
   normalizacion_correcta?: number;
   extraccion_correcta?: number;
   clasificacion_procesada?: number;
+  tiempo_inferencia_ml_ms?: number;
+  inicio_sistema_at?: string | null;
+  fin_sistema_at?: string | null;
+  duracion_sistema_segundos?: number | null;
 }
 
 export interface MetricasVariableIndependienteDTO {
@@ -147,6 +155,7 @@ export interface MetricasValidacionDTO {
   distribucion_marcas: { marca: string; conteo: number }[];
   top_fallas_reales: { falla: string; conteo: number }[];
   nota_metodologica?: string;
+  casos_piloto?: number;
   casos_verificados?: number;
   total_casos_verificados?: number;
   total_casos_borrador?: number;

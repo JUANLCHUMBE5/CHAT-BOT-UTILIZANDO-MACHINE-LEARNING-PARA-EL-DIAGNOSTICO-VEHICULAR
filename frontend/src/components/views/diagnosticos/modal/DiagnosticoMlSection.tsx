@@ -10,37 +10,64 @@ export const DiagnosticoMlSection: React.FC<DiagnosticoMlSectionProps> = ({
   diagnostico,
 }) => {
   return (
-    <div style={{ border: '1px solid var(--border-color)', borderRadius: '12px', padding: '18px', backgroundColor: '#ffffff' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px', flexWrap: 'wrap', gap: '8px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div
-            style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '6px',
-              backgroundColor: '#eff6ff',
-              color: '#2563eb',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Cpu size={16} />
-          </div>
-          <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
-            1. Comparación del Clasificador ML (SVM / TF-IDF)
-          </h4>
+    <div
+      style={{
+        border: '1px solid var(--border-color)',
+        borderRadius: '10px',
+        padding: '12px 14px',
+        backgroundColor: '#ffffff',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '8px',
+          flexWrap: 'wrap',
+          gap: '6px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <Cpu size={15} style={{ color: '#2563eb' }} />
+          <strong style={{ fontSize: '12.5px', color: 'var(--text-main)' }}>
+            Confianza ML · Linear SVM (TF-IDF)
+          </strong>
         </div>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-          Modelo: <strong>{diagnostico.version_modelo_ml || '2.2.0-external-audited'}</strong>
+        <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
+          Modelo: <strong>{diagnostico.version_modelo_ml || 'C1_FASE10_FINAL'}</strong>
         </span>
       </div>
 
-      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '0 0 14px 0' }}>
-        Distribución de probabilidades por clase calculadas para este síntoma:
-      </p>
+      {diagnostico.sintoma_normalizado && (
+        <div
+          style={{
+            marginBottom: '8px',
+            padding: '6px 10px',
+            backgroundColor: '#f8fafc',
+            borderRadius: '6px',
+            border: '1px solid #e2e8f0',
+            fontSize: '11px',
+          }}
+        >
+          <div style={{ color: '#475569', fontWeight: 700, fontSize: '10.5px', marginBottom: '2px' }}>
+            ⚙️ Normalización léxica (Entrada vector TF-IDF):
+          </div>
+          <div
+            style={{
+              fontFamily: 'monospace',
+              color: '#1e293b',
+              fontSize: '10px',
+              wordBreak: 'break-word',
+              lineHeight: 1.3,
+            }}
+          >
+            {diagnostico.sintoma_normalizado}
+          </div>
+        </div>
+      )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {diagnostico.predicciones_ml.map((prediccion) => {
           const esPrincipal = prediccion.orden === 1;
           const barColor = esPrincipal
@@ -54,38 +81,64 @@ export const DiagnosticoMlSection: React.FC<DiagnosticoMlSectionProps> = ({
             <div
               key={`${prediccion.orden}-${prediccion.falla}`}
               style={{
-                backgroundColor: esPrincipal ? '#f8faff' : '#ffffff',
-                padding: esPrincipal ? '10px 12px' : '6px 0',
-                borderRadius: '8px',
-                border: esPrincipal ? '1px solid #dbeafe' : 'none',
+                backgroundColor: esPrincipal ? '#f8faff' : '#f8fafc',
+                padding: '8px 10px',
+                borderRadius: '6px',
+                border: esPrincipal ? '1px solid #bfdbfe' : '1px solid var(--border-color)',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '6px', fontSize: '13px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ color: 'var(--text-main)', fontWeight: esPrincipal ? 700 : 500 }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '8px',
+                  marginBottom: '4px',
+                  fontSize: '12px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                  <span
+                    style={{
+                      color: 'var(--text-main)',
+                      fontWeight: esPrincipal ? 700 : 500,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
                     {prediccion.orden}. {prediccion.falla}
                   </span>
                   {esPrincipal && (
                     <span
                       style={{
-                        fontSize: '10px',
+                        fontSize: '9.5px',
                         fontWeight: 700,
                         backgroundColor: '#eff6ff',
                         color: '#1d4ed8',
-                        padding: '1px 6px',
-                        borderRadius: '6px',
+                        padding: '1px 5px',
+                        borderRadius: '4px',
                         border: '1px solid #bfdbfe',
+                        flexShrink: 0,
                       }}
                     >
-                      Predicción Ganadora
+                      Top 1
                     </span>
                   )}
                 </div>
-                <strong style={{ color: textColor, fontSize: '13px', whiteSpace: 'nowrap' }}>
+                <strong style={{ color: textColor, fontSize: '12px', whiteSpace: 'nowrap' }}>
                   {prediccion.probabilidad}%
                 </strong>
               </div>
-              <div style={{ width: '100%', height: '8px', borderRadius: '999px', backgroundColor: '#e2e8f0', overflow: 'hidden' }}>
+              <div
+                style={{
+                  width: '100%',
+                  height: '6px',
+                  borderRadius: '999px',
+                  backgroundColor: '#e2e8f0',
+                  overflow: 'hidden',
+                }}
+              >
                 <div
                   style={{
                     width: `${Math.max(1, Math.min(100, prediccion.probabilidad))}%`,
@@ -99,11 +152,6 @@ export const DiagnosticoMlSection: React.FC<DiagnosticoMlSectionProps> = ({
             </div>
           );
         })}
-      </div>
-
-      <div style={{ display: 'flex', gap: '16px', marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--border-color)', fontSize: '12px', color: 'var(--text-secondary)', flexWrap: 'wrap' }}>
-        <span>🎯 Hipótesis Seleccionada: <strong>{diagnostico.falla_predicha}</strong></span>
-        <span>📊 Confianza: <strong>{diagnostico.confianza}%</strong></span>
       </div>
     </div>
   );

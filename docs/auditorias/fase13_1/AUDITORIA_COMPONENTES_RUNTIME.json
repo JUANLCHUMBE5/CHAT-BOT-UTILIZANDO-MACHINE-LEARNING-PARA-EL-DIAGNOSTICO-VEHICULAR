@@ -1,0 +1,47 @@
+{
+  "model_version": "CARBOT_PRECAMPO_FROZEN",
+  "taxonomy_classes_count": 61,
+  "taxonomy_macro_systems_count": 7,
+  "ml_components": {
+    "model_type": "CalibratedClassifierCV",
+    "model_path": "C:\\Users\\leonc\\OneDrive\\Desktop\\CHAT_BOT_MACHINLEARNING\\machine_learning\\models\\c1_fase10_final\\modelo_diagnostico_c1.pkl",
+    "vectorizer_type": "TfidfVectorizer",
+    "vectorizer_path": "C:\\Users\\leonc\\OneDrive\\Desktop\\CHAT_BOT_MACHINLEARNING\\machine_learning\\models\\c1_fase10_final\\vectorizador_c1.pkl",
+    "macro_system_model_type": "CalibratedClassifierCV",
+    "macro_system_path": "C:\\Users\\leonc\\OneDrive\\Desktop\\CHAT_BOT_MACHINLEARNING\\machine_learning\\models\\c1_fase10_final\\modelo_sistema.pkl",
+    "classes_sample": [
+      "Alternador defectuoso o placa de diodos quemada",
+      "Amortiguadores reventados o bujes de suspension gastados",
+      "Baja presion de aceite o bomba de aceite defectuosa",
+      "Bateria descargada o bornes sulfatados",
+      "Bomba de gasolina quemada o con baja presion"
+    ]
+  },
+  "rag_components": {
+    "engine": "FAISS_IndexFlatIP",
+    "corpus_version": "a0fce3dc39bb6344",
+    "total_documents": 239,
+    "vector_dimension": 32708,
+    "min_similarity_threshold": 0.1
+  },
+  "dtc_components": {
+    "service_available": true,
+    "database_path": "C:\\Users\\leonc\\OneDrive\\Desktop\\CHAT_BOT_MACHINLEARNING\\machine_learning\\data\\fuentes_abiertas\\dtc_codes.db"
+  },
+  "llm_components": {
+    "provider": "Google Generative AI (Gemini)",
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0.2,
+    "timeout_seconds": 10,
+    "fallback_mode": "degraded_ml_rag",
+    "has_api_key_configured": true
+  },
+  "pipeline_modules": {
+    "semantic_purifier": "src.core.diagnostico.semantic_purifier",
+    "slang_translator": "src.core.traductor_jerga",
+    "text_processor": "src.core.diagnostico.text_processor",
+    "fusion_policy": "src.core.diagnostico.politica_fusion",
+    "prompt_builder": "src.core.diagnostico.prompt_builder"
+  },
+  "timestamp_audit": "2026-09-20T05:20:41.084922+00:00"
+}

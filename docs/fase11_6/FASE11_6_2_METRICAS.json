@@ -1,0 +1,55 @@
+{
+  "fase": "FASE_11_6_2_BLIND",
+  "fecha": "2026-09-19",
+  "total_casos": 50,
+  "top1_global": 30,
+  "top1_pct": 60.0,
+  "top3_global": 39,
+  "top3_pct": 78.0,
+  "macro_sistema_global": 46,
+  "macro_sistema_pct": 92.0,
+  "confianza_promedio": 0.7451,
+  "errores_alta_confianza_75": 8,
+  "total_errores": 20,
+  "rag": {
+    "hit1": 38,
+    "hit1_pct": 76.0,
+    "hit3": 43,
+    "hit3_pct": 86.0,
+    "hit5": 44,
+    "hit5_pct": 88.0,
+    "mrr": 0.812
+  },
+  "por_categoria": {
+    "TECNICO": {
+      "top1": 6,
+      "top3": 8,
+      "macro": 10,
+      "total": 10
+    },
+    "COLOQUIAL": {
+      "top1": 9,
+      "top3": 10,
+      "macro": 10,
+      "total": 10
+    },
+    "AMBIGUO": {
+      "top1": 3,
+      "top3": 5,
+      "macro": 9,
+      "total": 10
+    },
+    "DTC": {
+      "top1": 8,
+      "top3": 9,
+      "macro": 9,
+      "total": 10
+    },
+    "DIFERENCIAL": {
+      "top1": 4,
+      "top3": 7,
+      "macro": 8,
+      "total": 10
+    }
+  }
+}

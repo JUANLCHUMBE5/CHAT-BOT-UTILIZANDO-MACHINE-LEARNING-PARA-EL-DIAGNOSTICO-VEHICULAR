@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Card } from '../../../common/Card';
-import { Badge } from '../../../common/Badge';
 import { ErrorBoundary } from '../../../common/ErrorBoundary';
-import { DATOS_SINTETICOS_DEMO_60, METADATA_TESIS, type RegistroTesis } from '../../../../data/fichasTesisData';
+import type { RegistroTesis } from '../../../../data/fichasTesisData';
 import { TesisTablasFichas } from './TesisTablasFichas';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export type FichaId = 'ficha1' | 'ficha2' | 'ficha3';
-export type FaseVista = 'pre' | 'post' | 'contraste';
+export type FaseVista = 'pre' | 'post';
 
 interface TesisFichaOficialViewProps {
   fichaId: FichaId;
@@ -18,14 +16,10 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
   fichaId,
   casosReales = [],
 }) => {
-  const [fase, setFase] = useState<FaseVista>('contraste');
-  const [modoDemo, setModoDemo] = useState(false);
+  const [fase, setFase] = useState<FaseVista>('pre');
 
-  // Fuente de datos según el modo activo
-  const casosFuente: RegistroTesis[] = modoDemo ? DATOS_SINTETICOS_DEMO_60 : casosReales;
-
-  const preCasos = casosFuente.filter((c) => (c.fase || '').toLowerCase().includes('pre'));
-  const postCasos = casosFuente.filter((c) => (c.fase || '').toLowerCase().includes('post'));
+  const preCasos = casosReales.filter((c) => (c.fase || '').toLowerCase().includes('pre'));
+  const postCasos = casosReales.filter((c) => (c.fase || '').toLowerCase().includes('post'));
   const casosActivos: RegistroTesis[] = fase === 'pre' ? preCasos : postCasos;
 
   // Cálculos Ficha 1 (PPCF)
@@ -61,7 +55,7 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
       dimension: 'Control de información diagnóstica vehicular',
       indicador: 'Porcentaje de registros diagnósticos completos (PRDC)',
       medida: 'Porcentaje (%)',
-      formula: 'RDC = (RC / TRE) × 100  [RC: Registros con los 8 campos completos, TRE: Total registros evaluados]',
+      formula: 'PRDC = (RC / TRE) × 100  [RC: Registros con 8 campos completos, TRE: Total registros evaluados]',
     },
     ficha3: {
       tituloFicha: 'Ficha de registro: Eficiencia del diagnóstico vehicular',
@@ -73,79 +67,74 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
     },
   }[fichaId];
 
+  const resumenIndicadorFase = () => {
+    if (fichaId === 'ficha1') {
+      const valor = fase === 'pre' ? prePPCF : postPPCF;
+      const aciertos = fase === 'pre' ? preAciertos : postAciertos;
+      return (
+        <span style={{ fontWeight: 700, color: 'var(--primary)' }}>
+          PPCF: {casosActivos.length > 0 ? `${valor.toFixed(1)}%` : '—'} ({aciertos}/{casosActivos.length} aciertos)
+        </span>
+      );
+    }
+    if (fichaId === 'ficha2') {
+      const valor = fase === 'pre' ? prePRDC : postPRDC;
+      const completos = fase === 'pre' ? preCompletos : postCompletos;
+      return (
+        <span style={{ fontWeight: 700, color: 'var(--primary)' }}>
+          PRDC: {casosActivos.length > 0 ? `${valor.toFixed(1)}%` : '—'} ({completos}/{casosActivos.length} con 8 campos)
+        </span>
+      );
+    }
+    const valor = fase === 'pre' ? preTPRD : postTPRD;
+    const suma = fase === 'pre' ? preTiempoSuma : postTiempoSuma;
+    return (
+      <span style={{ fontWeight: 700, color: 'var(--primary)' }}>
+        TPRD: {casosActivos.length > 0 ? `${valor.toFixed(1)} min` : '—'} (total {suma} min)
+      </span>
+    );
+  };
+
   return (
     <ErrorBoundary fallbackTitle="Error al visualizar formato de Fichas Oficiales">
-      <div className="notranslate" translate="no" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-      {/* Banner de Estado Metodológico */}
-      <div
-        style={{
-          padding: '10px 14px',
-          borderRadius: '8px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          backgroundColor: modoDemo ? '#fffbeb' : '#f8fafc',
-          border: modoDemo ? '1px solid #fde68a' : '1px solid #e2e8f0',
-        }}
-      >
-        {modoDemo ? (
-          <AlertCircle size={18} style={{ color: '#d97706', flexShrink: 0 }} />
-        ) : (
-          <CheckCircle2 size={18} style={{ color: '#059669', flexShrink: 0 }} />
-        )}
-        <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
-          {modoDemo ? (
-            <span style={{ color: '#92400e', fontWeight: 600 }}>
-              MODO DEMOSTRACIÓN: Visualizando 60 registros sintéticos de prueba (simulación previa para calibración).
-            </span>
-          ) : (
-            <span style={{ color: '#065f46' }}>
-              <strong>Muestra Oficial de Taller (CARTER MOTOR'S E.I.R.L.):</strong> Avance actual registrado: <strong>{casosReales.length} de 60 registros verificados</strong> ({preCasos.length} Pre-test / {postCasos.length} Post-test).
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* 1. Tarjeta de Formato Oficial Institucional (Anexo 2) */}
-      <Card style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--border-color)' }}>
-        {/* Banner Superior */}
-        <div
-          style={{
-            padding: '14px 18px',
-            backgroundColor: 'var(--bg-subtle)',
-            borderBottom: '1px solid var(--border-color)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: '12px',
-          }}
-        >
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-              <span
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: 'var(--primary)',
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                UNIVERSIDAD CÉSAR VALLEJO · {infoFicha.codigo}
-              </span>
-              <Badge
-                type={modoDemo ? 'borrador' : 'confirmado'}
-                label={modoDemo ? 'Demo Sintética' : `Muestra Real (${casosFuente.length}/60)`}
-              />
+      <div className="notranslate" translate="no" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <Card style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--border-color)' }}>
+          {/* Encabezado Oficial del Instrumento */}
+          <div
+            style={{
+              padding: '12px 18px',
+              backgroundColor: 'var(--bg-subtle)',
+              borderBottom: '1px solid var(--border-color)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '12px',
+            }}
+          >
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    color: 'var(--primary)',
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  UNIVERSIDAD CÉSAR VALLEJO · {infoFicha.codigo}
+                </span>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  · CARTER MOTOR'S E.I.R.L.
+                </span>
+              </div>
+              <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 800, color: 'var(--text-main)' }}>
+                {infoFicha.tituloFicha}
+              </h3>
             </div>
-            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--text-main)' }}>
-              {infoFicha.tituloFicha}
-            </h3>
-          </div>
 
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-            {/* Selector de Modo: Real vs Demo */}
+            {/* Selector de Fase de Prueba */}
             <div
               style={{
                 display: 'flex',
@@ -158,202 +147,111 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
             >
               <button
                 type="button"
-                onClick={() => setModoDemo(false)}
-                style={{
-                  padding: '5px 9px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  borderRadius: '6px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: !modoDemo ? '#ffffff' : 'transparent',
-                  color: !modoDemo ? '#059669' : 'var(--text-muted)',
-                  boxShadow: !modoDemo ? '0 1px 2px rgba(0,0,0,0.08)' : 'none',
-                }}
-              >
-                Reales ({casosReales.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => setModoDemo(true)}
-                style={{
-                  padding: '5px 9px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  borderRadius: '6px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: modoDemo ? '#ffffff' : 'transparent',
-                  color: modoDemo ? '#d97706' : 'var(--text-muted)',
-                  boxShadow: modoDemo ? '0 1px 2px rgba(0,0,0,0.08)' : 'none',
-                }}
-              >
-                Demo (60)
-              </button>
-            </div>
-
-            {/* Selector de Fase de Prueba */}
-            <div
-              className="notranslate"
-              translate="no"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: '#f1f5f9',
-                padding: '3px',
-                borderRadius: '8px',
-                gap: '2px',
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => setFase('contraste')}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: '5px 12px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  borderRadius: '6px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: fase === 'contraste' ? '#ffffff' : 'transparent',
-                  color: fase === 'contraste' ? '#059669' : 'var(--text-muted)',
-                  boxShadow: fase === 'contraste' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-                }}
-              >
-                <span>⚡ Pre y Post a la vez</span>
-              </button>
-
-              <button
-                type="button"
                 onClick={() => setFase('pre')}
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: '5px 10px',
-                  fontSize: '11px',
+                  padding: '6px 12px',
+                  fontSize: '11.5px',
                   fontWeight: 700,
                   borderRadius: '6px',
                   border: 'none',
                   cursor: 'pointer',
                   backgroundColor: fase === 'pre' ? '#ffffff' : 'transparent',
-                  color: fase === 'pre' ? 'var(--text-main)' : 'var(--text-muted)',
-                  boxShadow: fase === 'pre' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  color: fase === 'pre' ? '#166534' : 'var(--text-muted)',
+                  boxShadow: fase === 'pre' ? '0 1px 2px rgba(0,0,0,0.08)' : 'none',
+                  transition: 'all 0.15s ease',
                 }}
               >
-                <span>Solo Pre-test ({preCasos.length})</span>
+                Pre-test ({preCasos.length}/30)
               </button>
 
               <button
                 type="button"
                 onClick={() => setFase('post')}
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                  padding: '5px 10px',
-                  fontSize: '11px',
+                  padding: '6px 12px',
+                  fontSize: '11.5px',
                   fontWeight: 700,
                   borderRadius: '6px',
                   border: 'none',
                   cursor: 'pointer',
                   backgroundColor: fase === 'post' ? '#ffffff' : 'transparent',
                   color: fase === 'post' ? 'var(--primary)' : 'var(--text-muted)',
-                  boxShadow: fase === 'post' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                  boxShadow: fase === 'post' ? '0 1px 2px rgba(0,0,0,0.08)' : 'none',
+                  transition: 'all 0.15s ease',
                 }}
               >
-                <span>Solo Post-test ({postCasos.length})</span>
+                Post-test ({postCasos.length}/30)
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Metadatos Institucionales de la Ficha */}
-        <div
-          style={{
-            padding: '12px 18px',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: '8px 16px',
-            fontSize: '11.5px',
-            backgroundColor: '#ffffff',
-            borderBottom: '1px solid var(--border-color)',
-          }}
-        >
-          <div>
-            <strong style={{ color: 'var(--text-secondary)' }}>Investigador(es): </strong>
-            <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{METADATA_TESIS.autores}</span>
-          </div>
-          <div>
-            <strong style={{ color: 'var(--text-secondary)' }}>Fase actual: </strong>
-            <span style={{ color: 'var(--text-main)', fontWeight: 700 }}>
-              {fase === 'pre'
-                ? 'Pre-test (Diagnóstico Tradicional)'
-                : fase === 'post'
-                ? 'Post-test (Asistido por CarBot)'
-                : 'Contraste de Fases'}
-            </span>
-          </div>
-          <div>
-            <strong style={{ color: 'var(--text-secondary)' }}>Variable: </strong>
-            <span style={{ color: 'var(--text-main)' }}>Diagnóstico vehicular</span>
-          </div>
-          <div>
-            <strong style={{ color: 'var(--text-secondary)' }}>Dimensión: </strong>
-            <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{infoFicha.dimension}</span>
-          </div>
-          <div>
-            <strong style={{ color: 'var(--text-secondary)' }}>Indicador: </strong>
-            <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{infoFicha.indicador}</span>
-          </div>
-          <div>
-            <strong style={{ color: 'var(--text-secondary)' }}>Unidad de Medida: </strong>
-            <span style={{ color: 'var(--text-main)' }}>{infoFicha.medida}</span>
-          </div>
-          <div style={{ gridColumn: '1 / -1' }}>
-            <strong style={{ color: 'var(--text-secondary)' }}>Fórmula Oficial: </strong>
-            <code
-              style={{
-                backgroundColor: '#f8fafc',
-                padding: '3px 8px',
-                borderRadius: '4px',
-                border: '1px solid #e2e8f0',
-                color: '#1e293b',
-                fontWeight: 600,
-              }}
-            >
-              {infoFicha.formula}
-            </code>
-          </div>
-        </div>
+          {/* Fila Compacta de Metadatos de la Variable Dependiente */}
+          <div
+            style={{
+              padding: '10px 18px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '12px',
+              fontSize: '12px',
+              backgroundColor: '#ffffff',
+              borderBottom: '1px solid var(--border-color)',
+            }}
+          >
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div>
+                <strong style={{ color: 'var(--text-secondary)' }}>Dimensión: </strong>
+                <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{infoFicha.dimension}</span>
+              </div>
+              <div>
+                <strong style={{ color: 'var(--text-secondary)' }}>Indicador: </strong>
+                <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{infoFicha.indicador}</span>
+              </div>
+              <div>
+                <strong style={{ color: 'var(--text-secondary)' }}>Fórmula: </strong>
+                <code
+                  style={{
+                    backgroundColor: '#f8fafc',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    border: '1px solid #e2e8f0',
+                    fontSize: '11px',
+                  }}
+                >
+                  {infoFicha.formula}
+                </code>
+              </div>
+            </div>
 
-        {/* 2. Tabla Modular de Datos de la Ficha */}
-        <div style={{ overflowX: 'auto' }}>
-          <TesisTablasFichas
-            fase={fase}
-            fichaId={fichaId}
-            preCasos={preCasos}
-            postCasos={postCasos}
-            casosActivos={casosActivos}
-            preAciertos={preAciertos}
-            postAciertos={postAciertos}
-            prePPCF={prePPCF}
-            postPPCF={postPPCF}
-            preCompletos={preCompletos}
-            postCompletos={postCompletos}
-            prePRDC={prePRDC}
-            postPRDC={postPRDC}
-            preTiempoSuma={preTiempoSuma}
-            postTiempoSuma={postTiempoSuma}
-            preTPRD={preTPRD}
-            postTPRD={postTPRD}
-          />
-        </div>
-      </Card>
-    </div>
-  </ErrorBoundary>
+            <div style={{ fontSize: '12px' }}>
+              <span style={{ color: 'var(--text-secondary)', marginRight: '6px' }}>Resultado {fase === 'pre' ? 'Pre-test' : 'Post-test'}:</span>
+              {resumenIndicadorFase()}
+            </div>
+          </div>
+
+          {/* Tabla de Datos de la Ficha */}
+          <div style={{ overflowX: 'auto' }}>
+            <TesisTablasFichas
+              fase={fase}
+              fichaId={fichaId}
+              casosActivos={casosActivos}
+              preAciertos={preAciertos}
+              postAciertos={postAciertos}
+              prePPCF={prePPCF}
+              postPPCF={postPPCF}
+              preCompletos={preCompletos}
+              postCompletos={postCompletos}
+              prePRDC={prePRDC}
+              postPRDC={postPRDC}
+              preTiempoSuma={preTiempoSuma}
+              postTiempoSuma={postTiempoSuma}
+              preTPRD={preTPRD}
+              postTPRD={postTPRD}
+            />
+          </div>
+        </Card>
+      </div>
+    </ErrorBoundary>
   );
 };

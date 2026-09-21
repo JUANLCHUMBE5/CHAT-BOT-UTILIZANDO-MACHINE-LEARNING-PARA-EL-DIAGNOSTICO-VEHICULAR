@@ -75,7 +75,7 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
     procesamiento_validado: Mapped[int | None] = mapped_column(Integer)
     tiempo_inferencia_ml_ms: Mapped[int | None] = mapped_column(Integer)
     tipo_registro: Mapped[str] = mapped_column(
-        String(30), nullable=False, default="THESIS_POSTTEST", server_default=text("'THESIS_POSTTEST'"), index=True
+        String(30), nullable=False, default="DEVELOPMENT", server_default=text("'DEVELOPMENT'"), index=True
     )
     conversacion_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("conversaciones.id", ondelete="SET NULL"), index=True
@@ -83,13 +83,16 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
     diagnostico_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("diagnosticos.id", ondelete="SET NULL"), index=True
     )
+    inicio_sistema_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    fin_sistema_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    duracion_sistema_segundos: Mapped[int | None] = mapped_column(Integer)
     creado_en: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
 
     __table_args__ = (
         CheckConstraint("fase IN ('Pre-test', 'Post-test', 'Piloto')", name="fase_valida"),
-        CheckConstraint("tipo_registro IN ('DEVELOPMENT', 'REGRESSION', 'THESIS_PRETEST', 'THESIS_POSTTEST')", name="chk_validaciones_tipo_registro"),
+        CheckConstraint("tipo_registro IN ('DEVELOPMENT', 'PILOT', 'REGRESSION', 'THESIS_PRETEST', 'THESIS_POSTTEST')", name="chk_validaciones_tipo_registro"),
         CheckConstraint("campos_completos IN (0, 1)", name="campos_completos_binario"),
         CheckConstraint("cantidad_campos_completos BETWEEN 0 AND 8", name="chk_validaciones_cantidad_campos_0_8"),
         CheckConstraint("prediccion_correcta IN (0, 1)", name="prediccion_correcta_binaria"),

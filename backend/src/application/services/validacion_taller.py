@@ -6,6 +6,7 @@ import uuid
 from datetime import date, datetime, timezone
 from typing import Any
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.infrastructure.database.models.validation import ValidacionTaller
@@ -163,7 +164,7 @@ def serializar_caso(caso: ValidacionTaller) -> dict[str, Any]:
         "metodo_confirmacion": caso.metodo_confirmacion,
         "evidencia_ref": caso.evidencia_ref,
         "estado_registro": caso.estado_registro,
-        "tipo_registro": getattr(caso, "tipo_registro", "THESIS_POSTTEST"),
+        "tipo_registro": getattr(caso, "tipo_registro", "DEVELOPMENT") or "DEVELOPMENT",
         "conversacion_id": str(caso.conversacion_id) if getattr(caso, "conversacion_id", None) else None,
         "diagnostico_id": str(caso.diagnostico_id) if getattr(caso, "diagnostico_id", None) else None,
         "sintoma_registrado_correctamente": caso.sintoma_registrado_correctamente,
@@ -174,6 +175,9 @@ def serializar_caso(caso: ValidacionTaller) -> dict[str, Any]:
         "clasificacion_procesada": caso.clasificacion_procesada,
         "procesamiento_validado": caso.procesamiento_validado,
         "tiempo_inferencia_ml_ms": caso.tiempo_inferencia_ml_ms,
+        "inicio_sistema_at": caso.inicio_sistema_at.isoformat() if getattr(caso, "inicio_sistema_at", None) else None,
+        "fin_sistema_at": caso.fin_sistema_at.isoformat() if getattr(caso, "fin_sistema_at", None) else None,
+        "duracion_sistema_segundos": float(caso.duracion_sistema_segundos) if getattr(caso, "duracion_sistema_segundos", None) is not None else None,
     }
 
 
@@ -220,19 +224,17 @@ class ServicioValidacionTaller:
                 and dto.clasificacion_procesada == 1
             ) else 0
 
-        # Resolución de tipo de registro para separación estricta
+        # Blindaje contra contaminación de muestra:
+        # Requiere intención explícita; NUNCA inferir THESIS_* automáticamente.
         if dto.tipo_registro:
             tipo_reg = dto.tipo_registro
         else:
-            fase_lower = dto.fase.strip().lower()
-            if "pre" in fase_lower:
-                tipo_reg = "THESIS_PRETEST"
-            elif "post" in fase_lower:
-                tipo_reg = "THESIS_POSTTEST"
-            elif "pilo" in fase_lower or "dev" in fase_lower:
-                tipo_reg = "DEVELOPMENT"
-            else:
-                tipo_reg = "THESIS_POSTTEST"
+            tipo_reg = "DEVELOPMENT"
+
+        if tipo_reg == "THESIS_PRETEST" and dto.fase != "Pre-test":
+            raise ValueError("Un registro de tesis THESIS_PRETEST debe pertenecer a la fase Pre-test.")
+        if tipo_reg == "THESIS_POSTTEST" and dto.fase != "Post-test":
+            raise ValueError("Un registro de tesis THESIS_POSTTEST debe pertenecer a la fase Post-test.")
 
         conv_id = None
         if dto.conversacion_id:
@@ -242,15 +244,57 @@ class ServicioValidacionTaller:
                 conv_id = None
 
         diag_id = None
+        chatbot_prediccion_final = dto.chatbot_prediccion.strip()
+        tiempo_ml = dto.tiempo_inferencia_ml_ms
+
         if dto.diagnostico_id:
             try:
                 diag_id = uuid.UUID(dto.diagnostico_id)
             except (ValueError, TypeError):
-                diag_id = None
+                raise ValueError("El diagnostico_id proporcionado no es un UUID válido.")
+
+            from src.infrastructure.database.models.diagnostics import Diagnostico
+
+            stmt_diag = select(Diagnostico).where(
+                Diagnostico.id == diag_id,
+                Diagnostico.taller_id == taller_id,
+            )
+            diag_real = (await self.session.execute(stmt_diag)).scalar_one_or_none()
+            if not diag_real:
+                raise ValueError("El diagnóstico vinculado no existe o no pertenece al taller.")
+
+            # INMUTABILIDAD ABSOLUTA: La predicción del modelo no puede alterarse
+            if diag_real.falla_predicha:
+                chatbot_prediccion_final = diag_real.falla_predicha
+
+            if not conv_id and diag_real.conversacion_id:
+                conv_id = diag_real.conversacion_id
+
+            if tiempo_ml is None and diag_real.tiempo_inferencia_ml_ms is not None:
+                tiempo_ml = diag_real.tiempo_inferencia_ml_ms
+
+        # Telemetría técnica
+        inicio_sis = None
+        if dto.inicio_sistema_at:
+            try:
+                inicio_sis = datetime.fromisoformat(dto.inicio_sistema_at)
+            except (ValueError, TypeError):
+                inicio_sis = None
+
+        fin_sis = None
+        if dto.fin_sistema_at:
+            try:
+                fin_sis = datetime.fromisoformat(dto.fin_sistema_at)
+            except (ValueError, TypeError):
+                fin_sis = None
+
+        duracion_sis = dto.duracion_sistema_segundos
+        if duracion_sis is None and inicio_sis and fin_sis:
+            duracion_sis = round((fin_sis - inicio_sis).total_seconds(), 2)
 
         fecha_val = datetime.now(timezone.utc) if estado == "verificado" else None
         validado_por = usuario_id if estado == "verificado" else None
-        sistema_probable = (dto.sistema_afectado_probable or dto.chatbot_prediccion).strip()
+        sistema_probable = (dto.sistema_afectado_probable or chatbot_prediccion_final).strip()
         descripcion_sintoma = (dto.descripcion_sintoma or "").strip()
         datos_generales_vehiculo = construir_datos_generales_vehiculo(
             marca_modelo=dto.marca_modelo,
@@ -285,7 +329,7 @@ class ServicioValidacionTaller:
             vehiculo_combustible=(dto.vehiculo_combustible or "").strip() or None,
             vehiculo_transmision=(dto.vehiculo_transmision or "").strip() or None,
             falla_real=dto.falla_real.strip(),
-            chatbot_prediccion=dto.chatbot_prediccion.strip(),
+            chatbot_prediccion=chatbot_prediccion_final,
             sistema_afectado_probable=sistema_probable,
             campos_completos=campos_completos,
             cantidad_campos_completos=cantidad_campos,
@@ -305,7 +349,10 @@ class ServicioValidacionTaller:
             extraccion_correcta=dto.extraccion_correcta,
             clasificacion_procesada=dto.clasificacion_procesada,
             procesamiento_validado=proc_val,
-            tiempo_inferencia_ml_ms=dto.tiempo_inferencia_ml_ms,
+            tiempo_inferencia_ml_ms=tiempo_ml,
+            inicio_sistema_at=inicio_sis,
+            fin_sistema_at=fin_sis,
+            duracion_sistema_segundos=duracion_sis,
         )
         detalles_actualizados = dict(caso.detalles_campos or {})
         if "campo_1" in detalles_actualizados:
@@ -330,10 +377,12 @@ class ServicioValidacionTaller:
         grupos = await self.repo.resumen_por_fase(taller_id, fecha_desde, fecha_hasta)
         metricas_vi = await self.repo.metricas_variable_independiente(taller_id, fecha_desde, fecha_hasta)
         distribuciones = await self.repo.distribuciones(taller_id, fecha_desde, fecha_hasta)
+        casos_piloto = await self.repo.contar_piloto(taller_id)
         total_v = int(metricas_vi.get("casos_verificados") or 0)
         return {
             **resumir_fases(grupos),
             **metricas_vi,
+            "casos_piloto": casos_piloto,
             "total_casos_verificados": total_v,
             **distribuciones,
         }

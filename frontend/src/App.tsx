@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { LoginView } from './features/auth';
-import { DashboardView, useMetricas } from './features/dashboard';
+import { DashboardView } from './features/dashboard';
 import {
+
   GestionChatbotView,
   type GestionSubTab,
   useDiagnosticos,
@@ -126,9 +127,9 @@ export const App: React.FC = () => {
   };
 
   // Custom Hooks for Modular Architecture
-  const { metricas, cargando: cargandoMetricas, cargarMetricas } = useMetricas();
   const {
     mecanicos,
+
     cargando: cargandoMecanicos,
     error: errorMecanicos,
     cargarMecanicos,
@@ -180,12 +181,12 @@ export const App: React.FC = () => {
   useEffect(() => {
     if (!user) return;
     if (activeTab === 'inicio') {
-      cargarMetricas();
       cargarSolicitudes();
     } else if (activeTab === 'gestion') {
       handleRecargarGestion();
     }
-  }, [user, activeTab, cargarMetricas, cargarSolicitudes, handleRecargarGestion]);
+  }, [user, activeTab, cargarSolicitudes, handleRecargarGestion]);
+
 
   // Initial badge count load for non-mechanic users
   useEffect(() => {
@@ -258,6 +259,11 @@ export const App: React.FC = () => {
     navigate('/gestion');
   };
 
+  const handleIrAFallas = () => {
+    setGestionSubTab('historial');
+    navigate('/gestion');
+  };
+
   if (!isAdminSession(user) || currentRoute === '/login') {
     return <LoginView onLoginSuccess={handleLoginSuccess} />;
   }
@@ -297,12 +303,11 @@ export const App: React.FC = () => {
         >
           {activeTab === 'inicio' && (
             <DashboardView
-              metricas={metricas}
-              cargando={cargandoMetricas}
-              onFiltrarMetricas={cargarMetricas}
+              onIrAFallas={handleIrAFallas}
               onIrAMecanicos={handleIrAMecanicos}
             />
           )}
+
 
           {activeTab === 'gestion' && (
             <GestionChatbotView

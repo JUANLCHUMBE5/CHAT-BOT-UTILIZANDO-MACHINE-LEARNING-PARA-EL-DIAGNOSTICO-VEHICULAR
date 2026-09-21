@@ -1,0 +1,196 @@
+/* ==========================================================================
+   DASHBOARD OPERATIVO RESPONSIVE - STYLES
+   ========================================================================== */
+
+.dashboard-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.dashboard-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dashboard-title-box {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.periodo-comparado-hint {
+  color: var(--text-muted, #94a3b8);
+}
+
+.dashboard-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dashboard-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm, 8px);
+  background: #ffffff;
+  border: 1px solid var(--border-color, #e2e8f0);
+  color: var(--text-secondary, #475569);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 36px;
+}
+.dashboard-refresh-btn:hover:not(:disabled) {
+  background: var(--bg-subtle, #f8fafc);
+  color: var(--primary, #ea580c);
+  border-color: var(--primary, #ea580c);
+}
+.dashboard-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 1. KPIs Grid (Fila 1) */
+.dashboard-kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+/* 2. Charts Grid (Fila 2) */
+.dashboard-charts-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 12px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.dashboard-chart-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chart-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chart-comparison-badge-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.estado-atenciones-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 16px;
+  margin-top: 10px;
+  flex: 1;
+}
+
+.estado-atenciones-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* 3. Fallas Card (Fila 3) */
+.dashboard-fallas-card {
+  width: 100%;
+}
+
+.falla-frecuente-row {
+  transition: transform 0.1s ease;
+}
+.falla-frecuente-row:hover {
+  transform: translateX(2px);
+}
+
+.ver-todas-fallas-btn:hover {
+  background-color: rgba(249, 115, 22, 0.08);
+}
+
+/* ==========================================================================
+   BREAKPOINTS RESPONSIVOS
+   ========================================================================== */
+
+/* TABLET (640px - 1023px) */
+@media (max-width: 1023px) {
+  .dashboard-kpis-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .dashboard-charts-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+/* MOBILE (< 640px) */
+@media (max-width: 639px) {
+  .dashboard-view-wrapper {
+    gap: 10px;
+  }
+  .dashboard-header-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .dashboard-actions-row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .dashboard-actions-row .glass-segmented-bar {
+    flex: 1;
+    min-width: 0;
+  }
+  .dashboard-kpis-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .estado-atenciones-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .periodo-comparado-hint {
+    display: block;
+    margin-top: 2px;
+  }
+  .refresh-btn-text {
+    display: none;
+  }
+  .dashboard-refresh-btn {
+    padding: 8px 10px;
+    min-height: 38px;
+  }
+}
+
+/* PANTALLAS MUY ESTRECHAS (< 360px) */
+@media (max-width: 359px) {
+  .dashboard-kpis-grid {
+    grid-template-columns: 1fr;
+  }
+}

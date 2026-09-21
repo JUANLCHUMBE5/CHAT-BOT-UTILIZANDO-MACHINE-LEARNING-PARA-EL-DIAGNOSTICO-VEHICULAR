@@ -184,7 +184,7 @@ export const DiagnosticosView: React.FC<DiagnosticosViewProps> = ({
                 )}
               </div>
               <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                Mostrando {diagnosticos.length} por página · Auditoría clínica y trazabilidad IA
+                Mostrando {diagnosticos.length} por página · Auditoría técnica vehicular y trazabilidad IA
               </span>
             </div>
           </div>

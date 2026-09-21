@@ -1,287 +1,194 @@
-import React, { useState } from 'react';
-import {
-  Calendar,
-  CheckCircle2,
-  Clock,
-  FileText,
-  RefreshCw,
-  Zap,
-} from 'lucide-react';
-import {
-  Bar,
-  BarChart,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
-import { Card } from '../common/Card';
-import { DateRangeModal } from '../common/DateRangeModal';
-import { StatCard } from '../common/StatCard';
+import React from 'react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
+import { useDashboardOperativo } from '../../hooks/useDashboardOperativo';
 import type { ResumenMetricas } from '../../types';
-import { getModoLabel } from '../../utils/modos';
+import {
+  DashboardFiltros,
+  DashboardKpis,
+  VehiculosPorDiaChart,
+  EstadoAtencionesChart,
+  FallasFrecuentesList,
+} from './dashboard';
 
 interface DashboardViewProps {
-  metricas: ResumenMetricas | null;
+  onIrAFallas?: () => void;
+  onIrAMecanicos?: () => void;
+  // Parámetros opcionales para preservar retrocompatibilidad
+  metricas?: ResumenMetricas | null;
   cargando?: boolean;
   onFiltrarMetricas?: (fechaInicio?: string, fechaFin?: string) => void;
-  onIrAMecanicos?: () => void;
 }
 
-const MODOS_COLORS: Record<string, string> = {
-  completo_ml_rag_llm: '#10b981',
-  diagnostico_degradado_ml_rag: '#06b6d4',
-  base_arboles_decision: '#6366f1',
-  evaluacion_reglas_expertas: '#8b5cf6',
-  rapido_patrones_frecuentes: '#ec4899',
-  en_cola_gemini: '#f59e0b',
-  saludo: '#3b82f6',
-  baja_confianza: '#ef4444',
-};
-
-const PALETTE_FALLBACKS = ['#10b981', '#06b6d4', '#8b5cf6', '#3b82f6', '#f59e0b', '#6366f1', '#ec4899'];
-
-const formatDateLocal = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
-const formatTiempoPromedio = (ms?: number): string => {
-  if (!ms || ms <= 0) return '0 s';
-  if (ms < 1000) return `${ms} ms`;
-  return `${(ms / 1000).toFixed(1)} s`;
-};
-
 export const DashboardView: React.FC<DashboardViewProps> = ({
-  metricas,
-  cargando = false,
-  onFiltrarMetricas,
+  onIrAFallas,
+  onIrAMecanicos,
 }) => {
-  const [activePreset, setActivePreset] = useState<'hoy' | '7dias' | 'esteMes' | 'custom'>('esteMes');
-  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
-  const [fechaInicio, setFechaInicio] = useState('');
-  const [fechaFin, setFechaFin] = useState('');
+  const {
+    preset,
+    periodos,
+    metricasActuales,
+    metricasAnteriores,
+    cargando,
+    error,
+    customInicio,
+    customFin,
+    cambiarPreset,
+    aplicarRangoCustom,
+    recargar,
+  } = useDashboardOperativo();
 
-  const handleQuickRange = (preset: 'hoy' | '7dias' | 'esteMes') => {
-    setActivePreset(preset);
-    const hoy = new Date();
-    const fin = formatDateLocal(hoy);
-    let inicio = fin;
-
-    if (preset === '7dias') {
-      const fecha = new Date();
-      fecha.setDate(hoy.getDate() - 6);
-      inicio = formatDateLocal(fecha);
-    } else if (preset === 'esteMes') {
-      inicio = formatDateLocal(new Date(hoy.getFullYear(), hoy.getMonth(), 1));
-    }
-
-    setFechaInicio(inicio);
-    setFechaFin(fin);
-    onFiltrarMetricas?.(inicio, fin);
-  };
-
-  const handleApplyCustomRange = (start: string, end: string) => {
-    setActivePreset('custom');
-    setFechaInicio(start);
-    setFechaFin(end);
-    onFiltrarMetricas?.(start || undefined, end || undefined);
-  };
-
-  const handleResetFiltro = () => {
-    setActivePreset('esteMes');
-    setFechaInicio('');
-    setFechaFin('');
-    onFiltrarMetricas?.();
-  };
-
-  if (cargando && !metricas) {
+  // 1. Estado de Carga Inicial (Skeleton Screen)
+  if (cargando && !metricasActuales) {
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-        {[1, 2, 3, 4].map((item) => (
-          <div
-            key={item}
-            style={{
-              height: '95px',
-              backgroundColor: '#ffffff',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--border-color)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <RefreshCw size={18} className="animate-spin" style={{ color: 'var(--primary)', opacity: 0.5 }} />
-          </div>
-        ))}
+      <div className="dashboard-view-wrapper" aria-busy="true" aria-label="Cargando dashboard operativo">
+        {/* Skeleton Header */}
+        <div style={{ height: '40px', backgroundColor: '#ffffff', borderRadius: '10px', opacity: 0.6 }} />
+
+        {/* Skeleton KPIs */}
+        <div className="dashboard-kpis-grid">
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              style={{
+                height: '90px',
+                backgroundColor: '#ffffff',
+                borderRadius: '14px',
+                border: '1px solid var(--border-color, #e2e8f0)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <RefreshCw size={18} className="animate-spin" style={{ color: 'var(--primary, #ea580c)', opacity: 0.4 }} />
+            </div>
+          ))}
+        </div>
+
+        {/* Skeleton Charts */}
+        <div className="dashboard-charts-grid">
+          <div style={{ height: '220px', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid var(--border-color, #e2e8f0)' }} />
+          <div style={{ height: '220px', backgroundColor: '#ffffff', borderRadius: '12px', border: '1px solid var(--border-color, #e2e8f0)' }} />
+        </div>
       </div>
     );
   }
 
-  if (!metricas) {
+  // 2. Estado de Error
+  if (error && !metricasActuales) {
     return (
-      <div style={{ padding: '32px 16px', textAlign: 'center', backgroundColor: '#fff', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-        <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-main)' }}>No se pudieron cargar las métricas operativas</p>
+      <div
+        style={{
+          padding: '40px 20px',
+          textAlign: 'center',
+          backgroundColor: '#ffffff',
+          borderRadius: '14px',
+          border: '1px solid var(--border-color, #e2e8f0)',
+          maxWidth: '500px',
+          margin: '40px auto',
+          boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05)',
+        }}
+        role="alert"
+      >
+        <div
+          style={{
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(239, 68, 68, 0.12)',
+            color: '#dc2626',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 16px',
+          }}
+        >
+          <AlertCircle size={24} />
+        </div>
+        <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main)', margin: '0 0 6px' }}>
+          No se pudieron cargar los datos del dashboard
+        </h3>
+        <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', margin: '0 0 16px' }}>
+          {error}
+        </p>
         <button
           type="button"
-          onClick={() => onFiltrarMetricas?.()}
-          style={{ marginTop: '12px', padding: '8px 16px', backgroundColor: '#3b82f6', color: '#fff', border: 'none', borderRadius: 'var(--radius-sm)', cursor: 'pointer' }}
+          onClick={recargar}
+          style={{
+            padding: '8px 18px',
+            backgroundColor: 'var(--primary, #ea580c)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '13px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
         >
-          Reintentar conexión
+          <RefreshCw size={14} />
+          <span>Reintentar</span>
         </button>
       </div>
     );
   }
 
-  const modos = (metricas.distribucion_modos || []).map((item) => ({
-    ...item,
-    nombreModo: getModoLabel(item.modo),
-  }));
-
-  const hasActividad = (metricas.actividad_diaria || []).some((item) => item.cantidad > 0);
-  const hasModos = modos.some((item) => item.cantidad > 0);
-  const hasFallas = Boolean(metricas.fallas_frecuentes?.length);
-
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      {/* Selector de Rango de Fecha */}
-      <div className="glass-segmented-bar">
-        <button type="button" onClick={() => handleQuickRange('hoy')} className={`glass-segment-item ${activePreset === 'hoy' ? 'active' : ''}`}>
-          Hoy
-        </button>
-        <button type="button" onClick={() => handleQuickRange('7dias')} className={`glass-segment-item ${activePreset === '7dias' ? 'active' : ''}`}>
-          7 días
-        </button>
-        <button type="button" onClick={() => handleQuickRange('esteMes')} className={`glass-segment-item ${activePreset === 'esteMes' ? 'active' : ''}`}>
-          Este mes
-        </button>
-        <button type="button" onClick={() => setIsDateModalOpen(true)} className={`glass-segment-item ${activePreset === 'custom' ? 'active' : ''}`}>
-          <Calendar size={13} />
-          <span>Rango</span>
+  // 3. Fallback de Datos Nulos
+  if (!metricasActuales) {
+    return (
+      <div style={{ padding: '32px 16px', textAlign: 'center', backgroundColor: '#ffffff', borderRadius: '12px' }}>
+        <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+          No hay datos para el período seleccionado.
+        </p>
+        <button
+          type="button"
+          onClick={recargar}
+          style={{ marginTop: '10px', padding: '6px 14px', cursor: 'pointer' }}
+        >
+          Reintentar
         </button>
       </div>
+    );
+  }
 
-      <DateRangeModal
-        isOpen={isDateModalOpen}
-        onClose={() => setIsDateModalOpen(false)}
-        initialFechaInicio={fechaInicio}
-        initialFechaFin={fechaFin}
-        onApply={handleApplyCustomRange}
-        onReset={handleResetFiltro}
+  // 4. Render Principal del Dashboard Operativo
+  return (
+    <div className="dashboard-view-wrapper">
+      {/* Encabezado y Filtros Temporales */}
+      <DashboardFiltros
+        preset={preset}
+        periodos={periodos}
+        cargando={cargando}
+        customInicio={customInicio}
+        customFin={customFin}
+        onCambiarPreset={cambiarPreset}
+        onAplicarRango={aplicarRangoCustom}
+        onRecargar={recargar}
       />
 
-      {/* 4 Stat Cards Operativas Reales (2x2 en móvil) */}
-      <div className="stat-grid-mobile" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '10px' }}>
-        <StatCard
-          title="Diagnósticos Realizados"
-          value={metricas.diagnosticos_realizados ?? metricas.diagnosticos_mes}
-          icon={<FileText size={16} />}
+      {/* Fila 1: Tarjetas KPI Operativas */}
+      <DashboardKpis
+        metricasActuales={metricasActuales}
+        metricasAnteriores={metricasAnteriores}
+        periodos={periodos}
+      />
+
+      {/* Fila 2: Gráficos de Actividad y Estados */}
+      <div className="dashboard-charts-grid">
+        <VehiculosPorDiaChart
+          metricasActuales={metricasActuales}
+          metricasAnteriores={metricasAnteriores}
+          periodos={periodos}
         />
-        <StatCard
-          title="Pendientes Confirmación"
-          value={metricas.diagnosticos_pendientes ?? 0}
-          icon={<Clock size={16} />}
-        />
-        <StatCard
-          title="Confirmados por Mecánicos"
-          value={`${metricas.porcentaje_confirmados}%`}
-          icon={<CheckCircle2 size={16} />}
-        />
-        <StatCard
-          title="Tiempo Promedio del Bot"
-          value={formatTiempoPromedio(metricas.tiempo_promedio_ms)}
-          icon={<Zap size={16} />}
-        />
+        <EstadoAtencionesChart metricas={metricasActuales} />
       </div>
 
-      {(hasActividad || hasModos) && (
-        <div className="charts-grid-mobile" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px' }}>
-          {hasActividad && (
-            <Card style={{ padding: '12px 12px 8px', overflow: 'hidden' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <h4 style={{ fontSize: '12.5px', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>Volumen diario</h4>
-                <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
-                  {activePreset === 'hoy' ? 'Hoy' : activePreset === '7dias' ? '7 días' : activePreset === 'esteMes' ? 'Este mes' : 'Rango'}
-                </span>
-              </div>
-              <div style={{ width: '100%', height: 150 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={metricas.actividad_diaria} margin={{ top: 6, right: 4, left: -24, bottom: 0 }}>
-                    <XAxis dataKey="fecha" stroke="#94a3b8" fontSize={9.5} tickLine={false} interval="preserveStartEnd" />
-                    <YAxis stroke="#94a3b8" fontSize={9.5} tickLine={false} axisLine={false} allowDecimals={false} />
-                    <Tooltip contentStyle={{ borderColor: 'var(--border-color)', borderRadius: '6px', fontSize: '11px' }} />
-                    <Bar dataKey="cantidad" fill="var(--primary)" radius={[4, 4, 0, 0]} name="Diagnósticos" maxBarSize={24} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </Card>
-          )}
-
-          {hasModos && (
-            <Card style={{ padding: '12px 12px 8px', overflow: 'hidden' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <h4 style={{ fontSize: '12.5px', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>Modos de respuesta</h4>
-              </div>
-              <div style={{ width: '100%', height: 150 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie data={modos} cx="50%" cy="50%" innerRadius={34} outerRadius={54} paddingAngle={3} dataKey="cantidad" nameKey="nombreModo">
-                      {modos.map((entry, index) => (
-                        <Cell key={`cell-${entry.modo || index}`} fill={MODOS_COLORS[entry.modo] || PALETTE_FALLBACKS[index % PALETTE_FALLBACKS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip contentStyle={{ borderColor: 'var(--border-color)', borderRadius: '6px', fontSize: '11px' }} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </Card>
-          )}
-        </div>
-      )}
-
-      {hasFallas && (
-        <Card style={{ padding: '12px 14px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <h4 style={{ fontSize: '12.5px', fontWeight: 700, margin: 0, color: 'var(--text-main)' }}>Fallas frecuentes</h4>
-            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>Periodo seleccionado</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-            {metricas.fallas_frecuentes.map((falla, index) => (
-              <div
-                key={`${falla.falla}-${index}`}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  padding: '5px 8px',
-                  backgroundColor: 'var(--bg-subtle)',
-                  borderRadius: '5px',
-                  fontSize: '11px',
-                }}
-              >
-                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '75%' }}>
-                  {falla.falla}
-                </span>
-                <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '10.5px' }}>
-                  {falla.cantidad} caso(s)
-                </span>
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
-
-      {!hasActividad && !hasModos && !hasFallas && (
-        <Card style={{ padding: '18px 14px', textAlign: 'center' }}>
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-            Aún no hay diagnósticos en este periodo.
-          </span>
-        </Card>
-      )}
+      {/* Fila 3: Fallas Más Frecuentes del Período */}
+      <FallasFrecuentesList
+        metricas={metricasActuales}
+        onIrAFallas={onIrAFallas || onIrAMecanicos}
+      />
     </div>
   );
 };

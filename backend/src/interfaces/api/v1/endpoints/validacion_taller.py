@@ -484,16 +484,19 @@ async def registrar_caso_validacion(
 ):
     if database_configurada():
         enmascarada, p_hash = _pseudonimizar_placa(dto.placa)
-        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
-            async with session.begin():
-                caso = await ServicioValidacionTaller(session).crear(
-                    _uuid_claim(payload, "taller_id"),
-                    _uuid_claim(payload, "usuario_id", obligatorio=False),
-                    dto,
-                    enmascarada,
-                    p_hash,
-                )
-            return CasoValidacionDTO(**serializar_caso(caso))
+        try:
+            async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+                async with session.begin():
+                    caso = await ServicioValidacionTaller(session).crear(
+                        _uuid_claim(payload, "taller_id"),
+                        _uuid_claim(payload, "usuario_id", obligatorio=False),
+                        dto,
+                        enmascarada,
+                        p_hash,
+                    )
+                return CasoValidacionDTO(**serializar_caso(caso))
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e))
 
     async with _ASYNC_CSV_LOCK:
         try:
@@ -655,6 +658,8 @@ async def exportar_fichas_anexo2_csv(
         df = _filtrar_periodo(_filtrar_df_por_taller(df_global, taller_id_auth), periodo)
         if not df.empty and "fase" in df.columns:
             df = df[df["fase"] != "Piloto"]
+        if not df.empty and "tipo_registro" in df.columns:
+            df = df[df["tipo_registro"].isin(["THESIS_PRETEST", "THESIS_POSTTEST"])]
         if not df.empty and "estado_registro" in df.columns:
             df = df[df["estado_registro"] == "verificado"]
         registros = df.to_dict(orient="records")
@@ -689,6 +694,7 @@ async def exportar_fichas_anexo2_csv(
     columnas_export = [
         "Item",
         "Fase",
+        "Tipo_Registro",
         "Fecha",
         "Placa_Enmascarada",
         "Marca_Modelo",
@@ -733,6 +739,7 @@ async def exportar_fichas_anexo2_csv(
         fila = [
             _sanitizar_campo_csv(r.get("item", "")),
             _sanitizar_campo_csv(r.get("fase", "")),
+            _sanitizar_campo_csv(r.get("tipo_registro", "")),
             _sanitizar_campo_csv(r.get("fecha", "")),
             _sanitizar_campo_csv(r.get("placa_enmascarada", "")),
             _sanitizar_campo_csv(r.get("marca_modelo", "")),

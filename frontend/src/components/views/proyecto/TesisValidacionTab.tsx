@@ -7,7 +7,7 @@ export const TesisValidacionTab = () => {
   return <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 16 }}>
     <div className="periodo-filter">
       <button type="button" aria-pressed={vista === 'fichas'} onClick={() => setVista('fichas')}>
-        Evaluación del diagnóstico vehicular (Variable Dependiente)
+        Fichas de Taller (Variable Dependiente)
       </button>
       <button type="button" aria-pressed={vista === 'consultas'} onClick={() => setVista('consultas')}>
         Desempeño de CarBot (Variable Independiente)
