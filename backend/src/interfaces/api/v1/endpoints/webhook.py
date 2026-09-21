@@ -3,12 +3,16 @@ from urllib.parse import parse_qs
 
 from fastapi import APIRouter, BackgroundTasks, Header, HTTPException, Query, Request
 from fastapi.responses import JSONResponse, PlainTextResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.application.services import GestorDiagnostico
+from src.application.services.whatsapp import WebhookService
 from src.config import settings
-from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.logger import logger
 from src.core.security import anonimizar_identificador, verificar_firma_meta, verificar_firma_twilio
-from src.core.services.webhook_service import WebhookService
+from src.infrastructure.database.connection import database_configurada, obtener_engine
+from src.infrastructure.database.repositories.taller_repository import TallerRepository
+from src.infrastructure.database.repositories.trabajo_sistema_repository import TrabajoSistemaRepository
 
 router = APIRouter()
 
@@ -22,6 +26,30 @@ def obtener_gestor_diagnostico(request: Request) -> GestorDiagnostico:
 def obtener_webhook_service(request: Request) -> WebhookService:
     gestor = obtener_gestor_diagnostico(request)
     return WebhookService(gestor)
+
+
+async def _encolar_mensaje_whatsapp(payload: dict, proveedor: str, mensaje_id: str) -> tuple[str, bool]:
+    """Persiste el mensaje antes de confirmar su recepción al proveedor."""
+    try:
+        engine = obtener_engine()
+        async with AsyncSession(engine, expire_on_commit=False) as session:
+            async with session.begin():
+                taller = await TallerRepository(session).obtener_taller_para_webhook(
+                    payload.get("telefono_id_meta")
+                )
+                if taller is None:
+                    raise HTTPException(status_code=503, detail="No existe un taller activo para este canal.")
+                trabajo, creado = await TrabajoSistemaRepository(session).crear_trabajo(
+                    tipo="webhook_mensaje",
+                    cola="audio" if payload.get("tipo_mensaje") == "audio" else "diagnosticos",
+                    payload=payload,
+                    prioridad=80 if payload.get("tipo_mensaje") == "text" else 60,
+                    clave_idempotencia=f"{proveedor}:{mensaje_id}",
+                    taller_id=taller.id,
+                )
+                return str(trabajo.id), creado
+    except OverflowError as exc:
+        raise HTTPException(status_code=503, detail=str(exc), headers={"Retry-After": "30"}) from exc
 
 
 async def _procesar_y_responder_whatsapp(
@@ -172,7 +200,10 @@ async def recibir_mensaje_meta(
             if tipo_mensaje == "text":
                 texto_cliente = msg.get("text", {}).get("body", "")
                 if len(texto_cliente) > settings.user_text_max_chars:
-                    raise HTTPException(status_code=413, detail="Mensaje de texto demasiado largo.")
+                    logger.warning(
+                        f"[Webhook Meta] Texto de cliente truncado de {len(texto_cliente)} a {settings.user_text_max_chars} caracteres."
+                    )
+                    texto_cliente = texto_cliente[: settings.user_text_max_chars]
             elif tipo_mensaje == "audio":
                 audio_id = msg.get("audio", {}).get("id", "")
             else:
@@ -187,22 +218,29 @@ async def recibir_mensaje_meta(
         rem_anon = anonimizar_identificador(remitente)
         logger.info(f"[Webhook Meta API] Mensaje válido de usuario {rem_anon} (Tipo: {tipo_mensaje}, MsgID: {meta_message_id})")
 
-        gestor = obtener_gestor_diagnostico(request)
-        resultado_proceso = await _procesar_y_responder_whatsapp(
-            gestor=gestor,
-            remitente=remitente,
-            tipo_mensaje=tipo_mensaje,
-            texto_cliente=texto_cliente,
-            audio_id=audio_id,
-            placa="WAPP-01",
-            marca_modelo="Vehiculo Generico",
-            session_id=remitente,
-            meta_message_id=meta_message_id,
-            proveedor="meta",
-            tipo_identificador=tipo_identificador,
-            telefono_id_meta=telefono_id_meta,
-            nombre_contacto=nombre_contacto,
-        )
+        datos_trabajo = {
+            "remitente": remitente,
+            "tipo_mensaje": tipo_mensaje,
+            "texto_cliente": texto_cliente,
+            "audio_id": audio_id,
+            "placa": "WAPP-01",
+            "marca_modelo": "Vehiculo Generico",
+            "session_id": remitente,
+            "meta_message_id": meta_message_id,
+            "proveedor": "meta",
+            "tipo_identificador": tipo_identificador,
+            "telefono_id_meta": telefono_id_meta,
+            "nombre_contacto": nombre_contacto,
+        }
+        if database_configurada():
+            trabajo_id, creado = await _encolar_mensaje_whatsapp(datos_trabajo, "meta", meta_message_id)
+        else:
+            background_tasks.add_task(
+                _procesar_y_responder_whatsapp,
+                obtener_gestor_diagnostico(request),
+                **datos_trabajo,
+            )
+            trabajo_id, creado = "background-local", True
     except HTTPException:
         raise
     except Exception as e:
@@ -214,7 +252,8 @@ async def recibir_mensaje_meta(
         status_code=200,
         content={
             "status": "procesado",
-            "estado_interno": resultado_proceso.get("status", "desconocido"),
+            "estado_interno": "encolado" if creado else "duplicado",
+            "trabajo_id": trabajo_id,
             "proveedor": "Meta Cloud API",
             "tiempo_respuesta_ms": round(elapsed_ms, 2),
         },
@@ -259,7 +298,10 @@ async def recibir_mensaje_twilio(
     remitente = params_dict.get("From", "whatsapp:+51000000000")
     texto_cliente = params_dict.get("Body", "")
     if len(texto_cliente) > settings.user_text_max_chars:
-        raise HTTPException(status_code=413, detail="Mensaje de texto demasiado largo.")
+        logger.warning(
+            f"[Webhook Twilio] Texto de cliente truncado de {len(texto_cliente)} a {settings.user_text_max_chars} caracteres."
+        )
+        texto_cliente = texto_cliente[: settings.user_text_max_chars]
     media_url = params_dict.get("MediaUrl0", "")
     tipo_mensaje = "audio" if media_url else "text"
     audio_id = media_url if media_url else ""
@@ -268,26 +310,34 @@ async def recibir_mensaje_twilio(
     rem_anon = anonimizar_identificador(remitente)
     logger.info(f"[Webhook Twilio] Mensaje verificado recibido de {rem_anon}")
 
-    gestor = obtener_gestor_diagnostico(request)
-    resultado_proceso = await _procesar_y_responder_whatsapp(
-        gestor=gestor,
-        remitente=remitente,
-        tipo_mensaje=tipo_mensaje,
-        texto_cliente=texto_cliente,
-        audio_id=audio_id,
-        placa="WAPP-01",
-        marca_modelo="Vehiculo Generico",
-        session_id=remitente,
-        meta_message_id=twilio_message_sid,
-        proveedor="twilio",
-    )
+    datos_trabajo = {
+        "remitente": remitente,
+        "tipo_mensaje": tipo_mensaje,
+        "texto_cliente": texto_cliente,
+        "audio_id": audio_id,
+        "placa": "WAPP-01",
+        "marca_modelo": "Vehiculo Generico",
+        "session_id": remitente,
+        "meta_message_id": twilio_message_sid,
+        "proveedor": "twilio",
+    }
+    if database_configurada():
+        trabajo_id, creado = await _encolar_mensaje_whatsapp(datos_trabajo, "twilio", twilio_message_sid)
+    else:
+        background_tasks.add_task(
+            _procesar_y_responder_whatsapp,
+            obtener_gestor_diagnostico(request),
+            **datos_trabajo,
+        )
+        trabajo_id, creado = "background-local", True
 
     elapsed_ms = (time.time() - t_inicio) * 1000
     return JSONResponse(
         status_code=200,
         content={
             "status": "procesado",
-            "estado_interno": resultado_proceso.get("status", "desconocido"),
+            "estado_interno": "encolado" if creado else "duplicado",
+            "trabajo_id": trabajo_id,
             "proveedor": "Twilio",
             "tiempo_respuesta_ms": round(elapsed_ms, 2),
         },

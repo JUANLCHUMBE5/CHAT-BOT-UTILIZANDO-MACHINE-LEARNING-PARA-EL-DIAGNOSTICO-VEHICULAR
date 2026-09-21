@@ -19,7 +19,10 @@ os.environ["LOCAL_AUTH_PASSWORD"] = "carbot2026"
 import pytest
 
 from src.config import settings
+from src.core.access_token_store import access_token_store
 from src.core.gemini_queue import gemini_rate_limiter
+from src.core.login_attempt_store import login_attempt_store
+from src.core.refresh_token_store import refresh_token_store
 from src.limiter import limiter
 
 # Asegurar habilitación de base de datos para pruebas si están configuradas
@@ -70,7 +73,7 @@ def pytest_sessionstart(session):
         async with engine.begin() as connection:
             await connection.execute(
                 text(
-                    "TRUNCATE TABLE talleres, trabajos_gemini, "
+                    "TRUNCATE TABLE talleres, trabajos_gemini, trabajos_sistema, workers_sistema, "
                     "cuotas_gemini_global RESTART IDENTITY CASCADE"
                 )
             )
@@ -109,6 +112,9 @@ def reset_rate_limiter():
         if hasattr(limiter, "_storage") and hasattr(limiter._storage, "reset"):
             limiter._storage.reset()
     gemini_rate_limiter.reiniciar()
+    login_attempt_store.reiniciar_local()
+    refresh_token_store.reiniciar_local()
+    access_token_store.reiniciar_local()
     yield
 
 
@@ -171,11 +177,15 @@ async def async_db_session():
 
 
 @pytest.fixture(autouse=True)
-def mock_gemini_en_todas_las_pruebas(monkeypatch):
+def mock_gemini_en_todas_las_pruebas(request, monkeypatch):
     """
-    Bloquea rigurosamente cualquier llamada externa a Google Gemini en los tests automáticos.
-    Evita cobros, consumo de cuota real y dependencia de conexión a internet durante pruebas.
+    Bloquea rigurosamente cualquier llamada externa a Google Gemini en los tests automáticos,
+    excepto en pruebas explícitas de integración real con Gemini.
     """
+    if "real_gemini" in request.keywords:
+        yield
+        return
+
     import requests
 
     def mocked_requests_post(url, *args, **kwargs):
@@ -251,4 +261,3 @@ def isolate_tracker_csv(tmp_path, monkeypatch):
 
     monkeypatch.setattr(settings.paths, "tracker_csv", temp_tracker)
     yield
-

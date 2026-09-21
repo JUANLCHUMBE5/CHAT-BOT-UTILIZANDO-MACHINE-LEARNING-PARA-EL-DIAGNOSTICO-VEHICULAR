@@ -12,6 +12,7 @@ export interface ConfirmModalProps {
   cancelText?: string;
   variant?: 'danger' | 'warning' | 'primary' | 'success';
   cargando?: boolean;
+  children?: React.ReactNode;
 }
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -24,6 +25,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   cancelText = 'Cancelar',
   variant = 'danger',
   cargando = false,
+  children,
 }) => {
   const getVariantStyles = () => {
     switch (variant) {
@@ -80,6 +82,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           </div>
           <div style={{ flex: 1, fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
             {message}
+            {children}
           </div>
         </div>
 

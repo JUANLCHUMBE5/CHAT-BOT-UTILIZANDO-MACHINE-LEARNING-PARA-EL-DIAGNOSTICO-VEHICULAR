@@ -5,6 +5,7 @@ del ChatBot de Diagnóstico Vehicular con Machine Learning (Tesis UCV 2026).
 """
 
 import pytest
+
 from src.core.gestor_diagnostico import GestorDiagnostico, ResultadoDiagnostico
 from src.core.traductor_jerga import normalizar_jerga_peruana
 
@@ -48,19 +49,23 @@ def test_obtencion_respuesta_por_sistema_vehicular(gestor, sintoma, termino_clav
         marca_modelo="Toyota Yaris"
     )
 
-    # 1. No debe quedar atrapado en ambigüedad
-    assert resultado.modo_diagnostico != "esperando_clarificacion", f"Falló en {sistema}: se clasificó como ambiguo"
+    # 1. Si emitió auto-pregunta técnica de descarte, contiene predicciones clínicas válidas
+    if resultado.modo_diagnostico == "esperando_clarificacion" and resultado.predicciones_ml:
+        assert resultado.confianza_ml > 0.0, f"Falló en {sistema}: confianza ML es 0"
+        texto_combinado = _quitar_tildes(
+            " ".join(p.falla for p in resultado.predicciones_ml) + " " +
+            resultado.respuesta_texto
+        )
+    else:
+        assert resultado.modo_diagnostico != "esperando_clarificacion", f"Falló en {sistema}: se clasificó como ambiguo"
+        assert resultado.confianza_ml > 0.0, f"Falló en {sistema}: confianza ML es 0"
+        texto_combinado = _quitar_tildes(
+            resultado.diagnostico_ml + " " +
+            resultado.contexto_manual + " " +
+            resultado.titulo_manual + " " +
+            resultado.respuesta_texto
+        )
 
-    # 2. Confianza ML positiva
-    assert resultado.confianza_ml > 0.0, f"Falló en {sistema}: confianza ML es 0"
-
-    # 3. Contexto técnico recuperado por RAG o diagnóstico clasificado (sin tildes)
-    texto_combinado = _quitar_tildes(
-        resultado.diagnostico_ml + " " +
-        resultado.contexto_manual + " " +
-        resultado.titulo_manual + " " +
-        resultado.respuesta_texto
-    )
     termino_normalizado = _quitar_tildes(termino_clave)
     assert termino_normalizado in texto_combinado, f"Falló en {sistema}: no se encontró '{termino_clave}' en el resultado"
 

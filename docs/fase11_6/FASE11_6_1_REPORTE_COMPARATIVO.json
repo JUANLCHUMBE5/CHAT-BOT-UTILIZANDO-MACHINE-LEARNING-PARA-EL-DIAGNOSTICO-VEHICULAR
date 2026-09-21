@@ -1,0 +1,86 @@
+{
+  "fecha": "2026-09-19",
+  "lote": "FASE_11_6_1",
+  "50_casos": {
+    "antes": {
+      "top1": 35,
+      "top1_pct": 70.0,
+      "top3": 43,
+      "top3_pct": 86.0,
+      "macro": 46,
+      "macro_pct": 92.0,
+      "errores_alta_confianza_75": 6,
+      "rag_hit1_pct": 80.0,
+      "rag_hit3_pct": 86.0,
+      "rag_hit5_pct": 86.0,
+      "rag_mrr": 0.827
+    },
+    "despues": {
+      "top1": 44,
+      "top1_pct": 88.0,
+      "top3": 47,
+      "top3_pct": 94.0,
+      "macro": 48,
+      "macro_pct": 96.0,
+      "errores_alta_confianza_75": 2,
+      "rag_hit1": 43,
+      "rag_hit1_pct": 86.0,
+      "rag_hit3": 47,
+      "rag_hit3_pct": 94.0,
+      "rag_hit5": 47,
+      "rag_hit5_pct": 94.0,
+      "rag_mrr": 0.897
+    },
+    "por_categoria": {
+      "TECNICO": {
+        "top1_antes": 8,
+        "top1_despues": 9,
+        "top3_antes": 9,
+        "top3_despues": 10,
+        "total": 10
+      },
+      "COLOQUIAL": {
+        "top1_antes": 8,
+        "top1_despues": 10,
+        "top3_antes": 8,
+        "top3_despues": 10,
+        "total": 10
+      },
+      "AMBIGUO": {
+        "top1_antes": 4,
+        "top1_despues": 5,
+        "top3_antes": 7,
+        "top3_despues": 7,
+        "total": 10
+      },
+      "DTC": {
+        "top1_antes": 9,
+        "top1_despues": 10,
+        "top3_antes": 9,
+        "top3_despues": 10,
+        "total": 10
+      },
+      "DIFERENCIAL": {
+        "top1_antes": 6,
+        "top1_despues": 10,
+        "top3_antes": 10,
+        "top3_despues": 10,
+        "total": 10
+      }
+    }
+  },
+  "holdout_20_casos": {
+    "total": 20,
+    "top1": 14,
+    "top1_pct": 70.0,
+    "top3": 17,
+    "top3_pct": 85.0,
+    "macro": 20,
+    "macro_pct": 100.0,
+    "errores_alta_confianza_75": 1,
+    "rag_hit1": 16,
+    "rag_hit1_pct": 80.0,
+    "rag_hit3": 18,
+    "rag_hit3_pct": 90.0
+  }
+}

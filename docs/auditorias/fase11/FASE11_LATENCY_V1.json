@@ -1,0 +1,74 @@
+{
+  "e2e_total": {
+    "media_ms": 183.7,
+    "mediana_ms": 9.0,
+    "p95_ms": 58.7,
+    "max_ms": 5137.0,
+    "muestras": 227
+  },
+  "ml_inferencia": {
+    "media_ms": 22.68,
+    "mediana_ms": 35.0,
+    "p95_ms": 45.7,
+    "max_ms": 51.0,
+    "muestras": 227
+  },
+  "rag_recuperacion": {
+    "media_ms": 1.53,
+    "mediana_ms": 2.0,
+    "p95_ms": 4.0,
+    "max_ms": 5.0,
+    "muestras": 227
+  },
+  "llm_sintesis": {
+    "media_ms": 344.82,
+    "mediana_ms": 0.0,
+    "p95_ms": 3234.0,
+    "max_ms": 5097.0,
+    "muestras": 227
+  },
+  "por_modo": {
+    "saludo": {
+      "media_ms": 2.6,
+      "mediana_ms": 1.0,
+      "p95_ms": 7.4,
+      "max_ms": 9.0,
+      "muestras": 5
+    },
+    "esperando_clarificacion": {
+      "media_ms": 10.96,
+      "mediana_ms": 1.0,
+      "p95_ms": 43.0,
+      "max_ms": 46.0,
+      "muestras": 81
+    },
+    "completo_ml_rag_llm": {
+      "media_ms": 1602.7,
+      "mediana_ms": 1.0,
+      "p95_ms": 4485.8,
+      "max_ms": 5137.0,
+      "muestras": 23
+    },
+    "fuera_de_alcance": {
+      "media_ms": 1.27,
+      "mediana_ms": 1.0,
+      "p95_ms": 2.0,
+      "max_ms": 3.0,
+      "muestras": 26
+    },
+    "en_cola_gemini": {
+      "media_ms": 43.24,
+      "mediana_ms": 46.0,
+      "p95_ms": 55.55,
+      "max_ms": 60.0,
+      "muestras": 90
+    },
+    "consulta_tecnica_en_cola": {
+      "media_ms": 6.5,
+      "mediana_ms": 6.5,
+      "p95_ms": 7.85,
+      "max_ms": 8.0,
+      "muestras": 2
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-09-18T04:06:58.102593+00:00",
+  "active_rag_version": "baseline_f8_3",
+  "baseline_state": {
+    "faiss_index_path": "machine_learning/manuals/indice_faiss.index",
+    "faiss_index_sha256": "757c4b006a8995f484f539b05420cd929b6034f9aba7e845d305a9d3cf631082",
+    "metadata_path": "machine_learning/manuals/metadatos_manuales.json",
+    "metadata_sha256": "2f0684477522efb67f2b8fbe0e14e5b39cc31bf01423cbafc621a3bc33d76625",
+    "manual_file_path": "machine_learning/manuals/manual_procedimientos.txt",
+    "document_count": 239
+  },
+  "frozen_c1_state": {
+    "vectorizer_c1_sha256": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+    "fault_model_c1_sha256": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+    "macrofix_c1_sha256": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
+    "classes_count": 61
+  },
+  "candidate_state": {
+    "version_id": "RAG_CANDIDATO_V1",
+    "faiss_index_path": "machine_learning/manuals/candidates/v1/indexes/indice_faiss_v1.index",
+    "faiss_index_sha256": "a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",
+    "metadata_path": "machine_learning/manuals/candidates/v1/metadata/metadatos_schema_v2.json",
+    "metadata_sha256": "af5c5edebdebbdbe7f97c488dad274c306e4782fb4c273cfab2e42e531c2e2b3",
+    "corpus_manifest_sha256": "a0fce3dc39bb6344388a18cc6f2a10d8298d5d47ae1f365e4ae226eab1b16bba",
+    "document_count": 239
+  },
+  "environment": {
+    "CARBOT_RAG_VERSION_PRE": "baseline_f8_3",
+    "switch_mechanism": "environment_and_settings_selection",
+    "file_replacement": false
+  }
+}

@@ -1,0 +1,32 @@
+clase_real,clase_contrastiva,cantidad_errores,niveles,confianza_promedio,es_sintetico,es_original
+Llantas desbalanceadas o desalineadas,Cremallera de direccion asistida con holgura o fuga,2,"L2, L3",0.5853,2,0
+Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),Bateria descargada o bornes sulfatados,2,"L2, L3",0.6113,2,0
+Llantas desbalanceadas o desalineadas,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),2,"L2, L3",0.8594,2,0
+Juntas homocineticas o palieres danados,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),2,L3,0.6285,2,0
+Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),2,"L2, L3",0.7347,2,0
+Bateria descargada o bornes sulfatados,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),1,L2,0.5646,1,0
+Alternador defectuoso o placa de diodos quemada,Falla en servofreno (booster) o linea de vacio,1,L3,0.6966,1,0
+Cuerpo de aceleracion o valvula IAC sucia,Falla en bujias o bobinas de encendido (misfire),1,L3,0.8463,1,0
+Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),Fallo en inversor de corriente IGBT o motor electrico (EV),1,L2,0.6572,1,0
+Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1,L3,0.4084,1,0
+Caliper de freno trabado o mordaza pegada (piston agarrotado),Desgaste de pastillas y zapatas de freno,1,L2,0.5086,1,0
+"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",Falla electrica del cierre centralizado o actuador de puerta,1,L2,0.5643,1,0
+Consumo de aceite por desgaste de anillos o retenes,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),1,L2,0.3642,1,0
+Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),Consumo de aceite por desgaste de anillos o retenes,1,L3,0.5744,1,0
+Cremallera de direccion asistida con holgura o fuga,Amortiguadores reventados o bujes de suspension gastados,1,L2,0.5007,1,0
+Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),Baja presion de aceite o bomba de aceite defectuosa,1,L2,0.9387,1,0
+Elevalunas electrico o guaya de alzacristales rota o trabada,Falla electrica del cierre centralizado o actuador de puerta,1,L3,0.5969,1,0
+Discos de freno alabeados o desgastados,Llantas desbalanceadas o desalineadas,1,L2,0.5895,1,0
+Discos de freno alabeados o desgastados,Falla en sensor de velocidad de rueda ABS,1,L3,0.6783,1,0
+Desgaste en collarin de empuje o crapodina de embrague,Disco de embrague desgastado o patinando,1,L3,0.7445,1,0
+Falla en sistema de frenado regenerativo (EV / Hibridos),Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1,L2,0.6766,1,0
+Falla electrica del cierre centralizado o actuador de puerta,Fuga parasita de corriente en reposo (consumo nocturno de bateria),1,L3,0.9973,1,0
+Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),Faja o cadena de distribucion destensada o con salto de punto,1,L2,0.9356,1,0
+Fuga hidraulica o aire en el sistema de frenos,Caliper de freno trabado o mordaza pegada (piston agarrotado),1,L3,0.4878,1,0
+Fuga en mangueras de intercooler o turbocompresor danado,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,1,L3,0.5467,1,0
+Foco o falla en sistema de refrigeracion de bateria/inversor (EV),Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1,L3,0.5777,1,0
+Inyectores sucios o filtro de combustible obstruido,Bomba de gasolina quemada o con baja presion,1,L2,0.7164,1,0
+Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),1,L3,0.528,1,0
+Rodajes de caja mecanica o diferencial gastados,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),1,L3,0.422,1,0
+Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),Falla en sensor de velocidad de rueda ABS,1,L3,0.9798,1,0
+Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),Rodajes de caja mecanica o diferencial gastados,1,L3,0.4357,1,0

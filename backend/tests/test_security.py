@@ -6,25 +6,25 @@ import jwt
 import pytest
 
 from src.config import settings
-from src.core.sanitizer import sanitizar_prompt_usuario
+from src.core.sanitizer import redactar_datos_sensibles_para_llm, sanitizar_prompt_usuario
 from src.core.security import (
     JWT_ALGORITHM,
     JWT_SECRET_KEY,
     anonimizar_identificador,
     crear_jwt_token,
     crear_refresh_token,
-    verificar_refresh_token,
     verificar_firma_meta,
     verificar_jwt_administrador,
     verificar_jwt_token,
+    verificar_refresh_token,
 )
 
 # ==========================================
 # TIER 1: SECURITY & JWT HELPER TESTS
 # ==========================================
 
-def test_jwt_token_creacion_y_expiracion_2_horas():
-    """T1-JWT: Token generation sets exp - iat to exactly 7200 seconds (2 hours)."""
+def test_jwt_token_creacion_y_expiracion_30_minutos():
+    """T1-JWT: El access token expira exactamente en 30 minutos."""
     token = crear_jwt_token(sub="taller_test")
     assert isinstance(token, str)
     
@@ -33,7 +33,7 @@ def test_jwt_token_creacion_y_expiracion_2_horas():
         audience=settings.jwt_audience, issuer=settings.jwt_issuer,
     )
     assert payload["sub"] == "taller_test"
-    assert payload["exp"] - payload["iat"] == 7200
+    assert payload["exp"] - payload["iat"] == 30 * 60
 
 def test_verificar_jwt_token_helper_exito():
     """T1-JWT: verificar_jwt_token returns valid payload dictionary when valid credentials provided."""
@@ -285,3 +285,14 @@ def test_anonimizacion_csv_tracker_y_logs():
     anon_result = anonimizar_identificador(placa_sensible)
     assert anon_result.startswith("PLACA_")
     assert placa_sensible not in anon_result
+
+
+def test_datos_sensibles_se_redactan_antes_del_llm():
+    texto = "Mi placa es ABC-123 y mi teléfono es +51 987654321"
+
+    resultado = redactar_datos_sensibles_para_llm(texto)
+
+    assert "ABC-123" not in resultado
+    assert "987654321" not in resultado
+    assert "[PLACA_REDACTADA]" in resultado
+    assert "[TELEFONO_REDACTADO]" in resultado

@@ -36,7 +36,7 @@ def test_registro_mecanico_no_requiere_password_web(client, token_admin):
         json=payload,
         headers={"Authorization": f"Bearer {token_admin}"},
     )
-    assert response.status_code in (200, 503)
+    assert response.status_code in (201, 503)
 
 
 def test_registro_administrador_exige_password_segura(client, token_admin):

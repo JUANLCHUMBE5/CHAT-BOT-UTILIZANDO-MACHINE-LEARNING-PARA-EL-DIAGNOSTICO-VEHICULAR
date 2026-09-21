@@ -1,0 +1,39 @@
+{
+  "archivo": "test10_fase10_blind_v1.csv",
+  "ruta_relativa": "machine_learning\\data\\fase10\\test10_fase10_blind_v1.csv",
+  "sha256": "6eaf42bca03d2aad98c8e414bfef541a74a42a0ff605eb4431b34b90cb7d0d0c",
+  "filas": 366,
+  "clases": 61,
+  "distribucion_clases": "6 casos por clase (exactamente balanceado)",
+  "distribucion_niveles": {
+    "L1": 122,
+    "L2": 122,
+    "L3": 122
+  },
+  "distribucion_lenguaje": {
+    "TECNICO": 140,
+    "TALLER": 104,
+    "COTIDIANO": 61,
+    "WHATSAPP": 61
+  },
+  "reglas_l1": {
+    "casos_con_dtc": 0,
+    "casos_requiere_pregunta_si": 122
+  },
+  "auditoria_universo": {
+    "total_referencias_universo": 8927,
+    "duplicados_exactos": 0,
+    "duplicados_normalizados": 0,
+    "near_duplicates_umbral_088": 0,
+    "maxima_similitud_universo": 0.7812,
+    "maxima_similitud_intra_test10": 0.3613,
+    "maxima_similitud_clase54_vs_historico": 0.4462
+  },
+  "revision_semantica": {
+    "total_auditados": 366,
+    "aprobados": 366,
+    "tasa_aprobacion": "100.0%"
+  },
+  "seed_utilizado": 42,
+  "estado": "LOCKED_BLIND_TEST"
+}

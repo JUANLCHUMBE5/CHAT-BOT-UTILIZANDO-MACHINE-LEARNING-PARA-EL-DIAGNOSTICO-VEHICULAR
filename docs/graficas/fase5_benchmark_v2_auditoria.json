@@ -1,0 +1,51 @@
+{
+  "total": 100,
+  "accuracy_top1_estricta": 0.86,
+  "accuracy_top1_ampliada": 0.98,
+  "top3_accuracy": 1.0,
+  "accuracy_sistema": 0.96,
+  "precision_macro": 0.8861111111111111,
+  "recall_macro": 0.8817460317460317,
+  "f1_macro": 0.8592548364374989,
+  "conteo": {
+    "correctos": 86,
+    "parciales": 12,
+    "incorrectos": 2
+  },
+  "pares_confusion": [
+    {
+      "esperado": "Amortiguadores reventados o bujes de suspension gastados",
+      "predicho": "Falla electrica del cierre centralizado o actuador de puerta",
+      "conteo": 1
+    },
+    {
+      "esperado": "Amortiguadores reventados o bujes de suspension gastados",
+      "predicho": "Llantas desbalanceadas o desalineadas",
+      "conteo": 1
+    }
+  ],
+  "errores_detalle": [
+    {
+      "grupo": "GRUPO_1",
+      "idx": 31,
+      "caso": "Hyundai Accent 2018 rebota varias veces después de pasar rompemuelle y en carretera se siente medio flotante.",
+      "esperado": "Amortiguadores reventados o bujes de suspension gastados",
+      "predicho": "Falla electrica del cierre centralizado o actuador de puerta",
+      "confianza": 0.1154,
+      "top2": "Amortiguadores reventados o bujes de suspension gastados",
+      "sist_esperado": "SUSPENSION_CHASIS",
+      "sist_predicho": "CARROCERIA_NEUMATICA"
+    },
+    {
+      "grupo": "GRUPO_2",
+      "idx": 10,
+      "caso": "En asfalto liso el carro no suena nada y el timón va derechito, pero paso por adoquines, baches o bajo un rompemuelle despacio y suena un 'cloc-cloc-cloc' seco y metálico abajo en las ruedas.",
+      "esperado": "Amortiguadores reventados o bujes de suspension gastados",
+      "predicho": "Llantas desbalanceadas o desalineadas",
+      "confianza": 0.469,
+      "top2": "Amortiguadores reventados o bujes de suspension gastados",
+      "sist_esperado": "SUSPENSION_CHASIS",
+      "sist_predicho": "SUSPENSION_CHASIS"
+    }
+  ]
+}

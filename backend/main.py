@@ -1,11 +1,15 @@
+import asyncio
+import re
 import subprocess
 import uuid
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 # En desarrollo, .env sustituye credenciales antiguas heredadas de Windows.
 # En produccion, las variables inyectadas externamente conservan prioridad.
@@ -24,12 +28,18 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 
 from scripts.descargar_modelo import asegurar_artefactos_modelo
+from src.application.jobs import gemini_rate_limiter
+from src.application.jobs.system_worker import SystemWorker
+from src.application.services import GestorDiagnostico
 from src.config import settings
-from src.core.gemini_queue import gemini_rate_limiter
-from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.logger import logger
 from src.core.services.retention_service import aplicar_retencion_datos
 from src.infrastructure.database.connection import cerrar_conexion, comprobar_conexion
+from src.interfaces.api.errors import (
+    manejar_error_no_controlado,
+    manejar_error_validacion,
+    manejar_http_exception,
+)
 from src.interfaces.api.v1.router import api_router
 from src.limiter import limiter
 
@@ -65,13 +75,30 @@ async def lifespan(app: FastAPI):
     app.state.gestor_diagnostico = GestorDiagnostico()
     logger.info("¡Instancia global Singleton cargada exitosamente!")
 
+    from src.core.version import registrar_startup_log
+    registrar_startup_log("api", puerto=8000)
+
     # Iniciar worker background para la cola real de Gemini
-    gemini_rate_limiter.iniciar_worker()
+    system_worker = None
+    system_worker_task = None
+    if settings.queue_embedded_worker:
+        gemini_rate_limiter.iniciar_worker()
+        system_worker = SystemWorker(app.state.gestor_diagnostico)
+        system_worker_task = asyncio.create_task(system_worker.run())
 
     try:
         yield
     finally:
-        await gemini_rate_limiter.detener_worker()
+        if settings.queue_embedded_worker:
+            if system_worker is not None:
+                await system_worker.detener()
+            if system_worker_task is not None:
+                system_worker_task.cancel()
+                try:
+                    await system_worker_task
+                except asyncio.CancelledError:
+                    pass
+            await gemini_rate_limiter.detener_worker()
         await cerrar_conexion()
         logger.info("Cerrando recursos de la aplicación...")
 
@@ -83,30 +110,71 @@ app = FastAPI(
     version=settings.version,
     debug=settings.debug,
     lifespan=lifespan,
+    docs_url=None if settings.is_production else "/docs",
+    redoc_url=None if settings.is_production else "/redoc",
+    openapi_url=None if settings.is_production else "/openapi.json",
 )
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(HTTPException, manejar_http_exception)
+app.add_exception_handler(RequestValidationError, manejar_error_validacion)
+app.add_exception_handler(Exception, manejar_error_no_controlado)
 app.add_middleware(SlowAPIMiddleware)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=list(settings.trusted_hosts))
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=list(settings.cors_allowed_origins),
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-CSRF-Token"],
+    expose_headers=[
+        "X-Request-ID",
+        "X-RateLimit-Limit",
+        "X-RateLimit-Remaining",
+        "X-Total-Count",
+        "Retry-After",
+    ],
 )
 
 
 @app.middleware("http")
 async def agregar_request_id(request: Request, call_next):
-    request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+    request_id_recibido = request.headers.get("X-Request-ID", "")
+    request_id = (
+        request_id_recibido
+        if re.fullmatch(r"[A-Za-z0-9._:-]{1,64}", request_id_recibido)
+        else str(uuid.uuid4())
+    )
+    request.state.request_id = request_id
     response = await call_next(request)
     response.headers["X-Request-ID"] = request_id
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["Permissions-Policy"] = "camera=(), geolocation=(), microphone=()"
+    response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+    if request.url.path.startswith(("/api/", "/health/")):
+        response.headers["Cache-Control"] = "no-store"
+    if settings.is_production:
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+        )
+        if request.url.scheme == "https":
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     return response
 
 # Incluir las rutas modulares versionadas bajo /api/v1
 app.include_router(api_router, prefix="/api/v1")
+
+
+@app.get("/api/v1/sistema/version", tags=["Sistema"])
+def get_sistema_version():
+    """Retorna la versión, build ID determinista y telemetría en runtime de la API."""
+    from src.core.version import obtener_telemetria_proceso
+    return obtener_telemetria_proceso("api")
+
 
 @app.get("/")
 def read_root():
@@ -114,7 +182,7 @@ def read_root():
         "estado": "online",
         "sistema": settings.app_name,
         "taller": "Taller Mecánico en Carabayllo",
-        "seguridad": "JWT Bearer Token (2 Horas Exp.) + Validación Firma HMAC + Rate Limiting + Concurrencia Thread-Safe",
+        "seguridad": "JWT Bearer de 30 minutos + refresh HttpOnly + HMAC + rate limiting",
         "documentacion": "Módulos de la arquitectura modular cargados correctamente: Presentación (api/v1), Aplicación, Infraestructura."
     }
 
@@ -126,9 +194,24 @@ async def health_live():
 
 @app.get("/health/ready", include_in_schema=False)
 async def health_ready(request: Request):
+    gemini_key_valida = bool(
+        settings.gemini_api_key
+        and settings.gemini_api_key != "tu_api_key_aqui"
+        and not settings.gemini_api_key.startswith("AIzaSyDummy")
+    )
+    worker_iniciado = bool(gemini_rate_limiter._worker_corriendo)
+    estado_gemini = await gemini_rate_limiter.obtener_estado_gemini_compartido(gemini_key_valida)
+
     componentes = {
         "postgresql": not settings.database.enabled,
-        "worker_gemini": bool(gemini_rate_limiter._worker_corriendo),
+        "worker_gemini_iniciado": worker_iniciado,
+        "gemini_disponible": estado_gemini["disponible"],
+        "gemini_estado": estado_gemini["estado"],
+        "gemini_ultima_verificacion": estado_gemini["ultima_verificacion"],
+        "gemini_ultimo_exito": estado_gemini["ultimo_exito"],
+        "gemini_ultimo_codigo_http": estado_gemini["ultimo_codigo_http"],
+        "gemini_ultimo_error": estado_gemini["ultimo_error"],
+        "gemini_cooldown_segundos": estado_gemini["cooldown_segundos"],
         "modelo_ml": False,
         "rag": False,
     }
@@ -142,10 +225,15 @@ async def health_ready(request: Request):
     if gestor:
         componentes["modelo_ml"] = bool(getattr(gestor.modelo_ml, "modelo", None))
         componentes["rag"] = bool(getattr(gestor.motor_rag, "faiss_index", None))
-    listo = all(componentes.values())
+    listo = componentes["postgresql"] and componentes["modelo_ml"] and componentes["rag"]
+    contenido = {"status": "ready" if listo else "not_ready"}
+    if not settings.is_production or settings.expose_health_details:
+        contenido["componentes"] = componentes
+        from src.core.version import obtener_telemetria_proceso
+        contenido["fingerprint"] = obtener_telemetria_proceso("api")
     return JSONResponse(
         status_code=200 if listo else 503,
-        content={"status": "ready" if listo else "not_ready", "componentes": componentes},
+        content=contenido,
     )
 
 def _iniciar_ngrok_autonomo(puerto: int, dominio: str) -> None:

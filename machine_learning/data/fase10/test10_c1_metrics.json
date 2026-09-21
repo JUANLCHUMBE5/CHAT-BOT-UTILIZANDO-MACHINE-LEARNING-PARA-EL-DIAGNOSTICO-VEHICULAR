@@ -1,0 +1,22 @@
+{
+  "top1_accuracy": 0.8169,
+  "top3_accuracy": 0.9454,
+  "macro_precision": 0.8257,
+  "macro_recall": 0.8169,
+  "macro_f1": 0.8102,
+  "weighted_f1": 0.8102,
+  "macro_system_accuracy": 0.9235,
+  "macro_system_f1": 0.9065,
+  "brier_score": 0.1155,
+  "ece": 0.047,
+  "umbrales_calibracion": {
+    "acc_gte_60": 0.8799,
+    "cov_gte_60": 0.8415,
+    "acc_gte_70": 0.906,
+    "cov_gte_70": 0.7268,
+    "acc_gte_80": 0.9369,
+    "cov_gte_80": 0.6066,
+    "acc_gte_90": 0.9458,
+    "cov_gte_90": 0.4536
+  }
+}

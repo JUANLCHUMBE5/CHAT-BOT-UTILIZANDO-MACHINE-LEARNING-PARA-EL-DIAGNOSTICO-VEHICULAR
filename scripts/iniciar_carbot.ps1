@@ -1,5 +1,6 @@
 param(
-    [switch]$SinNgrok
+    [switch]$SinNgrok,
+    [switch]$ReiniciarWorker
 )
 
 $ErrorActionPreference = "Stop"
@@ -25,7 +26,7 @@ function Start-CarBotWindow {
         [string]$Command
     )
 
-    $windowCommand = "`$Host.UI.RawUI.WindowTitle = '$Title'; $Command"
+    $windowCommand = "`$Host.UI.RawUI.WindowTitle = '$Title'; Set-Location '$WorkingDirectory'; $Command"
     Start-Process -FilePath "powershell.exe" `
         -ArgumentList @("-NoExit", "-Command", $windowCommand) `
         -WorkingDirectory $WorkingDirectory | Out-Null
@@ -37,6 +38,18 @@ if (-not (Test-Path -LiteralPath $backendPython)) {
 
 if (-not (Test-Path -LiteralPath (Join-Path $frontendRoot "package.json"))) {
     throw "No se encontró el panel web en: $frontendRoot"
+}
+
+$viteBin = Join-Path $frontendRoot "node_modules\.bin\vite.cmd"
+if (-not (Test-Path -LiteralPath $viteBin)) {
+    Write-Host "[INFO] Instalando dependencias del panel web (npm ci)..." -ForegroundColor Cyan
+    Push-Location $frontendRoot
+    try {
+        & npm ci
+    }
+    finally {
+        Pop-Location
+    }
 }
 
 $postgres = Get-Service -Name "postgresql-x64-17" -ErrorAction SilentlyContinue
@@ -57,12 +70,33 @@ else {
 }
 
 if (-not (Test-ListeningPort -Port 8000)) {
-    $backendCommand = "& '$backendPython' -m alembic upgrade head; if (`$LASTEXITCODE -eq 0) { & '$backendPython' -m uvicorn main:app --reload --port 8000 }"
+    $backendCommand = "`$env:QUEUE_EMBEDDED_WORKER='false'; & '$backendPython' -m alembic upgrade head; & '$backendPython' -m uvicorn main:app --reload --port 8000"
     Start-CarBotWindow -Title "CarBot - Backend" -WorkingDirectory $backendRoot -Command $backendCommand
     Write-Host "[OK] Iniciando chatbot y API..." -ForegroundColor Green
 }
 else {
     Write-Host "[OK] Backend ya estaba activo en el puerto 8000." -ForegroundColor Green
+}
+
+if ($ReiniciarWorker) {
+    Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+        Where-Object { $_.CommandLine -like "*src.application.jobs.worker*" } |
+        ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
+    Start-Sleep -Milliseconds 500
+    Write-Host "[OK] Worker anterior detenido para reinicio." -ForegroundColor Yellow
+}
+
+$workerActivo = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+    Where-Object { $_.CommandLine -like "*src.application.jobs.worker*" } |
+    Select-Object -First 1
+
+if (-not $workerActivo) {
+    $workerCommand = "`$env:QUEUE_EMBEDDED_WORKER='false'; & '$backendPython' -m src.application.jobs.worker"
+    Start-CarBotWindow -Title "CarBot - Worker de Colas" -WorkingDirectory $backendRoot -Command $workerCommand
+    Write-Host "[OK] Iniciando worker de colas y reintentos..." -ForegroundColor Green
+}
+else {
+    Write-Host "[OK] Worker de colas ya estaba activo." -ForegroundColor Green
 }
 
 if (-not (Test-ListeningPort -Port 5173)) {
@@ -94,22 +128,45 @@ if (-not $SinNgrok) {
 
 $backendReady = $false
 $frontendReady = $false
-for ($attempt = 0; $attempt -lt 30; $attempt++) {
+$maxAttempts = 60
+Write-Host -NoNewline "Esperando que los servicios respondan"
+for ($attempt = 0; $attempt -lt $maxAttempts; $attempt++) {
     Start-Sleep -Milliseconds 500
+    Write-Host -NoNewline "."
     $backendReady = Test-ListeningPort -Port 8000
     $frontendReady = Test-ListeningPort -Port 5173
     if ($backendReady -and $frontendReady) {
         break
     }
 }
-
 Write-Host ""
+
 if ($backendReady -and $frontendReady) {
-    Write-Host "CarBot está listo." -ForegroundColor Green
-    Write-Host "Panel: http://localhost:5173"
-    Write-Host "API:   http://localhost:8000/docs"
-    Write-Host "No cierres las ventanas de Backend, Panel Web y Ngrok mientras lo uses."
+    Write-Host ""
+    Write-Host "==========================================" -ForegroundColor Green
+    Write-Host " [OK] CarBot está corriendo al 100%!" -ForegroundColor Green
+    Write-Host "==========================================" -ForegroundColor Green
+    Write-Host " Panel Web:   http://localhost:5173" -ForegroundColor Cyan
+    Write-Host " API Docs:    http://localhost:8000/docs" -ForegroundColor Cyan
+    Write-Host " Worker:      Activo en segundo plano" -ForegroundColor Cyan
+    if (-not $SinNgrok) {
+        Write-Host " WhatsApp:    https://$ngrokDomain" -ForegroundColor Cyan
+    }
+    Write-Host ""
+    Write-Host "No cierres las ventanas de Backend, Worker, Panel Web y Ngrok mientras uses CarBot." -ForegroundColor Yellow
 }
 else {
-    Write-Warning "Algún servicio no terminó de iniciar. Revisa las ventanas abiertas para ver el error."
+    Write-Host ""
+    Write-Warning "Estado detallado de los servicios:"
+    if ($backendReady) {
+        Write-Host " [OK] Backend API (Puerto 8000): Activo" -ForegroundColor Green
+    } else {
+        Write-Host " [FALLO / ESPERANDO] Backend API (Puerto 8000): No respondió a tiempo." -ForegroundColor Red
+    }
+    if ($frontendReady) {
+        Write-Host " [OK] Panel Web (Puerto 5173): Activo" -ForegroundColor Green
+    } else {
+        Write-Host " [FALLO / ESPERANDO] Panel Web (Puerto 5173): No respondió a tiempo." -ForegroundColor Red
+    }
+    Write-Warning "Revisa la ventana correspondiente para ver detalles del error."
 }

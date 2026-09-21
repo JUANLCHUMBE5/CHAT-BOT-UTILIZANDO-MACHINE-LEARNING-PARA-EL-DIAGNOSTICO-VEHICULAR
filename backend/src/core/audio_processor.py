@@ -117,6 +117,22 @@ class AudioProcessor:
             json=payload,
             timeout=30,
         )
+        from src.core.gemini_queue import gemini_rate_limiter
+
+        if response.status_code == 200:
+            gemini_rate_limiter.registrar_estado_gemini(exitoso=True, codigo_http=200)
+        else:
+            espera = (
+                gemini_rate_limiter.extraer_retry_after_segundos(response)
+                if response.status_code == 429
+                else 0
+            )
+            gemini_rate_limiter.registrar_estado_gemini(
+                exitoso=False,
+                codigo_http=response.status_code,
+                error=f"Gemini audio HTTP {response.status_code}",
+                retry_after_segundos=espera,
+            )
         response.raise_for_status()
         data = response.json()
         try:
@@ -126,4 +142,3 @@ class AudioProcessor:
         if not texto:
             raise RuntimeError("La transcripción de audio está vacía.")
         return texto
-

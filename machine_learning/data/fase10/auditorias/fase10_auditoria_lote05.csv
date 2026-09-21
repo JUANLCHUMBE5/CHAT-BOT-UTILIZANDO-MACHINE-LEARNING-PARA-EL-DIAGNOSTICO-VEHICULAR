@@ -1,0 +1,241 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L05-0001,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.1442,0.4676,LOTE_04,,NO,
+F10-L05-0002,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.1222,0.2798,TRAIN,,NO,
+F10-L05-0003,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.0792,0.1897,TRAIN,,NO,
+F10-L05-0004,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.1807,0.217,LOTE_01,,NO,
+F10-L05-0005,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.2418,0.2064,TRAIN,,NO,
+F10-L05-0006,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.3314,0.3564,TRAIN,,NO,
+F10-L05-0007,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.1453,0.2219,TRAIN,,NO,
+F10-L05-0008,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.1906,0.2826,LOTE_04,,NO,
+F10-L05-0009,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.083,0.2035,TRAIN,,NO,
+F10-L05-0010,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L1,APROBADO,CONFORME,0.0437,0.0997,TRAIN,,NO,
+F10-L05-0011,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1906,0.2527,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0012,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1907,0.3312,TRAIN,P0335,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0013,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.0975,0.1789,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L05-0014,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1454,0.2371,TRAIN,P0340,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L05-0015,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1675,0.1794,TRAIN,,NO,
+F10-L05-0016,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.107,0.1454,TRAIN,P0339,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0017,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1054,0.1856,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L05-0018,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1045,0.1563,TRAIN,P0335,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L05-0019,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1286,0.1487,TRAIN,,NO,
+F10-L05-0020,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.096,0.1459,LOTE_01,P0016,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L05-0021,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1345,0.1697,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0022,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.2013,0.2167,TRAIN,P0341,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L05-0023,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.0784,0.1955,TRAIN,,NO,
+F10-L05-0024,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1056,0.1612,LOTE_04,,NO,
+F10-L05-0025,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L2,APROBADO,CONFORME,0.1097,0.1644,TRAIN,P0335,NO,
+F10-L05-0026,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1067,0.1474,TRAIN,P0335,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0027,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.142,0.1231,TRAIN,P0335,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L05-0028,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.126,0.2113,TRAIN,P0340,NO,
+F10-L05-0029,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1168,0.1529,LOTE_03,P0016,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L05-0030,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1848,0.1581,TEST_100,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0031,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.0977,0.1121,TRAIN,P0336,NO,
+F10-L05-0032,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1088,0.1418,LOTE_01,P0341,NO,
+F10-L05-0033,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1907,0.2066,TRAIN,P0335,NO,
+F10-L05-0034,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1016,0.1934,LOTE_04,P0339,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0035,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1042,0.1148,LOTE_03,P0017,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L05-0036,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1428,0.175,TRAIN,,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L05-0037,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.126,0.1275,TRAIN,,NO,
+F10-L05-0038,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1072,0.2262,LOTE_03,P0335,SI,Disco de embrague desgastado o patinando
+F10-L05-0039,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1014,0.0925,TRAIN,P0340,NO,
+F10-L05-0040,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),L3,APROBADO,CONFORME,0.1045,0.1377,TRAIN,P0335,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0041,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.1003,0.1965,LOTE_03,,NO,
+F10-L05-0042,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.2326,0.2113,TRAIN,,NO,
+F10-L05-0043,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.2682,0.3333,LOTE_04,,NO,
+F10-L05-0044,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.0761,0.1562,LOTE_04,,NO,
+F10-L05-0045,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.0814,0.4388,LOTE_03,,NO,
+F10-L05-0046,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.3494,0.2942,LOTE_03,,NO,
+F10-L05-0047,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.1041,0.2952,TRAIN,,NO,
+F10-L05-0048,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.3402,0.2861,LOTE_04,,NO,
+F10-L05-0049,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.1031,0.2693,LOTE_04,,NO,
+F10-L05-0050,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L1,APROBADO,CONFORME,0.1227,0.2167,TRAIN,,NO,
+F10-L05-0051,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1853,0.2998,TRAIN,,SI,Falla en regulador de presion de combustible o diafragma roto
+F10-L05-0052,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1551,0.3036,TRAIN,P0441,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L05-0053,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.223,0.1861,TRAIN,,NO,
+F10-L05-0054,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1376,0.3228,TRAIN,P0455,NO,
+F10-L05-0055,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1487,0.1809,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0056,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.2093,0.3796,TRAIN,P0442,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0057,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1578,0.203,TEST_100,,SI,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)
+F10-L05-0058,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1003,0.127,LOTE_01,P0440,NO,
+F10-L05-0059,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1467,0.1648,TRAIN,P0443,NO,
+F10-L05-0060,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1291,0.3646,TRAIN,,NO,
+F10-L05-0061,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1369,0.2688,TRAIN,P0446,NO,
+F10-L05-0062,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1901,0.1499,TRAIN,,NO,
+F10-L05-0063,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1551,0.1721,TRAIN,P0171,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0064,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1219,0.1179,TRAIN,,NO,
+F10-L05-0065,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L2,APROBADO,CONFORME,0.1047,0.2195,TRAIN,P0456,NO,
+F10-L05-0066,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1654,0.154,TRAIN,P0441,SI,Falla en regulador de presion de combustible o diafragma roto
+F10-L05-0067,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1386,0.1438,TRAIN,P0455,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0068,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1497,0.1277,LOTE_04,P0172,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0069,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.223,0.1963,TRAIN,,NO,
+F10-L05-0070,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1853,0.1879,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0071,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1524,0.1312,TRAIN,P0442,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0072,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1901,0.1071,TRAIN,P0440,NO,
+F10-L05-0073,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1246,0.128,LOTE_04,P0441,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L05-0074,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.167,0.141,TRAIN,,NO,
+F10-L05-0075,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.0928,0.1129,TRAIN,P0456,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0076,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1765,0.1498,TRAIN,,SI,Falla en regulador de presion de combustible o diafragma roto
+F10-L05-0077,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1346,0.0946,TRAIN,P0443,NO,
+F10-L05-0078,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.0898,0.1683,TRAIN,P0171,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0079,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.2093,0.1401,TRAIN,P0455,NO,
+F10-L05-0080,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),L3,APROBADO,CONFORME,0.1225,0.1432,LOTE_03,,SI,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)
+F10-L05-0081,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.3402,0.3505,LOTE_03,,NO,
+F10-L05-0082,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.1931,0.5697,TRAIN,,NO,
+F10-L05-0083,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.1787,0.2206,TRAIN,,NO,
+F10-L05-0084,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.1597,0.2379,LOTE_04,,NO,
+F10-L05-0085,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.1388,0.3109,FIELD_60,,NO,
+F10-L05-0086,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.3219,0.3181,TRAIN,,NO,
+F10-L05-0087,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.1183,0.5793,TRAIN,,NO,
+F10-L05-0088,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.4071,0.3549,LOTE_03,,NO,
+F10-L05-0089,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.127,0.1512,TRAIN,,NO,
+F10-L05-0090,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L1,APROBADO,CONFORME,0.1151,0.1559,LOTE_04,,NO,
+F10-L05-0091,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1024,0.1635,TRAIN,P0420,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0092,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.107,0.1948,LOTE_04,,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L05-0093,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1715,0.2962,TRAIN,,NO,
+F10-L05-0094,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1285,0.2923,TRAIN,P0430,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0095,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.3219,0.1852,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0096,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1151,0.2242,LOTE_02,,NO,
+F10-L05-0097,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1927,0.199,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L05-0098,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1855,0.1754,TRAIN,P0420,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0099,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1311,0.1219,TRAIN,,SI,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados
+F10-L05-0100,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1069,0.146,TRAIN,,NO,
+F10-L05-0101,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1778,0.1429,TRAIN,P0420,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0102,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.0622,0.0828,LOTE_02,P0420,NO,
+F10-L05-0103,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1094,0.1361,LOTE_03,,SI,Disco de embrague desgastado o patinando
+F10-L05-0104,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.119,0.1828,TRAIN,P0420,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0105,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L2,APROBADO,CONFORME,0.1206,0.1368,TRAIN,P0420,NO,
+F10-L05-0106,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1024,0.2175,TRAIN,P0420,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0107,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1139,0.1491,TRAIN,,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L05-0108,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1285,0.1661,TRAIN,P0420,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0109,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.0966,0.0992,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L05-0110,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.2961,0.1461,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0111,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1662,0.1686,TRAIN,P0430,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0112,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1927,0.1133,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L05-0113,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1031,0.1255,TRAIN,P0420,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L05-0114,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1208,0.1469,TRAIN,P0420,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0115,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1311,0.0946,TRAIN,P0420,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0116,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1931,0.1876,TRAIN,P0420,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L05-0117,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1572,0.1007,LOTE_04,P0420,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L05-0118,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.109,0.1483,LOTE_03,,NO,
+F10-L05-0119,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.1208,0.0928,LOTE_03,P0420,NO,
+F10-L05-0120,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),L3,APROBADO,CONFORME,0.123,0.1278,TRAIN,,NO,
+F10-L05-0121,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.1026,0.3439,TRAIN,,NO,
+F10-L05-0122,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.0871,0.1756,LOTE_02,,NO,
+F10-L05-0123,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.2326,0.1643,TRAIN,,NO,
+F10-L05-0124,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.2282,0.3509,TRAIN,,NO,
+F10-L05-0125,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.2682,0.4181,LOTE_04,,NO,
+F10-L05-0126,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.1639,0.3681,LOTE_04,,NO,
+F10-L05-0127,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.131,0.2639,LOTE_02,,NO,
+F10-L05-0128,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.1515,0.1921,TEST_100,,NO,
+F10-L05-0129,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.127,0.3714,LOTE_04,,NO,
+F10-L05-0130,Falla en regulador de presion de combustible o diafragma roto,L1,APROBADO,CONFORME,0.0873,0.1712,TRAIN,,NO,
+F10-L05-0131,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1618,0.3356,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0132,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1578,0.2594,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0133,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1598,0.148,TRAIN,P0172,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0134,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1596,0.1758,LOTE_01,,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0135,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.2282,0.2479,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0136,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1596,0.1705,TRAIN,P0171,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0137,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1256,0.1465,LOTE_04,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L05-0138,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1434,0.1812,TRAIN,P0172,NO,
+F10-L05-0139,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.097,0.1618,TRAIN,,NO,
+F10-L05-0140,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1483,0.2999,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L05-0141,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1579,0.1734,LOTE_01,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0142,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1528,0.176,TRAIN,,NO,
+F10-L05-0143,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1587,0.1924,LOTE_04,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0144,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.0982,0.0858,LOTE_03,P0172,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0145,Falla en regulador de presion de combustible o diafragma roto,L2,APROBADO,CONFORME,0.1139,0.2789,TRAIN,,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L05-0146,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1654,0.2339,TRAIN,P0172,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0147,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1587,0.1478,LOTE_04,P0172,NO,
+F10-L05-0148,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1598,0.1335,LOTE_04,P0171,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0149,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1528,0.1738,LOTE_04,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L05-0150,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1767,0.1326,TRAIN,,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0151,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1662,0.1914,TRAIN,P0172,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0152,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1306,0.2127,TRAIN,,NO,
+F10-L05-0153,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1593,0.1634,LOTE_04,P0171,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0154,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.112,0.125,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0155,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1362,0.1617,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0156,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1765,0.1568,LOTE_01,,SI,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)
+F10-L05-0157,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.0953,0.1369,TRAIN,P0172,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L05-0158,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1271,0.1438,TRAIN,,NO,
+F10-L05-0159,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.1596,0.1869,LOTE_04,P0171,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0160,Falla en regulador de presion de combustible o diafragma roto,L3,APROBADO,CONFORME,0.107,0.1289,LOTE_04,,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L05-0161,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.16,0.4123,FIELD_60,,NO,
+F10-L05-0162,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.2418,0.2891,TRAIN,,NO,
+F10-L05-0163,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.4071,0.354,LOTE_03,,NO,
+F10-L05-0164,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.3314,0.3563,TRAIN,,NO,
+F10-L05-0165,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.2005,0.361,LOTE_04,,NO,
+F10-L05-0166,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.2132,0.2588,TRAIN,,NO,
+F10-L05-0167,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.1462,0.2241,TRAIN,,NO,
+F10-L05-0168,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.2942,0.2986,TRAIN,,NO,
+F10-L05-0169,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.0985,0.1464,TRAIN,,NO,
+F10-L05-0170,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L1,APROBADO,CONFORME,0.12,0.1295,LOTE_04,,NO,
+F10-L05-0171,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.2004,0.2056,TRAIN,P0201,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0172,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.1394,0.152,TRAIN,P0203,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0173,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.2294,0.3038,TRAIN,P0202,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0174,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.1454,0.2747,TRAIN,P0204,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0175,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.0905,0.2164,TRAIN,P0202,SI,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados
+F10-L05-0176,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.2013,0.1551,TRAIN,P0201,NO,
+F10-L05-0177,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.1401,0.1408,LOTE_01,P0202,NO,
+F10-L05-0178,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.2083,0.1298,TRAIN,P0203,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0179,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.2379,0.1298,LOTE_03,P0204,NO,
+F10-L05-0180,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.1874,0.2116,TRAIN,P0203,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0181,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.1572,0.1433,LOTE_03,P0202,SI,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados
+F10-L05-0182,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.0781,0.1733,TRAIN,P0201,NO,
+F10-L05-0183,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.2294,0.1286,TRAIN,P0204,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0184,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.1882,0.159,TRAIN,P0201,SI,Falla en regulador de presion de combustible o diafragma roto
+F10-L05-0185,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L2,APROBADO,CONFORME,0.1487,0.1723,LOTE_03,P0203,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0186,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.1649,0.1484,TRAIN,P0201,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0187,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.1639,0.1405,TRAIN,P0203,SI,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados
+F10-L05-0188,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.2379,0.1571,TRAIN,P0204,NO,
+F10-L05-0189,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.1607,0.1285,TRAIN,P0202,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0190,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.2571,0.1336,LOTE_03,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0191,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.1346,0.0814,LOTE_04,P0202,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0192,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.0965,0.1303,LOTE_03,P0203,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0193,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.1731,0.1531,LOTE_03,P0201,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0194,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.109,0.18,TRAIN,P0204,NO,
+F10-L05-0195,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.0964,0.1128,TRAIN,P0202,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0196,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.2083,0.1788,LOTE_01,P0203,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0197,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.1073,0.1462,LOTE_03,P0201,NO,
+F10-L05-0198,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.0781,0.1433,TRAIN,P0204,NO,
+F10-L05-0199,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.1108,0.1261,LOTE_04,P0201,SI,Bomba de gasolina quemada o con baja presion
+F10-L05-0200,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),L3,APROBADO,CONFORME,0.1329,0.1022,TRAIN,P0202,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0201,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.16,0.2278,TRAIN,,NO,
+F10-L05-0202,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.2005,0.1738,TRAIN,,NO,
+F10-L05-0203,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.2778,0.3169,TRAIN,,NO,
+F10-L05-0204,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.162,0.3328,TRAIN,,NO,
+F10-L05-0205,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.2006,0.1826,TRAIN,,NO,
+F10-L05-0206,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.3494,0.3264,LOTE_03,,NO,
+F10-L05-0207,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.1039,0.1997,LOTE_04,,NO,
+F10-L05-0208,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.1288,0.185,TRAIN,,NO,
+F10-L05-0209,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.0605,0.1318,DEV_60,,NO,
+F10-L05-0210,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L1,APROBADO,CONFORME,0.123,0.179,LOTE_03,,NO,
+F10-L05-0211,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1896,0.3024,LOTE_02,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L05-0212,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.2687,0.3266,LOTE_02,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L05-0213,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1497,0.1687,TRAIN,P0304,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0214,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1198,0.1976,LOTE_03,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L05-0215,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.2115,0.1428,TRAIN,,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L05-0216,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.162,0.2261,TRAIN,,NO,
+F10-L05-0217,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1227,0.148,TRAIN,,SI,Empaque de culata soplado o danado
+F10-L05-0218,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1593,0.134,LOTE_04,P0304,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0219,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1512,0.18,TRAIN,,NO,
+F10-L05-0220,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1046,0.1294,TRAIN,P0301,SI,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)
+F10-L05-0221,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1121,0.2775,TRAIN,,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L05-0222,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1941,0.2756,TRAIN,,NO,
+F10-L05-0223,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1425,0.1824,LOTE_02,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0224,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1115,0.1797,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L05-0225,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L2,APROBADO,CONFORME,0.1092,0.1283,TRAIN,P0303,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L05-0226,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.2517,0.1411,TRAIN,P0303,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0227,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.2115,0.1032,LOTE_03,P0301,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L05-0228,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.2687,0.2665,LOTE_02,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L05-0229,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1425,0.1312,TRAIN,P0302,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L05-0230,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.2571,0.1227,LOTE_04,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L05-0231,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1246,0.1113,LOTE_04,P0301,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0232,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.2369,0.1612,TRAIN,P0304,SI,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)
+F10-L05-0233,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1217,0.0997,LOTE_04,P0302,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L05-0234,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1548,0.1064,TRAIN,P0303,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L05-0235,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1474,0.1398,TRAIN,,SI,Empaque de culata soplado o danado
+F10-L05-0236,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1121,0.1316,TRAIN,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L05-0237,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1004,0.1516,TRAIN,,SI,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)
+F10-L05-0238,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1409,0.2038,TRAIN,P0301,NO,
+F10-L05-0239,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.241,0.1349,LOTE_02,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L05-0240,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,L3,APROBADO,CONFORME,0.1045,0.1436,LOTE_04,,NO,

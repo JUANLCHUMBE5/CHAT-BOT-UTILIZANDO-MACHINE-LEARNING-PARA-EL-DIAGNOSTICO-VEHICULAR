@@ -1,0 +1,99 @@
+=== PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035) ===
+Código de Falla Asociado: DTC C0035 / Inspección de Sistema de Freno
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent/i10, Kia Rio/Picanto, Nissan Versa, Changan CS35, DFSK Glory 580
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Chillido metálico agudo al frenar, pedal vibrante, pastillas cristalizadas o surcos profundos en el disco.
+Instrucciones paso a paso:
+1. Levante el vehículo con la gata hidráulica, colóquelo sobre torres de seguridad y retire las ruedas delanteras.
+2. Afloje los pernos de fijación del cáliper usando una llave de 12mm o 14mm.
+3. Desmonte el cáliper de freno y asegúrelo con un gancho metálico a la suspensión para no tensar la manguera flexible de frenos.
+4. Retire las pastillas desgastadas y las láminas antirruido (shims).
+5. Mida el espesor del disco con micrómetro (límite mínimo estampado en la manzana del disco) y revise alabeo con reloj comparador (máx 0.05mm). Si supera el límite o tiene surcos, rectifique o cambie el disco.
+6. Utilice la prensa retractora para retroceder el pistón del cáliper a su posición inicial.
+7. Coloque las pastillas nuevas aplicando grasa sintética de alta temperatura en los puntos de contacto del soporte.
+8. Monte el cáliper, ajuste los pernos a 35 Nm, instale la rueda y bombee el pedal de freno 5 veces con motor apagado antes de avanzar el auto.
+
+=== PROCEDIMIENTO: LIMPIEZA Y PRUEBA DE INYECTORES DE COMBUSTIBLE EN BANCO ULTRASONIDO (DTC P0200 / P0261) ===
+Código de Falla Asociado: DTC P0200 (Circuito Inyector) / DTC P0261 (Inyector Cilindro 1 Bajo)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa/Kicks, Changan Alsvin, Suzuki Swift
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Motor atascado, jaloneo/tirones al acelerar, consumo excesivo de gasolina, humo negro o falta de potencia en subidas.
+Instrucciones paso a paso:
+1. Despresurice el sistema de combustible retirando el fusible de la bomba de gasolina y dando arranque 5 segundos hasta apagar el motor.
+2. Desconecte los conectores eléctricos de cada inyector y la cañería de alimentación de gasolina del riel.
+3. Retire los 2 pernos de 12mm del riel de inyección y extraiga el conjunto riel-inyectores con cuidado de no dañar los O-rings.
+4. Sumerja los inyectores en la tina de ultrasonido con solución detergente especializada durante 15 minutos.
+5. Monte los inyectores en el banco de pruebas de laboratorio para evaluar: pulverización (abanico), estanqueidad (ausencia de goteo a 3.5 bar) y balance de caudal cc/min.
+6. Sustituya los microfiltros internos y las juntas O-ring de vitón en todos los inyectores.
+7. Lubrique los O-rings con aceite de motor limpio e instale el riel de inyección en el múltiple de admisión aplicando 12 Nm en los pernos.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119) ===
+Código de Falla Asociado: DTC P0505 (Válvula IAC) / DTC P2119 (Control Mariposa Acelerador)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent/i10, Kia Rio/Picanto, Chevrolet Sail, Nissan Tiida
+Gravedad: Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Ralentí inestable, las revoluciones oscilan entre 500 y 1500 RPM, o el motor se apaga repentinamente al frenar en semáforos.
+Instrucciones paso a paso:
+1. Desconectar el borne negativo (-) de la batería de 12V.
+2. Retirar el ducto de aire de admisión aflojando las abrazaderas.
+3. Desconectar el conector eléctrico del servo motor de la mariposa o de la válvula IAC.
+4. Desmontar los 4 pernos del cuerpo de aceleración del múltiple de admisión.
+5. Limpiar los depósitos de carbonilla alrededor de la mariposa y del ducto de aire con aerosol Carburaclean (Throttle Body Cleaner) y brocha fina. No forzar bruscamente la mariposa motorizada.
+6. Reemplazar la empaquetadura de goma de la base del cuerpo de aceleración.
+7. Armar el conjunto, conectar la batería y ejecutar el re-aprendizaje de marcha lenta (Idle Relearn): dar contacto 10 segundos, apagar 10 segundos y encender el motor sin tocar el acelerador durante 10 minutos hasta alcanzar 90°C.
+
+=== PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550) ===
+Código de Falla Asociado: Inspección de Suspensión Delantera / Trasera / DTC C0550
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Changan CS15, DFSK Glory
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Ruido de golpeteo seco al pasar por rompemuelles/baches, estabilidad deficiente en autopista y rebote continuo de la rueda.
+Instrucciones paso a paso:
+1. Levante el vehículo y retire la rueda correspondiente.
+2. Desconecte la bieleta de la barra estabilizadora y el soporte de manguera de freno/ABS adjunto al amortiguador.
+3. Desmonte los 2 pernos pasantes de 17mm/19mm que unen la base del amortiguador con el mangueta.
+4. En el vano motor, retire las 3 tuercas de 12mm de la torre de suspensión y extraiga la pierna de suspensión completa.
+5. Utilice el compresor de espirales de seguridad para comprimir el resorte hasta liberar la presión de la cazoleta superior.
+6. Desmonte la tuerca del vástago central con llave acodada y dado allen.
+7. Reemplace la cazoleta, el rodamiento de empuje y el guardapolvo con tope de rebote de goma.
+8. Instale el amortiguador nuevo, torquee la tuerca superior a 45 Nm y descomprima el resorte con cuidado.
+
+=== PROCEDIMIENTO: REEMPLAZO DEL KIT DE EMBRAGUE EN TRANSMISIÓN MANUAL (DISCO, PRENSA, COLLARÍN Y BOMBÍN HIDRÁULICO TOYOTA YARIS) ===
+Código de Falla Asociado: Inspección Transmisión Manual / Embrague Patina / No Desembraga
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris (2NR-FE / 1NZ-FE 5MT), Toyota Avanza
+Gravedad: Alta | Tiempo Estimado de Taller: 240 minutos
+Síntomas: El motor acelera pero no avanza (patina), o el pedal de embrague no desembraga, pedal esponjoso o con fuga en el bombín hidráulico.
+Instrucciones paso a paso:
+1. Desconecte la batería, retire la caja del filtro de aire, el varillaje selector de cambios y el motor de arranque.
+2. Levante el vehículo en elevador, retire ruedas delanteras, palieres de transmisión y soporte inferior del motor.
+3. Sostenga la caja de cambios con un gato de transmisiones.
+4. Retire los pernos de la campana de transmisión al bloque del motor y desmonte la caja de cambios.
+5. Desatornille los 6 pernos de la prensa de embrague en forma cruzada para evitar deformar el volante de inercia.
+6. Inspeccione la pista del volante de inercia: si muestra zonas azuladas por calor o surcos, mande a rectificar el volante.
+7. Reemplace el collarín (rodamiento de empuje) y lubrique la guía del eje mando con grasa sintética de molibdeno.
+8. Instale el disco de embrague nuevo utilizando el centrador de disco para garantizar la alineación exacta con la prensa.
+9. Torqueé la prensa a 25 Nm, arme la caja de cambios y purgue el bombín hidráulico de embrague con DOT 4.
+
+=== PROCEDIMIENTO: REPARACIÓN DE EMBRAGUE ELECTROMAGNÉTICO Y COMPRESOR DE A/C (DTC B1421 / RUIDO EN COMPRESOR) ===
+Código de Falla Asociado: DTC B1421 / Falla Embrague de Compresor de Aire Acondicionado
+Modelos Compatibles Frecuentes en Perú: Toyota, Hyundai, Kia, Nissan, Chevrolet, Suzuki
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Ruido chillón al accionar el botón A/C, la polea se traba o el plato del electroimán no acopla.
+Instrucciones paso a paso:
+1. Desconecte el arnés de la bobina del embrague electromagnético del compresor.
+2. Retire la faja serpentina de accesorios y desmonte el perno central del eje del compresor.
+3. Retira el plato e inspeccione las arandelas de calibración (entrehierro estándar entre 0.35mm y 0.65mm).
+4. Mida la resistencia de la bobina electromagnética con multímetro (3.2 a 4.5 Ohmios).
+5. Arme con rodamiento nuevo y regule la luz del entrehierro agregando/quitando arandelas.
+
+=== PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS) ===
+Código de Falla Asociado: DTC P17BF (Protección Sobrecarga Bomba Hidráulica DSG 7v DQ200) / DTC P189C (Restricción por Presión Insuficiente) / DTC P0741
+Modelos Compatibles Frecuentes en Perú: Volkswagen Polo/Golf/Jetta (DSG 7v/6v), Audi A3, Hyundai Accent/Tucson DCT, Kia Cerato DCT
+Gravedad: Crítica | Tiempo Estimado de Taller: 180 minutos
+Síntomas: Llave inglesa o letras de marchas parpadeando en tablero, pérdida de marchas pares o impares, tirones bruscos al salir, fuga de aceite verde hidráulico bajo la mecatrónica.
+Instrucciones paso a paso:
+1. Conecte el escáner (VCDS / Launch) y escanee el módulo 02-Transmisión para verificar códigos de presión hidráulica (P17BF/P189C).
+2. Verifique la presión del acumulador de la mecatrónica en datos en vivo: si no retiene 40-60 bar de presión y la bomba eléctrica suena continuamente, existe grieta en la carcasa o acumulador suelto.
+3. Drene el aceite del grupo mecánico (75W) y el fluido sintético de la mecatrónica (Central Hidráulica CHF 11S / Febi 21829).
+4. Desmonte la unidad mecatrónica del frente de la caja liberando los selectores en posición neutro mediante herramienta de palanca OEM T10407.
+5. En mesa de trabajo limpia, instale la placa de refuerzo/acumulador reforzado en la carcasa mecatrónica o reemplace la mecatrónica completa.
+6. Vuelva a montar la mecatrónica torqueando los pernos a 10 Nm + 90°. Rellene 1.0L de fluido hidráulico mecatrónico fresco y 1.9L de aceite de engranajes DSG.
+7. Conecte el escáner y ejecute de manera obligatoria el Ajuste Básico (Basic Settings - Canal 061) escuchando las sincronizaciones y realizando la prueba de ruta de adaptación de embragues.

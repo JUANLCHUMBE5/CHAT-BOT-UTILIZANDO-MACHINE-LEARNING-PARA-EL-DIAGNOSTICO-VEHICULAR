@@ -1,0 +1,3 @@
+grupo,n,top1_accuracy,top3_accuracy,macro_f1
+CON_DTC,88,0.875,0.9545,0.8284
+SIN_DTC,400,0.6675,0.88,0.6501

@@ -1,0 +1,23 @@
+{
+  "resumen": {
+    "total_train": 6189,
+    "total_dev": 60,
+    "total_g1": 50,
+    "exact_duplicates_dev": 0,
+    "exact_duplicates_g1": 0,
+    "near_duplicates_dev": 0,
+    "near_duplicates_g1": 0,
+    "high_semantic_sim_dev": 0,
+    "high_semantic_sim_g1": 0,
+    "max_cosine_dev": 0.5671,
+    "mean_cosine_dev": 0.3453,
+    "max_cosine_g1": 0.5513,
+    "mean_cosine_g1": 0.2905
+  },
+  "detalles": {
+    "near_dev": [],
+    "near_g1": [],
+    "high_semantic_dev": [],
+    "high_semantic_g1": []
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "seed": 42,
+  "metodo_split": {
+    "original": "StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=42) sobre grupos de paráfrasis norm_g",
+    "fase10": "GroupSplit estratificado por clase y nivel L1(8/2), L2(12/3), L3(12/3) con id_grupo individual preservado"
+  },
+  "fuentes_utilizadas": [
+    {
+      "archivo": "dataset_sintomas_limpio.csv",
+      "sha256": "c94d6e7b88ef72ea20f7be1bbb3d5a61484f33d992dcb52c6b285306f1c52626",
+      "filas": 6189,
+      "clases": 61,
+      "tipo": "ORIGINAL_CANONICO"
+    },
+    {
+      "archivo": "dataset_fase10_master_v1_1_2440.csv",
+      "sha256": "6ccb8873092da94f5a5415303f07b8caf50a8f3850605b9c2b17b5d96ab1d445",
+      "filas": 2440,
+      "clases": 61,
+      "tipo": "SINTETICO_DERIVADO_NORMALIZADO_COLOQUIAL"
+    }
+  ],
+  "train10": {
+    "archivo": "train10_v1.csv",
+    "sha256": "ec407886b48d66c4d9be6fc8b72decf605f4f94ac1af0575d9c4fa0db005e92b",
+    "total_filas": 6904,
+    "total_clases": 61,
+    "proporcion_pool": 80.01,
+    "filas_original": 4952,
+    "filas_sintetico": 1952,
+    "sinteticos_por_nivel": {
+      "L2": 732,
+      "L3": 732,
+      "L1": 488
+    },
+    "total_grupos_unicos": 5819
+  },
+  "dev10": {
+    "archivo": "dev10_v1.csv",
+    "sha256": "b44a752ca58fb4e27c7d9167198747e076d0c3cd5c4b07eaa03919777d1fd2b6",
+    "total_filas": 1725,
+    "total_clases": 61,
+    "proporcion_pool": 19.99,
+    "filas_original": 1237,
+    "filas_sintetico": 488,
+    "sinteticos_por_nivel": {
+      "L2": 183,
+      "L3": 183,
+      "L1": 122
+    },
+    "total_grupos_unicos": 1453
+  },
+  "verificacion_integridad": {
+    "interseccion_ids": 0,
+    "interseccion_id_grupo": 0,
+    "duplicados_exactos_texto": 0,
+    "duplicados_normalizados_texto": 0,
+    "maxima_similitud_tfidf": 0.9951,
+    "similitud_promedio_tfidf": 0.5752,
+    "near_duplicates_umbral_088": 327,
+    "estado": "LOCKED_VALIDATED_SPLIT"
+  }
+}

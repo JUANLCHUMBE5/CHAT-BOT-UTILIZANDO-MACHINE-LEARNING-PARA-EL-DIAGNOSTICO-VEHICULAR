@@ -1,0 +1,83 @@
+/* Glassmorphism Design System Utilities */
+.stat-card-glass {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05) !important;
+}
+
+.glass-container {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid hsla(24, 85%, 60%, 0.18) !important;
+  box-shadow: 0 8px 24px -4px rgba(234, 88, 12, 0.08), 0 4px 12px rgba(15, 23, 42, 0.03) !important;
+}
+
+.glass-segmented-bar {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid hsla(24, 85%, 60%, 0.18);
+  border-radius: 14px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.glass-segmented-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.glass-segment-item {
+  flex: 1 1 0%;
+  min-width: max-content;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.glass-segment-item:hover:not(.active) {
+  background: rgba(234, 88, 12, 0.06);
+  color: var(--primary);
+}
+
+.glass-segment-item.active {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(234, 88, 12, 0.35);
+  font-weight: 700;
+}
+
+.glass-modal-overlay {
+  background: rgba(15, 23, 42, 0.5) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}
+
+.glass-modal-content {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid hsla(24, 85%, 60%, 0.22) !important;
+}

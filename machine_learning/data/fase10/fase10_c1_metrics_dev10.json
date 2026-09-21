@@ -1,0 +1,220 @@
+{
+  "candidate": "F10-C1",
+  "train_instances": 6904,
+  "dev_instances": 1725,
+  "f83": {
+    "top1": 0.8852,
+    "top3": 0.942,
+    "macro_precision": 0.9039,
+    "macro_recall": 0.8715,
+    "macro_f1": 0.8826,
+    "weighted_f1": 0.8851,
+    "macro_system_acc": 0.3316,
+    "brier_score": 0.0612,
+    "ece": 0.0228
+  },
+  "c1": {
+    "top1": 0.8406,
+    "top3": 0.9171,
+    "macro_precision": 0.8453,
+    "macro_recall": 0.8492,
+    "macro_f1": 0.8437,
+    "weighted_f1": 0.8412,
+    "macro_system_acc": 0.8475,
+    "brier_score": 0.0818,
+    "ece": 0.0226
+  },
+  "delta": {
+    "top1": -0.0446,
+    "top3": -0.0249,
+    "macro_precision": -0.0586,
+    "macro_recall": -0.0223,
+    "macro_f1": -0.0389,
+    "weighted_f1": -0.0439,
+    "macro_system_acc": 0.5159
+  },
+  "mcnemar": {
+    "statistic": 23.3846,
+    "p_value": 1.3263507816496656e-06,
+    "ambos_correctos": 1365,
+    "solo_f83": 162,
+    "solo_c1": 85,
+    "ambos_incorrectos": 113
+  },
+  "bootstrap_95ci": {
+    "delta_top1_mean": -0.0448,
+    "delta_top1_ci95": [
+      -0.0658,
+      -0.025
+    ],
+    "delta_top3_mean": -0.0251,
+    "delta_top3_ci95": [
+      -0.0422,
+      -0.0086
+    ],
+    "delta_macro_f1_mean": -0.0401,
+    "delta_macro_f1_ci95": [
+      -0.0615,
+      -0.0209
+    ]
+  },
+  "por_fuente": {
+    "original": {
+      "n": 1237,
+      "top1_f83": 0.9992,
+      "top1_c1": 0.8941,
+      "delta_top1": -0.1051,
+      "top3_f83": 1.0,
+      "top3_c1": 0.9264,
+      "delta_top3": -0.0736,
+      "mf1_f83": 0.9992,
+      "mf1_c1": 0.9006,
+      "delta_mf1": -0.0986
+    },
+    "sintetico": {
+      "n": 488,
+      "top1_f83": 0.5963,
+      "top1_c1": 0.7049,
+      "delta_top1": 0.1086,
+      "top3_f83": 0.7951,
+      "top3_c1": 0.8934,
+      "delta_top3": 0.0984,
+      "mf1_f83": 0.595,
+      "mf1_c1": 0.7014,
+      "delta_mf1": 0.1065
+    }
+  },
+  "por_nivel": {
+    "L1": {
+      "n": 122,
+      "top1_f83": 0.4262,
+      "top1_c1": 0.5246,
+      "delta_top1": 0.0984,
+      "top3_f83": 0.6639,
+      "top3_c1": 0.7213,
+      "delta_top3": 0.0574,
+      "mf1_f83": 0.384,
+      "mf1_c1": 0.4851,
+      "delta_mf1": 0.1011
+    },
+    "L2": {
+      "n": 183,
+      "top1_f83": 0.6776,
+      "top1_c1": 0.776,
+      "delta_top1": 0.0984,
+      "top3_f83": 0.8634,
+      "top3_c1": 0.9563,
+      "delta_top3": 0.0929,
+      "mf1_f83": 0.6536,
+      "mf1_c1": 0.755,
+      "delta_mf1": 0.1014
+    },
+    "L3": {
+      "n": 183,
+      "top1_f83": 0.6284,
+      "top1_c1": 0.7541,
+      "delta_top1": 0.1257,
+      "top3_f83": 0.8142,
+      "top3_c1": 0.9454,
+      "delta_top3": 0.1311,
+      "mf1_f83": 0.6018,
+      "mf1_c1": 0.7451,
+      "delta_mf1": 0.1433
+    }
+  },
+  "por_macro": {
+    "MOTOR": {
+      "n": 284,
+      "top1_f83": 0.7183,
+      "top1_c1": 0.75,
+      "delta_top1": 0.0317,
+      "top3_f83": 0.8415,
+      "top3_c1": 0.9049,
+      "delta_top3": 0.0634,
+      "mf1_f83": 0.5723,
+      "mf1_c1": 0.5939,
+      "delta_mf1": 0.0215,
+      "macro_acc_c1": 0.8803,
+      "macro_acc_f83": 0.9789
+    },
+    "FRENOS": {
+      "n": 68,
+      "top1_f83": 0.6765,
+      "top1_c1": 0.7206,
+      "delta_top1": 0.0441,
+      "top3_f83": 0.8676,
+      "top3_c1": 0.8676,
+      "delta_top3": 0.0,
+      "mf1_f83": 0.3619,
+      "mf1_c1": 0.4316,
+      "delta_mf1": 0.0697,
+      "macro_acc_c1": 0.6912,
+      "macro_acc_f83": 0.8235
+    },
+    "TRANSMISION": {
+      "n": 88,
+      "top1_f83": 0.7273,
+      "top1_c1": 0.8523,
+      "delta_top1": 0.125,
+      "top3_f83": 0.8523,
+      "top3_c1": 0.9432,
+      "delta_top3": 0.0909,
+      "mf1_f83": 0.3481,
+      "mf1_c1": 0.441,
+      "delta_mf1": 0.0929,
+      "macro_acc_c1": 0.8182,
+      "macro_acc_f83": 0.8523
+    },
+    "SUSPENSION_CHASIS": {
+      "n": 53,
+      "top1_f83": 0.6604,
+      "top1_c1": 0.7547,
+      "delta_top1": 0.0943,
+      "top3_f83": 0.8491,
+      "top3_c1": 0.9811,
+      "delta_top3": 0.1321,
+      "mf1_f83": 0.2708,
+      "mf1_c1": 0.3795,
+      "delta_mf1": 0.1086,
+      "macro_acc_c1": 0.7547,
+      "macro_acc_f83": 0.8113
+    },
+    "ELECTRICO": {
+      "n": 80,
+      "top1_f83": 0.6375,
+      "top1_c1": 0.7875,
+      "delta_top1": 0.15,
+      "top3_f83": 0.8375,
+      "top3_c1": 0.9375,
+      "delta_top3": 0.1,
+      "mf1_f83": 0.3079,
+      "mf1_c1": 0.4474,
+      "delta_mf1": 0.1396,
+      "macro_acc_c1": 0.8625,
+      "macro_acc_f83": 0.8625
+    },
+    "CLIMATIZACION": {
+      "n": 8,
+      "top1_f83": 0.375,
+      "top1_c1": 0.5,
+      "delta_top1": 0.125,
+      "top3_f83": 0.625,
+      "top3_c1": 0.625,
+      "delta_top3": 0.0,
+      "mf1_f83": 0.0909,
+      "mf1_c1": 0.1667,
+      "delta_mf1": 0.0758,
+      "macro_acc_c1": 0.25,
+      "macro_acc_f83": 0.25
+    }
+  },
+  "contrastivos": {
+    "n": 257,
+    "top1_f83": 0.6109,
+    "top1_c1": 0.7549,
+    "top3_f83": 0.8288,
+    "top3_c1": 0.9455,
+    "errores_hacia_contrastiva_f83": 52,
+    "errores_hacia_contrastiva_c1": 36
+  }
+}

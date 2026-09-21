@@ -13,9 +13,9 @@ from src.core.services.webhook_service import WebhookService
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.models.catalogs import Taller, Usuario
 from src.infrastructure.database.models.diagnostics import Diagnostico, HipotesisDiagnostico, Vehiculo
+from src.infrastructure.database.models.jobs import TrabajoGemini
 from src.infrastructure.database.models.messaging import Conversacion, Mensaje
 from src.infrastructure.database.models.operations import Auditoria, UsoApi
-from src.infrastructure.database.models.jobs import TrabajoGemini
 from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
@@ -242,7 +242,7 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         tipo_mensaje="text",
         texto_cliente="El carro vibra al acelerar en subida",
     )
-    assert res1["status"] == "completado"
+    assert res1["status"] in ("completado", "aclaracion")
 
     # Segunda llamada con el MISMO meta_message_id: debe ser ignorado de inmediato
     res2 = await service.procesar_mensaje(

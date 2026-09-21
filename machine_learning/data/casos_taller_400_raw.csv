@@ -1,0 +1,401 @@
+id,categoria,etiquetas,sintomas,diagnostico_principal,confianza
+1,Combustible,"arranque_dificil,olor_gasolina,solo_en_caliente","Arranca bien en frío. Cuando está caliente y lo apago un rato, al volver a arrancar le cuesta mucho o no prende. Sale olor fuerte a gasolina.",Inyectores con fuga,0.92
+2,Encendido,"vibracion,perdida_potencia,solo_en_caliente","Al acelerar arriba de 2200 rpm se siente temblor fuerte en el volante y en todo el auto. Más notorio cuando está caliente. No prende Check Engine.",Bobinas de encendido,0.89
+3,Mecánica Motor,"vibracion,en_ralenti,consumo_alto","En semáforos el motor vibra mucho (baila). Al acelerar se quita. Consume más gasolina de lo normal.",Soportes de motor rotos,0.87
+4,Transmisión / Embrague,"ruido","Al pisar el embrague se escucha un zumbido o ronroneo que desaparece al soltarlo. No cuesta meter las velocidades.",Rodamiento de embrague (thrust bearing),0.94
+5,Combustible,"perdida_potencia,bajo_carga","Al acelerar fuerte en 1ra y 2da se ahoga un momento y luego pega un jalón. Más notorio con el tanque a la mitad o menos.",Bomba de combustible débil,0.88
+6,Sensores,"tironeo,check_engine,en_carretera","En carretera a 100-110 km/h el motor tironea de repente y se recupera. A veces se apaga el aire acondicionado. Check Engine intermitente.",Sensor MAF sucio o fallando,0.85
+7,Sensores,"se_apaga,en_ralenti","Se apaga en los semáforos o cuando freno. Arranca de nuevo sin problema. No prende Check Engine.",Válvula IAC sucia o fallando,0.90
+8,Suspensión / Dirección,"ruido,solo_en_frio","Al girar el volante se escucha un chillido, especialmente en frío. La dirección se siente pesada a veces.",Bomba de dirección hidráulica,0.91
+9,Escape / Emisiones,"perdida_potencia,consumo_alto,check_engine","Pierde potencia de forma gradual, se siente pesado al acelerar y el consumo subió mucho. Check Engine encendido.",Catalizador tapado,0.86
+10,Mecánica Motor,"ruido,solo_en_frio","Al arrancar en las mañanas hace un ruido metálico fuerte unos segundos y luego desaparece.",Tensor o cadena de distribución estirada,0.83
+11,Encendido,"check_engine,falla_cilindro,en_ralenti","Check Engine encendido. El motor se siente inestable en ralentí y a veces falla un cilindro.",Bobina de encendido (cilindro específico),0.94
+12,Sensores,"humo_negro,consumo_alto,check_engine","Al acelerar fuerte sale humo negro por el escape y el auto se siente ahogado. Consumo excesivo. Check Engine encendido.",Sensor de oxígeno fallando,0.88
+13,Eléctrico,"no_arranca,luces_debiles","No arranca (no hace nada al girar la llave). Las luces del tablero están débiles o se apagan.",Batería descargada o en mal estado,0.95
+14,Eléctrico,"arranque_lento,luces_tenues","Arranca pero suena muy lento y pesado. Las luces se ponen muy tenues al dar arranque.",Batería con poca carga o celdas malas,0.93
+15,Frenos,"vibracion,se_va_de_lado","Al frenar el auto se va hacia un lado y el pedal de freno vibra.",Discos de freno alabeados,0.91
+16,Mecánica Motor,"humo_blanco,baja_refrigerante,check_engine","Sale humo blanco constante por el escape y el nivel de refrigerante baja sin fugas visibles. Check Engine encendido.",Empaque de cabeza (junta de culata),0.89
+17,Enfriamiento,"tarda_en_calentar,calefaccion_debil","El motor tarda mucho en calentar y el calefactor casi no calienta.",Termostato pegado abierto,0.87
+18,Enfriamiento,"sobrecalentamiento,ventilador_no_prende","Se enciende la luz de temperatura y el motor se calienta de más, especialmente en tráfico. El ventilador no prende.",Ventilador de radiador defectuoso,0.90
+19,Mecánica Motor,"silbido,olor_quemado","Al acelerar se escucha un silbido o chillido que aumenta con las rpm. A veces huele a quemado.",Correa de accesorios floja o gastada,0.92
+20,Escape / Emisiones,"olor_azufre,perdida_potencia,check_engine","Olor a huevo podrido (azufre) y pierde un poco de potencia. Check Engine encendido.",Catalizador dañado,0.85
+21,Combustible,"perdida_potencia,bajo_carga,zumbido","En subidas o con carga el motor se siente sin fuerza y a veces se apaga. El tanque hace un zumbido fuerte.",Bomba de combustible fallando,0.88
+22,Mecánica Motor,"ruido_metalico,solo_en_caliente","El motor tiene un sonido de 'tic-tic' metálico que aumenta con las rpm, más notorio en caliente.",Taqués (lifters) hidráulicos,0.83
+23,Transmisión / Embrague,"ruido,dificultad_cambiar","Al cambiar de marcha se escucha un ruido de roce y a veces cuesta meter la velocidad.",Sincronizadores gastados,0.86
+24,Ruedas / Llantas,"vibracion,rango_velocidad","El auto vibra solo cuando va entre 80 y 100 km/h. En otras velocidades no se siente.",Llantas desbalanceadas,0.90
+25,Suspensión / Dirección,"golpeteo,topes","Se siente un golpeteo en la parte delantera al pasar topes o baches.",Terminales de dirección o bujes de suspensión,0.87
+26,Encendido,"falla,solo_con_humedad","El motor falla solo cuando llueve o hay mucha humedad. En seco funciona normal.",Bobinas de encendido con fuga de corriente,0.89
+27,Aire Acondicionado,"no_enfria","El aire acondicionado dejó de enfriar de repente. El compresor se escucha que intenta prender.",Falta de gas refrigerante,0.91
+28,Eléctrico,"luz_bateria,luces_tenues","El tablero muestra que la batería no carga y las luces se ponen tenues mientras manejo.",Alternador defectuoso,0.94
+29,Sensores,"ralenti_alto","Al soltar el acelerador el motor se queda acelerado unos segundos y luego baja.",Cuerpo de aceleración sucio,0.86
+30,Ruedas / Llantas,"aullido,aumenta_con_velocidad","Ruido de 'uuuu' o aullido que aumenta con la velocidad, más fuerte en curva.",Rodamiento de rueda,0.88
+31,Combustible,"arranque_dificil,solo_en_caliente","Después de manejar y apagar el auto, al rato no quiere arrancar. Cuando finalmente prende huele a gasolina.",Regulador de presión de combustible,0.84
+32,Encendido,"vibracion,perdida_potencia,check_engine","Vibración al acelerar y pérdida de potencia. Check Engine con código de falla de cilindro.",Bujías gastadas o incorrectas,0.90
+33,Sensores,"tironeo,perdida_potencia","El auto tironea en aceleración parcial y se siente sin fuerza en subidas.",Sensor TPS descalibrado o fallando,0.85
+34,Mecánica Motor,"ruido,al_acelerar","Ruido de golpeteo o cascabeleo al acelerar, más notorio con el motor caliente.",Pistones o anillos (cascabeleo de motor),0.81
+35,Eléctrico,"no_arranca,click","Al girar la llave solo se escucha un 'click' y no arranca. Las luces funcionan normal.",Motor de arranque defectuoso,0.92
+36,Frenos,"pedal_blando,se_va_abajo","El pedal de freno se siente blando y se va hasta abajo. Hay que bombearlo para que frene.",Aire en el sistema de frenos o fuga,0.93
+37,Enfriamiento,"sobrecalentamiento,fugas","El motor se calienta y se ve refrigerante tirado debajo del auto o en el piso.",Bomba de agua con fuga,0.89
+38,Escape / Emisiones,"humo_azul,consumo_aceite","Sale humo azul por el escape y el motor consume aceite.",Anillos de pistón o guías de válvulas,0.87
+39,Sensores,"check_engine,mezcla_rica","Check Engine encendido y el auto huele a gasolina. Consume más de lo normal.",Sensor MAF dando señal incorrecta,0.86
+40,Suspensión / Dirección,"ruido,al_girar","Al girar en estacionamientos se escucha un ruido de golpe o chasquido en la parte delantera.",Junta homocinética (CV joint) dañada,0.91
+41,Combustible,"perdida_potencia,intermitente","De vez en cuando el auto se queda sin fuerza unos segundos y luego se recupera. Más en calor.",Filtro de combustible tapado,0.84
+42,Encendido,"falla,en_ralenti","En ralentí el motor falla y se siente inestable. Mejora un poco al acelerar.",Cables de bujía en mal estado,0.88
+43,Mecánica Motor,"ruido,correa","Ruido de chillido al arrancar en frío que desaparece después de unos minutos.",Tensor de correa de distribución o accesorios,0.85
+44,Eléctrico,"luces_parpadean,fallas_electricas","Las luces del tablero parpadean y a veces se reinician sistemas eléctricos mientras manejo.",Mala masa o conexión a tierra,0.87
+45,Frenos,"ruido,al_frenar","Al frenar se escucha un chillido agudo constante.",Pastillas de freno gastadas,0.93
+46,Aire Acondicionado,"no_enfria,olor","El A/C enfria poco y sale un olor a humedad o moho por las rejillas.",Evaporador sucio o con hongos,0.86
+47,Sensores,"arranque_dificil,solo_en_frio","En las mañanas frías le cuesta arrancar y tarda en estabilizarse el ralentí.",Sensor ECT (temperatura de refrigerante),0.89
+48,Ruedas / Llantas,"vibracion,al_frenar","Vibración en el volante solo cuando freno a alta velocidad.",Discos de freno alabeados (delanteros),0.90
+49,Transmisión / Embrague,"patina,olor_quemado","El embrague patina en 3ra y 4ta y sale olor a quemado cuando acelero fuerte.",Disco de embrague gastado,0.92
+50,Mecánica Motor,"ruido,parte_baja","Ruido de golpeteo en la parte baja del motor que aumenta con las rpm.",Cojinetes de biela o cigüeñal (grave),0.78
+51,Encendido,"vibracion,perdida_potencia,check_engine","El auto vibra y pierde potencia al acelerar. Check Engine con código P0300 (falla múltiple de cilindros).",Bobinas de encendido en mal estado,0.91
+52,Combustible,"arranque_dificil,olor_gasolina","Después de llenar el tanque el auto le cuesta arrancar y huele fuerte a gasolina por un rato.",Cánister de vapores saturado o válvula de purga,0.84
+53,Sensores,"tironeo,en_carretera,check_engine","En carretera a velocidad constante el motor tironea y se enciende el Check Engine de forma intermitente.",Sensor de oxígeno (O2) aguas arriba,0.87
+54,Mecánica Motor,"ruido,solo_en_caliente","Ruido de cascabeleo o golpeteo cuando el motor está caliente y se acelera.",Carbonilla en cámaras de combustión (cascabeleo),0.82
+55,Eléctrico,"no_arranca,click","Al girar la llave solo hace 'click-click' y no arranca. Las luces funcionan bien.",Solenoide de arranque defectuoso,0.90
+56,Frenos,"pedal_duro,poco_frena","El pedal de freno está muy duro y el auto casi no frena. Hay que apretar con mucha fuerza.",Servofreno (booster) defectuoso,0.89
+57,Enfriamiento,"sobrecalentamiento,ventilador_prende_tarde","El motor se calienta más de lo normal. El ventilador prende muy tarde o casi no prende.",Sensor de temperatura del refrigerante (ECT),0.88
+58,Escape / Emisiones,"humo_negro,consumo_alto","Sale humo negro constante y el consumo de gasolina aumentó bastante.",Inyectores goteando o sensor MAF,0.85
+59,Suspensión / Dirección,"ruido,al_pasar_topes","Golpeteo fuerte en la parte delantera al pasar topes. Se siente en el volante.",Bujes de horquilla o terminales de dirección,0.88
+60,Ruedas / Llantas,"vibracion,alta_velocidad","Vibración fuerte en el volante arriba de 110 km/h. En ciudad no se nota.",Llantas desbalanceadas o rin doblado,0.91
+61,Combustible,"perdida_potencia,bajo_carga","En subidas el auto se queda sin fuerza y a veces se apaga. El problema es peor con el tanque bajo.",Bomba de combustible débil,0.89
+62,Encendido,"falla,solo_con_humedad","Cuando llueve o hay mucha humedad el motor falla y se pone inestable. En seco funciona bien.",Bobinas o cables de bujía con fuga de corriente,0.90
+63,Sensores,"ralenti_inestable,check_engine","El ralentí está muy inestable y se enciende el Check Engine. A veces se casi se apaga.",Cuerpo de aceleración sucio + sensor TPS,0.87
+64,Mecánica Motor,"ruido,al_arrancar","Al arrancar en frío se escucha un ruido metálico de cadena por 2-3 segundos y luego se quita.",Tensor hidráulico de cadena de distribución,0.84
+65,Transmisión / Embrague,"patina,olor_quemado","El embrague patina cuando acelero fuerte y sale olor a quemado. Sobre todo en 3ra y 4ta.",Disco de embrague gastado,0.93
+66,Eléctrico,"luces_tenues,en_marcha","Mientras manejo las luces se ponen tenues y el voltaje baja. A veces se reinicia el radio.",Alternador no carga correctamente,0.94
+67,Frenos,"vibracion,al_frenar","Al frenar a más de 80 km/h el volante y el pedal vibran fuerte.",Discos de freno alabeados,0.92
+68,Aire Acondicionado,"no_enfria,compresor_prende","El A/C no enfría. Se escucha que el compresor prende y se apaga constantemente.",Bajo nivel de gas refrigerante,0.90
+69,Sensores,"arranque_dificil,solo_en_frio","En las mañanas muy frías le cuesta arrancar y el ralentí tarda en estabilizarse.",Sensor de temperatura del refrigerante (ECT),0.88
+70,Mecánica Motor,"ruido,parte_baja","Ruido de golpeteo grave en la parte baja del motor que aumenta con las revoluciones.",Cojinetes de biela (muy grave),0.79
+71,Combustible,"se_ahoga,aceleracion","Al acelerar de golpe el auto se ahoga un segundo y luego responde. Más notorio en frío.",Sensor MAF sucio,0.86
+72,Encendido,"vibracion,en_ralenti","En ralentí el motor vibra y se siente un cilindro fallando. Mejora al acelerar.",Bujía o bobina de un cilindro,0.91
+73,Suspensión / Dirección,"ruido,al_girar","Al girar completamente el volante se escucha un chasquido o clic en la rueda delantera.",Junta homocinética (CV joint) dañada,0.92
+74,Escape / Emisiones,"olor_azufre,check_engine","Olor a huevo podrido y Check Engine encendido. El auto tiene menos potencia.",Catalizador obstruido o dañado,0.86
+75,Eléctrico,"no_arranca,nada","Al girar la llave no pasa absolutamente nada. Ni click ni luces del tablero.",Batería totalmente descargada o fusible principal,0.93
+76,Frenos,"ruido,chillido","Chillido agudo constante al frenar, incluso suave.",Pastillas de freno gastadas (indicador de desgaste),0.94
+77,Enfriamiento,"tarda_en_calentar","El motor tarda demasiado en llegar a temperatura normal. La aguja casi no sube.",Termostato atorado en posición abierta,0.89
+78,Ruedas / Llantas,"aullido,en_curva","Aullido que aumenta con la velocidad y se hace más fuerte al doblar.",Rodamiento de rueda dañado,0.90
+79,Sensores,"perdida_potencia,check_engine","Pérdida de potencia y Check Engine. El auto se siente en modo de emergencia (limp mode).",Sensor de posición del cigüeñal (CKP),0.87
+80,Mecánica Motor,"silbido,al_acelerar","Silbido agudo que aumenta con las rpm. A veces se escucha más en frío.",Fuga de vacío en manguera o junta,0.85
+81,Combustible,"consumo_alto,olor_gasolina","Consumo de gasolina muy elevado y olor a gasolina alrededor del auto.",Regulador de presión de combustible defectuoso,0.84
+82,Encendido,"falla_intermitente","El motor falla de forma intermitente, especialmente cuando está caliente y con carga.",Bobina de encendido intermitente,0.88
+83,Transmisión / Embrague,"ruido,al_pisar_embrague","Ruido de ronroneo solo cuando el embrague está pisado. Al soltarlo desaparece.",Rodamiento de empuje del embrague,0.93
+84,Eléctrico,"parpadeo_luces","Las luces delanteras parpadean y la intensidad cambia mientras manejo.",Mala conexión en alternador o regulador de voltaje,0.86
+85,Frenos,"se_va_de_lado","Al frenar el auto se va strongly hacia un lado.",Pastillas o discos de freno desgastados de forma irregular,0.89
+86,Aire Acondicionado,"olor_moho","Sale olor a humedad o moho por las rejillas del A/C cuando se enciende.",Evaporador con hongos o bacteria,0.87
+87,Sensores,"ralenti_alto","El motor se queda acelerado (ralenti alto) después de soltar el acelerador.",Cuerpo de aceleración sucio o sensor TPS,0.88
+88,Mecánica Motor,"ruido_metalico,en_frio","Ruido metálico fuerte al arrancar en frío que dura varios segundos.",Tensor de cadena de distribución débil,0.83
+89,Suspensión / Dirección,"direccion_pesada","La dirección está muy pesada, especialmente a baja velocidad.",Bomba de dirección hidráulica débil o bajo nivel de líquido,0.90
+90,Ruedas / Llantas,"vibracion,volante","Vibración en el volante que aparece entre 90 y 110 km/h y luego disminuye.",Llantas desbalanceadas,0.91
+91,Combustible,"zumbido_tanque","Se escucha un zumbido fuerte proveniente del tanque de gasolina, especialmente al acelerar.",Bomba de combustible ruidosa (desgastada),0.87
+92,Encendido,"check_engine,P030X","Check Engine con código de falla de un cilindro específico (P0301, P0302, etc.).",Bobina o bujía del cilindro indicado,0.94
+93,Escape / Emisiones,"humo_blanco,dulce","Humo blanco constante con olor dulce y baja el nivel de refrigerante.",Empaque de cabeza quemado,0.90
+94,Eléctrico,"arranque_lento","El motor de arranque suena lento y pesado, aunque la batería está nueva.",Motor de arranque desgastado (carbones),0.88
+95,Frenos,"pedal_vibra","El pedal de freno vibra cuando freno, pero el volante no.",Discos de freno traseros alabeados,0.86
+96,Enfriamiento,"fugas_refrigerante","Se pierde refrigerante y se ven manchas verdes o rojas debajo del auto.",Radiador con fuga o mangueras,0.89
+97,Sensores,"modo_falla","El auto entra en modo de falla (poca potencia) y se enciende el Check Engine.",Sensor MAP o MAF defectuoso,0.85
+98,Mecánica Motor,"consumo_aceite","El motor consume aceite pero no hay fugas visibles ni humo azul evidente.",Guías de válvulas o sellos de vástago,0.82
+99,Transmisión / Embrague,"cuesta_meter_velocidades","Cuesta meter las velocidades, especialmente la 1ra y la reversa en frío.",Fluido de transmisión bajo o embrague desajustado,0.84
+100,Ruedas / Llantas,"ruido_ronroneo","Ronroneo constante que aumenta con la velocidad, más notorio en carretera.",Rodamiento de rueda o llanta defectuosa,0.88
+101,Encendido,"vibracion,perdida_potencia,solo_en_caliente","Cuando el motor está caliente y acelero, se siente una vibración fuerte y pierde potencia. En frío casi no se nota.",Bobinas de encendido degradadas por calor,0.90
+102,Combustible,"arranque_dificil,olor_gasolina,solo_en_caliente","Arranca perfecto en frío. Después de usarlo y apagarlo 20-30 minutos, le cuesta mucho arrancar y huele a gasolina.",Inyectores con fuga interna,0.93
+103,Sensores,"tironeo,check_engine","El auto tironea en aceleración suave y se enciende el Check Engine de forma intermitente.",Sensor de posición del acelerador (TPS),0.86
+104,Mecánica Motor,"ruido,al_acelerar","Ruido de golpeteo metálico al acelerar, más fuerte cuando el motor está caliente.",Taqués hidráulicos colapsados,0.84
+105,Eléctrico,"no_arranca,luces_normales","Al girar la llave solo hace un click fuerte y no arranca. Las luces del tablero están normales.",Motor de arranque defectuoso,0.91
+106,Frenos,"pedal_blando","El pedal de freno se siente esponjoso y hay que apretarlo más de lo normal para frenar bien.",Aire en las líneas de freno,0.92
+107,Enfriamiento,"sobrecalentamiento,en_trafico","El motor se calienta solo en tráfico lento o detenido. En carretera la temperatura es normal.",Ventilador de radiador no funciona,0.90
+108,Escape / Emisiones,"humo_azul,consumo_aceite","Humo azul por el escape al acelerar y el motor consume aceite entre cambios.",Anillos de pistón desgastados,0.87
+109,Suspensión / Dirección,"ruido,al_girar","Chasquido o clic al girar el volante completamente, especialmente al estacionar.",Junta homocinética dañada,0.93
+110,Ruedas / Llantas,"vibracion,80_120_kmh","Vibración molesta en el volante solo entre 80 y 120 km/h.",Llantas desbalanceadas,0.91
+111,Combustible,"perdida_potencia,tanque_bajo","Cuando el tanque está por debajo de la mitad el auto pierde fuerza y a veces se ahoga.",Bomba de combustible débil,0.89
+112,Encendido,"falla,humedad","El motor falla y se pone rough solo cuando hay lluvia o mucha humedad.",Bobinas de encendido con grietas,0.90
+113,Sensores,"ralenti_inestable","El ralentí sube y baja constantemente. A veces casi se apaga en semáforos.",Válvula IAC o cuerpo de aceleración sucio,0.88
+114,Mecánica Motor,"ruido,cadena","Ruido de cadena o cascabeleo al arrancar en frío que dura unos segundos.",Tensor de cadena de distribución,0.85
+115,Transmisión / Embrague,"patina","El embrague patina en marchas altas cuando se acelera con carga (subidas o con pasajeros).",Disco de embrague gastado,0.94
+116,Eléctrico,"voltaje_bajo","Las luces se ponen tenues y el voltaje baja mientras se maneja. A veces se apaga el radio.",Alternador defectuoso,0.93
+117,Frenos,"vibracion_pedal","El pedal de freno vibra al frenar, pero el volante casi no se mueve.",Discos traseros alabeados,0.87
+118,Aire Acondicionado,"no_enfria","El aire acondicionado deja de enfriar después de un rato de uso. El compresor se escucha trabajando.",Condensador tapado o ventilador de A/C,0.86
+119,Sensores,"arranque_dificil_frio","En mañanas frías el auto tarda en arrancar y el ralentí está muy alto al principio.",Sensor ECT defectuoso,0.89
+120,Mecánica Motor,"ruido_grave","Ruido grave de golpeteo en la parte baja del motor que aumenta con las rpm. Se escucha más en caliente.",Cojinetes de bancada o biela,0.77
+121,Combustible,"zumbido,perdida_potencia","Zumbido fuerte desde el tanque y pérdida de potencia en aceleraciones fuertes.",Bomba de combustible fallando,0.88
+122,Encendido,"check_engine,P0300","Check Engine con código P0300 (falla aleatoria de cilindros) y el motor vibra.",Bobinas o bujías en mal estado,0.90
+123,Suspensión / Dirección,"direccion_floja","La dirección se siente floja y el auto no mantiene bien la línea recta.",Terminales de dirección o brazos de dirección gastados,0.87
+124,Escape / Emisiones,"olor_azufre","Olor fuerte a azufre (huevo podrido) especialmente en aceleración. Check Engine encendido.",Catalizador dañado,0.86
+125,Eléctrico,"parpadeo","Las luces delanteras y del tablero parpadean de forma irregular mientras se maneja.",Mala masa o conexión suelta en el alternador,0.85
+126,Frenos,"chillido","Chillido agudo cada vez que se frena, incluso suave.",Pastillas de freno al límite,0.94
+127,Enfriamiento,"fugas","Se pierde refrigerante y aparecen manchas debajo del auto. La temperatura se eleva poco a poco.",Radiador con fuga o tapa de radiador,0.88
+128,Ruedas / Llantas,"aullido","Aullido constante que aumenta con la velocidad. Más notorio en carretera.",Rodamiento de rueda,0.91
+129,Sensores,"limp_mode","El auto entra en modo de emergencia (poca potencia) y se enciende el Check Engine.",Sensor CKP o CMP defectuoso,0.87
+130,Mecánica Motor,"silbido","Silbido agudo que cambia con las revoluciones. A veces se escucha más al acelerar.",Fuga de vacío o admisión,0.84
+131,Combustible,"consumo_alto","Consumo de combustible muy elevado sin razón aparente. No hay códigos de falla.",Sensor MAF sucio o descalibrado,0.85
+132,Encendido,"falla_caliente","El motor funciona bien en frío, pero cuando calienta empieza a fallar y vibrar.",Bobina de encendido que falla en caliente,0.91
+133,Transmisión / Embrague,"ruido_embrague","Ruido de ronroneo o zumbido únicamente cuando el pedal de embrague está pisado.",Rodamiento de embrague (thrust bearing),0.94
+134,Eléctrico,"arranque_pesado","El arranque suena pesado y lento aunque la batería está cargada y es nueva.",Motor de arranque con carbones gastados,0.89
+135,Frenos,"se_va_lado","Al frenar el auto se desvía hacia un lado de forma consistente.",Pinza de freno pegada o pastillas irregulares,0.88
+136,Aire Acondicionado,"olor","Olor a moho o humedad fuerte cuando se enciende el A/C por primera vez.",Evaporador contaminado,0.87
+137,Sensores,"ralenti_alto","Después de soltar el acelerador el motor se queda en altas revoluciones varios segundos.",Cuerpo de aceleración sucio,0.89
+138,Mecánica Motor,"ruido_frio","Ruido metálico fuerte solo al arrancar en frío. Desaparece al calentar.",Tensor hidráulico de cadena débil,0.84
+139,Suspensión / Dirección,"pesada","La dirección está pesada a baja velocidad y mejora un poco en carretera.",Bomba de dirección o bajo nivel de líquido,0.90
+140,Ruedas / Llantas,"vibracion_volante","Vibración en el volante que aparece a cierta velocidad y luego puede disminuir.",Balanceo de llantas necesario,0.92
+141,Combustible,"ahogo_aceleracion","Al pisar fuerte el acelerador el auto se ahoga un momento y luego responde con un jalón.",Filtro de combustible restringido,0.86
+142,Encendido,"P030X","Código de falla de un solo cilindro (P0301, P0302...) y vibración notable.",Bobina o bujía del cilindro afectado,0.95
+143,Escape / Emisiones,"humo_blanco_dulce","Humo blanco con olor dulce y el nivel de refrigerante baja sin fugas externas visibles.",Junta de culata quemada,0.91
+144,Eléctrico,"nada_al_arrancar","Al girar la llave no hay ninguna respuesta: ni luces, ni click, ni nada.",Batería descargada o conexión de terminales,0.94
+145,Frenos,"vibracion_alta_velocidad","Vibración fuerte en el volante solo al frenar desde alta velocidad.",Discos de freno delanteros alabeados,0.93
+146,Enfriamiento,"calienta_lento","La aguja de temperatura sube muy lento y el calefactor casi no calienta.",Termostato abierto permanentemente,0.90
+147,Sensores,"mezcla_rica","Olor a gasolina, consumo alto y a veces humo negro. Check Engine encendido.",Sensor de oxígeno o MAF defectuoso,0.86
+148,Mecánica Motor,"consumo_aceite_sin_humo","El motor baja el nivel de aceite pero no se ve humo azul ni fugas externas.",Sellos de válvulas o guías gastadas,0.83
+149,Transmisión / Embrague,"dificultad_cambios","Cuesta meter las marchas, especialmente en frío. Una vez caliente mejora un poco.",Fluido de transmisión degradado o bajo,0.85
+150,Ruedas / Llantas,"ronroneo_carretera","Ronroneo o zumbido que aumenta claramente con la velocidad en carretera.",Rodamiento de rueda o llanta con daño interno,0.89
+151,Encendido,"vibracion,check_engine,P0300","Vibración notable y Check Engine con código P0300 (falla múltiple). El problema empeora en caliente.",Varias bobinas de encendido fallando,0.91
+152,Combustible,"arranque_dificil_caliente,olor_gasolina","Después de manejar y dejar el auto 15-40 minutos, cuesta mucho arrancar y sale olor fuerte a gasolina.",Inyectores goteando,0.94
+153,Sensores,"tironeo_parcial,check_engine","Tironeo en aceleración parcial (no a fondo). Check Engine intermitente.",Sensor TPS (posición del acelerador),0.87
+154,Mecánica Motor,"cascabeleo_caliente","Cascabeleo o golpeteo metálico solo cuando el motor está caliente y se acelera con carga.",Carbonilla excesiva en cámaras + gasolina de bajo octanaje,0.83
+155,Eléctrico,"click_sin_arrancar","Al girar la llave solo se escucha un click seco y el motor no gira. Luces normales.",Solenoide o motor de arranque,0.92
+156,Frenos,"pedal_esponjoso","Pedal de freno esponjoso que se va bajando si se mantiene apretado.",Fuga interna en cilindro maestro,0.90
+157,Enfriamiento,"calienta_en_ciudad","Temperatura sube en ciudad y tráfico. En carretera se mantiene normal. Ventilador parece no ayudar.",Clutch de ventilador o ventilador eléctrico defectuoso,0.89
+158,Escape / Emisiones,"humo_azul_aceleracion","Humo azul más visible al acelerar y consumo de aceite elevado.",Anillos de pistón o guías de válvulas,0.86
+159,Suspensión / Dirección,"clic_al_girar","Clic o chasquido claro al girar el volante a tope (estacionando).",Junta homocinética (CV joint) externa,0.94
+160,Ruedas / Llantas,"vibracion_rango","Vibración en volante que aparece alrededor de 90-110 km/h y luego puede bajar.",Llantas desbalanceadas o pesos perdidos,0.92
+161,Combustible,"falta_potencia_subidas","Falta de potencia clara en subidas o con el auto cargado. Empeora con poca gasolina.",Bomba de combustible débil,0.90
+162,Encendido,"falla_solo_lluvia","El motor funciona perfecto en seco, pero falla y se pone rough cuando llueve o hay humedad alta.",Bobinas o cables con fuga de alta tensión,0.91
+163,Sensores,"ralenti_inestable_apaga","Ralentí muy inestable, sube y baja, y a veces se apaga en semáforos.",Cuerpo de aceleración sucio + IAC,0.89
+164,Mecánica Motor,"ruido_cadena_frio","Ruido fuerte de cadena al arrancar en frío. Dura 3-5 segundos y desaparece.",Tensor de cadena de distribución hidráulico,0.86
+165,Transmisión / Embrague,"patina_con_carga","El embrague patina cuando se acelera fuerte con carga (subida o varios pasajeros).",Disco de embrague al final de su vida,0.95
+166,Eléctrico,"luces_tenues_manejo","Luces se ponen tenues y voltaje bajo solo mientras el auto está en marcha.",Alternador no genera suficiente,0.94
+167,Frenos,"vibracion_solo_frenar","Vibración fuerte en el pedal y volante únicamente al frenar desde alta velocidad.",Discos delanteros alabeados,0.93
+168,Aire Acondicionado,"enfria_y_deja","El A/C enfría bien al principio y después de 10-15 minutos deja de enfriar.","Presostato, bajo nivel de gas o condensador",0.85
+169,Sensores,"arranque_frio_dificil","En frío extremo cuesta arrancar y el ralentí queda muy alto varios minutos.",Sensor de temperatura del refrigerante (ECT),0.90
+170,Mecánica Motor,"golpeteo_grave","Golpeteo grave y profundo en la parte baja del motor. Aumenta con las rpm. Muy preocupante.",Cojinetes de biela o bancada,0.76
+171,Combustible,"zumbido_tanque_fuerte","Zumbido muy fuerte desde el área del tanque, especialmente al acelerar o con poca gasolina.",Bomba de combustible desgastada,0.88
+172,Encendido,"codigo_P030X","Código específico de un cilindro (P0301, P0303, etc.) + vibración en ese cilindro.",Bobina o bujía del cilindro indicado,0.96
+173,Suspensión / Dirección,"direccion_vagante","La dirección se siente vagante, el auto no mantiene bien la trayectoria en recta.",Terminales o brazos de dirección gastados,0.88
+174,Escape / Emisiones,"olor_huevo_podrido","Olor intenso a huevo podrido (azufre) al acelerar. Check Engine suele estar encendido.",Catalizador deteriorado,0.87
+175,Eléctrico,"parpadeo_irregular","Parpadeo irregular de luces delanteras y tablero mientras se maneja.",Conexión de masa floja o alternador irregular,0.86
+176,Frenos,"chillido_constante","Chillido agudo constante al frenar (incluso suave).",Pastillas de freno gastadas (sensor de desgaste),0.95
+177,Enfriamiento,"perdida_refrigerante","Se pierde refrigerante de forma constante. No se ven fugas grandes, solo manchas.","Tapa de radiador, radiador o empaque",0.87
+178,Ruedas / Llantas,"aullido_velocidad","Aullido que crece claramente con la velocidad. Más evidente en carretera.",Rodamiento de rueda,0.92
+179,Sensores,"modo_emergencia","Entra en modo de emergencia (potencia muy reducida) y Check Engine encendido.",Sensor de cigüeñal (CKP) o árbol de levas,0.88
+180,Mecánica Motor,"silbido_admision","Silbido agudo que varía con las revoluciones. Se escucha más al acelerar.",Fuga de vacío en mangueras o junta de admisión,0.85
+181,Combustible,"consumo_elevado","Consumo de gasolina mucho más alto de lo normal sin códigos de falla evidentes.",Sensor MAF sucio o contaminado,0.86
+182,Encendido,"falla_en_caliente","Funciona bien en frío. Cuando alcanza temperatura normal empieza a fallar y vibrar.",Bobina que falla solo en caliente,0.92
+183,Transmisión / Embrague,"ruido_solo_pisado","Ruido de zumbido o ronroneo que aparece solo cuando se pisa el embrague.",Rodamiento de empuje del embrague,0.95
+184,Eléctrico,"arranque_lento_bateria_ok","Arranque lento y pesado aunque la batería está en buen estado y bien cargada.",Motor de arranque desgastado,0.90
+185,Frenos,"desvia_al_frenar","Al frenar el auto se desvía de forma consistente hacia un lado.",Pinza de freno pegada o desgaste irregular,0.89
+186,Aire Acondicionado,"olor_moho_fuerte","Olor fuerte a moho o humedad al encender el A/C, especialmente los primeros minutos.",Evaporador con hongos,0.88
+187,Sensores,"ralenti_queda_alto","El motor se queda en ralentí alto varios segundos después de soltar el acelerador.",Cuerpo de aceleración sucio,0.90
+188,Mecánica Motor,"ruido_cadena_frio_largo","Ruido de cadena más largo de lo normal al arrancar en frío (más de 5 segundos).",Tensor de cadena o cadena estirada,0.84
+189,Suspensión / Dirección,"direccion_muy_pesada","Dirección excesivamente pesada a baja velocidad. Mejora poco al ganar velocidad.",Bomba de dirección hidráulica débil,0.91
+190,Ruedas / Llantas,"vibracion_especifica","Vibración clara en un rango de velocidad específico (ejemplo 95-115 km/h).",Balanceo de llantas,0.93
+191,Combustible,"ahogo_y_jalon","Al acelerar fuerte se ahoga un instante y después pega un jalón. Más notorio en 1ra y 2da.",Filtro de combustible tapado o bomba débil,0.87
+192,Encendido,"falla_un_cilindro","Falla clara de un solo cilindro con código P030X correspondiente.",Bobina + bujía del cilindro afectado,0.96
+193,Escape / Emisiones,"humo_blanco_olor_dulce","Humo blanco constante con olor dulce. Baja el refrigerante sin fugas externas.",Junta de culata (empaque de cabeza),0.92
+194,Eléctrico,"sin_respuesta_llave","Al girar la llave no hay ninguna respuesta eléctrica (ni luces ni click).",Batería agotada o terminales sueltos/sucios,0.95
+195,Frenos,"vibracion_alta_velocidad_frenado","Vibración intensa en volante y pedal al frenar desde más de 100 km/h.",Discos de freno delanteros alabeados,0.94
+196,Enfriamiento,"temperatura_muy_baja","La temperatura del motor se mantiene muy baja y el calefactor casi no calienta.",Termostato atorado abierto,0.91
+197,Sensores,"mezcla_rica_humo","Olor a gasolina, posible humo negro y consumo alto. Check Engine frecuentemente encendido.",Sensor de oxígeno o MAF defectuoso,0.87
+198,Mecánica Motor,"consumo_aceite_limpio","Consumo de aceite notable pero el escape se mantiene limpio (sin humo azul evidente).",Sellos de vástago de válvulas,0.84
+199,Transmisión / Embrague,"cambios_duros_frio","Los cambios están duros y difíciles solo en frío. Al calentar mejoran bastante.",Fluido de transmisión inadecuado o degradado,0.86
+200,Ruedas / Llantas,"ronroneo_creciente","Ronroneo o zumbido que crece de forma proporcional a la velocidad del vehículo.",Rodamiento de rueda en mal estado,0.91
+201,Encendido,"vibracion,perdida_potencia,caliente","Vibración y pérdida de potencia al acelerar cuando el motor ya está caliente. En frío casi no se nota.",Bobinas de encendido que fallan en caliente,0.91
+202,Combustible,"arranque_dificil,olor_gasolina,caliente","Arranca bien en frío. Después de calentar y apagarlo 20-40 min, cuesta mucho arrancar y huele fuerte a gasolina.",Inyectores con fuga,0.94
+203,Sensores,"tironeo,aceleracion_parcial","Tironeo molesto en aceleración parcial (no a fondo). A veces enciende Check Engine.",Sensor TPS defectuoso,0.87
+204,Mecánica Motor,"cascabeleo,caliente","Cascabeleo metálico solo con el motor caliente y bajo carga.",Carbonilla en cámaras de combustión,0.83
+205,Eléctrico,"click_sin_arrancar","Solo hace click al girar la llave y no arranca. Luces del tablero normales.",Motor de arranque o solenoide,0.92
+206,Frenos,"pedal_esponjoso","Pedal de freno esponjoso que se hunde si se mantiene presionado.",Cilindro maestro con fuga interna,0.90
+207,Enfriamiento,"calienta_en_ciudad","Se calienta solo en tráfico lento. En carretera la temperatura es normal.",Ventilador de radiador no funciona correctamente,0.89
+208,Escape / Emisiones,"humo_azul,consumo_aceite","Humo azul al acelerar y consumo elevado de aceite.",Anillos de pistón desgastados,0.86
+209,Suspensión / Dirección,"clic_al_girar","Clic claro al girar el volante a tope (maniobras de estacionamiento).",Junta homocinética externa,0.94
+210,Ruedas / Llantas,"vibracion_90_110","Vibración en el volante entre 90 y 110 km/h aproximadamente.",Llantas desbalanceadas,0.92
+211,Combustible,"falta_potencia_subida","Falta de potencia evidente en subidas o con el auto cargado. Empeora con poca gasolina.",Bomba de combustible débil,0.90
+212,Encendido,"falla_humedad","Falla solo cuando hay lluvia o humedad alta. En seco funciona perfecto.",Bobinas con fuga de corriente,0.91
+213,Sensores,"ralenti_inestable","Ralentí muy inestable, sube y baja, a veces se apaga en semáforos.",Cuerpo de aceleración sucio + válvula IAC,0.89
+214,Mecánica Motor,"ruido_cadena_frio","Ruido fuerte de cadena al arrancar en frío. Desaparece a los pocos segundos.",Tensor de cadena de distribución,0.86
+215,Transmisión / Embrague,"patina_carga","El embrague patina al acelerar fuerte con carga (subidas o pasajeros).",Disco de embrague gastado,0.95
+216,Eléctrico,"luces_tenues_marcha","Luces tenues y voltaje bajo solo mientras el vehículo está en marcha.",Alternador defectuoso,0.94
+217,Frenos,"vibracion_frenado","Vibración fuerte en pedal y volante al frenar desde alta velocidad.",Discos delanteros alabeados,0.93
+218,Aire Acondicionado,"enfria_y_para","Enfría bien al inicio y después de rato deja de enfriar.",Bajo nivel de gas o presostato,0.85
+219,Sensores,"arranque_frio","En mañanas frías cuesta arrancar y el ralentí queda muy alto.",Sensor ECT (temperatura refrigerante),0.90
+220,Mecánica Motor,"golpeteo_grave","Golpeteo grave y profundo en la parte baja del motor. Aumenta con rpm.",Cojinetes de biela o bancada,0.76
+221,Combustible,"zumbido_tanque","Zumbido fuerte desde el tanque, especialmente al acelerar o con poca gasolina.",Bomba de combustible desgastada,0.88
+222,Encendido,"codigo_P030X","Código de falla de un cilindro específico + vibración.",Bobina o bujía del cilindro afectado,0.96
+223,Suspensión / Dirección,"direccion_vagante","Dirección vagante, el auto no mantiene bien la línea recta.",Terminales de dirección gastados,0.88
+224,Escape / Emisiones,"olor_azufre","Olor fuerte a huevo podrido al acelerar. Check Engine suele estar on.",Catalizador dañado,0.87
+225,Eléctrico,"parpadeo_luces","Parpadeo irregular de luces delanteras y de tablero en marcha.",Mala masa o alternador irregular,0.86
+226,Frenos,"chillido","Chillido agudo constante al frenar.",Pastillas de freno al límite,0.95
+227,Enfriamiento,"perdida_refrigerante","Pérdida constante de refrigerante con manchas debajo del auto.","Radiador, tapa o mangueras",0.87
+228,Ruedas / Llantas,"aullido","Aullido que aumenta claramente con la velocidad.",Rodamiento de rueda,0.92
+229,Sensores,"modo_emergencia","Entra en modo de emergencia (poca potencia) + Check Engine.",Sensor CKP o CMP,0.88
+230,Mecánica Motor,"silbido","Silbido agudo que varía con las revoluciones.",Fuga de vacío,0.85
+231,Combustible,"consumo_alto","Consumo de gasolina mucho más alto de lo normal sin códigos claros.",Sensor MAF sucio,0.86
+232,Encendido,"falla_caliente","Funciona bien en frío, falla y vibra cuando calienta.",Bobina que falla en caliente,0.92
+233,Transmisión / Embrague,"ruido_pisar_embrague","Ruido de zumbido solo cuando el embrague está pisado.",Rodamiento de empuje del embrague,0.95
+234,Eléctrico,"arranque_lento","Arranque lento aunque la batería está buena.",Motor de arranque desgastado,0.90
+235,Frenos,"desvia_lado","Al frenar el auto se desvía hacia un lado.",Pinza pegada o desgaste irregular,0.89
+236,Aire Acondicionado,"olor_moho","Olor fuerte a moho al encender el A/C.",Evaporador con hongos,0.88
+237,Sensores,"ralenti_alto","El motor se queda en ralentí alto varios segundos después de soltar el acelerador.",Cuerpo de aceleración sucio,0.90
+238,Mecánica Motor,"ruido_cadena_largo","Ruido de cadena más prolongado de lo normal al arrancar en frío.",Tensor o cadena estirada,0.84
+239,Suspensión / Dirección,"direccion_pesada","Dirección muy pesada a baja velocidad.",Bomba de dirección débil,0.91
+240,Ruedas / Llantas,"vibracion_rango","Vibración en un rango específico de velocidad.",Balanceo de llantas,0.93
+241,Combustible,"ahogo_jalon","Al acelerar fuerte se ahoga un momento y luego pega jalón.",Filtro de combustible o bomba débil,0.87
+242,Encendido,"falla_un_cilindro","Falla clara de un solo cilindro con código P030X.",Bobina + bujía del cilindro,0.96
+243,Escape / Emisiones,"humo_blanco_dulce","Humo blanco con olor dulce + baja refrigerante sin fugas externas.",Junta de culata,0.92
+244,Eléctrico,"sin_respuesta","Al girar la llave no hay ninguna respuesta (ni luces ni click).",Batería agotada o terminales,0.95
+245,Frenos,"vibracion_alta","Vibración intensa al frenar desde alta velocidad.",Discos delanteros alabeados,0.94
+246,Enfriamiento,"temperatura_baja","Temperatura del motor se mantiene muy baja + calefactor débil.",Termostato abierto,0.91
+247,Sensores,"mezcla_rica","Olor a gasolina, posible humo negro y consumo alto.",Sensor O2 o MAF defectuoso,0.87
+248,Mecánica Motor,"consumo_aceite_sin_humo","Consumo de aceite sin humo azul evidente.",Sellos de válvulas,0.84
+249,Transmisión / Embrague,"cambios_duros_frio","Cambios duros solo en frío. Mejoran al calentar.",Fluido de transmisión degradado,0.86
+250,Ruedas / Llantas,"ronroneo","Ronroneo que crece proporcional a la velocidad.",Rodamiento de rueda,0.91
+251,Encendido,"vibracion_ralenti","Vibración fuerte solo en ralentí. Mejora al acelerar.",Bujías o bobinas en mal estado,0.89
+252,Combustible,"perdida_potencia_intermitente","Pérdida de potencia intermitente, más notoria con el tanque por debajo de la mitad.",Bomba de combustible intermitente,0.88
+253,Sensores,"check_engine_P0171","Check Engine con código de mezcla pobre (P0171/P0174).",Fuga de vacío o sensor MAF,0.87
+254,Mecánica Motor,"ruido_lifters","Ruido de taqués (tic-tic) más fuerte en frío y disminuye un poco en caliente.",Taqués hidráulicos sucios o con poco aceite,0.85
+255,Eléctrico,"bateria_no_carga","Luz de batería encendida en el tablero mientras se maneja.",Alternador o regulador de voltaje,0.94
+256,Frenos,"pedal_alto_duro","Pedal de freno muy alto y duro, poca potencia de frenado.",Servofreno (booster) defectuoso,0.90
+257,Enfriamiento,"sobrecalentamiento_rapido","El motor se sobrecalienta rápidamente después de arrancar.",Termostato cerrado o bomba de agua,0.88
+258,Escape / Emisiones,"humo_negro_constante","Humo negro constante y consumo elevado.",Inyectores con fuga o sensor MAF,0.86
+259,Suspensión / Dirección,"golpeteo_topes","Golpeteo fuerte en la parte delantera al pasar topes.",Bujes de suspensión o terminales,0.89
+260,Ruedas / Llantas,"vibracion_volante_constante","Vibración constante en el volante a partir de cierta velocidad.",Llantas desbalanceadas o rin dañado,0.92
+261,Combustible,"olor_gasolina_exterior","Olor a gasolina alrededor del auto incluso cuando está apagado.",Fuga en línea de combustible o regulador,0.87
+262,Encendido,"falla_intermitente_caliente","Falla intermitente que aparece solo cuando el motor está completamente caliente.",Bobina intermitente,0.90
+263,Sensores,"aceleracion_retrasada","El auto tarda en responder al acelerador (sensación de delay).",Sensor TPS o cuerpo de aceleración,0.86
+264,Mecánica Motor,"ruido_correa","Chillido de correa al arrancar en frío o en días húmedos.",Correa de accesorios o tensor,0.91
+265,Transmisión / Embrague,"vibracion_embrague","Vibración al momento de soltar el embrague para arrancar.",Disco de embrague deformado o volante motor,0.88
+266,Eléctrico,"fusibles_queman","Se queman fusibles de forma repetida en un mismo circuito.",Cortocircuito en el cableado,0.89
+267,Frenos,"ruido_metal_metal","Ruido de metal contra metal al frenar.",Pastillas completamente gastadas,0.96
+268,Aire Acondicionado,"compresor_no_prende","El compresor del A/C no prende nunca.","Falta de gas, presostato o clutch",0.87
+269,Sensores,"codigo_P0420","Check Engine con código P0420 (eficiencia de catalizador).",Catalizador o sensores de oxígeno,0.85
+270,Mecánica Motor,"fuga_aceite","Fuga de aceite visible en la parte baja o delantera del motor.",Retén de cigüeñal o empaque de cárter,0.88
+271,Combustible,"presion_baja","El auto se ahoga en aceleraciones fuertes y tiene poca potencia en alta.",Bomba de combustible o filtro tapado,0.89
+272,Encendido,"cables_bujia","Falla y vibración que mejora al mover los cables de bujía.",Cables de bujía en mal estado,0.87
+273,Suspensión / Dirección,"ruido_direccion","Ruido de quejido al girar el volante, más en frío.",Bomba de dirección hidráulica,0.90
+274,Escape / Emisiones,"sonido_escape_fuerte","El escape se escucha mucho más fuerte de lo normal.",Fuga en escape o catalizador roto,0.86
+275,Eléctrico,"radio_se_apaga","El radio y otros sistemas se apagan o reinician mientras se maneja.",Alternador o mala conexión de batería,0.88
+276,Frenos,"abs_enciende","Se enciende la luz de ABS sin razón aparente.",Sensor de ABS o anillo tono,0.87
+277,Enfriamiento,"ventilador_siempre_on","El ventilador del radiador está siempre encendido.",Sensor ECT o relé del ventilador,0.85
+278,Ruedas / Llantas,"desgaste_irregular","Desgaste irregular de las llantas (de un solo lado o en forma de dientes).",Alineación desajustada,0.90
+279,Sensores,"codigo_P0300_sin_falla_clara","Código P0300 pero no se siente falla evidente de cilindro.",Fuga de vacío o sensor MAF,0.84
+280,Mecánica Motor,"compresion_baja","Pérdida de potencia general y consumo de aceite. Prueba de compresión baja en un cilindro.",Válvulas o anillos,0.85
+281,Combustible,"vapores_gasolina","Olor fuerte a vapores de gasolina dentro y fuera del auto.",Cánister de carbón saturado o válvula PCV,0.86
+282,Encendido,"modulo_encendido","Falla general de encendido sin códigos de cilindro específico.",Módulo de encendido o bobina única,0.87
+283,Transmisión / Embrague,"patina_suave","Patina ligeramente en 4ta y 5ta a alta velocidad.",Disco de embrague al final de vida,0.91
+284,Eléctrico,"arranque_intermitente","A veces arranca normal y a veces solo hace click.",Solenoide de arranque intermitente,0.89
+285,Frenos,"freno_mano_no_sostiene","El freno de mano no sostiene el auto en pendientes.",Cable de freno de mano flojo o pastillas traseras,0.88
+286,Aire Acondicionado,"enfria_poco","El A/C enfria muy poco aunque el compresor trabaja.",Bajo nivel de gas o condensador tapado,0.87
+287,Sensores,"sensor_arbol_levas","Check Engine + a veces no arranca o arranca con dificultad.",Sensor de árbol de levas (CMP),0.88
+288,Mecánica Motor,"ruido_bomba_agua","Ruido de rodamientos o silbido proveniente de la bomba de agua.",Bomba de agua (rodamiento),0.86
+289,Suspensión / Dirección,"auto_se_desvia","El auto se desvía solo hacia un lado en carretera recta.",Alineación o presión de llantas irregular,0.89
+290,Ruedas / Llantas,"golpe_en_llanta","Golpe o ruido rítmico que aumenta con la velocidad.",Llantas con bulbo o rin doblado,0.90
+291,Combustible,"filtro_tapado","Pérdida progresiva de potencia y a veces se apaga en marcha.",Filtro de combustible muy tapado,0.88
+292,Encendido,"bujias_incorrectas","Vibración y falla después de cambiar bujías (si se instalaron incorrectas).",Bujías de grado térmico incorrecto,0.87
+293,Escape / Emisiones,"PCV_falla","Consumo de aceite + presión excesiva en el motor (empaques empujan aceite).",Válvula PCV tapada o manguera,0.85
+294,Eléctrico,"cortocircuito_intermitente","Fallas eléctricas intermitentes (luces, sensores, etc.).",Cableado rozando o con aislamiento dañado,0.86
+295,Frenos,"liquido_freno_bajo","Luz de freno encendida y nivel de líquido bajo sin fugas visibles.",Pastillas muy gastadas (líquido baja),0.90
+296,Enfriamiento,"tapa_radiador","El sistema pierde presión y se calienta. Se ve refrigerante en el depósito de expansión.",Tapa de radiador defectuosa,0.88
+297,Sensores,"MAF_sucio","Tironeo, consumo alto y a veces códigos de mezcla.",Sensor MAF contaminado,0.89
+298,Mecánica Motor,"empaque_punta_cabeza","Fuga de aceite en la parte superior del motor (cerca de las tapas de punterías).",Empaque de tapa de punterías,0.87
+299,Transmisión / Embrague,"ruido_en_punto_muerto","Ruido en punto muerto que desaparece al pisar el embrague.",Rodamiento de embrague o caja,0.88
+300,Ruedas / Llantas,"balanceo_dinamico","Vibración que se siente más en el asiento que en el volante a cierta velocidad.",Balanceo dinámico de llantas traseras,0.89
+301,Encendido,"vibracion,caliente,perdida_potencia","Vibración y pérdida de potencia que aparece solo cuando el motor está completamente caliente.",Bobinas de encendido que fallan por temperatura,0.92
+302,Combustible,"arranque_dificil_caliente,olor_gasolina","Después de calentar y apagar el auto, al rato cuesta mucho arrancar y sale olor fuerte a gasolina.",Inyectores con fuga interna,0.95
+303,Sensores,"tironeo,aceleracion_suave","Tironeo en aceleraciones suaves y medias. A veces Check Engine intermitente.",Sensor TPS defectuoso o descalibrado,0.88
+304,Mecánica Motor,"cascabeleo_carga","Cascabeleo metálico cuando se acelera con carga y el motor está caliente.",Carbonilla excesiva en pistones,0.84
+305,Eléctrico,"click_arranque","Solo hace un click fuerte al intentar arrancar. Luces normales.",Solenoide de arranque defectuoso,0.93
+306,Frenos,"pedal_hunde","El pedal de freno se hunde poco a poco si se mantiene presionado.",Cilindro maestro con fuga interna,0.91
+307,Enfriamiento,"calienta_trafico","Se calienta solo en tráfico lento o detenido. En movimiento la temperatura baja.",Ventilador de radiador no activa,0.90
+308,Escape / Emisiones,"humo_azul_acelerar","Humo azul más notorio al acelerar + consumo de aceite.",Anillos de pistón desgastados,0.87
+309,Suspensión / Dirección,"clic_estacionar","Clic o chasquido al girar completamente el volante en maniobras de estacionamiento.",Junta homocinética (CV joint),0.95
+310,Ruedas / Llantas,"vibracion_rango_velocidad","Vibración en el volante solo en un rango específico de velocidad (ej. 95-120 km/h).",Llantas desbalanceadas,0.93
+311,Combustible,"falta_fuerza_subidas","Falta clara de fuerza en subidas y con el vehículo cargado. Empeora con poca gasolina.",Bomba de combustible débil,0.91
+312,Encendido,"falla_lluvia","El motor falla y se pone inestable solo cuando llueve o hay alta humedad.",Bobinas o cables con fuga de alta tensión,0.92
+313,Sensores,"ralenti_irregular","Ralentí irregular que sube y baja. A veces se apaga en detenido.",Cuerpo de aceleración sucio + IAC,0.90
+314,Mecánica Motor,"ruido_cadena_arranque","Ruido fuerte de cadena al arrancar en frío. Desaparece después de unos segundos.",Tensor hidráulico de cadena,0.87
+315,Transmisión / Embrague,"patina_aceleracion","El embrague patina al acelerar fuerte, especialmente en 3ra y 4ta.",Disco de embrague gastado,0.96
+316,Eléctrico,"voltaje_bajo_marcha","Voltaje bajo y luces tenues solo mientras el auto está en marcha.",Alternador defectuoso,0.95
+317,Frenos,"vibracion_frenado_alta","Vibración fuerte en volante y pedal al frenar desde alta velocidad.",Discos de freno delanteros alabeados,0.94
+318,Aire Acondicionado,"enfria_inicial_luego_no","Enfría bien los primeros minutos y después deja de enfriar.",Bajo nivel de refrigerante o presostato,0.86
+319,Sensores,"arranque_frio_alto_ralenti","En frío cuesta arrancar y el ralentí queda muy elevado varios minutos.",Sensor de temperatura del refrigerante (ECT),0.91
+320,Mecánica Motor,"golpeteo_parte_baja","Golpeteo grave y profundo en la parte baja del motor que aumenta con las rpm.",Cojinetes de biela,0.78
+321,Combustible,"zumbido_fuerte_tanque","Zumbido muy fuerte proveniente del tanque de combustible.",Bomba de combustible desgastada,0.89
+322,Encendido,"codigo_cilindro_especifico","Código P030X de un cilindro + vibración correspondiente.",Bobina o bujía del cilindro indicado,0.97
+323,Suspensión / Dirección,"direccion_floja_recta","La dirección se siente floja y el auto no mantiene bien la trayectoria en recta.",Terminales de dirección gastados,0.89
+324,Escape / Emisiones,"olor_azufre_acelerar","Olor intenso a azufre (huevo podrido) al acelerar.",Catalizador deteriorado,0.88
+325,Eléctrico,"parpadeo_luces_marcha","Parpadeo irregular de luces mientras se maneja.",Mala conexión de masa o alternador,0.87
+326,Frenos,"chillido_agudo","Chillido agudo constante al aplicar los frenos.",Pastillas de freno al límite de desgaste,0.96
+327,Enfriamiento,"perdida_lenta_refrigerante","Pérdida lenta pero constante de refrigerante. Manchas debajo del vehículo.",Radiador o tapa de radiador defectuosa,0.88
+328,Ruedas / Llantas,"aullido_creciente","Aullido que aumenta de forma clara con la velocidad del vehículo.",Rodamiento de rueda,0.93
+329,Sensores,"modo_limp","Entra en modo de emergencia (potencia reducida) + Check Engine.",Sensor de cigüeñal (CKP) o árbol de levas,0.89
+330,Mecánica Motor,"silbido_variable","Silbido agudo que cambia según las revoluciones del motor.",Fuga de vacío en admisión,0.86
+331,Combustible,"consumo_excesivo","Consumo de combustible excesivo sin códigos de falla evidentes.",Sensor MAF contaminado,0.87
+332,Encendido,"falla_solo_caliente","Funciona perfecto en frío. Cuando calienta empieza a fallar.",Bobina de encendido sensible a la temperatura,0.93
+333,Transmisión / Embrague,"ruido_solo_embrague_pisado","Ruido de zumbido que solo aparece cuando se pisa el embrague.",Rodamiento de empuje del embrague,0.96
+334,Eléctrico,"arranque_pesado_bateria_ok","Arranque pesado y lento aunque la batería está en buen estado.",Motor de arranque desgastado,0.91
+335,Frenos,"desviacion_frenado","Al frenar el vehículo se desvía de forma consistente hacia un lado.",Pinza de freno pegada o pastillas irregulares,0.90
+336,Aire Acondicionado,"olor_humedad","Olor fuerte a humedad o moho al encender el aire acondicionado.",Evaporador contaminado con hongos,0.89
+337,Sensores,"ralenti_queda_elevado","El ralentí se queda elevado varios segundos después de soltar el acelerador.",Cuerpo de aceleración sucio,0.91
+338,Mecánica Motor,"ruido_cadena_prolongado","Ruido de cadena más largo de lo normal al arrancar en frío.",Tensor de cadena o cadena elongada,0.85
+339,Suspensión / Dirección,"direccion_pesada_baja_vel","Dirección excesivamente pesada a baja velocidad.",Bomba de dirección hidráulica débil,0.92
+340,Ruedas / Llantas,"vibracion_especifica_velocidad","Vibración que aparece en un rango concreto de velocidad.",Balanceo de llantas necesario,0.94
+341,Combustible,"ahogo_luego_jalon","Al acelerar de golpe se ahoga un instante y después responde con un jalón.",Filtro de combustible restringido,0.88
+342,Encendido,"falla_un_solo_cilindro","Falla evidente de un solo cilindro con código de falla correspondiente.",Bobina + bujía del cilindro afectado,0.97
+343,Escape / Emisiones,"humo_blanco_olor_dulce","Humo blanco constante con olor dulce + pérdida de refrigerante sin fugas visibles.",Junta de culata quemada,0.93
+344,Eléctrico,"sin_ninguna_respuesta","Al girar la llave no hay ninguna respuesta eléctrica.",Batería descargada o terminales sueltos,0.96
+345,Frenos,"vibracion_frenado_velocidad","Vibración intensa al frenar desde velocidades altas.",Discos delanteros alabeados,0.95
+346,Enfriamiento,"temperatura_muy_baja","La temperatura del motor se mantiene excesivamente baja.",Termostato atorado en posición abierta,0.92
+347,Sensores,"mezcla_rica_consumo","Olor a gasolina, consumo alto y posible humo negro.",Sensor de oxígeno o MAF defectuoso,0.88
+348,Mecánica Motor,"consumo_aceite_sin_humo_azul","Consumo de aceite notable sin humo azul visible en el escape.",Sellos de vástago de válvulas,0.85
+349,Transmisión / Embrague,"cambios_dificiles_frio","Dificultad para meter marchas solo cuando el vehículo está frío.",Fluido de transmisión degradado o incorrecto,0.87
+350,Ruedas / Llantas,"ronroneo_proporcional","Ronroneo o zumbido que crece de forma proporcional a la velocidad.",Rodamiento de rueda en mal estado,0.92
+351,Encendido,"vibracion_ralenti_mejora_acelerar","Vibración fuerte en ralentí que mejora claramente al acelerar.",Bujías o bobinas en mal estado,0.90
+352,Combustible,"perdida_potencia_tanque_bajo","Pérdida de potencia más notoria cuando el tanque tiene menos de media.",Bomba de combustible débil,0.90
+353,Sensores,"codigo_mezcla_pobre","Check Engine con códigos de mezcla pobre (P0171 / P0174).",Fuga de vacío o sensor MAF,0.88
+354,Mecánica Motor,"ruido_taques","Ruido de taqués (tic-tic) más fuerte en frío.",Taqués hidráulicos con suciedad o poco aceite,0.86
+355,Eléctrico,"luz_bateria_encendida","Luz de batería encendida en el tablero durante la marcha.",Alternador o regulador de voltaje,0.95
+356,Frenos,"pedal_duro_poco_frena","Pedal de freno muy duro y poca potencia de frenado.",Servofreno (booster) defectuoso,0.91
+357,Enfriamiento,"sobrecalentamiento_rapido_arranque","Se sobrecalienta rápidamente después de arrancar.",Termostato cerrado o bomba de agua fallando,0.89
+358,Escape / Emisiones,"humo_negro_consumo","Humo negro constante + consumo de combustible elevado.",Inyectores con fuga o MAF defectuoso,0.87
+359,Suspensión / Dirección,"golpeteo_delantero_topes","Golpeteo fuerte en la parte delantera al pasar topes o baches.",Bujes de horquilla o terminales de dirección,0.90
+360,Ruedas / Llantas,"vibracion_volante_alta","Vibración en el volante a partir de cierta velocidad.",Llantas desbalanceadas o rin dañado,0.93
+361,Combustible,"olor_gasolina_exterior","Olor a gasolina en el exterior del vehículo incluso apagado.",Fuga en líneas de combustible o regulador,0.88
+362,Encendido,"falla_intermitente_temperatura","Falla intermitente que se presenta cuando el motor alcanza temperatura normal.",Bobina intermitente,0.91
+363,Sensores,"respuesta_acelerador_lenta","Sensación de que el acelerador tarda en responder.",Sensor TPS o cuerpo de aceleración sucio,0.87
+364,Mecánica Motor,"chillido_correa","Chillido de correa al arrancar en frío o en días húmedos.",Correa de accesorios o tensor gastado,0.92
+365,Transmisión / Embrague,"vibracion_al_partir","Vibración al momento de soltar el embrague para iniciar la marcha.",Disco de embrague o volante motor,0.89
+366,Eléctrico,"fusibles_quemados_repetidos","Se queman fusibles del mismo circuito de forma repetida.",Cortocircuito en el cableado,0.90
+367,Frenos,"ruido_metalico_frenado","Ruido de metal contra metal al frenar.",Pastillas completamente gastadas,0.97
+368,Aire Acondicionado,"compresor_no_embraga","El compresor del A/C no llega a embragar.","Falta de gas, clutch o presostato",0.88
+369,Sensores,"codigo_P0420","Check Engine con código P0420 (eficiencia catalizador baja).",Catalizador o sensores de oxígeno,0.86
+370,Mecánica Motor,"fuga_aceite_inferior","Fuga de aceite visible en la parte inferior del motor.",Retén de cigüeñal o empaque de cárter,0.89
+371,Combustible,"ahogo_aceleraciones_fuertes","Se ahoga en aceleraciones fuertes y tiene poca potencia en alta.",Bomba de combustible o filtro tapado,0.90
+372,Encendido,"cables_bujia_mal","Falla y vibración que cambia al manipular los cables de bujía.",Cables de bujía deteriorados,0.88
+373,Suspensión / Dirección,"quejido_al_girar","Quejido o chillido al girar el volante, más notorio en frío.",Bomba de dirección hidráulica,0.91
+374,Escape / Emisiones,"escape_muy_ruidoso","El escape se escucha mucho más fuerte de lo normal.",Fuga en el sistema de escape,0.87
+375,Eléctrico,"sistemas_se_reinician","Radio y otros sistemas se apagan o reinician durante la marcha.",Alternador o mala conexión de batería,0.89
+376,Frenos,"luz_abs_encendida","Luz de ABS encendida sin motivo aparente.",Sensor de ABS o anillo de tono,0.88
+377,Enfriamiento,"ventilador_siempre_encendido","El ventilador del radiador funciona todo el tiempo.",Sensor ECT o relé del ventilador,0.86
+378,Ruedas / Llantas,"desgaste_irregular_llantas","Desgaste irregular de las llantas (de un solo lado o en sierra).",Alineación incorrecta,0.91
+379,Sensores,"P0300_sin_vibracion_clara","Código P0300 pero apenas se percibe falla de cilindro.",Fuga de vacío o sensor MAF,0.85
+380,Mecánica Motor,"baja_compresion","Pérdida general de potencia + consumo de aceite. Compresión baja en un cilindro.",Válvulas o anillos de pistón,0.86
+381,Combustible,"vapores_fuertes","Olor fuerte a vapores de gasolina dentro y fuera del auto.",Cánister saturado o válvula de purga,0.87
+382,Encendido,"falla_general_sin_codigo_cilindro","Falla general de encendido sin códigos de cilindro específico.",Módulo de encendido o bobina única,0.88
+383,Transmisión / Embrague,"patina_marchas_altas","Patina ligeramente en marchas altas a velocidad de carretera.",Disco de embrague al final de su vida útil,0.92
+384,Eléctrico,"arranque_intermitente_click","A veces arranca normal y otras solo hace click.",Solenoide de arranque intermitente,0.90
+385,Frenos,"freno_mano_flojo","El freno de mano no sostiene el vehículo en pendientes.",Cable de freno de mano estirado o pastillas traseras,0.89
+386,Aire Acondicionado,"enfria_muy_poco","El aire acondicionado enfría muy poco aunque el compresor trabaja.",Bajo nivel de gas o condensador obstruido,0.88
+387,Sensores,"sensor_cmp","Check Engine + dificultad de arranque intermitente.",Sensor de árbol de levas (CMP),0.89
+388,Mecánica Motor,"ruido_bomba_agua","Ruido de rodamiento o silbido proveniente de la bomba de agua.",Bomba de agua (rodamiento dañado),0.87
+389,Suspensión / Dirección,"desviacion_recta","El auto se desvía solo hacia un lado en carretera recta.",Alineación desajustada o presión irregular de llantas,0.90
+390,Ruedas / Llantas,"golpe_ritmico","Golpe o ruido rítmico que aumenta con la velocidad.",Llantas con bulbo o rin doblado,0.91
+391,Combustible,"perdida_progresiva_potencia","Pérdida progresiva de potencia hasta casi apagarse en marcha.",Filtro de combustible muy obstruido,0.89
+392,Encendido,"bujias_grado_incorrecto","Vibración y falla después de un cambio de bujías reciente.",Bujías con grado térmico incorrecto,0.88
+393,Escape / Emisiones,"presion_carter","Consumo de aceite + presión excesiva en el cárter (empapa empaques).",Válvula PCV tapada,0.86
+394,Eléctrico,"fallas_electricas_intermitentes","Fallas eléctricas intermitentes en luces y sensores.",Cableado con aislamiento dañado o rozando,0.87
+395,Frenos,"nivel_liquido_bajo","Luz de freno encendida y nivel de líquido bajo sin fugas externas visibles.",Pastillas muy gastadas (el líquido baja al compensar),0.91
+396,Enfriamiento,"tapa_radiador_falla","El sistema no mantiene presión y se calienta. Refrigerante en el depósito de expansión.",Tapa de radiador defectuosa,0.89
+397,Sensores,"maf_contaminado","Tironeo, consumo alto y códigos de mezcla.",Sensor MAF contaminado,0.90
+398,Mecánica Motor,"fuga_aceite_superior","Fuga de aceite en la parte superior del motor (tapas de punterías).",Empaque de tapa de punterías,0.88
+399,Transmisión / Embrague,"ruido_punto_muerto","Ruido en punto muerto que desaparece al pisar el embrague.",Rodamiento de embrague o problema en caja,0.89
+400,Ruedas / Llantas,"vibracion_asiento","Vibración que se siente más en el asiento que en el volante a cierta velocidad.",Balanceo de llantas traseras,0.90

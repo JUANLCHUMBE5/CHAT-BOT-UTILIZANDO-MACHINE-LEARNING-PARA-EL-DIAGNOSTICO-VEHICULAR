@@ -1,0 +1,26 @@
+{
+  "version": "experimento-gemacar-1.0",
+  "algoritmo": "Linear_SVM",
+  "registros_base": 2861,
+  "registros_zenodo": 33,
+  "registros_gemacar_univocos": 5,
+  "grupos_gemacar_excluidos_por_multicausa": 21,
+  "referencia_base_mas_zenodo": {
+    "exactitud": 0.9754385964912281,
+    "f1_macro": 0.9595292918452056,
+    "f1_weighted": 0.9703275103530091,
+    "ece": 0.24812023402870662
+  },
+  "candidato_con_gemacar": {
+    "exactitud": 0.9736842105263158,
+    "f1_macro": 0.952675034990949,
+    "f1_weighted": 0.9674415074670063,
+    "ece": 0.24173881196515307
+  },
+  "peor_variacion_f1_por_clase": -0.23809523809523808,
+  "mejora_metricas": false,
+  "promovido_a_produccion": false,
+  "bloqueo_promocion": "Pendiente de licencia reutilizable y validacion por mecanico; el artefacto queda entrenado solo para evaluacion.",
+  "sha256_modelo_experimental": "a2daec53999f281d1dc37b5628077154a5bafd193391f1332814862c4821abf0",
+  "sha256_vectorizador_experimental": "0e6146a0fc87cfeef82f2839e924d545079bb27c81cadbdd3bfcd30e481f097b"
+}

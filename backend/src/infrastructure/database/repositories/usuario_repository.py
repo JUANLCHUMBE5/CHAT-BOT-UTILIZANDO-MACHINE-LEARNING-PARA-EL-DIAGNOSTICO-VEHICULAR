@@ -59,8 +59,8 @@ class UsuarioRepository:
             .join(Usuario.rol)
             .where(
                 Usuario.taller_id == taller_id,
-                Usuario.activo == True,
-                Usuario.bloqueado == False,
+                Usuario.activo.is_(True),
+                Usuario.bloqueado.is_(False),
                 Rol.codigo.in_(["administrador", "admin"]),
             )
         )
@@ -89,6 +89,24 @@ class UsuarioRepository:
         whatsapp_hash = hash_identificador_persistencia(telefono_str, "telefono")
         return await self.buscar_por_whatsapp_hash(whatsapp_hash)
 
+    async def buscar_por_username(
+        self, username: str, taller_id: Optional[uuid.UUID] = None
+    ) -> Optional[Usuario]:
+        """Busca un usuario por su nombre de usuario (username) único en el taller o sistema."""
+        stmt = (
+            select(Usuario)
+            .options(
+                selectinload(Usuario.taller),
+                selectinload(Usuario.rol),
+                selectinload(Usuario.identidades_whatsapp),
+            )
+            .where(func.lower(Usuario.username) == username.strip().lower())
+        )
+        if taller_id:
+            stmt = stmt.where(Usuario.taller_id == taller_id)
+        result = await self.session.execute(stmt)
+        return result.scalars().first()
+
     async def crear_usuario(
         self,
         taller_id: uuid.UUID,
@@ -96,6 +114,7 @@ class UsuarioRepository:
         nombres: str,
         whatsapp_hash: str,
         whatsapp_ultimos4: str = "0000",
+        username: Optional[str] = None,
         apellidos: Optional[str] = None,
         activo: bool = True,
         bloqueado: bool = False,
@@ -109,6 +128,7 @@ class UsuarioRepository:
             taller_id=taller_id,
             rol_id=rol_id,
             nombres=nombres,
+            username=username.strip().lower() if username else None,
             apellidos=apellidos,
             whatsapp_hash=whatsapp_hash,
             whatsapp_ultimos4=whatsapp_ultimos4,
@@ -144,7 +164,7 @@ class UsuarioRepository:
         )
 
     async def obtener_por_id(self, usuario_id: uuid.UUID) -> Optional[Usuario]:
-        """Obtiene un usuario por su UUID con rol, taller e identidades cargadas."""
+        """Obtiene un usuario por su UUID con rol, taller, identidades y diagnósticos cargados."""
         stmt = (
             select(Usuario)
             .options(
@@ -152,6 +172,7 @@ class UsuarioRepository:
                 selectinload(Usuario.rol),
                 selectinload(Usuario.identidades_whatsapp),
                 selectinload(Usuario.solicitudes_acceso),
+                selectinload(Usuario.diagnosticos),
             )
             .where(Usuario.id == usuario_id)
         )
@@ -280,6 +301,7 @@ class UsuarioRepository:
         self,
         usuario: Usuario,
         nombres: Optional[str] = None,
+        username: Optional[str] = None,
         whatsapp_hash: Optional[str] = None,
         whatsapp_ultimos4: Optional[str] = None,
         password_hash: Optional[str] = None,
@@ -287,6 +309,8 @@ class UsuarioRepository:
         """Actualiza los campos principales de un usuario."""
         if nombres is not None:
             usuario.nombres = nombres
+        if username is not None:
+            usuario.username = username.strip().lower() if username.strip() else None
         if whatsapp_hash is not None:
             usuario.whatsapp_hash = whatsapp_hash
         if whatsapp_ultimos4 is not None:

@@ -9,6 +9,47 @@ from __future__ import annotations
 
 import re
 
+# Variantes frecuentes de dictado/ASR y escritura informal. Son equivalencias
+# automotrices cerradas: evitamos un corrector difuso general que pueda cambiar
+# nombres de modelos, marcas o componentes válidos.
+DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
+    (
+        r"\bhumo blanco\b[^.]{0,100}\b(?:consume|pierde)\s+(?:el\s+)?refrigerante\b",
+        "vapor blanco consume refrigerante posible empaque de culata",
+    ),
+    (
+        r"\b(?:pasta|grasa|color|parece)\s+(?:como\s+)?caf[eé]\s+con\s+leche\b|"
+        r"\b(?:mayonesa|nata|crema)\s+(?:en\s+la\s+tapa|en\s+el\s+aceite|pegada)\b|"
+        r"\baceite\s+(?:lechoso|emulsionado|blanquecino|con\s+agua)\b|"
+        r"\bcaf[eé]\s+con\s+leche\b",
+        "aceite de motor parece leche con cafe chocolatada se mezcla el agua con el aceite",
+    ),
+    (
+        r"\bmangueras?\s+(?:[a-z]+\s+)*(?:duras?|infladas?|hinchadas?|como\s+piedra)\b|"
+        r"\bburbujeo\s+(?:violento\s+)?(?:en\s+el\s+dep[oó]sito|en\s+el\s+radiador)\b|"
+        r"\bburbujas\s+en\s+el\s+(?:dep[oó]sito|refrigerante|radiador)\b",
+        "el radiador bota burbujas con el motor encendido y consume agua",
+    ),
+    (
+        r"\bhumo\s+blanco\s+(?:espeso|denso)?\s*(?:y\s+)?dulce\b",
+        "sale bastante humo blanco espeso por el tubo de escape bota vapor blanco",
+    ),
+    (
+        r"\bp\s*0*300\b",
+        "codigo p0300 de falla de encendido multiple misfire en cilindros, revisar bujias o bobinas",
+    ),
+    (r"\bg\s*[.\-]?\s*n\s*[.\-]?\s*[bv]\b|\b(?:gnb|gnev|genebe)\b", "gnv"),
+    (r"\bg\s*[.\-]?\s*l\s*[.\-]?\s*[bp]\b|\b(?:glb|gelepe)\b", "glp"),
+    (r"\bgas licuado(?: de petr[oó]leo)?\b|\b(?:autogas|propano)\b", "glp"),
+    (r"\b(?:menjar|menejar|manegar)\b", "manejar"),
+    (r"\bvibraci[oó]n(?:es)?\b", "vibracion"),
+    (
+        r"\b(?:se\s+)?(?:vuelve|pone|queda)\s+chanch[oa]\b|"
+        r"\b(?:se\s+)?(?:chanchea|chanchaea|achancha|achanchea|chanchonea)\b",
+        "pierde potencia y presenta tirones al acelerar",
+    ),
+)
+
 # Las frases más específicas deben ir antes que las palabras individuales.
 # No se incluyen equivalencias regionales ambiguas (por ejemplo, ``cardán`` no
 # se transforma en ``palier``) porque podrían cambiar el sistema diagnosticado.
@@ -27,7 +68,8 @@ DICCIONARIO_JERGA_LATAM: tuple[tuple[str, str], ...] = (
     (r"\b(?:balero|ruleman|rulemán)\b", "rodamiento"),
     (r"\bslushbox\b", "caja automática"),
     # Arranque, carga y encendido.
-    (r"\b(?:burro de arranque|motor de partida|starter|marcha)\b", "motor de arranque"),
+    (r"\b(?:burro de arranque|motor de partida|starter)\b", "motor de arranque"),
+    (r"\bla\s+marcha\s+(?:no\s+gira|no\s+da|pesada|pegada|arrastra|falla)\b", "el motor de arranque no gira"),
     (r"\brelevador\b", "rele"),
     (r"\bbug[ií]a\b", "bujia"),
     # Motor, refrigeración y escape.
@@ -55,15 +97,16 @@ DICCIONARIO_JERGA_PERUANA: tuple[tuple[str, str], ...] = (
     (r"\bcaña\b", "vehiculo"),
     (r"\bcascabelea\b", "preignicion o falla de bujias por cascabeleo"),
     (r"\bcascabeleando\b", "preignicion o falla de bujias"),
-    (r"\bchanchaea\b", "falla de encendido en cilindro misfire"),
     (r"\bcabecea\b", "vibracion e inestabilidad en el motor"),
     (r"\bse chupa\b", "pierde potencia y se aguanta al acelerar"),
     (r"\bse aguanta\b", "perdida de fuerza al acelerar"),
     (r"\bzapatea\b", "vibracion por desbalanceo o discos de freno alabeados"),
     (r"\bzapateo\b", "vibracion en freno o aceleracion"),
     (r"\bbota vapor\b", "sobrecalentamiento y expulsion de refrigerante"),
-    (r"\bcalienta feo\b", "sobrecalentamiento de motor"),
-    (r"\bclac clac\b", "ruido clac clac en junta homocinetica o palier"),
+    (r"\b(?:taca\s*taca|traque\s*traque|clac\s*clac|cla\s*cla)\b", "chasquido clac clac en junta homocinetica o palier"),
+    (r"\b(?:doblar|doblo|giro|girar|doblando|girando)\s+(?:en\s+u|todo\s+el\s+tim[oó]n|el\s+tim[oó]n\s+a\s+tope)\b", "girar el timon a tope en curva cerrada palier"),
+    (r"\b(?:grasa\s+negra|grasa\s+botada|grasa\s+esparcida)\b", "fuga de grasa por fuelle roto de palier o junta homocinetica"),
+    (r"\b(?:fuelle|guardapolvo)\s+(?:roto|rajado|abierto|picado)\b", "fuelle roto de junta homocinetica con perdida de grasa"),
     (r"\bpedal esponjoso\b", "pedal de freno esponjoso por aire o fuga hidraulica"),
     (r"\bpedal largo\b", "recorrido excesivo del pedal de freno"),
     (r"\bchillido de faja\b", "chillido de faja de accesorios"),
@@ -89,7 +132,12 @@ def normalizar_jerga_peruana(texto: str) -> str:
         return ""
 
     texto_procesado = texto.lower()
-    for patron, reemplazo in DICCIONARIO_JERGA_LATAM + DICCIONARIO_JERGA_PERUANA:
+    diccionarios = (
+        DICCIONARIO_VARIANTES_ENTRADA
+        + DICCIONARIO_JERGA_LATAM
+        + DICCIONARIO_JERGA_PERUANA
+    )
+    for patron, reemplazo in diccionarios:
         texto_procesado = re.sub(patron, reemplazo, texto_procesado, flags=re.IGNORECASE)
 
     return re.sub(r"\s+", " ", texto_procesado).strip()

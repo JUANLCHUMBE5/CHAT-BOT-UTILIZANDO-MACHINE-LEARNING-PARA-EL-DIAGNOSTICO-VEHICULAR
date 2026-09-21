@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Wrench, Lock, User, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
-import { apiService } from '../../services/api';
+import { authApi } from '../../features/auth/api';
 import type { UsuarioSesion } from '../../types';
 import type { TokenResponseDTO } from '../../types';
 
@@ -27,14 +27,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
     if (!['administrador', 'admin'].includes(tokenRes.user.rol)) {
       throw new Error('El panel web es exclusivo para administradores. Los mecánicos usan WhatsApp.');
     }
+    authApi.establecerAccessToken(tokenRes.access_token);
     onLoginSuccess({
       id: tokenRes.user.id || tokenRes.user.usuario_id,
       username: tokenRes.user.username,
       nombre: tokenRes.user.nombre,
       rol: tokenRes.user.rol,
       taller: tokenRes.user.taller_nombre,
-      token: tokenRes.access_token,
-      refreshToken: tokenRes.refresh_token,
     });
   };
 
@@ -62,7 +61,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       }
       setLoading(true);
       try {
-        const cambio = await apiService.cambiarPassword(
+        const cambio = await authApi.cambiarPassword(
           cambioPendiente.access_token,
           password,
           passwordNueva,
@@ -91,7 +90,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
     setLoading(true);
 
     try {
-      const tokenRes = await apiService.login({ username, password });
+      const tokenRes = await authApi.login({ username, password });
       if (!tokenRes.user) {
         throw new Error('El servidor no devolvió la información del usuario.');
       }
@@ -114,8 +113,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'var(--bg-main)',
-        backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(234, 88, 12, 0.08) 0%, transparent 65%)',
+        backgroundImage: 'linear-gradient(rgba(15, 23, 42, 0.65), rgba(15, 23, 42, 0.75)), url(/taller_fondo.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         padding: '20px',
       }}
     >
@@ -123,10 +124,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
         style={{
           width: '100%',
           maxWidth: '440px',
-          backgroundColor: '#ffffff',
+          backgroundColor: 'rgba(255, 255, 255, 0.96)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           borderRadius: '16px',
-          border: '1px solid var(--border-color)',
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
           padding: '36px 32px',
           display: 'flex',
           flexDirection: 'column',
@@ -172,12 +175,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             </span>
           </div>
 
-          <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', marginTop: '2px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', marginTop: '2px', marginBottom: '4px' }}>
             CarBot <span style={{ color: 'var(--primary)' }}>Carabayllo</span>
           </h2>
-          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: 1.4, maxWidth: '320px' }}>
-            Panel administrativo del sistema de diagnóstico vehicular
-          </p>
         </div>
 
         {/* Form Container */}

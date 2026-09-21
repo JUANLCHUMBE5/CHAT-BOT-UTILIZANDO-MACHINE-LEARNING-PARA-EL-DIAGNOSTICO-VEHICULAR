@@ -13,8 +13,11 @@ if str(BACKEND_ROOT) not in sys.path:
 
 load_dotenv(RAIZ_PROYECTO / ".env")
 
-from src.config import settings
-from src.infrastructure.database.connection import cerrar_conexion, comprobar_conexion
+from src.config import settings  # noqa: E402 - requiere configurar sys.path y cargar .env
+from src.infrastructure.database.connection import (  # noqa: E402
+    cerrar_conexion,
+    comprobar_conexion,
+)
 
 
 async def main() -> None:

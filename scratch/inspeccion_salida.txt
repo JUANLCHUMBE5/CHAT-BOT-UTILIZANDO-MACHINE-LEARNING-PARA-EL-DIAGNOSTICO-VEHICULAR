@@ -1,0 +1,384 @@
+================================================================================
+CASO: G1_01
+Usuario: Corolla 2017 en frío prende perfecto, después de 25 minutos empieza a tironear y termina apagándose. En caliente gira motor pero no prende; espero 15 minutos y arranca como si nada. No tengo DTC.
+Macro: MOTOR
+Top-1 ML: Falla en bujias o bobinas de encendido (misfire) (0.6579)
+Top-3 Preds:
+   1. Falla en bujias o bobinas de encendido (misfire) (0.658)
+   2. Bomba de gasolina quemada o con baja presion (0.244)
+   3. Baja presion de aceite o bomba de aceite defectuosa (0.028)
+Interactivo: False
+Longitud reporte técnico: 3763
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular y Diagnóstico Diferencial**
+- **Hipótesis Principal:** Falla en bujías o bobinas de encendido (misfire) (65%).
+- **Diagnóstico Diferencial:** 
+  - *Hipótesis Principal (65%):* Fallas por temperatura en bujías o bobinas. Al calentar, los componentes eléctricos o bobinas con aislamiento fatigado generan fallos de chispa (misfire) que tiranizan el motor y lo apagan, impidiendo el arranque en caliente hasta que la temperatura descienda y se restablezca la continuidad eléctrica.
+  - *Diferencial Top 2 - Bomba de gasolina quemada o con baja presión (24%):* Coincide exactamente con el síntoma de que el vehículo arranca en frío, pero tras 25 minutos (momento en el cual la bomba acumula temperatura interna y sus componentes mecánicos o eléctricos internos se dilatan o fallan) pierde presión y apaga el motor. Al esperar 15 minutos, la bomba se enfría y permite el arranque nuevamente, sin generar necesariamente códigos DTC en sistemas más antiguos.
+  - *Diferencial Top 3 - Baja presión de aceite o bomba de aceite defectuosa (2%):* Menos probable para este síntoma específico de corte de arranque en caliente, ya que usualmente iría acompañado de testigo de presión de aceite en tablero o ruidos mecánicos severos.
+  - *Prueba de descarte inicial:* Para diferenciar entre la falla de encendido (Hipótesis 1) y el problema de suministro de combustible (Diferencial 2), debe verificarse la presencia de chispa en las bujías y comprobar la presión de combustible en el riel exactamente en el momento en que el motor se apaga y se niega a arrancar en caliente.
+
+📖 **
+================================================================================
+CASO: G1_06
+Usuario: Corolla 2015 tiene P0171. Ya revisé mangueras visibles y no encuentro fuga. En mínimo los fuel trims se van positivos pero acelerando a 2500 rpm mejoran bastante.
+Macro: MOTOR
+Top-1 ML: Cuerpo de aceleracion o valvula IAC sucia (0.53)
+Top-3 Preds:
+   1. Cuerpo de aceleracion o valvula IAC sucia (0.530)
+   2. Bomba de gasolina quemada o con baja presion (0.244)
+   3. Fuga en mangueras de intercooler o turbocompresor danado (0.026)
+Interactivo: False
+Longitud reporte técnico: 2177
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Cuerpo de aceleracion o valvula IAC sucia
+• **Certeza del Modelo:** 53%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_07
+Usuario: Hyundai Accent demora en prender únicamente después de cargar gasolina hasta llenar el tanque. Cuando prende huele fuerte a combustible y luego trabaja normal.
+Macro: MOTOR
+Top-1 ML: Auto-pregunta técnica de descarte enviada (0.5079)
+Top-3 Preds:
+   1. Falla en sensor de oxigeno o mezcla rica (0.508)
+   2. Bomba de gasolina quemada o con baja presion (0.456)
+   3. Inyectores sucios o filtro de combustible obstruido (0.009)
+Interactivo: True
+Turno 1 Bot: 🤖 🔍 Para confirmar el diagnóstico entre las principales hipótesis técnicas:
+
+• 1️⃣ Humo negro, olor excesivo a gasolina por el escape y alto consumo (
+Turno 2 Final: Falla en sensor de oxigeno o mezcla rica | Modo: en_cola_gemini
+Longitud reporte técnico: 539
+Reporte directo:
+🤖 🔍 Para confirmar el diagnóstico entre las principales hipótesis técnicas:
+
+• 1️⃣ Humo negro, olor excesivo a gasolina por el escape y alto consumo (Sensor de oxígeno / Mezcla) — 51%
+• 2️⃣ Falta de potencia en alta, se ahoga en subida o zumba fuerte el tanque de combustible (Bomba de combustible) —
+================================================================================
+CASO: G1_09
+Usuario: Toyota prende bien frío, pero caliente demora bastante en arrancar. No hay DTC. Presión de combustible queda dentro de rango y el motor de arranque gira normal.
+Macro: MOTOR
+Top-1 ML: Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups) (0.6153)
+Top-3 Preds:
+   1. Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups) (0.615)
+   2. Bomba de gasolina quemada o con baja presion (0.150)
+   3. Falla en bujias o bobinas de encendido (misfire) (0.097)
+Interactivo: False
+Longitud reporte técnico: 2088
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)
+• **Certeza del Modelo:** 61%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_11
+Usuario: Sentra P0420 vuelve cada dos días después de borrarlo. No hay misfire, consumo normal y el sensor delantero oscila, pero el sensor posterior copia casi la misma señal.
+Macro: MOTOR
+Top-1 ML: Falla en bujias o bobinas de encendido (misfire) (0.7307)
+Top-3 Preds:
+   1. Falla en bujias o bobinas de encendido (misfire) (0.731)
+   2. Falla en sensor de oxigeno o mezcla rica (0.731)
+   3. Bomba de gasolina quemada o con baja presion (0.037)
+Interactivo: False
+Longitud reporte técnico: 2144
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bujias o bobinas de encendido (misfire)
+• **Certeza del Modelo:** 73%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_12
+Usuario: Toyota P0301. Cambié bujía y bobina del cilindro 1 por las del cilindro 2 pero P0301 continúa. Compresión del cilindro 1 está bastante más baja que los demás.
+Macro: MOTOR
+Top-1 ML: Falla en bujias o bobinas de encendido (misfire) (0.9849)
+Top-3 Preds:
+   1. Falla en bujias o bobinas de encendido (misfire) (0.985)
+   2. Consumo de aceite por desgaste de anillos o retenes (0.003)
+   3. Inyectores sucios o filtro de combustible obstruido (0.002)
+Interactivo: False
+Longitud reporte técnico: 2003
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bujias o bobinas de encendido (misfire)
+• **Certeza del Modelo:** 98%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_13
+Usuario: Kia con humo negro y consumo alto. Scanner marca mezcla rica. Presión de combustible está por encima de especificación y al retirar la manguera de vacío del regulador aparece gasolina.
+Macro: MOTOR
+Top-1 ML: Falla en sensor de oxigeno o mezcla rica (0.8493)
+Top-3 Preds:
+   1. Falla en sensor de oxigeno o mezcla rica (0.849)
+   2. Bomba de gasolina quemada o con baja presion (0.046)
+   3. Inyectores sucios o filtro de combustible obstruido (0.044)
+Interactivo: False
+Longitud reporte técnico: 2586
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en sensor de oxigeno o mezcla rica
+• **Certeza del Modelo:** 84%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_18
+Usuario: Después de manejar 15 minutos la rueda delantera derecha queda hirviendo y el carro comienza a jalar. Lo dejo enfriar y vuelve a rodar libremente.
+Macro: FRENOS
+Top-1 ML: Desgaste de pastillas y zapatas de freno (0.5949)
+Top-3 Preds:
+   1. Desgaste de pastillas y zapatas de freno (0.595)
+   2. Llantas desbalanceadas o desalineadas (0.078)
+   3. Juntas homocineticas o palieres danados (0.051)
+Interactivo: False
+Longitud reporte técnico: 1891
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Desgaste de pastillas y zapatas de freno
+• **Certeza del Modelo:** 59%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_19
+Usuario: A 100 km/h no vibra nada mientras acelero. Piso freno suavemente y empieza a temblar el timón; mientras más fuerte freno, más fuerte vibra.
+Macro: SUSPENSION_CHASIS
+Top-1 ML: Llantas desbalanceadas o desalineadas (0.6567)
+Top-3 Preds:
+   1. Llantas desbalanceadas o desalineadas (0.657)
+   2. Discos de freno alabeados o desgastados (0.309)
+   3. Falla en servofreno (booster) o linea de vacio (0.009)
+Interactivo: False
+Longitud reporte técnico: 3187
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Llantas desbalanceadas o desalineadas
+• **Certeza del Modelo:** 65%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_25
+Usuario: Volkswagen DSG en frío trabaja normal, pero caliente tiembla al salir en primera y demora en enganchar D. No presenta falla de motor.
+Macro: MOTOR
+Top-1 ML: Falla en bujias o bobinas de encendido (misfire) (0.8284)
+Top-3 Preds:
+   1. Falla en bujias o bobinas de encendido (misfire) (0.828)
+   2. Disco de embrague desgastado o patinando (0.066)
+   3. Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW) (0.021)
+Interactivo: False
+Longitud reporte técnico: 1459
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bujias o bobinas de encendido (misfire)
+• **Certeza del Modelo:** 82%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_28
+Usuario: Al pisar embrague aparece un ronquido. Suelto pedal y desaparece completamente. Los cambios entran bien y el embrague no patina.
+Macro: TRANSMISION
+Top-1 ML: Falla en bombin o bomba hidraulica de embrague (0.6368)
+Top-3 Preds:
+   1. Falla en bombin o bomba hidraulica de embrague (0.637)
+   2. Disco de embrague desgastado o patinando (0.341)
+   3. Sobrecalentamiento o solenoides en caja automatica CVT / DSG (0.017)
+Interactivo: False
+Longitud reporte técnico: 2318
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bombin o bomba hidraulica de embrague
+• **Certeza del Modelo:** 63%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_29
+Usuario: En neutro caja hace un zumbido. Piso embrague y el ruido desaparece. Al soltarlo vuelve inmediatamente aunque el carro esté detenido.
+Macro: TRANSMISION
+Top-1 ML: Falla en bombin o bomba hidraulica de embrague (0.8925)
+Top-3 Preds:
+   1. Falla en bombin o bomba hidraulica de embrague (0.892)
+   2. Falta o degradacion de aceite de caja de cambios (0.032)
+   3. Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW) (0.028)
+Interactivo: False
+Longitud reporte técnico: 2985
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Falla en bombin o bomba hidraulica de embrague
+• **Certeza del Modelo:** 89%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_33
+Usuario: A 70 km/h aparece zumbido ronco adelante. Al hacer una curva larga hacia la izquierda el ruido disminuye y hacia la derecha aumenta.
+Macro: SUSPENSION_CHASIS
+Top-1 ML: Llantas desbalanceadas o desalineadas (0.936)
+Top-3 Preds:
+   1. Llantas desbalanceadas o desalineadas (0.936)
+   2. Rodajes de caja mecanica o diferencial gastados (0.034)
+   3. Juntas homocineticas o palieres danados (0.011)
+Interactivo: False
+Longitud reporte técnico: 2360
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Llantas desbalanceadas o desalineadas
+• **Certeza del Modelo:** 93%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_34
+Usuario: El carro rebota dos o tres veces después de cada rompemuelle y en carretera se siente flotando. Las llantas tienen presión correcta.
+Macro: SUSPENSION_CHASIS
+Top-1 ML: Llantas desbalanceadas o desalineadas (0.6707)
+Top-3 Preds:
+   1. Llantas desbalanceadas o desalineadas (0.671)
+   2. Falla en sensor de oxigeno o mezcla rica (0.050)
+   3. Inyectores sucios o filtro de combustible obstruido (0.037)
+Interactivo: False
+Longitud reporte técnico: 3187
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Llantas desbalanceadas o desalineadas
+• **Certeza del Modelo:** 67%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_41
+Usuario: En las mañanas hace tac-tac metálico arriba del motor durante 3 minutos. Cuando llega aceite y calienta desaparece por completo. No hay check engine.
+Macro: MOTOR
+Top-1 ML: Baja presion de aceite o bomba de aceite defectuosa (0.5302)
+Top-3 Preds:
+   1. Baja presion de aceite o bomba de aceite defectuosa (0.530)
+   2. Falla en bujias o bobinas de encendido (misfire) (0.146)
+   3. Faja o cadena de distribucion destensada o con salto de punto (0.079)
+Interactivo: False
+Longitud reporte técnico: 2279
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Baja presion de aceite o bomba de aceite defectuosa
+• **Certeza del Modelo:** 53%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_43
+Usuario: P0562 presente. En mínimo tengo 11.9 V y acelerando apenas llega a 12.3 V. Batería fue cambiada hace una semana.
+Macro: ELECTRICO
+Top-1 ML: Bateria descargada o bornes sulfatados (0.7926)
+Top-3 Preds:
+   1. Bateria descargada o bornes sulfatados (0.793)
+   2. Alternador defectuoso o placa de diodos quemada (0.177)
+   3. Cuerpo de aceleracion o valvula IAC sucia (0.009)
+Interactivo: False
+Longitud reporte técnico: 2047
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Bateria descargada o bornes sulfatados
+• **Certeza del Modelo:** 79%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_44
+Usuario: Giro llave y solo hace clac una vez. Faros mantienen buen brillo y batería mide 12.7 V. Golpeando suavemente el motor de arranque algunas veces prende.
+Macro: ELECTRICO
+Top-1 ML: Bateria descargada o bornes sulfatados (0.8819)
+Top-3 Preds:
+   1. Bateria descargada o bornes sulfatados (0.882)
+   2. Alternador defectuoso o placa de diodos quemada (0.110)
+   3. Fallo en inversor de corriente IGBT o motor electrico (EV) (0.003)
+Interactivo: False
+Longitud reporte técnico: 1961
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Bateria descargada o bornes sulfatados
+• **Certeza del Modelo:** 88%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_45
+Usuario: Batería nueva se descarga durante la noche. Alternador carga 14.2 V andando. Con carro apagado medí consumo de 650 mA y al retirar un fusible baja a 35 mA.
+Macro: ELECTRICO
+Top-1 ML: Alternador defectuoso o placa de diodos quemada (0.8384)
+Top-3 Preds:
+   1. Alternador defectuoso o placa de diodos quemada (0.838)
+   2. Bateria descargada o bornes sulfatados (0.153)
+   3. Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos) (0.003)
+Interactivo: False
+Longitud reporte técnico: 1970
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Alternador defectuoso o placa de diodos quemada
+• **Certeza del Modelo:** 83%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **
+================================================================================
+CASO: G1_49
+Usuario: Cliente solo dice: 'cuando calienta se pone pesado, tiembla un poco y a veces se apaga; después de descansar vuelve normal'. No hay scanner conectado ni más datos.
+Macro: MOTOR
+Top-1 ML: Auto-pregunta técnica de descarte enviada (0.3755)
+Top-3 Preds:
+   1. Falla en bujias o bobinas de encendido (misfire) (0.376)
+   2. Cuerpo de aceleracion o valvula IAC sucia (0.244)
+   3. Bomba de gasolina quemada o con baja presion (0.152)
+Interactivo: True
+Turno 1 Bot: 🤖 🔍 Para precisar la causa del problema de temperatura:
+
+• 1️⃣ Jalonea o cabecea con pérdida de fuerza al acelerar en subida o carga (Bujías o bobinas
+Turno 2 Final: Falla en bujias o bobinas de encendido (misfire) | Modo: en_cola_gemini
+Longitud reporte técnico: 544
+Reporte directo:
+🤖 🔍 Para precisar la causa del problema de temperatura:
+
+• 1️⃣ Jalonea o cabecea con pérdida de fuerza al acelerar en subida o carga (Bujías o bobinas de encendido) — 38%
+• 2️⃣ Las revoluciones (RPM) suben y bajan solas o se apaga al desacelerar o llegar a semáforos (Cuerpo de aceleración / IAC) — 2
+================================================================================
+CASO: G1_50
+Usuario: Cliente dice: 'adelante hace cloc, a veces jala y siento algo raro en el timón'. No sabe cuándo empezó, no sabe si ocurre frenando y no hay inspección todavía.
+Macro: SUSPENSION_CHASIS
+Top-1 ML: Llantas desbalanceadas o desalineadas (0.8416)
+Top-3 Preds:
+   1. Llantas desbalanceadas o desalineadas (0.842)
+   2. Bateria descargada o bornes sulfatados (0.086)
+   3. Cremallera de direccion asistida con holgura o fuga (0.028)
+Interactivo: False
+Longitud reporte técnico: 3187
+Sección 1 Diagnóstico Diferencial en Reporte:
+1. Posible Falla Vehicular (Modo Degradado ML+RAG):**
+• **Diagnóstico Sugerido (ML):** Llantas desbalanceadas o desalineadas
+• **Certeza del Modelo:** 84%
+⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.
+
+
+📖 **

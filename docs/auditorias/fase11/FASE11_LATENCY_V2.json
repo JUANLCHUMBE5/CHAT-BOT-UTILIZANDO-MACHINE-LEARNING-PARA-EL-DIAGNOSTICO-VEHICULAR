@@ -1,0 +1,74 @@
+{
+  "e2e_total": {
+    "media_ms": 1982.72,
+    "mediana_ms": 2478.0,
+    "p95_ms": 4655.0,
+    "max_ms": 10073.0,
+    "muestras": 227
+  },
+  "ml_inferencia": {
+    "media_ms": 38.41,
+    "mediana_ms": 39.0,
+    "p95_ms": 49.0,
+    "max_ms": 69.0,
+    "muestras": 180
+  },
+  "rag_recuperacion": {
+    "media_ms": 3.46,
+    "mediana_ms": 3.0,
+    "p95_ms": 5.0,
+    "max_ms": 8.0,
+    "muestras": 156
+  },
+  "llm_sintesis": {
+    "media_ms": 3413.31,
+    "mediana_ms": 3480.0,
+    "p95_ms": 4677.25,
+    "max_ms": 10017.0,
+    "muestras": 156
+  },
+  "por_modo": {
+    "saludo": {
+      "media_ms": 3.6,
+      "mediana_ms": 1.0,
+      "p95_ms": 11.4,
+      "max_ms": 14.0,
+      "muestras": 5
+    },
+    "esperando_clarificacion": {
+      "media_ms": 22.38,
+      "mediana_ms": 33.0,
+      "p95_ms": 45.3,
+      "max_ms": 50.0,
+      "muestras": 55
+    },
+    "completo_ml_rag_llm": {
+      "media_ms": 2984.78,
+      "mediana_ms": 3527.0,
+      "p95_ms": 4702.4,
+      "max_ms": 4803.0,
+      "muestras": 137
+    },
+    "diagnostico_degradado_ml_rag": {
+      "media_ms": 2197.29,
+      "mediana_ms": 482.0,
+      "p95_ms": 10054.6,
+      "max_ms": 10073.0,
+      "muestras": 17
+    },
+    "fuera_de_alcance": {
+      "media_ms": 1.09,
+      "mediana_ms": 1.0,
+      "p95_ms": 1.5,
+      "max_ms": 2.0,
+      "muestras": 11
+    },
+    "consulta_tecnica": {
+      "media_ms": 1274.0,
+      "mediana_ms": 1274.0,
+      "p95_ms": 1385.6,
+      "max_ms": 1398.0,
+      "muestras": 2
+    }
+  }
+}

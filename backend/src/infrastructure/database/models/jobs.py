@@ -50,6 +50,11 @@ class CuotaGeminiGlobal(Base):
     minuto_epoch: Mapped[int] = mapped_column(
         BigInteger, nullable=False, default=0, server_default=text("0")
     )
+    cooldown_hasta: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    ultima_verificacion: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    ultimo_exito: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    ultimo_codigo_http: Mapped[int | None] = mapped_column(SmallInteger, nullable=True)
+    ultimo_error: Mapped[str | None] = mapped_column(String(300), nullable=True)
     actualizado_en: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
@@ -130,4 +135,78 @@ class TrabajoGemini(UUIDPrimaryKeyMixin, TimestampMixin, Base):
             name="trabajo_gemini_tipo_consulta_valido",
         ),
         Index("ix_trabajos_gemini_estado_disponible", "estado", "disponible_desde", "bloqueado_hasta"),
+    )
+
+
+class TrabajoSistema(UUIDPrimaryKeyMixin, TimestampMixin, Base):
+    """Trabajo durable para procesos pesados o dependientes de servicios externos."""
+
+    __tablename__ = "trabajos_sistema"
+
+    taller_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("talleres.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    tipo: Mapped[str] = mapped_column(String(40), nullable=False)
+    cola: Mapped[str] = mapped_column(String(30), nullable=False, default="diagnosticos")
+    prioridad: Mapped[int] = mapped_column(SmallInteger, nullable=False, default=50, server_default=text("50"))
+    clave_idempotencia: Mapped[str | None] = mapped_column(String(180), nullable=True, unique=True)
+    payload_cifrado: Mapped[str] = mapped_column(Text, nullable=False)
+    resultado_resumen: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    estado: Mapped[str] = mapped_column(
+        String(30), nullable=False, default="pendiente", server_default=text("'pendiente'")
+    )
+    intentos: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default=text("0"))
+    max_intentos: Mapped[int] = mapped_column(Integer, nullable=False, default=4, server_default=text("4"))
+    disponible_desde: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc), server_default=text("CURRENT_TIMESTAMP")
+    )
+    bloqueado_hasta: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    worker_id: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    iniciado_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    completado_en: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    error_ultimo: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    taller: Mapped["Taller | None"] = relationship()
+
+    __table_args__ = (
+        CheckConstraint(
+            "estado IN ('pendiente', 'procesando', 'completado', 'pendiente_reintento', 'fallido', 'cancelado')",
+            name="trabajo_sistema_estado_valido",
+        ),
+        CheckConstraint("prioridad BETWEEN 0 AND 100", name="trabajo_sistema_prioridad_valida"),
+        CheckConstraint("max_intentos BETWEEN 1 AND 20", name="trabajo_sistema_max_intentos_valido"),
+        Index(
+            "ix_trabajos_sistema_cola_estado_disponible",
+            "cola",
+            "estado",
+            "disponible_desde",
+            "prioridad",
+        ),
+    )
+
+
+class WorkerSistema(Base):
+    """Heartbeat durable de cada proceso consumidor de colas."""
+
+    __tablename__ = "workers_sistema"
+
+    id: Mapped[str] = mapped_column(String(100), primary_key=True)
+    estado: Mapped[str] = mapped_column(String(20), nullable=False, default="activo")
+    iniciado_en: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        server_default=text("CURRENT_TIMESTAMP"),
+    )
+    ultimo_heartbeat: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        server_default=text("CURRENT_TIMESTAMP"),
+    )
+
+    __table_args__ = (
+        CheckConstraint("estado IN ('activo', 'detenido')", name="worker_sistema_estado_valido"),
+        Index("ix_workers_sistema_ultimo_heartbeat", "ultimo_heartbeat"),
     )

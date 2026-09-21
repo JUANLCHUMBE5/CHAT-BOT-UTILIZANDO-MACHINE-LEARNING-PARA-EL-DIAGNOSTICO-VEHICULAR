@@ -21,8 +21,14 @@ from src.infrastructure.database.repositories.taller_repository import (
 from src.infrastructure.database.repositories.trabajo_gemini_repository import (
     TrabajoGeminiRepository,
 )
+from src.infrastructure.database.repositories.trabajo_sistema_repository import (
+    TrabajoSistemaRepository,
+)
 from src.infrastructure.database.repositories.usuario_repository import (
     UsuarioRepository,
+)
+from src.infrastructure.database.repositories.validacion_taller_repository import (
+    ValidacionTallerRepository,
 )
 from src.infrastructure.database.repositories.vehiculo_repository import (
     VehiculoRepository,
@@ -37,5 +43,7 @@ __all__ = [
     "VehiculoRepository",
     "OperacionesRepository",
     "TrabajoGeminiRepository",
+    "TrabajoSistemaRepository",
     "CuotaGeminiRepository",
+    "ValidacionTallerRepository",
 ]

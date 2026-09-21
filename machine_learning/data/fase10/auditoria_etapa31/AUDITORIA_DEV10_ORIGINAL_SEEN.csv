@@ -1,0 +1,1238 @@
+id,clase_objetivo,source_row_id,is_exact_seen,is_norm_seen,max_cosine_sim_f83,category
+ORIG-0003,Desgaste de pastillas y zapatas de freno,2,True,True,1.0,EXACT_SEEN
+ORIG-0015,Desgaste de pastillas y zapatas de freno,14,True,True,1.0,EXACT_SEEN
+ORIG-0017,Desgaste de pastillas y zapatas de freno,16,True,True,1.0,EXACT_SEEN
+ORIG-0018,Desgaste de pastillas y zapatas de freno,17,True,True,1.0,EXACT_SEEN
+ORIG-0019,Desgaste de pastillas y zapatas de freno,18,True,True,1.0,EXACT_SEEN
+ORIG-0020,Desgaste de pastillas y zapatas de freno,19,True,True,1.0,EXACT_SEEN
+ORIG-0021,Fuga hidraulica o aire en el sistema de frenos,20,True,True,1.0,EXACT_SEEN
+ORIG-0022,Fuga hidraulica o aire en el sistema de frenos,21,True,True,1.0,EXACT_SEEN
+ORIG-0023,Fuga hidraulica o aire en el sistema de frenos,22,True,True,1.0,EXACT_SEEN
+ORIG-0024,Fuga hidraulica o aire en el sistema de frenos,23,True,True,1.0,EXACT_SEEN
+ORIG-0044,Falla en bujias o bobinas de encendido (misfire),43,True,True,1.0,EXACT_SEEN
+ORIG-0049,Falla en bujias o bobinas de encendido (misfire),48,True,True,1.0,EXACT_SEEN
+ORIG-0050,Falla en bujias o bobinas de encendido (misfire),49,True,True,1.0,EXACT_SEEN
+ORIG-0056,Falla en bujias o bobinas de encendido (misfire),55,True,True,1.0,EXACT_SEEN
+ORIG-0081,Llantas desbalanceadas o desalineadas,80,True,True,1.0,EXACT_SEEN
+ORIG-0082,Llantas desbalanceadas o desalineadas,81,True,True,1.0,EXACT_SEEN
+ORIG-0094,Llantas desbalanceadas o desalineadas,93,True,True,1.0,EXACT_SEEN
+ORIG-0095,Llantas desbalanceadas o desalineadas,94,True,True,1.0,EXACT_SEEN
+ORIG-0096,Llantas desbalanceadas o desalineadas,95,True,True,1.0,EXACT_SEEN
+ORIG-0098,Llantas desbalanceadas o desalineadas,97,True,True,1.0,EXACT_SEEN
+ORIG-0102,Amortiguadores reventados o bujes de suspension gastados,101,True,True,1.0,EXACT_SEEN
+ORIG-0108,Amortiguadores reventados o bujes de suspension gastados,107,True,True,1.0,EXACT_SEEN
+ORIG-0109,Amortiguadores reventados o bujes de suspension gastados,108,True,True,1.0,EXACT_SEEN
+ORIG-0111,Amortiguadores reventados o bujes de suspension gastados,110,True,True,1.0,EXACT_SEEN
+ORIG-0113,Amortiguadores reventados o bujes de suspension gastados,112,True,True,1.0,EXACT_SEEN
+ORIG-0114,Amortiguadores reventados o bujes de suspension gastados,113,True,True,1.0,EXACT_SEEN
+ORIG-0119,Juntas homocineticas o palieres danados,118,True,True,1.0,EXACT_SEEN
+ORIG-0120,Juntas homocineticas o palieres danados,119,True,True,1.0,EXACT_SEEN
+ORIG-0133,Juntas homocineticas o palieres danados,132,True,True,1.0,EXACT_SEEN
+ORIG-0142,Inyectores sucios o filtro de combustible obstruido,141,True,True,1.0,EXACT_SEEN
+ORIG-0143,Inyectores sucios o filtro de combustible obstruido,142,True,True,1.0,EXACT_SEEN
+ORIG-0144,Inyectores sucios o filtro de combustible obstruido,143,True,True,1.0,EXACT_SEEN
+ORIG-0150,Inyectores sucios o filtro de combustible obstruido,149,True,True,1.0,EXACT_SEEN
+ORIG-0151,Inyectores sucios o filtro de combustible obstruido,150,True,True,1.0,EXACT_SEEN
+ORIG-0154,Inyectores sucios o filtro de combustible obstruido,153,True,True,1.0,EXACT_SEEN
+ORIG-0157,Inyectores sucios o filtro de combustible obstruido,156,True,True,1.0,EXACT_SEEN
+ORIG-0166,Falla en sensor de oxigeno o mezcla rica,165,True,True,1.0,EXACT_SEEN
+ORIG-0167,Falla en sensor de oxigeno o mezcla rica,166,True,True,1.0,EXACT_SEEN
+ORIG-0168,Falla en sensor de oxigeno o mezcla rica,167,True,True,1.0,EXACT_SEEN
+ORIG-0171,Falla en sensor de oxigeno o mezcla rica,170,True,True,1.0,EXACT_SEEN
+ORIG-0173,Falla en sensor de oxigeno o mezcla rica,172,True,True,1.0,EXACT_SEEN
+ORIG-0174,Falla en sensor de oxigeno o mezcla rica,173,True,True,1.0,EXACT_SEEN
+ORIG-0185,Falla en sensor de oxigeno o mezcla rica,184,True,True,1.0,EXACT_SEEN
+ORIG-0186,Falla en sensor de oxigeno o mezcla rica,185,True,True,1.0,EXACT_SEEN
+ORIG-0187,Falla en sensor de oxigeno o mezcla rica,186,True,True,1.0,EXACT_SEEN
+ORIG-0188,Falla en sensor de oxigeno o mezcla rica,187,True,True,1.0,EXACT_SEEN
+ORIG-0190,Falla en sensor de oxigeno o mezcla rica,189,True,True,1.0,EXACT_SEEN
+ORIG-0191,Falla en sensor de oxigeno o mezcla rica,190,True,True,1.0,EXACT_SEEN
+ORIG-0192,Falla en sensor de oxigeno o mezcla rica,191,True,True,1.0,EXACT_SEEN
+ORIG-0193,Falla en sensor de oxigeno o mezcla rica,192,True,True,1.0,EXACT_SEEN
+ORIG-0194,Falla en sensor de oxigeno o mezcla rica,193,True,True,1.0,EXACT_SEEN
+ORIG-0200,Consumo de aceite por desgaste de anillos o retenes,199,True,True,1.0,EXACT_SEEN
+ORIG-0206,Consumo de aceite por desgaste de anillos o retenes,205,True,True,1.0,EXACT_SEEN
+ORIG-0209,Consumo de aceite por desgaste de anillos o retenes,208,True,True,1.0,EXACT_SEEN
+ORIG-0227,Empaque de culata soplado o danado,226,True,True,1.0,EXACT_SEEN
+ORIG-0229,Empaque de culata soplado o danado,228,True,True,1.0,EXACT_SEEN
+ORIG-0230,Empaque de culata soplado o danado,229,True,True,1.0,EXACT_SEEN
+ORIG-0234,Empaque de culata soplado o danado,233,True,True,1.0,EXACT_SEEN
+ORIG-0239,Alternador defectuoso o placa de diodos quemada,238,True,True,1.0,EXACT_SEEN
+ORIG-0240,Alternador defectuoso o placa de diodos quemada,239,True,True,1.0,EXACT_SEEN
+ORIG-0242,Alternador defectuoso o placa de diodos quemada,241,True,True,1.0,EXACT_SEEN
+ORIG-0253,Alternador defectuoso o placa de diodos quemada,252,True,True,1.0,EXACT_SEEN
+ORIG-0261,Cuerpo de aceleracion o valvula IAC sucia,260,True,True,1.0,EXACT_SEEN
+ORIG-0265,Cuerpo de aceleracion o valvula IAC sucia,264,True,True,1.0,EXACT_SEEN
+ORIG-0286,Desgaste de pastillas y zapatas de freno,285,True,True,1.0,EXACT_SEEN
+ORIG-0288,Desgaste de pastillas y zapatas de freno,287,True,True,1.0,EXACT_SEEN
+ORIG-0289,Desgaste de pastillas y zapatas de freno,288,True,True,1.0,EXACT_SEEN
+ORIG-0322,Fuga hidraulica o aire en el sistema de frenos,321,True,True,1.0,EXACT_SEEN
+ORIG-0323,Fuga hidraulica o aire en el sistema de frenos,322,True,True,1.0,EXACT_SEEN
+ORIG-0358,Falla en servofreno (booster) o linea de vacio,357,True,True,1.0,EXACT_SEEN
+ORIG-0363,Falla en servofreno (booster) o linea de vacio,362,True,True,1.0,EXACT_SEEN
+ORIG-0376,Discos de freno alabeados o desgastados,375,True,True,1.0,EXACT_SEEN
+ORIG-0377,Discos de freno alabeados o desgastados,376,True,True,1.0,EXACT_SEEN
+ORIG-0378,Discos de freno alabeados o desgastados,377,True,True,1.0,EXACT_SEEN
+ORIG-0379,Discos de freno alabeados o desgastados,378,True,True,1.0,EXACT_SEEN
+ORIG-0380,Discos de freno alabeados o desgastados,379,True,True,1.0,EXACT_SEEN
+ORIG-0381,Discos de freno alabeados o desgastados,380,True,True,1.0,EXACT_SEEN
+ORIG-0382,Discos de freno alabeados o desgastados,381,True,True,1.0,EXACT_SEEN
+ORIG-0383,Discos de freno alabeados o desgastados,382,True,True,1.0,EXACT_SEEN
+ORIG-0384,Discos de freno alabeados o desgastados,383,True,True,1.0,EXACT_SEEN
+ORIG-0414,Amortiguadores reventados o bujes de suspension gastados,413,True,True,1.0,EXACT_SEEN
+ORIG-0444,Juntas homocineticas o palieres danados,443,True,True,1.0,EXACT_SEEN
+ORIG-0445,Juntas homocineticas o palieres danados,444,True,True,1.0,EXACT_SEEN
+ORIG-0446,Juntas homocineticas o palieres danados,445,True,True,1.0,EXACT_SEEN
+ORIG-0447,Juntas homocineticas o palieres danados,446,True,True,1.0,EXACT_SEEN
+ORIG-0448,Juntas homocineticas o palieres danados,447,True,True,1.0,EXACT_SEEN
+ORIG-0450,Juntas homocineticas o palieres danados,449,True,True,1.0,EXACT_SEEN
+ORIG-0451,Juntas homocineticas o palieres danados,450,True,True,1.0,EXACT_SEEN
+ORIG-0458,Llantas desbalanceadas o desalineadas,457,True,True,1.0,EXACT_SEEN
+ORIG-0514,Disco de embrague desgastado o patinando,513,True,True,1.0,EXACT_SEEN
+ORIG-0515,Disco de embrague desgastado o patinando,514,True,True,1.0,EXACT_SEEN
+ORIG-0516,Disco de embrague desgastado o patinando,515,True,True,1.0,EXACT_SEEN
+ORIG-0517,Disco de embrague desgastado o patinando,516,True,True,1.0,EXACT_SEEN
+ORIG-0518,Disco de embrague desgastado o patinando,517,True,True,1.0,EXACT_SEEN
+ORIG-0519,Disco de embrague desgastado o patinando,518,True,True,1.0,EXACT_SEEN
+ORIG-0520,Disco de embrague desgastado o patinando,519,True,True,1.0,EXACT_SEEN
+ORIG-0572,Falta o degradacion de aceite de caja de cambios,571,True,True,1.0,EXACT_SEEN
+ORIG-0573,Falta o degradacion de aceite de caja de cambios,572,True,True,1.0,EXACT_SEEN
+ORIG-0576,Falta o degradacion de aceite de caja de cambios,575,True,True,1.0,EXACT_SEEN
+ORIG-0577,Falta o degradacion de aceite de caja de cambios,576,True,True,1.0,EXACT_SEEN
+ORIG-0578,Falta o degradacion de aceite de caja de cambios,577,True,True,1.0,EXACT_SEEN
+ORIG-0580,Falta o degradacion de aceite de caja de cambios,579,True,True,1.0,EXACT_SEEN
+ORIG-0607,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",606,True,True,1.0,EXACT_SEEN
+ORIG-0608,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",607,True,True,1.0,EXACT_SEEN
+ORIG-0609,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",608,True,True,1.0,EXACT_SEEN
+ORIG-0610,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",609,True,True,1.0,EXACT_SEEN
+ORIG-0611,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",610,True,True,1.0,EXACT_SEEN
+ORIG-0612,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",611,True,True,1.0,EXACT_SEEN
+ORIG-0613,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",612,True,True,1.0,EXACT_SEEN
+ORIG-0614,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",613,True,True,1.0,EXACT_SEEN
+ORIG-0615,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",614,True,True,1.0,EXACT_SEEN
+ORIG-0625,Elevalunas electrico o guaya de alzacristales rota o trabada,624,True,True,1.0,EXACT_SEEN
+ORIG-0626,Elevalunas electrico o guaya de alzacristales rota o trabada,625,True,True,1.0,EXACT_SEEN
+ORIG-0628,Elevalunas electrico o guaya de alzacristales rota o trabada,627,True,True,1.0,EXACT_SEEN
+ORIG-0629,Elevalunas electrico o guaya de alzacristales rota o trabada,628,True,True,1.0,EXACT_SEEN
+ORIG-0630,Elevalunas electrico o guaya de alzacristales rota o trabada,629,True,True,1.0,EXACT_SEEN
+ORIG-0631,Elevalunas electrico o guaya de alzacristales rota o trabada,630,True,True,1.0,EXACT_SEEN
+ORIG-0632,Elevalunas electrico o guaya de alzacristales rota o trabada,631,True,True,1.0,EXACT_SEEN
+ORIG-0640,Elevalunas electrico o guaya de alzacristales rota o trabada,639,True,True,1.0,EXACT_SEEN
+ORIG-0642,Limpiaparabrisas o motor pluma quemado,641,True,True,1.0,EXACT_SEEN
+ORIG-0643,Limpiaparabrisas o motor pluma quemado,642,True,True,1.0,EXACT_SEEN
+ORIG-0644,Limpiaparabrisas o motor pluma quemado,643,True,True,1.0,EXACT_SEEN
+ORIG-0646,Limpiaparabrisas o motor pluma quemado,645,True,True,1.0,EXACT_SEEN
+ORIG-0647,Limpiaparabrisas o motor pluma quemado,646,True,True,1.0,EXACT_SEEN
+ORIG-0648,Limpiaparabrisas o motor pluma quemado,647,True,True,1.0,EXACT_SEEN
+ORIG-0649,Limpiaparabrisas o motor pluma quemado,648,True,True,1.0,EXACT_SEEN
+ORIG-0650,Limpiaparabrisas o motor pluma quemado,649,True,True,1.0,EXACT_SEEN
+ORIG-0679,Bateria descargada o bornes sulfatados,678,True,True,1.0,EXACT_SEEN
+ORIG-0695,Bateria descargada o bornes sulfatados,694,True,True,1.0,EXACT_SEEN
+ORIG-0696,Bateria descargada o bornes sulfatados,695,True,True,1.0,EXACT_SEEN
+ORIG-0697,Bateria descargada o bornes sulfatados,696,True,True,1.0,EXACT_SEEN
+ORIG-0699,Bateria descargada o bornes sulfatados,698,True,True,1.0,EXACT_SEEN
+ORIG-0700,Bateria descargada o bornes sulfatados,699,True,True,1.0,EXACT_SEEN
+ORIG-0701,Bateria descargada o bornes sulfatados,700,True,True,1.0,EXACT_SEEN
+ORIG-0702,Bateria descargada o bornes sulfatados,701,True,True,1.0,EXACT_SEEN
+ORIG-0703,Bateria descargada o bornes sulfatados,702,True,True,1.0,EXACT_SEEN
+ORIG-0709,Alternador defectuoso o placa de diodos quemada,708,True,True,1.0,EXACT_SEEN
+ORIG-0720,Alternador defectuoso o placa de diodos quemada,719,True,True,1.0,EXACT_SEEN
+ORIG-0722,Alternador defectuoso o placa de diodos quemada,721,True,True,1.0,EXACT_SEEN
+ORIG-0723,Alternador defectuoso o placa de diodos quemada,722,True,True,1.0,EXACT_SEEN
+ORIG-0724,Alternador defectuoso o placa de diodos quemada,723,True,True,1.0,EXACT_SEEN
+ORIG-0725,Alternador defectuoso o placa de diodos quemada,724,True,True,1.0,EXACT_SEEN
+ORIG-0726,Alternador defectuoso o placa de diodos quemada,725,True,True,1.0,EXACT_SEEN
+ORIG-0764,Falla en bujias o bobinas de encendido (misfire),763,True,True,1.0,EXACT_SEEN
+ORIG-0765,Falla en bujias o bobinas de encendido (misfire),764,True,True,1.0,EXACT_SEEN
+ORIG-0766,Falla en bujias o bobinas de encendido (misfire),765,True,True,1.0,EXACT_SEEN
+ORIG-0767,Falla en bujias o bobinas de encendido (misfire),766,True,True,1.0,EXACT_SEEN
+ORIG-0769,Falla en bujias o bobinas de encendido (misfire),768,True,True,1.0,EXACT_SEEN
+ORIG-0771,Falla en bujias o bobinas de encendido (misfire),770,True,True,1.0,EXACT_SEEN
+ORIG-0772,Falla en bujias o bobinas de encendido (misfire),771,True,True,1.0,EXACT_SEEN
+ORIG-0784,Inyectores sucios o filtro de combustible obstruido,783,True,True,1.0,EXACT_SEEN
+ORIG-0787,Inyectores sucios o filtro de combustible obstruido,786,True,True,1.0,EXACT_SEEN
+ORIG-0789,Inyectores sucios o filtro de combustible obstruido,788,True,True,1.0,EXACT_SEEN
+ORIG-0797,Inyectores sucios o filtro de combustible obstruido,796,True,True,1.0,EXACT_SEEN
+ORIG-0805,Bomba de gasolina quemada o con baja presion,804,True,True,1.0,EXACT_SEEN
+ORIG-0834,Falla en sensor de oxigeno o mezcla rica,833,True,True,1.0,EXACT_SEEN
+ORIG-0845,Falla en sensor de oxigeno o mezcla rica,844,True,True,1.0,EXACT_SEEN
+ORIG-0864,Empaque de culata soplado o danado,863,True,True,1.0,EXACT_SEEN
+ORIG-0866,Empaque de culata soplado o danado,865,True,True,1.0,EXACT_SEEN
+ORIG-0867,Empaque de culata soplado o danado,866,True,True,1.0,EXACT_SEEN
+ORIG-0868,Empaque de culata soplado o danado,867,True,True,1.0,EXACT_SEEN
+ORIG-0869,Empaque de culata soplado o danado,868,True,True,1.0,EXACT_SEEN
+ORIG-0870,Empaque de culata soplado o danado,869,True,True,1.0,EXACT_SEEN
+ORIG-0871,Empaque de culata soplado o danado,870,True,True,1.0,EXACT_SEEN
+ORIG-0872,Empaque de culata soplado o danado,871,True,True,1.0,EXACT_SEEN
+ORIG-0874,Empaque de culata soplado o danado,873,True,True,1.0,EXACT_SEEN
+ORIG-0875,Consumo de aceite por desgaste de anillos o retenes,874,True,True,1.0,EXACT_SEEN
+ORIG-0876,Consumo de aceite por desgaste de anillos o retenes,875,True,True,1.0,EXACT_SEEN
+ORIG-0877,Consumo de aceite por desgaste de anillos o retenes,876,True,True,1.0,EXACT_SEEN
+ORIG-0878,Consumo de aceite por desgaste de anillos o retenes,877,True,True,1.0,EXACT_SEEN
+ORIG-0879,Consumo de aceite por desgaste de anillos o retenes,878,True,True,1.0,EXACT_SEEN
+ORIG-0880,Consumo de aceite por desgaste de anillos o retenes,879,True,True,1.0,EXACT_SEEN
+ORIG-0882,Consumo de aceite por desgaste de anillos o retenes,881,True,True,1.0,EXACT_SEEN
+ORIG-0883,Consumo de aceite por desgaste de anillos o retenes,882,True,True,1.0,EXACT_SEEN
+ORIG-0907,Fuga en mangueras de refrigerante o radiador picado,906,True,True,1.0,EXACT_SEEN
+ORIG-0913,Fuga en mangueras de refrigerante o radiador picado,912,True,True,1.0,EXACT_SEEN
+ORIG-0932,Cuerpo de aceleracion o valvula IAC sucia,931,True,True,1.0,EXACT_SEEN
+ORIG-0968,Fuga en mangueras de intercooler o turbocompresor danado,967,True,True,1.0,EXACT_SEEN
+ORIG-0971,Fuga en mangueras de intercooler o turbocompresor danado,970,True,True,1.0,EXACT_SEEN
+ORIG-0973,Fuga en mangueras de intercooler o turbocompresor danado,972,True,True,1.0,EXACT_SEEN
+ORIG-0979,Fuga en mangueras de intercooler o turbocompresor danado,978,True,True,1.0,EXACT_SEEN
+ORIG-0981,Fuga en mangueras de intercooler o turbocompresor danado,980,True,True,1.0,EXACT_SEEN
+ORIG-0983,Fuga en mangueras de intercooler o turbocompresor danado,982,True,True,1.0,EXACT_SEEN
+ORIG-0986,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),985,True,True,1.0,EXACT_SEEN
+ORIG-0990,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),989,True,True,1.0,EXACT_SEEN
+ORIG-0993,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),992,True,True,1.0,EXACT_SEEN
+ORIG-0995,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),994,True,True,1.0,EXACT_SEEN
+ORIG-1000,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),999,True,True,1.0,EXACT_SEEN
+ORIG-1006,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),1005,True,True,1.0,EXACT_SEEN
+ORIG-1009,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),1008,True,True,1.0,EXACT_SEEN
+ORIG-1011,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1010,True,True,1.0,EXACT_SEEN
+ORIG-1012,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1011,True,True,1.0,EXACT_SEEN
+ORIG-1013,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1012,True,True,1.0,EXACT_SEEN
+ORIG-1022,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1021,True,True,1.0,EXACT_SEEN
+ORIG-1025,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1024,True,True,1.0,EXACT_SEEN
+ORIG-1026,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1025,True,True,1.0,EXACT_SEEN
+ORIG-1031,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1030,True,True,1.0,EXACT_SEEN
+ORIG-1034,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1033,True,True,1.0,EXACT_SEEN
+ORIG-1035,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1034,True,True,1.0,EXACT_SEEN
+ORIG-1053,Fallo en inversor de corriente IGBT o motor electrico (EV),1052,True,True,1.0,EXACT_SEEN
+ORIG-1054,Fallo en inversor de corriente IGBT o motor electrico (EV),1053,True,True,1.0,EXACT_SEEN
+ORIG-1059,Fallo en inversor de corriente IGBT o motor electrico (EV),1058,True,True,1.0,EXACT_SEEN
+ORIG-1071,Falla en sistema de frenado regenerativo (EV / Hibridos),1070,True,True,1.0,EXACT_SEEN
+ORIG-1072,Falla en sistema de frenado regenerativo (EV / Hibridos),1071,True,True,1.0,EXACT_SEEN
+ORIG-1073,Falla en sistema de frenado regenerativo (EV / Hibridos),1072,True,True,1.0,EXACT_SEEN
+ORIG-1076,Falla en sistema de frenado regenerativo (EV / Hibridos),1075,True,True,1.0,EXACT_SEEN
+ORIG-1077,Falla en sistema de frenado regenerativo (EV / Hibridos),1076,True,True,1.0,EXACT_SEEN
+ORIG-1079,Falla en sistema de frenado regenerativo (EV / Hibridos),1078,True,True,1.0,EXACT_SEEN
+ORIG-1082,Falla en sistema de frenado regenerativo (EV / Hibridos),1081,True,True,1.0,EXACT_SEEN
+ORIG-1083,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1082,True,True,1.0,EXACT_SEEN
+ORIG-1088,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1087,True,True,1.0,EXACT_SEEN
+ORIG-1090,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1089,True,True,1.0,EXACT_SEEN
+ORIG-1105,Desgaste de pastillas y zapatas de freno,1104,True,True,1.0,EXACT_SEEN
+ORIG-1110,Desgaste de pastillas y zapatas de freno,1109,True,True,1.0,EXACT_SEEN
+ORIG-1111,Desgaste de pastillas y zapatas de freno,1110,True,True,1.0,EXACT_SEEN
+ORIG-1112,Desgaste de pastillas y zapatas de freno,1111,True,True,1.0,EXACT_SEEN
+ORIG-1113,Desgaste de pastillas y zapatas de freno,1112,True,True,1.0,EXACT_SEEN
+ORIG-1115,Desgaste de pastillas y zapatas de freno,1114,True,True,1.0,EXACT_SEEN
+ORIG-1116,Desgaste de pastillas y zapatas de freno,1115,True,True,1.0,EXACT_SEEN
+ORIG-1124,Desgaste de pastillas y zapatas de freno,1123,True,True,1.0,EXACT_SEEN
+ORIG-1137,Fuga hidraulica o aire en el sistema de frenos,1136,True,True,1.0,EXACT_SEEN
+ORIG-1138,Fuga hidraulica o aire en el sistema de frenos,1137,True,True,1.0,EXACT_SEEN
+ORIG-1139,Fuga hidraulica o aire en el sistema de frenos,1138,True,True,1.0,EXACT_SEEN
+ORIG-1140,Fuga hidraulica o aire en el sistema de frenos,1139,True,True,1.0,EXACT_SEEN
+ORIG-1142,Fuga hidraulica o aire en el sistema de frenos,1141,True,True,1.0,EXACT_SEEN
+ORIG-1148,Fuga hidraulica o aire en el sistema de frenos,1147,True,True,1.0,EXACT_SEEN
+ORIG-1187,Bateria descargada o bornes sulfatados,1186,True,True,1.0,EXACT_SEEN
+ORIG-1216,Llantas desbalanceadas o desalineadas,1215,True,True,1.0,EXACT_SEEN
+ORIG-1218,Llantas desbalanceadas o desalineadas,1217,True,True,1.0,EXACT_SEEN
+ORIG-1219,Llantas desbalanceadas o desalineadas,1218,True,True,1.0,EXACT_SEEN
+ORIG-1221,Llantas desbalanceadas o desalineadas,1220,True,True,1.0,EXACT_SEEN
+ORIG-1229,Llantas desbalanceadas o desalineadas,1228,True,True,1.0,EXACT_SEEN
+ORIG-1241,Juntas homocineticas o palieres danados,1240,True,True,1.0,EXACT_SEEN
+ORIG-1242,Juntas homocineticas o palieres danados,1241,True,True,1.0,EXACT_SEEN
+ORIG-1243,Juntas homocineticas o palieres danados,1242,True,True,1.0,EXACT_SEEN
+ORIG-1245,Juntas homocineticas o palieres danados,1244,True,True,1.0,EXACT_SEEN
+ORIG-1246,Juntas homocineticas o palieres danados,1245,True,True,1.0,EXACT_SEEN
+ORIG-1247,Juntas homocineticas o palieres danados,1246,True,True,1.0,EXACT_SEEN
+ORIG-1251,Juntas homocineticas o palieres danados,1250,True,True,1.0,EXACT_SEEN
+ORIG-1258,Juntas homocineticas o palieres danados,1257,True,True,1.0,EXACT_SEEN
+ORIG-1275,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",1274,True,True,1.0,EXACT_SEEN
+ORIG-1278,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",1277,True,True,1.0,EXACT_SEEN
+ORIG-1279,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",1278,True,True,1.0,EXACT_SEEN
+ORIG-1281,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",1280,True,True,1.0,EXACT_SEEN
+ORIG-1283,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",1282,True,True,1.0,EXACT_SEEN
+ORIG-1290,Desgaste de pastillas y zapatas de freno,1289,True,True,1.0,EXACT_SEEN
+ORIG-1291,Desgaste de pastillas y zapatas de freno,1290,True,True,1.0,EXACT_SEEN
+ORIG-1292,Desgaste de pastillas y zapatas de freno,1291,True,True,1.0,EXACT_SEEN
+ORIG-1293,Desgaste de pastillas y zapatas de freno,1292,True,True,1.0,EXACT_SEEN
+ORIG-1294,Desgaste de pastillas y zapatas de freno,1293,True,True,1.0,EXACT_SEEN
+ORIG-1295,Desgaste de pastillas y zapatas de freno,1294,True,True,1.0,EXACT_SEEN
+ORIG-1308,Fuga hidraulica o aire en el sistema de frenos,1307,True,True,1.0,EXACT_SEEN
+ORIG-1309,Fuga hidraulica o aire en el sistema de frenos,1308,True,True,1.0,EXACT_SEEN
+ORIG-1310,Fuga hidraulica o aire en el sistema de frenos,1309,True,True,1.0,EXACT_SEEN
+ORIG-1311,Fuga hidraulica o aire en el sistema de frenos,1310,True,True,1.0,EXACT_SEEN
+ORIG-1312,Fuga hidraulica o aire en el sistema de frenos,1311,True,True,1.0,EXACT_SEEN
+ORIG-1313,Fuga hidraulica o aire en el sistema de frenos,1312,True,True,1.0,EXACT_SEEN
+ORIG-1329,Falla en servofreno (booster) o linea de vacio,1328,True,True,1.0,EXACT_SEEN
+ORIG-1363,Amortiguadores reventados o bujes de suspension gastados,1362,True,True,1.0,EXACT_SEEN
+ORIG-1364,Amortiguadores reventados o bujes de suspension gastados,1363,True,True,1.0,EXACT_SEEN
+ORIG-1365,Amortiguadores reventados o bujes de suspension gastados,1364,True,True,1.0,EXACT_SEEN
+ORIG-1367,Amortiguadores reventados o bujes de suspension gastados,1366,True,True,1.0,EXACT_SEEN
+ORIG-1368,Amortiguadores reventados o bujes de suspension gastados,1367,True,True,1.0,EXACT_SEEN
+ORIG-1369,Amortiguadores reventados o bujes de suspension gastados,1368,True,True,1.0,EXACT_SEEN
+ORIG-1370,Amortiguadores reventados o bujes de suspension gastados,1369,True,True,1.0,EXACT_SEEN
+ORIG-1372,Amortiguadores reventados o bujes de suspension gastados,1371,True,True,1.0,EXACT_SEEN
+ORIG-1373,Amortiguadores reventados o bujes de suspension gastados,1372,True,True,1.0,EXACT_SEEN
+ORIG-1410,Juntas homocineticas o palieres danados,1409,True,True,1.0,EXACT_SEEN
+ORIG-1433,Llantas desbalanceadas o desalineadas,1432,True,True,1.0,EXACT_SEEN
+ORIG-1434,Llantas desbalanceadas o desalineadas,1433,True,True,1.0,EXACT_SEEN
+ORIG-1435,Llantas desbalanceadas o desalineadas,1434,True,True,1.0,EXACT_SEEN
+ORIG-1436,Llantas desbalanceadas o desalineadas,1435,True,True,1.0,EXACT_SEEN
+ORIG-1437,Llantas desbalanceadas o desalineadas,1436,True,True,1.0,EXACT_SEEN
+ORIG-1438,Llantas desbalanceadas o desalineadas,1437,True,True,1.0,EXACT_SEEN
+ORIG-1439,Llantas desbalanceadas o desalineadas,1438,True,True,1.0,EXACT_SEEN
+ORIG-1451,Cremallera de direccion asistida con holgura o fuga,1450,True,True,1.0,EXACT_SEEN
+ORIG-1453,Cremallera de direccion asistida con holgura o fuga,1452,True,True,1.0,EXACT_SEEN
+ORIG-1454,Cremallera de direccion asistida con holgura o fuga,1453,True,True,1.0,EXACT_SEEN
+ORIG-1455,Cremallera de direccion asistida con holgura o fuga,1454,True,True,1.0,EXACT_SEEN
+ORIG-1456,Cremallera de direccion asistida con holgura o fuga,1455,True,True,1.0,EXACT_SEEN
+ORIG-1457,Cremallera de direccion asistida con holgura o fuga,1456,True,True,1.0,EXACT_SEEN
+ORIG-1458,Cremallera de direccion asistida con holgura o fuga,1457,True,True,1.0,EXACT_SEEN
+ORIG-1459,Cremallera de direccion asistida con holgura o fuga,1458,True,True,1.0,EXACT_SEEN
+ORIG-1460,Cremallera de direccion asistida con holgura o fuga,1459,True,True,1.0,EXACT_SEEN
+ORIG-1461,Cremallera de direccion asistida con holgura o fuga,1460,True,True,1.0,EXACT_SEEN
+ORIG-1495,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",1494,True,True,1.0,EXACT_SEEN
+ORIG-1521,Limpiaparabrisas o motor pluma quemado,1520,True,True,1.0,EXACT_SEEN
+ORIG-1522,Limpiaparabrisas o motor pluma quemado,1521,True,True,1.0,EXACT_SEEN
+ORIG-1524,Limpiaparabrisas o motor pluma quemado,1523,True,True,1.0,EXACT_SEEN
+ORIG-1525,Limpiaparabrisas o motor pluma quemado,1524,True,True,1.0,EXACT_SEEN
+ORIG-1527,Limpiaparabrisas o motor pluma quemado,1526,True,True,1.0,EXACT_SEEN
+ORIG-1528,Limpiaparabrisas o motor pluma quemado,1527,True,True,1.0,EXACT_SEEN
+ORIG-1529,Limpiaparabrisas o motor pluma quemado,1528,True,True,1.0,EXACT_SEEN
+ORIG-1530,Limpiaparabrisas o motor pluma quemado,1529,True,True,1.0,EXACT_SEEN
+ORIG-1547,Falla en bujias o bobinas de encendido (misfire),1546,True,True,1.0,EXACT_SEEN
+ORIG-1562,Falla en bujias o bobinas de encendido (misfire),1561,True,True,1.0,EXACT_SEEN
+ORIG-1563,Falla en bujias o bobinas de encendido (misfire),1562,True,True,1.0,EXACT_SEEN
+ORIG-1564,Falla en bujias o bobinas de encendido (misfire),1563,True,True,1.0,EXACT_SEEN
+ORIG-1565,Falla en bujias o bobinas de encendido (misfire),1564,True,True,1.0,EXACT_SEEN
+ORIG-1567,Falla en bujias o bobinas de encendido (misfire),1566,True,True,1.0,EXACT_SEEN
+ORIG-1568,Falla en bujias o bobinas de encendido (misfire),1567,True,True,1.0,EXACT_SEEN
+ORIG-1569,Falla en bujias o bobinas de encendido (misfire),1568,True,True,1.0,EXACT_SEEN
+ORIG-1571,Falla en bujias o bobinas de encendido (misfire),1570,True,True,1.0,EXACT_SEEN
+ORIG-1590,Inyectores sucios o filtro de combustible obstruido,1589,True,True,1.0,EXACT_SEEN
+ORIG-1602,Inyectores sucios o filtro de combustible obstruido,1601,True,True,1.0,EXACT_SEEN
+ORIG-1603,Bomba de gasolina quemada o con baja presion,1602,True,True,1.0,EXACT_SEEN
+ORIG-1604,Bomba de gasolina quemada o con baja presion,1603,True,True,1.0,EXACT_SEEN
+ORIG-1606,Bomba de gasolina quemada o con baja presion,1605,True,True,1.0,EXACT_SEEN
+ORIG-1607,Bomba de gasolina quemada o con baja presion,1606,True,True,1.0,EXACT_SEEN
+ORIG-1608,Bomba de gasolina quemada o con baja presion,1607,True,True,1.0,EXACT_SEEN
+ORIG-1609,Bomba de gasolina quemada o con baja presion,1608,True,True,1.0,EXACT_SEEN
+ORIG-1610,Bomba de gasolina quemada o con baja presion,1609,True,True,1.0,EXACT_SEEN
+ORIG-1611,Bomba de gasolina quemada o con baja presion,1610,True,True,1.0,EXACT_SEEN
+ORIG-1613,Bomba de gasolina quemada o con baja presion,1612,True,True,1.0,EXACT_SEEN
+ORIG-1637,Falla en sensor de oxigeno o mezcla rica,1636,True,True,1.0,EXACT_SEEN
+ORIG-1668,Empaque de culata soplado o danado,1667,True,True,1.0,EXACT_SEEN
+ORIG-1687,Consumo de aceite por desgaste de anillos o retenes,1686,True,True,1.0,EXACT_SEEN
+ORIG-1688,Consumo de aceite por desgaste de anillos o retenes,1687,True,True,1.0,EXACT_SEEN
+ORIG-1690,Consumo de aceite por desgaste de anillos o retenes,1689,True,True,1.0,EXACT_SEEN
+ORIG-1691,Consumo de aceite por desgaste de anillos o retenes,1690,True,True,1.0,EXACT_SEEN
+ORIG-1692,Consumo de aceite por desgaste de anillos o retenes,1691,True,True,1.0,EXACT_SEEN
+ORIG-1693,Consumo de aceite por desgaste de anillos o retenes,1692,True,True,1.0,EXACT_SEEN
+ORIG-1694,Consumo de aceite por desgaste de anillos o retenes,1693,True,True,1.0,EXACT_SEEN
+ORIG-1695,Consumo de aceite por desgaste de anillos o retenes,1694,True,True,1.0,EXACT_SEEN
+ORIG-1706,Cuerpo de aceleracion o valvula IAC sucia,1705,True,True,1.0,EXACT_SEEN
+ORIG-1707,Cuerpo de aceleracion o valvula IAC sucia,1706,True,True,1.0,EXACT_SEEN
+ORIG-1708,Cuerpo de aceleracion o valvula IAC sucia,1707,True,True,1.0,EXACT_SEEN
+ORIG-1709,Cuerpo de aceleracion o valvula IAC sucia,1708,True,True,1.0,EXACT_SEEN
+ORIG-1710,Cuerpo de aceleracion o valvula IAC sucia,1709,True,True,1.0,EXACT_SEEN
+ORIG-1711,Cuerpo de aceleracion o valvula IAC sucia,1710,True,True,1.0,EXACT_SEEN
+ORIG-1713,Cuerpo de aceleracion o valvula IAC sucia,1712,True,True,1.0,EXACT_SEEN
+ORIG-1714,Cuerpo de aceleracion o valvula IAC sucia,1713,True,True,1.0,EXACT_SEEN
+ORIG-1715,Cuerpo de aceleracion o valvula IAC sucia,1714,True,True,1.0,EXACT_SEEN
+ORIG-1716,Cuerpo de aceleracion o valvula IAC sucia,1715,True,True,1.0,EXACT_SEEN
+ORIG-1720,Cuerpo de aceleracion o valvula IAC sucia,1719,True,True,1.0,EXACT_SEEN
+ORIG-1723,Cuerpo de aceleracion o valvula IAC sucia,1722,True,True,1.0,EXACT_SEEN
+ORIG-1728,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1727,True,True,1.0,EXACT_SEEN
+ORIG-1730,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1729,True,True,1.0,EXACT_SEEN
+ORIG-1731,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1730,True,True,1.0,EXACT_SEEN
+ORIG-1732,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1731,True,True,1.0,EXACT_SEEN
+ORIG-1733,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1732,True,True,1.0,EXACT_SEEN
+ORIG-1734,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1733,True,True,1.0,EXACT_SEEN
+ORIG-1735,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1734,True,True,1.0,EXACT_SEEN
+ORIG-1737,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1736,True,True,1.0,EXACT_SEEN
+ORIG-1738,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),1737,True,True,1.0,EXACT_SEEN
+ORIG-1776,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),1775,True,True,1.0,EXACT_SEEN
+ORIG-1806,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),1805,True,True,1.0,EXACT_SEEN
+ORIG-1814,Fallo en inversor de corriente IGBT o motor electrico (EV),1813,True,True,1.0,EXACT_SEEN
+ORIG-1815,Fallo en inversor de corriente IGBT o motor electrico (EV),1814,True,True,1.0,EXACT_SEEN
+ORIG-1816,Fallo en inversor de corriente IGBT o motor electrico (EV),1815,True,True,1.0,EXACT_SEEN
+ORIG-1817,Fallo en inversor de corriente IGBT o motor electrico (EV),1816,True,True,1.0,EXACT_SEEN
+ORIG-1819,Fallo en inversor de corriente IGBT o motor electrico (EV),1818,True,True,1.0,EXACT_SEEN
+ORIG-1820,Fallo en inversor de corriente IGBT o motor electrico (EV),1819,True,True,1.0,EXACT_SEEN
+ORIG-1821,Fallo en inversor de corriente IGBT o motor electrico (EV),1820,True,True,1.0,EXACT_SEEN
+ORIG-1822,Fallo en inversor de corriente IGBT o motor electrico (EV),1821,True,True,1.0,EXACT_SEEN
+ORIG-1823,Fallo en inversor de corriente IGBT o motor electrico (EV),1822,True,True,1.0,EXACT_SEEN
+ORIG-1832,Fallo en inversor de corriente IGBT o motor electrico (EV),1831,True,True,1.0,EXACT_SEEN
+ORIG-1856,Falla en sistema de frenado regenerativo (EV / Hibridos),1855,True,True,1.0,EXACT_SEEN
+ORIG-1858,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1857,True,True,1.0,EXACT_SEEN
+ORIG-1859,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1858,True,True,1.0,EXACT_SEEN
+ORIG-1861,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1860,True,True,1.0,EXACT_SEEN
+ORIG-1862,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1861,True,True,1.0,EXACT_SEEN
+ORIG-1863,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1862,True,True,1.0,EXACT_SEEN
+ORIG-1864,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1863,True,True,1.0,EXACT_SEEN
+ORIG-1865,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1864,True,True,1.0,EXACT_SEEN
+ORIG-1866,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),1865,True,True,1.0,EXACT_SEEN
+ORIG-1886,Empaque de culata soplado o danado,1885,True,True,1.0,EXACT_SEEN
+ORIG-1889,Empaque de culata soplado o danado,1888,True,True,1.0,EXACT_SEEN
+ORIG-1890,Empaque de culata soplado o danado,1889,True,True,1.0,EXACT_SEEN
+ORIG-1891,Empaque de culata soplado o danado,1890,True,True,1.0,EXACT_SEEN
+ORIG-1894,Empaque de culata soplado o danado,1893,True,True,1.0,EXACT_SEEN
+ORIG-1897,Empaque de culata soplado o danado,1896,True,True,1.0,EXACT_SEEN
+ORIG-1903,Empaque de culata soplado o danado,1902,True,True,1.0,EXACT_SEEN
+ORIG-1909,Faja o cadena de distribucion destensada o con salto de punto,1908,True,True,1.0,EXACT_SEEN
+ORIG-1913,Faja o cadena de distribucion destensada o con salto de punto,1912,True,True,1.0,EXACT_SEEN
+ORIG-1916,Faja o cadena de distribucion destensada o con salto de punto,1915,True,True,1.0,EXACT_SEEN
+ORIG-1933,Faja o cadena de distribucion destensada o con salto de punto,1932,True,True,1.0,EXACT_SEEN
+ORIG-1940,Baja presion de aceite o bomba de aceite defectuosa,1939,True,True,1.0,EXACT_SEEN
+ORIG-1941,Baja presion de aceite o bomba de aceite defectuosa,1940,True,True,1.0,EXACT_SEEN
+ORIG-1942,Baja presion de aceite o bomba de aceite defectuosa,1941,True,True,1.0,EXACT_SEEN
+ORIG-1959,Baja presion de aceite o bomba de aceite defectuosa,1958,True,True,1.0,EXACT_SEEN
+ORIG-1962,Baja presion de aceite o bomba de aceite defectuosa,1961,True,True,1.0,EXACT_SEEN
+ORIG-1964,Baja presion de aceite o bomba de aceite defectuosa,1963,True,True,1.0,EXACT_SEEN
+ORIG-1968,Baja presion de aceite o bomba de aceite defectuosa,1967,True,True,1.0,EXACT_SEEN
+ORIG-1981,Disco de embrague desgastado o patinando,1980,True,True,1.0,EXACT_SEEN
+ORIG-1984,Disco de embrague desgastado o patinando,1983,True,True,1.0,EXACT_SEEN
+ORIG-1991,Disco de embrague desgastado o patinando,1990,True,True,1.0,EXACT_SEEN
+ORIG-1995,Disco de embrague desgastado o patinando,1994,True,True,1.0,EXACT_SEEN
+ORIG-1999,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,1998,True,True,1.0,EXACT_SEEN
+ORIG-2005,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,2004,True,True,1.0,EXACT_SEEN
+ORIG-2006,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,2005,True,True,1.0,EXACT_SEEN
+ORIG-2007,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,2006,True,True,1.0,EXACT_SEEN
+ORIG-2010,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,2009,True,True,1.0,EXACT_SEEN
+ORIG-2012,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,2011,True,True,1.0,EXACT_SEEN
+ORIG-2018,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,2017,True,True,1.0,EXACT_SEEN
+ORIG-2029,Rodajes de caja mecanica o diferencial gastados,2028,True,True,1.0,EXACT_SEEN
+ORIG-2032,Rodajes de caja mecanica o diferencial gastados,2031,True,True,1.0,EXACT_SEEN
+ORIG-2035,Rodajes de caja mecanica o diferencial gastados,2034,True,True,1.0,EXACT_SEEN
+ORIG-2038,Rodajes de caja mecanica o diferencial gastados,2037,True,True,1.0,EXACT_SEEN
+ORIG-2045,Rodajes de caja mecanica o diferencial gastados,2044,True,True,1.0,EXACT_SEEN
+ORIG-2048,Rodajes de caja mecanica o diferencial gastados,2047,True,True,1.0,EXACT_SEEN
+ORIG-2050,Rodajes de caja mecanica o diferencial gastados,2049,True,True,1.0,EXACT_SEEN
+ORIG-2053,Rodajes de caja mecanica o diferencial gastados,2052,True,True,1.0,EXACT_SEEN
+ORIG-2058,Rodajes de caja mecanica o diferencial gastados,2057,True,True,1.0,EXACT_SEEN
+ORIG-2079,Desgaste de pastillas y zapatas de freno,2078,True,True,1.0,EXACT_SEEN
+ORIG-2080,Desgaste de pastillas y zapatas de freno,2079,True,True,1.0,EXACT_SEEN
+ORIG-2085,Desgaste de pastillas y zapatas de freno,2084,True,True,1.0,EXACT_SEEN
+ORIG-2087,Desgaste de pastillas y zapatas de freno,2086,True,True,1.0,EXACT_SEEN
+ORIG-2090,Discos de freno alabeados o desgastados,2089,True,True,1.0,EXACT_SEEN
+ORIG-2117,Discos de freno alabeados o desgastados,2116,True,True,1.0,EXACT_SEEN
+ORIG-2119,Falla en sensor de velocidad de rueda ABS,2118,True,True,1.0,EXACT_SEEN
+ORIG-2120,Falla en sensor de velocidad de rueda ABS,2119,True,True,1.0,EXACT_SEEN
+ORIG-2125,Falla en sensor de velocidad de rueda ABS,2124,True,True,1.0,EXACT_SEEN
+ORIG-2127,Falla en sensor de velocidad de rueda ABS,2126,True,True,1.0,EXACT_SEEN
+ORIG-2128,Falla en sensor de velocidad de rueda ABS,2127,True,True,1.0,EXACT_SEEN
+ORIG-2133,Falla en sensor de velocidad de rueda ABS,2132,True,True,1.0,EXACT_SEEN
+ORIG-2152,Cremallera de direccion asistida con holgura o fuga,2151,True,True,1.0,EXACT_SEEN
+ORIG-2162,Cremallera de direccion asistida con holgura o fuga,2161,True,True,1.0,EXACT_SEEN
+ORIG-2166,Cremallera de direccion asistida con holgura o fuga,2165,True,True,1.0,EXACT_SEEN
+ORIG-2172,Cremallera de direccion asistida con holgura o fuga,2171,True,True,1.0,EXACT_SEEN
+ORIG-2173,Cremallera de direccion asistida con holgura o fuga,2172,True,True,1.0,EXACT_SEEN
+ORIG-2179,Amortiguadores reventados o bujes de suspension gastados,2178,True,True,1.0,EXACT_SEEN
+ORIG-2180,Amortiguadores reventados o bujes de suspension gastados,2179,True,True,1.0,EXACT_SEEN
+ORIG-2181,Amortiguadores reventados o bujes de suspension gastados,2180,True,True,1.0,EXACT_SEEN
+ORIG-2183,Amortiguadores reventados o bujes de suspension gastados,2182,True,True,1.0,EXACT_SEEN
+ORIG-2184,Amortiguadores reventados o bujes de suspension gastados,2183,True,True,1.0,EXACT_SEEN
+ORIG-2186,Amortiguadores reventados o bujes de suspension gastados,2185,True,True,1.0,EXACT_SEEN
+ORIG-2187,Amortiguadores reventados o bujes de suspension gastados,2186,True,True,1.0,EXACT_SEEN
+ORIG-2197,Amortiguadores reventados o bujes de suspension gastados,2196,True,True,1.0,EXACT_SEEN
+ORIG-2211,Juntas homocineticas o palieres danados,2210,True,True,1.0,EXACT_SEEN
+ORIG-2217,Juntas homocineticas o palieres danados,2216,True,True,1.0,EXACT_SEEN
+ORIG-2219,Juntas homocineticas o palieres danados,2218,True,True,1.0,EXACT_SEEN
+ORIG-2224,Juntas homocineticas o palieres danados,2223,True,True,1.0,EXACT_SEEN
+ORIG-2226,Juntas homocineticas o palieres danados,2225,True,True,1.0,EXACT_SEEN
+ORIG-2230,Juntas homocineticas o palieres danados,2229,True,True,1.0,EXACT_SEEN
+ORIG-2231,Juntas homocineticas o palieres danados,2230,True,True,1.0,EXACT_SEEN
+ORIG-2236,Juntas homocineticas o palieres danados,2235,True,True,1.0,EXACT_SEEN
+ORIG-2243,Alternador defectuoso o placa de diodos quemada,2242,True,True,1.0,EXACT_SEEN
+ORIG-2252,Alternador defectuoso o placa de diodos quemada,2251,True,True,1.0,EXACT_SEEN
+ORIG-2261,Alternador defectuoso o placa de diodos quemada,2260,True,True,1.0,EXACT_SEEN
+ORIG-2266,Alternador defectuoso o placa de diodos quemada,2265,True,True,1.0,EXACT_SEEN
+ORIG-2267,Alternador defectuoso o placa de diodos quemada,2266,True,True,1.0,EXACT_SEEN
+ORIG-2279,Falla en compresor de aire acondicionado o fuga de gas R134a,2278,True,True,1.0,EXACT_SEEN
+ORIG-2282,Falla en compresor de aire acondicionado o fuga de gas R134a,2281,True,True,1.0,EXACT_SEEN
+ORIG-2283,Falla en compresor de aire acondicionado o fuga de gas R134a,2282,True,True,1.0,EXACT_SEEN
+ORIG-2284,Falla en compresor de aire acondicionado o fuga de gas R134a,2283,True,True,1.0,EXACT_SEEN
+ORIG-2290,Falla en compresor de aire acondicionado o fuga de gas R134a,2289,True,True,1.0,EXACT_SEEN
+ORIG-2292,Falla en compresor de aire acondicionado o fuga de gas R134a,2291,True,True,1.0,EXACT_SEEN
+ORIG-2309,Bateria descargada o bornes sulfatados,2308,True,True,1.0,EXACT_SEEN
+ORIG-2310,Bateria descargada o bornes sulfatados,2309,True,True,1.0,EXACT_SEEN
+ORIG-2311,Bateria descargada o bornes sulfatados,2310,True,True,1.0,EXACT_SEEN
+ORIG-2319,Bateria descargada o bornes sulfatados,2318,True,True,1.0,EXACT_SEEN
+ORIG-2321,Bateria descargada o bornes sulfatados,2320,True,True,1.0,EXACT_SEEN
+ORIG-2324,Bateria descargada o bornes sulfatados,2323,True,True,1.0,EXACT_SEEN
+ORIG-2325,Bateria descargada o bornes sulfatados,2324,True,True,1.0,EXACT_SEEN
+ORIG-2327,Bateria descargada o bornes sulfatados,2326,True,True,1.0,EXACT_SEEN
+ORIG-2328,Bateria descargada o bornes sulfatados,2327,True,True,1.0,EXACT_SEEN
+ORIG-2335,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",2334,True,True,1.0,EXACT_SEEN
+ORIG-2336,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",2335,True,True,1.0,EXACT_SEEN
+ORIG-2338,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",2337,True,True,1.0,EXACT_SEEN
+ORIG-2346,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",2345,True,True,1.0,EXACT_SEEN
+ORIG-2358,Falla electrica del cierre centralizado o actuador de puerta,2357,True,True,1.0,EXACT_SEEN
+ORIG-2360,Elevalunas electrico o guaya de alzacristales rota o trabada,2359,True,True,1.0,EXACT_SEEN
+ORIG-2364,Elevalunas electrico o guaya de alzacristales rota o trabada,2363,True,True,1.0,EXACT_SEEN
+ORIG-2373,Elevalunas electrico o guaya de alzacristales rota o trabada,2372,True,True,1.0,EXACT_SEEN
+ORIG-2377,Elevalunas electrico o guaya de alzacristales rota o trabada,2376,True,True,1.0,EXACT_SEEN
+ORIG-2383,Elevalunas electrico o guaya de alzacristales rota o trabada,2382,True,True,1.0,EXACT_SEEN
+ORIG-2384,Elevalunas electrico o guaya de alzacristales rota o trabada,2383,True,True,1.0,EXACT_SEEN
+ORIG-2385,Elevalunas electrico o guaya de alzacristales rota o trabada,2384,True,True,1.0,EXACT_SEEN
+ORIG-2393,Válvula de freno de aire o secador APS obstruido (Camiones),2392,True,True,1.0,EXACT_SEEN
+ORIG-2395,Válvula de freno de aire o secador APS obstruido (Camiones),2394,True,True,1.0,EXACT_SEEN
+ORIG-2396,Válvula de freno de aire o secador APS obstruido (Camiones),2395,True,True,1.0,EXACT_SEEN
+ORIG-2401,Válvula de freno de aire o secador APS obstruido (Camiones),2400,True,True,1.0,EXACT_SEEN
+ORIG-2409,Válvula de freno de aire o secador APS obstruido (Camiones),2408,True,True,1.0,EXACT_SEEN
+ORIG-2410,Válvula de freno de aire o secador APS obstruido (Camiones),2409,True,True,1.0,EXACT_SEEN
+ORIG-2412,Válvula de freno de aire o secador APS obstruido (Camiones),2411,True,True,1.0,EXACT_SEEN
+ORIG-2414,Válvula de freno de aire o secador APS obstruido (Camiones),2413,True,True,1.0,EXACT_SEEN
+ORIG-2422,Fuga en mangueras de intercooler o turbocompresor danado,2421,True,True,1.0,EXACT_SEEN
+ORIG-2430,Fuga en mangueras de intercooler o turbocompresor danado,2429,True,True,1.0,EXACT_SEEN
+ORIG-2438,Fuga en mangueras de intercooler o turbocompresor danado,2437,True,True,1.0,EXACT_SEEN
+ORIG-2439,Fuga en mangueras de intercooler o turbocompresor danado,2438,True,True,1.0,EXACT_SEEN
+ORIG-2441,Fuga en mangueras de intercooler o turbocompresor danado,2440,True,True,1.0,EXACT_SEEN
+ORIG-2442,Fuga en mangueras de intercooler o turbocompresor danado,2441,True,True,1.0,EXACT_SEEN
+ORIG-2443,Fuga en mangueras de intercooler o turbocompresor danado,2442,True,True,1.0,EXACT_SEEN
+ORIG-2447,Fuga en mangueras de intercooler o turbocompresor danado,2446,True,True,1.0,EXACT_SEEN
+ORIG-2448,Fuga en mangueras de intercooler o turbocompresor danado,2447,True,True,1.0,EXACT_SEEN
+ORIG-2452,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),2451,True,True,1.0,EXACT_SEEN
+ORIG-2454,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),2453,True,True,1.0,EXACT_SEEN
+ORIG-2465,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),2464,True,True,1.0,EXACT_SEEN
+ORIG-2469,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),2468,True,True,1.0,EXACT_SEEN
+ORIG-2473,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),2472,True,True,1.0,EXACT_SEEN
+ORIG-2477,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),2476,True,True,1.0,EXACT_SEEN
+ORIG-2485,Fallo en inversor de corriente IGBT o motor electrico (EV),2484,True,True,1.0,EXACT_SEEN
+ORIG-2493,Fallo en inversor de corriente IGBT o motor electrico (EV),2492,True,True,1.0,EXACT_SEEN
+ORIG-2509,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),2508,True,True,1.0,EXACT_SEEN
+ORIG-2513,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),2512,True,True,1.0,EXACT_SEEN
+ORIG-2515,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),2514,True,True,1.0,EXACT_SEEN
+ORIG-2519,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),2518,True,True,1.0,EXACT_SEEN
+ORIG-2520,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),2519,True,True,1.0,EXACT_SEEN
+ORIG-2530,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),2529,True,True,1.0,EXACT_SEEN
+ORIG-2535,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),2534,True,True,1.0,EXACT_SEEN
+ORIG-2542,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),2541,True,True,1.0,EXACT_SEEN
+ORIG-2543,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),2542,True,True,1.0,EXACT_SEEN
+ORIG-2546,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),2545,True,True,1.0,EXACT_SEEN
+ORIG-2554,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),2553,True,True,1.0,EXACT_SEEN
+ORIG-2557,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),2556,True,True,1.0,EXACT_SEEN
+ORIG-2566,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),2565,True,True,1.0,EXACT_SEEN
+ORIG-2569,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),2568,True,True,1.0,EXACT_SEEN
+ORIG-2586,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),2585,True,True,1.0,EXACT_SEEN
+ORIG-2589,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),2588,True,True,1.0,EXACT_SEEN
+ORIG-2594,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,2593,True,True,1.0,EXACT_SEEN
+ORIG-2595,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,2594,True,True,1.0,EXACT_SEEN
+ORIG-2601,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,2600,True,True,1.0,EXACT_SEEN
+ORIG-2603,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,2602,True,True,1.0,EXACT_SEEN
+ORIG-2609,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,2608,True,True,1.0,EXACT_SEEN
+ORIG-2610,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,2609,True,True,1.0,EXACT_SEEN
+ORIG-2613,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,2612,True,True,1.0,EXACT_SEEN
+ORIG-2615,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,2614,True,True,1.0,EXACT_SEEN
+ORIG-2636,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),2635,True,True,1.0,EXACT_SEEN
+ORIG-2652,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),2651,True,True,1.0,EXACT_SEEN
+ORIG-2659,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),2658,True,True,1.0,EXACT_SEEN
+ORIG-2669,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),2668,True,True,1.0,EXACT_SEEN
+ORIG-2671,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2670,True,True,1.0,EXACT_SEEN
+ORIG-2673,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2672,True,True,1.0,EXACT_SEEN
+ORIG-2674,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2673,True,True,1.0,EXACT_SEEN
+ORIG-2676,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2675,True,True,1.0,EXACT_SEEN
+ORIG-2677,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2676,True,True,1.0,EXACT_SEEN
+ORIG-2679,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2678,True,True,1.0,EXACT_SEEN
+ORIG-2685,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2684,True,True,1.0,EXACT_SEEN
+ORIG-2686,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2685,True,True,1.0,EXACT_SEEN
+ORIG-2699,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),2698,True,True,1.0,EXACT_SEEN
+ORIG-2705,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),2704,True,True,1.0,EXACT_SEEN
+ORIG-2706,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),2705,True,True,1.0,EXACT_SEEN
+ORIG-2707,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),2706,True,True,1.0,EXACT_SEEN
+ORIG-2711,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),2710,True,True,1.0,EXACT_SEEN
+ORIG-2713,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),2712,True,True,1.0,EXACT_SEEN
+ORIG-2732,Cuerpo de aceleracion o valvula IAC sucia,2731,True,True,1.0,EXACT_SEEN
+ORIG-2739,Cuerpo de aceleracion o valvula IAC sucia,2738,True,True,1.0,EXACT_SEEN
+ORIG-2750,Cuerpo de aceleracion o valvula IAC sucia,2749,True,True,1.0,EXACT_SEEN
+ORIG-2754,Falla en bombin o bomba hidraulica de embrague,2753,True,True,1.0,EXACT_SEEN
+ORIG-2757,Falla en bombin o bomba hidraulica de embrague,2756,True,True,1.0,EXACT_SEEN
+ORIG-2761,Falla en bombin o bomba hidraulica de embrague,2760,True,True,1.0,EXACT_SEEN
+ORIG-2770,Falla en bombin o bomba hidraulica de embrague,2769,True,True,1.0,EXACT_SEEN
+ORIG-2771,Falla en bombin o bomba hidraulica de embrague,2770,True,True,1.0,EXACT_SEEN
+ORIG-2775,Falta o degradacion de aceite de caja de cambios,2774,True,True,1.0,EXACT_SEEN
+ORIG-2777,Falta o degradacion de aceite de caja de cambios,2776,True,True,1.0,EXACT_SEEN
+ORIG-2781,Falta o degradacion de aceite de caja de cambios,2780,True,True,1.0,EXACT_SEEN
+ORIG-2784,Falta o degradacion de aceite de caja de cambios,2783,True,True,1.0,EXACT_SEEN
+ORIG-2800,Inyectores sucios o filtro de combustible obstruido,2799,True,True,1.0,EXACT_SEEN
+ORIG-2801,Inyectores sucios o filtro de combustible obstruido,2800,True,True,1.0,EXACT_SEEN
+ORIG-2808,Falla en bujias o bobinas de encendido (misfire),2807,True,True,1.0,EXACT_SEEN
+ORIG-2810,Falla en bujias o bobinas de encendido (misfire),2809,True,True,1.0,EXACT_SEEN
+ORIG-2811,Falla en bujias o bobinas de encendido (misfire),2810,True,True,1.0,EXACT_SEEN
+ORIG-2818,Falla en termostato o motoventilador de radiador,2817,True,True,1.0,EXACT_SEEN
+ORIG-2828,Fuga en mangueras de refrigerante o radiador picado,2827,True,True,1.0,EXACT_SEEN
+ORIG-2842,Falla en bombin o bomba hidraulica de embrague,2841,True,True,1.0,EXACT_SEEN
+ORIG-2847,Falla en bombin o bomba hidraulica de embrague,2846,True,True,1.0,EXACT_SEEN
+ORIG-2848,Falla en bombin o bomba hidraulica de embrague,2847,True,True,1.0,EXACT_SEEN
+ORIG-2851,Falla en bombin o bomba hidraulica de embrague,2850,True,True,1.0,EXACT_SEEN
+ORIG-2857,Falta o degradacion de aceite de caja de cambios,2856,True,True,1.0,EXACT_SEEN
+ORIG-2858,Falta o degradacion de aceite de caja de cambios,2857,True,True,1.0,EXACT_SEEN
+ORIG-2860,Falta o degradacion de aceite de caja de cambios,2859,True,True,1.0,EXACT_SEEN
+ORIG-2866,Alternador defectuoso o placa de diodos quemada,2865,True,True,1.0,EXACT_SEEN
+ORIG-2870,Alternador defectuoso o placa de diodos quemada,2869,True,True,1.0,EXACT_SEEN
+ORIG-2885,Alternador defectuoso o placa de diodos quemada,2884,True,True,1.0,EXACT_SEEN
+ORIG-2886,Alternador defectuoso o placa de diodos quemada,2885,True,True,1.0,EXACT_SEEN
+ORIG-2895,Alternador defectuoso o placa de diodos quemada,2894,True,True,1.0,EXACT_SEEN
+ORIG-2897,Alternador defectuoso o placa de diodos quemada,2896,True,True,1.0,EXACT_SEEN
+ORIG-2908,Alternador defectuoso o placa de diodos quemada,2907,True,True,1.0,EXACT_SEEN
+ORIG-2911,Alternador defectuoso o placa de diodos quemada,2910,True,True,1.0,EXACT_SEEN
+ORIG-2912,Alternador defectuoso o placa de diodos quemada,2911,True,True,1.0,EXACT_SEEN
+ORIG-2917,Bateria descargada o bornes sulfatados,2916,True,True,1.0,EXACT_SEEN
+ORIG-2918,Bateria descargada o bornes sulfatados,2917,True,True,1.0,EXACT_SEEN
+ORIG-2920,Bateria descargada o bornes sulfatados,2919,True,True,1.0,EXACT_SEEN
+ORIG-2921,Bateria descargada o bornes sulfatados,2920,True,True,1.0,EXACT_SEEN
+ORIG-2925,Bateria descargada o bornes sulfatados,2924,True,True,1.0,EXACT_SEEN
+ORIG-2928,Bateria descargada o bornes sulfatados,2927,True,True,1.0,EXACT_SEEN
+ORIG-2932,Bateria descargada o bornes sulfatados,2931,True,True,1.0,EXACT_SEEN
+ORIG-2938,Falla en bujias o bobinas de encendido (misfire),2937,True,True,1.0,EXACT_SEEN
+ORIG-2939,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",2938,True,True,1.0,EXACT_SEEN
+ORIG-2945,Fuga en mangueras de refrigerante o radiador picado,2944,True,True,1.0,EXACT_SEEN
+ORIG-2953,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),2952,True,True,1.0,EXACT_SEEN
+ORIG-2954,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),2953,True,True,1.0,EXACT_SEEN
+ORIG-2962,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),2961,True,True,1.0,EXACT_SEEN
+ORIG-2969,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),2968,True,True,1.0,EXACT_SEEN
+ORIG-2972,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),2971,True,True,1.0,EXACT_SEEN
+ORIG-2973,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),2972,True,True,1.0,EXACT_SEEN
+ORIG-2975,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),2974,True,True,1.0,EXACT_SEEN
+ORIG-2978,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),2977,True,True,1.0,EXACT_SEEN
+ORIG-2981,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),2980,True,True,1.0,EXACT_SEEN
+ORIG-2996,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),2995,True,True,1.0,EXACT_SEEN
+ORIG-2998,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),2997,True,True,1.0,EXACT_SEEN
+ORIG-2999,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),2998,True,True,1.0,EXACT_SEEN
+ORIG-3001,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),3000,True,True,1.0,EXACT_SEEN
+ORIG-3003,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),3002,True,True,1.0,EXACT_SEEN
+ORIG-3004,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),3003,True,True,1.0,EXACT_SEEN
+ORIG-3008,Falla en sistema Flex / Bi-combustible (Alcohol/Etanol),3007,True,True,1.0,EXACT_SEEN
+ORIG-3020,Falla en termostato o motoventilador de radiador,3019,True,True,1.0,EXACT_SEEN
+ORIG-3021,Falla en termostato o motoventilador de radiador,3020,True,True,1.0,EXACT_SEEN
+ORIG-3030,Falla en sensor de velocidad de rueda ABS,3029,True,True,1.0,EXACT_SEEN
+ORIG-3037,Falla en sensor de velocidad de rueda ABS,3036,True,True,1.0,EXACT_SEEN
+ORIG-3039,Rodajes de caja mecanica o diferencial gastados,3038,True,True,1.0,EXACT_SEEN
+ORIG-3047,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,3046,True,True,1.0,EXACT_SEEN
+ORIG-3056,Baja presion de aceite o bomba de aceite defectuosa,3055,True,True,1.0,EXACT_SEEN
+ORIG-3067,Faja o cadena de distribucion destensada o con salto de punto,3066,True,True,1.0,EXACT_SEEN
+ORIG-3069,Faja o cadena de distribucion destensada o con salto de punto,3068,True,True,1.0,EXACT_SEEN
+ORIG-3071,Falla electrica del cierre centralizado o actuador de puerta,3070,True,True,1.0,EXACT_SEEN
+ORIG-3073,Falla electrica del cierre centralizado o actuador de puerta,3072,True,True,1.0,EXACT_SEEN
+ORIG-3075,Falla electrica del cierre centralizado o actuador de puerta,3074,True,True,1.0,EXACT_SEEN
+ORIG-3077,Falla electrica del cierre centralizado o actuador de puerta,3076,True,True,1.0,EXACT_SEEN
+ORIG-3080,Válvula de freno de aire o secador APS obstruido (Camiones),3079,True,True,1.0,EXACT_SEEN
+ORIG-3088,Falla en sistema de frenado regenerativo (EV / Hibridos),3087,True,True,1.0,EXACT_SEEN
+ORIG-3093,Falla en sistema de frenado regenerativo (EV / Hibridos),3092,True,True,1.0,EXACT_SEEN
+ORIG-3107,Desgaste de pastillas y zapatas de freno,3106,True,True,1.0,EXACT_SEEN
+ORIG-3108,Desgaste de pastillas y zapatas de freno,3107,True,True,1.0,EXACT_SEEN
+ORIG-3109,Desgaste de pastillas y zapatas de freno,3108,True,True,1.0,EXACT_SEEN
+ORIG-3113,Fuga hidraulica o aire en el sistema de frenos,3112,True,True,1.0,EXACT_SEEN
+ORIG-3115,Fuga hidraulica o aire en el sistema de frenos,3114,True,True,1.0,EXACT_SEEN
+ORIG-3127,Bateria descargada o bornes sulfatados,3126,True,True,1.0,EXACT_SEEN
+ORIG-3154,Inyectores sucios o filtro de combustible obstruido,3153,True,True,1.0,EXACT_SEEN
+ORIG-3158,Inyectores sucios o filtro de combustible obstruido,3157,True,True,1.0,EXACT_SEEN
+ORIG-3161,Falla en sensor de oxigeno o mezcla rica,3160,True,True,1.0,EXACT_SEEN
+ORIG-3179,Empaque de culata soplado o danado,3178,True,True,1.0,EXACT_SEEN
+ORIG-3181,Alternador defectuoso o placa de diodos quemada,3180,True,True,1.0,EXACT_SEEN
+ORIG-3186,Alternador defectuoso o placa de diodos quemada,3185,True,True,1.0,EXACT_SEEN
+ORIG-3203,Fuga en mangueras de refrigerante o radiador picado,3202,True,True,1.0,EXACT_SEEN
+ORIG-3209,Falla en termostato o motoventilador de radiador,3208,True,True,1.0,EXACT_SEEN
+ORIG-3215,Falla en termostato o motoventilador de radiador,3214,True,True,1.0,EXACT_SEEN
+ORIG-3230,Falla en bombin o bomba hidraulica de embrague,3229,True,True,1.0,EXACT_SEEN
+ORIG-3237,Falta o degradacion de aceite de caja de cambios,3236,True,True,1.0,EXACT_SEEN
+ORIG-3246,Falla en servofreno (booster) o linea de vacio,3245,True,True,1.0,EXACT_SEEN
+ORIG-3260,Rodajes de caja mecanica o diferencial gastados,3259,True,True,1.0,EXACT_SEEN
+ORIG-3281,Falla en sensor de velocidad de rueda ABS,3280,True,True,1.0,EXACT_SEEN
+ORIG-3294,Falla electrica del cierre centralizado o actuador de puerta,3293,True,True,1.0,EXACT_SEEN
+ORIG-3307,Elevalunas electrico o guaya de alzacristales rota o trabada,3306,True,True,1.0,EXACT_SEEN
+ORIG-3309,Elevalunas electrico o guaya de alzacristales rota o trabada,3308,True,True,1.0,EXACT_SEEN
+ORIG-3324,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,3323,True,True,1.0,EXACT_SEEN
+ORIG-3328,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),3327,True,True,1.0,EXACT_SEEN
+ORIG-3333,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),3332,True,True,1.0,EXACT_SEEN
+ORIG-3340,Válvula de freno de aire o secador APS obstruido (Camiones),3339,True,True,1.0,EXACT_SEEN
+ORIG-3345,Fuga en mangueras de intercooler o turbocompresor danado,3344,True,True,1.0,EXACT_SEEN
+ORIG-3354,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),3353,True,True,1.0,EXACT_SEEN
+ORIG-3355,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),3354,True,True,1.0,EXACT_SEEN
+ORIG-3362,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),3361,True,True,1.0,EXACT_SEEN
+ORIG-3363,Fallo en inversor de corriente IGBT o motor electrico (EV),3362,True,True,1.0,EXACT_SEEN
+ORIG-3370,Falla en sistema de frenado regenerativo (EV / Hibridos),3369,True,True,1.0,EXACT_SEEN
+ORIG-3398,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),3397,True,True,1.0,EXACT_SEEN
+ORIG-3401,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),3400,True,True,1.0,EXACT_SEEN
+ORIG-3403,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),3402,True,True,1.0,EXACT_SEEN
+ORIG-3415,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),3414,True,True,1.0,EXACT_SEEN
+ORIG-3418,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),3417,True,True,1.0,EXACT_SEEN
+ORIG-3420,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),3419,True,True,1.0,EXACT_SEEN
+ORIG-3421,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),3420,True,True,1.0,EXACT_SEEN
+ORIG-3424,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),3423,True,True,1.0,EXACT_SEEN
+ORIG-3427,Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6),3426,True,True,1.0,EXACT_SEEN
+ORIG-3435,Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet),3434,True,True,1.0,EXACT_SEEN
+ORIG-3443,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,3442,True,True,1.0,EXACT_SEEN
+ORIG-3445,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,3444,True,True,1.0,EXACT_SEEN
+ORIG-3450,Fallo en inversor de corriente IGBT o motor electrico (EV),3449,True,True,1.0,EXACT_SEEN
+ORIG-3451,Fallo en inversor de corriente IGBT o motor electrico (EV),3450,True,True,1.0,EXACT_SEEN
+ORIG-3455,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),3454,True,True,1.0,EXACT_SEEN
+ORIG-3458,Inyectores sucios o filtro de combustible obstruido,3457,True,True,1.0,EXACT_SEEN
+ORIG-3460,Inyectores sucios o filtro de combustible obstruido,3459,True,True,1.0,EXACT_SEEN
+ORIG-3465,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,3464,True,True,1.0,EXACT_SEEN
+ORIG-3473,Disco de embrague desgastado o patinando,3472,True,True,1.0,EXACT_SEEN
+ORIG-3477,Discos de freno alabeados o desgastados,3476,True,True,1.0,EXACT_SEEN
+ORIG-3478,Discos de freno alabeados o desgastados,3477,True,True,1.0,EXACT_SEEN
+ORIG-3479,Discos de freno alabeados o desgastados,3478,True,True,1.0,EXACT_SEEN
+ORIG-3480,Falla en servofreno (booster) o linea de vacio,3479,True,True,1.0,EXACT_SEEN
+ORIG-3488,Bateria descargada o bornes sulfatados,3487,True,True,1.0,EXACT_SEEN
+ORIG-3489,Bateria descargada o bornes sulfatados,3488,True,True,1.0,EXACT_SEEN
+ORIG-3495,Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),3494,True,True,1.0,EXACT_SEEN
+ORIG-3506,Válvula de freno de aire o secador APS obstruido (Camiones),3505,True,True,1.0,EXACT_SEEN
+ORIG-3513,Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo),3512,True,True,1.0,EXACT_SEEN
+ORIG-3515,Falla en termostato o motoventilador de radiador,3514,True,True,1.0,EXACT_SEEN
+ORIG-3517,Falla en termostato o motoventilador de radiador,3516,True,True,1.0,EXACT_SEEN
+ORIG-3524,Desgaste de pastillas y zapatas de freno,3523,True,True,1.0,EXACT_SEEN
+ORIG-3525,Desgaste de pastillas y zapatas de freno,3524,True,True,1.0,EXACT_SEEN
+ORIG-3529,Fuga hidraulica o aire en el sistema de frenos,3528,True,True,1.0,EXACT_SEEN
+ORIG-3539,Falla en bujias o bobinas de encendido (misfire),3538,True,True,1.0,EXACT_SEEN
+ORIG-3542,Falla en bujias o bobinas de encendido (misfire),3541,True,True,1.0,EXACT_SEEN
+ORIG-3552,Falla en bujias o bobinas de encendido (misfire),3551,True,True,1.0,EXACT_SEEN
+ORIG-3558,Bomba de gasolina quemada o con baja presion,3557,True,True,1.0,EXACT_SEEN
+ORIG-3559,Bomba de gasolina quemada o con baja presion,3558,True,True,1.0,EXACT_SEEN
+ORIG-3570,Bomba de gasolina quemada o con baja presion,3569,True,True,1.0,EXACT_SEEN
+ORIG-3574,Bomba de gasolina quemada o con baja presion,3573,True,True,1.0,EXACT_SEEN
+ORIG-3580,Bomba de gasolina quemada o con baja presion,3579,True,True,1.0,EXACT_SEEN
+ORIG-3581,Bomba de gasolina quemada o con baja presion,3580,True,True,1.0,EXACT_SEEN
+ORIG-3582,Bomba de gasolina quemada o con baja presion,3581,True,True,1.0,EXACT_SEEN
+ORIG-3586,Bomba de gasolina quemada o con baja presion,3585,True,True,1.0,EXACT_SEEN
+ORIG-3589,Bomba de gasolina quemada o con baja presion,3588,True,True,1.0,EXACT_SEEN
+ORIG-3598,Amortiguadores reventados o bujes de suspension gastados,3597,True,True,1.0,EXACT_SEEN
+ORIG-3599,Amortiguadores reventados o bujes de suspension gastados,3598,True,True,1.0,EXACT_SEEN
+ORIG-3601,Falla en bombin o bomba hidraulica de embrague,3600,True,True,1.0,EXACT_SEEN
+ORIG-3603,Bomba de gasolina quemada o con baja presion,3602,True,True,1.0,EXACT_SEEN
+ORIG-3604,Falla en sensor de oxigeno o mezcla rica,3603,True,True,1.0,EXACT_SEEN
+ORIG-3608,Cremallera de direccion asistida con holgura o fuga,3607,True,True,1.0,EXACT_SEEN
+ORIG-3614,Falla en bujias o bobinas de encendido (misfire),3613,True,True,1.0,EXACT_SEEN
+ORIG-3616,Falla en sensor de oxigeno o mezcla rica,3615,True,True,1.0,EXACT_SEEN
+ORIG-3624,Empaque de culata soplado o danado,3623,True,True,1.0,EXACT_SEEN
+ORIG-3627,Falla en termostato o motoventilador de radiador,3626,True,True,1.0,EXACT_SEEN
+ORIG-3636,Baja presion de aceite o bomba de aceite defectuosa,3635,True,True,1.0,EXACT_SEEN
+ORIG-3638,Falta o degradacion de aceite de caja de cambios,3637,True,True,1.0,EXACT_SEEN
+ORIG-3650,Cuerpo de aceleracion o valvula IAC sucia,3649,True,True,1.0,EXACT_SEEN
+ORIG-3652,Rodajes de caja mecanica o diferencial gastados,3651,True,True,1.0,EXACT_SEEN
+ORIG-3657,Falla en bujias o bobinas de encendido (misfire),3656,True,True,1.0,EXACT_SEEN
+ORIG-3660,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),3659,True,True,1.0,EXACT_SEEN
+ORIG-3663,Bateria descargada o bornes sulfatados,3662,True,True,1.0,EXACT_SEEN
+ORIG-3670,Falla en sensor de oxigeno o mezcla rica,3669,True,True,1.0,EXACT_SEEN
+ORIG-3675,Inyectores sucios o filtro de combustible obstruido,3674,True,True,1.0,EXACT_SEEN
+ORIG-3681,Bateria descargada o bornes sulfatados,3680,True,True,1.0,EXACT_SEEN
+ORIG-3691,Disco de embrague desgastado o patinando,3690,True,True,1.0,EXACT_SEEN
+ORIG-3699,Falla en sensor de oxigeno o mezcla rica,3698,True,True,1.0,EXACT_SEEN
+ORIG-3700,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),3699,True,True,1.0,EXACT_SEEN
+ORIG-3704,Falla en servofreno (booster) o linea de vacio,3703,True,True,1.0,EXACT_SEEN
+ORIG-3705,Falla en servofreno (booster) o linea de vacio,3704,True,True,1.0,EXACT_SEEN
+ORIG-3707,Falla en termostato o motoventilador de radiador,3706,True,True,1.0,EXACT_SEEN
+ORIG-3717,Falla en bujias o bobinas de encendido (misfire),3716,True,True,1.0,EXACT_SEEN
+ORIG-3721,Faja o cadena de distribucion destensada o con salto de punto,3720,True,True,1.0,EXACT_SEEN
+ORIG-3722,Disco de embrague desgastado o patinando,3721,True,True,1.0,EXACT_SEEN
+ORIG-3723,Disco de embrague desgastado o patinando,3722,True,True,1.0,EXACT_SEEN
+ORIG-3725,Alternador defectuoso o placa de diodos quemada,3724,True,True,1.0,EXACT_SEEN
+ORIG-3726,Discos de freno alabeados o desgastados,3725,True,True,1.0,EXACT_SEEN
+ORIG-3727,Discos de freno alabeados o desgastados,3726,True,True,1.0,EXACT_SEEN
+ORIG-3732,Baja presion de aceite o bomba de aceite defectuosa,3731,True,True,1.0,EXACT_SEEN
+ORIG-3733,Baja presion de aceite o bomba de aceite defectuosa,3732,True,True,1.0,EXACT_SEEN
+ORIG-3739,Juntas homocineticas o palieres danados,3738,True,True,1.0,EXACT_SEEN
+ORIG-3754,Falla en sensor de oxigeno o mezcla rica,3753,True,True,1.0,EXACT_SEEN
+ORIG-3755,Falla en sensor de oxigeno o mezcla rica,3754,True,True,1.0,EXACT_SEEN
+ORIG-3758,Falla en bombin o bomba hidraulica de embrague,3757,True,True,1.0,EXACT_SEEN
+ORIG-3766,Cuerpo de aceleracion o valvula IAC sucia,3765,True,True,1.0,EXACT_SEEN
+ORIG-3785,Fuga en mangueras de refrigerante o radiador picado,3784,True,True,1.0,EXACT_SEEN
+ORIG-3796,Inyectores sucios o filtro de combustible obstruido,3795,True,True,1.0,EXACT_SEEN
+ORIG-3800,Baja presion de aceite o bomba de aceite defectuosa,3799,True,True,1.0,EXACT_SEEN
+ORIG-3802,Bateria descargada o bornes sulfatados,3801,True,True,1.0,EXACT_SEEN
+ORIG-3803,Bateria descargada o bornes sulfatados,3802,True,True,1.0,EXACT_SEEN
+ORIG-3804,Fuga hidraulica o aire en el sistema de frenos,3803,True,True,1.0,EXACT_SEEN
+ORIG-3812,Llantas desbalanceadas o desalineadas,3811,True,True,1.0,EXACT_SEEN
+ORIG-3816,Falla en bujias o bobinas de encendido (misfire),3815,True,True,1.0,EXACT_SEEN
+ORIG-3819,Cuerpo de aceleracion o valvula IAC sucia,3818,True,True,1.0,EXACT_SEEN
+ORIG-3820,Faja o cadena de distribucion destensada o con salto de punto,3819,True,True,1.0,EXACT_SEEN
+ORIG-3822,Disco de embrague desgastado o patinando,3821,True,True,1.0,EXACT_SEEN
+ORIG-3825,Alternador defectuoso o placa de diodos quemada,3824,True,True,1.0,EXACT_SEEN
+ORIG-3826,Discos de freno alabeados o desgastados,3825,True,True,1.0,EXACT_SEEN
+ORIG-3827,Discos de freno alabeados o desgastados,3826,True,True,1.0,EXACT_SEEN
+ORIG-3829,Falla en compresor de aire acondicionado o fuga de gas R134a,3828,True,True,1.0,EXACT_SEEN
+ORIG-3839,Amortiguadores reventados o bujes de suspension gastados,3838,True,True,1.0,EXACT_SEEN
+ORIG-3840,Falla en sensor de oxigeno o mezcla rica,3839,True,True,1.0,EXACT_SEEN
+ORIG-3845,Desgaste de pastillas y zapatas de freno,3844,True,True,1.0,EXACT_SEEN
+ORIG-3860,Bateria descargada o bornes sulfatados,3859,True,True,1.0,EXACT_SEEN
+ORIG-3861,Bateria descargada o bornes sulfatados,3860,True,True,1.0,EXACT_SEEN
+ORIG-3865,Falla en compresor de aire acondicionado o fuga de gas R134a,3864,True,True,1.0,EXACT_SEEN
+ORIG-3868,Faja o cadena de distribucion destensada o con salto de punto,3867,True,True,1.0,EXACT_SEEN
+ORIG-3869,Faja o cadena de distribucion destensada o con salto de punto,3868,True,True,1.0,EXACT_SEEN
+ORIG-3872,Llantas desbalanceadas o desalineadas,3871,True,True,1.0,EXACT_SEEN
+ORIG-3874,Inyectores sucios o filtro de combustible obstruido,3873,True,True,1.0,EXACT_SEEN
+ORIG-3886,Falla en sensor de oxigeno o mezcla rica,3885,True,True,1.0,EXACT_SEEN
+ORIG-3888,Consumo de aceite por desgaste de anillos o retenes,3887,True,True,1.0,EXACT_SEEN
+ORIG-3897,Inyectores sucios o filtro de combustible obstruido,3896,True,True,1.0,EXACT_SEEN
+ORIG-3905,Fuga hidraulica o aire en el sistema de frenos,3904,True,True,1.0,EXACT_SEEN
+ORIG-3919,Cuerpo de aceleracion o valvula IAC sucia,3918,True,True,1.0,EXACT_SEEN
+ORIG-3921,Faja o cadena de distribucion destensada o con salto de punto,3920,True,True,1.0,EXACT_SEEN
+ORIG-3922,Disco de embrague desgastado o patinando,3921,True,True,1.0,EXACT_SEEN
+ORIG-3928,Falla en compresor de aire acondicionado o fuga de gas R134a,3927,True,True,1.0,EXACT_SEEN
+ORIG-3931,Falla en termostato o motoventilador de radiador,3930,True,True,1.0,EXACT_SEEN
+ORIG-3932,Baja presion de aceite o bomba de aceite defectuosa,3931,True,True,1.0,EXACT_SEEN
+ORIG-3935,Bomba de gasolina quemada o con baja presion,3934,True,True,1.0,EXACT_SEEN
+ORIG-3946,Fuga en mangueras de refrigerante o radiador picado,3945,True,True,1.0,EXACT_SEEN
+ORIG-3947,Fuga en mangueras de refrigerante o radiador picado,3946,True,True,1.0,EXACT_SEEN
+ORIG-3951,Falla en bujias o bobinas de encendido (misfire),3950,True,True,1.0,EXACT_SEEN
+ORIG-3958,Falla en bombin o bomba hidraulica de embrague,3957,True,True,1.0,EXACT_SEEN
+ORIG-3959,Falla en bombin o bomba hidraulica de embrague,3958,True,True,1.0,EXACT_SEEN
+ORIG-3961,Bateria descargada o bornes sulfatados,3960,True,True,1.0,EXACT_SEEN
+ORIG-3965,Falla en compresor de aire acondicionado o fuga de gas R134a,3964,True,True,1.0,EXACT_SEEN
+ORIG-3966,Cuerpo de aceleracion o valvula IAC sucia,3965,True,True,1.0,EXACT_SEEN
+ORIG-3977,Falla en bujias o bobinas de encendido (misfire),3976,True,True,1.0,EXACT_SEEN
+ORIG-3991,Falta o degradacion de aceite de caja de cambios,3990,True,True,1.0,EXACT_SEEN
+ORIG-3992,Rodajes de caja mecanica o diferencial gastados,3991,True,True,1.0,EXACT_SEEN
+ORIG-3998,Cuerpo de aceleracion o valvula IAC sucia,3997,True,True,1.0,EXACT_SEEN
+ORIG-3999,Cuerpo de aceleracion o valvula IAC sucia,3998,True,True,1.0,EXACT_SEEN
+ORIG-4000,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),3999,True,True,1.0,EXACT_SEEN
+ORIG-4007,Falla en termostato o motoventilador de radiador,4006,True,True,1.0,EXACT_SEEN
+ORIG-4011,Juntas homocineticas o palieres danados,4010,True,True,1.0,EXACT_SEEN
+ORIG-4017,Falla en bujias o bobinas de encendido (misfire),4016,True,True,1.0,EXACT_SEEN
+ORIG-4020,Faja o cadena de distribucion destensada o con salto de punto,4019,True,True,1.0,EXACT_SEEN
+ORIG-4032,Baja presion de aceite o bomba de aceite defectuosa,4031,True,True,1.0,EXACT_SEEN
+ORIG-4034,Bomba de gasolina quemada o con baja presion,4033,True,True,1.0,EXACT_SEEN
+ORIG-4035,Bomba de gasolina quemada o con baja presion,4034,True,True,1.0,EXACT_SEEN
+ORIG-4047,Fuga en mangueras de refrigerante o radiador picado,4046,True,True,1.0,EXACT_SEEN
+ORIG-4049,Rodajes de caja mecanica o diferencial gastados,4048,True,True,1.0,EXACT_SEEN
+ORIG-4052,Cuerpo de aceleracion o valvula IAC sucia,4051,True,True,1.0,EXACT_SEEN
+ORIG-4063,Fuga hidraulica o aire en el sistema de frenos,4062,True,True,1.0,EXACT_SEEN
+ORIG-4068,Faja o cadena de distribucion destensada o con salto de punto,4067,True,True,1.0,EXACT_SEEN
+ORIG-4069,Cremallera de direccion asistida con holgura o fuga,4068,True,True,1.0,EXACT_SEEN
+ORIG-4076,Falla en bujias o bobinas de encendido (misfire),4075,True,True,1.0,EXACT_SEEN
+ORIG-4088,Consumo de aceite por desgaste de anillos o retenes,4087,True,True,1.0,EXACT_SEEN
+ORIG-4090,Falta o degradacion de aceite de caja de cambios,4089,True,True,1.0,EXACT_SEEN
+ORIG-4104,Falla en servofreno (booster) o linea de vacio,4103,True,True,1.0,EXACT_SEEN
+ORIG-4105,Falla en termostato o motoventilador de radiador,4104,True,True,1.0,EXACT_SEEN
+ORIG-4106,Falla en termostato o motoventilador de radiador,4105,True,True,1.0,EXACT_SEEN
+ORIG-4111,Llantas desbalanceadas o desalineadas,4110,True,True,1.0,EXACT_SEEN
+ORIG-4112,Llantas desbalanceadas o desalineadas,4111,True,True,1.0,EXACT_SEEN
+ORIG-4116,Falla en bujias o bobinas de encendido (misfire),4115,True,True,1.0,EXACT_SEEN
+ORIG-4119,Faja o cadena de distribucion destensada o con salto de punto,4118,True,True,1.0,EXACT_SEEN
+ORIG-4127,Falla en compresor de aire acondicionado o fuga de gas R134a,4126,True,True,1.0,EXACT_SEEN
+ORIG-4128,Falla en compresor de aire acondicionado o fuga de gas R134a,4127,True,True,1.0,EXACT_SEEN
+ORIG-4129,Falla en sensor de oxigeno o mezcla rica,4128,True,True,1.0,EXACT_SEEN
+ORIG-4132,Baja presion de aceite o bomba de aceite defectuosa,4131,True,True,1.0,EXACT_SEEN
+ORIG-4136,Falla en bujias o bobinas de encendido (misfire),4135,True,True,1.0,EXACT_SEEN
+ORIG-4138,Cremallera de direccion asistida con holgura o fuga,4137,True,True,1.0,EXACT_SEEN
+ORIG-4141,Alternador defectuoso o placa de diodos quemada,4140,True,True,1.0,EXACT_SEEN
+ORIG-4159,Bateria descargada o bornes sulfatados,4158,True,True,1.0,EXACT_SEEN
+ORIG-4160,Bateria descargada o bornes sulfatados,4159,True,True,1.0,EXACT_SEEN
+ORIG-4165,Falla en bujias o bobinas de encendido (misfire),4164,True,True,1.0,EXACT_SEEN
+ORIG-4168,Fuga en mangueras de refrigerante o radiador picado,4167,True,True,1.0,EXACT_SEEN
+ORIG-4180,Falla electrica del cierre centralizado o actuador de puerta,4179,True,True,1.0,EXACT_SEEN
+ORIG-4182,Desgaste de pastillas y zapatas de freno,4181,True,True,1.0,EXACT_SEEN
+ORIG-4189,Falla en bombin o bomba hidraulica de embrague,4188,True,True,1.0,EXACT_SEEN
+ORIG-4197,Cuerpo de aceleracion o valvula IAC sucia,4196,True,True,1.0,EXACT_SEEN
+ORIG-4200,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),4199,True,True,1.0,EXACT_SEEN
+ORIG-4207,Consumo de aceite por desgaste de anillos o retenes,4206,True,True,1.0,EXACT_SEEN
+ORIG-4217,Cuerpo de aceleracion o valvula IAC sucia,4216,True,True,1.0,EXACT_SEEN
+ORIG-4219,Faja o cadena de distribucion destensada o con salto de punto,4218,True,True,1.0,EXACT_SEEN
+ORIG-4220,Faja o cadena de distribucion destensada o con salto de punto,4219,True,True,1.0,EXACT_SEEN
+ORIG-4221,Disco de embrague desgastado o patinando,4220,True,True,1.0,EXACT_SEEN
+ORIG-4222,Disco de embrague desgastado o patinando,4221,True,True,1.0,EXACT_SEEN
+ORIG-4227,Falla en compresor de aire acondicionado o fuga de gas R134a,4226,True,True,1.0,EXACT_SEEN
+ORIG-4230,Falla en termostato o motoventilador de radiador,4229,True,True,1.0,EXACT_SEEN
+ORIG-4235,Falla en bujias o bobinas de encendido (misfire),4234,True,True,1.0,EXACT_SEEN
+ORIG-4237,Amortiguadores reventados o bujes de suspension gastados,4236,True,True,1.0,EXACT_SEEN
+ORIG-4239,Falla en sensor de oxigeno o mezcla rica,4238,True,True,1.0,EXACT_SEEN
+ORIG-4241,Alternador defectuoso o placa de diodos quemada,4240,True,True,1.0,EXACT_SEEN
+ORIG-4246,Fuga en mangueras de refrigerante o radiador picado,4245,True,True,1.0,EXACT_SEEN
+ORIG-4248,Rodajes de caja mecanica o diferencial gastados,4247,True,True,1.0,EXACT_SEEN
+ORIG-4272,Llantas desbalanceadas o desalineadas,4271,True,True,1.0,EXACT_SEEN
+ORIG-4275,Falla en bujias o bobinas de encendido (misfire),4274,True,True,1.0,EXACT_SEEN
+ORIG-4278,Empaque de culata soplado o danado,4277,True,True,1.0,EXACT_SEEN
+ORIG-4279,Bateria descargada o bornes sulfatados,4278,True,True,1.0,EXACT_SEEN
+ORIG-4282,Discos de freno alabeados o desgastados,4281,True,True,1.0,EXACT_SEEN
+ORIG-4283,Falla en termostato o motoventilador de radiador,4282,True,True,1.0,EXACT_SEEN
+ORIG-4285,Falla en sensor de oxigeno o mezcla rica,4284,True,True,1.0,EXACT_SEEN
+ORIG-4303,Falla en servofreno (booster) o linea de vacio,4302,True,True,1.0,EXACT_SEEN
+ORIG-4306,Falla en termostato o motoventilador de radiador,4305,True,True,1.0,EXACT_SEEN
+ORIG-4307,Inyectores sucios o filtro de combustible obstruido,4306,True,True,1.0,EXACT_SEEN
+ORIG-4308,Inyectores sucios o filtro de combustible obstruido,4307,True,True,1.0,EXACT_SEEN
+ORIG-4313,Falla en sensor de oxigeno o mezcla rica,4312,True,True,1.0,EXACT_SEEN
+ORIG-4315,Falla en bujias o bobinas de encendido (misfire),4314,True,True,1.0,EXACT_SEEN
+ORIG-4317,Cuerpo de aceleracion o valvula IAC sucia,4316,True,True,1.0,EXACT_SEEN
+ORIG-4336,Cremallera de direccion asistida con holgura o fuga,4335,True,True,1.0,EXACT_SEEN
+ORIG-4338,Alternador defectuoso o placa de diodos quemada,4337,True,True,1.0,EXACT_SEEN
+ORIG-4341,Falla en sensor de velocidad de rueda ABS,4340,True,True,1.0,EXACT_SEEN
+ORIG-4342,Falla en termostato o motoventilador de radiador,4341,True,True,1.0,EXACT_SEEN
+ORIG-4345,Llantas desbalanceadas o desalineadas,4344,True,True,1.0,EXACT_SEEN
+ORIG-4346,Cuerpo de aceleracion o valvula IAC sucia,4345,True,True,1.0,EXACT_SEEN
+ORIG-4361,Falla en bujias o bobinas de encendido (misfire),4360,True,True,1.0,EXACT_SEEN
+ORIG-4368,Falla en bujias o bobinas de encendido (misfire),4367,True,True,1.0,EXACT_SEEN
+ORIG-4369,Falla en bujias o bobinas de encendido (misfire),4368,True,True,1.0,EXACT_SEEN
+ORIG-4370,Consumo de aceite por desgaste de anillos o retenes,4369,True,True,1.0,EXACT_SEEN
+ORIG-4372,Falla electrica del cierre centralizado o actuador de puerta,4371,True,True,1.0,EXACT_SEEN
+ORIG-4377,Fuga en mangueras de refrigerante o radiador picado,4376,True,True,1.0,EXACT_SEEN
+ORIG-4394,Llantas desbalanceadas o desalineadas,4393,True,True,1.0,EXACT_SEEN
+ORIG-4396,Empaque de culata soplado o danado,4395,True,True,1.0,EXACT_SEEN
+ORIG-4397,Empaque de culata soplado o danado,4396,True,True,1.0,EXACT_SEEN
+ORIG-4410,Fuga hidraulica o aire en el sistema de frenos,4409,True,True,1.0,EXACT_SEEN
+ORIG-4416,Cremallera de direccion asistida con holgura o fuga,4415,True,True,1.0,EXACT_SEEN
+ORIG-4417,Cremallera de direccion asistida con holgura o fuga,4416,True,True,1.0,EXACT_SEEN
+ORIG-4423,Fuga hidraulica o aire en el sistema de frenos,4422,True,True,1.0,EXACT_SEEN
+ORIG-4428,Discos de freno alabeados o desgastados,4427,True,True,1.0,EXACT_SEEN
+ORIG-4432,Bomba de gasolina quemada o con baja presion,4431,True,True,1.0,EXACT_SEEN
+ORIG-4433,Bomba de gasolina quemada o con baja presion,4432,True,True,1.0,EXACT_SEEN
+ORIG-4438,Disco de embrague desgastado o patinando,4437,True,True,1.0,EXACT_SEEN
+ORIG-4439,Disco de embrague desgastado o patinando,4438,True,True,1.0,EXACT_SEEN
+ORIG-4440,Falla en sensor de oxigeno o mezcla rica,4439,True,True,1.0,EXACT_SEEN
+ORIG-4441,Falla en sensor de oxigeno o mezcla rica,4440,True,True,1.0,EXACT_SEEN
+ORIG-4443,Falla en termostato o motoventilador de radiador,4442,True,True,1.0,EXACT_SEEN
+ORIG-4445,Falla en sensor de oxigeno o mezcla rica,4444,True,True,1.0,EXACT_SEEN
+ORIG-4446,Bateria descargada o bornes sulfatados,4445,True,True,1.0,EXACT_SEEN
+ORIG-4449,Faja o cadena de distribucion destensada o con salto de punto,4448,True,True,1.0,EXACT_SEEN
+ORIG-4463,Falla en bujias o bobinas de encendido (misfire),4462,True,True,1.0,EXACT_SEEN
+ORIG-4465,Fuga en mangueras de refrigerante o radiador picado,4464,True,True,1.0,EXACT_SEEN
+ORIG-4477,Falla en compresor de aire acondicionado o fuga de gas R134a,4476,True,True,1.0,EXACT_SEEN
+ORIG-4480,Llantas desbalanceadas o desalineadas,4479,True,True,1.0,EXACT_SEEN
+ORIG-4485,Falla en bujias o bobinas de encendido (misfire),4484,True,True,1.0,EXACT_SEEN
+ORIG-4488,Cuerpo de aceleracion o valvula IAC sucia,4487,True,True,1.0,EXACT_SEEN
+ORIG-4490,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),4489,True,True,1.0,EXACT_SEEN
+ORIG-4493,Bateria descargada o bornes sulfatados,4492,True,True,1.0,EXACT_SEEN
+ORIG-4500,Juntas homocineticas o palieres danados,4499,True,True,1.0,EXACT_SEEN
+ORIG-4505,Bomba de gasolina quemada o con baja presion,4504,True,True,1.0,EXACT_SEEN
+ORIG-4507,Falla en bujias o bobinas de encendido (misfire),4506,True,True,1.0,EXACT_SEEN
+ORIG-4508,Cuerpo de aceleracion o valvula IAC sucia,4507,True,True,1.0,EXACT_SEEN
+ORIG-4514,Alternador defectuoso o placa de diodos quemada,4513,True,True,1.0,EXACT_SEEN
+ORIG-4515,Alternador defectuoso o placa de diodos quemada,4514,True,True,1.0,EXACT_SEEN
+ORIG-4516,Discos de freno alabeados o desgastados,4515,True,True,1.0,EXACT_SEEN
+ORIG-4518,Falla en compresor de aire acondicionado o fuga de gas R134a,4517,True,True,1.0,EXACT_SEEN
+ORIG-4520,Falla en termostato o motoventilador de radiador,4519,True,True,1.0,EXACT_SEEN
+ORIG-4522,Baja presion de aceite o bomba de aceite defectuosa,4521,True,True,1.0,EXACT_SEEN
+ORIG-4527,Falla en bujias o bobinas de encendido (misfire),4526,True,True,1.0,EXACT_SEEN
+ORIG-4541,Falla en bujias o bobinas de encendido (misfire),4540,True,True,1.0,EXACT_SEEN
+ORIG-4542,Cuerpo de aceleracion o valvula IAC sucia,4541,True,True,1.0,EXACT_SEEN
+ORIG-4544,Falla en sensor de oxigeno o mezcla rica,4543,True,True,1.0,EXACT_SEEN
+ORIG-4551,Bateria descargada o bornes sulfatados,4550,True,True,1.0,EXACT_SEEN
+ORIG-4553,Fuga hidraulica o aire en el sistema de frenos,4552,True,True,1.0,EXACT_SEEN
+ORIG-4555,Falla en compresor de aire acondicionado o fuga de gas R134a,4554,True,True,1.0,EXACT_SEEN
+ORIG-4559,Faja o cadena de distribucion destensada o con salto de punto,4558,True,True,1.0,EXACT_SEEN
+ORIG-4579,Consumo de aceite por desgaste de anillos o retenes,4578,True,True,1.0,EXACT_SEEN
+ORIG-4586,Inyectores sucios o filtro de combustible obstruido,4585,True,True,1.0,EXACT_SEEN
+ORIG-4588,Cuerpo de aceleracion o valvula IAC sucia,4587,True,True,1.0,EXACT_SEEN
+ORIG-4591,Bateria descargada o bornes sulfatados,4590,True,True,1.0,EXACT_SEEN
+ORIG-4593,Fuga hidraulica o aire en el sistema de frenos,4592,True,True,1.0,EXACT_SEEN
+ORIG-4594,Falla en termostato o motoventilador de radiador,4593,True,True,1.0,EXACT_SEEN
+ORIG-4595,Falla en termostato o motoventilador de radiador,4594,True,True,1.0,EXACT_SEEN
+ORIG-4625,Falla en bujias o bobinas de encendido (misfire),4624,True,True,1.0,EXACT_SEEN
+ORIG-4627,Amortiguadores reventados o bujes de suspension gastados,4626,True,True,1.0,EXACT_SEEN
+ORIG-4628,Falla en sensor de oxigeno o mezcla rica,4627,True,True,1.0,EXACT_SEEN
+ORIG-4629,Falla en sensor de oxigeno o mezcla rica,4628,True,True,1.0,EXACT_SEEN
+ORIG-4631,Bateria descargada o bornes sulfatados,4630,True,True,1.0,EXACT_SEEN
+ORIG-4636,Cuerpo de aceleracion o valvula IAC sucia,4635,True,True,1.0,EXACT_SEEN
+ORIG-4638,Falla en sensor de oxigeno o mezcla rica,4637,True,True,1.0,EXACT_SEEN
+ORIG-4642,Falla en bombin o bomba hidraulica de embrague,4641,True,True,1.0,EXACT_SEEN
+ORIG-4648,Cuerpo de aceleracion o valvula IAC sucia,4647,True,True,1.0,EXACT_SEEN
+ORIG-4650,Faja o cadena de distribucion destensada o con salto de punto,4649,True,True,1.0,EXACT_SEEN
+ORIG-4653,Llantas desbalanceadas o desalineadas,4652,True,True,1.0,EXACT_SEEN
+ORIG-4655,Inyectores sucios o filtro de combustible obstruido,4654,True,True,1.0,EXACT_SEEN
+ORIG-4657,Falla en bujias o bobinas de encendido (misfire),4656,True,True,1.0,EXACT_SEEN
+ORIG-4663,Discos de freno alabeados o desgastados,4662,True,True,1.0,EXACT_SEEN
+ORIG-4665,Falla en termostato o motoventilador de radiador,4664,True,True,1.0,EXACT_SEEN
+ORIG-4666,Falla en sensor de oxigeno o mezcla rica,4665,True,True,1.0,EXACT_SEEN
+ORIG-4679,Baja presion de aceite o bomba de aceite defectuosa,4678,True,True,1.0,EXACT_SEEN
+ORIG-4680,Alternador defectuoso o placa de diodos quemada,4679,True,True,1.0,EXACT_SEEN
+ORIG-4682,Falla en servofreno (booster) o linea de vacio,4681,True,True,1.0,EXACT_SEEN
+ORIG-4689,Amortiguadores reventados o bujes de suspension gastados,4688,True,True,1.0,EXACT_SEEN
+ORIG-4695,Falla en bujias o bobinas de encendido (misfire),4694,True,True,1.0,EXACT_SEEN
+ORIG-4696,Cuerpo de aceleracion o valvula IAC sucia,4695,True,True,1.0,EXACT_SEEN
+ORIG-4698,Faja o cadena de distribucion destensada o con salto de punto,4697,True,True,1.0,EXACT_SEEN
+ORIG-4707,Falla en compresor de aire acondicionado o fuga de gas R134a,4706,True,True,1.0,EXACT_SEEN
+ORIG-4714,Falla en bujias o bobinas de encendido (misfire),4713,True,True,1.0,EXACT_SEEN
+ORIG-4724,Falla en termostato o motoventilador de radiador,4723,True,True,1.0,EXACT_SEEN
+ORIG-4745,Llantas desbalanceadas o desalineadas,4744,True,True,1.0,EXACT_SEEN
+ORIG-4747,Llantas desbalanceadas o desalineadas,4746,True,True,1.0,EXACT_SEEN
+ORIG-4748,Inyectores sucios o filtro de combustible obstruido,4747,True,True,1.0,EXACT_SEEN
+ORIG-4749,Inyectores sucios o filtro de combustible obstruido,4748,True,True,1.0,EXACT_SEEN
+ORIG-4750,Falla en bujias o bobinas de encendido (misfire),4749,True,True,1.0,EXACT_SEEN
+ORIG-4751,Falla en bujias o bobinas de encendido (misfire),4750,True,True,1.0,EXACT_SEEN
+ORIG-4754,Falla electrica del cierre centralizado o actuador de puerta,4753,True,True,1.0,EXACT_SEEN
+ORIG-4757,Desgaste de pastillas y zapatas de freno,4756,True,True,1.0,EXACT_SEEN
+ORIG-4763,Baja presion de aceite o bomba de aceite defectuosa,4762,True,True,1.0,EXACT_SEEN
+ORIG-4764,Falla en bombin o bomba hidraulica de embrague,4763,True,True,1.0,EXACT_SEEN
+ORIG-4772,Baja presion de aceite o bomba de aceite defectuosa,4771,True,True,1.0,EXACT_SEEN
+ORIG-4777,Llantas desbalanceadas o desalineadas,4776,True,True,1.0,EXACT_SEEN
+ORIG-4782,Bomba de gasolina quemada o con baja presion,4781,True,True,1.0,EXACT_SEEN
+ORIG-4795,Falla en bujias o bobinas de encendido (misfire),4794,True,True,1.0,EXACT_SEEN
+ORIG-4801,Juntas homocineticas o palieres danados,4800,True,True,1.0,EXACT_SEEN
+ORIG-4803,Falla en bujias o bobinas de encendido (misfire),4802,True,True,1.0,EXACT_SEEN
+ORIG-4804,Inyectores sucios o filtro de combustible obstruido,4803,True,True,1.0,EXACT_SEEN
+ORIG-4810,Alternador defectuoso o placa de diodos quemada,4809,True,True,1.0,EXACT_SEEN
+ORIG-4813,Amortiguadores reventados o bujes de suspension gastados,4812,True,True,1.0,EXACT_SEEN
+ORIG-4823,Faja o cadena de distribucion destensada o con salto de punto,4822,True,True,1.0,EXACT_SEEN
+ORIG-4834,Discos de freno alabeados o desgastados,4833,True,True,1.0,EXACT_SEEN
+ORIG-4841,Falta o degradacion de aceite de caja de cambios,4840,True,True,1.0,EXACT_SEEN
+ORIG-4843,Rodajes de caja mecanica o diferencial gastados,4842,True,True,1.0,EXACT_SEEN
+ORIG-4862,Llantas desbalanceadas o desalineadas,4861,True,True,1.0,EXACT_SEEN
+ORIG-4865,Falla en sensor de oxigeno o mezcla rica,4864,True,True,1.0,EXACT_SEEN
+ORIG-4866,Falla en bujias o bobinas de encendido (misfire),4865,True,True,1.0,EXACT_SEEN
+ORIG-4873,Disco de embrague desgastado o patinando,4872,True,True,1.0,EXACT_SEEN
+ORIG-4874,Falla electrica del cierre centralizado o actuador de puerta,4873,True,True,1.0,EXACT_SEEN
+ORIG-4875,Falla electrica del cierre centralizado o actuador de puerta,4874,True,True,1.0,EXACT_SEEN
+ORIG-4876,Falla en compresor de aire acondicionado o fuga de gas R134a,4875,True,True,1.0,EXACT_SEEN
+ORIG-4877,Falla en compresor de aire acondicionado o fuga de gas R134a,4876,True,True,1.0,EXACT_SEEN
+ORIG-4878,Falla en sensor de oxigeno o mezcla rica,4877,True,True,1.0,EXACT_SEEN
+ORIG-4879,Falla en sensor de oxigeno o mezcla rica,4878,True,True,1.0,EXACT_SEEN
+ORIG-4887,Cremallera de direccion asistida con holgura o fuga,4886,True,True,1.0,EXACT_SEEN
+ORIG-4891,Alternador defectuoso o placa de diodos quemada,4890,True,True,1.0,EXACT_SEEN
+ORIG-4894,Falla en termostato o motoventilador de radiador,4893,True,True,1.0,EXACT_SEEN
+ORIG-4898,Falla en sensor de oxigeno o mezcla rica,4897,True,True,1.0,EXACT_SEEN
+ORIG-4903,Falla en sensor de oxigeno o mezcla rica,4902,True,True,1.0,EXACT_SEEN
+ORIG-4910,Desgaste de pastillas y zapatas de freno,4909,True,True,1.0,EXACT_SEEN
+ORIG-4911,Desgaste de pastillas y zapatas de freno,4910,True,True,1.0,EXACT_SEEN
+ORIG-4913,Falla en compresor de aire acondicionado o fuga de gas R134a,4912,True,True,1.0,EXACT_SEEN
+ORIG-4915,Falla en bujias o bobinas de encendido (misfire),4914,True,True,1.0,EXACT_SEEN
+ORIG-4916,Fuga en mangueras de refrigerante o radiador picado,4915,True,True,1.0,EXACT_SEEN
+ORIG-4918,Llantas desbalanceadas o desalineadas,4917,True,True,1.0,EXACT_SEEN
+ORIG-4922,Falla en bujias o bobinas de encendido (misfire),4921,True,True,1.0,EXACT_SEEN
+ORIG-4931,Fuga en mangueras de refrigerante o radiador picado,4930,True,True,1.0,EXACT_SEEN
+ORIG-4933,Falla en sensor de oxigeno o mezcla rica,4932,True,True,1.0,EXACT_SEEN
+ORIG-4938,Llantas desbalanceadas o desalineadas,4937,True,True,1.0,EXACT_SEEN
+ORIG-4941,Fuga en mangueras de intercooler o turbocompresor danado,4940,True,True,1.0,EXACT_SEEN
+ORIG-4944,Cremallera de direccion asistida con holgura o fuga,4943,True,True,1.0,EXACT_SEEN
+ORIG-4951,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,4950,True,True,1.0,EXACT_SEEN
+ORIG-4957,Llantas desbalanceadas o desalineadas,4956,True,True,1.0,EXACT_SEEN
+ORIG-4958,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),4957,True,True,1.0,EXACT_SEEN
+ORIG-4961,Falla en servofreno (booster) o linea de vacio,4960,True,True,1.0,EXACT_SEEN
+ORIG-4962,Falla en servofreno (booster) o linea de vacio,4961,True,True,1.0,EXACT_SEEN
+ORIG-4967,Falla en servofreno (booster) o linea de vacio,4966,True,True,1.0,EXACT_SEEN
+ORIG-4970,Falla en servofreno (booster) o linea de vacio,4969,True,True,1.0,EXACT_SEEN
+ORIG-4979,Falla en servofreno (booster) o linea de vacio,4978,True,True,1.0,EXACT_SEEN
+ORIG-4985,Falla en servofreno (booster) o linea de vacio,4984,True,True,1.0,EXACT_SEEN
+ORIG-4986,Falla en servofreno (booster) o linea de vacio,4985,True,True,1.0,EXACT_SEEN
+ORIG-4988,Falla en servofreno (booster) o linea de vacio,4987,True,True,1.0,EXACT_SEEN
+ORIG-4997,Falla en servofreno (booster) o linea de vacio,4996,True,True,1.0,EXACT_SEEN
+ORIG-4998,Falla en servofreno (booster) o linea de vacio,4997,True,True,1.0,EXACT_SEEN
+ORIG-4999,Falla en servofreno (booster) o linea de vacio,4998,True,True,1.0,EXACT_SEEN
+ORIG-5012,Falla electrica del cierre centralizado o actuador de puerta,5011,True,True,1.0,EXACT_SEEN
+ORIG-5014,Falla electrica del cierre centralizado o actuador de puerta,5013,True,True,1.0,EXACT_SEEN
+ORIG-5015,Falla electrica del cierre centralizado o actuador de puerta,5014,True,True,1.0,EXACT_SEEN
+ORIG-5016,Falla electrica del cierre centralizado o actuador de puerta,5015,True,True,1.0,EXACT_SEEN
+ORIG-5017,Falla electrica del cierre centralizado o actuador de puerta,5016,True,True,1.0,EXACT_SEEN
+ORIG-5028,Falla electrica del cierre centralizado o actuador de puerta,5027,True,True,1.0,EXACT_SEEN
+ORIG-5029,Falla electrica del cierre centralizado o actuador de puerta,5028,True,True,1.0,EXACT_SEEN
+ORIG-5031,Falla electrica del cierre centralizado o actuador de puerta,5030,True,True,1.0,EXACT_SEEN
+ORIG-5033,Falla electrica del cierre centralizado o actuador de puerta,5032,True,True,1.0,EXACT_SEEN
+ORIG-5041,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5040,True,True,1.0,EXACT_SEEN
+ORIG-5054,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5053,True,True,1.0,EXACT_SEEN
+ORIG-5056,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5055,True,True,1.0,EXACT_SEEN
+ORIG-5061,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5060,True,True,1.0,EXACT_SEEN
+ORIG-5068,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),5067,True,True,1.0,EXACT_SEEN
+ORIG-5070,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),5069,True,True,1.0,EXACT_SEEN
+ORIG-5082,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),5081,True,True,1.0,EXACT_SEEN
+ORIG-5089,Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW),5088,True,True,1.0,EXACT_SEEN
+ORIG-5090,Bomba de gasolina quemada o con baja presion,5089,True,True,1.0,EXACT_SEEN
+ORIG-5095,Bomba de gasolina quemada o con baja presion,5094,True,True,1.0,EXACT_SEEN
+ORIG-5096,Bomba de gasolina quemada o con baja presion,5095,True,True,1.0,EXACT_SEEN
+ORIG-5097,Bomba de gasolina quemada o con baja presion,5096,True,True,1.0,EXACT_SEEN
+ORIG-5103,Bomba de gasolina quemada o con baja presion,5102,True,True,1.0,EXACT_SEEN
+ORIG-5106,Bomba de gasolina quemada o con baja presion,5105,True,True,1.0,EXACT_SEEN
+ORIG-5108,Bomba de gasolina quemada o con baja presion,5107,True,True,1.0,EXACT_SEEN
+ORIG-5118,Bomba de gasolina quemada o con baja presion,5117,True,True,1.0,EXACT_SEEN
+ORIG-5128,Llantas desbalanceadas o desalineadas,5127,True,True,1.0,EXACT_SEEN
+ORIG-5129,Llantas desbalanceadas o desalineadas,5128,True,True,1.0,EXACT_SEEN
+ORIG-5130,Llantas desbalanceadas o desalineadas,5129,True,True,1.0,EXACT_SEEN
+ORIG-5137,Llantas desbalanceadas o desalineadas,5136,True,True,1.0,EXACT_SEEN
+ORIG-5138,Llantas desbalanceadas o desalineadas,5137,True,True,1.0,EXACT_SEEN
+ORIG-5139,Llantas desbalanceadas o desalineadas,5138,True,True,1.0,EXACT_SEEN
+ORIG-5150,Discos de freno alabeados o desgastados,5149,True,True,1.0,EXACT_SEEN
+ORIG-5151,Discos de freno alabeados o desgastados,5150,True,True,1.0,EXACT_SEEN
+ORIG-5152,Discos de freno alabeados o desgastados,5151,True,True,1.0,EXACT_SEEN
+ORIG-5154,Discos de freno alabeados o desgastados,5153,True,True,1.0,EXACT_SEEN
+ORIG-5161,Discos de freno alabeados o desgastados,5160,True,True,1.0,EXACT_SEEN
+ORIG-5163,Discos de freno alabeados o desgastados,5162,True,True,1.0,EXACT_SEEN
+ORIG-5164,Discos de freno alabeados o desgastados,5163,True,True,1.0,EXACT_SEEN
+ORIG-5173,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5172,True,True,1.0,EXACT_SEEN
+ORIG-5176,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5175,True,True,1.0,EXACT_SEEN
+ORIG-5178,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5177,True,True,1.0,EXACT_SEEN
+ORIG-5182,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5181,True,True,1.0,EXACT_SEEN
+ORIG-5189,Válvula de freno de aire o secador APS obstruido (Camiones),5188,True,True,1.0,EXACT_SEEN
+ORIG-5191,Válvula de freno de aire o secador APS obstruido (Camiones),5190,True,True,1.0,EXACT_SEEN
+ORIG-5203,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5202,True,True,1.0,EXACT_SEEN
+ORIG-5209,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5208,True,True,1.0,EXACT_SEEN
+ORIG-5219,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5218,True,True,1.0,EXACT_SEEN
+ORIG-5223,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5222,True,True,1.0,EXACT_SEEN
+ORIG-5224,Falta o degradacion de aceite de caja de cambios,5223,True,True,1.0,EXACT_SEEN
+ORIG-5227,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,5226,True,True,1.0,EXACT_SEEN
+ORIG-5232,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5231,True,True,1.0,EXACT_SEEN
+ORIG-5234,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5233,True,True,1.0,EXACT_SEEN
+ORIG-5236,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5235,True,True,1.0,EXACT_SEEN
+ORIG-5239,Válvula de freno de aire o secador APS obstruido (Camiones),5238,True,True,1.0,EXACT_SEEN
+ORIG-5242,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5241,True,True,1.0,EXACT_SEEN
+ORIG-5243,Válvula de freno de aire o secador APS obstruido (Camiones),5242,True,True,1.0,EXACT_SEEN
+ORIG-5245,Válvula de freno de aire o secador APS obstruido (Camiones),5244,True,True,1.0,EXACT_SEEN
+ORIG-5248,Fugas de aire o fallos en el sistema de frenos neumático (Camiones),5247,True,True,1.0,EXACT_SEEN
+ORIG-5275,Faja o cadena de distribucion destensada o con salto de punto,5274,True,True,1.0,EXACT_SEEN
+ORIG-5278,Baja presion de aceite o bomba de aceite defectuosa,5277,True,True,1.0,EXACT_SEEN
+ORIG-5292,Desgaste de pastillas y zapatas de freno,5291,True,True,1.0,EXACT_SEEN
+ORIG-5304,Desgaste de pastillas y zapatas de freno,5303,True,True,1.0,EXACT_SEEN
+ORIG-5309,Discos de freno alabeados o desgastados,5308,True,True,1.0,EXACT_SEEN
+ORIG-5310,Juntas homocineticas o palieres danados,5309,True,True,1.0,EXACT_SEEN
+ORIG-5313,Juntas homocineticas o palieres danados,5312,True,True,1.0,EXACT_SEEN
+ORIG-5314,Juntas homocineticas o palieres danados,5313,True,True,1.0,EXACT_SEEN
+ORIG-5315,Juntas homocineticas o palieres danados,5314,True,True,1.0,EXACT_SEEN
+ORIG-5317,Juntas homocineticas o palieres danados,5316,True,True,1.0,EXACT_SEEN
+ORIG-5327,Rodajes de caja mecanica o diferencial gastados,5326,True,True,1.0,EXACT_SEEN
+ORIG-5337,Rodajes de caja mecanica o diferencial gastados,5336,True,True,1.0,EXACT_SEEN
+ORIG-5352,Cremallera de direccion asistida con holgura o fuga,5351,True,True,1.0,EXACT_SEEN
+ORIG-5360,Disco de embrague desgastado o patinando,5359,True,True,1.0,EXACT_SEEN
+ORIG-5368,Falla en servofreno (booster) o linea de vacio,5367,True,True,1.0,EXACT_SEEN
+ORIG-5371,Falla en servofreno (booster) o linea de vacio,5370,True,True,1.0,EXACT_SEEN
+ORIG-5374,Falla en servofreno (booster) o linea de vacio,5373,True,True,1.0,EXACT_SEEN
+ORIG-5381,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5380,True,True,1.0,EXACT_SEEN
+ORIG-5391,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5390,True,True,1.0,EXACT_SEEN
+ORIG-5392,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5391,True,True,1.0,EXACT_SEEN
+ORIG-5394,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5393,True,True,1.0,EXACT_SEEN
+ORIG-5398,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5397,True,True,1.0,EXACT_SEEN
+ORIG-5401,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5400,True,True,1.0,EXACT_SEEN
+ORIG-5408,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5407,True,True,1.0,EXACT_SEEN
+ORIG-5413,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5412,True,True,1.0,EXACT_SEEN
+ORIG-5417,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5416,True,True,1.0,EXACT_SEEN
+ORIG-5419,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5418,True,True,1.0,EXACT_SEEN
+ORIG-5422,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),5421,True,True,1.0,EXACT_SEEN
+ORIG-5428,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5427,True,True,1.0,EXACT_SEEN
+ORIG-5440,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5439,True,True,1.0,EXACT_SEEN
+ORIG-5443,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5442,True,True,1.0,EXACT_SEEN
+ORIG-5444,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5443,True,True,1.0,EXACT_SEEN
+ORIG-5445,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5444,True,True,1.0,EXACT_SEEN
+ORIG-5449,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5448,True,True,1.0,EXACT_SEEN
+ORIG-5452,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5451,True,True,1.0,EXACT_SEEN
+ORIG-5453,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5452,True,True,1.0,EXACT_SEEN
+ORIG-5458,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5457,True,True,1.0,EXACT_SEEN
+ORIG-5471,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),5470,True,True,1.0,EXACT_SEEN
+ORIG-5476,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5475,True,True,1.0,EXACT_SEEN
+ORIG-5480,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5479,True,True,1.0,EXACT_SEEN
+ORIG-5484,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5483,True,True,1.0,EXACT_SEEN
+ORIG-5485,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5484,True,True,1.0,EXACT_SEEN
+ORIG-5496,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5495,True,True,1.0,EXACT_SEEN
+ORIG-5497,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5496,True,True,1.0,EXACT_SEEN
+ORIG-5504,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5503,True,True,1.0,EXACT_SEEN
+ORIG-5510,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5509,True,True,1.0,EXACT_SEEN
+ORIG-5517,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5516,True,True,1.0,EXACT_SEEN
+ORIG-5521,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),5520,True,True,1.0,EXACT_SEEN
+ORIG-5527,Falla en regulador de presion de combustible o diafragma roto,5526,True,True,1.0,EXACT_SEEN
+ORIG-5528,Falla en regulador de presion de combustible o diafragma roto,5527,True,True,1.0,EXACT_SEEN
+ORIG-5535,Falla en regulador de presion de combustible o diafragma roto,5534,True,True,1.0,EXACT_SEEN
+ORIG-5538,Falla en regulador de presion de combustible o diafragma roto,5537,True,True,1.0,EXACT_SEEN
+ORIG-5539,Falla en regulador de presion de combustible o diafragma roto,5538,True,True,1.0,EXACT_SEEN
+ORIG-5544,Falla en regulador de presion de combustible o diafragma roto,5543,True,True,1.0,EXACT_SEEN
+ORIG-5558,Falla en regulador de presion de combustible o diafragma roto,5557,True,True,1.0,EXACT_SEEN
+ORIG-5561,Falla en regulador de presion de combustible o diafragma roto,5560,True,True,1.0,EXACT_SEEN
+ORIG-5562,Falla en regulador de presion de combustible o diafragma roto,5561,True,True,1.0,EXACT_SEEN
+ORIG-5575,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5574,True,True,1.0,EXACT_SEEN
+ORIG-5581,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5580,True,True,1.0,EXACT_SEEN
+ORIG-5587,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5586,True,True,1.0,EXACT_SEEN
+ORIG-5589,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5588,True,True,1.0,EXACT_SEEN
+ORIG-5591,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5590,True,True,1.0,EXACT_SEEN
+ORIG-5604,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5603,True,True,1.0,EXACT_SEEN
+ORIG-5605,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5604,True,True,1.0,EXACT_SEEN
+ORIG-5609,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5608,True,True,1.0,EXACT_SEEN
+ORIG-5616,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5615,True,True,1.0,EXACT_SEEN
+ORIG-5621,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5620,True,True,1.0,EXACT_SEEN
+ORIG-5622,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),5621,True,True,1.0,EXACT_SEEN
+ORIG-5625,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5624,True,True,1.0,EXACT_SEEN
+ORIG-5629,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5628,True,True,1.0,EXACT_SEEN
+ORIG-5630,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5629,True,True,1.0,EXACT_SEEN
+ORIG-5640,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5639,True,True,1.0,EXACT_SEEN
+ORIG-5642,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5641,True,True,1.0,EXACT_SEEN
+ORIG-5646,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5645,True,True,1.0,EXACT_SEEN
+ORIG-5656,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5655,True,True,1.0,EXACT_SEEN
+ORIG-5668,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5667,True,True,1.0,EXACT_SEEN
+ORIG-5671,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,5670,True,True,1.0,EXACT_SEEN
+ORIG-5680,Caliper de freno trabado o mordaza pegada (piston agarrotado),5679,True,True,1.0,EXACT_SEEN
+ORIG-5686,Caliper de freno trabado o mordaza pegada (piston agarrotado),5685,True,True,1.0,EXACT_SEEN
+ORIG-5687,Caliper de freno trabado o mordaza pegada (piston agarrotado),5686,True,True,1.0,EXACT_SEEN
+ORIG-5697,Caliper de freno trabado o mordaza pegada (piston agarrotado),5696,True,True,1.0,EXACT_SEEN
+ORIG-5702,Caliper de freno trabado o mordaza pegada (piston agarrotado),5701,True,True,1.0,EXACT_SEEN
+ORIG-5704,Caliper de freno trabado o mordaza pegada (piston agarrotado),5703,True,True,1.0,EXACT_SEEN
+ORIG-5705,Caliper de freno trabado o mordaza pegada (piston agarrotado),5704,True,True,1.0,EXACT_SEEN
+ORIG-5712,Caliper de freno trabado o mordaza pegada (piston agarrotado),5711,True,True,1.0,EXACT_SEEN
+ORIG-5714,Caliper de freno trabado o mordaza pegada (piston agarrotado),5713,True,True,1.0,EXACT_SEEN
+ORIG-5722,Caliper de freno trabado o mordaza pegada (piston agarrotado),5721,True,True,1.0,EXACT_SEEN
+ORIG-5725,Desgaste en collarin de empuje o crapodina de embrague,5724,True,True,1.0,EXACT_SEEN
+ORIG-5734,Desgaste en collarin de empuje o crapodina de embrague,5733,True,True,1.0,EXACT_SEEN
+ORIG-5736,Desgaste en collarin de empuje o crapodina de embrague,5735,True,True,1.0,EXACT_SEEN
+ORIG-5738,Desgaste en collarin de empuje o crapodina de embrague,5737,True,True,1.0,EXACT_SEEN
+ORIG-5741,Desgaste en collarin de empuje o crapodina de embrague,5740,True,True,1.0,EXACT_SEEN
+ORIG-5746,Desgaste en collarin de empuje o crapodina de embrague,5745,True,True,1.0,EXACT_SEEN
+ORIG-5749,Desgaste en collarin de empuje o crapodina de embrague,5748,True,True,1.0,EXACT_SEEN
+ORIG-5764,Desgaste en collarin de empuje o crapodina de embrague,5763,True,True,1.0,EXACT_SEEN
+ORIG-5772,Desgaste en collarin de empuje o crapodina de embrague,5771,True,True,1.0,EXACT_SEEN
+ORIG-5788,Rodajes de transmision manual o eje primario gastados,5787,True,True,1.0,EXACT_SEEN
+ORIG-5790,Rodajes de transmision manual o eje primario gastados,5789,True,True,1.0,EXACT_SEEN
+ORIG-5799,Rodajes de transmision manual o eje primario gastados,5798,True,True,1.0,EXACT_SEEN
+ORIG-5800,Rodajes de transmision manual o eje primario gastados,5799,True,True,1.0,EXACT_SEEN
+ORIG-5804,Rodajes de transmision manual o eje primario gastados,5803,True,True,1.0,EXACT_SEEN
+ORIG-5807,Rodajes de transmision manual o eje primario gastados,5806,True,True,1.0,EXACT_SEEN
+ORIG-5810,Rodajes de transmision manual o eje primario gastados,5809,True,True,1.0,EXACT_SEEN
+ORIG-5811,Rodajes de transmision manual o eje primario gastados,5810,True,True,1.0,EXACT_SEEN
+ORIG-5814,Rodajes de transmision manual o eje primario gastados,5813,True,True,1.0,EXACT_SEEN
+ORIG-5816,Rodajes de transmision manual o eje primario gastados,5815,True,True,1.0,EXACT_SEEN
+ORIG-5818,Rodajes de transmision manual o eje primario gastados,5817,True,True,1.0,EXACT_SEEN
+ORIG-5820,Rodajes de transmision manual o eje primario gastados,5819,True,True,1.0,EXACT_SEEN
+ORIG-5830,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5829,True,True,1.0,EXACT_SEEN
+ORIG-5834,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5833,True,True,1.0,EXACT_SEEN
+ORIG-5840,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5839,True,True,1.0,EXACT_SEEN
+ORIG-5844,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5843,True,True,1.0,EXACT_SEEN
+ORIG-5856,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5855,True,True,1.0,EXACT_SEEN
+ORIG-5857,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5856,True,True,1.0,EXACT_SEEN
+ORIG-5865,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5864,True,True,1.0,EXACT_SEEN
+ORIG-5867,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5866,True,True,1.0,EXACT_SEEN
+ORIG-5869,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5868,True,True,1.0,EXACT_SEEN
+ORIG-5870,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5869,True,True,1.0,EXACT_SEEN
+ORIG-5872,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),5871,True,True,1.0,EXACT_SEEN
+ORIG-5879,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5878,True,True,1.0,EXACT_SEEN
+ORIG-5882,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5881,True,True,1.0,EXACT_SEEN
+ORIG-5883,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5882,True,True,1.0,EXACT_SEEN
+ORIG-5892,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5891,True,True,1.0,EXACT_SEEN
+ORIG-5901,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5900,True,True,1.0,EXACT_SEEN
+ORIG-5902,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5901,True,True,1.0,EXACT_SEEN
+ORIG-5908,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5907,True,True,1.0,EXACT_SEEN
+ORIG-5916,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5915,True,True,1.0,EXACT_SEEN
+ORIG-5922,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),5921,True,True,1.0,EXACT_SEEN
+ORIG-5932,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5931,True,True,1.0,EXACT_SEEN
+ORIG-5938,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5937,True,True,1.0,EXACT_SEEN
+ORIG-5941,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5940,True,True,1.0,EXACT_SEEN
+ORIG-5946,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5945,True,True,1.0,EXACT_SEEN
+ORIG-5950,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5949,True,True,1.0,EXACT_SEEN
+ORIG-5951,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5950,True,True,1.0,EXACT_SEEN
+ORIG-5953,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5952,True,True,1.0,EXACT_SEEN
+ORIG-5961,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5960,True,True,1.0,EXACT_SEEN
+ORIG-5967,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5966,True,True,1.0,EXACT_SEEN
+ORIG-5969,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5968,True,True,1.0,EXACT_SEEN
+ORIG-5973,Fuga parasita de corriente en reposo (consumo nocturno de bateria),5972,True,True,1.0,EXACT_SEEN
+ORIG-5976,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),5975,True,True,1.0,EXACT_SEEN
+ORIG-5985,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),5984,True,True,1.0,EXACT_SEEN
+ORIG-5995,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),5994,True,True,1.0,EXACT_SEEN
+ORIG-5999,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),5998,True,True,1.0,EXACT_SEEN
+ORIG-6006,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),6005,True,True,1.0,EXACT_SEEN
+ORIG-6014,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),6013,True,True,1.0,EXACT_SEEN
+ORIG-6018,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),6017,True,True,1.0,EXACT_SEEN
+ORIG-6020,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),6019,True,True,1.0,EXACT_SEEN
+ORIG-6021,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),6020,True,True,1.0,EXACT_SEEN
+ORIG-6023,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),6022,True,True,1.0,EXACT_SEEN
+ORIG-6027,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),6026,True,True,1.0,EXACT_SEEN
+ORIG-6031,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),6030,True,True,1.0,EXACT_SEEN
+ORIG-6043,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),6042,True,True,1.0,EXACT_SEEN
+ORIG-6046,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),6045,True,True,1.0,EXACT_SEEN
+ORIG-6057,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),6056,True,True,1.0,EXACT_SEEN
+ORIG-6058,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),6057,True,True,1.0,EXACT_SEEN
+ORIG-6065,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),6064,True,True,1.0,EXACT_SEEN
+ORIG-6068,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),6067,True,True,1.0,EXACT_SEEN
+ORIG-6071,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),6070,True,True,1.0,EXACT_SEEN
+ORIG-6075,Falla en regulador de presion de combustible o diafragma roto,6074,True,True,1.0,EXACT_SEEN
+ORIG-6083,Falla en regulador de presion de combustible o diafragma roto,6082,True,True,1.0,EXACT_SEEN
+ORIG-6086,Falla en regulador de presion de combustible o diafragma roto,6085,True,True,1.0,EXACT_SEEN
+ORIG-6098,Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208),6097,True,True,1.0,EXACT_SEEN
+ORIG-6102,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,6101,True,True,1.0,EXACT_SEEN
+ORIG-6103,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,6102,True,True,1.0,EXACT_SEEN
+ORIG-6110,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,6109,True,True,1.0,EXACT_SEEN
+ORIG-6111,Caliper de freno trabado o mordaza pegada (piston agarrotado),6110,True,True,1.0,EXACT_SEEN
+ORIG-6118,Caliper de freno trabado o mordaza pegada (piston agarrotado),6117,True,True,1.0,EXACT_SEEN
+ORIG-6124,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),6123,True,True,1.0,EXACT_SEEN
+ORIG-6127,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),6126,True,True,1.0,EXACT_SEEN
+ORIG-6138,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),6137,True,True,1.0,EXACT_SEEN
+ORIG-6140,Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire),6139,True,True,1.0,EXACT_SEEN
+ORIG-6150,Desgaste en collarin de empuje o crapodina de embrague,6149,True,True,1.0,EXACT_SEEN
+ORIG-6152,Desgaste en collarin de empuje o crapodina de embrague,6151,True,True,1.0,EXACT_SEEN
+ORIG-6155,Desgaste en collarin de empuje o crapodina de embrague,6154,True,True,1.0,EXACT_SEEN
+ORIG-6167,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),6166,True,True,1.0,EXACT_SEEN
+ORIG-6170,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),6169,True,True,1.0,EXACT_SEEN
+ORIG-6175,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),6174,True,True,1.0,EXACT_SEEN
+ORIG-6189,Fuga parasita de corriente en reposo (consumo nocturno de bateria),6188,True,True,1.0,EXACT_SEEN

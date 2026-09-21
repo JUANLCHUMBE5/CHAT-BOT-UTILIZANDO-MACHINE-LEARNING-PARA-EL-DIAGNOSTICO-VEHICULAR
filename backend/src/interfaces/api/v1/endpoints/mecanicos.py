@@ -4,72 +4,35 @@ from __future__ import annotations
 
 import re
 import uuid
-from typing import List, Literal, Optional
+from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.core.authorization import exigir_gestion_usuarios
 from src.core.security import (
     cifrar_texto_reversible,
     generar_password_hash,
     hash_identificador_persistencia,
-    verificar_jwt_token,
 )
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.repositories.identidad_whatsapp_repository import IdentidadWhatsAppRepository
 from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
 from src.infrastructure.database.repositories.solicitud_acceso_repository import SolicitudAccesoRepository
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
+from src.interfaces.api.v1.dtos.mecanicos import (
+    CambiarRolDTO,
+    MecanicoCreateDTO,
+    MecanicoResponseDTO,
+    MecanicoUpdateDTO,
+)
 
 router = APIRouter()
 
 
-class MecanicoCreateDTO(BaseModel):
-    nombres: str
-    telefono_whatsapp: str
-    password: Optional[str] = None
-    rol: Literal["mecanico", "jefe_taller", "administrador"] = "mecanico"
-
-
-class MecanicoUpdateDTO(BaseModel):
-    nombres: Optional[str] = None
-    telefono_whatsapp: Optional[str] = None
-    password: Optional[str] = None
-
-
-
-class CambiarRolDTO(BaseModel):
-    nuevo_rol: Literal["mecanico", "jefe_taller", "administrador"]
-    password: Optional[str] = None
-
-
-class MecanicoResponseDTO(BaseModel):
-    id: str
-    nombres: str
-    telefono: str
-    rol: str
-    activo: bool
-    bloqueado: bool
-    fecha_registro: str
-    total_diagnosticos: int
-    ultimo_acceso: str
-
-
-def exigir_rol_administrativo(payload: dict = Depends(verificar_jwt_token)) -> dict:
-    """Asegura que solo un administrador pueda operar el panel."""
-    rol = payload.get("rol", "")
-    if rol not in ("administrador", "admin"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Acceso denegado. Se requiere rol administrativo.",
-        )
-    return payload
-
-
 @router.get("", response_model=List[MecanicoResponseDTO], summary="Listar mecánicos del taller")
-async def listar_mecanicos(payload: dict = Depends(exigir_rol_administrativo)):
+async def listar_mecanicos(payload: dict = Depends(exigir_gestion_usuarios)):
     """Retorna la lista de mecánicos pertenecientes al taller autenticado desde PostgreSQL."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
     taller_uuid = uuid.UUID(taller_id_str)
@@ -83,6 +46,7 @@ async def listar_mecanicos(payload: dict = Depends(exigir_rol_administrativo)):
                 MecanicoResponseDTO(
                     id=str(u.id),
                     nombres=u.nombres,
+                    username=u.username,
                     telefono=f"+51 *** *** {u.whatsapp_ultimos4}",
                     rol=u.rol.codigo if u.rol else "mecanico",
                     activo=u.activo,
@@ -97,9 +61,14 @@ async def listar_mecanicos(payload: dict = Depends(exigir_rol_administrativo)):
     raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
 
 
-@router.post("", response_model=MecanicoResponseDTO, summary="Registrar nuevo mecánico")
+@router.post(
+    "",
+    response_model=MecanicoResponseDTO,
+    status_code=status.HTTP_201_CREATED,
+    summary="Registrar nuevo mecánico",
+)
 async def registrar_mecanico(
-    dto: MecanicoCreateDTO, payload: dict = Depends(exigir_rol_administrativo)
+    dto: MecanicoCreateDTO, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Registra personal; solo las cuentas administrativas reciben contraseña web."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -131,6 +100,15 @@ async def registrar_mecanico(
     ultimos4 = digits[-4:] if len(digits) >= 4 else digits.zfill(4)
     w_hash = hash_identificador_persistencia(dto.telefono_whatsapp, "telefono")
 
+    username_limpio = None
+    if dto.username:
+        username_limpio = dto.username.strip().lower()
+        if len(username_limpio) < 3 or not re.match(r"^[a-zA-Z0-9_.-]+$", username_limpio):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="El nombre de usuario debe tener al menos 3 caracteres y solo contener letras, números, guiones o puntos.",
+            )
+
     if database_configurada():
         engine = obtener_engine()
         async with AsyncSession(engine, expire_on_commit=False) as session:
@@ -140,6 +118,14 @@ async def registrar_mecanico(
             operaciones_repo = OperacionesRepository(session)
             roles = await user_repo.asegurar_roles_estandar()
             rol_obj = roles.get(dto.rol, roles["mecanico"])
+
+            if username_limpio:
+                existente_user = await user_repo.buscar_por_username(username_limpio)
+                if existente_user:
+                    raise HTTPException(
+                        status_code=status.HTTP_409_CONFLICT,
+                        detail="El nombre de usuario ya está registrado por otro miembro.",
+                    )
 
             existente = await user_repo.buscar_por_whatsapp_hash(w_hash)
             if existente:
@@ -155,6 +141,8 @@ async def registrar_mecanico(
                     )
 
                 existente.nombres = dto.nombres.strip()
+                if username_limpio:
+                    existente.username = username_limpio
                 existente.rol_id = rol_obj.id
                 existente.password_hash = generar_password_hash(raw_password) if es_nuevo_admin else None
                 existente.debe_cambiar_password = es_nuevo_admin
@@ -203,6 +191,7 @@ async def registrar_mecanico(
                 return MecanicoResponseDTO(
                     id=str(existente.id),
                     nombres=existente.nombres,
+                    username=existente.username,
                     telefono=f"+51 *** *** {ultimos4}",
                     rol=rol_obj.codigo,
                     activo=True,
@@ -217,6 +206,7 @@ async def registrar_mecanico(
                     taller_id=taller_uuid,
                     rol_id=rol_obj.id,
                     nombres=dto.nombres.strip(),
+                    username=username_limpio,
                     whatsapp_hash=w_hash,
                     whatsapp_ultimos4=ultimos4,
                     password_hash=generar_password_hash(raw_password) if es_nuevo_admin else None,
@@ -244,6 +234,7 @@ async def registrar_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {ultimos4}",
                 rol=rol_obj.codigo,
                 activo=True,
@@ -258,7 +249,7 @@ async def registrar_mecanico(
 
 @router.patch("/{mecanico_id}/activar", response_model=MecanicoResponseDTO, summary="Alternar activación de mecánico")
 async def toggle_activar_mecanico(
-    mecanico_id: str, payload: dict = Depends(exigir_rol_administrativo)
+    mecanico_id: str, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Activa o desactiva la cuenta de un mecánico verificando taller_id."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -302,6 +293,7 @@ async def toggle_activar_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {usuario.whatsapp_ultimos4}",
                 rol=usuario.rol.codigo if usuario.rol else "mecanico",
                 activo=usuario.activo,
@@ -316,7 +308,7 @@ async def toggle_activar_mecanico(
 
 @router.patch("/{mecanico_id}/bloquear", response_model=MecanicoResponseDTO, summary="Alternar bloqueo de mecánico")
 async def toggle_bloquear_mecanico(
-    mecanico_id: str, payload: dict = Depends(exigir_rol_administrativo)
+    mecanico_id: str, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Bloquea o desbloquea el acceso de un mecánico verificando taller_id."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -363,6 +355,7 @@ async def toggle_bloquear_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {usuario.whatsapp_ultimos4}",
                 rol=usuario.rol.codigo if usuario.rol else "mecanico",
                 activo=usuario.activo,
@@ -377,7 +370,7 @@ async def toggle_bloquear_mecanico(
 
 @router.patch("/{mecanico_id}/rol", response_model=MecanicoResponseDTO, summary="Cambiar el rol de un mecánico")
 async def cambiar_rol_mecanico(
-    mecanico_id: str, dto: CambiarRolDTO, payload: dict = Depends(exigir_rol_administrativo)
+    mecanico_id: str, dto: CambiarRolDTO, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Cambia el rol de un usuario o mecánico en PostgreSQL."""
     taller_uuid = uuid.UUID(str(payload.get("taller_id")))
@@ -447,6 +440,7 @@ async def cambiar_rol_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {usuario.whatsapp_ultimos4}",
                 rol=rol_obj.codigo,
                 activo=usuario.activo,
@@ -462,7 +456,7 @@ async def cambiar_rol_mecanico(
 @router.patch("/{mecanico_id}/revocar-acceso", summary="Revocar acceso técnico y regresar a cliente")
 @router.delete("/{mecanico_id}", summary="Compatibilidad: revocar acceso técnico", deprecated=True)
 async def revocar_acceso_mecanico(
-    mecanico_id: str, payload: dict = Depends(exigir_rol_administrativo)
+    mecanico_id: str, payload: dict = Depends(exigir_gestion_usuarios)
 ):
     """Retira permisos internos sin borrar identidad, conversaciones ni diagnósticos."""
     try:
@@ -530,7 +524,7 @@ async def revocar_acceso_mecanico(
 async def actualizar_mecanico(
     mecanico_id: str,
     dto: MecanicoUpdateDTO,
-    payload: dict = Depends(exigir_rol_administrativo),
+    payload: dict = Depends(exigir_gestion_usuarios),
 ):
     """Actualiza los datos personales de un mecánico (nombres, teléfono WhatsApp, contraseña)."""
     taller_id_str = payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
@@ -580,6 +574,14 @@ async def actualizar_mecanico(
                 detail="La contraseña debe tener al menos 12 caracteres, incluir mayúsculas, minúsculas y números.",
             )
 
+    if dto.username is not None:
+        username_candidate = dto.username.strip().lower()
+        if username_candidate and (len(username_candidate) < 3 or not re.match(r"^[a-zA-Z0-9_.-]+$", username_candidate)):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="El nombre de usuario debe tener al menos 3 caracteres y solo contener letras, números, guiones o puntos.",
+            )
+
     if database_configurada():
         engine = obtener_engine()
         async with AsyncSession(engine, expire_on_commit=False) as session:
@@ -607,12 +609,26 @@ async def actualizar_mecanico(
 
             detalles_dict = {
                 "nombres_modificados": dto.nombres is not None,
+                "username_modificado": dto.username is not None,
                 "telefono_modificado": dto.telefono_whatsapp is not None,
                 "password_modificado": bool(dto.password),
             }
 
             if dto.nombres is not None:
                 usuario.nombres = dto.nombres.strip()
+
+            if dto.username is not None:
+                new_username = dto.username.strip().lower()
+                if new_username:
+                    existente_u = await user_repo.buscar_por_username(new_username)
+                    if existente_u and existente_u.id != usuario.id:
+                        raise HTTPException(
+                            status_code=status.HTTP_409_CONFLICT,
+                            detail="El nombre de usuario ya está en uso por otro miembro.",
+                        )
+                    usuario.username = new_username
+                else:
+                    usuario.username = None
 
             if dto.telefono_whatsapp is not None:
                 telefono_raw = dto.telefono_whatsapp.strip()
@@ -668,6 +684,7 @@ async def actualizar_mecanico(
             return MecanicoResponseDTO(
                 id=str(usuario.id),
                 nombres=usuario.nombres,
+                username=usuario.username,
                 telefono=f"+51 *** *** {usuario.whatsapp_ultimos4}",
                 rol=usuario.rol.codigo if usuario.rol else "mecanico",
                 activo=usuario.activo,

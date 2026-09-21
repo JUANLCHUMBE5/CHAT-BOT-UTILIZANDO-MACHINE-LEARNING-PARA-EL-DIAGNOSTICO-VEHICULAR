@@ -55,3 +55,16 @@ def sanitizar_prompt_usuario(texto: str, max_length: int = 500) -> str:
                 texto_limpio = "[INTENTO_INYECCION_BLOQUEADO] " + texto_limpio
             
     return texto_limpio
+
+
+def redactar_datos_sensibles_para_llm(texto: str) -> str:
+    """Reduce exposición accidental de teléfonos y placas al proveedor LLM."""
+    if not texto:
+        return ""
+    redactado = re.sub(r"(?<!\d)(?:\+?51[\s-]?)?9\d{8}(?!\d)", "[TELEFONO_REDACTADO]", texto)
+    redactado = re.sub(
+        r"(?i)\b[A-Z]{3}[\s-]?\d{3}\b",
+        "[PLACA_REDACTADA]",
+        redactado,
+    )
+    return redactado

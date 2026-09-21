@@ -5,8 +5,8 @@ Revises: 20260807_04
 """
 
 import sqlalchemy as sa
-from alembic import op
 
+from alembic import op
 
 revision = "20260807_05"
 down_revision = "20260807_04"

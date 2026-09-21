@@ -9,8 +9,8 @@ Cubre:
 - Tier 4: Casos de borde (actualizaciones parciales, UUID malformado 400 Bad Request, mecánico no encontrado 404 Not Found, peticiones no autenticadas 401 Unauthorized, nombre en blanco 400 Bad Request).
 """
 
-import re
 import uuid
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import select
@@ -24,11 +24,10 @@ from src.core.security import (
     hash_identificador_persistencia,
     verificar_password,
 )
-from src.infrastructure.database.models import Auditoria, IdentidadWhatsApp, Usuario
 from src.infrastructure.database.connection import database_configurada, obtener_engine
+from src.infrastructure.database.models import Auditoria, IdentidadWhatsApp
 from src.infrastructure.database.repositories.identidad_whatsapp_repository import IdentidadWhatsAppRepository
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
-
 
 
 @pytest.fixture
@@ -174,6 +173,15 @@ def test_actualizar_perfil_validacion_nombre_vacio(client, token_admin, mecanico
     response = client.put(f"/api/v1/mecanicos/{mecanico_user_id}", json=payload, headers=headers)
     assert response.status_code == 400
     assert "vacío" in response.json()["detail"].lower()
+
+
+def test_actualizar_perfil_validacion_username_invalido(client, token_admin, mecanico_user_id):
+    """Verifica que un nombre de usuario con formato inválido o menor a 3 caracteres retorne HTTP 400."""
+    payload = {"username": "ab"}
+    headers = {"Authorization": f"Bearer {token_admin}"}
+    response = client.put(f"/api/v1/mecanicos/{mecanico_user_id}", json=payload, headers=headers)
+    assert response.status_code == 400
+    assert "3 caracteres" in response.json()["detail"].lower()
 
 
 # ==============================================================================
@@ -335,7 +343,7 @@ async def test_actualizar_perfil_colision_telefono_duplicado_409():
 
         # Usuario B
         w_hash_b = hash_identificador_persistencia(tel_user_b, "telefono")
-        user_b = await user_repo.crear_usuario(
+        await user_repo.crear_usuario(
             taller_id=taller_uuid,
             rol_id=roles["mecanico"].id,
             nombres="Mecanico User B",

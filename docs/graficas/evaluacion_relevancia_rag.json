@@ -1,0 +1,4017 @@
+{
+  "total_casos": 100,
+  "linea_base": {
+    "hit_at_1": 65.0,
+    "hit_at_3": 87.0,
+    "hit_at_5": 91.0,
+    "mrr": 0.7468
+  },
+  "hibrida_multisenal": {
+    "hit_at_1": 79.0,
+    "hit_at_3": 90.0,
+    "hit_at_5": 95.0,
+    "mrr": 0.847
+  },
+  "detalles": [
+    {
+      "idx": 1,
+      "caso": "Mazda 3 2018 llegó fallando en mínimo, tiembla bastante y al acelerar ",
+      "falla_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE BOBINAS DE ENCENDIDO COP Y TIEMPO DE QUEMADO DE CHISPA (DTC P0300 A P0304 / TIRONEO BAJO CARGA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOBINAS DE ENCENDIDO COP Y TIEMPO DE QUEMADO DE CHISPA (DTC P0300 A P0304 / TIRONEO BAJO CARGA)",
+          "similitud": 0.8367,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: GALGADO Y METROLOGÍA DE BUJÍAS DE ENCENDIDO DE IRIDIO / PLATINO Y PRUEBA DE SECUNDARIO (DTC P0300)",
+          "similitud": 0.5718,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+          "similitud": 0.4884,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE)",
+          "similitud": 0.3045,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BANCO DE INYECTORES MULTIPUNTO (MPI), PRUEBA DE ESTANQUEIDAD Y BALANCE DE CAUDAL (DTC P0171 / P0300)",
+          "similitud": 0.2629,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 2,
+      "caso": "Toyota Corolla 2019 prende normal pero después de unos minutos comienz",
+      "falla_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "rank_base": 3,
+      "rank_hibrido": 3,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+          "similitud": 0.425,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.3404,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+          "similitud": 0.3103,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.2456,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.1923,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 3,
+      "caso": "Kia Rio 2018 tiene chispa pero un cilindro no está trabajando parejo, ",
+      "falla_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE)",
+          "similitud": 0.2544,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2459,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOBINAS DE ENCENDIDO COP Y TIEMPO DE QUEMADO DE CHISPA (DTC P0300 A P0304 / TIRONEO BAJO CARGA)",
+          "similitud": 0.2394,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+          "similitud": 0.2156,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+          "similitud": 0.2083,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 4,
+      "caso": "Hyundai Accent 2017 en frío trabaja parejo pero cuando calienta empiez",
+      "falla_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "rank_base": 3,
+      "rank_hibrido": 2,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+          "similitud": 0.3495,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+          "similitud": 0.3219,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.302,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+          "similitud": 0.2613,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE POSICIÓN DE CIGÜEÑAL CKP Y LEVAS CMP (DTC P0335 / P0340)",
+          "similitud": 0.2403,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 5,
+      "caso": "Nissan Versa 2020 llegó con P0171, mínimo inestable y se escucha como ",
+      "falla_esperada": "Falla en servofreno (booster) o linea de vacio",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE ENTRADAS DE AIRE PARÁSITAS Y SENSOR MAF/MAP CON GENERADOR DE HUMO (DTC P0171 / P0101 / VACÍO)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE ENTRADAS DE AIRE PARÁSITAS Y SENSOR MAF/MAP CON GENERADOR DE HUMO (DTC P0171 / P0101 / VACÍO)",
+          "similitud": 0.0756,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.0749,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA POBRE / RICA Y ANÁLISIS DE DATOS EN VIVO STFT & LTFT (DTC P0171 / P0172)",
+          "similitud": 0.0629,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA DEMASIADO POBRE BANCO 1 (DTC P0171)",
+          "similitud": 0.0483,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE LA VÁLVULA PCV Y DIAFRAGMA DE VENTILACIÓN DE CÁRTER (DTC P0171 / SILBIDO DE VACÍO)",
+          "similitud": 0.0436,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 6,
+      "caso": "Yaris 2018 no da arranque, tablero y faros prenden fuerte pero al gira",
+      "falla_esperada": "Bateria descargada o bornes sulfatados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.3251,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.2777,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 0.2573,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MOTOR DE ARRANQUE Y SOLENOIDE DE IGNICIÓN (CLIC SIN ARRANQUE / DTC P0615)",
+          "similitud": 0.2218,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONSUMO PARÁSITO DE CORRIENTE Y DRENAJE DE BATERÍA EN REPOSO (DESCARGA NOCTURNA / SIN ARRANQUE EN LAS MAÑANAS)",
+          "similitud": 0.2127,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 7,
+      "caso": "Corolla 2016 llegó con batería descargada, le puse batería cargada y p",
+      "falla_esperada": "Alternador defectuoso o placa de diodos quemada",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.7401,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.6441,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 0.4451,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE ALTERNADOR Y SISTEMA DE CARGA DE 12V (DTC P0562 / P0563 / BATERÍA NO CARGA)",
+          "similitud": 0.3072,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE CARGA INTELIGENTE Y SENSOR DE BATERÍA (IBS / LIN BUS / DTC P0620 / P0625 / P2503)",
+          "similitud": 0.2956,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 8,
+      "caso": "Kia Picanto 2019 arranca con puente pero después de dejarlo estacionad",
+      "falla_esperada": "Bateria descargada o bornes sulfatados",
+      "rank_base": 2,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.4578,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE ALTO VOLTAJE E INVERSOR EN VEHÍCULOS ELÉCTRICOS E HÍBRIDOS (EV/HEV / DTC P0A80)",
+          "similitud": 0.3847,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.3666,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE BATERIA DE ALTO VOLTAJE E INVERSOR EN VEHICULOS ELECTRICOS E HIBRIDOS (ELECTRICO_HV_001 A 004)",
+          "similitud": 0.3435,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PÉRDIDA DE AISLAMIENTO DE ALTO VOLTAJE Y CORTO A CHASIS EN VEHÍCULOS HÍBRIDOS (DTC P0AA6 / P1A80)",
+          "similitud": 0.3107,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 9,
+      "caso": "Hyundai Elantra 2018 testigo de batería aparece cuando prendo luces y ",
+      "falla_esperada": "Alternador defectuoso o placa de diodos quemada",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.7393,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.6244,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 0.4832,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE ALTERNADOR Y SISTEMA DE CARGA DE 12V (DTC P0562 / P0563 / BATERÍA NO CARGA)",
+          "similitud": 0.3101,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE CARGA INTELIGENTE Y SENSOR DE BATERÍA (IBS / LIN BUS / DTC P0620 / P0625 / P2503)",
+          "similitud": 0.2806,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 10,
+      "caso": "Nissan Sentra 2017 scanner arroja P0562 y el cliente dice que las luce",
+      "falla_esperada": "Alternador defectuoso o placa de diodos quemada",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 1.0,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 1.0,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 1.0,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE ALTERNADOR Y SISTEMA DE CARGA DE 12V (DTC P0562 / P0563 / BATERÍA NO CARGA)",
+          "similitud": 1.0,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONSUMO PARÁSITO DE CORRIENTE Y DRENAJE DE BATERÍA EN REPOSO (DESCARGA NOCTURNA / SIN ARRANQUE EN LAS MAÑANAS)",
+          "similitud": 0.5155,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 11,
+      "caso": "Toyota Avanza 2018 tiene pedal de freno durísimo, para detenerlo tengo",
+      "falla_esperada": "Falla en servofreno (booster) o linea de vacio",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.1633,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.1252,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+          "similitud": 0.108,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+          "similitud": 0.0961,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: PURGA ELECTRÓNICA Y REEMPLAZO DE ELECTROVÁLVULAS DEL MÓDULO ABS CON ESCÁNER DIAGNÓSTICO (DTC C0020 / C0082 / PEDAL DURO BAJO ACTIVACIÓN ABS)",
+          "similitud": 0.0961,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 12,
+      "caso": "Kia Rio 2019 frena pero pedal se va bajando poco a poco mientras lo ma",
+      "falla_esperada": "Fuga hidraulica o aire en el sistema de frenos",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.2003,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: PURGA ELECTRÓNICA Y REEMPLAZO DE ELECTROVÁLVULAS DEL MÓDULO ABS CON ESCÁNER DIAGNÓSTICO (DTC C0020 / C0082 / PEDAL DURO BAJO ACTIVACIÓN ABS)",
+          "similitud": 0.1252,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.1185,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE EMBRAGUE HIDRÁULICO, BOMBA PRINCIPAL Y CILINDRO ESCLAVO (PEDAL ESPONJOSO / DIFICULTAD EN CAMBIOS)",
+          "similitud": 0.0905,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+          "similitud": 0.0825,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 13,
+      "caso": "Corolla 2017 a 100 km/h anda normal, pero apenas piso freno comienza a",
+      "falla_esperada": "Discos de freno alabeados o desgastados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+          "similitud": 0.2319,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+          "similitud": 0.1887,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.1231,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: PURGA ELECTRÓNICA Y REEMPLAZO DE ELECTROVÁLVULAS DEL MÓDULO ABS CON ESCÁNER DIAGNÓSTICO (DTC C0020 / C0082 / PEDAL DURO BAJO ACTIVACIÓN ABS)",
+          "similitud": 0.0867,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.0775,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 14,
+      "caso": "Hyundai Accent 2019 timón vibra entre 90 y 110, pero cuando freno no c",
+      "falla_esperada": "Llantas desbalanceadas o desalineadas",
+      "rank_base": 5,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.3014,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.0671,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+          "similitud": 0.0257,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.0205,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+          "similitud": 0.0198,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 15,
+      "caso": "Nissan Versa 2018 una rueda delantera queda muy caliente después de ma",
+      "falla_esperada": "Desgaste de pastillas y zapatas de freno",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.4201,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y PUNTO CERO (DTC C1203 / C1210 / VOLANTE DESVIADO)",
+          "similitud": 0.0658,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE JUNTA HOMOCINÉTICA Y CUBREPOLVOS DE PALIER (CLAC CLAC AL DOBLAR)",
+          "similitud": 0.0537,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+          "similitud": 0.022,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO Y CALIBRACIÓN DE FRENO DE ESTACIONAMIENTO ELECTRÓNICO (EPB / EMB / DTC C1555 / C1556)",
+          "similitud": 0.0197,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 16,
+      "caso": "Yaris 2015 se está calentando parado en tráfico, revisé refrigerante y",
+      "falla_esperada": "Falla en termostato o motoventilador de radiador",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+          "similitud": 0.5247,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE TEMPERATURA DE REFRIGERANTE ECT (DTC P0117 / P0118 / P0128)",
+          "similitud": 0.3258,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE ELECTROVENTILADOR CON MÓDULO DE CONTROL ELECTRÓNICO PWM (MOTOVENTILADOR NO ENCIENDE / DTC P0480)",
+          "similitud": 0.2693,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2253,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE LA BOMBA DE AGUA ELÉCTRICA Y TERMOSTATO ELECTRÓNICO MAP-CONTROLLED (DTC P261B / 2E81 / 2E82)",
+          "similitud": 0.1742,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 17,
+      "caso": "Corolla 2014 está consumiendo refrigerante pero no veo fuga afuera, ha",
+      "falla_esperada": "Empaque de culata soplado o danado",
+      "rank_base": 3,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
+          "similitud": 0.5272,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE ENFRIADOR DE ACEITE DE MOTOR Y JUNTA DE CULATA (CONTAMINACIÓN DE REFRIGERANTE / MAYONESA)",
+          "similitud": 0.3095,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+          "similitud": 0.2312,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2277,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.1802,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 18,
+      "caso": "Kia Sportage 2017 temperatura sube rápido y manguera superior está cal",
+      "falla_esperada": "Falla en termostato o motoventilador de radiador",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+          "similitud": 0.6789,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE TEMPERATURA DE REFRIGERANTE ECT (DTC P0117 / P0118 / P0128)",
+          "similitud": 0.3253,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2169,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.1737,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE LA BOMBA DE AGUA ELÉCTRICA Y TERMOSTATO ELECTRÓNICO MAP-CONTROLLED (DTC P261B / 2E81 / 2E82)",
+          "similitud": 0.1654,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 19,
+      "caso": "Hyundai Accent 2016 testigo de aceite prende solamente con motor calie",
+      "falla_esperada": "Baja presion de aceite o bomba de aceite defectuosa",
+      "rank_base": 5,
+      "rank_hibrido": 3,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.276,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+          "similitud": 0.272,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE ACEITE DE MOTOR, FILTRO Y LIMPIEZA DE CÁRTER (DTC P0520 / BAJA PRESIÓN)",
+          "similitud": 0.2463,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE LA VÁLVULA DE RALENTÍ IAC (DTC P0505 / P0506 / P0507)",
+          "similitud": 0.2286,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.2264,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 20,
+      "caso": "Nissan Sentra 2015 está gastando aceite sin dejar manchas en el piso y",
+      "falla_esperada": "Consumo de aceite por desgaste de anillos o retenes",
+      "rank_base": 1,
+      "rank_hibrido": 4,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.3116,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.2492,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.2204,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.2002,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE SEGUIDOR DE LEVA (CAM FOLLOWER) EN BOMBA DE ALTA PRESIÓN GDI / TSI (DTC P0087 / P2293)",
+          "similitud": 0.198,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 21,
+      "caso": "Toyota Yaris mecánico, en cuarta acelero fuerte y RPM suben rápido per",
+      "falla_esperada": "Disco de embrague desgastado o patinando",
+      "rank_base": 1,
+      "rank_hibrido": 4,
+      "top1_recuperado": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECÁNICA Y DIFERENCIAL (CAMBIO DE VALVOLINA Y SINCRONIZADORES)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECÁNICA Y DIFERENCIAL (CAMBIO DE VALVOLINA Y SINCRONIZADORES)",
+          "similitud": 0.1477,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
+          "similitud": 0.1196,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REGENERACIÓN FORZADA Y DIAGNÓSTICO DE SENSOR DE PRESIÓN DIFERENCIAL EN FILTRO DE PARTÍCULAS (DPF / DTC P2002 / P2452 / P2453)",
+          "similitud": 0.0907,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE VÁLVULA DE BLOQUEO DEL CONVERTIDOR DE PAR TCC LOCK-UP (DTC P0740 / P0741 / P0742)",
+          "similitud": 0.0799,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN Y SERVICIO DE FLUIDO EN TRANSMISIÓN AUTOMÁTICA Y CVT POR TAPÓN DE REBOSE (TEMPERATURA 35°C A 45°C)",
+          "similitud": 0.0698,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 22,
+      "caso": "Kia Rio 2018 pedal de embrague quedó abajo y encontré líquido por la z",
+      "falla_esperada": "Falla en bombin o bomba hidraulica de embrague",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)",
+          "similitud": 0.2886,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TRANSMISIÓN DE DOBLE EMBRAGUE SECO (DCT / DSG DQ200 / POWERSHIFT) (DTC P0700 / P0841)",
+          "similitud": 0.2825,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN Y ADAPTACIÓN BÁSICA DE EMBRAGUE DOBLE EN TRANSMISIÓN ROBOTIZADA (DSG / DCT / POWERSHIFT / DTC P0730 / P0810)",
+          "similitud": 0.2604,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT (VARIADORES, CORREA METÁLICA Y SOLENOIDES / DTC P0701 / P0841)",
+          "similitud": 0.2514,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS)",
+          "similitud": 0.2312,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 23,
+      "caso": "Hyundai Accent 2017 cuando piso embrague aparece un ronquido, cuando s",
+      "falla_esperada": "Falla en bombin o bomba hidraulica de embrague",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: PURGA Y REEMPLAZO DEL BOMBÍN Y CILINDRO MAESTRO DE EMBRAGUE HYUNDAI ACCENT (DTC MANUAL / PEDAL DURO O PEGADO AL PISO)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: PURGA Y REEMPLAZO DEL BOMBÍN Y CILINDRO MAESTRO DE EMBRAGUE HYUNDAI ACCENT (DTC MANUAL / PEDAL DURO O PEGADO AL PISO)",
+          "similitud": 0.2437,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TRANSMISIÓN DE DOBLE EMBRAGUE SECO (DCT / DSG DQ200 / POWERSHIFT) (DTC P0700 / P0841)",
+          "similitud": 0.1598,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS)",
+          "similitud": 0.1335,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TRACCIÓN TOTAL INTELIGENTE (AWD / 4WD / HALDEX / DTC C1811 / C1814 / GOLPETEO EN GIRO CERRADO)",
+          "similitud": 0.1024,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN Y ADAPTACIÓN BÁSICA DE EMBRAGUE DOBLE EN TRANSMISIÓN ROBOTIZADA (DSG / DCT / POWERSHIFT / DTC P0730 / P0810)",
+          "similitud": 0.0948,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 24,
+      "caso": "Corolla 2016 al salir en primera tiembla bastante, pero una vez que el",
+      "falla_esperada": "Disco de embrague desgastado o patinando",
+      "rank_base": 1,
+      "rank_hibrido": 0,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.0389,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.0275,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.0258,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE SEGUIDOR DE LEVA (CAM FOLLOWER) EN BOMBA DE ALTA PRESIÓN GDI / TSI (DTC P0087 / P2293)",
+          "similitud": 0.0254,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.0239,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 25,
+      "caso": "Fiat con Dualogic, en tráfico empieza a marcar N solo, bomba trabaja s",
+      "falla_esperada": "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)",
+      "rank_base": 0,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DEL GRUPO ELECTROHIDRÁULICO Y PRESIÓN DE ACUMULADOR EN TRANSMISIONES ROBOTIZADAS DUALOGIC / I-MOTION / FREECHOICE",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL GRUPO ELECTROHIDRÁULICO Y PRESIÓN DE ACUMULADOR EN TRANSMISIONES ROBOTIZADAS DUALOGIC / I-MOTION / FREECHOICE",
+          "similitud": 0.4313,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+          "similitud": 0.0303,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.0275,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+          "similitud": 0.0212,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.02,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 26,
+      "caso": "Nissan Sentra CVT entra en modo protección después de manejar un rato,",
+      "falla_esperada": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)",
+          "similitud": 0.9918,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT (VARIADORES, CORREA METÁLICA Y SOLENOIDES / DTC P0701 / P0841)",
+          "similitud": 0.9092,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TRANSMISIÓN DE DOBLE EMBRAGUE SECO (DCT / DSG DQ200 / POWERSHIFT) (DTC P0700 / P0841)",
+          "similitud": 0.783,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE PRESIÓN Y TEMPERATURA DE ACEITE EN CAJAS CVT (DTC P0841 / P0846 / LECTURA ERRÁTICA)",
+          "similitud": 0.7548,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN HIDRÁULICA Y FLUIDO EN TRANSMISIÓN AUTOMÁTICA CVT (DTC P0746 / P0841 / ZUMBIDO DE BANDA METÁLICA)",
+          "similitud": 0.665,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 27,
+      "caso": "Volkswagen con DSG da golpe al salir, a veces demora en enganchar D y ",
+      "falla_esperada": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)",
+          "similitud": 0.3218,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT (VARIADORES, CORREA METÁLICA Y SOLENOIDES / DTC P0701 / P0841)",
+          "similitud": 0.2848,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN Y ADAPTACIÓN BÁSICA DE EMBRAGUE DOBLE EN TRANSMISIÓN ROBOTIZADA (DSG / DCT / POWERSHIFT / DTC P0730 / P0810)",
+          "similitud": 0.2679,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TRANSMISIÓN DE DOBLE EMBRAGUE SECO (DCT / DSG DQ200 / POWERSHIFT) (DTC P0700 / P0841)",
+          "similitud": 0.2472,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS)",
+          "similitud": 0.2202,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 28,
+      "caso": "Toyota automático demora varios segundos en entrar reversa cuando está",
+      "falla_esperada": "Falta o degradacion de aceite de caja de cambios",
+      "rank_base": 5,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
+          "similitud": 0.1881,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN HIDRÁULICA Y FLUIDO EN TRANSMISIÓN AUTOMÁTICA CVT (DTC P0746 / P0841 / ZUMBIDO DE BANDA METÁLICA)",
+          "similitud": 0.1036,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT NISSAN SENTRA (VARIADORES, CORREA METÁLICA, SOLENOIDES Y SOBRECALENTAMIENTO / DTC P0700 / P0701 / P0841)",
+          "similitud": 0.0994,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SERVICIO A TRANSMISIÓN CONTINUAMENTE VARIABLE CVT (VARIADORES, CORREA METÁLICA Y SOLENOIDES / DTC P0701 / P0841)",
+          "similitud": 0.0992,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN Y SERVICIO DE FLUIDO EN TRANSMISIÓN AUTOMÁTICA Y CVT POR TAPÓN DE REBOSE (TEMPERATURA 35°C A 45°C)",
+          "similitud": 0.0774,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 29,
+      "caso": "Yaris 2018 hace cloc cloc adelante al pasar pistas malas, en carretera",
+      "falla_esperada": "Amortiguadores reventados o bujes de suspension gastados",
+      "rank_base": 3,
+      "rank_hibrido": 5,
+      "top1_recuperado": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+          "similitud": 0.1761,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+          "similitud": 0.1651,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+          "similitud": 0.1617,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.1584,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL FRENO DE ESTACIONAMIENTO ELÉCTRICO EPB Y MODO SERVICIO (DTC C1001 / C1087)",
+          "similitud": 0.1284,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 30,
+      "caso": "Kia Rio 2019 al girar todo el timón y avanzar despacio hace tac tac ta",
+      "falla_esperada": "Juntas homocineticas o palieres danados",
+      "rank_base": 1,
+      "rank_hibrido": 4,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.2644,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
+          "similitud": 0.1619,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y PUNTO CERO (DTC C1203 / C1210 / VOLANTE DESVIADO)",
+          "similitud": 0.1247,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN MC PHERSON: CAZOLETAS, COJINETES DE TOPE Y MUELLES (CRUJIDO AL GIRAR EL TIMÓN)",
+          "similitud": 0.1087,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.1087,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 31,
+      "caso": "Hyundai Accent 2018 rebota varias veces después de pasar rompemuelle y",
+      "falla_esperada": "Amortiguadores reventados o bujes de suspension gastados",
+      "rank_base": 0,
+      "rank_hibrido": 3,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNOSTICO Y REPARACION DE CIERRE CENTRALIZADO Y ACTUADOR ELECTRICO DE PUERTA (CARROCERIA_001)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REPARACION DE CIERRE CENTRALIZADO Y ACTUADOR ELECTRICO DE PUERTA (CARROCERIA_001)",
+          "similitud": 0.8843,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: REPARACIÓN Y ALINEACIÓN DE CHAPA DE PUERTA / PESTILLO MECÁNICO",
+          "similitud": 0.5909,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REPARACION Y ALINEACION DE CHAPA, PESTILLO Y CERRADURA MECANICA DE PUERTA (CARROCERIA_002)",
+          "similitud": 0.208,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: REPARACIÓN Y REEMPLAZO DE MOTOR ELEVALUNAS ELÉCTRICO, GUAYA Y ALZACRISTALES (LUNA O VIDRIO DE PUERTA TRABADO)",
+          "similitud": 0.0658,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REEMPLAZO DE ELEVALUNAS ELECTRICO / ALZACRISTALES Y GUAYA (CARROCERIA_003)",
+          "similitud": 0.0583,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 32,
+      "caso": "Corolla 2017 después de pegar fuerte en un hueco quedó jalando a la de",
+      "falla_esperada": "Llantas desbalanceadas o desalineadas",
+      "rank_base": 2,
+      "rank_hibrido": 2,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.2554,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.2247,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN PILOTADA ELECTRÓNICA / AMORTIGUADORES MAGNÉTICOS O VALVULADOS (DTC C1710)",
+          "similitud": 0.1118,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE RÓTULAS DE SUSPENSIÓN, TRAPECIOS Y BUJES (JUEGO EN TIMÓN / JALONEO)",
+          "similitud": 0.0752,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550)",
+          "similitud": 0.0746,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 33,
+      "caso": "Nissan Versa tiene desgaste fuerte solamente por la parte interna de l",
+      "falla_esperada": "Llantas desbalanceadas o desalineadas",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.2617,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.2267,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN PILOTADA ELECTRÓNICA / AMORTIGUADORES MAGNÉTICOS O VALVULADOS (DTC C1710)",
+          "similitud": 0.0964,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550)",
+          "similitud": 0.0754,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE RÓTULAS DE SUSPENSIÓN, TRAPECIOS Y BUJES (JUEGO EN TIMÓN / JALONEO)",
+          "similitud": 0.0594,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 34,
+      "caso": "Toyota Yaris recién cambió llantas, desde ese día empieza vibración en",
+      "falla_esperada": "Llantas desbalanceadas o desalineadas",
+      "rank_base": 3,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.3315,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.0557,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+          "similitud": 0.0207,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.0195,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+          "similitud": 0.0188,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 35,
+      "caso": "Kia Rio hace zumbido en una rueda que aumenta con la velocidad, cuando",
+      "falla_esperada": "Rodajes de caja mecanica o diferencial gastados",
+      "rank_base": 3,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
+          "similitud": 0.1881,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECÁNICA Y DIFERENCIAL (CAMBIO DE VALVOLINA Y SINCRONIZADORES)",
+          "similitud": 0.1519,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN HIDRÁULICA Y FLUIDO EN TRANSMISIÓN AUTOMÁTICA CVT (DTC P0746 / P0841 / ZUMBIDO DE BANDA METÁLICA)",
+          "similitud": 0.0717,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DE RODAMIENTOS DE RUEDA / MAZA (ZUMBIDO METÁLICO MODULADO AL VIRAR / PRUEBA DE HOLGURA)",
+          "similitud": 0.0379,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.0183,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 36,
+      "caso": "Corolla 2016 demora en prender y en subida se queda sin fuerza, medí c",
+      "falla_esperada": "Bomba de gasolina quemada o con baja presion",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.5689,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.4621,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.3498,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN GDI / CRDI Y PRESIÓN DE RIEL (DTC P0087 / P0088)",
+          "similitud": 0.3457,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.3188,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 37,
+      "caso": "Hyundai Accent gira motor normal pero no prende, hay chispa y al dar c",
+      "falla_esperada": "Bomba de gasolina quemada o con baja presion",
+      "rank_base": 4,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.4852,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.3397,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.332,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE SEGUIDOR DE LEVA (CAM FOLLOWER) EN BOMBA DE ALTA PRESIÓN GDI / TSI (DTC P0087 / P2293)",
+          "similitud": 0.3128,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.297,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 38,
+      "caso": "Nissan Sentra arranca normal en frío pero después de 30 minutos pierde",
+      "falla_esperada": "Bomba de gasolina quemada o con baja presion",
+      "rank_base": 0,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.4744,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.3396,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.3025,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+          "similitud": 0.2862,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN GDI / CRDI Y PRESIÓN DE RIEL (DTC P0087 / P0088)",
+          "similitud": 0.2722,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 39,
+      "caso": "Yaris 2017 mínimo inestable y se apaga al llegar al semáforo, si mante",
+      "falla_esperada": "Cuerpo de aceleracion o valvula IAC sucia",
+      "rank_base": 1,
+      "rank_hibrido": 2,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.3069,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+          "similitud": 0.2823,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE LA VÁLVULA DE RALENTÍ IAC (DTC P0505 / P0506 / P0507)",
+          "similitud": 0.2795,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.2395,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.2188,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 40,
+      "caso": "Corolla 2018 está botando humo negro, huele bastante a gasolina y el c",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.5621,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.5038,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y LIMPIEZA DE SENSORES DE FLUJO DE AIRE MAF Y PRESIÓN MAP (DTC P0100 / P0106)",
+          "similitud": 0.4276,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL CIRCUITO CALEFACTOR DEL SENSOR DE OXÍGENO (DTC P0135)",
+          "similitud": 0.3505,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA DEMASIADO RICA BANCO 1 (DTC P0172)",
+          "similitud": 0.32,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 41,
+      "caso": "Chevrolet llegó con P0420, no presenta una falla fuerte al manejar per",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.5377,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE EFICIENCIA DE CATALIZADOR POR DEBAJO DEL UMBRAL (DTC P0420)",
+          "similitud": 0.5154,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.4343,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONTRAPRESIÓN DE ESCAPE Y CATALIZADOR TAPONADO (DTC P0420 / P0430 / AUTO AMARRADO EN PISTA)",
+          "similitud": 0.3549,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL CIRCUITO CALEFACTOR DEL SENSOR DE OXÍGENO (DTC P0135)",
+          "similitud": 0.2576,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 42,
+      "caso": "Toyota con P0301 y P0303, motor tiembla y huele a gasolina cruda por e",
+      "falla_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+          "similitud": 1.0,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE)",
+          "similitud": 1.0,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOBINAS DE ENCENDIDO COP Y TIEMPO DE QUEMADO DE CHISPA (DTC P0300 A P0304 / TIRONEO BAJO CARGA)",
+          "similitud": 0.9577,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.3104,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.2717,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 43,
+      "caso": "Camión pierde aire estando estacionado, se escucha fuga continua cerca",
+      "falla_esperada": "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)",
+      "rank_base": 2,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE FRENOS DE AIRE NEUMÁTICOS EN CAMIONES (SCANIA / VOLVO / SPN 1087)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE FRENOS DE AIRE NEUMÁTICOS EN CAMIONES (SCANIA / VOLVO / SPN 1087)",
+          "similitud": 0.2803,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA DE FRENOS DE AIRE NEUMATICOS EN CAMIONES (FRENO_006 / FRENO_007)",
+          "similitud": 0.2583,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TURBOALIMENTADOR, ACTUADOR ELECTRÓNICO WASTEGATE Y FUGAS DE PRESIÓN DE AIRE (DTC P0234 / P0299)",
+          "similitud": 0.0286,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TURBOCOMPRESOR, VÁLVULA WASTEGATE Y PRESIÓN DE SOBREALIMENTACIÓN BOOST (DTC P0299 / P0234)",
+          "similitud": 0.0268,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL ACTUADOR DE GEOMETRÍA VARIABLE VGT / WASTEGATE ELECTRÓNICA DE TURBO (DTC P0299 / P0234)",
+          "similitud": 0.0171,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 44,
+      "caso": "Camión carga aire normal pero el secador está purgando a cada rato, ha",
+      "falla_esperada": "Válvula de freno de aire o secador APS obstruido (Camiones)",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE FRENOS DE AIRE NEUMÁTICOS EN CAMIONES (SCANIA / VOLVO / SPN 1087)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE FRENOS DE AIRE NEUMÁTICOS EN CAMIONES (SCANIA / VOLVO / SPN 1087)",
+          "similitud": 0.299,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA DE FRENOS DE AIRE NEUMATICOS EN CAMIONES (FRENO_006 / FRENO_007)",
+          "similitud": 0.2601,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.0234,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.0211,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONSUMO PARÁSITO DE CORRIENTE Y DRENAJE DE BATERÍA EN REPOSO (DESCARGA NOCTURNA / SIN ARRANQUE EN LAS MAÑANAS)",
+          "similitud": 0.016,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 45,
+      "caso": "Camión demora demasiado en levantar presión de aire y el compresor tra",
+      "falla_esperada": "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE FRENOS DE AIRE NEUMÁTICOS EN CAMIONES (SCANIA / VOLVO / SPN 1087)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE FRENOS DE AIRE NEUMÁTICOS EN CAMIONES (SCANIA / VOLVO / SPN 1087)",
+          "similitud": 0.3166,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA DE FRENOS DE AIRE NEUMATICOS EN CAMIONES (FRENO_006 / FRENO_007)",
+          "similitud": 0.278,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CARGA DE REFRIGERANTE R134a / R1234yf Y PRUEBA DE FUGAS CON MANÓMETROS (DTC B1000 / A/C TIBIO)",
+          "similitud": 0.029,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN NEUMÁTICA, COMPRESOR Y BLOQUE DE VÁLVULAS (AUTO INCLINADO O CAÍDO / DTC C1525)",
+          "similitud": 0.0217,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE VÁLVULA DE EXPANSIÓN TÉRMICA Y FILTRO DESECANTE DE A/C (DTC B1008 / FALTA DE ENFRÍAMIENTO / PRESIONES ANORMALES)",
+          "similitud": 0.0215,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 46,
+      "caso": "Toyota cierre centralizado no abre puerta trasera con control, se escu",
+      "falla_esperada": "Falla electrica del cierre centralizado o actuador de puerta",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: REPARACIÓN Y ALINEACIÓN DE CHAPA DE PUERTA / PESTILLO MECÁNICO",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: REPARACIÓN Y ALINEACIÓN DE CHAPA DE PUERTA / PESTILLO MECÁNICO",
+          "similitud": 1.0,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REPARACION DE CIERRE CENTRALIZADO Y ACTUADOR ELECTRICO DE PUERTA (CARROCERIA_001)",
+          "similitud": 0.9221,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REPARACION Y ALINEACION DE CHAPA, PESTILLO Y CERRADURA MECANICA DE PUERTA (CARROCERIA_002)",
+          "similitud": 0.6991,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REEMPLAZO DE MOTOR DE LIMPIAPARABRISAS / PLUMAS (CARROCERIA_004)",
+          "similitud": 0.1496,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: REPARACIÓN Y REEMPLAZO DE MOTOR ELEVALUNAS ELÉCTRICO, GUAYA Y ALZACRISTALES (LUNA O VIDRIO DE PUERTA TRABADO)",
+          "similitud": 0.0935,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 47,
+      "caso": "Kia al presionar control remoto ninguna puerta cierra, pero desde cada",
+      "falla_esperada": "Falla electrica del cierre centralizado o actuador de puerta",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNOSTICO Y REPARACION DE CIERRE CENTRALIZADO Y ACTUADOR ELECTRICO DE PUERTA (CARROCERIA_001)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REPARACION DE CIERRE CENTRALIZADO Y ACTUADOR ELECTRICO DE PUERTA (CARROCERIA_001)",
+          "similitud": 0.9444,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: REPARACIÓN Y ALINEACIÓN DE CHAPA DE PUERTA / PESTILLO MECÁNICO",
+          "similitud": 0.7172,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REPARACIÓN Y REEMPLAZO DE MOTOR ELEVALUNAS ELÉCTRICO, GUAYA Y ALZACRISTALES (LUNA O VIDRIO DE PUERTA TRABADO)",
+          "similitud": 0.3786,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO Y REEMPLAZO DE ELEVALUNAS ELECTRICO / ALZACRISTALES Y GUAYA (CARROCERIA_003)",
+          "similitud": 0.3101,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: REPARACION Y ALINEACION DE CHAPA, PESTILLO Y CERRADURA MECANICA DE PUERTA (CARROCERIA_002)",
+          "similitud": 0.2488,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 48,
+      "caso": "Cliente dice que el carro pierde fuerza después de un rato y prende ch",
+      "falla_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "rank_base": 3,
+      "rank_hibrido": 3,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+          "similitud": 0.4168,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.3338,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+          "similitud": 0.3027,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.24,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.1898,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 49,
+      "caso": "Hace un ruido adelante cuando manejo, a veces vibra y cliente dice que",
+      "falla_esperada": "Amortiguadores reventados o bujes de suspension gastados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.3591,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.2367,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN PILOTADA ELECTRÓNICA / AMORTIGUADORES MAGNÉTICOS O VALVULADOS (DTC C1710)",
+          "similitud": 0.1109,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y PUNTO CERO (DTC C1203 / C1210 / VOLANTE DESVIADO)",
+          "similitud": 0.0872,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550)",
+          "similitud": 0.0838,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 50,
+      "caso": "Motor tiembla un poco, consume más gasolina y algunas mañanas demora e",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 2,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.4291,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.35,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.3383,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.3381,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.2836,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 51,
+      "caso": "Maestro, al salir en subida o cuando acelero fuerte en tercera, el car",
+      "falla_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "rank_base": 1,
+      "rank_hibrido": 3,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+          "similitud": 0.3027,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2483,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+          "similitud": 0.2314,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: GALGADO Y METROLOGÍA DE BUJÍAS DE ENCENDIDO DE IRIDIO / PLATINO Y PRUEBA DE SECUNDARIO (DTC P0300)",
+          "similitud": 0.2212,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOBINAS DE ENCENDIDO COP Y TIEMPO DE QUEMADO DE CHISPA (DTC P0300 A P0304 / TIRONEO BAJO CARGA)",
+          "similitud": 0.2145,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 52,
+      "caso": "En plano rueda tranquilo, pero piso a fondo en carretera para adelanta",
+      "falla_esperada": "Bomba de gasolina quemada o con baja presion",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.7378,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.4066,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.3399,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE SEGUIDOR DE LEVA (CAM FOLLOWER) EN BOMBA DE ALTA PRESIÓN GDI / TSI (DTC P0087 / P2293)",
+          "similitud": 0.3331,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.3077,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 53,
+      "caso": "Cuando paso los 60 o 70 km/h empieza a sonar un zumbido sordo adelante",
+      "falla_esperada": "Rodajes de caja mecanica o diferencial gastados",
+      "rank_base": 0,
+      "rank_hibrido": 2,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.3441,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.1582,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DE RODAMIENTOS DE RUEDA / MAZA (ZUMBIDO METÁLICO MODULADO AL VIRAR / PRUEBA DE HOLGURA)",
+          "similitud": 0.1221,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECÁNICA Y DIFERENCIAL (CAMBIO DE VALVOLINA Y SINCRONIZADORES)",
+          "similitud": 0.0169,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
+          "similitud": 0.0157,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 54,
+      "caso": "En pista recta a 90 km/h rueda sedita, pero apenas piso el freno para ",
+      "falla_esperada": "Discos de freno alabeados o desgastados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.2616,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.084,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y PUNTO CERO (DTC C1203 / C1210 / VOLANTE DESVIADO)",
+          "similitud": 0.0716,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DE RODAMIENTOS DE RUEDA / MAZA (ZUMBIDO METÁLICO MODULADO AL VIRAR / PRUEBA DE HOLGURA)",
+          "similitud": 0.0598,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN DE PUNTO CERO DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS / DTC C1260 / C0460 / TESTIGO ESP ENCENDIDO TRAS ALINEAR)",
+          "similitud": 0.0556,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 55,
+      "caso": "En ciudad anda perfecto, pero apenas salgo a pista rápida y llego a 80",
+      "falla_esperada": "Llantas desbalanceadas o desalineadas",
+      "rank_base": 3,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.2831,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+          "similitud": 0.0237,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+          "similitud": 0.0208,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.018,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.0156,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 56,
+      "caso": "Frenando en velocidad responde bien, pero si me quedo parado en un sem",
+      "falla_esperada": "Fuga hidraulica o aire en el sistema de frenos",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+          "similitud": 0.2116,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.1923,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.1473,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: PURGA ELECTRÓNICA Y REEMPLAZO DE ELECTROVÁLVULAS DEL MÓDULO ABS CON ESCÁNER DIAGNÓSTICO (DTC C0020 / C0082 / PEDAL DURO BAJO ACTIVACIÓN ABS)",
+          "similitud": 0.1239,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO Y CALIBRACIÓN DE FRENO DE ESTACIONAMIENTO ELECTRÓNICO (EPB / EMB / DTC C1555 / C1556)",
+          "similitud": 0.1182,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 57,
+      "caso": "Giro la llave y no hace nada de marcha, solo se escucha un 'clac' seco",
+      "falla_esperada": "Bateria descargada o bornes sulfatados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.414,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.3597,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE ALTO VOLTAJE E INVERSOR EN VEHÍCULOS ELÉCTRICOS E HÍBRIDOS (EV/HEV / DTC P0A80)",
+          "similitud": 0.3298,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE BATERIA DE ALTO VOLTAJE E INVERSOR EN VEHICULOS ELECTRICOS E HIBRIDOS (ELECTRICO_HV_001 A 004)",
+          "similitud": 0.317,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 0.3053,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 58,
+      "caso": "Prende al llavazo en frío, pero cuando ando media hora en tráfico pesa",
+      "falla_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "rank_base": 3,
+      "rank_hibrido": 0,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE POSICIÓN DE CIGÜEÑAL CKP Y LEVAS CMP (DTC P0335 / P0340)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE POSICIÓN DE CIGÜEÑAL CKP Y LEVAS CMP (DTC P0335 / P0340)",
+          "similitud": 0.268,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+          "similitud": 0.2327,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2105,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.2026,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE PRESIÓN DE COMBUSTIBLE EN RIEL (FRP) Y LECTURA EN MILIVOLTIOS (DTC P0191 / P0193)",
+          "similitud": 0.2016,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 59,
+      "caso": "Llego a una esquina, piso el embrague o pongo neutro y el carro empiez",
+      "falla_esperada": "Cuerpo de aceleracion o valvula IAC sucia",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+          "similitud": 0.2771,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE LA VÁLVULA DE RALENTÍ IAC (DTC P0505 / P0506 / P0507)",
+          "similitud": 0.265,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN Y REAPRENDIZAJE DE MARCHA MÍNIMA EN CUERPO DE ACELERACIÓN ELECTRÓNICO (DRIVE-BY-WIRE / TAC / ETCS-I)",
+          "similitud": 0.2085,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y PEDAL TPS (DTC P2135 / P2101 / RALENTÍ INESTABLE HYUNDAI ACCENT)",
+          "similitud": 0.0777,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: REPARACIÓN DE EMBRAGUE ELECTROMAGNÉTICO Y COMPRESOR DE A/C (DTC B1421 / RUIDO EN COMPRESOR)",
+          "similitud": 0.0266,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 60,
+      "caso": "En asfalto liso el carro no suena nada y el timón va derechito, pero p",
+      "falla_esperada": "Amortiguadores reventados o bujes de suspension gastados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.3961,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.1776,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550)",
+          "similitud": 0.1041,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN PILOTADA ELECTRÓNICA / AMORTIGUADORES MAGNÉTICOS O VALVULADOS (DTC C1710)",
+          "similitud": 0.094,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SUSPENSIÓN, BIELETAS ESTABILIZADORAS Y RÓTULAS DE CARGA (GOLPETEO SECO CLAC-CLAC AL PASAR BACHES)",
+          "similitud": 0.086,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 61,
+      "caso": "En línea recta anda suave sin ruidos, pero cuando doblo cerrado en una",
+      "falla_esperada": "Juntas homocineticas o palieres danados",
+      "rank_base": 0,
+      "rank_hibrido": 0,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.2126,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.1337,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN PILOTADA ELECTRÓNICA / AMORTIGUADORES MAGNÉTICOS O VALVULADOS (DTC C1710)",
+          "similitud": 0.0887,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550)",
+          "similitud": 0.086,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y PUNTO CERO (DTC C1203 / C1210 / VOLANTE DESVIADO)",
+          "similitud": 0.0842,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 62,
+      "caso": "Acelero a fondo en subida, las revoluciones del motor se disparan a 40",
+      "falla_esperada": "Disco de embrague desgastado o patinando",
+      "rank_base": 1,
+      "rank_hibrido": 4,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.0434,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.0358,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN GDI / CRDI Y PRESIÓN DE RIEL (DTC P0087 / P0088)",
+          "similitud": 0.0272,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE COMBUSTIBLE Y PRESIÓN DE LÍNEA GASOLINA/GLP/GNV (DTC P0087 / P0088)",
+          "similitud": 0.0272,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.0255,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 63,
+      "caso": "Anoche manejando noté que las luces y el tablero bajaban de brillo y t",
+      "falla_esperada": "Alternador defectuoso o placa de diodos quemada",
+      "rank_base": 2,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.6388,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.5965,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 0.4489,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE ALTO VOLTAJE E INVERSOR EN VEHÍCULOS ELÉCTRICOS E HÍBRIDOS (EV/HEV / DTC P0A80)",
+          "similitud": 0.3925,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE ALTERNADOR Y SISTEMA DE CARGA DE 12V (DTC P0562 / P0563 / BATERÍA NO CARGA)",
+          "similitud": 0.3005,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 64,
+      "caso": "Salgo a manejar y a los 10 minutos la aguja de temperatura se va direc",
+      "falla_esperada": "Falla en termostato o motoventilador de radiador",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+          "similitud": 0.6463,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE TEMPERATURA DE REFRIGERANTE ECT (DTC P0117 / P0118 / P0128)",
+          "similitud": 0.3133,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2367,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE ELECTROVENTILADOR CON MÓDULO DE CONTROL ELECTRÓNICO PWM (MOTOVENTILADOR NO ENCIENDE / DTC P0480)",
+          "similitud": 0.2364,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE LA BOMBA DE AGUA ELÉCTRICA Y TERMOSTATO ELECTRÓNICO MAP-CONTROLLED (DTC P261B / 2E81 / 2E82)",
+          "similitud": 0.1774,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 65,
+      "caso": "En frío prende al toque. Lo ruedo una hora, lo apago 15 minutos para c",
+      "falla_esperada": "Inyectores sucios o filtro de combustible obstruido",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.3281,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.3177,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y LIMPIEZA DE SENSORES DE FLUJO DE AIRE MAF Y PRESIÓN MAP (DTC P0100 / P0106)",
+          "similitud": 0.2571,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA DEMASIADO RICA BANCO 1 (DTC P0172)",
+          "similitud": 0.2435,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2248,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 66,
+      "caso": "El motor en neutro se queda acelerado a casi 1500 revoluciones y no ba",
+      "falla_esperada": "Cuerpo de aceleracion o valvula IAC sucia",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE LA VÁLVULA DE RALENTÍ IAC (DTC P0505 / P0506 / P0507)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE LA VÁLVULA DE RALENTÍ IAC (DTC P0505 / P0506 / P0507)",
+          "similitud": 0.253,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+          "similitud": 0.2317,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE ACEITE DE MOTOR, FILTRO Y LIMPIEZA DE CÁRTER (DTC P0520 / BAJA PRESIÓN)",
+          "similitud": 0.1661,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE LA BOMBA DE VACÍO MECÁNICA / TÁNDEM EN MOTORES DIESEL Y GDI (PEDAL DE FRENO DURO COMO PIEDRA)",
+          "similitud": 0.1417,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE VACÍO MECÁNICA Y ELÉCTRICA DE FRENOS (PEDAL DURO EN DIÉSEL / TURBO)",
+          "similitud": 0.1335,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 67,
+      "caso": "Solo cuando piso el acelerador en tercera o cuarta para ganar velocida",
+      "falla_esperada": "Juntas homocineticas o palieres danados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.3506,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.1772,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
+          "similitud": 0.1239,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE DIRECCIÓN EN CREMALLERA DUAL PINION R-EPS (DTC C1521 / C1532)",
+          "similitud": 0.0949,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DE RODAMIENTOS DE RUEDA / MAZA (ZUMBIDO METÁLICO MODULADO AL VIRAR / PRUEBA DE HOLGURA)",
+          "similitud": 0.0887,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 68,
+      "caso": "Paso un bache y el carro sigue rebotando varias veces seguidas como si",
+      "falla_esperada": "Amortiguadores reventados o bujes de suspension gastados",
+      "rank_base": 0,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.4416,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN PILOTADA ELECTRÓNICA / AMORTIGUADORES MAGNÉTICOS O VALVULADOS (DTC C1710)",
+          "similitud": 0.2049,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
+          "similitud": 0.1164,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE DIRECCIÓN EN CREMALLERA DUAL PINION R-EPS (DTC C1521 / C1532)",
+          "similitud": 0.0968,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE RÓTULAS DE SUSPENSIÓN, TRAPECIOS Y BUJES (JUEGO EN TIMÓN / JALONEO)",
+          "similitud": 0.0733,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 69,
+      "caso": "Con el carro parado en neutro y sin pisar pedales suena un chillido co",
+      "falla_esperada": "Rodajes de caja mecanica o diferencial gastados",
+      "rank_base": 0,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECÁNICA Y DIFERENCIAL (CAMBIO DE VALVOLINA Y SINCRONIZADORES)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECÁNICA Y DIFERENCIAL (CAMBIO DE VALVOLINA Y SINCRONIZADORES)",
+          "similitud": 0.2151,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
+          "similitud": 0.1848,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: PURGA Y REEMPLAZO DEL BOMBÍN Y CILINDRO MAESTRO DE EMBRAGUE HYUNDAI ACCENT (DTC MANUAL / PEDAL DURO O PEGADO AL PISO)",
+          "similitud": 0.1272,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE MECATRÓNICA Y EMBRAGUE DOBLE EN TRANSMISIÓN DSG / DCT (DTC P0741 / P17BF / TIRONES EN CAMBIOS)",
+          "similitud": 0.1065,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN HIDRÁULICA Y FLUIDO EN TRANSMISIÓN AUTOMÁTICA CVT (DTC P0746 / P0841 / ZUMBIDO DE BANDA METÁLICA)",
+          "similitud": 0.0907,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 70,
+      "caso": "Cada vez que pongo primera y saco el embrague para avanzar, o cuando m",
+      "falla_esperada": "Amortiguadores reventados o bujes de suspension gastados",
+      "rank_base": 3,
+      "rank_hibrido": 0,
+      "top1_recuperado": "PROCEDIMIENTO: PURGA Y REEMPLAZO DEL BOMBÍN Y CILINDRO MAESTRO DE EMBRAGUE HYUNDAI ACCENT (DTC MANUAL / PEDAL DURO O PEGADO AL PISO)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: PURGA Y REEMPLAZO DEL BOMBÍN Y CILINDRO MAESTRO DE EMBRAGUE HYUNDAI ACCENT (DTC MANUAL / PEDAL DURO O PEGADO AL PISO)",
+          "similitud": 0.2851,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TRANSMISIÓN DE DOBLE EMBRAGUE SECO (DCT / DSG DQ200 / POWERSHIFT) (DTC P0700 / P0841)",
+          "similitud": 0.118,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL GRUPO ELECTROHIDRÁULICO Y PRESIÓN DE ACUMULADOR EN TRANSMISIONES ROBOTIZADAS DUALOGIC / I-MOTION / FREECHOICE",
+          "similitud": 0.114,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE VÁLVULA DE BLOQUEO DEL CONVERTIDOR DE PAR TCC LOCK-UP (DTC P0740 / P0741 / P0742)",
+          "similitud": 0.0782,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DEL KIT DE EMBRAGUE EN TRANSMISIÓN MANUAL (DISCO, PRENSA Y COLLARÍN)",
+          "similitud": 0.0202,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 71,
+      "caso": "Le doy a la llave para arrancar y el motor no gira, solo hace un sonid",
+      "falla_esperada": "Bateria descargada o bornes sulfatados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.4608,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.3488,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 0.2844,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE BATERÍA INTELIGENTE (IBS / BMS) Y CODIFICACIÓN EN REEMPLAZO (DTC U0111 / BATERÍA AGM)",
+          "similitud": 0.2003,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONSUMO PARÁSITO DE CORRIENTE Y DRENAJE DE BATERÍA EN REPOSO (DESCARGA NOCTURNA / SIN ARRANQUE EN LAS MAÑANAS)",
+          "similitud": 0.1798,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 72,
+      "caso": "En tramos cortos anda bien, pero en carretera por más que pise a fondo",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.5314,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.3328,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.3067,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.3007,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE SEGUIDOR DE LEVA (CAM FOLLOWER) EN BOMBA DE ALTA PRESIÓN GDI / TSI (DTC P0087 / P2293)",
+          "similitud": 0.2818,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 73,
+      "caso": "Piso el acelerador de golpe para salir rápido y el motor se queda pens",
+      "falla_esperada": "Cuerpo de aceleracion o valvula IAC sucia",
+      "rank_base": 1,
+      "rank_hibrido": 2,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.3253,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.2674,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119)",
+          "similitud": 0.1829,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE LA VÁLVULA DE RALENTÍ IAC (DTC P0505 / P0506 / P0507)",
+          "similitud": 0.1776,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO AGUAS ARRIBA (DTC P0130 / P0133)",
+          "similitud": 0.1376,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 74,
+      "caso": "En carretera la temperatura va perfecta a la mitad, pero apenas me aga",
+      "falla_esperada": "Falla en termostato o motoventilador de radiador",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+          "similitud": 0.4541,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE TEMPERATURA DE REFRIGERANTE ECT (DTC P0117 / P0118 / P0128)",
+          "similitud": 0.3102,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2667,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
+          "similitud": 0.1933,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE ENFRIADOR DE ACEITE DE MOTOR Y JUNTA DE CULATA (CONTAMINACIÓN DE REFRIGERANTE / MAYONESA)",
+          "similitud": 0.1883,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 75,
+      "caso": "Cada vez que piso el freno suave se escucha un chillido agudo insoport",
+      "falla_esperada": "Desgaste de pastillas y zapatas de freno",
+      "rank_base": 2,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+          "similitud": 0.2763,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO Y CALIBRACIÓN DE FRENO DE ESTACIONAMIENTO ELECTRÓNICO (EPB / EMB / DTC C1555 / C1556)",
+          "similitud": 0.2613,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL FRENO DE ESTACIONAMIENTO ELÉCTRICO EPB Y MODO SERVICIO (DTC C1001 / C1087)",
+          "similitud": 0.2321,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.1485,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.1202,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 76,
+      "caso": "El carro anda suave y no vibra, pero si suelto el timón un segundo en ",
+      "falla_esperada": "Llantas desbalanceadas o desalineadas",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.4173,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.2072,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.1555,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN MC PHERSON: CAZOLETAS, COJINETES DE TOPE Y MUELLES (CRUJIDO AL GIRAR EL TIMÓN)",
+          "similitud": 0.1148,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN PILOTADA ELECTRÓNICA / AMORTIGUADORES MAGNÉTICOS O VALVULADOS (DTC C1710)",
+          "similitud": 0.0912,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 77,
+      "caso": "Al girar el timón despacio para estacionar en la cochera, suena un cru",
+      "falla_esperada": "Juntas homocineticas o palieres danados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO ELECTROMECÁNICO DEL MOTOR DE ARRANQUE, SOLENOIDE Y CAÍDA DE TENSIÓN EN TERMINAL 50 (SIN ESCÁNER / CLAC SECO)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO ELECTROMECÁNICO DEL MOTOR DE ARRANQUE, SOLENOIDE Y CAÍDA DE TENSIÓN EN TERMINAL 50 (SIN ESCÁNER / CLAC SECO)",
+          "similitud": 0.2494,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE JUNTA HOMOCINÉTICA Y CUBREPOLVOS DE PALIER (CLAC CLAC AL DOBLAR)",
+          "similitud": 0.2129,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
+          "similitud": 0.1635,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN MC PHERSON: CAZOLETAS, COJINETES DE TOPE Y MUELLES (CRUJIDO AL GIRAR EL TIMÓN)",
+          "similitud": 0.1411,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SUSPENSIÓN, BIELETAS ESTABILIZADORAS Y RÓTULAS DE CARGA (GOLPETEO SECO CLAC-CLAC AL PASAR BACHES)",
+          "similitud": 0.1337,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 78,
+      "caso": "El carro calienta al exigirlo en subida, el depósito de agua empieza a",
+      "falla_esperada": "Empaque de culata soplado o danado",
+      "rank_base": 3,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
+          "similitud": 0.5512,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE ENFRIADOR DE ACEITE DE MOTOR Y JUNTA DE CULATA (CONTAMINACIÓN DE REFRIGERANTE / MAYONESA)",
+          "similitud": 0.2926,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.2589,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+          "similitud": 0.2277,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.1923,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 79,
+      "caso": "Cada vez que voy al grifo y lleno el tanque de gasolina a tope, el car",
+      "falla_esperada": "Bomba de gasolina quemada o con baja presion",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.4349,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.3534,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.3391,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.3113,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.2856,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 80,
+      "caso": "En autopista el carro se siente flotante, el timón tiene un juego muer",
+      "falla_esperada": "Cremallera de direccion asistida con holgura o fuga",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
+          "similitud": 0.1547,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.154,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE DIRECCIÓN EN CREMALLERA DUAL PINION R-EPS (DTC C1521 / C1532)",
+          "similitud": 0.1069,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN MC PHERSON: CAZOLETAS, COJINETES DE TOPE Y MUELLES (CRUJIDO AL GIRAR EL TIMÓN)",
+          "similitud": 0.087,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.0599,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 81,
+      "caso": "En las mañanas demora bastante en prender, le cuesta salir de parado e",
+      "falla_esperada": "Inyectores sucios o filtro de combustible obstruido",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.4564,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.429,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA COMMON RAIL DIESEL Y BOMBA DE ALTA PRESION (COMBUSTIBLE_005)",
+          "similitud": 0.4171,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.3603,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.3452,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 82,
+      "caso": "Al doblar toda la dirección despacio o al entrar a una rampa suena un ",
+      "falla_esperada": "Cremallera de direccion asistida con holgura o fuga",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO ELECTROMECÁNICO DEL MOTOR DE ARRANQUE, SOLENOIDE Y CAÍDA DE TENSIÓN EN TERMINAL 50 (SIN ESCÁNER / CLAC SECO)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO ELECTROMECÁNICO DEL MOTOR DE ARRANQUE, SOLENOIDE Y CAÍDA DE TENSIÓN EN TERMINAL 50 (SIN ESCÁNER / CLAC SECO)",
+          "similitud": 0.2421,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.2057,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE JUNTA HOMOCINÉTICA Y CUBREPOLVOS DE PALIER (CLAC CLAC AL DOBLAR)",
+          "similitud": 0.1983,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SUSPENSIÓN, BIELETAS ESTABILIZADORAS Y RÓTULAS DE CARGA (GOLPETEO SECO CLAC-CLAC AL PASAR BACHES)",
+          "similitud": 0.1445,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
+          "similitud": 0.1284,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 83,
+      "caso": "Las luces alumbran demasiado brillante por momentos y se me quemaron d",
+      "falla_esperada": "Alternador defectuoso o placa de diodos quemada",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.6484,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.5853,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 0.4237,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE ALTERNADOR Y SISTEMA DE CARGA DE 12V (DTC P0562 / P0563 / BATERÍA NO CARGA)",
+          "similitud": 0.267,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE CARGA INTELIGENTE Y SENSOR DE BATERÍA (IBS / LIN BUS / DTC P0620 / P0625 / P2503)",
+          "similitud": 0.2636,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 84,
+      "caso": "El carro se frena solo hacia un lado al rodar. Cuando me estaciono des",
+      "falla_esperada": "Desgaste de pastillas y zapatas de freno",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+          "similitud": 0.2871,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: MANTENIMIENTO Y CALIBRACIÓN DE FRENO DE ESTACIONAMIENTO ELECTRÓNICO (EPB / EMB / DTC C1555 / C1556)",
+          "similitud": 0.2009,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL FRENO DE ESTACIONAMIENTO ELÉCTRICO EPB Y MODO SERVICIO (DTC C1001 / C1087)",
+          "similitud": 0.176,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.1311,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.1218,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 85,
+      "caso": "El pedal del freno se va muy abajo y frena despacio, se siente como pi",
+      "falla_esperada": "Fuga hidraulica o aire en el sistema de frenos",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: PURGA Y CAMBIO DE LÍQUIDO DEL SISTEMA HIDRÁULICO DE FRENOS (PEDAL ESPONJOSO / DTC C0040)",
+          "similitud": 0.1972,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+          "similitud": 0.139,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: REEMPLAZO DE PASTILLAS Y DISCOS DE FRENO DELANTEROS / TRASEROS (CHILLIDO / DTC C0035)",
+          "similitud": 0.1282,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: PURGA ELECTRÓNICA Y REEMPLAZO DE ELECTROVÁLVULAS DEL MÓDULO ABS CON ESCÁNER DIAGNÓSTICO (DTC C0020 / C0082 / PEDAL DURO BAJO ACTIVACIÓN ABS)",
+          "similitud": 0.1227,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: PURGA ASISTIDA DEL MÓDULO HIDRÁULICO DE FRENOS ABS CON ESCÁNER (PEDAL BAJO TRAS CAMBIO DE BOMBA / BURBUJA ATRAPADA)",
+          "similitud": 0.1112,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 86,
+      "caso": "En las mañanas al prender suena un taqueteo metálico rápido arriba en ",
+      "falla_esperada": "Faja o cadena de distribucion destensada o con salto de punto",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+          "similitud": 0.2631,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE POSICIÓN DE CIGÜEÑAL CKP Y LEVAS CMP (DTC P0335 / P0340)",
+          "similitud": 0.2077,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESFASE DE DISTRIBUCIÓN Y SALTO DE DIENTE MEDIANTE OSCILOSCOPIO CMP/CKP",
+          "similitud": 0.1896,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y SINCRONIZACIÓN DE SENSORES CKP Y CMP (DTC P0016 / P0017 / P0335 - OSCILOGRAMA DE CORRELACIÓN)",
+          "similitud": 0.1874,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE ACEITE DE MOTOR, FILTRO Y LIMPIEZA DE CÁRTER (DTC P0520 / BAJA PRESIÓN)",
+          "similitud": 0.1812,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 87,
+      "caso": "A velocidad bien baja, como a 20 km/h, siento que el carro cabecea de ",
+      "falla_esperada": "Llantas desbalanceadas o desalineadas",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.3528,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PALIERS SEMIEJES, RODAMIENTO DE APOYO INTERMEDIO Y TRICETAS (VIBRACIÓN AL ACELERAR A 40-60 KM/H)",
+          "similitud": 0.2475,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532)",
+          "similitud": 0.1309,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN MC PHERSON: CAZOLETAS, COJINETES DE TOPE Y MUELLES (CRUJIDO AL GIRAR EL TIMÓN)",
+          "similitud": 0.1054,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE DIRECCIÓN EN CREMALLERA DUAL PINION R-EPS (DTC C1521 / C1532)",
+          "similitud": 0.1043,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 88,
+      "caso": "Le hicieron el cambio de faja hace dos días y el carro quedó sin fuerz",
+      "falla_esperada": "Faja o cadena de distribucion destensada o con salto de punto",
+      "rank_base": 0,
+      "rank_hibrido": 0,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.4139,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.3369,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL CIRCUITO CALEFACTOR DEL SENSOR DE OXÍGENO (DTC P0135)",
+          "similitud": 0.1978,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+          "similitud": 0.1703,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO AGUAS ARRIBA (DTC P0130 / P0133)",
+          "similitud": 0.1661,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 89,
+      "caso": "En carretera la aguja de temperatura se cae al suelo como si el carro ",
+      "falla_esperada": "Falla en termostato o motoventilador de radiador",
+      "rank_base": 2,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+          "similitud": 0.4449,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.3104,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.2573,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE TEMPERATURA DE REFRIGERANTE ECT (DTC P0117 / P0118 / P0128)",
+          "similitud": 0.2475,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2277,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 90,
+      "caso": "Huele fuertísimo a gasolina cruda por el motor, bota humo negro por el",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.5181,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.4947,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y LIMPIEZA DE SENSORES DE FLUJO DE AIRE MAF Y PRESIÓN MAP (DTC P0100 / P0106)",
+          "similitud": 0.4493,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA DEMASIADO RICA BANCO 1 (DTC P0172)",
+          "similitud": 0.3824,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL CIRCUITO CALEFACTOR DEL SENSOR DE OXÍGENO (DTC P0135)",
+          "similitud": 0.3004,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 91,
+      "caso": "Cuando prendo las luces altas o la calefacción, la aguja de la tempera",
+      "falla_esperada": "Bateria descargada o bornes sulfatados",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+          "similitud": 0.3827,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJO VOLTAJE DEL SISTEMA ELÉCTRICO Y ALTERNADOR (DTC P0562)",
+          "similitud": 0.3644,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALTERNADOR, PLACA DE DIODOS Y CAÍDA DE TENSIÓN B+ (LUCES TITILANTES EN MARCHA / BATERÍA MUERTA AL DÍA SIGUIENTE)",
+          "similitud": 0.2741,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONSUMO PARÁSITO DE CORRIENTE Y DRENAJE DE BATERÍA EN REPOSO (DESCARGA NOCTURNA / SIN ARRANQUE EN LAS MAÑANAS)",
+          "similitud": 0.2142,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE BATERÍA INTELIGENTE (IBS / BMS) Y CODIFICACIÓN EN REEMPLAZO (DTC U0111 / BATERÍA AGM)",
+          "similitud": 0.214,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 92,
+      "caso": "Demora como cinco segundos de giro continuo para prender. Tiene la luz",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 3,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.5938,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.5041,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.3178,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL CIRCUITO CALEFACTOR DEL SENSOR DE OXÍGENO (DTC P0135)",
+          "similitud": 0.2628,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE MEZCLA DEMASIADO POBRE BANCO 1 (DTC P0171)",
+          "similitud": 0.2513,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 93,
+      "caso": "Si acelero suave responde parejo, pero si piso el pedal a fondo de gol",
+      "falla_esperada": "Bomba de gasolina quemada o con baja presion",
+      "rank_base": 2,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.5432,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.4142,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.3211,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE SEGUIDOR DE LEVA (CAM FOLLOWER) EN BOMBA DE ALTA PRESIÓN GDI / TSI (DTC P0087 / P2293)",
+          "similitud": 0.2747,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.2733,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 94,
+      "caso": "Prendo el aire acondicionado y se escucha un chillido fuertísimo de fa",
+      "falla_esperada": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+      "rank_base": 3,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: CARGA DE REFRIGERANTE R134a / R1234yf Y PRUEBA DE FUGAS CON MANÓMETROS (DTC B1000 / A/C TIBIO)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: CARGA DE REFRIGERANTE R134a / R1234yf Y PRUEBA DE FUGAS CON MANÓMETROS (DTC B1000 / A/C TIBIO)",
+          "similitud": 0.4746,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE VÁLVULA DE EXPANSIÓN TÉRMICA Y FILTRO DESECANTE DE A/C (DTC B1008 / FALTA DE ENFRÍAMIENTO / PRESIONES ANORMALES)",
+          "similitud": 0.2628,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE CONDENSADOR Y FUGAS EN EL RADIADOR DE CALEFACCIÓN / EVAPORADOR (DTC B1010 / REFRIGERANTE EN ALFOMBRA / LÍNEA AC SECA)",
+          "similitud": 0.2213,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL MOTOVENTILADOR DE CABINA (BLOWER MOTOR) Y RESISTENCIA PWM (AIRE ACONDICIONADO NO SOPLA / SOLO SOPLA AL MÁXIMO)",
+          "similitud": 0.214,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE LA BOMBA DE VACÍO MECÁNICA / TÁNDEM EN MOTORES DIESEL Y GDI (PEDAL DE FRENO DURO COMO PIEDRA)",
+          "similitud": 0.0203,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 95,
+      "caso": "Cuando dejo el carro parado en una bajada aguantado con el motor y vue",
+      "falla_esperada": "Consumo de aceite por desgaste de anillos o retenes",
+      "rank_base": 1,
+      "rank_hibrido": 3,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.3748,
+          "relevante": false
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.2908,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE EMPAQUE DE CULATA (HUMO BLANCO / SOBRECALENTAMIENTO / DTC P0217)",
+          "similitud": 0.2121,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL CIRCUITO CALEFACTOR DEL SENSOR DE OXÍGENO (DTC P0135)",
+          "similitud": 0.1648,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE VÁLVULA PCV Y VENTILACIÓN POSITIVA DEL CÁRTER (DTC P0171 / CONSUMO DE ACEITE POR SUCCIÓN)",
+          "similitud": 0.1557,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 96,
+      "caso": "El carro cascabelea al acelerar a medio pedal como si tuviera gasolina",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.29,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2892,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.2578,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.2313,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y LIMPIEZA DE SENSORES DE FLUJO DE AIRE MAF Y PRESIÓN MAP (DTC P0100 / P0106)",
+          "similitud": 0.2264,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 97,
+      "caso": "El motor calienta únicamente cuando voy en subida con pasajeros o con ",
+      "falla_esperada": "Falla en termostato o motoventilador de radiador",
+      "rank_base": 0,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+          "similitud": 0.3798,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.2632,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSORES DE POSICIÓN DE CIGÜEÑAL CKP INDUCTIVOS VS EFECTO HALL (DTC P0335 / P0339)",
+          "similitud": 0.244,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE TEMPERATURA DE REFRIGERANTE ECT (DTC P0117 / P0118 / P0128)",
+          "similitud": 0.2404,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.1949,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 98,
+      "caso": "Se me prendió la luz del motor en el tablero fija. El auto anda normal",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO DE BANDA ANCHA (A/F) Y CORRIENTE DE BOMBEO (DTC P2195 / P2196 / DTC P0134)",
+          "similitud": 0.5048,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195)",
+          "similitud": 0.4956,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL CIRCUITO CALEFACTOR DEL SENSOR DE OXÍGENO (DTC P0135)",
+          "similitud": 0.2566,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE OXÍGENO AGUAS ARRIBA (DTC P0130 / P0133)",
+          "similitud": 0.208,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE OXÍGENO / LAMBDA (DTC P0130 / P0135 / P0141)",
+          "similitud": 0.206,
+          "relevante": true
+        }
+      ]
+    },
+    {
+      "idx": 99,
+      "caso": "Al acelerar suena un zumbido ronco y fuerte debajo de los asientos com",
+      "falla_esperada": "Falla en sensor de oxigeno o mezcla rica",
+      "rank_base": 1,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE PRESIÓN DE COMBUSTIBLE Y CAÍDA DE CAUDAL BAJO CARGA (DTC P0087 / TIRONEO AL EXIGIR ACELERACIÓN)",
+          "similitud": 0.5615,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE ALTA PRESIÓN (HPFP) Y SISTEMA DE INYECCIÓN DIRECTA GDI / TSI (DTC P0087 / P0088 / P0089)",
+          "similitud": 0.444,
+          "relevante": false
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE SISTEMA DE INYECCIÓN DIRECTA GDI / CRDI Y PRESIÓN DE ALTA (DTC P0087 / P0088)",
+          "similitud": 0.3966,
+          "relevante": false
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE SEGUIDOR DE LEVA (CAM FOLLOWER) EN BOMBA DE ALTA PRESIÓN GDI / TSI (DTC P0087 / P2293)",
+          "similitud": 0.387,
+          "relevante": false
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE BAJA PRESIÓN EN RIEL DE COMBUSTIBLE (DTC P0087)",
+          "similitud": 0.3775,
+          "relevante": false
+        }
+      ]
+    },
+    {
+      "idx": 100,
+      "caso": "Paso por cualquier hueco y suena un golpe seco de fierro abajo, y al m",
+      "falla_esperada": "Amortiguadores reventados o bujes de suspension gastados",
+      "rank_base": 2,
+      "rank_hibrido": 1,
+      "top1_recuperado": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+      "candidatos_top5": [
+        {
+          "rank": 1,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DE DESGASTE DE BUJES DE TRAPECIO, BARRAS ESTABILIZADORAS Y AMORTIGUADORES (GOLPETEO EN TROCHA / REBOTE)",
+          "similitud": 0.3799,
+          "relevante": true
+        },
+        {
+          "rank": 2,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN MC PHERSON: CAZOLETAS, COJINETES DE TOPE Y MUELLES (CRUJIDO AL GIRAR EL TIMÓN)",
+          "similitud": 0.1701,
+          "relevante": true
+        },
+        {
+          "rank": 3,
+          "titulo": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN PILOTADA ELECTRÓNICA / AMORTIGUADORES MAGNÉTICOS O VALVULADOS (DTC C1710)",
+          "similitud": 0.1686,
+          "relevante": true
+        },
+        {
+          "rank": 4,
+          "titulo": "PROCEDIMIENTO: BALANCEO DINÁMICO DE RUEDAS EN EQUILIBRADORA Y ALINEACIÓN LÁSER DE DIRECCIÓN (VIBRACIÓN A VELOCIDAD DE CRUCERO / JALONEO LATERAL)",
+          "similitud": 0.1664,
+          "relevante": true
+        },
+        {
+          "rank": 5,
+          "titulo": "PROCEDIMIENTO: CAMBIO DE AMORTIGUADORES DELANTEROS, RESORTES Y CAZOLETAS (GOLPE EN BUCHES / DTC C0550)",
+          "similitud": 0.1387,
+          "relevante": true
+        }
+      ]
+    }
+  ]
+}

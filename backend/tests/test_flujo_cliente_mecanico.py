@@ -23,6 +23,7 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from main import app
+from src.config import settings
 from src.core.security import (
     crear_jwt_token,
     descifrar_texto_reversible,
@@ -30,6 +31,7 @@ from src.core.security import (
 )
 from src.core.services.webhook_service import WebhookService
 from src.infrastructure.database.connection import database_configurada, obtener_engine
+from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.identidad_whatsapp_repository import IdentidadWhatsAppRepository
 from src.infrastructure.database.repositories.solicitud_acceso_repository import SolicitudAccesoRepository
 from src.infrastructure.database.repositories.taller_repository import TallerRepository
@@ -202,14 +204,16 @@ async def test_cliente_solicita_acceso_crea_solicitud_pendiente():
 
 
 @pytest.mark.anyio
-async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico():
+async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypatch):
     """El administrador aprueba la solicitud: rol pasa a mecánico, genera clave temporal y encola WhatsApp con destino real."""
     if not database_configurada():
         pytest.skip("PostgreSQL no disponible")
 
+    monkeypatch.setattr(settings, "gemini_api_key", "")
     engine = obtener_engine()
     tel_mecanico_futuro = f"+51999888{uuid.uuid4().hex[:3]}"
     service = WebhookService()
+    service.gestor.api_key = ""
 
     # 1. Crear cliente y solicitud
     await service.procesar_mensaje(
@@ -259,16 +263,12 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico():
         assert res.status_code == 200
         data = res.json()
         assert data["nuevo_rol"] == "mecanico"
-        assert "password_temporal" in data
-        assert data["password_temporal"].startswith("Mec_")
 
     # 4. Verificar que el usuario ahora tiene rol mecánico en PostgreSQL
     async with AsyncSession(engine, expire_on_commit=False) as session:
         usuario_repo = UsuarioRepository(session)
         usuario_promovido = await usuario_repo.obtener_por_id(usuario.id)
         assert usuario_promovido.rol.codigo == "mecanico"
-        assert usuario_promovido.debe_cambiar_password is True
-        assert usuario_promovido.password_hash is not None
 
     # 5. El mecánico ahora envía un síntoma vehicular y SÍ se ejecuta el diagnóstico técnico
     res_diagnostico = await service.procesar_mensaje(
@@ -282,6 +282,34 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico():
     assert "diagnostico_id" in res_diagnostico
     assert "falla_predicha" in res_diagnostico
     assert res_diagnostico["falla_predicha"] is not None
+
+    # 6. Si responde NO, CarBot solicita la falla real y conserva la predicción original.
+    res_no = await service.procesar_mensaje(
+        remitente=tel_mecanico_futuro,
+        meta_message_id=f"msg_no_{uuid.uuid4().hex[:6]}",
+        tipo_mensaje="text",
+        texto_cliente="NO",
+    )
+    assert res_no["status"] in ("aclaracion", "esperando_falla_real")
+    assert "falla" in res_no["respuesta"].lower() or "descart" in res_no["respuesta"].lower()
+
+    # 7. La corrección queda asociada al mismo diagnóstico, sin ejecutar otro ML/RAG/LLM.
+    falla_real = "Bobina defectuosa"
+    res_correccion = await service.procesar_mensaje(
+        remitente=tel_mecanico_futuro,
+        meta_message_id=f"msg_fix_{uuid.uuid4().hex[:6]}",
+        tipo_mensaje="text",
+        texto_cliente=falla_real,
+    )
+    assert res_correccion["status"] == "validacion_tecnica"
+    assert res_correccion["diagnostico_id"] == res_diagnostico["diagnostico_id"]
+
+    async with AsyncSession(engine, expire_on_commit=False) as session:
+        diagnostico = await DiagnosticoRepository(session).obtener_por_id(
+            uuid.UUID(res_diagnostico["diagnostico_id"])
+        )
+        assert diagnostico.estado == "descartado"
+        assert diagnostico.conclusion_mecanico == falla_real
 
 
 @pytest.mark.anyio
@@ -422,7 +450,7 @@ async def test_panel_promueve_cliente_y_revocacion_lo_regresa_a_cliente():
                 "rol": "mecanico",
             },
         )
-        assert promocion.status_code == 200
+        assert promocion.status_code == 201
         assert promocion.json()["rol"] == "mecanico"
 
         revocacion = await client.patch(

@@ -1,0 +1,76 @@
+/* App shell & content layout */
+.app-main-content {
+  padding: 24px 32px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Responsive display utilities */
+.mobile-only {
+  display: none !important;
+}
+
+.desktop-only {
+  display: flex !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: flex !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+  .app-main-content {
+    padding: 12px 14px !important;
+  }
+}
+
+/* Mobile Friendly Header & Content Optimizations */
+@media (max-width: 640px) {
+  header {
+    height: 56px !important;
+    padding: 0 12px !important;
+  }
+
+  main {
+    padding: 12px !important;
+  }
+
+  .stat-grid-mobile {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .stat-grid-mobile > * {
+    flex: unset !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .dashboard-filter-container {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  .dashboard-filter-inputs {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .dashboard-filter-inputs input[type="date"] {
+    flex: 1 !important;
+    min-width: 0 !important;
+    font-size: 11px !important;
+    padding: 5px 4px !important;
+  }
+
+  .chart-container-mobile {
+    height: 160px !important;
+  }
+}

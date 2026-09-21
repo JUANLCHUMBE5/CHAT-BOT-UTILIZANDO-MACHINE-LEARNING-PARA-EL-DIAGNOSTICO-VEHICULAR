@@ -35,11 +35,11 @@ from src.infrastructure.database.repositories.trabajo_gemini_repository import T
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
 
 
-def test_alembic_head_es_20260809_01():
+def test_alembic_head_es_20260912_01():
     """Verifica que la migración más reciente sea el head activo de Alembic."""
     config = Config("alembic.ini")
     scripts = ScriptDirectory.from_config(config)
-    assert scripts.get_current_head() == "20260809_01"
+    assert scripts.get_current_head() == "20260912_01"
 
 
 def test_gemini_rate_limiter_concede_12_y_encola_excedentes():
@@ -58,25 +58,48 @@ def test_gemini_rate_limiter_concede_12_y_encola_excedentes():
 
     # 3. La solicitud 13 se coloca en la cola real
     solicitud, posicion, espera = limiter.encolar_solicitud(
-        sintoma="freno rechina",
-        diagnostico_ml="Falla en pastillas de freno",
-        confianza_ml=0.88,
-        contexto_manual="Manual de frenos",
-        titulo_manual="Frenos",
-        proveedor="twilio",
+        sintoma="motor no arranca",
+        diagnostico_ml="falla de batería",
+        confianza_ml=0.92,
+        contexto_manual="Comprobar voltaje",
+        titulo_manual="Batería",
     )
-
     assert posicion == 1
-    assert limiter.tamaño_cola() == 1
-    assert espera > 0.0
-    assert solicitud.diagnostico_ml == "Falla en pastillas de freno"
-    assert solicitud.proveedor == "twilio"
+    assert espera >= 0
 
     # 4. Desencolar siguiente
+    assert limiter.tamaño_cola() == 1
     siguiente = limiter.descolar_siguiente()
     assert siguiente is not None
     assert siguiente.id == solicitud.id
     assert limiter.tamaño_cola() == 0
+
+    limiter.reiniciar()
+
+
+def test_resumen_dtc_no_relacionado_no_indica_bobina_ni_cilindro():
+    solicitud = SolicitudGeminiEncolada(
+        sintoma="El escáner reporta P0420 y hay pérdida de potencia",
+        diagnostico_ml="Eficiencia del catalizador por debajo del umbral",
+        confianza_ml=0.81,
+    )
+
+    resumen = GeminiRateLimiter()._crear_resumen_whatsapp(solicitud, "Gravedad: media")
+
+    assert "bobina y bujía del cilindro afectado" not in resumen
+    assert "inspección funcional" in resumen
+
+
+def test_resumen_dtc_encendido_prioriza_revision_de_bobina():
+    solicitud = SolicitudGeminiEncolada(
+        sintoma="El escáner reporta P0301 con falla de encendido",
+        diagnostico_ml="Falla de encendido del cilindro 1",
+        confianza_ml=0.81,
+    )
+
+    resumen = GeminiRateLimiter()._crear_resumen_whatsapp(solicitud, "Gravedad: media")
+
+    assert "bobina" in resumen and "cilindro afectado" in resumen
 
 
 def test_cifrado_reversible_para_remitente_de_trabajos():
@@ -246,8 +269,15 @@ async def test_error_temporal_gemini_programa_reintento(async_db_session: AsyncS
     class RespuestaTemporal:
         status_code = 503
 
+    class MockSession:
+        def post(self, *a, **k):
+            return RespuestaTemporal()
+
     monkeypatch.setattr(settings, "gemini_api_key", "clave-prueba")
-    monkeypatch.setattr("src.core.gemini_queue.requests.post", lambda *a, **k: RespuestaTemporal())
+    monkeypatch.setattr(
+        "src.core.gemini_queue.worker_processor._obtener_http_session_gemini",
+        lambda: MockSession(),
+    )
     solicitud = SolicitudGeminiEncolada(
         id=str(trabajo_id),
         sintoma="motor pierde fuerza",

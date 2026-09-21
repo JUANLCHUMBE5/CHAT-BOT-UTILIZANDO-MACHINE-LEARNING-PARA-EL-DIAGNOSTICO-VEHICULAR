@@ -1,0 +1,79 @@
+{
+  "condicion_a": {
+    "condicion": "A_SESION_NUEVA",
+    "mensaje_original": "Buenas, mi carro estaba normal hasta ayer. Hoy salí a la carretera y a los 20 minutos de manejar empecé a sentir que perdía fuerza, como que se ahogaba. Bajé la velocidad y se recuperó. Pero a los 5 minutos otra vez. Ya no puedo pasar de 80. ¿Qué será?",
+    "hechos_extraidos": [
+      {
+        "campo": "condicion_operacion",
+        "valor": "en carretera a velocidad",
+        "estado": "CONFIRMADO",
+        "turno_origen": 1,
+        "confianza": 1.0,
+        "texto_crudo": "Buenas, mi carro estaba normal hasta ayer. Hoy salí a la carretera y a los 20 minutos de manejar empecé a sentir que perdía fuerza, como que se ahogaba. Bajé la velocidad y se recuperó. Pero a los 5 minutos otra vez. Ya no puedo pasar de 80. ¿Qué será?",
+        "categoria": "condicion",
+        "tipo": "CONDICION"
+      },
+      {
+        "campo": "sintoma_pérdida_de_potencia",
+        "valor": "pérdida de potencia",
+        "estado": "CONFIRMADO",
+        "turno_origen": 1,
+        "confianza": 1.0,
+        "texto_crudo": "Buenas, mi carro estaba normal hasta ayer. Hoy salí a la carretera y a los 20 minutos de manejar empecé a sentir que perdía fuerza, como que se ahogaba. Bajé la velocidad y se recuperó. Pero a los 5 minutos otra vez. Ya no puedo pasar de 80. ¿Qué será?",
+        "categoria": "sintoma",
+        "tipo": "SINTOMA"
+      }
+    ],
+    "consulta_sintetizada": "presenta pérdida de potencia. cuando está en carretera a velocidad.",
+    "texto_normalizado": "presenta pérdida de potencia. cuando está en carretera a velocidad.",
+    "macro_sistema": "MOTOR",
+    "top_ml": [
+      {
+        "falla": "Falla en bujias o bobinas de encendido (misfire)",
+        "probabilidad": 0.4894
+      },
+      {
+        "falla": "Falla en sensor de oxigeno o mezcla rica",
+        "probabilidad": 0.4278
+      },
+      {
+        "falla": "Bomba de gasolina quemada o con baja presion",
+        "probabilidad": 0.0434
+      }
+    ],
+    "consulta_rag": "Falla en bujias o bobinas de encendido (misfire)",
+    "titulo_rag": "PROCEDIMIENTO: CAMBIO DE BUJÍAS DE ENCENDIDO Y DIAGNÓSTICO DE MISFIRE (DTC P0300 / P0301)",
+    "resultado_rag_len": 837,
+    "respuesta_final": "🔧 *Posibles causas*\n\n1. Falla en bujias o bobinas de encendido (misfire) — 49%\n2. Falla en sensor de oxigeno o mezcla rica — 43%\n3. Bomba de gasolina quemada o con baja presion — 4%\n\n🛠️ *Primero revisa:* salto de chispa en las bobinas y estado/calibración del electrodo de las bujías.\n\n¿Has podido verificar este punto o deseas que te detalle el procedimiento de prueba?"
+  },
+  "condicion_b": {
+    "condicion": "B_SESION_EXISTENTE_CONTAMINADA",
+    "mensaje_original": "Buenas, mi carro estaba normal hasta ayer. Hoy salí a la carretera y a los 20 minutos de manejar empecé a sentir que perdía fuerza, como que se ahogaba. Bajé la velocidad y se recuperó. Pero a los 5 minutos otra vez. Ya no puedo pasar de 80. ¿Qué será?",
+    "hechos_en_estado": [
+      "sintoma_chasquido_de_arranque_clac",
+      "sintoma_motor_no_arranca",
+      "sintoma_ruido_anómalo"
+    ],
+    "consulta_sintetizada": "presenta ruido anómalo, motor no arranca, chasquido de arranque clac.",
+    "texto_normalizado": "presenta ruido anómalo, motor no arranca, chasquido de arranque clac.",
+    "macro_sistema": "ELECTRICO",
+    "top_ml": [
+      {
+        "falla": "Bateria descargada o bornes sulfatados",
+        "probabilidad": 0.7685
+      },
+      {
+        "falla": "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)",
+        "probabilidad": 0.1759
+      },
+      {
+        "falla": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+        "probabilidad": 0.0221
+      }
+    ],
+    "consulta_rag": "Bateria descargada o bornes sulfatados",
+    "titulo_rag": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+    "resultado_rag_len": 1287,
+    "respuesta_final": "🔧 *Posibles causas*\n\n1. Bateria descargada o bornes sulfatados — 77%\n2. Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados) — 18%\n3. Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6) — 2% *(solo si es Diésel)*\n\n🛠️ *Primero revisa:* voltaje de batería en reposo (mínimo 12.6 V) y ajuste/limpieza de los bornes.\n\n¿Tienes multímetro para comprobar el voltaje?"
+  }
+}

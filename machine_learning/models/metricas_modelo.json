@@ -1,25 +1,25 @@
 {
   "version": "2.2.0-external-audited",
   "algoritmo_ganador_cv": "Linear_SVM",
-  "exactitud_holdout_agrupado": 0.9754385964912281,
-  "f1_macro_holdout_agrupado": 0.9595292918452056,
-  "f1_weighted_holdout_agrupado": 0.9703275103530091,
+  "exactitud_holdout_agrupado": 0.9500959692898272,
+  "f1_macro_holdout_agrupado": 0.9440181788378524,
+  "f1_weighted_holdout_agrupado": 0.950213507513966,
   "cv_4fold_agrupado": {
     "Random_Forest": {
-      "media_f1_macro": 0.9436676955922464,
-      "desviacion_std": 0.014150567609558847
+      "media_f1_macro": 0.8951835567298474,
+      "desviacion_std": 0.006987902239464256
     },
     "Logistic_Regression": {
-      "media_f1_macro": 0.9639321513217779,
-      "desviacion_std": 0.014827640635363527
+      "media_f1_macro": 0.9252716472029914,
+      "desviacion_std": 0.008042587077104002
     },
     "Linear_SVM": {
-      "media_f1_macro": 0.9737306151694196,
-      "desviacion_std": 0.01201410259269135
+      "media_f1_macro": 0.9297094567556418,
+      "desviacion_std": 0.005075272134542879
     },
     "Complement_Naive_Bayes": {
-      "media_f1_macro": 0.9499348524550417,
-      "desviacion_std": 0.021596514211510716
+      "media_f1_macro": 0.9026108859431129,
+      "desviacion_std": 0.009338146871978842
     }
   },
   "soporte_particiones_cv": [
@@ -27,431 +27,426 @@
       "fold": 1,
       "clases_ajuste": 48,
       "clases_validacion": 48,
-      "minimo_soporte_validacion": 5,
+      "minimo_soporte_validacion": 9,
       "clases_ausentes_validacion": []
     },
     {
       "fold": 2,
       "clases_ajuste": 48,
       "clases_validacion": 48,
-      "minimo_soporte_validacion": 4,
+      "minimo_soporte_validacion": 8,
       "clases_ausentes_validacion": []
     },
     {
       "fold": 3,
       "clases_ajuste": 48,
       "clases_validacion": 48,
-      "minimo_soporte_validacion": 4,
+      "minimo_soporte_validacion": 9,
       "clases_ausentes_validacion": []
     },
     {
       "fold": 4,
       "clases_ajuste": 48,
       "clases_validacion": 48,
-      "minimo_soporte_validacion": 5,
+      "minimo_soporte_validacion": 8,
       "clases_ausentes_validacion": []
     }
   ],
   "soporte_holdout_por_clase": {
-    "Juntas homocineticas o palieres danados": 26,
-    "Desgaste de pastillas y zapatas de freno": 25,
-    "Falla en bujias o bobinas de encendido (misfire)": 23,
-    "Bateria descargada o bornes sulfatados": 23,
-    "Amortiguadores reventados o bujes de suspension gastados": 23,
-    "Empaque de culata soplado o danado": 21,
-    "Fuga hidraulica o aire en el sistema de frenos": 20,
-    "Llantas desbalanceadas o desalineadas": 20,
-    "Inyectores sucios o filtro de combustible obstruido": 18,
-    "Falla en sensor de oxigeno o mezcla rica": 18,
-    "Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado": 18,
-    "Cuerpo de aceleracion o valvula IAC sucia": 17,
+    "Falla en bujias o bobinas de encendido (misfire)": 61,
+    "Falla en sensor de oxigeno o mezcla rica": 44,
+    "Bateria descargada o bornes sulfatados": 43,
+    "Llantas desbalanceadas o desalineadas": 41,
+    "Desgaste de pastillas y zapatas de freno": 37,
+    "Cuerpo de aceleracion o valvula IAC sucia": 37,
+    "Alternador defectuoso o placa de diodos quemada": 36,
+    "Bomba de gasolina quemada o con baja presion": 35,
+    "Juntas homocineticas o palieres danados": 32,
+    "Amortiguadores reventados o bujes de suspension gastados": 31,
+    "Inyectores sucios o filtro de combustible obstruido": 30,
+    "Fuga hidraulica o aire en el sistema de frenos": 28,
+    "Discos de freno alabeados o desgastados": 28,
+    "Empaque de culata soplado o danado": 27,
+    "Consumo de aceite por desgaste de anillos o retenes": 24,
+    "Falla en termostato o motoventilador de radiador": 24,
+    "Cremallera de direccion asistida con holgura o fuga": 22,
+    "Falla en servofreno (booster) o linea de vacio": 22,
+    "Disco de embrague desgastado o patinando": 21,
+    "Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado": 20,
+    "Falla electrica del cierre centralizado o actuador de puerta": 20,
+    "Falla en compresor de aire acondicionado o fuga de gas R134a": 20,
+    "Faja o cadena de distribucion destensada o con salto de punto": 19,
+    "Baja presion de aceite o bomba de aceite defectuosa": 19,
+    "Fallo en inversor de corriente IGBT o motor electrico (EV)": 18,
+    "Falla en bombin o bomba hidraulica de embrague": 18,
     "Elevalunas electrico o guaya de alzacristales rota o trabada": 17,
-    "Fallo en inversor de corriente IGBT o motor electrico (EV)": 16,
-    "Alternador defectuoso o placa de diodos quemada": 15,
-    "Falla en servofreno (booster) o linea de vacio": 15,
-    "Cremallera de direccion asistida con holgura o fuga": 15,
-    "Fuga en mangueras de intercooler o turbocompresor danado": 15,
-    "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)": 15,
-    "Discos de freno alabeados o desgastados": 14,
-    "Consumo de aceite por desgaste de anillos o retenes": 12,
-    "Disco de embrague desgastado o patinando": 11,
-    "Falta o degradacion de aceite de caja de cambios": 11,
-    "Falla en bombin o bomba hidraulica de embrague": 11,
-    "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)": 10,
-    "Bomba de gasolina quemada o con baja presion": 9,
-    "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)": 9,
-    "Falla en sistema de frenado regenerativo (EV / Hibridos)": 9,
-    "Limpiaparabrisas o motor pluma quemado": 8,
-    "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)": 7,
-    "Faja o cadena de distribucion destensada o con salto de punto": 6,
-    "Baja presion de aceite o bomba de aceite defectuosa": 6,
-    "Sobrecalentamiento o solenoides en caja automatica CVT / DSG": 6,
-    "Rodajes de caja mecanica o diferencial gastados": 6,
-    "Falla en sensor de velocidad de rueda ABS": 6,
-    "Falla en compresor de aire acondicionado o fuga de gas R134a": 6,
-    "Válvula de freno de aire o secador APS obstruido (Camiones)": 6,
-    "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI": 6,
-    "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)": 6,
-    "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)": 6,
-    "Falla electrica del cierre centralizado o actuador de puerta": 5,
-    "Falla en termostato o motoventilador de radiador": 5,
-    "Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)": 5,
-    "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)": 5,
-    "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)": 5,
-    "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)": 5,
-    "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)": 5,
-    "Fuga en mangueras de refrigerante o radiador picado": 4
+    "Fuga en mangueras de intercooler o turbocompresor danado": 17,
+    "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)": 17,
+    "Sobrecalentamiento o solenoides en caja automatica CVT / DSG": 17,
+    "Falta o degradacion de aceite de caja de cambios": 16,
+    "Limpiaparabrisas o motor pluma quemado": 16,
+    "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)": 16,
+    "Rodajes de caja mecanica o diferencial gastados": 16,
+    "Fuga en mangueras de refrigerante o radiador picado": 15,
+    "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)": 14,
+    "Válvula de freno de aire o secador APS obstruido (Camiones)": 13,
+    "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)": 12,
+    "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)": 11,
+    "Falla en sistema de frenado regenerativo (EV / Hibridos)": 11,
+    "Falla en sensor de velocidad de rueda ABS": 11,
+    "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)": 11,
+    "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI": 10,
+    "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)": 10,
+    "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)": 9,
+    "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)": 9,
+    "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)": 9,
+    "Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)": 8
   },
-  "clases_holdout_soporte_menor_5": [
-    "Fuga en mangueras de refrigerante o radiador picado"
-  ],
+  "clases_holdout_soporte_menor_5": [],
   "reporte_holdout_por_clase": {
     "Alternador defectuoso o placa de diodos quemada": {
-      "precision": 1.0,
+      "precision": 0.8571428571428571,
       "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 15.0
+      "f1-score": 0.9230769230769231,
+      "support": 36.0
     },
     "Amortiguadores reventados o bujes de suspension gastados": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 23.0
+      "recall": 0.967741935483871,
+      "f1-score": 0.9836065573770492,
+      "support": 31.0
     },
     "Baja presion de aceite o bomba de aceite defectuosa": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 6.0
+      "precision": 0.9473684210526315,
+      "recall": 0.9473684210526315,
+      "f1-score": 0.9473684210526315,
+      "support": 19.0
     },
     "Bateria descargada o bornes sulfatados": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 23.0
+      "precision": 0.95,
+      "recall": 0.8837209302325582,
+      "f1-score": 0.9156626506024096,
+      "support": 43.0
     },
     "Bomba de gasolina quemada o con baja presion": {
-      "precision": 1.0,
-      "recall": 0.1111111111111111,
-      "f1-score": 0.2,
-      "support": 9.0
+      "precision": 0.8888888888888888,
+      "recall": 0.9142857142857143,
+      "f1-score": 0.9014084507042254,
+      "support": 35.0
     },
     "Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado": {
-      "precision": 0.9473684210526315,
-      "recall": 1.0,
-      "f1-score": 0.972972972972973,
-      "support": 18.0
+      "precision": 1.0,
+      "recall": 0.95,
+      "f1-score": 0.9743589743589743,
+      "support": 20.0
     },
     "Consumo de aceite por desgaste de anillos o retenes": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 12.0
+      "support": 24.0
     },
     "Cremallera de direccion asistida con holgura o fuga": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 15.0
+      "recall": 0.9545454545454546,
+      "f1-score": 0.9767441860465116,
+      "support": 22.0
     },
     "Cuerpo de aceleracion o valvula IAC sucia": {
-      "precision": 0.6538461538461539,
-      "recall": 1.0,
-      "f1-score": 0.7906976744186046,
-      "support": 17.0
-    },
-    "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 15.0
+      "support": 37.0
+    },
+    "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)": {
+      "precision": 0.9411764705882353,
+      "recall": 0.9411764705882353,
+      "f1-score": 0.9411764705882353,
+      "support": 17.0
     },
     "Desgaste de pastillas y zapatas de freno": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 25.0
+      "recall": 0.9459459459459459,
+      "f1-score": 0.9722222222222222,
+      "support": 37.0
     },
     "Disco de embrague desgastado o patinando": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 11.0
+      "precision": 0.9473684210526315,
+      "recall": 0.8571428571428571,
+      "f1-score": 0.9,
+      "support": 21.0
     },
     "Discos de freno alabeados o desgastados": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 14.0
+      "precision": 0.8181818181818182,
+      "recall": 0.9642857142857143,
+      "f1-score": 0.8852459016393442,
+      "support": 28.0
     },
     "Elevalunas electrico o guaya de alzacristales rota o trabada": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
+      "recall": 0.8823529411764706,
+      "f1-score": 0.9375,
       "support": 17.0
     },
     "Empaque de culata soplado o danado": {
-      "precision": 0.9545454545454546,
+      "precision": 1.0,
       "recall": 1.0,
-      "f1-score": 0.9767441860465116,
-      "support": 21.0
+      "f1-score": 1.0,
+      "support": 27.0
     },
     "Faja o cadena de distribucion destensada o con salto de punto": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 6.0
+      "recall": 0.9473684210526315,
+      "f1-score": 0.972972972972973,
+      "support": 19.0
     },
     "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 5.0
+      "precision": 0.8888888888888888,
+      "recall": 0.8888888888888888,
+      "f1-score": 0.8888888888888888,
+      "support": 9.0
     },
     "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 6.0
+      "support": 11.0
     },
     "Falla electrica del cierre centralizado o actuador de puerta": {
-      "precision": 1.0,
-      "recall": 0.8,
-      "f1-score": 0.8888888888888888,
-      "support": 5.0
+      "precision": 0.9047619047619048,
+      "recall": 0.95,
+      "f1-score": 0.926829268292683,
+      "support": 20.0
     },
     "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 6.0
+      "recall": 0.9,
+      "f1-score": 0.9473684210526315,
+      "support": 10.0
     },
     "Falla en bombin o bomba hidraulica de embrague": {
-      "precision": 0.9166666666666666,
+      "precision": 0.8571428571428571,
       "recall": 1.0,
-      "f1-score": 0.9565217391304348,
-      "support": 11.0
+      "f1-score": 0.9230769230769231,
+      "support": 18.0
     },
     "Falla en bujias o bobinas de encendido (misfire)": {
-      "precision": 0.9583333333333334,
-      "recall": 1.0,
-      "f1-score": 0.9787234042553191,
-      "support": 23.0
+      "precision": 0.9836065573770492,
+      "recall": 0.9836065573770492,
+      "f1-score": 0.9836065573770492,
+      "support": 61.0
     },
     "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 5.0
+      "precision": 0.9166666666666666,
+      "recall": 0.7857142857142857,
+      "f1-score": 0.8461538461538461,
+      "support": 14.0
     },
     "Falla en compresor de aire acondicionado o fuga de gas R134a": {
-      "precision": 1.0,
+      "precision": 0.9523809523809523,
       "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 6.0
+      "f1-score": 0.975609756097561,
+      "support": 20.0
     },
     "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)": {
-      "precision": 1.0,
+      "precision": 0.75,
       "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 5.0
+      "f1-score": 0.8571428571428571,
+      "support": 9.0
     },
     "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 5.0
+      "recall": 0.7777777777777778,
+      "f1-score": 0.875,
+      "support": 9.0
     },
     "Falla en sensor de oxigeno o mezcla rica": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 18.0
+      "precision": 0.9772727272727273,
+      "recall": 0.9772727272727273,
+      "f1-score": 0.9772727272727273,
+      "support": 44.0
     },
     "Falla en sensor de velocidad de rueda ABS": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 6.0
+      "support": 11.0
     },
     "Falla en servofreno (booster) o linea de vacio": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 15.0
+      "recall": 0.9545454545454546,
+      "f1-score": 0.9767441860465116,
+      "support": 22.0
     },
     "Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 5.0
+      "precision": 0.875,
+      "recall": 0.875,
+      "f1-score": 0.875,
+      "support": 8.0
     },
     "Falla en sistema de frenado regenerativo (EV / Hibridos)": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 9.0
+      "support": 11.0
     },
     "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 6.0
+      "support": 10.0
     },
     "Falla en termostato o motoventilador de radiador": {
-      "precision": 1.0,
-      "recall": 0.4,
-      "f1-score": 0.5714285714285714,
-      "support": 5.0
+      "precision": 0.96,
+      "recall": 1.0,
+      "f1-score": 0.9795918367346939,
+      "support": 24.0
     },
     "Fallo en inversor de corriente IGBT o motor electrico (EV)": {
-      "precision": 1.0,
+      "precision": 0.9473684210526315,
       "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 16.0
+      "f1-score": 0.972972972972973,
+      "support": 18.0
     },
     "Falta o degradacion de aceite de caja de cambios": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 11.0
+      "precision": 0.8333333333333334,
+      "recall": 0.9375,
+      "f1-score": 0.8823529411764706,
+      "support": 16.0
     },
     "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 7.0
+      "precision": 0.9,
+      "recall": 0.75,
+      "f1-score": 0.8181818181818182,
+      "support": 12.0
     },
     "Fuga en mangueras de intercooler o turbocompresor danado": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 15.0
+      "precision": 0.8888888888888888,
+      "recall": 0.9411764705882353,
+      "f1-score": 0.9142857142857143,
+      "support": 17.0
     },
     "Fuga en mangueras de refrigerante o radiador picado": {
-      "precision": 0.75,
-      "recall": 0.75,
-      "f1-score": 0.75,
-      "support": 4.0
+      "precision": 0.9375,
+      "recall": 1.0,
+      "f1-score": 0.967741935483871,
+      "support": 15.0
     },
     "Fuga hidraulica o aire en el sistema de frenos": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 20.0
+      "precision": 0.9310344827586207,
+      "recall": 0.9642857142857143,
+      "f1-score": 0.9473684210526315,
+      "support": 28.0
     },
     "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 9.0
+      "recall": 0.9090909090909091,
+      "f1-score": 0.9523809523809523,
+      "support": 11.0
     },
     "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 10.0
+      "recall": 0.9375,
+      "f1-score": 0.967741935483871,
+      "support": 16.0
     },
     "Inyectores sucios o filtro de combustible obstruido": {
-      "precision": 1.0,
-      "recall": 0.9444444444444444,
-      "f1-score": 0.9714285714285714,
-      "support": 18.0
+      "precision": 0.9642857142857143,
+      "recall": 0.9,
+      "f1-score": 0.9310344827586207,
+      "support": 30.0
     },
     "Juntas homocineticas o palieres danados": {
-      "precision": 1.0,
+      "precision": 0.9696969696969697,
       "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 26.0
+      "f1-score": 0.9846153846153847,
+      "support": 32.0
     },
     "Limpiaparabrisas o motor pluma quemado": {
       "precision": 1.0,
       "recall": 1.0,
       "f1-score": 1.0,
-      "support": 8.0
+      "support": 16.0
     },
     "Llantas desbalanceadas o desalineadas": {
       "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 20.0
+      "recall": 0.926829268292683,
+      "f1-score": 0.9620253164556962,
+      "support": 41.0
     },
     "Rodajes de caja mecanica o diferencial gastados": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 6.0
+      "precision": 0.9333333333333333,
+      "recall": 0.875,
+      "f1-score": 0.9032258064516129,
+      "support": 16.0
     },
     "Sobrecalentamiento o solenoides en caja automatica CVT / DSG": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 6.0
+      "precision": 0.8823529411764706,
+      "recall": 0.8823529411764706,
+      "f1-score": 0.8823529411764706,
+      "support": 17.0
     },
     "Válvula de freno de aire o secador APS obstruido (Camiones)": {
-      "precision": 1.0,
+      "precision": 0.9285714285714286,
       "recall": 1.0,
-      "f1-score": 1.0,
-      "support": 6.0
+      "f1-score": 0.9629629629629629,
+      "support": 13.0
     },
-    "accuracy": 0.9754385964912281,
+    "accuracy": 0.9500959692898272,
     "macro avg": {
-      "precision": 0.9829325006134216,
-      "recall": 0.9584490740740742,
-      "f1-score": 0.9595292918452056,
-      "support": 570.0
+      "precision": 0.9485877696769895,
+      "recall": 0.9431765791833809,
+      "f1-score": 0.9440181788378524,
+      "support": 1042.0
     },
     "weighted avg": {
-      "precision": 0.9812955627013799,
-      "recall": 0.9754385964912281,
-      "f1-score": 0.9703275103530091,
-      "support": 570.0
+      "precision": 0.9531756444611148,
+      "recall": 0.9500959692898272,
+      "f1-score": 0.950213507513966,
+      "support": 1042.0
     }
   },
-  "peor_f1_holdout_por_clase": 0.2,
+  "peor_f1_holdout_por_clase": 0.8181818181818182,
   "aprobado_modelo_para_produccion": false,
   "bloqueos_produccion": [
-    "Hay clases con menos de 5 casos en holdout",
-    "Hay clases con F1 inferior a 0.60 en holdout",
     "El error de calibracion ECE supera 0.10"
   ],
-  "error_calibracion_esperado": 0.24812023402870662,
-  "brier_multiclase": 0.12063664527378887,
+  "error_calibracion_esperado": 0.2434673262087223,
+  "brier_multiclase": 0.15570533422593769,
   "umbral_baja_confianza": 0.5,
-  "registros": 2894,
-  "registros_base": 2861,
+  "registros": 5232,
+  "registros_base": 5199,
   "registros_externos_disponibles": 33,
   "registros_externos_incorporados": 33,
   "dataset_externo_seleccionado": true,
   "comparacion_enriquecimiento_externo": {
     "base": {
-      "exactitud": 0.9754385964912281,
-      "f1_macro": 0.954884784221047,
-      "f1_weighted": 0.9691983905947585,
-      "ece": 0.25736887165504374
+      "exactitud": 0.9491362763915547,
+      "f1_macro": 0.942191665885247,
+      "f1_weighted": 0.949180341255523,
+      "ece": 0.2453274678502931
     },
     "enriquecido": {
-      "exactitud": 0.9754385964912281,
-      "f1_macro": 0.9595292918452056,
-      "f1_weighted": 0.9703275103530091,
-      "ece": 0.24812023402870662
+      "exactitud": 0.9500959692898272,
+      "f1_macro": 0.9440181788378524,
+      "f1_weighted": 0.950213507513966,
+      "ece": 0.2434673262087223
     },
     "criterio": "Solo incorporar si mejora F1 macro, mantiene exactitud y calibracion, y ninguna clase pierde mas de 0.10 de F1.",
-    "peor_variacion_f1_clase": -0.050000000000000044,
+    "peor_variacion_f1_clase": -0.03896103896103886,
     "clases_mejoradas": {
-      "Falla en termostato o motoventilador de radiador": 0.23809523809523808,
-      "Falta o degradacion de aceite de caja de cambios": 0.04347826086956519,
-      "Sobrecalentamiento o solenoides en caja automatica CVT / DSG": 0.07692307692307687
+      "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)": 0.065359477124183,
+      "Falla en sensor de oxigeno o mezcla rica": 0.01098059244126659,
+      "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)": 0.04761904761904767,
+      "Falla en termostato o motoventilador de radiador": 0.01959183673469389
     },
     "clases_empeoradas": {
-      "Cuerpo de aceleracion o valvula IAC sucia": -0.018826135105204922,
-      "Empaque de culata soplado o danado": -0.023255813953488413,
-      "Falla en bombin o bomba hidraulica de embrague": -0.04347826086956519,
-      "Fuga en mangueras de refrigerante o radiador picado": -0.050000000000000044
+      "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)": -0.03896103896103886,
+      "Fuga hidraulica o aire en el sistema de frenos": -0.016917293233082775
     }
   },
-  "familias_sintoma": 1541,
+  "familias_sintoma": 3842,
   "clases": 48,
-  "sha256_modelo": "74e42873a6f8676fdb0c5f3d77cc851012fe30bb578ef8b7483a229f7e487a75",
-  "sha256_vectorizador": "efe5cfda83a1e51ab431455da30dd51c02ea494676847474b6ced4578701b5e9"
+  "sha256_modelo": "7d39c9af7839af5a436ba39af42c7c91b01fa7c16b2add910b0c37ad552d5c18",
+  "sha256_vectorizador": "d8228913bab96c4c878cd6eeefe704a9d708010a25017d40b15fda811513b380"
 }

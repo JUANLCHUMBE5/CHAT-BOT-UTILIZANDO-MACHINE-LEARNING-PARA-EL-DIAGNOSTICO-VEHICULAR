@@ -15,3 +15,10 @@ class IMotorRAG(Protocol):
 
     def recuperar_contexto_con_similitud(self, query: str) -> Tuple[str, str, float]:
         ...
+
+
+@runtime_checkable
+class IDtcLookup(Protocol):
+    """Protocolo de dominio para la consulta de códigos de diagnóstico automotriz (DTC)."""
+    def consultar_codigo(self, codigo: str, marca: str | None = None) -> dict | None:
+        ...

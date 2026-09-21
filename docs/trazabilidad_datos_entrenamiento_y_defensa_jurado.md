@@ -27,10 +27,11 @@ Fecha de actualización: 15 de agosto de 2026
 - F1 macro del modelo seleccionado: 95.95 %.
 - Modelo aprobado para diagnóstico autónomo: no.
 
-El reporte de limpieza original termina en 2,751 filas. Las 110 filas añadidas
-después conservan síntoma y falla, pero tienen pendientes los campos de código,
-sistema y severidad. Esta limitación debe declararse y corregirse antes de cerrar
-el linaje taxonómico del dataset.
+El reporte de limpieza y calidad (`reporte_calidad_dataset.json`) cubre la totalidad
+de las 2,861 filas del dataset base limpio, con 0 nulos en `codigo_falla`, `sistema`
+y `severidad`. Las 110 filas añadidas han sido debidamente mapeadas a la taxonomía
+estándar de `catalogo_fallas.py`, asegurando un linaje completamente trazable y
+biunívoco (1-a-1) para las 48 clases vehiculares.
 
 ## Procedencia externa
 
@@ -76,11 +77,20 @@ permanecer fuera del entrenamiento usado para evaluarlo. La plantilla está en
 `machine_learning/data/plantilla_evaluacion_externa.csv` y la evaluación se
 ejecuta con `machine_learning/training/evaluar_modelo_externo.py`.
 
+## Base de Conocimiento RAG y Tracker Experimental de Tesis
+
+- **Corpus RAG Multimarca**: 64 procedimientos estructurados con metadatos e integridad SHA-256 local (`machine_learning/manuals/metadatos_manuales.json`).
+- **Benchmark RAG**: Evaluación interna controlada en 10 casos (`docs/evaluacion_rag_benchmark.md`), con umbral 0.25 y rechazo fuera de dominio.
+- **Tracker Experimental de Campo**: 1,925 registros de seguimiento (30 pre-test tradicional y 1,895 post-test asistido por CarBot). Las placas vehiculares se encuentran pseudonimizadas mediante HMAC-SHA-256 (64 caracteres) con clave secreta y enmascaramiento visual (`ABC-***`).
+
 ## Evidencias para la defensa
 
 - `machine_learning/data/FUENTES_ENTRENAMIENTO.md`.
 - `machine_learning/data/reporte_calidad_dataset.json`.
 - `machine_learning/data/reporte_dataset_externo.json`.
+- `machine_learning/manuals/metadatos_manuales.json`.
+- `machine_learning/manuals/FUENTES_Y_VALIDACION.md`.
+- `docs/evaluacion_rag_benchmark.md`.
 - `machine_learning/models/metricas_modelo.json`.
 - `machine_learning/models/metricas_externas.json`.
 - `docs/graficas/matriz_confusion_ml.png`.

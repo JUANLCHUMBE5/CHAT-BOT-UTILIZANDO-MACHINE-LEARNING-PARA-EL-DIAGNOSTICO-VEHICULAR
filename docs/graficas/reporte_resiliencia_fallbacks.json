@@ -1,0 +1,23 @@
+{
+  "fecha": "2026-09-15 20:52:26",
+  "pruebas": [
+    {
+      "escenario": "1. Caída de Gemini API (Modo Degradado ML+RAG)",
+      "latencia_ms": 4097.82,
+      "aprobado": true,
+      "detalles": "El sistema respondió de inmediato con ML (Falla en bujias o bobinas de encendido (misfire)) y RAG sin detener WhatsApp."
+    },
+    {
+      "escenario": "2. RAG Zero-Match / Coincidencia atípica",
+      "latencia_ms": 1.08,
+      "aprobado": true,
+      "detalles": "Manejo seguro sin caída del sistema y sin alucinación de procedimientos ficticios."
+    },
+    {
+      "escenario": "3. Falla mecánica pura sin DTC (Regla de Tesis 9)",
+      "latencia_ms": 3811.48,
+      "aprobado": true,
+      "detalles": "Cumple estrictamente la regla metodológica: no sugiere escáner DTC y exige metrología física."
+    }
+  ]
+}

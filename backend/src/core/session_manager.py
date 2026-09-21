@@ -2,6 +2,9 @@ import threading
 import time
 from typing import Any, Dict, List, Optional
 
+from src.core.conversacion.extractor_hechos import ExtractorHechos
+from src.core.conversacion.models import ConversationState
+from src.core.conversacion.sintetizador_consulta import SintetizadorConsulta
 from src.core.logger import logger
 
 
@@ -10,14 +13,23 @@ class DiagnosticSession:
     
     def __init__(self, session_id: str):
         self.session_id: str = session_id
+        self.case_id: Optional[str] = None
         self.placa: Optional[str] = None
         self.marca_modelo: Optional[str] = None
         self.sintomas: List[str] = []
+        self.conversation_state: ConversationState = ConversationState(session_id=session_id)
         self.perfil_vehiculo: Dict[str, Any] = {}
         self.consulta_tecnica_pendiente: Optional[str] = None
+        self.consulta_combustible_pendiente: Optional[str] = None
+        self.modo_falla_combustible: Optional[str] = None
+        self.autopregunta_sintoma_base: Optional[str] = None
+        self.autopregunta_opciones: List[str] = []
+        self.autopregunta_hipotesis: List[str] = []
+        self.ultimas_hipotesis_diferenciales: List[str] = []
         self.campos_requeridos: List[str] = []
         self.kilometraje_por_aclarar: bool = False
-        self.estado: str = "inicio"  # inicio, esperando_clarificacion, completo
+        self.contexto: Dict[str, Any] = {}
+        self.estado: str = "inicio"  # inicio, esperando_clarificacion, esperando_autopregunta, completo
         self.created_at: float = time.time()
         self.updated_at: float = time.time()
         self._lock = threading.RLock()
@@ -28,19 +40,83 @@ class DiagnosticSession:
             if texto_limpio:
                 if texto_limpio not in self.sintomas:
                     self.sintomas.append(texto_limpio)
+                ExtractorHechos.extraer_y_actualizar(self.conversation_state, texto_limpio)
                 self.updated_at = time.time()
 
     def obtener_sintoma_completo(self) -> str:
         with self._lock:
-            return " ".join(self.sintomas).strip()
+            texto_sintomas = " ".join(self.sintomas).strip()
+            if texto_sintomas:
+                return texto_sintomas
+            tiene_sintomas = any(
+                h.categoria == "sintoma" and h.estado.value == "CONFIRMADO"
+                for h in self.conversation_state.hechos.values()
+            )
+            sintetizado = SintetizadorConsulta.sintetizar(self.conversation_state)
+            if tiene_sintomas and sintetizado and sintetizado != "Consulta vehicular técnica general":
+                return sintetizado
+            return ""
 
     def reiniciar(self):
         with self._lock:
+            self.case_id = None
             self.sintomas = []
+            self.conversation_state.reiniciar()
             self.consulta_tecnica_pendiente = None
+            self.consulta_combustible_pendiente = None
+            self.modo_falla_combustible = None
+            self.autopregunta_sintoma_base = None
+            self.autopregunta_opciones = []
+            self.autopregunta_hipotesis = []
+            self.ultimas_hipotesis_diferenciales = []
             self.campos_requeridos = []
             self.kilometraje_por_aclarar = False
             self.estado = "inicio"
+            self.updated_at = time.time()
+
+    def finalizar_caso(self, nuevo_case_id: Optional[str] = None) -> str:
+        """Cierra el caso diagnóstico activo y prepara un estado limpio conservando trazabilidad."""
+        with self._lock:
+            self.sintomas = []
+            self.conversation_state.iniciar_nuevo_caso(nuevo_case_id)
+            self.case_id = self.conversation_state.case_id
+            self.consulta_tecnica_pendiente = None
+            self.consulta_combustible_pendiente = None
+            self.modo_falla_combustible = None
+            self.autopregunta_sintoma_base = None
+            self.autopregunta_opciones = []
+            self.autopregunta_hipotesis = []
+            self.ultimas_hipotesis_diferenciales = []
+            self.campos_requeridos = []
+            self.kilometraje_por_aclarar = False
+            self.estado = "inicio"
+            self.updated_at = time.time()
+            return str(self.case_id)
+
+    def establecer_autopregunta(
+        self,
+        sintoma_base: str,
+        opciones: List[str],
+        hipotesis: List[str],
+    ) -> None:
+        with self._lock:
+            self.autopregunta_sintoma_base = sintoma_base
+            self.autopregunta_opciones = list(opciones)
+            self.autopregunta_hipotesis = list(hipotesis)
+            self.estado = "esperando_autopregunta"
+            self.updated_at = time.time()
+
+    def establecer_consulta_combustible(self, sintoma: str) -> None:
+        with self._lock:
+            self.consulta_combustible_pendiente = sintoma
+            self.modo_falla_combustible = None
+            self.estado = "esperando_combustible"
+            self.updated_at = time.time()
+
+    def establecer_modo_falla_combustible(self, modo: Optional[str]) -> None:
+        with self._lock:
+            if modo:
+                self.modo_falla_combustible = modo
             self.updated_at = time.time()
 
     def establecer_consulta_tecnica(
@@ -71,23 +147,44 @@ class DiagnosticSession:
     def exportar_contexto(self) -> Dict[str, Any]:
         with self._lock:
             return {
+                "case_id": self.case_id,
                 "perfil_vehiculo": dict(self.perfil_vehiculo),
                 "consulta_tecnica_pendiente": self.consulta_tecnica_pendiente,
+                "consulta_combustible_pendiente": self.consulta_combustible_pendiente,
+                "modo_falla_combustible": self.modo_falla_combustible,
+                "autopregunta_sintoma_base": self.autopregunta_sintoma_base,
+                "autopregunta_opciones": list(self.autopregunta_opciones),
+                "autopregunta_hipotesis": list(self.autopregunta_hipotesis),
+                "ultimas_hipotesis_diferenciales": list(self.ultimas_hipotesis_diferenciales),
                 "campos_requeridos": list(self.campos_requeridos),
                 "kilometraje_por_aclarar": self.kilometraje_por_aclarar,
                 "estado": self.estado,
+                "conversation_state": self.conversation_state.exportar_dict(),
             }
 
     def cargar_contexto(self, contexto: Dict[str, Any]) -> None:
         with self._lock:
+            self.case_id = contexto.get("case_id")
             self.perfil_vehiculo = dict(contexto.get("perfil_vehiculo") or {})
             marca = self.perfil_vehiculo.get("marca")
             modelo = self.perfil_vehiculo.get("modelo")
             self.marca_modelo = f"{marca} {modelo}" if marca and modelo else None
             self.consulta_tecnica_pendiente = contexto.get("consulta_tecnica_pendiente")
+            self.consulta_combustible_pendiente = contexto.get("consulta_combustible_pendiente")
+            self.modo_falla_combustible = contexto.get("modo_falla_combustible")
+            self.autopregunta_sintoma_base = contexto.get("autopregunta_sintoma_base")
+            self.autopregunta_opciones = list(contexto.get("autopregunta_opciones") or [])
+            self.autopregunta_hipotesis = list(contexto.get("autopregunta_hipotesis") or [])
+            self.ultimas_hipotesis_diferenciales = list(contexto.get("ultimas_hipotesis_diferenciales") or [])
             self.campos_requeridos = list(contexto.get("campos_requeridos") or [])
             self.kilometraje_por_aclarar = bool(contexto.get("kilometraje_por_aclarar", False))
             self.estado = str(contexto.get("estado") or "inicio")
+            if "conversation_state" in contexto and isinstance(contexto["conversation_state"], dict):
+                self.conversation_state = ConversationState.from_dict(contexto["conversation_state"])
+                if self.case_id and not self.conversation_state.case_id:
+                    self.conversation_state.case_id = self.case_id
+                elif self.conversation_state.case_id and not self.case_id:
+                    self.case_id = self.conversation_state.case_id
             self.updated_at = time.time()
 
     def ha_expirado(self, ttl_segundos: int = 1800) -> bool:
@@ -169,6 +266,14 @@ class SessionManager:
             if session_id in self._sesiones:
                 logger.debug(f"[SessionManager] Reiniciando sesión para session_id='{session_id}'")
                 self._sesiones[session_id].reiniciar()
+
+    def finalizar_caso(self, session_id: str, nuevo_case_id: Optional[str] = None) -> Optional[str]:
+        """Finaliza el caso activo en memoria y prepara un nuevo case_id sin residuos sintomáticos."""
+        with self._lock:
+            if session_id in self._sesiones:
+                logger.debug(f"[SessionManager] Finalizando caso activo para session_id='{session_id}'")
+                return self._sesiones[session_id].finalizar_caso(nuevo_case_id)
+            return None
 
     def exportar_contexto(self, session_id: str) -> Dict[str, Any]:
         sesion = self.obtener_sesion(session_id)

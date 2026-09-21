@@ -1,0 +1,281 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L09-0001,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.1607,0.1817,TRAIN,,NO,
+F10-L09-0002,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.1149,0.3277,TRAIN,,NO,
+F10-L09-0003,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.1176,0.2017,TRAIN,,NO,
+F10-L09-0004,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.1075,0.3315,TRAIN,,NO,
+F10-L09-0005,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.1241,0.284,TRAIN,,NO,
+F10-L09-0006,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.1122,0.1453,TRAIN,,NO,
+F10-L09-0007,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.2013,0.2434,TEST_100,,NO,
+F10-L09-0008,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.1782,0.2349,TRAIN,,NO,
+F10-L09-0009,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.1207,0.2671,TEST_100,,NO,
+F10-L09-0010,Alternador defectuoso o placa de diodos quemada,L1,APROBADO,CONFORME,0.0554,0.1578,TRAIN,,NO,
+F10-L09-0011,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1878,0.3154,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0012,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1418,0.2172,G2,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0013,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.0971,0.1684,LOTE_07,,SI,Rodajes de transmision manual o eje primario gastados
+F10-L09-0014,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1495,0.1376,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0015,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1012,0.2521,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0016,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.2013,0.2053,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0017,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1507,0.1861,LOTE_04,P0620,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0018,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1011,0.2515,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0019,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1052,0.1398,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0020,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.19,0.1871,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L09-0021,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.299,0.1782,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0022,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1339,0.1928,DEV_60,P0562,SI,Bateria descargada o bornes sulfatados
+F10-L09-0023,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.094,0.0861,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0024,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.1782,0.1934,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0025,Alternador defectuoso o placa de diodos quemada,L2,APROBADO,CONFORME,0.0753,0.3021,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0026,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.0901,0.0928,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0027,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1507,0.1412,TRAIN,P065B,SI,Bateria descargada o bornes sulfatados
+F10-L09-0028,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1006,0.0998,LOTE_04,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0029,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1826,0.1894,G2,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0030,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.197,0.1272,LOTE_05,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0031,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1012,0.1152,FIELD_60,P0563,SI,Bateria descargada o bornes sulfatados
+F10-L09-0032,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1061,0.1132,LOTE_07,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0033,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.0624,0.0893,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0034,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1539,0.1313,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0035,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.19,0.1003,LOTE_06,,SI,Disco de embrague desgastado o patinando
+F10-L09-0036,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.0874,0.0871,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L09-0037,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1062,0.1743,LOTE_06,,SI,Falla en servofreno (booster) o linea de vacio
+F10-L09-0038,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1214,0.1551,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0039,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.2012,0.1566,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0040,Alternador defectuoso o placa de diodos quemada,L3,APROBADO,CONFORME,0.1011,0.1005,TRAIN,,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L09-0041,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.3018,0.3549,TRAIN,,NO,
+F10-L09-0042,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.1034,0.2832,TRAIN,,NO,
+F10-L09-0043,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.1243,0.125,TRAIN,,NO,
+F10-L09-0044,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.1058,0.3413,LOTE_05,,NO,
+F10-L09-0045,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.1699,0.1788,LOTE_05,,NO,
+F10-L09-0046,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.0984,0.2494,TRAIN,,NO,
+F10-L09-0047,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.1085,0.2649,TRAIN,,NO,
+F10-L09-0048,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.0873,0.272,TRAIN,,NO,
+F10-L09-0049,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.0665,0.1749,TRAIN,,NO,
+F10-L09-0050,Bateria descargada o bornes sulfatados,L1,APROBADO,CONFORME,0.1441,0.2684,LOTE_08,,NO,
+F10-L09-0051,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1387,0.1642,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0052,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1553,0.1329,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0053,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1699,0.1205,LOTE_04,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0054,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.0841,0.1212,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0055,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1369,0.1058,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0056,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1048,0.1455,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0057,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1321,0.1259,TEST_100,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0058,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1167,0.1984,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0059,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.0836,0.0734,G1,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0060,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1841,0.1023,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0061,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.299,0.1707,LOTE_03,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0062,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.0971,0.0857,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0063,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.0599,0.1577,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0064,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1063,0.1052,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0065,Bateria descargada o bornes sulfatados,L2,APROBADO,CONFORME,0.1128,0.1156,LOTE_06,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0066,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.0988,0.0894,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0067,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1637,0.1291,LOTE_05,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0068,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1321,0.0633,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0069,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1047,0.1571,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0070,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1068,0.099,LOTE_04,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0071,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1586,0.1075,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0072,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1441,0.1231,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0073,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.0702,0.0675,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L09-0074,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.197,0.1444,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0075,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.0702,0.1089,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0076,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.0892,0.1573,LOTE_08,C1551,SI,Cremallera de direccion asistida con holgura o fuga
+F10-L09-0077,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1158,0.0735,LOTE_06,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0078,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1369,0.0943,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0079,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1128,0.1209,FIELD_60,,SI,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)
+F10-L09-0080,Bateria descargada o bornes sulfatados,L3,APROBADO,CONFORME,0.1253,0.1408,LOTE_06,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0081,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.279,0.3005,TRAIN,,NO,
+F10-L09-0082,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.1215,0.1787,TRAIN,,NO,
+F10-L09-0083,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.1235,0.1475,TRAIN,,NO,
+F10-L09-0084,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.1557,0.2184,TRAIN,,NO,
+F10-L09-0085,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.1606,0.1983,LOTE_05,,NO,
+F10-L09-0086,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.153,0.1999,TRAIN,,NO,
+F10-L09-0087,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.1649,0.2979,LOTE_06,,NO,
+F10-L09-0088,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.2117,0.2379,TRAIN,,NO,
+F10-L09-0089,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.108,0.1778,TRAIN,,NO,
+F10-L09-0090,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L1,APROBADO,CONFORME,0.135,0.1974,TRAIN,,NO,
+F10-L09-0091,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1476,0.187,TRAIN,P0A80,SI,Bateria descargada o bornes sulfatados
+F10-L09-0092,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1841,0.1335,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0093,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1606,0.2528,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0094,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1379,0.1224,TRAIN,P0A7F,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0095,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1586,0.1191,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0096,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.109,0.1352,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0097,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1202,0.1256,TRAIN,,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0098,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.0721,0.1987,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0099,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.0956,0.1594,TRAIN,,SI,Falla en sistema de frenado regenerativo (EV / Hibridos)
+F10-L09-0100,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1476,0.1192,TRAIN,P0A7E,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0101,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.2117,0.1399,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L09-0102,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1141,0.146,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0103,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1975,0.1115,TRAIN,,NO,
+F10-L09-0104,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1083,0.1201,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0105,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L2,APROBADO,CONFORME,0.1006,0.1516,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0106,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.146,0.0824,TRAIN,P0A80,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0107,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.1975,0.1099,LOTE_07,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0108,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.1077,0.1034,TRAIN,P0A7F,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0109,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.1856,0.1484,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0110,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.2012,0.1506,LOTE_05,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0111,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.0993,0.1007,TRAIN,P0B3C,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0112,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.1164,0.142,TRAIN,P0A80,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0113,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.0612,0.0615,LOTE_04,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0114,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.1448,0.1408,LOTE_05,P0A6B,SI,Bateria descargada o bornes sulfatados
+F10-L09-0115,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.1223,0.0747,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0116,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.0993,0.1428,TRAIN,P0AA6,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0117,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.0834,0.0826,TRAIN,,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0118,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.1161,0.0961,TRAIN,P0B24,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0119,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.1039,0.1412,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0120,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos),L3,APROBADO,CONFORME,0.0651,0.0798,LOTE_08,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0121,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.2031,0.3216,LOTE_03,,NO,
+F10-L09-0122,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.3085,0.1597,G2,,NO,
+F10-L09-0123,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.1176,0.1756,TRAIN,,NO,
+F10-L09-0124,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.1649,0.2846,TRAIN,,NO,
+F10-L09-0125,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.1607,0.1893,G2,,NO,
+F10-L09-0126,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.0901,0.2817,TRAIN,,NO,
+F10-L09-0127,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.118,0.2878,LOTE_06,,NO,
+F10-L09-0128,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.1416,0.4031,LOTE_02,,NO,
+F10-L09-0129,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.2015,0.3578,TRAIN,,NO,
+F10-L09-0130,Fallo en inversor de corriente IGBT o motor electrico (EV),L1,APROBADO,CONFORME,0.0974,0.2544,LOTE_07,,NO,
+F10-L09-0131,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1115,0.2084,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0132,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1404,0.1158,TRAIN,,NO,
+F10-L09-0133,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1187,0.1329,TRAIN,,SI,Falla en sistema de frenado regenerativo (EV / Hibridos)
+F10-L09-0134,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.0969,0.1433,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0135,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1288,0.142,TRAIN,,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0136,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1288,0.174,LOTE_03,P0A78,NO,
+F10-L09-0137,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1438,0.2125,TRAIN,P0A94,NO,
+F10-L09-0138,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.2015,0.1478,TRAIN,,NO,
+F10-L09-0139,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.0985,0.1374,TRAIN,,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0140,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1373,0.2072,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0141,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1243,0.1714,TRAIN,P0A1B,NO,
+F10-L09-0142,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1094,0.1506,TRAIN,,NO,
+F10-L09-0143,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1167,0.1443,TRAIN,P0A79,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0144,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.135,0.1995,DEV_60,,SI,Falla en sistema de frenado regenerativo (EV / Hibridos)
+F10-L09-0145,Fallo en inversor de corriente IGBT o motor electrico (EV),L2,APROBADO,CONFORME,0.1108,0.1624,TRAIN,,NO,
+F10-L09-0146,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.2651,0.1516,TRAIN,P0AA6,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0147,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.186,0.1045,LOTE_05,P0A78,NO,
+F10-L09-0148,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.0704,0.1133,LOTE_04,,NO,
+F10-L09-0149,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.0865,0.0909,TRAIN,P0A79,NO,
+F10-L09-0150,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.116,0.1105,TRAIN,P0AA6,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0151,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.1438,0.1851,TRAIN,P0A94,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0152,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.0689,0.0809,LOTE_05,,NO,
+F10-L09-0153,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.0798,0.086,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0154,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.1144,0.0894,TRAIN,P0A78,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L09-0155,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.1154,0.0815,LOTE_05,,NO,
+F10-L09-0156,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.0833,0.1321,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0157,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.186,0.1079,LOTE_04,,NO,
+F10-L09-0158,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.2651,0.1596,TRAIN,"P0AA6, P0A1B",NO,
+F10-L09-0159,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.0684,0.0923,LOTE_06,,SI,Falla en sistema de frenado regenerativo (EV / Hibridos)
+F10-L09-0160,Fallo en inversor de corriente IGBT o motor electrico (EV),L3,APROBADO,CONFORME,0.0788,0.1412,TRAIN,,NO,
+F10-L09-0161,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.153,0.4166,TRAIN,,NO,
+F10-L09-0162,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.1636,0.3166,LOTE_01,,NO,
+F10-L09-0163,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.2335,0.2511,TRAIN,,NO,
+F10-L09-0164,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.162,0.2085,TRAIN,,NO,
+F10-L09-0165,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.1878,0.3202,TRAIN,,NO,
+F10-L09-0166,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.3085,0.2681,LOTE_07,,NO,
+F10-L09-0167,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.147,0.1588,LOTE_04,,NO,
+F10-L09-0168,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.1241,0.2683,TRAIN,,NO,
+F10-L09-0169,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.1555,0.1739,TRAIN,,NO,
+F10-L09-0170,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L1,APROBADO,CONFORME,0.2335,0.3487,TRAIN,,NO,
+F10-L09-0171,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1122,0.1592,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0172,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1243,0.176,TRAIN,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0173,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1951,0.2987,TRAIN,P0A93,NO,
+F10-L09-0174,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1383,0.2111,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0175,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1636,0.2534,LOTE_06,,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0176,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1584,0.2463,TRAIN,P0A82,NO,
+F10-L09-0177,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1776,0.1068,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0178,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1243,0.3156,TRAIN,,NO,
+F10-L09-0179,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1184,0.1638,TRAIN,,SI,Falla en sistema de frenado regenerativo (EV / Hibridos)
+F10-L09-0180,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1179,0.2185,TRAIN,,NO,
+F10-L09-0181,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1014,0.0975,TRAIN,P0A93,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0182,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1171,0.4068,TRAIN,,NO,
+F10-L09-0183,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1067,0.1672,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0184,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.1085,0.301,TRAIN,,NO,
+F10-L09-0185,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L2,APROBADO,CONFORME,0.118,0.1225,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0186,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1213,0.1427,TRAIN,P0A93,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0187,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1194,0.094,LOTE_06,P0A82,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0188,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.0908,0.143,LOTE_05,,NO,
+F10-L09-0189,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1015,0.1147,G1,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0190,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.0928,0.1102,TRAIN,P0A93,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0191,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1127,0.1469,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0192,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.0969,0.1511,TRAIN,P0A82,NO,
+F10-L09-0193,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1134,0.1285,TRAIN,,NO,
+F10-L09-0194,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1776,0.1,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0195,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1213,0.1538,TRAIN,P0A93,SI,Fallo en inversor de corriente IGBT o motor electrico (EV)
+F10-L09-0196,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.0947,0.1186,TRAIN,,NO,
+F10-L09-0197,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.08,0.1704,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0198,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1071,0.1006,LOTE_07,,NO,
+F10-L09-0199,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.0984,0.1453,LOTE_07,,NO,
+F10-L09-0200,Foco o falla en sistema de refrigeracion de bateria/inversor (EV),L3,APROBADO,CONFORME,0.1045,0.1025,TRAIN,,SI,Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)
+F10-L09-0201,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.3018,0.4521,TRAIN,,NO,
+F10-L09-0202,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.1885,0.3212,TRAIN,,NO,
+F10-L09-0203,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.2031,0.2109,LOTE_04,,NO,
+F10-L09-0204,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.1523,0.2301,TRAIN,,NO,
+F10-L09-0205,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.139,0.1577,TRAIN,,NO,
+F10-L09-0206,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.1107,0.3076,TRAIN,,NO,
+F10-L09-0207,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.1347,0.1751,TRAIN,,NO,
+F10-L09-0208,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.1102,0.2416,LOTE_04,,NO,
+F10-L09-0209,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.1795,0.1909,FIELD_60,,NO,
+F10-L09-0210,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L1,APROBADO,CONFORME,0.2676,0.1979,TRAIN,,NO,
+F10-L09-0211,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1885,0.3232,DEV_60,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0212,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1294,0.1597,TRAIN,,SI,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)
+F10-L09-0213,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1531,0.2062,TRAIN,,NO,
+F10-L09-0214,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1103,0.1889,LOTE_05,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0215,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1638,0.1884,LOTE_05,,NO,
+F10-L09-0216,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.0972,0.156,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0217,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1301,0.2224,TRAIN,,SI,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)
+F10-L09-0218,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1301,0.1371,TRAIN,P0615,NO,
+F10-L09-0219,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.0988,0.1272,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0220,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1523,0.227,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0221,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.0663,0.0986,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0222,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1531,0.4135,TRAIN,,NO,
+F10-L09-0223,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.0719,0.1273,TRAIN,,NO,
+F10-L09-0224,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1428,0.1526,TRAIN,,SI,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)
+F10-L09-0225,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L2,APROBADO,CONFORME,0.1638,0.2385,G2,,NO,
+F10-L09-0226,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1608,0.1519,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0227,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1573,0.1304,LOTE_05,,NO,
+F10-L09-0228,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.0903,0.1765,TRAIN,,NO,
+F10-L09-0229,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.0964,0.0917,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0230,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1161,0.1123,LOTE_05,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0231,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.08,0.1126,LOTE_05,,SI,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)
+F10-L09-0232,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1714,0.128,TRAIN,,NO,
+F10-L09-0233,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1178,0.1081,TRAIN,P0615,NO,
+F10-L09-0234,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1531,0.1604,TRAIN,,NO,
+F10-L09-0235,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.14,0.1987,DEV_60,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0236,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1608,0.1,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0237,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1084,0.1068,LOTE_05,,NO,
+F10-L09-0238,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1151,0.1091,TRAIN,,NO,
+F10-L09-0239,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.0903,0.1353,TRAIN,,NO,
+F10-L09-0240,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),L3,APROBADO,CONFORME,0.1444,0.0968,TRAIN,,NO,
+F10-L09-0241,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.1856,0.2459,TRAIN,,NO,
+F10-L09-0242,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.2676,0.2403,TRAIN,,NO,
+F10-L09-0243,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.1568,0.2176,TRAIN,,NO,
+F10-L09-0244,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.0743,0.134,TRAIN,,NO,
+F10-L09-0245,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.0941,0.1724,TRAIN,,NO,
+F10-L09-0246,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.1339,0.2317,TRAIN,,NO,
+F10-L09-0247,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.1247,0.1617,TRAIN,,NO,
+F10-L09-0248,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.1568,0.2302,TRAIN,,NO,
+F10-L09-0249,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.1443,0.1818,TRAIN,,NO,
+F10-L09-0250,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L1,APROBADO,CONFORME,0.0769,0.2113,TRAIN,,NO,
+F10-L09-0251,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1406,0.1291,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0252,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1223,0.1355,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0253,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.0786,0.2676,TRAIN,,NO,
+F10-L09-0254,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.147,0.1604,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0255,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1169,0.3716,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0256,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1421,0.1669,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L09-0257,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1071,0.1362,TRAIN,,NO,
+F10-L09-0258,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1328,0.2496,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0259,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1227,0.1376,TRAIN,,NO,
+F10-L09-0260,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.0957,0.2097,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0261,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1205,0.2096,TRAIN,,NO,
+F10-L09-0262,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1421,0.2329,TRAIN,,NO,
+F10-L09-0263,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.1428,0.1892,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0264,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.0968,0.1725,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L09-0265,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L2,APROBADO,CONFORME,0.108,0.1333,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0266,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1539,0.2088,TRAIN,,NO,
+F10-L09-0267,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1853,0.0949,LOTE_05,,NO,
+F10-L09-0268,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1161,0.1009,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0269,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1334,0.0977,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L09-0270,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.086,0.1029,TRAIN,,NO,
+F10-L09-0271,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1117,0.1087,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0272,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1146,0.1375,TRAIN,,NO,
+F10-L09-0273,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.0903,0.0998,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0274,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1853,0.152,LOTE_05,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L09-0275,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1259,0.1377,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L09-0276,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.0914,0.1049,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L09-0277,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1063,0.0871,TRAIN,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L09-0278,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1588,0.0848,TRAIN,,NO,
+F10-L09-0279,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1247,0.1487,TRAIN,,NO,
+F10-L09-0280,Fuga parasita de corriente en reposo (consumo nocturno de bateria),L3,APROBADO,CONFORME,0.1477,0.0893,TEST_100,,SI,Bateria descargada o bornes sulfatados

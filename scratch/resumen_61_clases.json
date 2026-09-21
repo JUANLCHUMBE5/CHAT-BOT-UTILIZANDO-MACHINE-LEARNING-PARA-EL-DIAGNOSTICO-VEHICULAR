@@ -1,0 +1,1907 @@
+[
+  {
+    "falla": "Alternador defectuoso o placa de diodos quemada",
+    "total": 181,
+    "n_l1": 118,
+    "p_l1": 65.2,
+    "n_l2": 61,
+    "p_l2": 33.7,
+    "n_l3": 2,
+    "p_l3": 1.1,
+    "sintomas": [
+      "apagado",
+      "falla_electrica",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "al_girar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "descarte_reemplazo",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "cabecea",
+      "chilla",
+      "muelle",
+      "pesado",
+      "rompemuelle",
+      "se chupa",
+      "tac"
+    ],
+    "vocab_unico": 521,
+    "ratio_variacion": 0.165,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Amortiguadores reventados o bujes de suspension gastados",
+    "total": 156,
+    "n_l1": 114,
+    "p_l1": 73.1,
+    "n_l2": 42,
+    "p_l2": 26.9,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_suspension",
+      "misfire",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "al_girar",
+      "alta_velocidad",
+      "baches_terreno",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "bache",
+      "cabecea",
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 187,
+    "ratio_variacion": 0.1,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Baja presion de aceite o bomba de aceite defectuosa",
+    "total": 102,
+    "n_l1": 65,
+    "p_l1": 63.7,
+    "n_l2": 36,
+    "p_l2": 35.3,
+    "n_l3": 1,
+    "p_l3": 1.0,
+    "sintomas": [
+      "apagado",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "medicion_metrologica"
+    ],
+    "jerga": [
+      "tac"
+    ],
+    "vocab_unico": 237,
+    "ratio_variacion": 0.16,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Bateria descargada o bornes sulfatados",
+    "total": 217,
+    "n_l1": 117,
+    "p_l1": 53.9,
+    "n_l2": 99,
+    "p_l2": 45.6,
+    "n_l3": 1,
+    "p_l3": 0.5,
+    "sintomas": [
+      "apagado",
+      "falla_electrica",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "al_girar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "descarte_reemplazo",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "bache",
+      "clac",
+      "hierve",
+      "muelle",
+      "pesado",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 439,
+    "ratio_variacion": 0.146,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Bomba de gasolina quemada o con baja presion",
+    "total": 175,
+    "n_l1": 86,
+    "p_l1": 49.1,
+    "n_l2": 74,
+    "p_l2": 42.3,
+    "n_l3": 15,
+    "p_l3": 8.6,
+    "sintomas": [
+      "apagado",
+      "misfire",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "al_girar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "descarte_reemplazo",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "cabecea",
+      "muelle",
+      "pata a fondo",
+      "pesado",
+      "rompemuelle",
+      "se chupa",
+      "tac"
+    ],
+    "vocab_unico": 425,
+    "ratio_variacion": 0.152,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Caliper de freno trabado o mordaza pegada (piston agarrotado)",
+    "total": 62,
+    "n_l1": 56,
+    "p_l1": 90.3,
+    "n_l2": 6,
+    "p_l2": 9.7,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_frenos",
+      "no_arranca",
+      "perdida_potencia",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "alta_velocidad"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "amarrado",
+      "esponjoso",
+      "fierro"
+    ],
+    "vocab_unico": 241,
+    "ratio_variacion": 0.195,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",
+    "total": 101,
+    "n_l1": 91,
+    "p_l1": 90.1,
+    "n_l2": 10,
+    "p_l2": 9.9,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_suspension",
+      "no_arranca"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 163,
+    "ratio_variacion": 0.114,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Consumo de aceite por desgaste de anillos o retenes",
+    "total": 122,
+    "n_l1": 87,
+    "p_l1": 71.3,
+    "n_l2": 35,
+    "p_l2": 28.7,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "humo_anomalo",
+      "perdida_potencia"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 199,
+    "ratio_variacion": 0.125,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)",
+    "total": 65,
+    "n_l1": 31,
+    "p_l1": 47.7,
+    "n_l2": 33,
+    "p_l2": 50.8,
+    "n_l3": 1,
+    "p_l3": 1.5,
+    "sintomas": [
+      "perdida_potencia",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "tac"
+    ],
+    "vocab_unico": 265,
+    "ratio_variacion": 0.2,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Cremallera de direccion asistida con holgura o fuga",
+    "total": 123,
+    "n_l1": 63,
+    "p_l1": 51.2,
+    "n_l2": 52,
+    "p_l2": 42.3,
+    "n_l3": 8,
+    "p_l3": 6.5,
+    "sintomas": [
+      "falla_direccion",
+      "misfire",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_girar",
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "chilla",
+      "duro",
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 213,
+    "ratio_variacion": 0.134,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+    "total": 184,
+    "n_l1": 96,
+    "p_l1": 52.2,
+    "n_l2": 78,
+    "p_l2": 42.4,
+    "n_l3": 10,
+    "p_l3": 5.4,
+    "sintomas": [
+      "apagado",
+      "misfire",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "descarte_reemplazo",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 270,
+    "ratio_variacion": 0.113,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)",
+    "total": 84,
+    "n_l1": 66,
+    "p_l1": 78.6,
+    "n_l2": 18,
+    "p_l2": 21.4,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "apagado"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "medicion_metrologica"
+    ],
+    "jerga": [
+      "pesado"
+    ],
+    "vocab_unico": 143,
+    "ratio_variacion": 0.118,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Desgaste de pastillas y zapatas de freno",
+    "total": 198,
+    "n_l1": 120,
+    "p_l1": 60.6,
+    "n_l2": 78,
+    "p_l2": 39.4,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_frenos",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "al_girar",
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "chilla",
+      "chirrido",
+      "duro",
+      "fierro",
+      "muelle",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 282,
+    "ratio_variacion": 0.117,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Desgaste en collarin de empuje o crapodina de embrague",
+    "total": 62,
+    "n_l1": 50,
+    "p_l1": 80.6,
+    "n_l2": 7,
+    "p_l2": 11.3,
+    "n_l3": 5,
+    "p_l3": 8.1,
+    "sintomas": [
+      "apagado",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "chilla",
+      "chirrido"
+    ],
+    "vocab_unico": 198,
+    "ratio_variacion": 0.162,
+    "estado_cobertura": "SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Disco de embrague desgastado o patinando",
+    "total": 116,
+    "n_l1": 69,
+    "p_l1": 59.5,
+    "n_l2": 47,
+    "p_l2": 40.5,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_transmision",
+      "misfire",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "cabecea",
+      "muelle",
+      "patina",
+      "rompemuelle",
+      "zapatea"
+    ],
+    "vocab_unico": 276,
+    "ratio_variacion": 0.17,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Discos de freno alabeados o desgastados",
+    "total": 155,
+    "n_l1": 56,
+    "p_l1": 36.1,
+    "n_l2": 99,
+    "p_l2": 63.9,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_suspension",
+      "misfire",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "medicion_metrologica"
+    ],
+    "jerga": [
+      "cabecea",
+      "muelle",
+      "rompemuelle",
+      "zapatea"
+    ],
+    "vocab_unico": 331,
+    "ratio_variacion": 0.146,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Elevalunas electrico o guaya de alzacristales rota o trabada",
+    "total": 84,
+    "n_l1": 74,
+    "p_l1": 88.1,
+    "n_l2": 10,
+    "p_l2": 11.9,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "ruido_anomalo"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "muelle",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 135,
+    "ratio_variacion": 0.113,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Empaque de culata soplado o danado",
+    "total": 133,
+    "n_l1": 124,
+    "p_l1": 93.2,
+    "n_l2": 9,
+    "p_l2": 6.8,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "humo_anomalo",
+      "no_arranca",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 178,
+    "ratio_variacion": 0.102,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Faja o cadena de distribucion destensada o con salto de punto",
+    "total": 109,
+    "n_l1": 44,
+    "p_l1": 40.4,
+    "n_l2": 58,
+    "p_l2": 53.2,
+    "n_l3": 7,
+    "p_l3": 6.4,
+    "sintomas": [
+      "misfire",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "cabecea",
+      "chirrido",
+      "tac"
+    ],
+    "vocab_unico": 272,
+    "ratio_variacion": 0.165,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)",
+    "total": 47,
+    "n_l1": 42,
+    "p_l1": 89.4,
+    "n_l2": 5,
+    "p_l2": 10.6,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "ruido_anomalo"
+    ],
+    "condiciones": [
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "medicion_metrologica"
+    ],
+    "jerga": [
+      "duro"
+    ],
+    "vocab_unico": 174,
+    "ratio_variacion": 0.216,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)",
+    "total": 52,
+    "n_l1": 18,
+    "p_l1": 34.6,
+    "n_l2": 24,
+    "p_l2": 46.2,
+    "n_l3": 10,
+    "p_l3": 19.2,
+    "sintomas": [
+      "misfire",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc"
+    ],
+    "jerga": [
+      "cabecea",
+      "pesado"
+    ],
+    "vocab_unico": 178,
+    "ratio_variacion": 0.224,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Falla electrica del cierre centralizado o actuador de puerta",
+    "total": 102,
+    "n_l1": 91,
+    "p_l1": 89.2,
+    "n_l2": 11,
+    "p_l2": 10.8,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_electrica",
+      "ruido_anomalo"
+    ],
+    "condiciones": [
+      "alta_velocidad"
+    ],
+    "discriminadores": [
+      "descarte_reemplazo",
+      "medicion_metrologica"
+    ],
+    "jerga": [
+      "bache",
+      "clac"
+    ],
+    "vocab_unico": 326,
+    "ratio_variacion": 0.228,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)",
+    "total": 60,
+    "n_l1": 32,
+    "p_l1": 53.3,
+    "n_l2": 28,
+    "p_l2": 46.7,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [],
+    "condiciones": [],
+    "discriminadores": [
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "tac"
+    ],
+    "vocab_unico": 191,
+    "ratio_variacion": 0.153,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
+    "total": 50,
+    "n_l1": 23,
+    "p_l1": 46.0,
+    "n_l2": 23,
+    "p_l2": 46.0,
+    "n_l3": 4,
+    "p_l3": 8.0,
+    "sintomas": [
+      "perdida_potencia",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "tac"
+    ],
+    "vocab_unico": 199,
+    "ratio_variacion": 0.246,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Falla en bombin o bomba hidraulica de embrague",
+    "total": 87,
+    "n_l1": 67,
+    "p_l1": 77.0,
+    "n_l2": 20,
+    "p_l2": 23.0,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_frenos",
+      "falla_transmision",
+      "ruido_anomalo"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "duro",
+      "esponjoso",
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 204,
+    "ratio_variacion": 0.181,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "total": 301,
+    "n_l1": 142,
+    "p_l1": 47.2,
+    "n_l2": 130,
+    "p_l2": 43.2,
+    "n_l3": 29,
+    "p_l3": 9.6,
+    "sintomas": [
+      "apagado",
+      "consumo_combustible",
+      "misfire",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "descarte_reemplazo",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "cabecea",
+      "cascabelea",
+      "corcovea",
+      "muelle",
+      "pesado",
+      "rompemuelle",
+      "se chupa",
+      "tac"
+    ],
+    "vocab_unico": 464,
+    "ratio_variacion": 0.117,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)",
+    "total": 67,
+    "n_l1": 54,
+    "p_l1": 80.6,
+    "n_l2": 13,
+    "p_l2": 19.4,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_transmision",
+      "misfire",
+      "no_arranca",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [],
+    "vocab_unico": 264,
+    "ratio_variacion": 0.264,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)",
+    "total": 62,
+    "n_l1": 0,
+    "p_l1": 0.0,
+    "n_l2": 62,
+    "p_l2": 100.0,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_electrica",
+      "misfire",
+      "vibracion"
+    ],
+    "condiciones": [
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "descarte_reemplazo",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "tac"
+    ],
+    "vocab_unico": 222,
+    "ratio_variacion": 0.189,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L1"
+  },
+  {
+    "falla": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+    "total": 101,
+    "n_l1": 96,
+    "p_l1": 95.0,
+    "n_l2": 5,
+    "p_l2": 5.0,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "apagado",
+      "falla_transmision",
+      "no_arranca",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [],
+    "discriminadores": [
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "patina",
+      "tac"
+    ],
+    "vocab_unico": 224,
+    "ratio_variacion": 0.17,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+    "total": 47,
+    "n_l1": 8,
+    "p_l1": 17.0,
+    "n_l2": 39,
+    "p_l2": 83.0,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "humo_anomalo",
+      "no_arranca"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "tac"
+    ],
+    "vocab_unico": 190,
+    "ratio_variacion": 0.249,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L1"
+  },
+  {
+    "falla": "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)",
+    "total": 45,
+    "n_l1": 7,
+    "p_l1": 15.6,
+    "n_l2": 38,
+    "p_l2": 84.4,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "apagado",
+      "misfire",
+      "no_arranca",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "bache",
+      "tac"
+    ],
+    "vocab_unico": 176,
+    "ratio_variacion": 0.235,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L1"
+  },
+  {
+    "falla": "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)",
+    "total": 62,
+    "n_l1": 31,
+    "p_l1": 50.0,
+    "n_l2": 31,
+    "p_l2": 50.0,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "no_arranca",
+      "ruido_anomalo"
+    ],
+    "condiciones": [
+      "alta_velocidad"
+    ],
+    "discriminadores": [
+      "descarte_reemplazo",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "clac",
+      "tac"
+    ],
+    "vocab_unico": 198,
+    "ratio_variacion": 0.154,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Falla en regulador de presion de combustible o diafragma roto",
+    "total": 62,
+    "n_l1": 37,
+    "p_l1": 59.7,
+    "n_l2": 25,
+    "p_l2": 40.3,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "consumo_combustible",
+      "humo_anomalo",
+      "misfire",
+      "perdida_potencia",
+      "vibracion"
+    ],
+    "condiciones": [
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "medicion_metrologica"
+    ],
+    "jerga": [],
+    "vocab_unico": 217,
+    "ratio_variacion": 0.177,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Falla en sensor de oxigeno o mezcla rica",
+    "total": 221,
+    "n_l1": 152,
+    "p_l1": 68.8,
+    "n_l2": 63,
+    "p_l2": 28.5,
+    "n_l3": 6,
+    "p_l3": 2.7,
+    "sintomas": [
+      "apagado",
+      "consumo_combustible",
+      "humo_anomalo",
+      "misfire",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "muelle",
+      "pesado",
+      "rompemuelle"
+    ],
+    "vocab_unico": 311,
+    "ratio_variacion": 0.114,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)",
+    "total": 70,
+    "n_l1": 8,
+    "p_l1": 11.4,
+    "n_l2": 50,
+    "p_l2": 71.4,
+    "n_l3": 12,
+    "p_l3": 17.1,
+    "sintomas": [
+      "apagado",
+      "misfire",
+      "no_arranca",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "se muere",
+      "tac"
+    ],
+    "vocab_unico": 308,
+    "ratio_variacion": 0.183,
+    "estado_cobertura": "SUBREPRESENTADA EN L1"
+  },
+  {
+    "falla": "Falla en sensor de velocidad de rueda ABS",
+    "total": 53,
+    "n_l1": 30,
+    "p_l1": 56.6,
+    "n_l2": 23,
+    "p_l2": 43.4,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "muelle",
+      "patina",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 177,
+    "ratio_variacion": 0.241,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Falla en servofreno (booster) o linea de vacio",
+    "total": 119,
+    "n_l1": 98,
+    "p_l1": 82.4,
+    "n_l2": 21,
+    "p_l2": 17.6,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_frenos",
+      "misfire",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "descarte_reemplazo"
+    ],
+    "jerga": [
+      "cabecea",
+      "duro",
+      "muelle",
+      "pesado",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 305,
+    "ratio_variacion": 0.172,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)",
+    "total": 42,
+    "n_l1": 15,
+    "p_l1": 35.7,
+    "n_l2": 27,
+    "p_l2": 64.3,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "humo_anomalo",
+      "misfire",
+      "perdida_potencia",
+      "vibracion"
+    ],
+    "condiciones": [
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "cabecea",
+      "pesado"
+    ],
+    "vocab_unico": 164,
+    "ratio_variacion": 0.257,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga)",
+    "total": 65,
+    "n_l1": 34,
+    "p_l1": 52.3,
+    "n_l2": 31,
+    "p_l2": 47.7,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "consumo_combustible",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "tac"
+    ],
+    "vocab_unico": 252,
+    "ratio_variacion": 0.192,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Falla en sistema de frenado regenerativo (EV / Hibridos)",
+    "total": 56,
+    "n_l1": 21,
+    "p_l1": 37.5,
+    "n_l2": 35,
+    "p_l2": 62.5,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_frenos",
+      "ruido_anomalo"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "duro",
+      "pesado"
+    ],
+    "vocab_unico": 166,
+    "ratio_variacion": 0.2,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)",
+    "total": 53,
+    "n_l1": 12,
+    "p_l1": 22.6,
+    "n_l2": 38,
+    "p_l2": 71.7,
+    "n_l3": 3,
+    "p_l3": 5.7,
+    "sintomas": [
+      "apagado",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "amarrado",
+      "cascabelea"
+    ],
+    "vocab_unico": 202,
+    "ratio_variacion": 0.233,
+    "estado_cobertura": "SUBREPRESENTADA EN L1"
+  },
+  {
+    "falla": "Falla en termostato o motoventilador de radiador",
+    "total": 122,
+    "n_l1": 79,
+    "p_l1": 64.8,
+    "n_l2": 43,
+    "p_l2": 35.2,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "no_arranca",
+      "perdida_potencia",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "hierve",
+      "muelle",
+      "pesado",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 286,
+    "ratio_variacion": 0.168,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Fallo en inversor de corriente IGBT o motor electrico (EV)",
+    "total": 92,
+    "n_l1": 37,
+    "p_l1": 40.2,
+    "n_l2": 54,
+    "p_l2": 58.7,
+    "n_l3": 1,
+    "p_l3": 1.1,
+    "sintomas": [
+      "apagado",
+      "misfire",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "pesado"
+    ],
+    "vocab_unico": 163,
+    "ratio_variacion": 0.131,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Falta o degradacion de aceite de caja de cambios",
+    "total": 96,
+    "n_l1": 55,
+    "p_l1": 57.3,
+    "n_l2": 41,
+    "p_l2": 42.7,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_transmision",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "duro",
+      "fierro",
+      "muelle",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 279,
+    "ratio_variacion": 0.213,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)",
+    "total": 60,
+    "n_l1": 23,
+    "p_l1": 38.3,
+    "n_l2": 37,
+    "p_l2": 61.7,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "pesado"
+    ],
+    "vocab_unico": 190,
+    "ratio_variacion": 0.203,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Fuga en mangueras de intercooler o turbocompresor danado",
+    "total": 86,
+    "n_l1": 59,
+    "p_l1": 68.6,
+    "n_l2": 27,
+    "p_l2": 31.4,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "humo_anomalo",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "pesado",
+      "tac"
+    ],
+    "vocab_unico": 149,
+    "ratio_variacion": 0.128,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Fuga en mangueras de refrigerante o radiador picado",
+    "total": 75,
+    "n_l1": 71,
+    "p_l1": 94.7,
+    "n_l2": 4,
+    "p_l2": 5.3,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "humo_anomalo",
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 241,
+    "ratio_variacion": 0.227,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Fuga hidraulica o aire en el sistema de frenos",
+    "total": 140,
+    "n_l1": 117,
+    "p_l1": 83.6,
+    "n_l2": 23,
+    "p_l2": 16.4,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "falla_frenos",
+      "ruido_anomalo"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [],
+    "jerga": [
+      "esponjoso",
+      "muelle",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 210,
+    "ratio_variacion": 0.11,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+    "total": 57,
+    "n_l1": 14,
+    "p_l1": 24.6,
+    "n_l2": 41,
+    "p_l2": 71.9,
+    "n_l3": 2,
+    "p_l3": 3.5,
+    "sintomas": [
+      "apagado",
+      "humo_anomalo",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "cascabelea",
+      "pesado"
+    ],
+    "vocab_unico": 152,
+    "ratio_variacion": 0.189,
+    "estado_cobertura": "SUBREPRESENTADA EN L1"
+  },
+  {
+    "falla": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+    "total": 61,
+    "n_l1": 25,
+    "p_l1": 41.0,
+    "n_l2": 36,
+    "p_l2": 59.0,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [],
+    "condiciones": [
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "descarte_reemplazo",
+      "medicion_metrologica"
+    ],
+    "jerga": [
+      "tac"
+    ],
+    "vocab_unico": 221,
+    "ratio_variacion": 0.181,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)",
+    "total": 96,
+    "n_l1": 67,
+    "p_l1": 69.8,
+    "n_l2": 29,
+    "p_l2": 30.2,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "ruido_anomalo",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "chilla",
+      "duro",
+      "pesado",
+      "tac"
+    ],
+    "vocab_unico": 266,
+    "ratio_variacion": 0.172,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Inyectores sucios o filtro de combustible obstruido",
+    "total": 149,
+    "n_l1": 62,
+    "p_l1": 41.6,
+    "n_l2": 86,
+    "p_l2": 57.7,
+    "n_l3": 1,
+    "p_l3": 0.7,
+    "sintomas": [
+      "apagado",
+      "humo_anomalo",
+      "misfire",
+      "no_arranca",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "aguanta",
+      "muelle",
+      "rompemuelle",
+      "se chupa",
+      "tac"
+    ],
+    "vocab_unico": 297,
+    "ratio_variacion": 0.152,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Juntas homocineticas o palieres danados",
+    "total": 183,
+    "n_l1": 49,
+    "p_l1": 26.8,
+    "n_l2": 123,
+    "p_l2": 67.2,
+    "n_l3": 11,
+    "p_l3": 6.0,
+    "sintomas": [
+      "apagado",
+      "misfire",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_girar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "cabecea",
+      "clac",
+      "muelle",
+      "rompemuelle",
+      "tac"
+    ],
+    "vocab_unico": 276,
+    "ratio_variacion": 0.107,
+    "estado_cobertura": "SUBREPRESENTADA EN L1"
+  },
+  {
+    "falla": "Limpiaparabrisas o motor pluma quemado",
+    "total": 63,
+    "n_l1": 55,
+    "p_l1": 87.3,
+    "n_l2": 8,
+    "p_l2": 12.7,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "perdida_potencia"
+    ],
+    "condiciones": [
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "muelle",
+      "rompemuelle"
+    ],
+    "vocab_unico": 138,
+    "ratio_variacion": 0.174,
+    "estado_cobertura": "SUBREPRESENTADA EN L3, SUBREPRESENTADA EN L2"
+  },
+  {
+    "falla": "Llantas desbalanceadas o desalineadas",
+    "total": 203,
+    "n_l1": 152,
+    "p_l1": 74.9,
+    "n_l2": 49,
+    "p_l2": 24.1,
+    "n_l3": 2,
+    "p_l3": 1.0,
+    "sintomas": [
+      "misfire",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "al_girar",
+      "alta_velocidad",
+      "carga_aceleracion"
+    ],
+    "discriminadores": [
+      "descarte_reemplazo",
+      "medicion_metrologica"
+    ],
+    "jerga": [
+      "bache",
+      "chilla",
+      "muelle",
+      "rompemuelle",
+      "zapatea"
+    ],
+    "vocab_unico": 311,
+    "ratio_variacion": 0.118,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados",
+    "total": 62,
+    "n_l1": 31,
+    "p_l1": 50.0,
+    "n_l2": 30,
+    "p_l2": 48.4,
+    "n_l3": 1,
+    "p_l3": 1.6,
+    "sintomas": [
+      "misfire",
+      "vibracion"
+    ],
+    "condiciones": [
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "descarte_reemplazo",
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [],
+    "vocab_unico": 237,
+    "ratio_variacion": 0.186,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Rodajes de caja mecanica o diferencial gastados",
+    "total": 91,
+    "n_l1": 65,
+    "p_l1": 71.4,
+    "n_l2": 25,
+    "p_l2": 27.5,
+    "n_l3": 1,
+    "p_l3": 1.1,
+    "sintomas": [
+      "apagado",
+      "ruido_anomalo",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_girar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "medicion_metrologica"
+    ],
+    "jerga": [],
+    "vocab_unico": 224,
+    "ratio_variacion": 0.175,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Rodajes de transmision manual o eje primario gastados",
+    "total": 60,
+    "n_l1": 23,
+    "p_l1": 38.3,
+    "n_l2": 36,
+    "p_l2": 60.0,
+    "n_l3": 1,
+    "p_l3": 1.7,
+    "sintomas": [
+      "apagado",
+      "ruido_anomalo"
+    ],
+    "condiciones": [
+      "al_girar",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [],
+    "jerga": [],
+    "vocab_unico": 188,
+    "ratio_variacion": 0.149,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+    "total": 62,
+    "n_l1": 44,
+    "p_l1": 71.0,
+    "n_l2": 18,
+    "p_l2": 29.0,
+    "n_l3": 0,
+    "p_l3": 0.0,
+    "sintomas": [
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "al_girar",
+      "alta_velocidad",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [],
+    "jerga": [],
+    "vocab_unico": 229,
+    "ratio_variacion": 0.174,
+    "estado_cobertura": "SUBREPRESENTADA EN L3"
+  },
+  {
+    "falla": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+    "total": 98,
+    "n_l1": 45,
+    "p_l1": 45.9,
+    "n_l2": 46,
+    "p_l2": 46.9,
+    "n_l3": 7,
+    "p_l3": 7.1,
+    "sintomas": [
+      "falla_transmision",
+      "misfire",
+      "perdida_potencia",
+      "ruido_anomalo",
+      "sobrecalentamiento",
+      "vibracion"
+    ],
+    "condiciones": [
+      "al_frenar",
+      "alta_velocidad",
+      "carga_aceleracion",
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "codigo_dtc",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "duro",
+      "patina",
+      "tac"
+    ],
+    "vocab_unico": 386,
+    "ratio_variacion": 0.239,
+    "estado_cobertura": "BIEN CUBIERTA"
+  },
+  {
+    "falla": "Válvula de freno de aire o secador APS obstruido (Camiones)",
+    "total": 80,
+    "n_l1": 64,
+    "p_l1": 80.0,
+    "n_l2": 15,
+    "p_l2": 18.8,
+    "n_l3": 1,
+    "p_l3": 1.2,
+    "sintomas": [
+      "perdida_potencia",
+      "sobrecalentamiento"
+    ],
+    "condiciones": [
+      "ralenti_detenido"
+    ],
+    "discriminadores": [
+      "medicion_metrologica",
+      "pieza_especifica"
+    ],
+    "jerga": [
+      "duro",
+      "muelle",
+      "pesado"
+    ],
+    "vocab_unico": 275,
+    "ratio_variacion": 0.197,
+    "estado_cobertura": "SUBREPRESENTADA EN L2"
+  }
+]

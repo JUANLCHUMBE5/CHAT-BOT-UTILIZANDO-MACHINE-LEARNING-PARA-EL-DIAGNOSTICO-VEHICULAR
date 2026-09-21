@@ -1,0 +1,192 @@
+/* Card Base Hover Effects */
+.card-hover-effect {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease !important;
+}
+
+.card-hover-effect:hover {
+  box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.08) !important;
+  border-color: rgba(234, 88, 12, 0.3) !important;
+}
+
+/* Stat Cards */
+.stat-card-compact {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.22s ease !important;
+}
+
+.stat-card-compact:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -4px rgba(234, 88, 12, 0.16), 0 4px 8px -2px rgba(0, 0, 0, 0.05) !important;
+  border-color: hsla(24, 85%, 60%, 0.40) !important;
+}
+
+.stat-card-compact:hover .stat-card-icon {
+  transform: scale(1.1);
+}
+
+.stat-card-icon {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@media (max-width: 640px) {
+  .stat-card-compact {
+    padding: 10px 12px !important;
+    gap: 4px !important;
+  }
+  .stat-card-title {
+    font-size: 11px !important;
+  }
+  .stat-card-value {
+    font-size: 20px !important;
+  }
+  .stat-card-icon {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+/* Personas y Accesos Grid & Cards */
+.personas-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.personas-stat-card {
+  position: relative;
+  padding: 16px 18px;
+  background-color: #ffffff;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.personas-stat-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.personas-stat-card.active-tab {
+  border-color: #3b82f6 !important;
+  background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%) !important;
+  box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.18) !important;
+}
+
+.personas-stat-card.active-tab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #3b82f6;
+}
+
+.personas-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.personas-stat-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.personas-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.personas-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .personas-stat-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+  }
+  .personas-stat-card {
+    padding: 8px 4px !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 3px !important;
+    border-radius: var(--radius-sm) !important;
+  }
+  .personas-stat-icon {
+    width: 26px !important;
+    height: 26px !important;
+    border-radius: 6px !important;
+  }
+  .personas-stat-icon svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  .personas-stat-label {
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    max-width: 100% !important;
+  }
+  .personas-stat-value {
+    font-size: 16px !important;
+    margin-top: 0 !important;
+  }
+  .personas-tab-button {
+    padding: 8px 6px !important;
+    font-size: 12px !important;
+    gap: 4px !important;
+    flex: 1 !important;
+    justify-content: center !important;
+  }
+  .personas-tab-button svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+
+/* Management Action Button */
+.management-btn-native {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.management-btn-native:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 14px 30px -4px rgba(234, 88, 12, 0.52),
+              0 6px 14px rgba(0, 0, 0, 0.08) !important;
+}
+
+.management-btn-native .arrow-icon-animated {
+  animation: arrowBounceHorizontal 1.2s infinite ease-in-out;
+}

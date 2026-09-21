@@ -5,7 +5,8 @@ from src.interfaces.api.v1.endpoints.clientes import router as clientes_router
 from src.interfaces.api.v1.endpoints.diagnostico import router as diagnostico_router
 from src.interfaces.api.v1.endpoints.mecanicos import router as mecanicos_router
 from src.interfaces.api.v1.endpoints.metricas import router as metricas_router
-from src.interfaces.api.v1.endpoints.webhook import router as webhook_router
+from src.interfaces.api.v1.endpoints.validacion_taller import router as validacion_taller_router
+from src.interfaces.messaging.whatsapp import router as webhook_router
 
 api_router = APIRouter()
 
@@ -16,3 +17,4 @@ api_router.include_router(diagnostico_router, prefix="/diagnostico", tags=["Diag
 api_router.include_router(mecanicos_router, prefix="/mecanicos", tags=["Gestión Mecánicos"])
 api_router.include_router(clientes_router, prefix="/clientes", tags=["Clientes y Solicitudes"])
 api_router.include_router(metricas_router, prefix="/metricas", tags=["Métricas Ejecutivas"])
+api_router.include_router(validacion_taller_router, prefix="/validacion-taller", tags=["Validación Real Taller"])

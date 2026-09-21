@@ -1,0 +1,55 @@
+{
+  "candidate": "F10-C1",
+  "objetivo": "DATA-ONLY (Medir efecto del corpus estratificado Fase 10 preservando arquitectura Fase 8.3)",
+  "train_dataset": "train10_v1.csv",
+  "n_train": 6904,
+  "clases": 61,
+  "features_usadas": [
+    "texto_usuario"
+  ],
+  "features_excluidas": [
+    "clase",
+    "macro_sistema",
+    "dtc",
+    "nivel",
+    "fuente",
+    "observaciones",
+    "clase_contrastiva",
+    "source_type"
+  ],
+  "tfidf": {
+    "ngram_range": [
+      1,
+      2
+    ],
+    "sublinear_tf": true,
+    "strip_accents": "unicode",
+    "min_df": 1,
+    "max_features": 25000,
+    "vocab_size": 25000
+  },
+  "linearsvc_falla": {
+    "C": 1.2,
+    "class_weight": "balanced",
+    "random_state": 42,
+    "max_iter": 3500,
+    "loss": "squared_hinge",
+    "penalty": "l2"
+  },
+  "linearsvc_sistema": {
+    "C": 1.0,
+    "class_weight": "balanced",
+    "random_state": 42,
+    "max_iter": 3000,
+    "loss": "squared_hinge",
+    "penalty": "l2"
+  },
+  "calibracion": {
+    "method": "isotonic",
+    "cv": 5,
+    "cv_strategy": "StratifiedGroupKFold por id_grupo",
+    "temperatura": 0.8,
+    "exp_sistema": 0.65
+  },
+  "duracion_entrenamiento_segundos": 28.5
+}

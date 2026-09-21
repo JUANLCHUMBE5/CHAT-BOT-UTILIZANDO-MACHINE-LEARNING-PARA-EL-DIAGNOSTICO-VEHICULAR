@@ -1,0 +1,2 @@
+=== PROCEDIMIENTO MANTENIMIENTO PREVENTIVO TOYOTA_COROLLA ===
+Inspección general de fluidos, torques y escaneo OBD-II.

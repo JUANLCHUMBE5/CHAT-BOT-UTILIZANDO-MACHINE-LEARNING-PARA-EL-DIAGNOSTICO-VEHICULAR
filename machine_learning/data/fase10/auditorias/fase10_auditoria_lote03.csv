@@ -1,0 +1,201 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L03-0001,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.2455,0.1804,TRAIN,,NO,
+F10-L03-0002,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.1434,0.2535,LOTE_01,,NO,
+F10-L03-0003,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.1328,0.304,TRAIN,,NO,
+F10-L03-0004,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.103,0.1603,TRAIN,,NO,
+F10-L03-0005,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.1146,0.3408,TRAIN,,NO,
+F10-L03-0006,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.1022,0.1504,TRAIN,,NO,
+F10-L03-0007,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.0674,0.2251,TRAIN,,NO,
+F10-L03-0008,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.1144,0.1291,TRAIN,,NO,
+F10-L03-0009,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.1017,0.1483,TRAIN,,NO,
+F10-L03-0010,Faja o cadena de distribucion destensada o con salto de punto,L1,APROBADO,CONFORME,0.144,0.2182,TEST_100,,NO,
+F10-L03-0011,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1592,0.2016,FIELD_60,,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L03-0012,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1146,0.1686,TRAIN,,SI,Disco de embrague desgastado o patinando
+F10-L03-0013,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1618,0.2331,TRAIN,,NO,
+F10-L03-0014,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1435,0.2507,TRAIN,P0016,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L03-0015,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1452,0.2559,TRAIN,,NO,
+F10-L03-0016,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1383,0.1911,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0017,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1124,0.1678,LOTE_02,,NO,
+F10-L03-0018,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1165,0.1714,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0019,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1213,0.168,TRAIN,,NO,
+F10-L03-0020,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.0705,0.1379,TRAIN,,NO,
+F10-L03-0021,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1257,0.1753,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0022,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.095,0.1105,TRAIN,,NO,
+F10-L03-0023,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1864,0.2807,TRAIN,,NO,
+F10-L03-0024,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1348,0.1321,TRAIN,,SI,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados
+F10-L03-0025,Faja o cadena de distribucion destensada o con salto de punto,L2,APROBADO,CONFORME,0.1435,0.2317,LOTE_01,,SI,Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)
+F10-L03-0026,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1294,0.1886,TRAIN,P0016,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L03-0027,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1618,0.1295,TRAIN,,NO,
+F10-L03-0028,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1245,0.1057,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L03-0029,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1474,0.1115,TRAIN,P0017,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0030,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1192,0.1672,LOTE_02,P0016,NO,
+F10-L03-0031,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1158,0.1602,TRAIN,,NO,
+F10-L03-0032,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1348,0.1437,TRAIN,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L03-0033,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1864,0.1803,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L03-0034,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1434,0.1536,TRAIN,P0016,NO,
+F10-L03-0035,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.0913,0.1342,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L03-0036,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1192,0.1477,TRAIN,,NO,
+F10-L03-0037,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.0942,0.1136,TRAIN,P0016,NO,
+F10-L03-0038,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1474,0.1583,TRAIN,,NO,
+F10-L03-0039,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.1439,0.1783,TRAIN,,SI,Rodajes de caja mecanica o diferencial gastados
+F10-L03-0040,Faja o cadena de distribucion destensada o con salto de punto,L3,APROBADO,CONFORME,0.0741,0.099,TRAIN,P0016,SI,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)
+F10-L03-0041,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.1281,0.2449,TRAIN,,NO,
+F10-L03-0042,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.2283,0.2868,TRAIN,,NO,
+F10-L03-0043,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.1227,0.4491,LOTE_01,,NO,
+F10-L03-0044,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.1199,0.2264,TRAIN,,NO,
+F10-L03-0045,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.1631,0.1017,LOTE_02,,NO,
+F10-L03-0046,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.1477,0.1852,TRAIN,,NO,
+F10-L03-0047,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.1564,0.2289,TRAIN,,NO,
+F10-L03-0048,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.0966,0.209,TRAIN,,NO,
+F10-L03-0049,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.1054,0.2034,TRAIN,,NO,
+F10-L03-0050,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L1,APROBADO,CONFORME,0.095,0.1314,G2,,NO,
+F10-L03-0051,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.2133,0.2823,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L03-0052,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.0949,0.1905,TRAIN,P0011,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L03-0053,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1176,0.145,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L03-0054,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1187,0.2535,TRAIN,,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L03-0055,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1697,0.1375,TRAIN,P0012,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L03-0056,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1052,0.1815,TRAIN,P0014,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0057,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.0937,0.231,TRAIN,,NO,
+F10-L03-0058,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.0882,0.1212,LOTE_02,P0011,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L03-0059,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1733,0.3072,TRAIN,,NO,
+F10-L03-0060,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1096,0.1735,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L03-0061,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1206,0.1263,TRAIN,,NO,
+F10-L03-0062,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1564,0.157,TRAIN,,NO,
+F10-L03-0063,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1288,0.0992,TRAIN,,NO,
+F10-L03-0064,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1054,0.1384,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L03-0065,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L2,APROBADO,CONFORME,0.1199,0.1959,TRAIN,P0011,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0066,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.111,0.1216,TRAIN,P0011,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L03-0067,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.0834,0.1305,TRAIN,P0012,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L03-0068,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1187,0.1387,TRAIN,P0014,NO,
+F10-L03-0069,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.0991,0.2296,TRAIN,,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L03-0070,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1237,0.1222,TRAIN,P0016,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L03-0071,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1462,0.255,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L03-0072,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1551,0.2127,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L03-0073,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1294,0.1763,TRAIN,P0011,NO,
+F10-L03-0074,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1288,0.1395,FIELD_60,P0012,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0075,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.0766,0.11,TRAIN,,NO,
+F10-L03-0076,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1277,0.1098,TEST_100,P0011,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0077,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1076,0.1317,LOTE_02,P0012,SI,Baja presion de aceite o bomba de aceite defectuosa
+F10-L03-0078,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.099,0.2306,TRAIN,P0011,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L03-0079,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.1697,0.203,TRAIN,,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L03-0080,Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic),L3,APROBADO,CONFORME,0.0739,0.0967,TRAIN,P0012,NO,
+F10-L03-0081,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.1146,0.1657,TRAIN,,NO,
+F10-L03-0082,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.1593,0.1793,TRAIN,,NO,
+F10-L03-0083,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.1631,0.1485,TRAIN,,NO,
+F10-L03-0084,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.2837,0.2362,TRAIN,,NO,
+F10-L03-0085,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.1978,0.1746,TRAIN,,NO,
+F10-L03-0086,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.218,0.2287,TRAIN,,NO,
+F10-L03-0087,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.1532,0.2981,TRAIN,,NO,
+F10-L03-0088,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.1603,0.1748,TRAIN,,NO,
+F10-L03-0089,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.0571,0.2285,TRAIN,,NO,
+F10-L03-0090,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L1,APROBADO,CONFORME,0.1448,0.1824,TRAIN,,NO,
+F10-L03-0091,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1532,0.2327,LOTE_02,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0092,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1192,0.2082,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0093,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1529,0.2074,TRAIN,,NO,
+F10-L03-0094,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1777,0.1429,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L03-0095,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1869,0.2668,TRAIN,,NO,
+F10-L03-0096,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.0857,0.1564,TRAIN,P0300,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L03-0097,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1188,0.1831,TEST_100,,NO,
+F10-L03-0098,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.2837,0.1715,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L03-0099,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1186,0.1428,TRAIN,,NO,
+F10-L03-0100,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1551,0.1711,TRAIN,,NO,
+F10-L03-0101,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.153,0.1859,LOTE_01,,SI,Empaque de culata soplado o danado
+F10-L03-0102,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1,0.1191,TRAIN,,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0103,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1147,0.2161,TRAIN,P0300,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0104,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.1054,0.1609,TRAIN,,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L03-0105,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L2,APROBADO,CONFORME,0.0764,0.1167,TRAIN,,NO,
+F10-L03-0106,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1777,0.2127,TRAIN,P0300,SI,Bomba de gasolina quemada o con baja presion
+F10-L03-0107,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1869,0.2718,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0108,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.0981,0.1179,G1,P0300,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L03-0109,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1007,0.1725,TRAIN,,NO,
+F10-L03-0110,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1574,0.1612,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0111,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1538,0.1131,TRAIN,,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0112,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.0849,0.1083,LOTE_02,,SI,Empaque de culata soplado o danado
+F10-L03-0113,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1415,0.1026,LOTE_02,P0300,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0114,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1401,0.1874,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L03-0115,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1134,0.1146,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L03-0116,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.0818,0.1978,TRAIN,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L03-0117,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.08,0.1326,TRAIN,,NO,
+F10-L03-0118,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1573,0.1481,TRAIN,,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0119,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1285,0.2124,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0120,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),L3,APROBADO,CONFORME,0.1415,0.1121,TRAIN,P0300,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0121,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.366,0.2356,TRAIN,,NO,
+F10-L03-0122,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.14,0.2355,TRAIN,,NO,
+F10-L03-0123,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.2455,0.4408,TRAIN,,NO,
+F10-L03-0124,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.3046,0.5557,TRAIN,,NO,
+F10-L03-0125,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.1383,0.1593,TRAIN,,NO,
+F10-L03-0126,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.1659,0.2388,TRAIN,,NO,
+F10-L03-0127,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.1324,0.1609,TRAIN,,NO,
+F10-L03-0128,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.1317,0.3131,TRAIN,,NO,
+F10-L03-0129,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.1978,0.1812,LOTE_01,,NO,
+F10-L03-0130,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L1,APROBADO,CONFORME,0.1159,0.1227,TRAIN,,NO,
+F10-L03-0131,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.3046,0.3643,TRAIN,P0299,NO,
+F10-L03-0132,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.2205,0.179,TRAIN,,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L03-0133,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.3135,0.2167,TRAIN,P0299,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0134,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.14,0.2665,TRAIN,P0299,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0135,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.1148,0.2157,TRAIN,,NO,
+F10-L03-0136,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.1951,0.1672,TRAIN,P0234,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0137,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.1472,0.1392,TRAIN,,NO,
+F10-L03-0138,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.2053,0.1634,TRAIN,P0299,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0139,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.1249,0.3102,TRAIN,,NO,
+F10-L03-0140,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.2122,0.5066,TRAIN,P2563,NO,
+F10-L03-0141,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.2071,0.1666,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L03-0142,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.1715,0.1617,TRAIN,,NO,
+F10-L03-0143,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.1538,0.1765,TRAIN,P0299,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0144,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.0992,0.1613,TRAIN,,NO,
+F10-L03-0145,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L2,APROBADO,CONFORME,0.1951,0.1611,LOTE_01,P0234,NO,
+F10-L03-0146,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1583,0.2004,TRAIN,P0299,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0147,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1407,0.1446,TRAIN,P0299,SI,Faja o cadena de distribucion destensada o con salto de punto
+F10-L03-0148,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1178,0.1139,TRAIN,P0234,NO,
+F10-L03-0149,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1669,0.239,TRAIN,,NO,
+F10-L03-0150,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1214,0.1479,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L03-0151,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.2122,0.1071,TRAIN,P2563,NO,
+F10-L03-0152,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1563,0.1427,TRAIN,,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0153,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1408,0.1297,TRAIN,P0299,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0154,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.2053,0.1262,TRAIN,P0299,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0155,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1068,0.1349,TRAIN,,NO,
+F10-L03-0156,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1342,0.1768,FIELD_60,,NO,
+F10-L03-0157,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1184,0.1335,TRAIN,P0234,NO,
+F10-L03-0158,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1583,0.1948,TRAIN,,NO,
+F10-L03-0159,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.1573,0.1588,TEST_100,,SI,Fuga en mangueras de intercooler o turbocompresor danado
+F10-L03-0160,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI,L3,APROBADO,CONFORME,0.124,0.1153,TRAIN,P0299,NO,
+F10-L03-0161,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.1549,0.5052,TRAIN,,NO,
+F10-L03-0162,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.366,0.145,TRAIN,,NO,
+F10-L03-0163,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.2547,0.2001,TRAIN,,NO,
+F10-L03-0164,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.218,0.4881,FIELD_60,,NO,
+F10-L03-0165,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.1214,0.2077,LOTE_02,,NO,
+F10-L03-0166,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.2204,0.1818,TRAIN,,NO,
+F10-L03-0167,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.1155,0.2764,TRAIN,,NO,
+F10-L03-0168,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.1383,0.1914,LOTE_02,,NO,
+F10-L03-0169,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.1156,0.2928,TRAIN,,NO,
+F10-L03-0170,Fuga en mangueras de intercooler o turbocompresor danado,L1,APROBADO,CONFORME,0.1387,0.4514,TRAIN,,NO,
+F10-L03-0171,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1565,0.221,TRAIN,P0299,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0172,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.2712,0.3358,TRAIN,,NO,
+F10-L03-0173,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.123,0.1435,LOTE_02,,SI,Bomba de gasolina quemada o con baja presion
+F10-L03-0174,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.3135,0.227,TRAIN,P0299,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0175,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.2204,0.1935,TRAIN,,NO,
+F10-L03-0176,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1665,0.3178,TRAIN,,SI,Fuga en mangueras de refrigerante o radiador picado
+F10-L03-0177,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1049,0.2576,TRAIN,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L03-0178,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1214,0.1663,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0179,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1489,0.1336,TRAIN,,NO,
+F10-L03-0180,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1293,0.1736,TRAIN,,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L03-0181,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.0982,0.2524,LOTE_01,,NO,
+F10-L03-0182,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1015,0.1511,TRAIN,,NO,
+F10-L03-0183,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.0951,0.1526,TRAIN,,NO,
+F10-L03-0184,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1542,0.1253,FIELD_60,P0299,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0185,Fuga en mangueras de intercooler o turbocompresor danado,L2,APROBADO,CONFORME,0.1227,0.2342,TRAIN,,SI,Falla en bujias o bobinas de encendido (misfire)
+F10-L03-0186,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1387,0.1537,TRAIN,P0299,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0187,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.2712,0.2031,TRAIN,,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0188,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1238,0.1309,LOTE_02,,SI,Cuerpo de aceleracion o valvula IAC sucia
+F10-L03-0189,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1665,0.1576,TRAIN,P0299,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0190,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.2071,0.2649,TRAIN,,SI,Inyectores sucios o filtro de combustible obstruido
+F10-L03-0191,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1282,0.1628,TRAIN,,SI,Consumo de aceite por desgaste de anillos o retenes
+F10-L03-0192,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1119,0.1106,FIELD_60,,NO,
+F10-L03-0193,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1583,0.1198,TRAIN,P0299,NO,
+F10-L03-0194,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1289,0.1888,TRAIN,,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0195,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.0962,0.1286,TRAIN,,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0196,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1386,0.2119,TRAIN,,SI,Bomba de gasolina quemada o con baja presion
+F10-L03-0197,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1489,0.1207,TRAIN,P0299,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0198,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.0942,0.1073,TRAIN,,NO,
+F10-L03-0199,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1583,0.129,TRAIN,P0299,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI
+F10-L03-0200,Fuga en mangueras de intercooler o turbocompresor danado,L3,APROBADO,CONFORME,0.1564,0.1063,TRAIN,,SI,Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI

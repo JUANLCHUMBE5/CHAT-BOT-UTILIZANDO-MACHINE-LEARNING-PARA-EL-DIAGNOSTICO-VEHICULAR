@@ -14,7 +14,7 @@ if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
 load_dotenv(RAIZ_PROYECTO / ".env")
-from src.config import settings
+from src.config import settings  # noqa: E402 - requiere configurar sys.path y cargar .env
 
 
 async def main():

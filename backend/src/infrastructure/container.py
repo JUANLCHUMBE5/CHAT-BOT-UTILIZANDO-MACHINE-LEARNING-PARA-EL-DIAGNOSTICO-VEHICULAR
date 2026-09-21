@@ -1,7 +1,8 @@
 from typing import Optional
 
-from src.infrastructure.modelo_ml import ModeloML
-from src.infrastructure.motor_rag import MotorRAG
+from src.infrastructure.dtc.dtc_lookup_service import DtcLookupService
+from src.infrastructure.ml import ModeloML
+from src.infrastructure.rag import MotorRAG
 
 
 class ServiceContainer:
@@ -12,6 +13,7 @@ class ServiceContainer:
     """
     _modelo_ml: Optional[ModeloML] = None
     _motor_rag: Optional[MotorRAG] = None
+    _dtc_service: Optional[DtcLookupService] = None
 
     @classmethod
     def get_modelo_ml(cls) -> ModeloML:
@@ -28,7 +30,15 @@ class ServiceContainer:
         return cls._motor_rag
 
     @classmethod
+    def get_dtc_service(cls) -> DtcLookupService:
+        """Retorna la instancia Singleton del servicio de consulta DTC."""
+        if cls._dtc_service is None:
+            cls._dtc_service = DtcLookupService()
+        return cls._dtc_service
+
+    @classmethod
     def reset(cls):
         """Reinicia las instancias para pruebas en aislamiento."""
         cls._modelo_ml = None
         cls._motor_rag = None
+        cls._dtc_service = None

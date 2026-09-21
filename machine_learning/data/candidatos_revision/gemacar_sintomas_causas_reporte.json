@@ -1,0 +1,33 @@
+{
+  "tipo_dataset": "CONOCIMIENTO_MULTICAUSA_CANDIDATO",
+  "generado_el": "2026-09-02",
+  "registros": 149,
+  "sintomas_unicos": 26,
+  "causas_unicas": 99,
+  "conteo_estado_mapeo": {
+    "DESCARTAR_NO_FALLA": 2,
+    "MAPEO_PROPUESTO": 69,
+    "REQUIERE_DESCARTE": 13,
+    "REQUIERE_REVISION_AMBIGUEDAD": 19,
+    "SIN_CLASE_CANONICA": 46
+  },
+  "fuentes": {
+    "fallas_comunes": {
+      "url": "https://gemacar.com/blog/fallas-comunes-auto/",
+      "sha256": "88cb512affaf6573b6d81bb1a5e172192c0c1e9c761255bbba78c6ab591669d6",
+      "archivo_verificado": true,
+      "licencia": "NO_DECLARADA"
+    },
+    "perdida_potencia": {
+      "url": "https://gemacar.com/blog/perdida-de-potencia-del-motor/",
+      "sha256": "da91396c7ac7fd5669b4b4ae809a0ebc8649d6197dcf91b104f669a7498fc4f1",
+      "archivo_verificado": true,
+      "licencia": "NO_DECLARADA"
+    }
+  },
+  "duplicados_exactos": 0,
+  "incorporado_al_entrenamiento": false,
+  "motivo": "La fuente es secundaria, no declara licencia reutilizable y las relaciones son multicausa. Requiere permiso y validacion por mecanico.",
+  "registros_ml_experimentales": 5,
+  "secciones_rag_secundarias": 26
+}

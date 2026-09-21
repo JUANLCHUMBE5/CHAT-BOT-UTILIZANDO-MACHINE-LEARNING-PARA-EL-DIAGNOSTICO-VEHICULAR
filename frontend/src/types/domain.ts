@@ -39,9 +39,12 @@ export interface Diagnostico {
   fuente: FuenteDiagnostico;
   mecanico_id: string;
   mecanico_nombre: string;
+  cliente_nombre?: string;
+  cliente_telefono?: string;
   placa_vehiculo: string;
   marca_modelo: string;
   fecha_hora: string;
+  conversacion_id?: string;
   duracion_ms: number;
   procedimiento_rag: string;
   fuente_manual?: string;
@@ -62,6 +65,7 @@ export interface Diagnostico {
 export interface Mecanico {
   id: string;
   nombres: string;
+  username?: string;
   telefono: string;
   rol: MecanicoRol;
   activo: boolean;
@@ -95,6 +99,7 @@ export interface SolicitudAcceso {
   revisado_por?: string;
   revisado_en?: string;
   observaciones?: string;
+  motivo_rechazo?: string;
 }
 
 export interface ResumenMetricas {
@@ -108,6 +113,21 @@ export interface ResumenMetricas {
   distribucion_modos: { modo: string; cantidad: number }[];
   actividad_diaria: { fecha: string; cantidad: number }[];
   fallas_frecuentes: { falla: string; cantidad: number }[];
+  colas?: MetricasCola;
+  tiempo_inferencia_ml_ms?: number | null;
+}
+
+export interface MetricasCola {
+  total: number;
+  pendientes: number;
+  procesando: number;
+  fallidos: number;
+  espera_promedio_ms: number;
+  worker_activo: boolean;
+  worker_id?: string;
+  ultima_actividad?: string;
+  por_cola: { cola: string; estado: string; cantidad: number }[];
+  consultado_en: string;
 }
 
 export interface FiltrosDiagnostico {
@@ -124,6 +144,6 @@ export interface UsuarioSesion {
   nombre: string;
   rol: string;
   taller: string;
-  token: string;
-  refreshToken: string;
+  token?: string;
+  refreshToken?: string;
 }

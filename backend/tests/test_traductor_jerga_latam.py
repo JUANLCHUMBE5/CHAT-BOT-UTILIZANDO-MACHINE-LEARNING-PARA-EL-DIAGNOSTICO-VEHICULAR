@@ -24,3 +24,27 @@ def test_no_convierte_cardan_en_palier_por_ser_ambiguo():
     normalizado = normalizar_jerga_peruana("El cardán vibra en carretera")
     assert "cardán" in normalizado
     assert "palier" not in normalizado
+
+
+@pytest.mark.parametrize(
+    ("entrada", "esperado"),
+    [
+        ("El equipo es gnb", "gnv"),
+        ("Funciona con G.N.B.", "gnv"),
+        ("Tiene glb", "glp"),
+        ("Cuando acelera se chanchea", "pierde potencia"),
+        ("En subida se vuelve chancho", "pierde potencia"),
+        ("A velocidad se achancha", "pierde potencia"),
+        ("Tiene vibraciones al menjar", "vibracion al manejar"),
+        (
+            "Sale humo blanco por el escape y consume refrigerante",
+            "vapor blanco consume refrigerante posible empaque de culata",
+        ),
+        (
+            "El scanner indica P0300 misfire en cilindros",
+            "codigo p0300 de falla de encendido multiple",
+        ),
+    ],
+)
+def test_normaliza_variantes_de_dictado_y_escritura(entrada, esperado):
+    assert esperado in normalizar_jerga_peruana(entrada)

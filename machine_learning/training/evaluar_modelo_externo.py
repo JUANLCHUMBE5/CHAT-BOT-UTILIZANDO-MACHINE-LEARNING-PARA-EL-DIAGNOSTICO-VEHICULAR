@@ -18,7 +18,10 @@ BACKEND_ROOT = RAIZ_PROYECTO.parent / "backend"
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
-from src.core.taxonomy.catalogo_fallas import CATALOGO_TAXONOMIA, MAPA_UNIFICACION_ETIQUETAS
+from src.core.taxonomy.catalogo_fallas import (  # noqa: E402 - importa tras configurar sys.path
+    CATALOGO_TAXONOMIA,
+    MAPA_UNIFICACION_ETIQUETAS,
+)
 
 COLUMNAS_PROVENIENCIA = {
     "tipo_vehiculo",

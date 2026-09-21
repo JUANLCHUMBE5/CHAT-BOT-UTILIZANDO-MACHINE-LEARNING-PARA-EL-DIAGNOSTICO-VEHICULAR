@@ -1,18 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Header } from './components/layout/Header';
-import { Sidebar } from './components/layout/Sidebar';
-import type { NavTab } from './components/layout/Sidebar';
-import { LoginView } from './components/views/LoginView';
-import { DashboardView } from './components/views/DashboardView';
-import { PersonasAccesosView } from './components/views/PersonasAccesosView';
-import { DiagnosticosView } from './components/views/DiagnosticosView';
-import { useMecanicos } from './hooks/useMecanicos';
-import { useDiagnosticos } from './hooks/useDiagnosticos';
-import { useMetricas } from './hooks/useMetricas';
-import type { UsuarioSesion, Diagnostico } from './types';
-import { apiService, SESSION_EXPIRED_EVENT, SESSION_UPDATED_EVENT } from './services/api';
-import { getValidRoute } from './utils/routing';
-import type { AppRoute } from './utils/routing';
+import { LoginView } from './features/auth';
+import { DashboardView } from './features/dashboard';
+import {
+
+  GestionChatbotView,
+  type GestionSubTab,
+  useDiagnosticos,
+  useMecanicos,
+} from './features/management';
+import { ProyectoCarbotView } from './features/project';
+import {
+  apiService,
+  SESSION_EXPIRED_EVENT,
+  SESSION_UPDATED_EVENT,
+} from './shared/api';
+import { Header, Sidebar, type NavTab } from './shared/layout';
+import { getValidRoute, type AppRoute } from './shared/routing';
+import type {
+  Diagnostico,
+  SolicitudAcceso,
+  UsuarioSesion,
+} from './shared/types';
 
 export type { AppRoute };
 
@@ -20,8 +28,8 @@ const LAST_ROUTE_KEY = 'carbot_last_route';
 
 const readLastRoute = (): AppRoute => {
   const saved = localStorage.getItem(LAST_ROUTE_KEY);
-  return ['/inicio', '/personas', '/diagnosticos'].includes(saved || '')
-    ? saved as AppRoute
+  return ['/inicio', '/gestion', '/proyecto', '/personas', '/diagnosticos', '/validacion', '/fichas'].includes(saved || '')
+    ? (saved === '/personas' || saved === '/diagnosticos' ? '/gestion' : saved) as AppRoute
     : '/inicio';
 };
 
@@ -33,7 +41,17 @@ const readAdminSession = (): UsuarioSesion | null => {
     const saved = localStorage.getItem('carbot_session');
     if (!saved) return null;
     const parsed = JSON.parse(saved) as UsuarioSesion;
-    if (isAdminSession(parsed)) return parsed;
+    if (isAdminSession(parsed)) {
+      const safeSession: UsuarioSesion = {
+        id: parsed.id,
+        username: parsed.username,
+        nombre: parsed.nombre,
+        rol: parsed.rol,
+        taller: parsed.taller,
+      };
+      localStorage.setItem('carbot_session', JSON.stringify(safeSession));
+      return safeSession;
+    }
   } catch {
     // Una sesión dañada o antigua se elimina abajo.
   }
@@ -62,7 +80,10 @@ export const App: React.FC = () => {
     return initialRoute;
   });
 
-  const [solicitudesPendientesCount, setSolicitudesPendientesCount] = useState<number>(0);
+  const [solicitudes, setSolicitudes] = useState<SolicitudAcceso[]>([]);
+  const [cargandoSolicitudes, setCargandoSolicitudes] = useState(false);
+  const [errorSolicitudes, setErrorSolicitudes] = useState<string | null>(null);
+  const [gestionSubTab, setGestionSubTab] = useState<GestionSubTab>('solicitudes');
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -106,60 +127,73 @@ export const App: React.FC = () => {
   };
 
   // Custom Hooks for Modular Architecture
-  const { metricas, cargando: cargandoMetricas, cargarMetricas } = useMetricas();
   const {
     mecanicos,
+
+    cargando: cargandoMecanicos,
+    error: errorMecanicos,
     cargarMecanicos,
   } = useMecanicos();
   const {
     diagnosticos,
+    total: totalDiagnosticos,
     cargando: cargandoDiagnosticos,
+    error: errorDiagnosticos,
     cargarDiagnosticos,
-    actualizarEstado,
   } = useDiagnosticos();
 
   // Selected diagnostic modal state
   const [diagnosticoSeleccionado, setDiagnosticoSeleccionado] = useState<Diagnostico | null>(null);
 
-  // Fetch pending requests count (only for administrative roles)
-  const cargarSolicitudesPendientesCount = useCallback(async () => {
+  // Fetch all access requests
+  const cargarSolicitudes = useCallback(async () => {
     if (!isAdminSession(user)) {
-      setSolicitudesPendientesCount(0);
+      setSolicitudes([]);
       return;
     }
     try {
-      const lista = await apiService.getSolicitudesAcceso('pendiente');
-      setSolicitudesPendientesCount(Array.isArray(lista) ? lista.length : 0);
+      setCargandoSolicitudes(true);
+      setErrorSolicitudes(null);
+      const lista = await apiService.getSolicitudesAcceso();
+      setSolicitudes(Array.isArray(lista) ? lista : []);
     } catch (err) {
-      console.error('Error al cargar solicitudes pendientes:', err);
+      console.error('Error al cargar solicitudes:', err);
+      setErrorSolicitudes(err instanceof Error ? err.message : 'Error al cargar las solicitudes');
+    } finally {
+      setCargandoSolicitudes(false);
     }
   }, [user]);
 
-  const handleRecargarPersonas = useCallback(() => {
-    cargarSolicitudesPendientesCount();
-  }, [cargarSolicitudesPendientesCount]);
+  const solicitudesPendientesCount = solicitudes.filter((s) => s.estado === 'pendiente').length;
 
-  const activeTab: NavTab = currentRoute === '/personas' ? 'personas' : currentRoute === '/diagnosticos' ? 'diagnosticos' : 'inicio';
+  const handleRecargarGestion = useCallback(async () => {
+    await Promise.all([cargarSolicitudes(), cargarMecanicos(), cargarDiagnosticos()]);
+  }, [cargarSolicitudes, cargarMecanicos, cargarDiagnosticos]);
+
+  const activeTab: NavTab =
+    currentRoute === '/gestion' || currentRoute === '/personas' || currentRoute === '/diagnosticos'
+      ? 'gestion'
+      : currentRoute === '/proyecto'
+      ? 'proyecto'
+      : 'inicio';
 
   // Load module data on demand when tab changes
   useEffect(() => {
     if (!user) return;
     if (activeTab === 'inicio') {
-      cargarMetricas();
-    } else if (activeTab === 'diagnosticos') {
-      cargarDiagnosticos();
-      cargarMecanicos();
-    } else if (activeTab === 'personas') {
-      cargarSolicitudesPendientesCount();
+      cargarSolicitudes();
+    } else if (activeTab === 'gestion') {
+      handleRecargarGestion();
     }
-  }, [user, activeTab, cargarMetricas, cargarDiagnosticos, cargarMecanicos, cargarSolicitudesPendientesCount]);
+  }, [user, activeTab, cargarSolicitudes, handleRecargarGestion]);
+
 
   // Initial badge count load for non-mechanic users
   useEffect(() => {
     if (isAdminSession(user)) {
-      cargarSolicitudesPendientesCount();
+      cargarSolicitudes();
     }
-  }, [user, cargarSolicitudesPendientesCount]);
+  }, [user, cargarSolicitudes]);
 
   // Sync route on popstate (browser back/forward buttons)
   useEffect(() => {
@@ -187,27 +221,47 @@ export const App: React.FC = () => {
   const handleLoginSuccess = (usuarioSesion: UsuarioSesion) => {
     if (!isAdminSession(usuarioSesion)) {
       localStorage.removeItem('carbot_session');
+      localStorage.removeItem(LAST_ROUTE_KEY);
       setUser(null);
       setCurrentRoute('/login');
       return;
     }
     setUser(usuarioSesion);
-    localStorage.setItem('carbot_session', JSON.stringify(usuarioSesion));
-    const restoredRoute = getValidRoute(readLastRoute(), usuarioSesion);
-    if (window.location.pathname !== restoredRoute) {
-      window.history.pushState({}, '', restoredRoute);
+    apiService.setAccessToken(usuarioSesion.token || null);
+    const safeSession: UsuarioSesion = {
+      id: usuarioSesion.id,
+      username: usuarioSesion.username,
+      nombre: usuarioSesion.nombre,
+      rol: usuarioSesion.rol,
+      taller: usuarioSesion.taller,
+    };
+    localStorage.setItem('carbot_session', JSON.stringify(safeSession));
+    localStorage.setItem(LAST_ROUTE_KEY, '/inicio');
+    if (window.location.pathname !== '/inicio') {
+      window.history.pushState({}, '', '/inicio');
     }
-    setCurrentRoute(restoredRoute);
+    setCurrentRoute('/inicio');
   };
 
   const handleLogout = () => {
-    if (currentRoute !== '/login') localStorage.setItem(LAST_ROUTE_KEY, currentRoute);
+    void apiService.logout();
+    localStorage.removeItem(LAST_ROUTE_KEY);
     setUser(null);
     localStorage.removeItem('carbot_session');
     if (window.location.pathname !== '/login') {
       window.history.pushState({}, '', '/login');
     }
     setCurrentRoute('/login');
+  };
+
+  const handleIrAMecanicos = () => {
+    setGestionSubTab('mecanicos');
+    navigate('/gestion');
+  };
+
+  const handleIrAFallas = () => {
+    setGestionSubTab('historial');
+    navigate('/gestion');
   };
 
   if (!isAdminSession(user) || currentRoute === '/login') {
@@ -240,6 +294,7 @@ export const App: React.FC = () => {
         <main
           style={{
             flex: 1,
+            minWidth: 0,
             padding: '24px 32px',
             width: '100%',
             maxWidth: '100%',
@@ -248,32 +303,36 @@ export const App: React.FC = () => {
         >
           {activeTab === 'inicio' && (
             <DashboardView
-              metricas={metricas}
-              cargando={cargandoMetricas}
-              onFiltrarMetricas={cargarMetricas}
-              onIrAMecanicos={() => navigate('/personas')}
+              onIrAFallas={handleIrAFallas}
+              onIrAMecanicos={handleIrAMecanicos}
             />
           )}
 
-          {activeTab === 'personas' && (
-            <PersonasAccesosView
-              user={user}
-              onRecargarMecanicos={handleRecargarPersonas}
-            />
-          )}
 
-          {activeTab === 'diagnosticos' && (
-            <DiagnosticosView
-              diagnosticos={diagnosticos}
-              cargando={cargandoDiagnosticos}
+          {activeTab === 'gestion' && (
+            <GestionChatbotView
+              initialSubTab={gestionSubTab}
+              solicitudes={solicitudes}
+              cargandoSolicitudes={cargandoSolicitudes}
               mecanicos={mecanicos}
-              currentUser={user}
-              onActualizarEstado={actualizarEstado}
-              onFiltrar={cargarDiagnosticos}
+              cargandoMecanicos={cargandoMecanicos}
+              diagnosticos={diagnosticos}
+              totalDiagnosticos={totalDiagnosticos}
+              cargandoDiagnosticos={cargandoDiagnosticos}
+              errorSolicitudes={errorSolicitudes}
+              errorMecanicos={errorMecanicos}
+              errorDiagnosticos={errorDiagnosticos}
+              onRecargarSolicitudes={cargarSolicitudes}
+              onRecargarMecanicos={cargarMecanicos}
+              onFiltrarDiagnosticos={cargarDiagnosticos}
               diagnosticoSeleccionadoModal={diagnosticoSeleccionado}
               onCerrarModalDetalle={() => setDiagnosticoSeleccionado(null)}
               onAbrirModalDetalle={(diag) => setDiagnosticoSeleccionado(diag)}
             />
+          )}
+
+          {activeTab === 'proyecto' && (
+            <ProyectoCarbotView />
           )}
         </main>
       </div>

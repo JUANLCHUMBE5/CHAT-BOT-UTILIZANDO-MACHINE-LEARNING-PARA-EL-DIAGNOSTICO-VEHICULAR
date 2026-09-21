@@ -1,0 +1,34 @@
+﻿﻿ground_truth \ predicho,Alternador defectuoso o placa de diodos quemada,Amortiguadores reventados o bujes de suspension gastados,Auto-pregunta técnica de descarte enviada,Bateria descargada o bornes sulfatados,Bomba de gasolina quemada o con baja presion,Caliper de freno trabado o mordaza pegada (piston agarrotado),Consulta Ambigua / Datos Faltantes,Consumo de aceite por desgaste de anillos o retenes,Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),Cuerpo de aceleracion o valvula IAC sucia,Desgaste de pastillas y zapatas de freno,Disco de embrague desgastado o patinando,Discos de freno alabeados o desgastados,Empaque de culata soplado o danado,Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),Falla en bujias o bobinas de encendido (misfire),Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),Falla en sensor de oxigeno o mezcla rica,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),Falla en sensor de velocidad de rueda ABS,Falla en servofreno (booster) o linea de vacio,Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),Falla en termostato o motoventilador de radiador,Falta o degradacion de aceite de caja de cambios,Fuga en mangueras de refrigerante o radiador picado,Fuga hidraulica o aire en el sistema de frenos,Inyectores sucios o filtro de combustible obstruido,Llantas desbalanceadas o desalineadas,Pendiente de comparar el modo de combustible,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,Rodajes de transmision manual o eje primario gastados,Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+Alternador defectuoso o placa de diodos quemada,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Amortiguadores reventados o bujes de suspension gastados,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Auto-pregunta técnica de descarte enviada,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Bateria descargada o bornes sulfatados,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Bomba de gasolina quemada o con baja presion,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Caliper de freno trabado o mordaza pegada (piston agarrotado),0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Consulta Ambigua / Datos Faltantes,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Consumo de aceite por desgaste de anillos o retenes,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430),0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Cuerpo de aceleracion o valvula IAC sucia,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Desgaste de pastillas y zapatas de freno,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Disco de embrague desgastado o patinando,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
+Discos de freno alabeados o desgastados,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Empaque de culata soplado o danado,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Falla en bujias o bobinas de encendido (misfire),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0
+Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Falla en sensor de oxigeno o mezcla rica,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Falla en sensor de velocidad de rueda ABS,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
+Falla en servofreno (booster) o linea de vacio,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0
+Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga),0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+Falla en termostato o motoventilador de radiador,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0
+Falta o degradacion de aceite de caja de cambios,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+Fuga en mangueras de refrigerante o radiador picado,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0
+Fuga hidraulica o aire en el sistema de frenos,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
+Inyectores sucios o filtro de combustible obstruido,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Llantas desbalanceadas o desalineadas,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0
+Pendiente de comparar el modo de combustible,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Rodajes de transmision manual o eje primario gastados,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura),0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Sobrecalentamiento o solenoides en caja automatica CVT / DSG,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1

@@ -1,0 +1,20 @@
+/* ==========================================================================
+   CARBOT DESIGN SYSTEM - GLOBAL ENTRY POINT
+   ========================================================================== */
+
+/* 1. Design Tokens & CSS Custom Properties */
+@import './variables/tokens.css';
+
+/* 2. Base & Normalize */
+@import './base/reset.css';
+@import './base/animations.css';
+
+/* 3. Layout & Grid */
+@import './layout/layout.css';
+
+/* 4. Component Styles */
+@import './components/cards.css';
+@import './components/glass.css';
+@import './components/tables.css';
+@import './components/dashboard.css';
+

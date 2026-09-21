@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { apiService } from '../services/api';
+import { mechanicsApi } from '../features/management/api/mechanicsApi';
 import type { Mecanico, MecanicoRol } from '../types';
 import { getErrorMessage } from '../utils/errors';
 
@@ -12,7 +12,7 @@ export function useMecanicos() {
     setCargando(true);
     setError(null);
     try {
-      const data = await apiService.getMecanicos();
+      const data = await mechanicsApi.listar();
       setMecanicos(data);
     } catch (error: unknown) {
       setError(getErrorMessage(error, 'Error al cargar los mecánicos del taller'));
@@ -27,7 +27,7 @@ export function useMecanicos() {
     password?: string;
     rol: MecanicoRol;
   }) => {
-    await apiService.registrarMecanico({
+    await mechanicsApi.registrar({
       nombres: data.nombres,
       telefono_whatsapp: data.telefono,
       password: data.password,
@@ -37,22 +37,22 @@ export function useMecanicos() {
   }, [cargarMecanicos]);
 
   const toggleActivar = useCallback(async (id: string) => {
-    await apiService.toggleActivarMecanico(id);
+    await mechanicsApi.alternarActivo(id);
     await cargarMecanicos();
   }, [cargarMecanicos]);
 
   const toggleBloquear = useCallback(async (id: string) => {
-    await apiService.toggleBloquearMecanico(id);
+    await mechanicsApi.alternarBloqueo(id);
     await cargarMecanicos();
   }, [cargarMecanicos]);
 
   const eliminarMecanico = useCallback(async (id: string) => {
-    await apiService.eliminarMecanico(id);
+    await mechanicsApi.eliminar(id);
     await cargarMecanicos();
   }, [cargarMecanicos]);
 
   const cambiarRol = useCallback(async (id: string, nuevoRol: MecanicoRol) => {
-    await apiService.cambiarRolMecanico(id, nuevoRol);
+    await mechanicsApi.cambiarRol(id, nuevoRol);
     await cargarMecanicos();
   }, [cargarMecanicos]);
 

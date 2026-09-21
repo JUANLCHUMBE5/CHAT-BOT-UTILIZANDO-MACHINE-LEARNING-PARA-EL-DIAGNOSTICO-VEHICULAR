@@ -1,9 +1,29 @@
 # --- Python Cache ---
 __pycache__/
 .pytest_cache/
+.ruff_cache/
 .coverage
 htmlcov/
 *.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
 *$py.class
 *.so
 .Python
@@ -37,20 +57,18 @@ ENV/
 credenciales_temporales*.txt
 credenciales_temporales*.csv
 
-# --- Archivos de Audio Temporales ---
-*.wav
-*.mp3
-*.ogg
-
 # --- Archivos del IDE & OS ---
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+~$*.docx
 
 # --- Archivos de Auditoría y Agentes ---
 .gemini/
 .agents/
+.codex_tmp/
+/tmp/
 ORIGINAL_REQUEST.md
 TEST_INFRA.md
 TEST_READY.md
@@ -58,6 +76,7 @@ TEST_READY.md
 
 # --- Datos operativos y artefactos ajenos al proyecto ---
 machine_learning/data/tracker_diagnosticos.csv
+backend/data/tracker_diagnosticos.csv
 machine_learning/data/evidencias_evaluacion/
 sss/
 
@@ -65,7 +84,21 @@ sss/
 # --- Modelos Binarios de ML (>100MB) ---
 machine_learning/models/modelo_diagnostico.pkl
 *.pkl
+machine_learning/models/experimentos/**/*.joblib
 
 # --- Frontend Web Dashboard ---
 frontend/node_modules/
 frontend/dist/
+
+# --- Repositorios Separados Exportados ---
+repositorios_separados/
+scratch/
+
+# --- Datos masivos, experimentales y repositorios externos clonados ---
+machine_learning/data/fuentes_abiertas/*/
+!machine_learning/data/fuentes_abiertas/normalizado/
+machine_learning/data/fuentes_abiertas/fallas_vehiculares/
+machine_learning/manuals/sandbox_rag_experimental/
+machine_learning/experimentos/
+*.index
+

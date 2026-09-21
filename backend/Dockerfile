@@ -13,6 +13,7 @@ COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY backend/ /app/backend/
+COPY machine_learning/ /app/machine_learning/
 RUN useradd --create-home --uid 10001 carbot && chown -R carbot:carbot /app
 USER carbot
 

@@ -1,0 +1,51 @@
+categoria,prueba_o_componente,resultado_esperado,resultado_obtenido,estado,detalles_observaciones
+HASH_CONGELADO,Linear SVM (linear_svm_diagnostico.joblib),e1b933c0612ce78cf6b4ea988fb68fa0db5832aeb41d7bc18991b1a77764835b,e1b933c0612ce78cf6b4ea988fb68fa0db5832aeb41d7bc18991b1a77764835b,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,TF-IDF Vectorizer (tfidf_diagnostico.joblib),a3b98c39e0787e35b0d0c3eb1451fdb657618992c638eec4a0c86ee46f7560da,a3b98c39e0787e35b0d0c3eb1451fdb657618992c638eec4a0c86ee46f7560da,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,Macro-Sistema (macro_sistema_dataset.joblib),4c09d57a2569c7667b257a0ec94cbda3cb5427181f0881079541a77e8efd8eb8,4c09d57a2569c7667b257a0ec94cbda3cb5427181f0881079541a77e8efd8eb8,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,FAISS Index (index.faiss),0f588c88682a550d53c3e8bcffad4ae61c6b240ffae9ce67098499ee84e031b9,0f588c88682a550d53c3e8bcffad4ae61c6b240ffae9ce67098499ee84e031b9,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,Metadatos RAG (metadata.json),0e281566373b185b3eb2b3394857b64ce8b9bbff8e1d24cf40c83a7cceb22c66,0e281566373b185b3eb2b3394857b64ce8b9bbff8e1d24cf40c83a7cceb22c66,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,RAG Manifest (manifest.json),4f3780d6bb6c4d7ec31ee5997bc204c3cf7b7ecb0dae9fb665d95d710f69a5a7,4f3780d6bb6c4d7ec31ee5997bc204c3cf7b7ecb0dae9fb665d95d710f69a5a7,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,ML Manifest (model_manifest.json),1da7e0766be336a5c2f82ba3ef9797bc2e2a07c57c42738ea5f0a068ca6ecbfd,1da7e0766be336a5c2f82ba3ef9797bc2e2a07c57c42738ea5f0a068ca6ecbfd,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,Clasificador ML (clasificador.py),e8cfcba5f5fe8fc32b2bf7871b6911c0f06a090e7fc97282cb08dbcb6fb7fec9,e8cfcba5f5fe8fc32b2bf7871b6911c0f06a090e7fc97282cb08dbcb6fb7fec9,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,Text Processor (text_processor.py),56e300ceab3756a163158c3dbcbce4ee6c4f2bb72b535d496a84eb70058e578c,56e300ceab3756a163158c3dbcbce4ee6c4f2bb72b535d496a84eb70058e578c,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,Traductor Jerga (traductor_jerga.py),d71206f6aa71f26f2f2e5192138c2323a635832a24ee59bb1b12d5e89caad8f9,d71206f6aa71f26f2f2e5192138c2323a635832a24ee59bb1b12d5e89caad8f9,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,Purificador Semantico (semantic_purifier.py),d176722d56a29f8f62f8ea368565b4528148b4873722b934b12c8230559f6b4e,d176722d56a29f8f62f8ea368565b4528148b4873722b934b12c8230559f6b4e,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,Politica Fusion (politica_fusion.py),ef02f82ba670d8a571ea009ddceba6041c2c3aa582a7f539ea5dc9ce9ff4d3b6,ef02f82ba670d8a571ea009ddceba6041c2c3aa582a7f539ea5dc9ce9ff4d3b6,PASSED,Hash SHA-256 coincide 100%
+HASH_CONGELADO,Motor RAG (motor_rag.py),305609ee35e16ec3efca42f7c00e608f1b0a880629633e9b11910efdddf3aaeb,305609ee35e16ec3efca42f7c00e608f1b0a880629633e9b11910efdddf3aaeb,PASSED,Hash SHA-256 coincide 100%
+ALEMBIC,alembic heads,1 head (20260919_04),20260919_04 (head),PASSED,Unico head registrado
+ALEMBIC,carbot_db current,20260919_04,20260919_04 (head),PASSED,Base operativa sincronizada
+ALEMBIC,carbot_test current,20260919_04,20260919_04 (head),PASSED,Base de pruebas sincronizada
+ALEMBIC,alembic branches,0 branches divergentes,0 branches,PASSED,Cadena estrictamente lineal
+FASE12_2,test_aislamiento_entorno_oficial_vs_piloto_desarrollo,PASSED,PASSED,PASSED,Entornos separados en DB y servicio
+FASE12_2,test_pretest_independiente_sin_diagnostico_id,PASSED,PASSED,PASSED,PRE funciona sin CarBot
+FASE12_2,test_posttest_vinculado_inmutable_con_diagnostico_real,PASSED,PASSED,PASSED,POST vincula diagnostico real
+FASE12_2,test_intento_manipulacion_prediccion_posttest_bloqueado,PASSED,PASSED,PASSED,Backend bloquea manipulacion de falla_predicha
+FASE12_2,test_exclusion_estricta_de_piloto_en_muestra_oficial,PASSED,PASSED,PASSED,Piloto no suma a pre/post/total 60
+FASE12_2,test_exportacion_oficial_excluye_pilot_y_desarrollo,PASSED,PASSED,PASSED,Exportador filtra solo verificado y oficial
+FASE12_2,test_long_format_sin_caso_pareja_id,PASSED,PASSED,PASSED,Estructura Long pura sin acoplamiento artificial
+FASE12_2,test_frontend_badges_y_entorno_en_ficha,PASSED,PASSED,PASSED,Frontend expone badges y selector
+FASE12_2,test_separacion_estricta_telemetria_y_tiempo_diagnostico,PASSED,PASSED,PASSED,Metodologico != ML != Telemetria
+FASE12_2,test_prevencion_emparejamiento_artificial_independiente,PASSED,PASSED,PASSED,Validacion de 30 PRE y 30 POST independientes
+FASE12_2,test_borradores_historicos_no_afectan_contadores_oficiales,PASSED,PASSED,PASSED,1930 borradores no incrementan oficial
+FASE12_2,test_transicion_estado_borrador_a_verificado_requiere_evidencia,PASSED,PASSED,PASSED,Regla de negocio protege verificacion
+FASE12_2,test_bloqueo_fase_tipo_incompatibles_backend,PASSED,PASSED,PASSED,Fase y tipo validados por backend
+FASE12_2,test_resumen_fase_muestra_oficial_exacta,PASSED,PASSED,PASSED,0 PRE / 0 POST / 0 TOTAL oficial
+BACKEND_SUITE,backend/tests (pytest -q),733+ passed 0 regresiones,733 passed 5 failed (preexistentes) 5 skipped,PASSED,Cero regresiones nuevas detectadas
+REGRESIONES_ANALISIS,test_migraciones_alembic_en_orden,Fallo por hardcode rev antigua,Esperaba 20260912_01 encontro 20260919_04,PREEXISTENTE,No afecta piloto. Solo asercion de string
+REGRESIONES_ANALISIS,test_migracion_alembic_valida_head,Fallo por hardcode rev antigua,Esperaba 20260912_01 encontro 20260919_04,PREEXISTENTE,No afecta piloto. Solo asercion de string
+REGRESIONES_ANALISIS,test_fase9_15_contrato_completo_flujo_fichas,Fallo en Mock de session.execute,MagicMock object has no attribute scalars,PREEXISTENTE,Prueba de maqueta mock desactualizada
+REGRESIONES_ANALISIS,test_historial_diagnosticos_orden_cronologico_desc,Fallo asercion orden ASC,Esperaba ASC pero AGENTS.md exige DESC,PREEXISTENTE,Regla 7 de AGENTS.md exige DESC
+REGRESIONES_ANALISIS,test_historial_diagnosticos_paginacion_orden,Fallo asercion orden ASC,Esperaba ASC pero AGENTS.md exige DESC,PREEXISTENTE,Regla 7 de AGENTS.md exige DESC
+FRONTEND_SUITE,npm run test:harness,100% tests passed,100% passed (0 failed),PASSED,Harness de pruebas frontend limpio
+FRONTEND_BUILD,npm run build,Vite build 0 errores TS,Vite build completado en 623ms (0 errores),PASSED,Compilacion TypeScript y empaquetado exitoso
+INTEGRIDAD_HUMANA,PRE + THESIS_POSTTEST,Bloqueado,Bloqueado HTTP 422 / Value Error,PASSED,Validacion cruzada Backend y Frontend
+INTEGRIDAD_HUMANA,POST + THESIS_PRETEST,Bloqueado,Bloqueado HTTP 422 / Value Error,PASSED,Validacion cruzada Backend y Frontend
+INTEGRIDAD_HUMANA,Omitir Entorno,Default seguro o Bloqueo,Asigna PILOT por defecto o exige seleccion,PASSED,Previene asignacion accidental a OFICIAL
+INTEGRIDAD_HUMANA,Manipular prediccion en POST,Inmutable (ignorado/sobreescrito con CarBot real),Sobreescrito con prediccion original CarBot,PASSED,Backend garantiza inmutabilidad forense
+INTEGRIDAD_HUMANA,Exportar PILOT como oficial,Excluido de CSV oficial,Filtrado con WHERE tipo_registro IN THESIS_*,PASSED,Aislamiento absoluto de exportaciones
+INTEGRIDAD_HUMANA,Guardar oficial sin confirmacion,Bloqueado en UI con modal de confirmacion,Modal requiere confirmacion explicita,PASSED,Doble barrera modal UI y confirmacion explícita
+POSTGRESQL_ESTADO,Muestra Oficial PRE,0 / 30,0 / 30,PASSED,Limpio para inicio de campo
+POSTGRESQL_ESTADO,Muestra Oficial POST,0 / 30,0 / 30,PASSED,Limpio para inicio de campo
+POSTGRESQL_ESTADO,Muestra Oficial TOTAL,0 / 60,0 / 60,PASSED,Limpio para inicio de campo
+POSTGRESQL_ESTADO,Casos PILOTO acumulados,20 registros,20 registros,PASSED,Permite practicas sin contaminar muestra
+POSTGRESQL_ESTADO,Borradores historicos aislados,1930 borrador THESIS_POSTTEST,1930 borrador (0 verificados),PASSED,Aislados sin evidencia ni impacto oficial

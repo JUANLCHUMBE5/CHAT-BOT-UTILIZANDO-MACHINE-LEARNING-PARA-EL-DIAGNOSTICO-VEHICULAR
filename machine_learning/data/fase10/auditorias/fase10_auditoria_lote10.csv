@@ -1,0 +1,201 @@
+id,clase_objetivo,nivel_informacion,estado_auditoria,motivos,sim_intra_max,sim_inter_max,inter_ref_origen,dtc,es_contrastivo,clase_contrastiva
+F10-L10-0001,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.117,0.4447,FIELD_60,,NO,
+F10-L10-0002,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.1904,0.2377,FIELD_60,,NO,
+F10-L10-0003,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.0983,0.2476,LOTE_03,,NO,
+F10-L10-0004,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.2032,0.2479,TRAIN,,NO,
+F10-L10-0005,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.0713,0.217,TRAIN,,NO,
+F10-L10-0006,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.1675,0.2088,TRAIN,,NO,
+F10-L10-0007,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.1023,0.2746,TRAIN,,NO,
+F10-L10-0008,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.0557,0.217,LOTE_02,,NO,
+F10-L10-0009,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.0715,0.1938,TRAIN,,NO,
+F10-L10-0010,Falla en compresor de aire acondicionado o fuga de gas R134a,L1,APROBADO,CONFORME,0.1312,0.2298,LOTE_02,,NO,
+F10-L10-0011,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.0983,0.1783,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0012,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.1675,0.2019,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0013,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.1142,0.159,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0014,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.0896,0.1261,LOTE_09,,NO,
+F10-L10-0015,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.1001,0.1757,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0016,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.2089,0.1434,LOTE_06,B1422,NO,
+F10-L10-0017,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.0888,0.2141,TRAIN,,NO,
+F10-L10-0018,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.1182,0.2626,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0019,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.1084,0.2106,TRAIN,,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L10-0020,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.1047,0.1382,TRAIN,,SI,Falla en sensor de oxigeno o mezcla rica
+F10-L10-0021,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.1057,0.2614,G1,B1423,NO,
+F10-L10-0022,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.1014,0.1517,TRAIN,,NO,
+F10-L10-0023,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.0897,0.106,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0024,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.0727,0.1606,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0025,Falla en compresor de aire acondicionado o fuga de gas R134a,L2,APROBADO,CONFORME,0.0921,0.1322,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0026,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.1018,0.1739,G1,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0027,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.092,0.1059,LOTE_02,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0028,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0968,0.1087,LOTE_05,,NO,
+F10-L10-0029,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.1111,0.124,LOTE_05,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0030,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0773,0.1178,LOTE_09,B1070,NO,
+F10-L10-0031,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0464,0.0989,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0032,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0895,0.092,LOTE_06,B1423,NO,
+F10-L10-0033,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0951,0.0787,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0034,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0486,0.0959,TRAIN,,NO,
+F10-L10-0035,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.1392,0.1997,LOTE_09,P0A1F,SI,Foco o falla en sistema de refrigeracion de bateria/inversor (EV)
+F10-L10-0036,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0798,0.1379,TRAIN,,NO,
+F10-L10-0037,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0913,0.0752,TRAIN,,NO,
+F10-L10-0038,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0788,0.1541,LOTE_09,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0039,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.1476,0.1275,LOTE_09,B1422,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0040,Falla en compresor de aire acondicionado o fuga de gas R134a,L3,APROBADO,CONFORME,0.0524,0.0791,TRAIN,,SI,Falla en termostato o motoventilador de radiador
+F10-L10-0041,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1655,0.2857,TRAIN,,NO,
+F10-L10-0042,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.2382,0.3257,TRAIN,,NO,
+F10-L10-0043,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1565,0.2556,TRAIN,,NO,
+F10-L10-0044,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1655,0.2589,TRAIN,,NO,
+F10-L10-0045,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1568,0.274,TRAIN,,NO,
+F10-L10-0046,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1296,0.1748,TRAIN,,NO,
+F10-L10-0047,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1353,0.2513,TRAIN,,NO,
+F10-L10-0048,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1956,0.3453,TRAIN,,NO,
+F10-L10-0049,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1181,0.1739,LOTE_09,,NO,
+F10-L10-0050,Falla electrica del cierre centralizado o actuador de puerta,L1,APROBADO,CONFORME,0.1383,0.174,TRAIN,,NO,
+F10-L10-0051,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.2032,0.3155,G2,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0052,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.1195,0.2218,TRAIN,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0053,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.189,0.1675,LOTE_09,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L10-0054,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.1215,0.1553,TRAIN,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0055,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.1322,0.1494,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0056,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.2089,0.138,TRAIN,B1300,NO,
+F10-L10-0057,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.1041,0.2514,LOTE_07,,NO,
+F10-L10-0058,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.164,0.1502,TRAIN,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0059,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.1568,0.1545,TRAIN,,NO,
+F10-L10-0060,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.0948,0.1554,TRAIN,,NO,
+F10-L10-0061,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.1336,0.1137,TRAIN,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0062,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.1183,0.1833,TRAIN,,NO,
+F10-L10-0063,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.0974,0.1907,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0064,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.1123,0.1628,TRAIN,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0065,Falla electrica del cierre centralizado o actuador de puerta,L2,APROBADO,CONFORME,0.137,0.2002,TRAIN,,NO,
+F10-L10-0066,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.103,0.1204,TRAIN,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0067,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.1041,0.1552,TRAIN,,NO,
+F10-L10-0068,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.0988,0.1296,LOTE_09,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0069,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.0859,0.1202,TRAIN,B1312,NO,
+F10-L10-0070,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.1926,0.1979,LOTE_05,,NO,
+F10-L10-0071,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.0959,0.0971,TRAIN,,NO,
+F10-L10-0072,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.3566,0.1294,LOTE_09,U0199,SI,Bateria descargada o bornes sulfatados
+F10-L10-0073,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.093,0.0961,LOTE_08,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0074,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.0843,0.14,LOTE_09,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0075,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.115,0.1173,TRAIN,B1335,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0076,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.1096,0.1337,LOTE_06,,NO,
+F10-L10-0077,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.189,0.1606,LOTE_09,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L10-0078,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.0677,0.115,LOTE_09,,NO,
+F10-L10-0079,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.1916,0.109,LOTE_09,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0080,Falla electrica del cierre centralizado o actuador de puerta,L3,APROBADO,CONFORME,0.1057,0.1462,LOTE_06,B1228,NO,
+F10-L10-0081,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.2382,0.2192,TRAIN,,NO,
+F10-L10-0082,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.0932,0.567,TRAIN,,NO,
+F10-L10-0083,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.3068,0.4991,TRAIN,,NO,
+F10-L10-0084,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.1501,0.384,TRAIN,,NO,
+F10-L10-0085,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.2312,0.2164,TRAIN,,NO,
+F10-L10-0086,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.1956,0.3753,TRAIN,,NO,
+F10-L10-0087,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.123,0.1451,G2,,NO,
+F10-L10-0088,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.1056,0.1178,TRAIN,,NO,
+F10-L10-0089,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.0935,0.1653,TRAIN,,NO,
+F10-L10-0090,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L1,APROBADO,CONFORME,0.1145,0.2103,LOTE_07,,NO,
+F10-L10-0091,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1344,0.1681,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0092,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1501,0.1354,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0093,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.3068,0.2729,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0094,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1465,0.1731,TRAIN,,NO,
+F10-L10-0095,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1761,0.0934,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0096,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1105,0.1987,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0097,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1295,0.1924,TRAIN,,NO,
+F10-L10-0098,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1874,0.1182,TRAIN,,NO,
+F10-L10-0099,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1659,0.2676,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0100,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1716,0.2029,TRAIN,,NO,
+F10-L10-0101,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1336,0.1521,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0102,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1778,0.2137,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0103,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1052,0.1951,TRAIN,,NO,
+F10-L10-0104,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.1342,0.1495,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0105,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L2,APROBADO,CONFORME,0.0869,0.125,TRAIN,,NO,
+F10-L10-0106,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1761,0.0859,LOTE_07,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0107,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1209,0.0876,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0108,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1171,0.0871,LOTE_06,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0109,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1874,0.1336,TRAIN,,NO,
+F10-L10-0110,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1055,0.1849,LOTE_07,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0111,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.0836,0.0814,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0112,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.188,0.1289,LOTE_07,,NO,
+F10-L10-0113,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1659,0.102,LOTE_08,,NO,
+F10-L10-0114,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1234,0.073,LOTE_06,,NO,
+F10-L10-0115,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1209,0.098,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0116,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1091,0.1068,TRAIN,,NO,
+F10-L10-0117,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.0641,0.1352,TRAIN,,NO,
+F10-L10-0118,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.1727,0.1868,LOTE_07,,NO,
+F10-L10-0119,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.0634,0.0762,LOTE_07,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0120,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",L3,APROBADO,CONFORME,0.0962,0.0721,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0121,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.1606,0.2937,TRAIN,,NO,
+F10-L10-0122,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.2426,0.3067,TRAIN,,NO,
+F10-L10-0123,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.1604,0.3792,LOTE_09,,NO,
+F10-L10-0124,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.1592,0.235,TRAIN,,NO,
+F10-L10-0125,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.1514,0.2325,TRAIN,,NO,
+F10-L10-0126,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.1221,0.1942,LOTE_04,,NO,
+F10-L10-0127,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.1312,0.1812,TRAIN,,NO,
+F10-L10-0128,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.1471,0.1918,LOTE_02,,NO,
+F10-L10-0129,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.1554,0.1833,LOTE_06,,NO,
+F10-L10-0130,Elevalunas electrico o guaya de alzacristales rota o trabada,L1,APROBADO,CONFORME,0.2426,0.25,TRAIN,,NO,
+F10-L10-0131,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1565,0.2742,TRAIN,,NO,
+F10-L10-0132,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1606,0.1487,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0133,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1583,0.135,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0134,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1322,0.1284,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0135,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1387,0.1498,TRAIN,,NO,
+F10-L10-0136,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.0867,0.1257,LOTE_07,,NO,
+F10-L10-0137,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1246,0.1423,TRAIN,,NO,
+F10-L10-0138,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.0749,0.1259,LOTE_06,,NO,
+F10-L10-0139,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.164,0.1441,TRAIN,,NO,
+F10-L10-0140,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1219,0.0874,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0141,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1284,0.1483,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0142,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1,0.1217,LOTE_09,,NO,
+F10-L10-0143,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.0823,0.1879,TRAIN,B1402,SI,Bateria descargada o bornes sulfatados
+F10-L10-0144,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.1583,0.1427,TRAIN,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0145,Elevalunas electrico o guaya de alzacristales rota o trabada,L2,APROBADO,CONFORME,0.0776,0.1203,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0146,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1652,0.1229,LOTE_09,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0147,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1057,0.2097,LOTE_09,,NO,
+F10-L10-0148,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1342,0.1248,LOTE_09,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0149,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1171,0.0691,TRAIN,,NO,
+F10-L10-0150,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.0986,0.1214,TRAIN,B1402,NO,
+F10-L10-0151,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1096,0.147,LOTE_09,,NO,
+F10-L10-0152,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.2392,0.0762,LOTE_07,,NO,
+F10-L10-0153,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1469,0.1488,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0154,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.188,0.1076,TRAIN,,NO,
+F10-L10-0155,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1926,0.1249,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0156,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.3566,0.1106,LOTE_09,U0201,SI,Bateria descargada o bornes sulfatados
+F10-L10-0157,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1281,0.0835,TRAIN,,SI,"Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"
+F10-L10-0158,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.0663,0.0762,LOTE_07,,NO,
+F10-L10-0159,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.1916,0.098,LOTE_07,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0160,Elevalunas electrico o guaya de alzacristales rota o trabada,L3,APROBADO,CONFORME,0.0836,0.1517,TRAIN,,SI,Fuga parasita de corriente en reposo (consumo nocturno de bateria)
+F10-L10-0161,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1333,0.5043,TRAIN,,NO,
+F10-L10-0162,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1054,0.1453,LOTE_02,,NO,
+F10-L10-0163,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1438,0.1852,TRAIN,,NO,
+F10-L10-0164,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1221,0.1505,TRAIN,,NO,
+F10-L10-0165,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1313,0.2981,TRAIN,,NO,
+F10-L10-0166,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1107,0.2347,TRAIN,,NO,
+F10-L10-0167,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1438,0.2946,TRAIN,,NO,
+F10-L10-0168,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1194,0.2465,TRAIN,,NO,
+F10-L10-0169,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1353,0.2564,TRAIN,,NO,
+F10-L10-0170,Limpiaparabrisas o motor pluma quemado,L1,APROBADO,CONFORME,0.1194,0.1584,TRAIN,,NO,
+F10-L10-0171,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1435,0.1559,TRAIN,,NO,
+F10-L10-0172,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1333,0.2762,TRAIN,,NO,
+F10-L10-0173,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1194,0.1369,TRAIN,,NO,
+F10-L10-0174,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.0643,0.1815,TEST_100,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0175,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.0981,0.096,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0176,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1222,0.1322,TRAIN,,NO,
+F10-L10-0177,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1435,0.1336,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0178,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1011,0.2079,TRAIN,,NO,
+F10-L10-0179,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.071,0.1465,TRAIN,,NO,
+F10-L10-0180,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1448,0.1133,LOTE_04,B1130,NO,
+F10-L10-0181,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1,0.1362,TRAIN,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0182,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.0853,0.1457,TRAIN,,NO,
+F10-L10-0183,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.0846,0.1264,TRAIN,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0184,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1194,0.1401,TRAIN,,NO,
+F10-L10-0185,Limpiaparabrisas o motor pluma quemado,L2,APROBADO,CONFORME,0.1228,0.1819,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0186,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.1652,0.119,LOTE_09,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0187,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.0887,0.1188,TRAIN,,NO,
+F10-L10-0188,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.1057,0.1155,LOTE_05,,NO,
+F10-L10-0189,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.1727,0.1548,LOTE_08,,NO,
+F10-L10-0190,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.0986,0.0951,LOTE_09,B1132,SI,Bateria descargada o bornes sulfatados
+F10-L10-0191,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.1705,0.2604,LOTE_09,,SI,Alternador defectuoso o placa de diodos quemada
+F10-L10-0192,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.1052,0.125,LOTE_09,,NO,
+F10-L10-0193,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.2392,0.11,TRAIN,,NO,
+F10-L10-0194,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.0683,0.0752,TRAIN,,SI,Falla electrica del cierre centralizado o actuador de puerta
+F10-L10-0195,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.0705,0.1024,LOTE_08,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0196,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.1046,0.1785,LOTE_06,,NO,
+F10-L10-0197,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.1649,0.1228,LOTE_07,,SI,Bateria descargada o bornes sulfatados
+F10-L10-0198,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.0873,0.1306,LOTE_05,,NO,
+F10-L10-0199,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.0719,0.1349,LOTE_09,B1150,NO,
+F10-L10-0200,Limpiaparabrisas o motor pluma quemado,L3,APROBADO,CONFORME,0.0859,0.1094,TRAIN,,NO,
