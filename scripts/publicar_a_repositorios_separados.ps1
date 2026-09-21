@@ -27,7 +27,8 @@ param(
     [string]$Mensaje = "sync: sincronizacion desde monorepo principal $(Get-Date -Format 'yyyy-MM-dd HH:mm')",
     [switch]$SoloBackend,
     [switch]$SoloFrontend,
-    [switch]$SoloML
+    [switch]$SoloML,
+    [switch]$HaciaMain
 )
 
 $ErrorActionPreference = "Continue"
@@ -42,6 +43,7 @@ $repos = @(
         Activo = ($sincronizarTodos -or $SoloBackend)
         Origen = (Join-Path $projectRoot "backend")
         Tipo = "backend"
+        RamaDev = "dev-backend"
     },
     @{
         Nombre = "carbot-frontend"
@@ -49,6 +51,7 @@ $repos = @(
         Activo = ($sincronizarTodos -or $SoloFrontend)
         Origen = (Join-Path $projectRoot "frontend")
         Tipo = "frontend"
+        RamaDev = "dev-frontend"
     },
     @{
         Nombre = "carbot-machine-learning"
@@ -56,6 +59,7 @@ $repos = @(
         Activo = ($sincronizarTodos -or $SoloML)
         Origen = $projectRoot
         Tipo = "ml"
+        RamaDev = "dev-machine-learning"
     }
 )
 
@@ -75,11 +79,13 @@ try {
         $url = $r.Url
         $cloneDir = Join-Path $tempBase $nombre
 
-        Write-Host "`n--> Procesando [$nombre]..." -ForegroundColor Green
-        Write-Host "    Clonando repositorio remoto desde GitHub..." -ForegroundColor Gray
-        & git clone --depth 1 --quiet $url $cloneDir
+        $targetBranch = if ($HaciaMain) { "main" } else { $r.RamaDev }
+
+        Write-Host "`n--> Procesando [$nombre] (Rama: $targetBranch)..." -ForegroundColor Green
+        Write-Host "    Clonando rama '$targetBranch' desde GitHub..." -ForegroundColor Gray
+        & git clone --branch $targetBranch --depth 1 --quiet $url $cloneDir
         if ($LASTEXITCODE -ne 0) {
-            Write-Warning "No se pudo clonar $url. Verifica tu conexion a internet o permisos de GitHub."
+            Write-Warning "No se pudo clonar la rama $targetBranch de $url. Verifica tu conexion a internet o permisos de GitHub."
             continue
         }
 
@@ -119,17 +125,17 @@ try {
         try {
             $status = & git status --porcelain
             if ([string]::IsNullOrWhiteSpace($status)) {
-                Write-Host "    [AL DIA] $nombre ya tiene todos los archivos actualizados." -ForegroundColor Cyan
+                Write-Host "    [AL DIA] $nombre ya tiene todos los archivos actualizados en '$targetBranch'." -ForegroundColor Cyan
             }
             else {
-                Write-Host "    Cambios detectados. Creando commit y enviando a GitHub..." -ForegroundColor Yellow
+                Write-Host "    Cambios detectados. Creando commit y enviando a GitHub ($targetBranch)..." -ForegroundColor Yellow
                 & git add -A
                 & git commit -m "$Mensaje" | Out-Null
-                & git push origin main
+                & git push origin $targetBranch
                 if ($LASTEXITCODE -eq 0) {
-                    Write-Host "    [OK] $nombre actualizado con exito en GitHub!" -ForegroundColor Green
+                    Write-Host "    [OK] $nombre actualizado con exito en GitHub en la rama '$targetBranch'!" -ForegroundColor Green
                 } else {
-                    Write-Warning "    Error al hacer git push a $nombre."
+                    Write-Warning "    Error al hacer git push a $nombre ($targetBranch)."
                 }
             }
         }
