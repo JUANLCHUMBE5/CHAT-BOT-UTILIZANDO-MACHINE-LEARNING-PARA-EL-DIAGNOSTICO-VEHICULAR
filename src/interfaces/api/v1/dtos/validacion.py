@@ -8,6 +8,7 @@ from pydantic import AliasChoices, BaseModel, Field
 
 FaseEvaluacion = Literal["Pre-test", "Post-test", "Piloto"]
 EstadoRegistro = Literal["borrador", "verificado", "excluido"]
+TipoRegistro = Literal["DEVELOPMENT", "REGRESSION", "THESIS_PRETEST", "THESIS_POSTTEST", "PILOT"]
 
 
 class CasoValidacionDTO(BaseModel):
@@ -36,7 +37,7 @@ class CasoValidacionDTO(BaseModel):
     metodo_confirmacion: Optional[str] = "Inspección Visual en Elevador"
     evidencia_ref: Optional[str] = None
     estado_registro: str = "borrador"
-    tipo_registro: Optional[str] = "THESIS_POSTTEST"
+    tipo_registro: Optional[str] = "DEVELOPMENT"
     conversacion_id: Optional[str] = None
     diagnostico_id: Optional[str] = None
     sintoma_registrado_correctamente: Optional[int] = None
@@ -47,6 +48,9 @@ class CasoValidacionDTO(BaseModel):
     clasificacion_procesada: Optional[int] = None
     procesamiento_validado: Optional[int] = None
     tiempo_inferencia_ml_ms: Optional[int] = None
+    inicio_sistema_at: Optional[str] = None
+    fin_sistema_at: Optional[str] = None
+    duracion_sistema_segundos: Optional[float] = None
 
 
 class CrearCasoValidacionDTO(BaseModel):
@@ -73,7 +77,7 @@ class CrearCasoValidacionDTO(BaseModel):
     metodo_confirmacion: Optional[str] = Field(default="Inspección Visual + Escáner OBD", max_length=500)
     evidencia_ref: Optional[str] = Field(default=None, max_length=500)
     estado_registro: EstadoRegistro = Field(default="borrador")
-    tipo_registro: Optional[Literal["DEVELOPMENT", "REGRESSION", "THESIS_PRETEST", "THESIS_POSTTEST"]] = None
+    tipo_registro: Optional[TipoRegistro] = None
     conversacion_id: Optional[str] = None
     diagnostico_id: Optional[str] = None
     sintoma_registrado_correctamente: Optional[int] = Field(default=None, ge=0, le=1)
@@ -82,6 +86,9 @@ class CrearCasoValidacionDTO(BaseModel):
     clasificacion_procesada: Optional[int] = Field(default=None, ge=0, le=1)
     procesamiento_validado: Optional[int] = Field(default=None, ge=0, le=1)
     tiempo_inferencia_ml_ms: Optional[int] = Field(default=None, ge=0)
+    inicio_sistema_at: Optional[str] = None
+    fin_sistema_at: Optional[str] = None
+    duracion_sistema_segundos: Optional[float] = None
 
 
 class MetricasVariableIndependienteDTO(BaseModel):
@@ -106,6 +113,7 @@ class MetricasValidacionResponseDTO(BaseModel):
     tasa_acierto_posttest_porcentaje: float
     tiempo_promedio_posttest_min: float
     reduccion_tiempo_porcentaje: float
+    casos_piloto: int = 0
     casos_verificados: int = 0
     total_casos_verificados: int = 0
     total_casos_borrador: int = 0

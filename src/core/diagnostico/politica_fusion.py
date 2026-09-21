@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional
 
 from src.core.diagnostico.taxonomia_sistemas import (
     DTC_A_SISTEMA,
+    obtener_macro_sistema,
 )
 
 
@@ -70,6 +71,13 @@ class PoliticaFusionDiagnostica:
         # ---------------------------------------------------------------------
         # 1. DETECCIÓN DE COMPONENTES DESCARTADOS / PROBADOS
         # ---------------------------------------------------------------------
+        mencion_bobina_falla = any(
+            p in texto_norm
+            for p in (
+                "bobina falla", "cambiar la bobina", "falla de chispa", "sin chispa",
+                "no genera chispa", "bobina individual", "bobina no manda", "bobina mala"
+            )
+        )
         descarte_ignicion = any(
             p in texto_norm
             for p in (
@@ -78,8 +86,10 @@ class PoliticaFusionDiagnostica:
                 "cambie bujias y bobinas", "descarte bujia", "descarte bobina", "probe chispa",
             )
         )
-        if descarte_ignicion:
-            componentes_descartados.append("Bujías / Bobinas de encendido (descarte parcial en taller)")
+        if descarte_ignicion and not mencion_bobina_falla:
+            componentes_descartados.append("Bujías de encendido (reemplazadas/probadas)")
+        elif descarte_ignicion and mencion_bobina_falla:
+            evidencia_confirmada.append("Bujías nuevas instaladas; falla confirmada en bobina de encendido")
 
         descarte_sensor_presion = "cambie bulbo" in texto_norm or "sensor nuevo" in texto_norm
         if descarte_sensor_presion and "aceite" in texto_norm:
@@ -88,21 +98,34 @@ class PoliticaFusionDiagnostica:
         # ---------------------------------------------------------------------
         # 2. DETECCIÓN DE EVIDENCIA FÍSICA Y METROLÓGICA EXPLÍCITA
         # ---------------------------------------------------------------------
-        # Metrología de compresión mecánica
+        # Metrología de compresión mecánica en cilindro (requiere manómetro de compresión, no de combustible)
         m_compresion = re.search(r"(\d{2,3})\s*(psi|bar)", texto_norm)
         es_compresion_baja = False
-        if m_compresion and any(w in texto_norm for w in ("compresion", "cil", "cilindro", "valvula")):
+        es_manometro_combustible = any(w in texto_norm for w in ("combustible", "riel", "gasolina", "bomba"))
+        menciona_compresion_cilindro = bool(re.search(r"\b(?:compresi[oó]n|cilindro|cilindros|valvula|valvulas)\b", texto_norm))
+        if m_compresion and menciona_compresion_cilindro and not es_manometro_combustible:
             valor = float(m_compresion.group(1))
             unidad = m_compresion.group(2)
             if (unidad == "psi" and valor < 90) or (unidad == "bar" and valor < 6.2):
                 es_compresion_baja = True
-                evidencia_confirmada.append(f"Compresión baja medida en manómetro: {valor} {unidad}")
+                evidencia_confirmada.append(f"Compresión baja medida en manómetro de cilindro: {valor} {unidad}")
 
-        # Circuito de inyector abierto
-        es_resistencia_infinita = any(
+        # Sensor de oxígeno / sonda lambda trabada o STFT anormal
+        es_sensor_oxigeno_lambda = any(
+            w in texto_norm for w in ("sensor lambda", "sensor de oxigeno", "sonda lambda", "0.9v", "0.1v", "stft", "ltft")
+        ) and any(w in texto_norm for w in ("humo negro", "consumo excesivo", "mezcla rica", "correccion", "trabado"))
+        if es_sensor_oxigeno_lambda:
+            evidencia_confirmada.append("Telemetría de sensor lambda / STFT confirma falla en sensor de oxígeno o mezcla")
+
+        # Circuito de inyector abierto (requiere contexto explícito de inyector, ohmios o DTC P0201-P0208)
+        tiene_token_circuito_abierto = any(
             w in texto_norm for w in ("abierto infinito", "resistencia infinita", "circuito abierto")
         )
-        if es_resistencia_infinita and any(w in texto_norm for w in ("inyector", "ohmios", "ohm")):
+        tiene_contexto_inyector = any(
+            w in texto_norm for w in ("inyector", "inyectores", "ohmios", "ohm", "p0201", "p0202", "p0203", "p0204", "p0205", "p0206", "p0207", "p0208")
+        )
+        es_resistencia_infinita = tiene_token_circuito_abierto and tiene_contexto_inyector
+        if es_resistencia_infinita:
             evidencia_confirmada.append("Medición de resistencia en inyector indica circuito abierto (infinito)")
 
         # Diafragma de regulador de presión roto
@@ -116,16 +139,34 @@ class PoliticaFusionDiagnostica:
         if es_diafragma_roto:
             evidencia_confirmada.append("Fuga física de combustible a través de la manguera de vacío del regulador")
 
-        # Patinamiento mecánico de embrague
-        es_embrague_patinando = any(
+        # Patinamiento mecánico de embrague (exclusivo para transmisión manual)
+        es_transmision_automatica = any(
+            w in texto_norm for w in ("automatica", "caja automatica", "cvt", "dsg", "dualogic", "p0700", "p0730", "p0841")
+        )
+        es_embrague_patinando = not es_transmision_automatica and any(
             w in texto_norm
             for w in (
                 "suben las revoluciones", "suben las rpm", "no gana velocidad",
-                "huele a asbesto", "asbesto quemado", "patina el embrague",
+                "rpm se incrementan", "revoluciones se incrementan", "sube de vueltas",
+                "sin incremento proporcional en la velocidad", "el carro no avanza",
+                "huele a asbesto", "asbesto quemado", "patina el embrague", "patina",
             )
-        ) and any(w in texto_norm for w in ("pendiente", "subida", "4ta", "3ra", "asbesto", "embrague"))
+        ) and any(w in texto_norm for w in ("pendiente", "subida", "4ta", "3ra", "cuarta", "tercera", "marcha", "tren motriz", "asbesto", "embrague"))
         if es_embrague_patinando:
             evidencia_confirmada.append("Discrepancia cinemática entre RPM de motor y velocidad en marcha (embrague patinando)")
+
+        # Cinemática: Vehículo rodando en marcha con motor encendido
+        vehiculo_en_movimiento = bool(re.search(
+            r"\b(?:a\s+\d{2,3}\s*km/?h|en\s+(?:carretera|autopista|pista|avenida|bajada|pendiente|subida)|"
+            r"en\s+(?:primera|segunda|tercera|cuarta|quinta|sexta)\s+(?:marcha|velocidad)|"
+            r"mientras\s+(?:manejo|conduzco|circulo|ruedo|acelero)|"
+            r"al\s+(?:manejar|conducir|circular|rodar|acelerar\s+en\s+carretera)|"
+            r"con\s+el\s+motor\s+encendido|en\s+plena\s+marcha)\b",
+            texto_norm
+        ))
+        intento_rearranque = any(
+            w in texto_norm for w in ("se apago y", "se apago pero", "se apago de la nada y no prende", "se paro y no arranca", "start-stop", "start stop")
+        )
 
         # Zumbido de rodaje de maza / rueda con carga lateral
         es_rodaje_rueda = any(
@@ -223,6 +264,10 @@ class PoliticaFusionDiagnostica:
             falla_elegida = "Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados"
             confianza_res = max(confianza_res, 0.88)
             origen = "RESCATE_EVIDENCIA_FISICA"
+        elif es_sensor_oxigeno_lambda:
+            falla_elegida = "Falla en sensor de oxigeno o mezcla rica"
+            confianza_res = max(confianza_res, 0.88)
+            origen = "RESCATE_EVIDENCIA_FISICA"
         elif es_diafragma_roto:
             falla_elegida = "Falla en regulador de presion de combustible o diafragma roto"
             confianza_res = max(confianza_res, 0.90)
@@ -284,14 +329,17 @@ class PoliticaFusionDiagnostica:
         elif dtcs:
             for cod_dtc in dtcs:
                 fallas_prioritarias = []
+                macro_dtc: Optional[str] = None
                 if cod_dtc in DTC_A_SISTEMA:
-                    _, fallas_prioritarias = DTC_A_SISTEMA[cod_dtc]
+                    macro_dtc, fallas_prioritarias = DTC_A_SISTEMA[cod_dtc]
                 elif cod_dtc == "P0299":
+                    macro_dtc = "MOTOR"
                     fallas_prioritarias = [
                         "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
                         "Fuga en mangueras de intercooler o turbocompresor danado",
                     ]
                 elif cod_dtc == "P2463":
+                    macro_dtc = "MOTOR"
                     fallas_prioritarias = [
                         "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
                     ]
@@ -308,12 +356,25 @@ class PoliticaFusionDiagnostica:
                         candidata_rescate = fallas_prioritarias[0]
                     elif len(fallas_prioritarias) > 1 and fallas_prioritarias[1] in fallas_ml[:3]:
                         candidata_rescate = fallas_prioritarias[1]
+                    # Contradicción de Macro-Sistema: Si el DTC reconocido en catálogo pertenece a un
+                    # macro-sistema incompatible con top1_ml (ej. DTC FRENOS vs ML MOTOR), la evidencia
+                    # estructurada del catálogo prevalece sobre la coincidencia léxica incompatible.
+                    elif macro_dtc:
+                        macro_top1 = obtener_macro_sistema(top1_ml)
+                        if macro_top1 != macro_dtc:
+                            candidata_rescate = fallas_prioritarias[0]
 
                     if candidata_rescate and candidata_rescate != top1_ml:
                         falla_elegida = candidata_rescate
                         confianza_res = max(conf1_ml, 0.84)
                         origen = "RESCATE_DTC"
                         evidencia_confirmada.append(f"Código DTC oficial {cod_dtc} asociado a {candidata_rescate}")
+                        break
+                    elif cod_dtc in ("P0171", "P0172") and top1_ml not in fallas_prioritarias:
+                        falla_elegida = fallas_prioritarias[0]
+                        confianza_res = max(conf1_ml, 0.84)
+                        origen = "RESCATE_DTC"
+                        evidencia_confirmada.append(f"Código DTC oficial {cod_dtc} prioriza diagnóstico de mezcla: {falla_elegida}")
                         break
 
         # C. Rescate por RAG de Alta Certidumbre y Consistencia (sin degradar ML Top 1 fuerte)
@@ -322,8 +383,22 @@ class PoliticaFusionDiagnostica:
             confianza_res = max(conf1_ml, 0.78)
             origen = "FUSION_RAG"
 
+        # D. Restricción física: Vehículo en marcha excluye motor de arranque eléctrico
+        if vehiculo_en_movimiento and not intento_rearranque and "arranque" in falla_elegida.lower():
+            if es_embrague_patinando:
+                falla_elegida = "Disco de embrague desgastado o patinando"
+                confianza_res = max(confianza_res, 0.85)
+                origen = "RESCATE_EVIDENCIA_FISICA"
+            else:
+                candidatas_mov = [f for f in fallas_ml if "arranque" not in f.lower() and "bateria" not in f.lower()]
+                if candidatas_mov:
+                    falla_elegida = candidatas_mov[0]
+                    confianza_res = max(0.60, conf1_ml * 0.85)
+                    origen = "RESCATE_CINEMATICA_MARCHA"
+                    evidencia_confirmada.append("Vehículo en marcha descarta mecánicamente falla en motor de arranque eléctrico")
+
         # ---------------------------------------------------------------------
-        # 4. CONSTRUCCIÓN DEL DIAGNÓSTICO DIFERENCIAL
+        # 4. CONSTRUCCIÓN DEL DIAGNÓSTICO DIFERENCIAL Y POLÍTICA DE INCERTIDUMBRE
         # ---------------------------------------------------------------------
         diferenciales = []
         candidatas_diff = [f for f in fallas_ml if f != falla_elegida]
@@ -339,6 +414,22 @@ class PoliticaFusionDiagnostica:
             diferenciales.append({"falla": candidatas_diff[0], "probabilidad": prob_d2})
         if len(candidatas_diff) > 1:
             diferenciales.append({"falla": candidatas_diff[1], "probabilidad": prob_d3})
+
+        # Manejo de política de incertidumbre para casos ambiguos
+        distancia_top = 1.0
+        if len(probs_ml) >= 2:
+            distancia_top = abs(probs_ml[0] - probs_ml[1])
+
+        es_ambiguedad_significativa = (
+            (confianza_res < 0.60 or distancia_top < 0.12)
+            and origen in ("ML_TOP1", "FUSION_RAG")
+            and len(diferenciales) >= 1
+            and not dtcs
+        )
+        if es_ambiguedad_significativa:
+            datos_faltantes.append(
+                f"Ambigüedad técnica detectada entre {falla_elegida} y {diferenciales[0]['falla']}. Requiere verificación discriminante en taller."
+            )
 
         return ResultadoFusion(
             falla_principal=falla_elegida,

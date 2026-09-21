@@ -68,7 +68,8 @@ DICCIONARIO_JERGA_LATAM: tuple[tuple[str, str], ...] = (
     (r"\b(?:balero|ruleman|rulemán)\b", "rodamiento"),
     (r"\bslushbox\b", "caja automática"),
     # Arranque, carga y encendido.
-    (r"\b(?:burro de arranque|motor de partida|starter|marcha)\b", "motor de arranque"),
+    (r"\b(?:burro de arranque|motor de partida|starter)\b", "motor de arranque"),
+    (r"\bla\s+marcha\s+(?:no\s+gira|no\s+da|pesada|pegada|arrastra|falla)\b", "el motor de arranque no gira"),
     (r"\brelevador\b", "rele"),
     (r"\bbug[ií]a\b", "bujia"),
     # Motor, refrigeración y escape.

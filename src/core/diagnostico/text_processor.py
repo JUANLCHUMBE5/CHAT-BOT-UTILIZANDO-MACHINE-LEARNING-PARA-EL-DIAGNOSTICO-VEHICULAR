@@ -561,24 +561,53 @@ def procesar_consulta_texto(
             predicciones_ml = predicciones_ml[:3]
 
     # Especialización técnica: parpadeo de Check Engine / luz del motor bajo carga (Misfire severo)
-    descarte_ignicion = any(
+    # Diferenciación: Componente individual reemplazado vs Sistema completo de encendido descartado
+    mencion_bobina_falla = any(
         p in texto_evaluar.lower()
         for p in (
-            "cambie bujia", "cambie bobina", "bujias nuevas", "bobinas nuevas",
-            "probe bobina", "probe bujia", "intercambie bobina", "intercambie bujia",
-            "cambie bujias y bobinas", "bujias y bobinas cambiadas", "descarte bujia",
-            "descarte bobina", "probe chispa",
+            "bobina falla", "cambiar la bobina", "cambie la bobina individual",
+            "al cambiar la bobina", "bobina no manda", "bobina mala", "falla de chispa",
+            "sin chispa", "no genera chispa", "bobina individual"
         )
     )
+    descarte_ambos_ignicion = any(
+        p in texto_evaluar.lower()
+        for p in (
+            "cambie bujias y bobinas", "bujias y bobinas cambiadas", "bujias y bobinas nuevas",
+            "descarte bujias y bobinas", "probe bujias y bobinas", "cambie cables bujias y bobinas"
+        )
+    )
+    descarte_ignicion_total = descarte_ambos_ignicion or (
+        any(
+            p in texto_evaluar.lower()
+            for p in (
+                "cambie bujias", "cambie bobinas", "bujias nuevas", "bobinas nuevas",
+                "probe bobinas", "probe bujias", "intercambie bobinas", "intercambie bujias",
+                "descarte bujias", "descarte bobinas", "probe chispa",
+            )
+        )
+        and not mencion_bobina_falla
+    )
+
     es_parpadeo_check = (
         ("parpadea" in texto_evaluar.lower() or "destella" in texto_evaluar.lower())
         and any(w in texto_evaluar.lower() for w in ("luz del motor", "check engine", "testigo del motor"))
     ) or ("misfire" in texto_evaluar.lower())
 
-    if descarte_ignicion:
+    compresion_normal = bool(re.search(
+        r"\b(?:compresi[oó]n\s+(?:en\s+los\s+\d+\s+cilindros\s+)?(?:marc[oó]\s+)?(?:1[2-9]\d|2\d\d)\s*psi|"
+        r"buena\s+compresi[oó]n|compresi[oó]n\s+(?:pareja|buena|normal|excelente|perfecta))\b",
+        texto_evaluar.lower()
+    ))
+    compresion_baja = any(
+        w in texto_evaluar.lower()
+        for w in ("baja compresion", "sin compresion", "valvula pisada", "valvula soplada", "anillos gastados", "fuga de compresion")
+    ) or bool(re.search(r"\b(?:[0-8]\d)\s*psi\b", texto_evaluar.lower()))
+
+    if descarte_ignicion_total:
         if "inyector" in texto_evaluar.lower() or "pulso" in texto_evaluar.lower() or "p020" in texto_evaluar.lower():
             promovida = "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)"
-        elif any(w in texto_evaluar.lower() for w in ("compresion", "valvula", "piston", "anillos")):
+        elif compresion_baja and not compresion_normal:
             promovida = "Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados"
         else:
             promovida = "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)"
@@ -588,9 +617,9 @@ def procesar_consulta_texto(
             predicciones_ml = [p for p in predicciones_ml if "bujia" not in p.falla.lower()]
             predicciones_ml.insert(0, PrediccionML(falla=promovida, probabilidad=confianza))
             predicciones_ml = predicciones_ml[:3]
-    elif es_parpadeo_check and diagnostico_predictivo != "Falla en bujias o bobinas de encendido (misfire)":
+    elif (es_parpadeo_check or mencion_bobina_falla) and diagnostico_predictivo != "Falla en bujias o bobinas de encendido (misfire)":
         diagnostico_predictivo = "Falla en bujias o bobinas de encendido (misfire)"
-        confianza = max(confianza, 0.70)
+        confianza = max(confianza, 0.75)
         if predicciones_ml:
             predicciones_ml.insert(0, PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza))
             predicciones_ml = predicciones_ml[:3]

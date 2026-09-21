@@ -302,9 +302,15 @@ class MotorRAG:
         consulta_limpia = str(consulta or "").strip()[:4000]
         consulta_lower = consulta_limpia.lower()
         expansiones = []
-        vibracion_al_frenar = "vibr" in consulta_lower and "fren" in consulta_lower
+        niega_vibracion_freno = bool(
+            re.search(r"\b(?:al\s+frenar\s+no\s+vibra|al\s+pisar\s+el\s+freno\s+no\s+vibra|fren(?:ar|o|os)?\s+no\s+vibra|no\s+vibra\s+al\s+frenar)\b", consulta_lower)
+        )
+        vibracion_al_frenar = ("vibr" in consulta_lower and "fren" in consulta_lower) and not niega_vibracion_freno
         if vibracion_al_frenar:
             expansiones.append("vibracion pedal freno discos deformados durante frenado")
+        elif niega_vibracion_freno:
+            expansiones.append("balanceo dinamico ruedas alineacion direccion vibracion volante velocidad")
+
         
         diccionario_dtc = {
             "p0300": "bujias cascabeleo misfire encendido",

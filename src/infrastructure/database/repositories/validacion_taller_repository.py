@@ -193,6 +193,13 @@ class ValidacionTallerRepository:
             resultado[clave] = [dict(r) for r in (await self.session.execute(stmt)).mappings().all()]
         return resultado
 
+    async def contar_piloto(self, taller_id: uuid.UUID) -> int:
+        stmt = select(func.count()).select_from(ValidacionTaller).where(
+            ValidacionTaller.taller_id == taller_id,
+            ValidacionTaller.tipo_registro == "PILOT",
+        )
+        return int((await self.session.execute(stmt)).scalar_one() or 0)
+
     async def crear(
         self,
         *,
@@ -220,7 +227,7 @@ class ValidacionTallerRepository:
         metodo_confirmacion: str | None,
         evidencia_ref: str | None,
         estado_registro: str = "borrador",
-        tipo_registro: str = "THESIS_POSTTEST",
+        tipo_registro: str = "DEVELOPMENT",
         conversacion_id: uuid.UUID | None = None,
         diagnostico_id: uuid.UUID | None = None,
         sintoma_registrado_correctamente: int | None = None,
@@ -231,6 +238,9 @@ class ValidacionTallerRepository:
         clasificacion_procesada: int | None = None,
         procesamiento_validado: int | None = None,
         tiempo_inferencia_ml_ms: int | None = None,
+        inicio_sistema_at: datetime | None = None,
+        fin_sistema_at: datetime | None = None,
+        duracion_sistema_segundos: Decimal | float | None = None,
     ) -> ValidacionTaller:
         caso = ValidacionTaller(
             taller_id=taller_id,
@@ -268,6 +278,9 @@ class ValidacionTallerRepository:
             clasificacion_procesada=clasificacion_procesada,
             procesamiento_validado=procesamiento_validado,
             tiempo_inferencia_ml_ms=tiempo_inferencia_ml_ms,
+            inicio_sistema_at=inicio_sistema_at,
+            fin_sistema_at=fin_sistema_at,
+            duracion_sistema_segundos=duracion_sistema_segundos,
         )
         self.session.add(caso)
         await self.session.flush()

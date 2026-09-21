@@ -128,7 +128,7 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
             name="modo_diagnostico_valido",
         ),
         CheckConstraint(
-            "tipo_registro IN ('DEVELOPMENT', 'REGRESSION', 'THESIS_PRETEST', 'THESIS_POSTTEST')",
+            "tipo_registro IN ('DEVELOPMENT', 'REGRESSION', 'THESIS_PRETEST', 'THESIS_POSTTEST', 'PILOT')",
             name="chk_diagnosticos_tipo_registro",
         ),
     )

@@ -106,8 +106,8 @@ DTC_A_SISTEMA: Dict[str, Tuple[str, List[str]]] = {
     "P0203": ("MOTOR", ["Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)", "Inyectores sucios o filtro de combustible obstruido"]),
     "P0204": ("MOTOR", ["Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)", "Inyectores sucios o filtro de combustible obstruido"]),
     # Mezcla y Emisiones
-    "P0171": ("MOTOR", ["Falla en servofreno (booster) o linea de vacio", "Cuerpo de aceleracion o valvula IAC sucia", "Falla en regulador de presion de combustible o diafragma roto", "Falla en sensor de oxigeno o mezcla rica"]),
-    "P0172": ("MOTOR", ["Falla en regulador de presion de combustible o diafragma roto", "Falla en sensor de oxigeno o mezcla rica", "Inyectores sucios o filtro de combustible obstruido"]),
+    "P0171": ("MOTOR", ["Falla en sensor de oxigeno o mezcla rica", "Falla en servofreno (booster) o linea de vacio", "Bomba de gasolina quemada o con baja presion", "Falla en regulador de presion de combustible o diafragma roto", "Inyectores sucios o filtro de combustible obstruido"]),
+    "P0172": ("MOTOR", ["Falla en sensor de oxigeno o mezcla rica", "Falla en regulador de presion de combustible o diafragma roto", "Inyectores sucios o filtro de combustible obstruido"]),
     "P0420": ("MOTOR", ["Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)", "Falla en sensor de oxigeno o mezcla rica"]),
     "P0430": ("MOTOR", ["Convertidor catalitico ineficiente u obstruido (DTC P0420 / P0430)", "Falla en sensor de oxigeno o mezcla rica"]),
     # EVAP
