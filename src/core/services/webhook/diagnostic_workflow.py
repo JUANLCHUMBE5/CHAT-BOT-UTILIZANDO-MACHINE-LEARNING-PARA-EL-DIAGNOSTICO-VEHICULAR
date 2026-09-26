@@ -173,6 +173,11 @@ class TechnicalDiagnosticWorkflow:
             marca_modelo=marca_modelo,
             proveedor=proveedor,
             diagnostico_forzado=diagnostico_forzado,
+            diferir_encolado_persistente=True,
+            taller_id=str(usuario.taller_id),
+            usuario_id=str(usuario.id),
+            conversacion_id=str(conversacion.id),
+            remitente=remitente,
         )
 
         estado_actual = res_turno.get("estado")

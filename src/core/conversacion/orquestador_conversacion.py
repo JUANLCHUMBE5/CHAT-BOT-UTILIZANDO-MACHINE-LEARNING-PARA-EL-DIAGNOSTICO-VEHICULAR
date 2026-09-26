@@ -50,6 +50,11 @@ class OrquestadorConversacion:
         marca_modelo: Optional[str] = None,
         proveedor: str = "meta",
         diagnostico_forzado: Optional[str] = None,
+        diferir_encolado_persistente: bool = False,
+        taller_id: Optional[str] = None,
+        usuario_id: Optional[str] = None,
+        conversacion_id: Optional[str] = None,
+        remitente: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Procesa un turno conversacional de WhatsApp con memoria y auto-interrogador inteligente."""
         t0 = time.perf_counter()
@@ -200,13 +205,13 @@ class OrquestadorConversacion:
             dto_tecnico = gestor_diagnostico._procesar_consulta_tecnica(
                 pregunta=texto_limpio,
                 inicio_total=t0,
-                remitente=None,
+                remitente=remitente,
                 proveedor=proveedor,
-                taller_id=None,
-                usuario_id=None,
-                conversacion_id=session_id,
+                taller_id=taller_id,
+                usuario_id=usuario_id,
+                conversacion_id=conversacion_id or session_id,
                 slot_gemini_preconcedido=None,
-                diferir_encolado_persistente=False,
+                diferir_encolado_persistente=diferir_encolado_persistente,
             )
             return {
                 "status": "consulta_tecnica",
@@ -449,9 +454,14 @@ class OrquestadorConversacion:
                 placa=estado.placa or "WAPP-01",
                 marca_modelo=f"{estado.marca or 'Vehiculo'} {estado.modelo or 'Generico'}",
                 session_id=session_id,
+                remitente=remitente,
                 proveedor=proveedor,
+                taller_id=taller_id,
+                usuario_id=usuario_id,
+                conversacion_id=conversacion_id,
                 diagnostico_forzado=falla_diag,
                 orquestado=True,
+                diferir_encolado_persistente=diferir_encolado_persistente,
             )
             top3_ml_raw = None
             if getattr(dto_resultado, "predicciones_ml", None):

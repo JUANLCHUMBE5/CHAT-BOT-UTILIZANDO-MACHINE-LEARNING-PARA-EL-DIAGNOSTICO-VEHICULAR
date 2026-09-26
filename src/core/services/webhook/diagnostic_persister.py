@@ -349,9 +349,10 @@ class DiagnosticPersister:
 
         await session.commit()
         return {
-            "status": "completado",
+            "status": "en_cola_gemini" if dto.modo_diagnostico == "en_cola_gemini" else "completado",
             "diagnostico_id": str(diag.id),
             "conversacion_id": str(conversacion.id),
+            "solicitud_id": dto.solicitud_id if dto.modo_diagnostico == "en_cola_gemini" else None,
             "falla_predicha": dto.diagnostico_ml,
             "confianza": float(dto.confianza_ml),
             "similitud_rag": float(dto.similitud_rag),

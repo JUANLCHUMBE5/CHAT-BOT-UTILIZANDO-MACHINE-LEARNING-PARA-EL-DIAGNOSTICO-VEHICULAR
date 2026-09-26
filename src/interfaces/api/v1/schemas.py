@@ -34,6 +34,9 @@ class DiagnosticResponseDTO(BaseModel):
     procedimiento_tecnico: Optional[str] = Field(default=None, description="Pasos de reparación recuperados del manual técnico vía RAG")
     respuesta_explicativa: Optional[str] = Field(default=None, description="Respuesta completa sintetizada por Gemini o plantilla de 3 secciones")
     tiempo_respuesta_ms: float = Field(..., description="Tiempo total de procesamiento en milisegundos")
+    modo_diagnostico: Optional[str] = Field(default=None, description="Estado tecnico final o encolado del diagnostico")
+    solicitud_id: Optional[str] = Field(default=None, description="UUID durable del trabajo Gemini cuando queda en cola")
+    diagnostico_id: Optional[str] = Field(default=None, description="UUID del diagnostico persistido")
 
 class HealthCheckDTO(BaseModel):
     status: str = "healthy"

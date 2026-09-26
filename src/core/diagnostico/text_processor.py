@@ -923,5 +923,6 @@ def procesar_consulta_texto(
         tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
     )
 
-    diagnostico_cache.guardar(clave_cache, resultado_final)
+    if resultado_final.modo_diagnostico not in ("en_cola_gemini", "consulta_tecnica_en_cola"):
+        diagnostico_cache.guardar(clave_cache, resultado_final)
     return resultado_final

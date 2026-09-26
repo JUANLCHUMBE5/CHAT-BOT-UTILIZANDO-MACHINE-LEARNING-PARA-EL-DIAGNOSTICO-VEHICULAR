@@ -43,6 +43,7 @@ class DiagnosticoRepository:
         version_modelo_ml: Optional[str] = None,
         version_corpus_rag: Optional[str] = None,
         trazabilidad: Optional[dict[str, Any]] = None,
+        tipo_registro: str = "DEVELOPMENT",
     ) -> Diagnostico:
         """Persiste un nuevo diagnóstico vehicular con sus métricas y fuentes."""
         conf_decimal = Decimal(str(round(float(confianza), 4))) if confianza is not None else None
@@ -72,10 +73,24 @@ class DiagnosticoRepository:
             version_modelo_ml=version_modelo_ml,
             version_corpus_rag=version_corpus_rag,
             trazabilidad=trazabilidad,
+            tipo_registro=tipo_registro,
         )
         self.session.add(diag)
         await self.session.flush()
         return diag
+
+    async def listar_por_vehiculo(
+        self, taller_id: uuid.UUID, vehiculo_id: uuid.UUID, limite: int = 100
+    ) -> Sequence[Diagnostico]:
+        """Historial exacto de un vehículo, más reciente primero."""
+        stmt = (
+            select(Diagnostico)
+            .options(selectinload(Diagnostico.hipotesis), selectinload(Diagnostico.vehiculo))
+            .where(Diagnostico.taller_id == taller_id, Diagnostico.vehiculo_id == vehiculo_id)
+            .order_by(Diagnostico.creado_en.desc(), Diagnostico.id.desc())
+            .limit(limite)
+        )
+        return (await self.session.execute(stmt)).scalars().all()
 
     async def agregar_hipotesis(
         self,
