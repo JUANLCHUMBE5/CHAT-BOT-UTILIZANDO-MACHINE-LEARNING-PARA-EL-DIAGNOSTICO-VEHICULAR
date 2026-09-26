@@ -27,7 +27,13 @@ def test_chapa_o_pestillo_mecanico_trabado(gestor):
     resultado = gestor.procesar_consulta_texto(sintoma)
 
     assert resultado.estado_sesion != "esperando_clarificacion"
-    assert "chapa" in resultado.contexto_manual.lower() or "cerradura" in resultado.contexto_manual.lower() or "pestillo" in resultado.contexto_manual.lower()
+    # Sin procedimiento OEM compatible, RAG debe permanecer vacío: inventar un
+    # contexto para satisfacer la prueba vulneraría la separación ML/RAG. La
+    # orientación degradada, en cambio, debe conservar la hipótesis mecánica.
+    respuesta = resultado.respuesta_texto.lower()
+    diagnostico = resultado.diagnostico_ml.lower()
+    assert any(termino in f"{respuesta} {diagnostico}" for termino in ("chapa", "cerradura", "pestillo"))
+    assert resultado.contexto_manual == ""
 
 
 def test_elevalunas_electrico_guaya_rota(gestor):

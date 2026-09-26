@@ -4,6 +4,7 @@ Verifica los 10 comportamientos críticos requeridos (A - J) para prevenir regre
 """
 
 import pytest
+
 from src.core.gestor_diagnostico import GestorDiagnostico
 
 

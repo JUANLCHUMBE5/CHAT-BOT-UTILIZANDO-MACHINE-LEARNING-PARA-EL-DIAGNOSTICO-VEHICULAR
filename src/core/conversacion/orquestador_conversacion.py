@@ -36,8 +36,9 @@ class OrquestadorConversacion:
     async def finalizar_caso(self, session_id: str, gestor_diagnostico: Optional[Any] = None) -> None:
         """Finaliza formalmente el case_id en el repositorio y en el SessionManager."""
         nuevo_id = None
-        if gestor_diagnostico and hasattr(gestor_diagnostico, "session_manager"):
-            nuevo_id = gestor_diagnostico.session_manager.finalizar_caso(session_id)
+        session_manager = getattr(gestor_diagnostico, "session_manager", None)
+        if session_manager is not None:
+            nuevo_id = session_manager.finalizar_caso(session_id)
         await self.repositorio.finalizar_caso(session_id, nuevo_id)
 
     async def procesar_turno(
@@ -437,8 +438,9 @@ class OrquestadorConversacion:
             es_caso_b = not es_suficiente and estado.turnos_repregunta >= estado.max_repreguntas and not falla_forzada_alternativa
             falla_diag = None if es_caso_b else falla_forzada_alternativa
 
-            if hasattr(gestor_diagnostico, "session_manager"):
-                gestor_diagnostico.session_manager.cargar_contexto(
+            session_manager = getattr(gestor_diagnostico, "session_manager", None)
+            if session_manager is not None:
+                session_manager.cargar_contexto(
                     session_id,
                     {"conversation_state": estado.exportar_dict(), "case_id": estado.case_id}
                 )

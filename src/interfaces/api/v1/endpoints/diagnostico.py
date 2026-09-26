@@ -21,12 +21,14 @@ from src.core.logger import logger
 from src.core.security import anonimizar_identificador
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
+from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
 from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
 from src.infrastructure.database.repositories.trabajo_sistema_repository import TrabajoSistemaRepository
 from src.interfaces.api.v1.dtos.diagnosticos import (
     ActualizarEstadoDTO,
     EtapaProcesamientoDTO,
     ItemDiagnosticoDTO,
+    MensajeConversacionDTO,
     PrediccionMLDTO,
 )
 from src.interfaces.api.v1.schemas import ConsultaDiagnostico, ResultadoDiagnostico
@@ -350,6 +352,7 @@ async def consultar_historial(
                         llm_modelo=gemini.get("modelo"),
                         tokens_entrada=int(gemini.get("tokens_entrada", 0)),
                         tokens_salida=int(gemini.get("tokens_salida", 0)),
+                        conversacion_id=str(d.conversacion_id) if d.conversacion_id else None,
                         desde_cache=bool(traza.get("desde_cache", False)),
                     )
                 )
@@ -394,3 +397,48 @@ async def confirmar_diagnostico(
             return {"mensaje": f"Diagnóstico {diagnostico_id} actualizado a {dto.nuevo_estado} en PostgreSQL."}
 
     raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+
+
+@router.get(
+    "/{diagnostico_id}/conversacion",
+    response_model=List[MensajeConversacionDTO],
+    summary="Obtener trazabilidad cronológica de mensajes de la conversación del diagnóstico",
+)
+async def obtener_conversacion_diagnostico(
+    diagnostico_id: str,
+    token_payload: dict = Depends(exigir_lectura_diagnosticos),
+):
+    """Retorna los mensajes cronológicos reales asociados a la conversación de un diagnóstico."""
+    try:
+        diag_uuid = uuid.UUID(diagnostico_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="ID de diagnóstico inválido.")
+
+    taller_id_str = token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
+    taller_uuid = uuid.UUID(taller_id_str)
+
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+
+    engine = obtener_engine()
+    async with AsyncSession(engine, expire_on_commit=False) as session:
+        diag_repo = DiagnosticoRepository(session)
+        diag = await diag_repo.obtener_por_id(diag_uuid)
+        if not diag or diag.taller_id != taller_uuid:
+            raise HTTPException(status_code=404, detail="Diagnóstico no encontrado en este taller.")
+
+        if not diag.conversacion_id:
+            return []
+
+        msg_repo = MensajeRepository(session)
+        mensajes = await msg_repo.listar_por_conversacion(diag.conversacion_id, limite=50)
+        return [
+            MensajeConversacionDTO(
+                id=str(m.id),
+                direccion=m.direccion,
+                texto=m.texto,
+                tipo=m.tipo,
+                fecha_hora=m.ocurrido_en.strftime("%Y-%m-%d %H:%M") if m.ocurrido_en else "Reciente",
+            )
+            for m in mensajes
+        ]
