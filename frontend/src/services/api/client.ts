@@ -5,6 +5,21 @@ export const API_BASE_URL = API_ORIGIN_OR_BASE.endsWith('/api/v1')
   ? API_ORIGIN_OR_BASE
   : `${API_ORIGIN_OR_BASE}/api/v1`;
 
+function apiUsaNgrok(): boolean {
+  try {
+    const host = new URL(API_BASE_URL).hostname.toLowerCase();
+    return host.endsWith('.ngrok-free.dev') || host.endsWith('.ngrok.io') || host.endsWith('.ngrok.app');
+  } catch {
+    return false;
+  }
+}
+
+export function crearHeadersApi(iniciales?: HeadersInit): Headers {
+  const headers = new Headers(iniciales);
+  if (apiUsaNgrok()) headers.set('ngrok-skip-browser-warning', 'true');
+  return headers;
+}
+
 export const SESSION_UPDATED_EVENT = 'carbot:session-updated';
 export const SESSION_EXPIRED_EVENT = 'carbot:session-expired';
 
@@ -40,7 +55,7 @@ export async function renewAccessToken(): Promise<string> {
   refreshInProgress = (async () => {
     const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: crearHeadersApi({ 'Content-Type': 'application/json' }),
       credentials: 'include',
     });
     if (!response.ok) {
@@ -66,7 +81,7 @@ export async function renewAccessToken(): Promise<string> {
 
 export async function authFetch(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
   const execute = (accessToken?: string) => {
-    const headers = new Headers(init.headers);
+    const headers = crearHeadersApi(init.headers);
     if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
     const token = accessToken || accessTokenInMemory;
     if (token) headers.set('Authorization', `Bearer ${token}`);
@@ -81,13 +96,9 @@ export async function authFetch(input: RequestInfo | URL, init: RequestInit = {}
 }
 
 export function getAuthHeaders(): Record<string, string> {
-  if (accessTokenInMemory) {
-    return {
-      'Authorization': `Bearer ${accessTokenInMemory}`,
-      'Content-Type': 'application/json',
-    };
-  }
-  return { 'Content-Type': 'application/json' };
+  const headers = crearHeadersApi({ 'Content-Type': 'application/json' });
+  if (accessTokenInMemory) headers.set('Authorization', `Bearer ${accessTokenInMemory}`);
+  return Object.fromEntries(headers.entries());
 }
 
 export function enmascararIdentificadorSensible(valor: string, tipo: 'placa' | 'telefono'): string {
