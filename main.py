@@ -129,7 +129,13 @@ app.add_middleware(
     allow_origins=list(settings.cors_allowed_origins),
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-CSRF-Token"],
+    allow_headers=[
+        "Authorization",
+        "Content-Type",
+        "X-Request-ID",
+        "X-CSRF-Token",
+        "ngrok-skip-browser-warning",
+    ],
     expose_headers=[
         "X-Request-ID",
         "X-RateLimit-Limit",
