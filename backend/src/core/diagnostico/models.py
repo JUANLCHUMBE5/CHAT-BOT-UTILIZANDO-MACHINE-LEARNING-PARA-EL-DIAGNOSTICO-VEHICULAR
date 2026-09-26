@@ -32,6 +32,9 @@ class ResultadoDiagnostico(BaseModel):
     solicitud_id: Optional[str] = None
     sintoma_evaluado: str = ""
     predicciones_ml: List[PrediccionML] = Field(default_factory=list)
+    predicciones_ml_raw: List[PrediccionML] = Field(default_factory=list)
+    motivo_prioridad: str = ""
+    respuesta_limitada: bool = False
     tiempo_ml_ms: int = 0
     tiempo_rag_ms: int = 0
     tiempo_llm_ms: int = 0

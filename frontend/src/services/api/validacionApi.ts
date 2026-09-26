@@ -73,6 +73,25 @@ export async function crearCasoValidacion(dto: CrearCasoValidacionDTO): Promise<
   return (await res.json()) as CasoValidacionDTO;
 }
 
+export async function crearBorradorPosttest(diagnosticoId: string): Promise<CasoValidacionDTO> {
+  const res = await authFetch(`${API_BASE_URL}/posttest/desde-diagnostico/${diagnosticoId}`, {
+    method: 'POST', headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error(await extractErrorMessage(res, 'No se pudo crear el borrador POST-TEST'));
+  return (await res.json()) as CasoValidacionDTO;
+}
+
+export async function confirmarPosttest(casoId: string, datos: {
+  falla_real: string; tiempo_diagnostico_minutos: number; prediccion_correcta: 0 | 1;
+  metodo_confirmacion: string; evidencia_ref?: string;
+}): Promise<CasoValidacionDTO> {
+  const res = await authFetch(`${API_BASE_URL}/posttest/${casoId}/confirmacion-humana`, {
+    method: 'PATCH', headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(datos),
+  });
+  if (!res.ok) throw new Error(await extractErrorMessage(res, 'No se pudo registrar la confirmación humana'));
+  return (await res.json()) as CasoValidacionDTO;
+}
+
 export function getExportarTrackerCsvUrl(): string {
   return `${API_BASE_URL}/validacion-taller/exportar-csv`;
 }

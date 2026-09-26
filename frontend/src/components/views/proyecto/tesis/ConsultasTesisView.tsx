@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { DiagnosticoDetalleModal } from '../../diagnosticos/DiagnosticoDetalleModal';
 import { ValidacionNuevoCasoModal } from '../../validacion/ValidacionNuevoCasoModal';
@@ -14,6 +14,7 @@ import {
 import { IndicadoresVariableIndependiente } from './rendimiento/IndicadoresVariableIndependiente';
 import { MetricasTecnicas } from './rendimiento/MetricasTecnicas';
 import { AuditoriaConsultas } from './rendimiento/AuditoriaConsultas';
+import { PostTestConfirmacionModal } from './PostTestConfirmacionModal';
 
 export const ConsultasTesisView: React.FC = () => {
   const [periodo] = useState<Periodo>({});
@@ -25,6 +26,8 @@ export const ConsultasTesisView: React.FC = () => {
   const [diagnosticoModal, setDiagnosticoModal] = useState<Diagnostico | null>(null);
   const [modalNuevoCasoAbierto, setModalNuevoCasoAbierto] = useState(false);
   const [guardandoCaso, setGuardandoCaso] = useState(false);
+  const [borradorPosttest, setBorradorPosttest] = useState<import('../../../../types/api').CasoValidacionDTO | null>(null);
+  const [ultimoPosttest, setUltimoPosttest] = useState<import('../../../../types/api').CasoValidacionDTO | null>(null);
   const [casoParaCrear, setCasoParaCrear] = useState<CrearCasoValidacionDTO>({
     fase: 'Post-test',
     placa: '',
@@ -50,7 +53,7 @@ export const ConsultasTesisView: React.FC = () => {
     cargando: true,
   });
 
-  const cargarDatos = async () => {
+  const cargarDatos = useCallback(async () => {
     setCargandoMetricas(true);
     setError(null);
     try {
@@ -65,11 +68,11 @@ export const ConsultasTesisView: React.FC = () => {
     } finally {
       setCargandoMetricas(false);
     }
-  };
+  }, [periodo]);
 
   useEffect(() => {
     void cargarDatos();
-  }, [periodo]);
+  }, [cargarDatos]);
 
   useEffect(() => {
     let activo = true;
@@ -122,7 +125,7 @@ export const ConsultasTesisView: React.FC = () => {
     metricas?.diagnosticos_pendientes ??
     historial.diagnosticos.filter((d) => d.estado === 'generado' || d.estado === 'en_revision').length;
 
-  const handleCrearPostTestDesdeDiagnostico = (d: Diagnostico) => {
+  const _handleCrearPostTestDesdeDiagnostico = (d: Diagnostico) => {
     setCasoParaCrear({
       fase: 'Post-test',
       fecha: d.fecha_hora ? d.fecha_hora.slice(0, 10) : new Date().toISOString().slice(0, 10),
@@ -148,6 +151,9 @@ export const ConsultasTesisView: React.FC = () => {
     setModalNuevoCasoAbierto(true);
   };
 
+  // Conserva la ruta manual de desarrollo; el POST oficial usa el flujo directo inferior.
+  void _handleCrearPostTestDesdeDiagnostico;
+
   const handleGuardarNuevoCaso = async (e: React.FormEvent) => {
     e.preventDefault();
     if (casoParaCrear.prediccion_correcta < 0) {
@@ -165,6 +171,27 @@ export const ConsultasTesisView: React.FC = () => {
     } finally {
       setGuardandoCaso(false);
     }
+  };
+
+  const handleCrearBorradorDirecto = async (diagnostico: Diagnostico) => {
+    try {
+      const borrador = await apiService.crearBorradorPosttest(diagnostico.id);
+      if (!borrador.id) throw new Error('El servidor no devolvió el UUID real del borrador.');
+      setDiagnosticoModal(null);
+      setBorradorPosttest(borrador);
+      alert('Se creó el borrador POST-TEST correctamente.');
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'No se pudo crear el borrador POST-TEST.');
+    }
+  };
+
+  const handleConfirmarBorrador = async (datos: { falla_real: string; tiempo_diagnostico_minutos: number; prediccion_correcta: 0 | 1; metodo_confirmacion: string }) => {
+    if (!borradorPosttest?.id) return;
+    const confirmado = await apiService.confirmarPosttest(borradorPosttest.id, datos);
+    setBorradorPosttest(null);
+    setUltimoPosttest(confirmado);
+    setMetricasValidacion(await apiService.getMetricasValidacion(periodo));
+    alert('POST-TEST CONFIRMADO. Se validaron los ocho campos.');
   };
 
   return (
@@ -208,6 +235,16 @@ export const ConsultasTesisView: React.FC = () => {
         </div>
       )}
 
+      {ultimoPosttest && (
+        <div style={{ border: '1px solid #86efac', background: '#f0fdf4', borderRadius: 8, padding: 12, fontSize: 12, color: '#14532d' }}>
+          <strong>POST-TEST CONFIRMADO</strong> · {ultimoPosttest.placa_enmascarada}<br />
+          Síntoma: {ultimoPosttest.sintoma}<br />
+          Predicción CarBot: {ultimoPosttest.chatbot_prediccion}<br />
+          Falla confirmada: {ultimoPosttest.falla_real} · Predicción correcta: {ultimoPosttest.prediccion_correcta ? 'Sí' : 'No'}<br />
+          Tiempo diagnóstico: {ultimoPosttest.tiempo_diagnostico_minutos} min · Campos completos: {ultimoPosttest.cantidad_campos_completos}/8 · Registro completo: {ultimoPosttest.campos_completos ? 'Sí' : 'No'}
+        </div>
+      )}
+
       {/* 1. Indicadores Metodológicos Oficiales de la Variable Independiente (Anexo 1) */}
       <IndicadoresVariableIndependiente indicadores={indicadoresVI} />
 
@@ -232,7 +269,7 @@ export const ConsultasTesisView: React.FC = () => {
         diagnostico={diagnosticoModal}
         isOpen={Boolean(diagnosticoModal)}
         onClose={() => setDiagnosticoModal(null)}
-        onCrearPostTest={handleCrearPostTestDesdeDiagnostico}
+        onCrearPostTest={(diagnostico) => { void handleCrearBorradorDirecto(diagnostico); }}
       />
 
       {/* Modal para Crear Registro Experimental desde Diagnóstico */}
@@ -244,6 +281,7 @@ export const ConsultasTesisView: React.FC = () => {
         guardando={guardandoCaso}
         onSubmit={handleGuardarNuevoCaso}
       />
+      <PostTestConfirmacionModal caso={borradorPosttest} onClose={() => setBorradorPosttest(null)} onConfirmar={handleConfirmarBorrador} />
     </div>
   );
 };

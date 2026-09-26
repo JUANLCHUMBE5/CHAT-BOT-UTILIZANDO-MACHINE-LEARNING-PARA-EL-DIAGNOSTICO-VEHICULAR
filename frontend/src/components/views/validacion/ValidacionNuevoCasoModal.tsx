@@ -369,7 +369,7 @@ export const ValidacionNuevoCasoModal: React.FC<ValidacionNuevoCasoModalProps> =
               <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '4px' }}>
                 {nuevoCaso.fase === 'Pre-test'
                   ? 'Hipótesis Inicial (Diagnóstico Tradicional) *'
-                  : Boolean(nuevoCaso.diagnostico_id)
+                  : nuevoCaso.diagnostico_id
                   ? 'Predicción CarBot (Inmutable) 🔒'
                   : 'Predicción CarBot *'}
               </label>

@@ -24,14 +24,14 @@ class CasoValidacionDTO(BaseModel):
     vehiculo_kilometraje: Optional[int] = None
     vehiculo_combustible: Optional[str] = None
     vehiculo_transmision: Optional[str] = None
-    falla_real: str
+    falla_real: Optional[str] = None
     chatbot_prediccion: str
     sistema_afectado_probable: Optional[str] = None
     campos_completos: int
     cantidad_campos_completos: int = 0
     detalles_campos: Optional[Dict[str, Any]] = None
-    tiempo_diagnostico_minutos: int
-    prediccion_correcta: int
+    tiempo_diagnostico_minutos: Optional[int] = None
+    prediccion_correcta: Optional[int] = None
     taller_id: Optional[str] = None
     mecanico_id: Optional[str] = None
     metodo_confirmacion: Optional[str] = "Inspección Visual en Elevador"

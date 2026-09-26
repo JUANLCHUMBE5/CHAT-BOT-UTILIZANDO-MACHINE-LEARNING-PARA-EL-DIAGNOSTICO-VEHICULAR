@@ -25,7 +25,7 @@ from src.core.security import (
 )
 from src.core.services.webhook_service import WebhookService
 from src.infrastructure.database.models.catalogs import Taller, Usuario
-from src.infrastructure.database.models.diagnostics import Diagnostico
+from src.infrastructure.database.models.diagnostics import Diagnostico, Vehiculo
 from src.infrastructure.database.models.jobs import CuotaGeminiGlobal, TrabajoGemini
 from src.infrastructure.database.models.messaging import Conversacion
 from src.infrastructure.database.models.operations import UsoApi
@@ -35,11 +35,11 @@ from src.infrastructure.database.repositories.trabajo_gemini_repository import T
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
 
 
-def test_alembic_head_es_20260912_01():
+def test_alembic_head_es_20260926_01():
     """Verifica que la migración más reciente sea el head activo de Alembic."""
     config = Config("alembic.ini")
     scripts = ScriptDirectory.from_config(config)
-    assert scripts.get_current_head() == "20260912_01"
+    assert scripts.get_current_head() == "20260926_01"
 
 
 def test_gemini_rate_limiter_concede_12_y_encola_excedentes():
@@ -331,6 +331,7 @@ async def test_webhook_persiste_free_tier_costo_cero_en_uso_api(async_db_session
         remitente=rand_phone,
         meta_message_id=f"wamid_freetier_{uuid.uuid4().hex}",
         tipo_mensaje="text",
+        placa="DEV-FT01",
         texto_cliente="El pedal de freno está muy esponjoso al frenar",
     )
 
@@ -358,6 +359,7 @@ async def test_webhook_persiste_free_tier_costo_cero_en_uso_api(async_db_session
     await async_db_session.execute(delete(TrabajoGemini).where(TrabajoGemini.taller_id == taller.id))
     await async_db_session.execute(delete(UsoApi).where(UsoApi.taller_id == taller.id))
     await async_db_session.execute(delete(Diagnostico).where(Diagnostico.taller_id == taller.id))
+    await async_db_session.execute(delete(Vehiculo).where(Vehiculo.taller_id == taller.id))
     await async_db_session.execute(delete(Conversacion).where(Conversacion.taller_id == taller.id))
     await async_db_session.execute(delete(Usuario).where(Usuario.id == usuario.id))
     await async_db_session.execute(delete(Taller).where(Taller.id == taller.id))

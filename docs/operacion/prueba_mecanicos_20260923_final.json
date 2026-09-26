@@ -1,0 +1,144 @@
+[
+  {
+    "id": 7,
+    "sistema": "Suspensión",
+    "esperado": "bujes/rótulas",
+    "texto": "Suena cloc cloc adelante al pasar baches. En pista lisa no suena. En elevador encontré juego en la rótula inferior y goma del buje rota. Al frenar no vibra.",
+    "criterios": [
+      "rotula",
+      "rótula",
+      "buje",
+      "suspension",
+      "suspensión"
+    ],
+    "resultado": {
+      "respuesta_texto": "🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**\n• **Diagnóstico Sugerido (ML):** Amortiguadores reventados o bujes de suspension gastados\n• **Certeza del Modelo:** 37%\n⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.\n\n\n📖 **2. Procedimiento Técnico de Reparación (Sin procedimiento compatible verificado):**\n\n\n⏱️ **3. Tiempo Estimado y Gravedad:**\n• **Recomendación Técnica:** Siga los pasos del manual de taller adjunto y realice las pruebas de verificación correspondientes.",
+      "diagnostico_ml": "Amortiguadores reventados o bujes de suspension gastados",
+      "confianza_ml": 0.3751,
+      "contexto_manual": "",
+      "titulo_manual": "Sin procedimiento compatible verificado",
+      "similitud_rag": 0.0,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "diagnostico_degradado_ml_rag",
+      "llm_usado": false,
+      "llm_modelo": null,
+      "tokens_entrada": 0,
+      "tokens_salida": 0,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "suena cloc cloc adelante al pasar baches. en pista lisa no suena. en elevador encontré juego en la rótula inferior y goma del buje rota. al frenar no vibra.",
+      "predicciones_ml": [
+        {
+          "falla": "Amortiguadores reventados o bujes de suspension gastados",
+          "probabilidad": 0.3751
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "probabilidad": 0.615
+        },
+        {
+          "falla": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+          "probabilidad": 0.0078
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "probabilidad": 0.615
+        },
+        {
+          "falla": "Amortiguadores reventados o bujes de suspension gastados",
+          "probabilidad": 0.3751
+        },
+        {
+          "falla": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+          "probabilidad": 0.0078
+        }
+      ],
+      "motivo_prioridad": "Hallazgo físico declarado en rótula/buje; priorizado sobre balanceo.",
+      "respuesta_limitada": false,
+      "tiempo_ml_ms": 32,
+      "tiempo_rag_ms": 4,
+      "tiempo_llm_ms": 10348,
+      "tiempo_total_ms": 10408,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 10.42
+  },
+  {
+    "id": 10,
+    "sistema": "Transmisión",
+    "esperado": "transmisión automática",
+    "texto": "Carro automático: en D entra normal. En R demora varios segundos, debo acelerar un poco y entra con golpe. Hacia adelante cambia normal. Sin luces en tablero. No he revisado nada.",
+    "criterios": [
+      "transmision",
+      "transmisión",
+      "caja",
+      "atf",
+      "solenoide"
+    ],
+    "resultado": {
+      "respuesta_texto": "🛠️ **1. Posible Falla Vehicular (Modo Degradado ML+RAG):**\n• **Diagnóstico Sugerido (ML):** Falta o degradacion de aceite de caja de cambios\n• **Certeza del Modelo:** 25%\n⚠️ *Nota:* Se requiere inspección física obligatoria: la confianza ML es insuficiente o el procedimiento RAG aún no tiene fuente OEM validada.\n\n\n📖 **2. Procedimiento Técnico de Reparación (Sin procedimiento compatible verificado):**\n\n\n⏱️ **3. Tiempo Estimado y Gravedad:**\n• **Recomendación Técnica:** Siga los pasos del manual de taller adjunto y realice las pruebas de verificación correspondientes.",
+      "diagnostico_ml": "Falta o degradacion de aceite de caja de cambios",
+      "confianza_ml": 0.2558,
+      "contexto_manual": "",
+      "titulo_manual": "Sin procedimiento compatible verificado",
+      "similitud_rag": 0.0,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "diagnostico_degradado_ml_rag",
+      "llm_usado": false,
+      "llm_modelo": null,
+      "tokens_entrada": 0,
+      "tokens_salida": 0,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "carro automático: en d entra normal. en r demora varios segundos, debo acelerar un poco y entra con golpe. hacia adelante cambia normal. sin luces en tablero. no he revisado nada.",
+      "predicciones_ml": [
+        {
+          "falla": "Falta o degradacion de aceite de caja de cambios",
+          "probabilidad": 0.2558
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "probabilidad": 0.4198
+        },
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "probabilidad": 0.1058
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "probabilidad": 0.4198
+        },
+        {
+          "falla": "Falta o degradacion de aceite de caja de cambios",
+          "probabilidad": 0.2558
+        },
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "probabilidad": 0.1058
+        }
+      ],
+      "motivo_prioridad": "Queja de acoplamiento de transmisión; componente exacto pendiente de comprobación.",
+      "respuesta_limitada": false,
+      "tiempo_ml_ms": 29,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 10338,
+      "tiempo_total_ms": 10379,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 10.38
+  }
+]

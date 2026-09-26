@@ -60,11 +60,11 @@ div[style*="overflow-x: auto"] {
   }
 }
 
-/* Gestion Subtabs Grid: 4 columns on desktop, 2x2 grid on mobile */
+/* Gestion Subtabs Grid: 3 columns on desktop and tablet, adaptive on mobile */
 .gestion-subtabs-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
   background-color: #f1f5f9;
   padding: 4px;
   border-radius: 10px;
@@ -72,9 +72,47 @@ div[style*="overflow-x: auto"] {
   box-sizing: border-box;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .gestion-subtabs-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4px;
+    gap: 3px;
+    padding: 3px;
+  }
+  .gestion-subtabs-grid button {
+    padding: 7px 6px !important;
+    font-size: 11px !important;
+    gap: 4px !important;
+  }
+}
+
+/* Responsive Desktop Table vs Mobile Card List */
+.responsive-table-desktop {
+  display: block;
+}
+.responsive-cards-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .responsive-table-desktop {
+    display: none !important;
+  }
+  .responsive-cards-mobile {
+    display: flex !important;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Responsive Mecanicos Grid */
+.mecanicos-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .mecanicos-grid-container {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }

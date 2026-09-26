@@ -1,0 +1,385 @@
+﻿id_caso,placa_simulada,grupo,fecha,estado,estado_ejecucion,sintoma_ingresado,diagnostico_principal_carbot,alternativas_diagnosticas_carbot,diagnostico_referencia_esperado_simulado,criterio_coincidencia,coincide_principal_con_referencia,informacion_generada_carbot,contexto_rag,titulo_manual,confianza_ml,tiempo_real_ms,tiempo_ml_ms,tiempo_rag_ms,tiempo_llm_ms,tiempo_total_reportado_ms,modo_diagnostico,error
+SIMULACION_POST_001,SIMPOST-001,1,2026-09-24,SIMULACION_POST,EJECUTADO,El motor se apaga al detenerme en el semáforo y vuelve a encender después.,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),"[{""falla"": ""Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)"", ""probabilidad"": 0.599}, {""falla"": ""Falla en bujias o bobinas de encendido (misfire)"", ""probabilidad"": 0.261}, {""falla"": ""Cuerpo de aceleracion o valvula IAC sucia"", ""probabilidad"": 0.14}]",Cuerpo de aceleración sucio,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**
+- **Hipótesis Principal:** Falla en sensor de posición de cigüeñal (CKP) o árbol de levas (CMP) (59%).
+- **Diagnóstico Diferencial:** Se debe diferenciar esta falla intermitente con el Top 2 (misfire por bujías/bobinas) y el Top 3 (cuerpo de aceleración/IAC sucio). El sensor CKP/CMP suele apagar el motor súbitamente sin tirones previos; un misfire genera vibración y código de cilindro; una válvula IAC o cuerpo sucio provoca que el ralentí oscile y decaiga progresivamente hasta apagarse al detenerse.
+
+📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**
+- Conecte el escáner para verificar códigos y observe el tacómetro al girar el motor: si las RPM marcan cero o no hay chispa/inyección durante la falla, apunte al sensor CKP. 
+
+⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**
+- Gravedad moderada. Se requiere el manual de taller específico para verificar los valores eléctricos de alimentación. 
+
+¿Cuál es la marca, modelo, año y cilindrada exacta del vehículo para consultar el torque y datos OEM precisos?","Código de Falla Asociado: DTC P0335 (Sensor CKP) / DTC P0340 (Sensor CMP)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Sentra, Chevrolet Sail
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+Síntomas: El motor gira pero no arranca, se apaga repentinamente al calentar o el tacómetro de RPM marca cero en marcha.
+Instrucciones paso a paso:
+1. Conecte el escáner y verifique códigos almacenados en la PCM.
+2. Mida la resistencia del sensor CKP inductivo (500 a 1000 Ohmios) o verifique la presencia de 5V/12V de alimentación en sensores Hall.
+3. Retire el perno de sujeción de 10mm del sensor en la tapa de distribución o bloque motor.
+4. Instale el sensor CKP/CMP nuevo con junta O-ring lubricada.
+5. Borre los códigos DTC y realice prueba de encendido.",PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE SENSOR DE POSICIÓN DE CIGÜEÑAL CKP Y LEVAS CMP (DTC P0335 / P0340),0.599,3069.49,32,4,3003,3065,completo_ml_rag_llm,
+SIMULACION_POST_002,SIMPOST-002,1,2026-09-24,SIMULACION_POST,EJECUTADO,"En frío demora bastante en arrancar, el motor gira pero recién prende al segundo intento.",Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups),"[{""falla"": ""Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)"", ""probabilidad"": 0.7959}, {""falla"": ""Falla en termostato o motoventilador de radiador"", ""probabilidad"": 0.133}, {""falla"": ""Falla en bujias o bobinas de encendido (misfire)"", ""probabilidad"": 0.071}]",Batería descargada,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**
+- Hipótesis Principal: Fuga o baja presión en sistema Common Rail Diésel (79%).
+- Diagnóstico Diferencial: Se contrasta con una falla en bujías/bobinas (7%) o termostato/motoventilador (13%). Dado que el motor gira pero demora en arrancar en frío, el comportamiento apunta a una descarga de presión en el riel (retorno excesivo de inyectores o válvula SCV) más que a un fallo de encendido por chispa o temperatura.
+
+📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**
+- Realice una prueba de retorno de inyectores con probetas graduadas para verificar si hay una fuga interna excesiva que impida alcanzar la presión mínima de arranque requerida por la ECU. 
+
+⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**
+- ⚠️ *Advertencia de Seguridad:* El circuito Common Rail opera a presiones extremas. NUNCA palpe cañerías con el motor en marcha. 
+- Para validar el tiempo de taller y los valores exactos, ¿cuál es la marca, modelo, año y motorización exacta de este vehículo de simulación?","Código de Falla Asociado: P0087, P0088
+Modelos Compatibles Frecuentes en Perú: Toyota Hilux/Hiace, Ford Ranger TDCi, Nissan Frontier YD25, Mitsubishi L200 DI-D, Isuzu D-Max, Fuso Canter
+Gravedad: Crítica | Tiempo Estimado de Taller: 75 minutos
+
+ADVERTENCIA DE SEGURIDAD CRITICA (CIRCUITO COMMON RAIL > 1,600 BAR):
+El riel y canerias de inyeccion diesel operan a presiones extremas de 1,600 a 2,200 bar.
+Riesgo grave de inyeccion subcutanea de combustible y corte tisular.
+NUNCA palpar canerias ni buscar fugas con la mano mientras el motor este en marcha o durante el arranque.
+Seguir estrictamente el procedimiento OEM del fabricante para la despresurizacion segura del circuito antes de desmontar canerias.
+Síntomas: El motor tarda mucho en arrancar en frío o caliente, se apaga súbitamente al acelerar a fondo bajo carga en subidas y registra DTC P0087 (Baja Presión de Riel).
+Instrucciones paso a paso:
+1. Conecte el escáner y grafique simultáneamente la Presión Deseada de Riel (Rail Pressure Target) vs Presión Real de Riel (Rail Pressure Actual).
+2. En marcha de arranque, la presión real debe alcanzar al menos 250 a 300 bar en menos de 2 segundos para que la ECU habilite la inyección.
+3. Si no alcanza 250 bar, realice la prueba de retorno de inyectores con probetas graduadas: desconecte las mangueras de retorno de los 4 inyectores y acople los tubos calibrados del kit de probetas.
+4. Dé marcha continua durante 15 segundos o mantenga el motor en ralentí durante 2 minutos: mida el volumen de diésel retornado por cada inyector.
+5. Tolerancia de retorno: el volumen de fuga por retorno no debe exceder 25 a 35 ml por inyector en 2 minutos. Si un inyector llena la probeta el doble que los demás, su válvula de control de retorno está erosionada, descargando la presión de riel al tanque.
+6. Inspeccione la válvula reguladora de succión (SCV) en la bomba de alta presión: verifique que la resistencia sea de 1.8 a 2.4 Ohmios y que no tenga limallas en su microfiltro de entrada.
+Tolerancias y especificaciones metrológicas OEM: Presión mínima de riel para arranque: 250 bar (3,600 psi). Presión máxima a plena carga: 1,600 a 2,000 bar. Retorno máximo admisible por inyector en 2 min: < 35 ml. Resistencia de válvula SCV: 1.8 a 2.4 Ohms a 20°C.",PROCEDIMIENTO: MEDICIÓN DE RETORNO DE INYECTORES Y CONTROL DE PRESIÓN COMMON RAIL DIESEL (DTC P0087 / P0088),0.7959,1739.39,30,3,1698,1739,completo_ml_rag_llm,
+SIMULACION_POST_003,SIMPOST-003,1,2026-09-24,SIMULACION_POST,EJECUTADO,En subida no responde al acelerador y pierde fuerza con el aire acondicionado encendido.,Pendiente de comparar el modo de combustible,[],Inyectores sucios,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔎 ¿Usa *GNV*, *GLP* o gasolina? ¿En cuál presenta la falla?",,,0.0,1.28,0,0,0,0,esperando_clarificacion,
+SIMULACION_POST_004,SIMPOST-004,2,2026-09-25,SIMULACION_POST,EJECUTADO,"El motor tironea, tiembla en ralentí y se encendió check engine después de lluvia.",Auto-pregunta técnica de descarte enviada,"[{""falla"": ""Falla en bujias o bobinas de encendido (misfire)"", ""probabilidad"": 0.6617}, {""falla"": ""Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga)"", ""probabilidad"": 0.11}, {""falla"": ""Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)"", ""probabilidad"": 0.0803}]",Bobina de encendido defectuosa,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🤖 🔍 Para precisar la causa del tironeo o falta de fuerza:
+
+• 1️⃣ Jalonea o cabecea con pérdida de fuerza al acelerar en subida o carga (Bujías o bobinas de encendido) — 66%
+• 2️⃣ Tironea o huele a nafta inmediatamente después de llenar el tanque (Sistema EVAP / Cánister) — 11%
+• 3️⃣ El motor se apaga de golpe en caliente y no arranca hasta enfriar unos minutos (Sensor CKP / CMP) — 8%
+
+👉 *Responde indicando 1, 2 o describiendo brevemente la opción (o describe qué otro síntoma nota si ninguna coincide).*",,,0.6617,31.12,29,0,0,31,esperando_clarificacion,
+SIMULACION_POST_005,SIMPOST-005,2,2026-09-25,SIMULACION_POST,EJECUTADO,Al acelerar siento jaloneos y por el escape sale olor fuerte a gasolina.,Falla en sensor de oxigeno o mezcla rica,"[{""falla"": ""Falla en sensor de oxigeno o mezcla rica"", ""probabilidad"": 0.5239}, {""falla"": ""Inyectores sucios o filtro de combustible obstruido"", ""probabilidad"": 0.309}, {""falla"": ""Empaque de culata soplado o danado"", ""probabilidad"": 0.167}]",Inyector con fuga,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔥 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO INMINENTE DE INCENDIO**
+Fuga activa de combustible detectada. No intente arrancar el motor ni accionar componentes eléctricos. Mantenga alejadas fuentes de ignición o calor y solicite asistencia técnica profesional en un área ventilada.
+
+🔧 Hipótesis por comprobar:
+1. Falla en sensor de oxigeno o mezcla rica
+2. Inyectores sucios o filtro de combustible obstruido
+3. Empaque de culata soplado o danado
+
+Confirma la hipótesis mediante una prueba de taller antes de sustituir componentes.
+
+Para especificaciones exactas necesito marca, modelo, año y motorización.","Codigo de Falla Asociado: DTC P0135 (Calefactor Sensor O2 Banco 1 Sensor 1) / DTC P2195 (Señal Sensor A/F Pegada en Pobre) / Consumo de Combustible
+Modelos Compatibles Frecuentes en Peru: Toyota Yaris/Corolla/Hilux, Nissan Versa/Sentra, Hyundai Accent, Kia Rio, Honda Civic/CR-V
+Gravedad: Media | Tiempo Estimado de Taller: 40 minutos
+Sintomas: Luz Check Engine encendida, olor a combustible crudo por el escape, alto consumo de gasolina/gas, respuesta lenta del motor al acelerar de golpe.
+Instrucciones paso a paso:
+1. Identificar el tipo de sensor en Banco 1 Sensor 1 (aguas arriba del catalizador): diferenciar sensor de circonio tradicional (señal oscilante de 0.1V a 0.9V) de sensor A/F planar de banda ancha (señal constante alrededor de 3.3V o medición de miliamperios).
+2. Desconectar el arnés del sensor y medir la resistencia del elemento calefactor (cables del mismo color, normalmente negros o blancos):
+   - Sensor convencional: debe marcar entre 5.0 y 15.0 Ohms a 20°C.
+   - Sensor A/F Toyota/Lexus: debe marcar entre 1.8 y 3.4 Ohms a 20°C.
+   - Si marca resistencia infinita (circuito abierto), el calefactor interno está quemado y requiere reemplazo de la sonda.
+3. Verificar con lámpara de prueba lógica o multímetro que llegue alimentación positiva de 12V de batería al circuito del calefactor con contacto en ON.
+4. Conectar escáner en datos en vivo y graficar el sensor a 2500 RPM estables:
+   - Crear una fuga de vacío controlada desconectando una manguera de admisión: la lectura debe irse inmediatamente a mezcla pobre (mayor a 3.8V en A/F o 0.1V en O2).
+   - Enriquecer la mezcla inyectando limpiador de carburador por el múltiple: la lectura debe caer inmediatamente a mezcla rica (menor a 2.8V en A/F o 0.9V en O2). Si no reacciona, el sensor está pasivado/envenenado por plomo o aditivos.
+5. Aplicar compuesto antiadherente de cobre en la rosca del sensor nuevo e instalar aplicando un par de apriete de 40 a 45 Nm.",PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195),0.5239,1990.91,30,3,1955,1990,completo_ml_rag_llm,
+SIMULACION_POST_006,SIMPOST-006,2,2026-09-25,SIMULACION_POST,EJECUTADO,Las revoluciones suben y bajan solas cuando el auto está detenido.,Sobrecalentamiento o solenoides en caja automatica CVT / DSG,"[{""falla"": ""Sobrecalentamiento o solenoides en caja automatica CVT / DSG"", ""probabilidad"": 0.5344}, {""falla"": ""Cuerpo de aceleracion o valvula IAC sucia"", ""probabilidad"": 0.303}, {""falla"": ""Disco de embrague desgastado o patinando"", ""probabilidad"": 0.163}]",Válvula IAC sucia,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔧 Hipótesis por comprobar:
+1. Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+2. Cuerpo de aceleracion o valvula IAC sucia
+3. Disco de embrague desgastado o patinando
+
+Comprueba el acoplamiento y el estado del fluido según el procedimiento del fabricante; no fuerces la marcha.
+
+No hay procedimiento compatible verificado. Para especificaciones exactas necesito marca, modelo, año y motorización.",,Sin procedimiento compatible verificado,0.5344,1914.62,30,3,1879,1914,completo_ml_rag_llm,
+SIMULACION_POST_007,SIMPOST-007,3,2026-09-26,SIMULACION_POST,EJECUTADO,La aguja de temperatura sube rápido y el depósito de refrigerante baja cada semana.,Auto-pregunta técnica de descarte enviada,"[{""falla"": ""Falla en termostato o motoventilador de radiador"", ""probabilidad"": 0.4826}, {""falla"": ""Fuga en mangueras de refrigerante o radiador picado"", ""probabilidad"": 0.4046}, {""falla"": ""Empaque de culata soplado o danado"", ""probabilidad"": 0.1055}]",Bomba de agua defectuosa,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🤖 🔍 Para precisar la causa del problema de temperatura:
+
+• 1️⃣ La temperatura sube rápidamente en tráfico o el ventilador no enciende (Termostato / Motoventilador) — 48%
+• 2️⃣ Pérdida visible de refrigerante o vapor blanco debajo del capó (Fuga de refrigerante) — 40%
+• 3️⃣ Consume refrigerante, bota humo blanco espeso o burbujea el depósito de expansión (Empaque de culata) — 11%
+
+👉 *Responde indicando 1, 2 o describiendo brevemente la opción (o describe qué otro síntoma nota si ninguna coincide).*",,,0.4826,30.97,29,0,0,30,esperando_clarificacion,
+SIMULACION_POST_008,SIMPOST-008,3,2026-09-26,SIMULACION_POST,EJECUTADO,El ventilador no entra y el motor se recalienta en tráfico lento.,Falla en termostato o motoventilador de radiador,"[{""falla"": ""Falla en termostato o motoventilador de radiador"", ""probabilidad"": 0.9963}, {""falla"": ""Fallo en inversor de corriente IGBT o motor electrico (EV)"", ""probabilidad"": 0.033}, {""falla"": ""Bateria descargada o bornes sulfatados"", ""probabilidad"": 0.017}]",Motoventilador de radiador defectuoso,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔧 Hipótesis por comprobar:
+1. Falla en termostato o motoventilador de radiador
+2. Fallo en inversor de corriente IGBT o motor electrico (EV)
+3. Bateria descargada o bornes sulfatados
+
+Confirma la hipótesis mediante una prueba de taller antes de sustituir componentes.
+
+Para especificaciones exactas necesito marca, modelo, año y motorización.","Codigo de Falla Asociado: DTC P0128 (Temperatura de Refrigerante por Debajo de Rango) / Recalentamiento / Bolsa de Aire en Radiador
+Modelos Compatibles Frecuentes en Peru: Toyota Yaris/Corolla, Nissan Versa/Tiida, Hyundai Accent/Tucson, Kia Rio/Sportage, Chevrolet Sail
+Gravedad: Alta | Tiempo Estimado de Taller: 50 minutos
+Sintomas: Aguja de temperatura oscilante o en tope rojo al exigir en subida, manguera superior de radiador caliente e inferior fría, calefacción de cabina sale fría por bolsas de aire, motoventilador no enciende a tiempo.
+Instrucciones paso a paso:
+1. Con motor frío, retirar la tapa del radiador e instalar un embudo anti-derrames sellado herméticamente para purga de refrigerante.
+2. Extraer el termostato e inspeccionar el estado del sello de jebe perimetral y la válvula de alivio o sangrado (jiggle valve), la cual debe montarse siempre orientada hacia las 12 horas (arriba).
+3. Prueba de banco del termostato: sumergir en recipiente metálico con agua y termómetro industrial. Monitorear temperatura con calentador:
+   - Inicio de apertura: entre 82°C y 88°C según especificación de fabricante grabada en el cuerpo metálico.
+   - Apertura completa: entre 95°C y 100°C con una carrera mínima de elevación del vástago de 8.0 mm a 10.0 mm. Si no abre o abre a destiempo, sustituir por termostato original.
+4. Instalar termostato nuevo aplicando 10 Nm a los pernos de la toma de agua.
+5. Rellenar con refrigerante orgánico OAT/HOAT al 50/50 (no usar agua de grifo para evitar cavitación en bomba y picadura de culata de aluminio).
+6. Encender el motor a 2000 RPM con la calefacción en temperatura máxima y ventilador en baja hasta que el motoventilador cicle dos veces completas, expulsando todo el aire atrapado en el circuito.",PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA),0.9963,1842.63,29,3,1808,1842,completo_ml_rag_llm,
+SIMULACION_POST_009,SIMPOST-009,3,2026-09-26,SIMULACION_POST,EJECUTADO,Se escucha un chillido por la parte delantera del motor al encender el aire acondicionado.,Falla en compresor de aire acondicionado o fuga de gas R134a,"[{""falla"": ""Falla en compresor de aire acondicionado o fuga de gas R134a"", ""probabilidad"": 0.9951}, {""falla"": ""Faja o cadena de distribucion destensada o con salto de punto"", ""probabilidad"": 0.033}, {""falla"": ""Baja presion de aceite o bomba de aceite defectuosa"", ""probabilidad"": 0.017}]",Correa de accesorios desgastada,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**
+- Hipótesis Principal: Falla en compresor o fuga de gas R134a (99%).
+- Diagnóstico Diferencial: El chillido al activar el A/C suele originarse en un deslizamiento por sobrecarga del compresor o tensión deficiente de la correa auxiliar. Se diferencia de la Hipótesis Top 2 (faja/cadena destensada) evaluando si el ruido cesa al apagar el climatizador; y de la Top 3 (presión de aceite) comprobando el testigo en tablero y nivel en varilla.
+
+📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**
+- Inspeccione visualmente la tensión y el estado de desgaste de la correa de accesorios con el motor detenido. El documento RAG sobre presiones de manifold requiere validación OEM, ya que falta especificar marca, modelo, año y motorización del vehículo de simulación.
+
+⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**
+- Gravedad moderada. Se requiere identificar la marca, modelo, año y cilindrada exacta del vehículo para confirmar torques, diagramas de recorrido de correa y presiones de trabajo antes de proceder con el reemplazo de componentes.
+
+¿Cuál es la marca, modelo, año y cilindrada exacta del vehículo simulado?","Código de Falla Asociado: DTC B1000 / Falla de Climatización / Refrigerante Bajo
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Suzuki, Changan, Chery
+Gravedad: Media | Tiempo Estimado de Taller: 60 minutos
+Síntomas: El aire acondicionado bota aire tibio por las rejillas, el compresor no acopla o se oye silbido en el evaporador.
+Instrucciones paso a paso:
+1. Conecte la manguera azul de baja presión (L) y roja de alta presión (H) del manifold de manómetros en las válvulas de servicio.
+2. Conecte la bomba de vacío a la manguera amarilla central y efectúe vacío durante 25 minutos (-30 inHg).
+3. Mantenga el vacío durante 15 minutos comprobando que la aguja no caiga.
+4. Conecte el balón de gas R134a, purgue la manguera e inyecte refrigerante por baja presión con motor a 1500 RPM y A/C al máximo.
+5. Ajuste presiones de trabajo: Baja entre 25 y 35 PSI; Alta entre 150 y 220 PSI.",PROCEDIMIENTO: CARGA DE REFRIGERANTE R134a / R1234yf Y PRUEBA DE FUGAS CON MANÓMETROS (DTC B1000 / A/C TIBIO),0.9951,1713.16,30,3,1677,1713,completo_ml_rag_llm,
+SIMULACION_POST_010,SIMPOST-010,4,2026-09-27,SIMULACION_POST,EJECUTADO,Al frenar el volante vibra y el pedal late como si rebotara.,Discos de freno alabeados o desgastados,"[{""falla"": ""Discos de freno alabeados o desgastados"", ""probabilidad"": 0.9845}, {""falla"": ""Falla en servofreno (booster) o linea de vacio"", ""probabilidad"": 0.033}, {""falla"": ""Desgaste de pastillas y zapatas de freno"", ""probabilidad"": 0.017}]",Discos de freno alabeados,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**
+- Hipótesis Principal: Discos de freno alabeados o desgastados (98%).
+- Diagnóstico Diferencial: La vibración en el volante al frenar indica alabeo en los discos (Hipótesis Principal), mientras que el pedal rebotando señala variación de espesor (DTV) o desgaste severo de pastillas (Top 3). Una falla en el servofreno o línea de vacío (Top 2) causaría un pedal duro, no pulsaciones. 
+
+📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**
+- Realizar inspección metrológica con reloj comparador de carátula para medir el alabeo lateral y micrómetro de exteriores para el espesor, comparando los valores obtenidos contra el manual de taller específico del modelo.
+
+⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**
+- Gravedad media. Indicar marca, modelo y año del vehículo para confirmar torques y tolerancias exactas. ¿Cuenta con los datos específicos de motorización para validar el espesor mínimo (MIN TH)?","Codigo de Falla Asociado: Falla Mecánica Pura (Sin Escáner) / Alabeo de Disco de Freno (Runout) / Variación de Espesor del Disco (DTV)
+Modelos Compatibles Frecuentes en Peru: Todas las marcas (Universal)
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 40 minutos
+Sintomas: Pedal de freno tiembla o pulsa al pisarlo a mas de 60 km/h, el timon vibra violentamente al aplicar frenado medio en bajadas de autopista.
+Instrucciones paso a paso:
+1. Inspeccion de espesor con micrometro de exteriores:
+   - Medir el espesor del disco en 8 puntos equidistantes del perimetro a 10 mm del borde exterior.
+   - Espesor minimo (MIN TH): grabado en el borde del disco (ejemplo: MIN TH 22.0 mm). Si el disco tiene 21.8 mm, esta prohibido rectificarlo por riesgo de fatiga termica y rotura.
+   - Variacion de espesor del disco (Disc Thickness Variation - DTV): la diferencia maxima de grosor entre los 8 puntos no debe superar 0.012 mm (12 micras). Un DTV mayor a 0.015 mm genera pulsacion en el pedal aunque el disco no este doblado.
+2. Medicion de alabeo lateral (Runout) con reloj comparador de caratula centesimal:
+   - Fijar la base magnetica del reloj comparador a la maza o mangueta de suspension. Apoyar el palpador a 5 mm del borde exterior del disco de freno.
+   - Ajustar reloj a cero y girar el disco lentamente a mano una vuelta completa (360°).
+   - Alabeo maximo admisible montado en vehiculo: 0.040 mm (40 micras). Si la aguja oscila 0.08 mm a 0.15 mm, el disco esta alabeado por choque termico (lavar el auto con frenos calientes o frenadas prolongadas).
+3. Correccion: verificar primero que la superficie de la maza de rueda no tenga oxido o rebabas (alabeo de maza maximo 0.015 mm). Sustituir discos en pares y cambiar pastillas simultaneamente; apretar tuercas de rueda con torquimetro a 105 Nm en patron cruzado.",PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR),0.9845,1575.57,30,2,1539,1575,completo_ml_rag_llm,
+SIMULACION_POST_011,SIMPOST-011,4,2026-09-27,SIMULACION_POST,EJECUTADO,El pedal se va hasta abajo y debo bombear para que el vehículo frene.,Fuga hidraulica o aire en el sistema de frenos,"[{""falla"": ""Fuga hidraulica o aire en el sistema de frenos"", ""probabilidad"": 0.9982}, {""falla"": ""Caliper de freno trabado o mordaza pegada (piston agarrotado)"", ""probabilidad"": 0.033}, {""falla"": ""Falla en servofreno (booster) o linea de vacio"", ""probabilidad"": 0.017}]",Aire en sistema hidráulico de frenos,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔧 Hipótesis por comprobar:
+1. Fuga hidraulica o aire en el sistema de frenos
+2. Caliper de freno trabado o mordaza pegada (piston agarrotado)
+3. Falla en servofreno (booster) o linea de vacio
+
+Comprueba físicamente el sistema de frenos; si el frenado es inseguro, no circules.
+
+No hay procedimiento compatible verificado. Para especificaciones exactas necesito marca, modelo, año y motorización.",,Sin procedimiento compatible verificado,0.9982,1521.95,29,3,1487,1521,completo_ml_rag_llm,
+SIMULACION_POST_012,SIMPOST-012,4,2026-09-27,SIMULACION_POST,EJECUTADO,Al girar a la derecha se oye un zumbido que aumenta con la velocidad.,Rodajes de caja mecanica o diferencial gastados,"[{""falla"": ""Rodajes de caja mecanica o diferencial gastados"", ""probabilidad"": 0.7171}, {""falla"": ""Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)"", ""probabilidad"": 0.184}, {""falla"": ""Llantas desbalanceadas o desalineadas"", ""probabilidad"": 0.099}]",Rodamiento de rueda desgastado,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔧 Hipótesis por comprobar:
+1. Rodajes de caja mecanica o diferencial gastados
+2. Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)
+3. Llantas desbalanceadas o desalineadas
+
+Comprueba el acoplamiento y el estado del fluido según el procedimiento del fabricante; no fuerces la marcha.
+
+Para especificaciones exactas necesito marca, modelo, año y motorización.","Codigo de Falla Asociado: Falla Mecánica Pura (Sin Escáner) / Desgaste de Rodamiento de Rueda / Picadura de Pista (Spalling)
+Modelos Compatibles Frecuentes en Peru: Todas las marcas (Universal)
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 45 minutos
+Sintomas: Zumbido grave continuo (como de avioneta) a partir de 40 a 60 km/h que se intensifica al girar la direccion hacia un lado y disminuye notablemente al girar hacia el opuesto.
+Instrucciones paso a paso:
+1. Prueba de ruta dinamica para aislar el lado afectado:
+   - Al virar hacia la izquierda en curva suave, el peso del vehiculo se transfiere a las ruedas derechas: si el zumbido aumenta fuertemente, el rodamiento dañado es el DERECHO.
+   - Si el ruido aumenta al virar a la derecha, el rodamiento dañado es el IZQUIERDO.
+2. Inspeccion fisica en elevador con ruedas en el aire:
+   - Tomar la rueda firmemente colocando una mano a las 12 horas y la otra a las 6 horas. Mover de forma oscilante con fuerza hacia adentro y hacia afuera: no debe existir ningun juego u holgura milimetrica.
+   - Girar la rueda manualmente a velocidad mientras se apoya la mano en el muelle helicoidal del amortiguador: la vibracion o aspereza de las bolas de acero rodando sobre la pista picada se transmite directamente como un hormigueo inconfundible.
+3. Sustitucion: en rodamientos tipo maza sellada completa (Hub Unit), desmontar caliper, disco y sensor ABS (con cuidado de no fracturar el plastico). Instalar maza nueva apretando los 4 pernos de anclaje a 65 Nm y la tuerca del palier/semieje central con torquimetro a 180 - 220 Nm segun especificacion OEM. Prohibido usar pistola de impacto en la tuerca central para no fracturar las pistas del rodamiento nuevo.",PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DE RODAMIENTOS DE RUEDA / MAZA (ZUMBIDO METÁLICO MODULADO AL VIRAR / PRUEBA DE HOLGURA),0.7171,1855.98,29,3,1821,1855,completo_ml_rag_llm,
+SIMULACION_POST_013,SIMPOST-013,5,2026-09-28,SIMULACION_POST,EJECUTADO,En los baches suena clac clac adelante y el auto se siente inestable.,Juntas homocineticas o palieres danados,"[{""falla"": ""Juntas homocineticas o palieres danados"", ""probabilidad"": 0.8771}, {""falla"": ""Amortiguadores reventados o bujes de suspension gastados"", ""probabilidad"": 0.08}, {""falla"": ""Bateria descargada o bornes sulfatados"", ""probabilidad"": 0.043}]",Bieleta de barra estabilizadora desgastada,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔧 Hipótesis por comprobar:
+1. Juntas homocineticas o palieres danados
+2. Amortiguadores reventados o bujes de suspension gastados
+3. Bateria descargada o bornes sulfatados
+
+Confirma la holgura o daño mediante inspección física segura antes de cambiar componentes.
+
+Para especificaciones exactas necesito marca, modelo, año y motorización.","Código de Falla Asociado: Falla de Tracción Delantera / Palier / Junta Homocinética
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Suzuki Swift, Chery, Changan
+Gravedad: Alta | Tiempo Estimado de Taller: 75 minutos
+Síntomas: Sonido metálico repetitivo (""clac clac clac"") en las ruedas delanteras al virar la dirección o dar vueltas en U.
+Instrucciones paso a paso:
+1. Desafloje la tuerca central del eje de la rueda con dado de 30mm o 32mm mientras el auto está apoyado en el piso.
+2. Levante el vehículo, retire la rueda, el cáliper de freno y el terminal de dirección.
+3. Desconecte la rótula de suspensión inferior para desacoplar el mangueta del eje del palier.
+4. Retire las abrazaderas metálicas del cubrepolvo roto y retire la grasa contaminada.
+5. Desmonte la junta homocinética exterior del eje usando un extractor de rodajes o golpeteo controlado con martillo de bronce.
+6. Limpie la canastilla y esferas. Si presenta surcos o picaduras, reemplace la junta completa.
+7. Instale el nuevo fuelle de neopreno, empaque abundante grasa de bisulfuro de molibdeno (grasa negra) y apriete las abrazaderas.",PROCEDIMIENTO: REEMPLAZO DE JUNTA HOMOCINÉTICA Y CUBREPOLVOS DE PALIER (CLAC CLAC AL DOBLAR),0.8771,1996.33,29,3,1961,1996,completo_ml_rag_llm,
+SIMULACION_POST_014,SIMPOST-014,5,2026-09-28,SIMULACION_POST,EJECUTADO,Una rueda quedó inclinada y el neumático se desgasta solo por el borde interior.,Llantas desbalanceadas o desalineadas,"[{""falla"": ""Llantas desbalanceadas o desalineadas"", ""probabilidad"": 0.5342}, {""falla"": ""Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)"", ""probabilidad"": 0.303}, {""falla"": ""Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado"", ""probabilidad"": 0.163}]",Brazo de suspensión doblado,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔧 Hipótesis por comprobar:
+1. Llantas desbalanceadas o desalineadas
+2. Falla en actuador de resorte o camara Maxi-Brake trabada (frenos de aire)
+3. Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado
+
+Confirma la holgura o daño mediante inspección física segura antes de cambiar componentes.
+
+No hay procedimiento compatible verificado. Para especificaciones exactas necesito marca, modelo, año y motorización.",,Sin procedimiento compatible verificado,0.5342,35.84,30,3,0,35,en_cola_gemini,
+SIMULACION_POST_015,SIMPOST-015,5,2026-09-28,SIMULACION_POST,EJECUTADO,El auto rebota varias veces después de pasar un rompemuelles.,Inyectores sucios o filtro de combustible obstruido,"[{""falla"": ""Inyectores sucios o filtro de combustible obstruido"", ""probabilidad"": 0.5847}, {""falla"": ""Faja o cadena de distribucion destensada o con salto de punto"", ""probabilidad"": 0.27}, {""falla"": ""Cuerpo de aceleracion o valvula IAC sucia"", ""probabilidad"": 0.145}]",Amortiguadores desgastados,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔧 Hipótesis por comprobar:
+1. Inyectores sucios o filtro de combustible obstruido
+2. Faja o cadena de distribucion destensada o con salto de punto
+3. Cuerpo de aceleracion o valvula IAC sucia
+
+Confirma la hipótesis mediante una prueba de taller antes de sustituir componentes.
+
+No hay procedimiento compatible verificado. Para especificaciones exactas necesito marca, modelo, año y motorización.",,Sin procedimiento compatible verificado,0.5847,36.31,30,3,0,36,en_cola_gemini,
+SIMULACION_POST_016,SIMPOST-016,6,2026-09-29,SIMULACION_POST,EJECUTADO,"El motor enciende check engine, gasta más gasolina y falla al acelerar.",Auto-pregunta técnica de descarte enviada,"[{""falla"": ""Falla en bujias o bobinas de encendido (misfire)"", ""probabilidad"": 0.4043}, {""falla"": ""Inyectores sucios o filtro de combustible obstruido"", ""probabilidad"": 0.3473}, {""falla"": ""Falla en sensor de oxigeno o mezcla rica"", ""probabilidad"": 0.2443}]",Sensor de oxígeno defectuoso,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🤖 🔍 Para confirmar el diagnóstico entre las principales hipótesis técnicas:
+
+• 1️⃣ Jalonea o cabecea con pérdida de fuerza al acelerar en subida o carga (Bujías o bobinas de encendido) — 40%
+• 2️⃣ El motor tose, tironea a cualquier velocidad o le cuesta responder al acelerador (Inyectores / Filtro) — 35%
+• 3️⃣ Humo negro, olor excesivo a gasolina por el escape y alto consumo (Sensor de oxígeno / Mezcla) — 24%
+
+👉 *Responde indicando 1, 2 o describiendo brevemente la opción (o describe qué otro síntoma nota si ninguna coincide).*",,,0.4043,32.57,31,0,0,32,esperando_clarificacion,
+SIMULACION_POST_017,SIMPOST-017,6,2026-09-29,SIMULACION_POST,EJECUTADO,Marca error de mezcla pobre y se siente poca fuerza al salir desde parado.,Consulta fuera del alcance automotriz,[],Sensor MAF sucio,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🚗 Describe el síntoma, por ejemplo: *vibra al manejar*.",,,0.0,3.28,0,0,0,3,fuera_de_alcance,
+SIMULACION_POST_018,SIMPOST-018,6,2026-09-29,SIMULACION_POST,EJECUTADO,El velocímetro deja de marcar intermitentemente y aparece check engine.,Falla en sensor de oxigeno o mezcla rica,"[{""falla"": ""Falla en sensor de oxigeno o mezcla rica"", ""probabilidad"": 0.4573}, {""falla"": ""Falla en bujias o bobinas de encendido (misfire)"", ""probabilidad"": 0.353}, {""falla"": ""Falla en sensor de velocidad de rueda ABS"", ""probabilidad"": 0.19}]",Sensor de velocidad defectuoso,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #3)*
+Hipótesis preliminar ML: *Falla en sensor de oxigeno o mezcla rica* (45%).
+Al ser confianza media (<70%), se contrastará con manuales y pruebas de taller.
+En breve recibirás el resumen; el detalle quedará en el panel.","Codigo de Falla Asociado: DTC P0135 (Calefactor Sensor O2 Banco 1 Sensor 1) / DTC P2195 (Señal Sensor A/F Pegada en Pobre) / Consumo de Combustible
+Modelos Compatibles Frecuentes en Peru: Toyota Yaris/Corolla/Hilux, Nissan Versa/Sentra, Hyundai Accent, Kia Rio, Honda Civic/CR-V
+Gravedad: Media | Tiempo Estimado de Taller: 40 minutos
+Sintomas: Luz Check Engine encendida, olor a combustible crudo por el escape, alto consumo de gasolina/gas, respuesta lenta del motor al acelerar de golpe.
+Instrucciones paso a paso:
+1. Identificar el tipo de sensor en Banco 1 Sensor 1 (aguas arriba del catalizador): diferenciar sensor de circonio tradicional (señal oscilante de 0.1V a 0.9V) de sensor A/F planar de banda ancha (señal constante alrededor de 3.3V o medición de miliamperios).
+2. Desconectar el arnés del sensor y medir la resistencia del elemento calefactor (cables del mismo color, normalmente negros o blancos):
+   - Sensor convencional: debe marcar entre 5.0 y 15.0 Ohms a 20°C.
+   - Sensor A/F Toyota/Lexus: debe marcar entre 1.8 y 3.4 Ohms a 20°C.
+   - Si marca resistencia infinita (circuito abierto), el calefactor interno está quemado y requiere reemplazo de la sonda.
+3. Verificar con lámpara de prueba lógica o multímetro que llegue alimentación positiva de 12V de batería al circuito del calefactor con contacto en ON.
+4. Conectar escáner en datos en vivo y graficar el sensor a 2500 RPM estables:
+   - Crear una fuga de vacío controlada desconectando una manguera de admisión: la lectura debe irse inmediatamente a mezcla pobre (mayor a 3.8V en A/F o 0.1V en O2).
+   - Enriquecer la mezcla inyectando limpiador de carburador por el múltiple: la lectura debe caer inmediatamente a mezcla rica (menor a 2.8V en A/F o 0.9V en O2). Si no reacciona, el sensor está pasivado/envenenado por plomo o aditivos.
+5. Aplicar compuesto antiadherente de cobre en la rosca del sensor nuevo e instalar aplicando un par de apriete de 40 a 45 Nm.",PROCEDIMIENTO: DIAGNÓSTICO DE SENSOR DE RELACIÓN AIRE/COMBUSTIBLE (A/F BANDA ANCHA) Y SONDA LAMBDA (DTC P0135 / P2195),0.4573,36.15,30,3,0,36,en_cola_gemini,
+SIMULACION_POST_019,SIMPOST-019,7,2026-09-30,SIMULACION_POST,EJECUTADO,En primera el motor revoluciona pero el carro casi no avanza y huele a quemado.,Disco de embrague desgastado o patinando,"[{""falla"": ""Disco de embrague desgastado o patinando"", ""probabilidad"": 0.9971}, {""falla"": ""Rodajes de transmision manual o eje primario gastados"", ""probabilidad"": 0.033}, {""falla"": ""Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)"", ""probabilidad"": 0.017}]",Disco de embrague patinando,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #4)*
+Hipótesis preliminar ML: *Disco de embrague desgastado o patinando* (99%).
+En breve recibirás el resumen; el detalle quedará en el panel.","Código de Falla Asociado: Falla de Embrague / Disco Desgastado / Patina en Subida / RPM Suben sin Aceleración
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Alto/Celerio
+Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
+Síntomas: Al acelerar en carretera o pendiente pronunciada, las revoluciones del motor aumentan bruscamente (sube el tacómetro) pero el vehículo no incrementa su velocidad; olor penetrante a forro quemado (ferodo recalentado); pedal de embrague con punto de acople excesivamente alto.
+Tolerancias y Parámetros Metrológicos OEM:
+- Carrera libre del pedal de embrague: 15 mm a 25 mm.
+- Recorrido total del pedal: 130 mm a 145 mm.
+- Espesor total del disco de embrague nuevo: 7.8 mm a 8.4 mm.
+- Profundidad mínima de la cabeza de remaches respecto a la superficie de fricción: 0.30 mm (límite de descarte; disco nuevo = 1.20 mm).
+- Alabeo máximo permisible del volante de motor: 0.10 mm (medido con reloj comparador centesimal).
+- Alabeo máximo del plato de presión: 0.12 mm.
+Instrucciones paso a paso:
+1. Prueba de calado dinámico en taller (Stall Test):
+   a. Ubicar el vehículo sobre piso horizontal sin obstáculos al frente.
+   b. Accionar el freno de estacionamiento a máxima retención y mantener pisado el freno de servicio.
+   c. Arrancar el motor, pisar el embrague a fondo y engranar 4ta marcha (o 3ra).
+   d. Acelerar el motor progresivamente hasta 2,200 - 2,500 RPM.
+   e. Soltar el pedal de embrague con rapidez controlada.
+   f. Interpretación metrológica: Si el motor se apaga y cala de golpe en menos de 1.5 segundos, el embrague conserva suficiente adherencia mecánica. Si el motor permanece funcionando con el pedal completamente suelto o tarda más de 2 segundos en calarse, el disco de embrague patina críticamente y está cristalizado o desgastado.
+2. Descartar contaminación por aceite: inspeccionar la ventana de inspección inferior de la campana de la caja de cambios buscando restos de aceite de motor (fuga por retén de cigüeñal) o valvulina (fuga por retén de eje piloto).
+3. Inspeccionar el sistema hidráulico: verificar que el bombín esclavo y cilindro maestro retornen libremente y purgar el líquido DOT 4 si hay degradación térmica.
+4. Desmontaje y metrología: si el embrague patina, desmontar la transmisión, medir espesor de remaches con micrómetro de profundidad y comprobar el temple de las lengüetas del diafragma de la prensa.",PROCEDIMIENTO: DIAGNÓSTICO DE PATINAMIENTO DE DISCO DE EMBRAGUE Y PRUEBA DE CALADO EN 4TA MARCHA,0.9971,35.67,30,3,0,35,en_cola_gemini,
+SIMULACION_POST_020,SIMPOST-020,7,2026-09-30,SIMULACION_POST,EJECUTADO,Cuesta entrar los cambios y el pedal de embrague se queda pegado abajo.,Falla en bombin o bomba hidraulica de embrague,"[{""falla"": ""Falla en bombin o bomba hidraulica de embrague"", ""probabilidad"": 0.7362}, {""falla"": ""Disco de embrague desgastado o patinando"", ""probabilidad"": 0.171}, {""falla"": ""Sobrecalentamiento o solenoides en caja automatica CVT / DSG"", ""probabilidad"": 0.092}]",Cilindro maestro de embrague defectuoso,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔧 Hipótesis por comprobar:
+1. Falla en bombin o bomba hidraulica de embrague
+2. Disco de embrague desgastado o patinando
+3. Sobrecalentamiento o solenoides en caja automatica CVT / DSG
+
+Comprueba el acoplamiento y el estado del fluido según el procedimiento del fabricante; no fuerces la marcha.
+
+No hay procedimiento compatible verificado. Para especificaciones exactas necesito marca, modelo, año y motorización.",,Sin procedimiento compatible verificado,0.7362,35.88,30,3,0,35,en_cola_gemini,
+SIMULACION_POST_021,SIMPOST-021,7,2026-09-30,SIMULACION_POST,EJECUTADO,"Al dar arranque solo se escucha un clic, las luces del tablero bajan de intensidad.",Alternador defectuoso o placa de diodos quemada,"[{""falla"": ""Alternador defectuoso o placa de diodos quemada"", ""probabilidad"": 0.8206}, {""falla"": ""Bateria descargada o bornes sulfatados"", ""probabilidad"": 0.117}, {""falla"": ""Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)"", ""probabilidad"": 0.063}]",Batería descargada,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #6)*
+Hipótesis preliminar ML: *Alternador defectuoso o placa de diodos quemada* (82%).
+En breve recibirás el resumen; el detalle quedará en el panel.","Código de Falla Asociado: DTC P0562 (Voltaje del Sistema Bajo) / DTC P0620 (Circuito de Control del Alternador) / Falla de Batería y Carga
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Testigo de batería encendido en el tablero, el alternador no carga y la batería se descarga rápido, pérdida de luces o dificultad para arrancar.
+Instrucciones paso a paso:
+1. Mida el voltaje de la batería en reposo con multímetro (debe registrar 12.4V a 12.7V con motor apagado).
+2. Encienda el motor y mida el voltaje de carga entre bornes a 2000 RPM (debe registrar entre 13.8V y 14.5V). Si marca menos de 13.0V o más de 15.0V, el alternador o regulador de voltaje está defectuoso.
+3. Realice prueba de caída de tensión en el cable positivo (+) del alternador a la batería (máximo 0.2V) y en el circuito de masa (-) (máximo 0.1V).
+4. Verifique la tensión y estado de la faja serpentina de accesorios.
+5. Desmonte el alternador, revise la placa de diodos rectificadores, los carbones/escobillas y el rotor.
+6. Si la batería no retiene carga tras prueba de conductancia con analizador digital, reemplace la batería automotriz y limpie bornes sulfatados.","PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",0.8206,36.29,30,3,0,36,en_cola_gemini,
+SIMULACION_POST_022,SIMPOST-022,8,2026-10-01,SIMULACION_POST,EJECUTADO,La batería se descarga aunque es nueva y la luz de batería prende mientras manejo.,Alternador defectuoso o placa de diodos quemada,"[{""falla"": ""Alternador defectuoso o placa de diodos quemada"", ""probabilidad"": 0.7418}, {""falla"": ""Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)"", ""probabilidad"": 0.168}, {""falla"": ""Fuga parasita de corriente en reposo (consumo nocturno de bateria)"", ""probabilidad"": 0.09}]",Alternador defectuoso,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #7)*
+Hipótesis preliminar ML: *Alternador defectuoso o placa de diodos quemada* (74%).
+En breve recibirás el resumen; el detalle quedará en el panel.","Código de Falla Asociado: DTC P0562 (Voltaje del Sistema Bajo) / DTC P0620 (Circuito de Control del Alternador) / Falla de Batería y Carga
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Testigo de batería encendido en el tablero, el alternador no carga y la batería se descarga rápido, pérdida de luces o dificultad para arrancar.
+Instrucciones paso a paso:
+1. Mida el voltaje de la batería en reposo con multímetro (debe registrar 12.4V a 12.7V con motor apagado).
+2. Encienda el motor y mida el voltaje de carga entre bornes a 2000 RPM (debe registrar entre 13.8V y 14.5V). Si marca menos de 13.0V o más de 15.0V, el alternador o regulador de voltaje está defectuoso.
+3. Realice prueba de caída de tensión en el cable positivo (+) del alternador a la batería (máximo 0.2V) y en el circuito de masa (-) (máximo 0.1V).
+4. Verifique la tensión y estado de la faja serpentina de accesorios.
+5. Desmonte el alternador, revise la placa de diodos rectificadores, los carbones/escobillas y el rotor.
+6. Si la batería no retiene carga tras prueba de conductancia con analizador digital, reemplace la batería automotriz y limpie bornes sulfatados.","PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",0.7418,37.29,31,3,0,37,en_cola_gemini,
+SIMULACION_POST_023,SIMPOST-023,8,2026-10-01,SIMULACION_POST,EJECUTADO,Las luces parpadean y el tablero se apaga por segundos al acelerar.,Alternador defectuoso o placa de diodos quemada,"[{""falla"": ""Alternador defectuoso o placa de diodos quemada"", ""probabilidad"": 0.7202}, {""falla"": ""Bateria descargada o bornes sulfatados"", ""probabilidad"": 0.182}, {""falla"": ""Cuerpo de aceleracion o valvula IAC sucia"", ""probabilidad"": 0.098}]",Terminal negativo de batería sulfatado,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #8)*
+Hipótesis preliminar ML: *Alternador defectuoso o placa de diodos quemada* (72%).
+En breve recibirás el resumen; el detalle quedará en el panel.","Código de Falla Asociado: DTC P0562 (Voltaje del Sistema Bajo) / DTC P0620 (Circuito de Control del Alternador) / Falla de Batería y Carga
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Testigo de batería encendido en el tablero, el alternador no carga y la batería se descarga rápido, pérdida de luces o dificultad para arrancar.
+Instrucciones paso a paso:
+1. Mida el voltaje de la batería en reposo con multímetro (debe registrar 12.4V a 12.7V con motor apagado).
+2. Encienda el motor y mida el voltaje de carga entre bornes a 2000 RPM (debe registrar entre 13.8V y 14.5V). Si marca menos de 13.0V o más de 15.0V, el alternador o regulador de voltaje está defectuoso.
+3. Realice prueba de caída de tensión en el cable positivo (+) del alternador a la batería (máximo 0.2V) y en el circuito de masa (-) (máximo 0.1V).
+4. Verifique la tensión y estado de la faja serpentina de accesorios.
+5. Desmonte el alternador, revise la placa de diodos rectificadores, los carbones/escobillas y el rotor.
+6. Si la batería no retiene carga tras prueba de conductancia con analizador digital, reemplace la batería automotriz y limpie bornes sulfatados.","PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",0.7202,39.45,33,3,0,39,en_cola_gemini,
+SIMULACION_POST_024,SIMPOST-024,8,2026-10-01,SIMULACION_POST,EJECUTADO,El motor no enciende después de cargar combustible; se siente olor a gasolina.,Auto-pregunta técnica de descarte enviada,"[{""falla"": ""Falla en sensor de oxigeno o mezcla rica"", ""probabilidad"": 0.6384}, {""falla"": ""Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)"", ""probabilidad"": 0.1128}, {""falla"": ""Bomba de gasolina quemada o con baja presion"", ""probabilidad"": 0.1065}]",Bomba de gasolina con baja presión,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🤖 🔍 Para confirmar el diagnóstico entre las principales hipótesis técnicas:
+
+• 1️⃣ Humo negro, olor excesivo a gasolina por el escape y alto consumo (Sensor de oxígeno / Mezcla) — 64%
+• 2️⃣ Falla de arranque en frío o descalibración de mezcla en vehículo flex/etanol (Sistema Bi-combustible) — 11%
+• 3️⃣ Falta de potencia en alta, se ahoga en subida o zumba fuerte el tanque de combustible (Bomba de combustible) — 11%
+
+👉 *Responde indicando 1, 2 o describiendo brevemente la opción (o describe qué otro síntoma nota si ninguna coincide).*",,,0.6384,32.6,31,0,0,32,esperando_clarificacion,
+SIMULACION_POST_025,SIMPOST-025,9,2026-10-02,SIMULACION_POST,EJECUTADO,"Al acelerar a fondo pierde potencia y da tirones, como si no llegara combustible.",Pendiente de comparar el modo de combustible,[],Bomba de gasolina con baja presión,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔎 ¿Usa *GNV*, *GLP* o gasolina? ¿En cuál presenta la falla?",,,0.0,1.01,0,0,0,0,esperando_clarificacion,
+SIMULACION_POST_026,SIMPOST-026,9,2026-10-02,SIMULACION_POST,EJECUTADO,"Enciende, pero luego de unos minutos empieza a fallar un cilindro y vibra todo el motor.",Consulta Ambigua / Datos Faltantes,[],Bobina de encendido defectuosa,igualdad_normalizada_prediccion_principal_vs_referencia,False,"🔎 ¿Vibra al frenar, a cierta velocidad o en mínimo?",,,0.0,1.32,0,0,0,0,esperando_clarificacion,
+SIMULACION_POST_027,SIMPOST-027,9,2026-10-02,SIMULACION_POST,EJECUTADO,Cuando suelto el acelerador se apaga; el ralentí es muy bajo e inestable.,Cuerpo de aceleracion o valvula IAC sucia,"[{""falla"": ""Cuerpo de aceleracion o valvula IAC sucia"", ""probabilidad"": 0.8972}, {""falla"": ""Bomba de gasolina quemada o con baja presion"", ""probabilidad"": 0.067}, {""falla"": ""Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)"", ""probabilidad"": 0.036}]",Válvula IAC sucia,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #9)*
+Hipótesis preliminar ML: *Cuerpo de aceleracion o valvula IAC sucia* (89%).
+En breve recibirás el resumen; el detalle quedará en el panel.","Código de Falla Asociado: DTC P0505 (Válvula IAC) / DTC P2119 (Control Mariposa Acelerador)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent/i10, Kia Rio/Picanto, Chevrolet Sail, Nissan Tiida
+Gravedad: Media | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Ralentí inestable, las revoluciones oscilan entre 500 y 1500 RPM, o el motor se apaga repentinamente al frenar en semáforos.
+Instrucciones paso a paso:
+1. Desconectar el borne negativo (-) de la batería de 12V.
+2. Retirar el ducto de aire de admisión aflojando las abrazaderas.
+3. Desconectar el conector eléctrico del servo motor de la mariposa o de la válvula IAC.
+4. Desmontar los 4 pernos del cuerpo de aceleración del múltiple de admisión.
+5. Limpiar los depósitos de carbonilla alrededor de la mariposa y del ducto de aire con aerosol Carburaclean (Throttle Body Cleaner) y brocha fina. No forzar bruscamente la mariposa motorizada.
+6. Reemplazar la empaquetadura de goma de la base del cuerpo de aceleración.
+7. Armar el conjunto, conectar la batería y ejecutar el re-aprendizaje de marcha lenta (Idle Relearn): dar contacto 10 segundos, apagar 10 segundos y encender el motor sin tocar el acelerador durante 10 minutos hasta alcanzar 90°C.",PROCEDIMIENTO: DIAGNÓSTICO Y CALIBRACIÓN DE CUERPO DE ACELERACIÓN ELECTRÓNICO Y VÁLVULA IAC (DTC P0505 / P2119),0.8972,36.12,30,3,0,36,en_cola_gemini,
+SIMULACION_POST_028,SIMPOST-028,10,2026-10-03,SIMULACION_POST,EJECUTADO,Sube la temperatura en carretera y se escucha un ruido metálico cerca de la bomba de agua.,Fuga en mangueras de refrigerante o radiador picado,"[{""falla"": ""Fuga en mangueras de refrigerante o radiador picado"", ""probabilidad"": 0.8485}, {""falla"": ""Falla en termostato o motoventilador de radiador"", ""probabilidad"": 0.098}, {""falla"": ""Faja o cadena de distribucion destensada o con salto de punto"", ""probabilidad"": 0.053}]",Bomba de agua defectuosa,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #10)*
+Hipótesis preliminar ML: *Fuga en mangueras de refrigerante o radiador picado* (84%).
+En breve recibirás el resumen; el detalle quedará en el panel.","Código de Falla Asociado: P0128
+Modelos Compatibles Frecuentes en Perú: Toyota Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Aveo, Suzuki Swift
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Nivel de refrigerante desciende constantemente en el depósito de expansión, charco verdoso/rosado bajo el radiador y temperatura que se eleva en tráfico.
+Instrucciones paso a paso:
+1. Con el motor frío, retire la tapa del radiador o del depósito presurizado.
+2. Instale el probador neumático de tapones y radiadores con el adaptador bayoneta/roscado.
+3. Bombee presión manual hasta 15 a 18 psi (1.0 a 1.2 bar, sin exceder el tarado de la tapa de fábrica).
+4. Observe el manómetro durante 10 minutos: una caída de más de 1 psi certifica fuga externa o interna.
+5. Proyecte lámpara ultravioleta o inspeccione visualmente el panel de aluminio del radiador, tanques plásticos laterales y abrazaderas de mangueras superior e inferior.
+6. Reemplace mangueras resecas o radiador picado, llene con refrigerante OAT/HOAT al 50% y purgue el aire en ralentí con calefacción encendida.
+Tolerancias y especificaciones metrológicas OEM: Presión de prueba de estanqueidad: 15 a 18 psi (1.0 a 1.2 bar). Caída admisible: < 0.5 psi en 10 min. Concentración de etilenglicol: 50/50 (punto de congelación -37°C / ebullición 108°C a 1 atm).",PROCEDIMIENTO: DIAGNÓSTICO DE FUGA EN SISTEMA DE ENFRIAMIENTO Y PRUEBA DE PRESIÓN DE RADIADOR Y MANGUERAS (DTC P0128),0.8485,35.85,30,3,0,35,en_cola_gemini,
+SIMULACION_POST_029,SIMPOST-029,10,2026-10-03,SIMULACION_POST,EJECUTADO,Al frenar fuerte el vehículo se desvía hacia un lado y una rueda queda caliente.,Discos de freno alabeados o desgastados,"[{""falla"": ""Discos de freno alabeados o desgastados"", ""probabilidad"": 0.562}, {""falla"": ""Fuga hidraulica o aire en el sistema de frenos"", ""probabilidad"": 0.285}, {""falla"": ""Desgaste de pastillas y zapatas de freno"", ""probabilidad"": 0.153}]",Cáliper de freno trabado,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #11)*
+Hipótesis preliminar ML: *Discos de freno alabeados o desgastados* (56%).
+Al ser confianza media (<70%), se contrastará con manuales y pruebas de taller.
+En breve recibirás el resumen; el detalle quedará en el panel.","Codigo de Falla Asociado: Falla Mecánica Pura (Sin Escáner) / Alabeo de Disco de Freno (Runout) / Variación de Espesor del Disco (DTV)
+Modelos Compatibles Frecuentes en Peru: Todas las marcas (Universal)
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 40 minutos
+Sintomas: Pedal de freno tiembla o pulsa al pisarlo a mas de 60 km/h, el timon vibra violentamente al aplicar frenado medio en bajadas de autopista.
+Instrucciones paso a paso:
+1. Inspeccion de espesor con micrometro de exteriores:
+   - Medir el espesor del disco en 8 puntos equidistantes del perimetro a 10 mm del borde exterior.
+   - Espesor minimo (MIN TH): grabado en el borde del disco (ejemplo: MIN TH 22.0 mm). Si el disco tiene 21.8 mm, esta prohibido rectificarlo por riesgo de fatiga termica y rotura.
+   - Variacion de espesor del disco (Disc Thickness Variation - DTV): la diferencia maxima de grosor entre los 8 puntos no debe superar 0.012 mm (12 micras). Un DTV mayor a 0.015 mm genera pulsacion en el pedal aunque el disco no este doblado.
+2. Medicion de alabeo lateral (Runout) con reloj comparador de caratula centesimal:
+   - Fijar la base magnetica del reloj comparador a la maza o mangueta de suspension. Apoyar el palpador a 5 mm del borde exterior del disco de freno.
+   - Ajustar reloj a cero y girar el disco lentamente a mano una vuelta completa (360°).
+   - Alabeo maximo admisible montado en vehiculo: 0.040 mm (40 micras). Si la aguja oscila 0.08 mm a 0.15 mm, el disco esta alabeado por choque termico (lavar el auto con frenos calientes o frenadas prolongadas).
+3. Correccion: verificar primero que la superficie de la maza de rueda no tenga oxido o rebabas (alabeo de maza maximo 0.015 mm). Sustituir discos en pares y cambiar pastillas simultaneamente; apretar tuercas de rueda con torquimetro a 105 Nm en patron cruzado.",PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR),0.562,36.41,30,3,0,36,en_cola_gemini,
+SIMULACION_POST_030,SIMPOST-030,10,2026-10-03,SIMULACION_POST,EJECUTADO,Se oye un golpeteo al pasar pistas maltratadas y la dirección tiene juego.,Cremallera de direccion asistida con holgura o fuga,"[{""falla"": ""Cremallera de direccion asistida con holgura o fuga"", ""probabilidad"": 0.7036}, {""falla"": ""Amortiguadores reventados o bujes de suspension gastados"", ""probabilidad"": 0.193}, {""falla"": ""Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)"", ""probabilidad"": 0.104}]",Rótula de dirección con holgura,igualdad_normalizada_prediccion_principal_vs_referencia,False,"⏳ *Analizando consulta (cola #12)*
+Hipótesis preliminar ML: *Cremallera de direccion asistida con holgura o fuga* (70%).
+En breve recibirás el resumen; el detalle quedará en el panel.","Código de Falla Asociado: DTC C1532 (Falla Mecánica / Acoplamiento Motor EPS) / Ruido Mecánico en Cremallera
+Modelos Compatibles Frecuentes en Perú: Hyundai Accent/i10/Elantra, Kia Rio/Picanto/Cerato, Toyota Yaris, Nissan Versa
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 120 minutos
+Síntomas: Golpeteo seco o chasquido tipo ""taca taca"" metálico al girar el timón en terreno empedrado o al maniobrar para estacionar, juego libre excesivo en el volante, desalineación.
+Instrucciones paso a paso:
+1. Para ruido proveniente de la columna EPS en modelos Hyundai/Kia: desmonte la parte inferior de la columna de dirección EPS bajo el tablero para acceder al servomotor.
+2. Retire los 3 pernos de fijación del servomotor de la columna y extraiga el acople flexible de goma en forma de estrella (Flexible Steering Coupler). Si los dientes de goma están desgastados o pulverizados, instale el nuevo acople de poliuretano reforzado y vuelva a armar el servomotor.
+3. Para holgura en la caja de dirección cremallera asistida (Rack & Pinion): levante el auto, retire las ruedas delanteras y desacople los terminales de dirección de los manguetas.
+4. Desmonte las abrazaderas de la barra estabilizadora y baje el subchasis cuna del motor retirando los pernos principales.
+5. Desmonte la caja cremallera de dirección desacoplando el nudo cardánico de la columna.
+6. Instale la nueva caja cremallera de dirección EPS, torquee pernos de sujeción al subchasis a 90 Nm, oriente los axiales y terminales de dirección.
+7. Arme el conjunto, realice la alineación computarizada de dirección e inicie la calibración del sensor de punto cero de dirección EPS con escáner.",PROCEDIMIENTO: DIAGNÓSTICO Y REEMPLAZO DE CAJA DE DIRECCIÓN CREMALLERA ELECTRÓNICA Y ACOPLE FLEXIBLE (CHILLIDO / JUEGO EN CREMALLERA / DTC C1532),0.7036,35.99,30,3,0,35,en_cola_gemini,

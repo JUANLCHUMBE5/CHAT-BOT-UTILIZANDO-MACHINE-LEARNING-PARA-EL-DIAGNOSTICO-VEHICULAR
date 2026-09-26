@@ -2,6 +2,9 @@ import { useState, useMemo } from 'react';
 import type { Mecanico } from '../types';
 import { apiService } from '../services/api';
 import { getErrorMessage } from '../utils/errors';
+import { calcularVigenciaMecanico } from '../utils/vigenciaMecanico';
+
+export type FiltroEstadoMecanico = 'todos' | 'activos' | 'por_vencer' | 'inactivos_bloqueados';
 
 export interface UseMecanicosAutorizadosProps {
   mecanicos: Mecanico[];
@@ -13,7 +16,7 @@ export const useMecanicosAutorizados = ({
   onRecargar,
 }: UseMecanicosAutorizadosProps) => {
   const [busqueda, setBusqueda] = useState('');
-  const [filtroEstado, setFiltroEstado] = useState<'todos' | 'activos' | 'bloqueados' | 'inactivos'>('activos');
+  const [filtroEstado, setFiltroEstado] = useState<FiltroEstadoMecanico>('activos');
 
   // Feedback notifications
   const [notificacionError, setNotificacionError] = useState<string | null>(null);
@@ -29,26 +32,45 @@ export const useMecanicosAutorizados = ({
   const [confirmRevocarModal, setConfirmRevocarModal] = useState<Mecanico | null>(null);
   const [procesandoRevocacion, setProcesandoRevocacion] = useState(false);
 
-  // Filtrado de mecánicos
+  // Filtrado de mecánicos con vigencia derivada
   const mecanicosFiltrados = useMemo(() => {
     return mecanicos.filter((m) => {
       const cumpleBusqueda =
         !busqueda ||
-        m.nombres.toLowerCase().includes(busqueda.toLowerCase()) ||
-        m.telefono.includes(busqueda);
+        (m.nombres && m.nombres.toLowerCase().includes(busqueda.toLowerCase())) ||
+        (m.telefono && m.telefono.includes(busqueda));
 
       if (!cumpleBusqueda) return false;
 
-      if (filtroEstado === 'activos') return m.activo && !m.bloqueado;
-      if (filtroEstado === 'bloqueados') return m.bloqueado;
-      if (filtroEstado === 'inactivos') return !m.activo && !m.bloqueado;
+      const vigencia = calcularVigenciaMecanico(m);
+
+      if (filtroEstado === 'activos') {
+        return vigencia.estadoVisual === 'activo';
+      }
+      if (filtroEstado === 'por_vencer') {
+        return vigencia.estadoVisual === 'por_vencer';
+      }
+      if (filtroEstado === 'inactivos_bloqueados') {
+        return vigencia.estadoVisual === 'bloqueado' || vigencia.estadoVisual === 'inactivo' || vigencia.estadoVisual === 'vencido';
+      }
       return true;
     });
   }, [mecanicos, busqueda, filtroEstado]);
 
-  const totalActivos = mecanicos.filter((m) => m.activo && !m.bloqueado).length;
-  const totalBloqueados = mecanicos.filter((m) => m.bloqueado).length;
-  const totalInactivos = mecanicos.filter((m) => !m.activo && !m.bloqueado).length;
+  const conteos = useMemo(() => {
+    let activos = 0;
+    let porVencer = 0;
+    let inactivosBloqueados = 0;
+
+    for (const m of mecanicos) {
+      const vigencia = calcularVigenciaMecanico(m);
+      if (vigencia.estadoVisual === 'activo') activos++;
+      else if (vigencia.estadoVisual === 'por_vencer') porVencer++;
+      else inactivosBloqueados++;
+    }
+
+    return { activos, porVencer, inactivosBloqueados };
+  }, [mecanicos]);
 
   const handleToggleBloquear = async () => {
     if (!confirmBloquearModal) return;
@@ -109,9 +131,9 @@ export const useMecanicosAutorizados = ({
     setConfirmRevocarModal,
     procesandoRevocacion,
     mecanicosFiltrados,
-    totalActivos,
-    totalBloqueados,
-    totalInactivos,
+    totalActivos: conteos.activos,
+    totalPorVencer: conteos.porVencer,
+    totalInactivosBloqueados: conteos.inactivosBloqueados,
     handleToggleBloquear,
     handleRevocarAcceso,
   };

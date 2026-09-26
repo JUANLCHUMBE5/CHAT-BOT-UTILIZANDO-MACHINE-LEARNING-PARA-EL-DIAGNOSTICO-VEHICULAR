@@ -12,6 +12,14 @@ from src.core.security import hash_identificador_persistencia
 from src.infrastructure.database.models.diagnostics import Vehiculo
 
 
+def normalizar_placa(placa: str) -> str:
+    """Normaliza una placa antes de calcular su identificador pseudónimo."""
+    normalizada = "".join(caracter for caracter in placa.upper() if caracter.isalnum())
+    if len(normalizada) < 3:
+        raise ValueError("La placa debe contener al menos 3 caracteres alfanuméricos.")
+    return normalizada
+
+
 class VehiculoRepository:
     """Acceso a datos asíncrono para vehículos del taller."""
 
@@ -25,7 +33,7 @@ class VehiculoRepository:
         if not placa_str or placa_str in ("WAPP-01", "REST-API", "SIN-PLACA"):
             return None
         try:
-            placa_hash = hash_identificador_persistencia(placa_str, "placa")
+            placa_hash = hash_identificador_persistencia(normalizar_placa(placa_str), "placa")
         except Exception:
             return None
 
@@ -55,9 +63,9 @@ class VehiculoRepository:
                 return existente
 
             # Extraer los últimos 4 caracteres alfanuméricos de la placa
-            placa_limpia = "".join(c for c in placa_str.upper() if c.isalnum())
+            placa_limpia = normalizar_placa(placa_str)
             ultimos4 = placa_limpia[-4:] if len(placa_limpia) >= 4 else placa_limpia.rjust(4, "0")
-            placa_hash = hash_identificador_persistencia(placa_str, "placa")
+            placa_hash = hash_identificador_persistencia(placa_limpia, "placa")
         else:
             placa_hash = None
             ultimos4 = None

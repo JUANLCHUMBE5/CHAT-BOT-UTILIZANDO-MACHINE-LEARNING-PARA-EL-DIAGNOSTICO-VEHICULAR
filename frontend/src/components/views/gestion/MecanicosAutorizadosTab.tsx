@@ -36,8 +36,8 @@ export const MecanicosAutorizadosTab: React.FC<MecanicosAutorizadosTabProps> = (
     procesandoRevocacion,
     mecanicosFiltrados,
     totalActivos,
-    totalBloqueados,
-    totalInactivos,
+    totalPorVencer,
+    totalInactivosBloqueados,
     handleToggleBloquear,
     handleRevocarAcceso,
   } = useMecanicosAutorizados({ mecanicos, onRecargar });
@@ -131,7 +131,7 @@ export const MecanicosAutorizadosTab: React.FC<MecanicosAutorizadosTabProps> = (
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '4px' }}>
+          <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
             <button
               type="button"
               onClick={() => setFiltroEstado('todos')}
@@ -164,42 +164,38 @@ export const MecanicosAutorizadosTab: React.FC<MecanicosAutorizadosTabProps> = (
             >
               Activos ({totalActivos})
             </button>
-            {totalBloqueados > 0 && (
-              <button
-                type="button"
-                onClick={() => setFiltroEstado('bloqueados')}
-                style={{
-                  padding: '5px 8px',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  borderRadius: '6px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: filtroEstado === 'bloqueados' ? '#dc2626' : 'var(--bg-subtle)',
-                  color: filtroEstado === 'bloqueados' ? '#ffffff' : 'var(--text-secondary)',
-                }}
-              >
-                Bloqueados ({totalBloqueados})
-              </button>
-            )}
-            {totalInactivos > 0 && (
-              <button
-                type="button"
-                onClick={() => setFiltroEstado('inactivos')}
-                style={{
-                  padding: '5px 8px',
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  borderRadius: '6px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  backgroundColor: filtroEstado === 'inactivos' ? '#64748b' : 'var(--bg-subtle)',
-                  color: filtroEstado === 'inactivos' ? '#ffffff' : 'var(--text-secondary)',
-                }}
-              >
-                Inactivos ({totalInactivos})
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setFiltroEstado('por_vencer')}
+              style={{
+                padding: '5px 8px',
+                fontSize: '11px',
+                fontWeight: 600,
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: filtroEstado === 'por_vencer' ? '#d97706' : 'var(--bg-subtle)',
+                color: filtroEstado === 'por_vencer' ? '#ffffff' : 'var(--text-secondary)',
+              }}
+            >
+              Por vencer ({totalPorVencer})
+            </button>
+            <button
+              type="button"
+              onClick={() => setFiltroEstado('inactivos_bloqueados')}
+              style={{
+                padding: '5px 8px',
+                fontSize: '11px',
+                fontWeight: 600,
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: filtroEstado === 'inactivos_bloqueados' ? '#dc2626' : 'var(--bg-subtle)',
+                color: filtroEstado === 'inactivos_bloqueados' ? '#ffffff' : 'var(--text-secondary)',
+              }}
+            >
+              Inactivos/Bloqueados ({totalInactivosBloqueados})
+            </button>
           </div>
         </div>
       </div>

@@ -83,7 +83,7 @@ export const App: React.FC = () => {
   const [solicitudes, setSolicitudes] = useState<SolicitudAcceso[]>([]);
   const [cargandoSolicitudes, setCargandoSolicitudes] = useState(false);
   const [errorSolicitudes, setErrorSolicitudes] = useState<string | null>(null);
-  const [gestionSubTab, setGestionSubTab] = useState<GestionSubTab>('solicitudes');
+  const [gestionSubTab, setGestionSubTab] = useState<GestionSubTab>('diagnosticos');
   const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
@@ -260,7 +260,7 @@ export const App: React.FC = () => {
   };
 
   const handleIrAFallas = () => {
-    setGestionSubTab('historial');
+    setGestionSubTab('diagnosticos');
     navigate('/gestion');
   };
 

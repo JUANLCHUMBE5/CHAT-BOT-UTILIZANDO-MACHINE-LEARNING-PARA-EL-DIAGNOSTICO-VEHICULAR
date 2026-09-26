@@ -8,6 +8,12 @@ from typing import Any, Optional
 
 from src.config import settings
 from src.core.diagnostic_cache import diagnostico_cache
+from src.core.diagnostico.coherencia_evidencia import (
+    bateria_ya_comprobada,
+    documento_compatible,
+    limitar_respuesta,
+    priorizar_evidencia,
+)
 from src.core.diagnostico.models import PrediccionML, ResultadoDiagnostico
 from src.core.intent_classifier import clasificar_intencion_consulta
 from src.core.logger import logger
@@ -526,6 +532,7 @@ def procesar_consulta_texto(
         diagnostico_predictivo, confianza = gestor.modelo_ml.predecir_falla_con_confianza(texto_ml)
         predicciones_ml = [PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza)]
 
+    predicciones_originales = [p.model_copy() for p in predicciones_ml]
     # Especialización técnica: motor de arranque / clac seco
     es_sintoma_arrancador = any(
         p in texto_evaluar.lower()
@@ -650,7 +657,12 @@ def procesar_consulta_texto(
         if ses_chk.estado == "en_proceso" or bool(ses_chk.ultimas_hipotesis_diferenciales):
             ya_aclarado = True
 
-    # Auto-Preguntas Técnicas de Descarte para 100% de Asertividad
+    predicciones_ml, motivo_prioridad = priorizar_evidencia(texto_evaluar, predicciones_ml)
+    if motivo_prioridad:
+        diagnostico_predictivo = predicciones_ml[0].falla
+        confianza = predicciones_ml[0].probabilidad
+
+    # Preguntas de descarte solo cuando falta información discriminante.
     from src.core.diagnostico.auto_interrogador import (
         evaluar_auto_pregunta_descarte,
         formatear_mensaje_auto_pregunta,
@@ -675,6 +687,8 @@ def procesar_consulta_texto(
         and not diagnostico_forzado
         and not ya_aclarado
         and not es_critico_seguridad
+        and not motivo_prioridad
+        and not bateria_ya_comprobada(texto_evaluar)
     ):
         ses_auto = gestor.session_manager.obtener_o_crear_sesion(clave_sesion)
         if ses_auto.estado != "esperando_autopregunta":
@@ -764,6 +778,21 @@ def procesar_consulta_texto(
             origen_decision="COMBUSTIBLE_DUAL",
         )
 
+    # La fusión no debe deshacer la prioridad física ni inventar su confianza.
+    if motivo_prioridad:
+        predicciones_ml, _ = priorizar_evidencia(texto_evaluar, predicciones_originales)
+        diagnostico_predictivo = predicciones_ml[0].falla
+        confianza = predicciones_ml[0].probabilidad
+        resultado_fusion.evidencia_confirmada.append(motivo_prioridad)
+
+    # Si la fusión cambió la hipótesis, el documento anterior ya no es evidencia aplicable.
+    if (
+        diagnostico_predictivo != (meta_rag_dict or {}).get("falla", diagnostico_predictivo)
+        or not documento_compatible(texto_evaluar, titulo_manual, contexto_manual)
+    ):
+        contexto_manual, titulo_manual, similitud_rag = "", "Sin procedimiento compatible verificado", 0.0
+        rag_valido = False
+
     if confianza < 0.10:
         if rag_valido:
             diagnostico_predictivo = f"Hipótesis ML de baja confianza: {diagnostico_predictivo}"
@@ -841,6 +870,9 @@ def procesar_consulta_texto(
         componentes_descartados=resultado_fusion.componentes_descartados,
         datos_faltantes=resultado_fusion.datos_faltantes,
     )
+    respuesta_explicativa, respuesta_limitada = limitar_respuesta(
+        respuesta_explicativa, predicciones_ml, motivo_prioridad, sin_documento=not rag_valido,
+    )
     tiempo_llm_ms = max(0, int((time.perf_counter() - inicio_llm) * 1000))
 
     gestor._registrar_en_tracker(
@@ -882,11 +914,15 @@ def procesar_consulta_texto(
         tiempo_espera_cola=uso_llm.get("tiempo_espera_cola", 0.0),
         sintoma_evaluado=texto_evaluar,
         predicciones_ml=predicciones_ml,
+        predicciones_ml_raw=predicciones_originales,
+        motivo_prioridad=motivo_prioridad,
+        respuesta_limitada=respuesta_limitada,
         tiempo_ml_ms=tiempo_ml_ms,
         tiempo_rag_ms=tiempo_rag_ms,
         tiempo_llm_ms=tiempo_llm_ms,
         tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
     )
 
-    diagnostico_cache.guardar(clave_cache, resultado_final)
+    if resultado_final.modo_diagnostico not in ("en_cola_gemini", "consulta_tecnica_en_cola"):
+        diagnostico_cache.guardar(clave_cache, resultado_final)
     return resultado_final

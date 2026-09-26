@@ -20,6 +20,7 @@ import pytest
 
 from src.config import settings
 from src.core.access_token_store import access_token_store
+from src.core.diagnostic_cache import diagnostico_cache
 from src.core.gemini_queue import gemini_rate_limiter
 from src.core.login_attempt_store import login_attempt_store
 from src.core.refresh_token_store import refresh_token_store
@@ -112,6 +113,7 @@ def reset_rate_limiter():
         if hasattr(limiter, "_storage") and hasattr(limiter._storage, "reset"):
             limiter._storage.reset()
     gemini_rate_limiter.reiniciar()
+    diagnostico_cache.limpiar()
     login_attempt_store.reiniciar_local()
     refresh_token_store.reiniciar_local()
     access_token_store.reiniciar_local()
@@ -128,6 +130,7 @@ def aislar_postgresql_en_pruebas_unitarias(request, monkeypatch):
         "test_webhook_persistence.py",
         "test_cli_registrar_admin.py",
         "test_gemini_rate_limiting.py",
+        "test_gemini_queue_durability.py",
         "test_dashboard_postgresql_integration.py",
         "test_flujo_cliente_mecanico.py",
     }

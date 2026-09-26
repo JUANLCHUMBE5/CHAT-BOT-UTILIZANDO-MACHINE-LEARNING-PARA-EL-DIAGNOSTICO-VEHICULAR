@@ -67,7 +67,9 @@ def test_alembic_tiene_una_sola_revision_head():
     scripts = ScriptDirectory.from_config(config)
 
     assert len(scripts.get_heads()) == 1
-    assert scripts.get_current_head() == "20260912_01"
+    # Las migraciones de soporte PILOT/Ficha 2 extienden la cadena de 20260912_01.
+    # Esta aserción detecta una regresión de revisión, además de ramificaciones.
+    assert scripts.get_current_head() == "20260926_01"
 
 
 def test_hash_persistencia_normaliza_telefono_y_placa():

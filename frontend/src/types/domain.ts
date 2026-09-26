@@ -27,6 +27,14 @@ export interface EtapaProcesamiento {
   detalle?: string;
 }
 
+export interface MensajeConversacion {
+  id: string;
+  direccion: 'entrada' | 'salida' | string;
+  texto?: string;
+  tipo: string;
+  fecha_hora: string;
+}
+
 export interface Diagnostico {
   id: string;
   sintoma_original: string;

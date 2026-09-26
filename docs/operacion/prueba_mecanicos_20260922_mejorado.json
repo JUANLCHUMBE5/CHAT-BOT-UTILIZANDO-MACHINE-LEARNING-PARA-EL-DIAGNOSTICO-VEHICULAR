@@ -1,0 +1,692 @@
+[
+  {
+    "id": 1,
+    "sistema": "Frenos",
+    "esperado": "discos",
+    "texto": "Soy mecánico. El volante vibra solamente al frenar desde 80 km/h. Sin frenar no vibra. Medí alabeo lateral en los discos delanteros fuera de tolerancia. Pastillas parejas.",
+    "criterios": [
+      "disco",
+      "alabe"
+    ],
+    "resultado": {
+      "respuesta_texto": "🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**\n- Hipótesis Principal: Discos de freno alabeados o desgastados (98%).\n- Diagnóstico Diferencial: La vibración exclusiva al frenar descarta llantas desbalanceadas (Top 2, que vibrarían en rangos de velocidad constantes sin pisar el freno) y el desgaste de pastillas (Top 3, que genera fricción metálica continua o sonido). El alabeo provoca pulsación directa por variación de espesor.\n\n📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**\n- Realiza la medición de alabeo lateral montado y variación de espesor (DTV) con reloj comparador. Al tratarse de un vehículo genérico, consulta el manual de taller específico para validar los límites de tolerancia y espesor mínimo (MIN TH) según la motorización antes de cualquier rectificación.\n\n⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**\n- Gravedad Media-Alta por afectación directa al sistema de frenado. Para brindar tiempos estimados y torques precisos, ¿cuál es la marca, modelo, año y motorización exacta del vehículo?",
+      "diagnostico_ml": "Discos de freno alabeados o desgastados",
+      "confianza_ml": 0.9839,
+      "contexto_manual": "Codigo de Falla Asociado: Falla Mecánica Pura (Sin Escáner) / Alabeo de Disco de Freno (Runout) / Variación de Espesor del Disco (DTV)\nModelos Compatibles Frecuentes en Peru: Todas las marcas (Universal)\nGravedad: Media-Alta | Tiempo Estimado de Taller: 40 minutos\nSintomas: Pedal de freno tiembla o pulsa al pisarlo a mas de 60 km/h, el timon vibra violentamente al aplicar frenado medio en bajadas de autopista.\nInstrucciones paso a paso:\n1. Inspeccion de espesor con micrometro de exteriores:\n   - Medir el espesor del disco en 8 puntos equidistantes del perimetro a 10 mm del borde exterior.\n   - Espesor minimo (MIN TH): grabado en el borde del disco (ejemplo: MIN TH 22.0 mm). Si el disco tiene 21.8 mm, esta prohibido rectificarlo por riesgo de fatiga termica y rotura.\n   - Variacion de espesor del disco (Disc Thickness Variation - DTV): la diferencia maxima de grosor entre los 8 puntos no debe superar 0.012 mm (12 micras). Un DTV mayor a 0.015 mm genera pulsacion en el pedal aunque el disco no este doblado.\n2. Medicion de alabeo lateral (Runout) con reloj comparador de caratula centesimal:\n   - Fijar la base magnetica del reloj comparador a la maza o mangueta de suspension. Apoyar el palpador a 5 mm del borde exterior del disco de freno.\n   - Ajustar reloj a cero y girar el disco lentamente a mano una vuelta completa (360°).\n   - Alabeo maximo admisible montado en vehiculo: 0.040 mm (40 micras). Si la aguja oscila 0.08 mm a 0.15 mm, el disco esta alabeado por choque termico (lavar el auto con frenos calientes o frenadas prolongadas).\n3. Correccion: verificar primero que la superficie de la maza de rueda no tenga oxido o rebabas (alabeo de maza maximo 0.015 mm). Sustituir discos en pares y cambiar pastillas simultaneamente; apretar tuercas de rueda con torquimetro a 105 Nm en patron cruzado.",
+      "titulo_manual": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+      "similitud_rag": 0.4628,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1919,
+      "tokens_salida": 264,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "soy mecánico. el volante vibra solamente al frenar desde 80 km/h. sin frenar no vibra. medí alabeo lateral en los discos delanteros fuera de tolerancia. pastillas parejas.",
+      "predicciones_ml": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "probabilidad": 0.9839
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "probabilidad": 0.033
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "probabilidad": 0.017
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Discos de freno alabeados o desgastados",
+          "probabilidad": 0.9839
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "probabilidad": 0.0072
+        },
+        {
+          "falla": "Desgaste de pastillas y zapatas de freno",
+          "probabilidad": 0.0052
+        }
+      ],
+      "motivo_prioridad": "",
+      "respuesta_limitada": false,
+      "tiempo_ml_ms": 32,
+      "tiempo_rag_ms": 4,
+      "tiempo_llm_ms": 1919,
+      "tiempo_total_ms": 1980,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 1.99
+  },
+  {
+    "id": 2,
+    "sistema": "Encendido",
+    "esperado": "bujías/bobinas",
+    "texto": "En el taller tengo un motor a gasolina que tironea y pierde fuerza al subir. Sale P0302. Intercambié la bobina del cilindro 2 al 3 y el fallo cambió a P0303.",
+    "criterios": [
+      "bobina",
+      "bujia",
+      "bujía"
+    ],
+    "resultado": {
+      "respuesta_texto": "🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**\n- Hipótesis Principal: Falla de encendido (misfire) por bujías o bobinas (79%).\n- Diagnóstico Diferencial: La prueba de intercambio realizada por el mecánico confirma que el DTC cambió de P0302 a P0303 al mover la bobina, apuntando directamente a la bobina del cilindro 2 como defectuosa. Se diferencia del Top 2 (falla de inyector) y Top 3 (pérdida de compresión) porque el fallo se trasladó físicamente al cambiar el componente de encendido.\n\n📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**\n- Inspeccione visualmente el capuchón de la bobina sospechosa en busca de perforaciones o trazas de carbón. \n- *Aviso:* El documento RAG es referencial (Kia/Hyundai). Falta verificar la aplicabilidad exacta a la marca y motorización actual.\n\n⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**\n- **Gravedad:** Media-Alta (riesgo de dañar el catalizador si parpadea el Check Engine).\n- **Acción:** Indique marca, modelo, año y motorización exacta del vehículo para confirmar torques y compatibilidad de repuestos antes del montaje definitivo.",
+      "diagnostico_ml": "Falla en bujias o bobinas de encendido (misfire)",
+      "confianza_ml": 0.7998,
+      "contexto_manual": "DEFINICIÓN OFICIAL DEL CÓDIGO (OBD-II):\n• Código P0302 (GENERIC): Cylinder 2 Misfire Detected\n• Código P0303 (GENERIC): Cylinder 3 Misfire Detected\n\nCódigo de Falla Asociado: DTC P0300 (Fallo de Encendido Múltiple) / DTC P0301-P0304 (Misfire Cilindro Específico)\nModelos Compatibles Frecuentes en Perú: Kia Rio 1.4L/1.6L, Kia Soluto, Hyundai Grand i10\nGravedad: Media-Alta | Tiempo Estimado de Taller: 40 minutos\nSíntomas: El motor tiembla en ralentí, tironea al acelerar en 2da o 3ra marcha y la luz Check Engine parpadea indicando daño potencial al catalizador.\nInstrucciones paso a paso:\n1. Conecte el escáner y acceda al menú de diagnóstico para confirmar el cilindro con contador de fallas de encendido elevado (Misfire Counter).\n2. Intercambie la bobina del cilindro afectado a otro cilindro (ejemplo: intercambiar bobina 1 con bobina 2) para verificar si la falla se traslada.\n3. Extraiga la bobina sospechosa: inspeccione el capuchón de goma en busca de perforaciones por chispa perdida (trazas blancas/carbonizadas).\n4. Retire la bujía usando dado de 16mm (5/8\") imantado.\n5. Calibre la holgura de electrodo de la bujía nueva de iridio (gap estándar: 1.0 a 1.1 mm) con calibrador de láminas sin dañar la punta fina de iridio.\n6. Instale la bujía roscando a mano y apriete a un torque de 22 a 25 Nm. Monte la bobina aplicando grasa dieléctrica en la punta del capuchón y ajuste el perno a 9 Nm.",
+      "titulo_manual": "PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE)",
+      "similitud_rag": 0.4284,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1932,
+      "tokens_salida": 303,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "en el taller tengo un motor a gasolina que tironea y pierde fuerza al subir. sale p0302. intercambié la bobina del cilindro 2 al 3 y el fallo cambió a p0303.",
+      "predicciones_ml": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "probabilidad": 0.7998
+        },
+        {
+          "falla": "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)",
+          "probabilidad": 0.13
+        },
+        {
+          "falla": "Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados",
+          "probabilidad": 0.07
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Falla en bujias o bobinas de encendido (misfire)",
+          "probabilidad": 0.7998
+        },
+        {
+          "falla": "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)",
+          "probabilidad": 0.1218
+        },
+        {
+          "falla": "Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados",
+          "probabilidad": 0.075
+        }
+      ],
+      "motivo_prioridad": "",
+      "respuesta_limitada": false,
+      "tiempo_ml_ms": 31,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 1464,
+      "tiempo_total_ms": 1503,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 1.5
+  },
+  {
+    "id": 3,
+    "sistema": "Carga",
+    "esperado": "alternador",
+    "texto": "El cliente dice que se prende la luz de batería andando. Medí 12.1 V con motor encendido y baja al prender luces. La correa está puesta y los bornes están firmes.",
+    "criterios": [
+      "alternador",
+      "carga"
+    ],
+    "resultado": {
+      "respuesta_texto": "🔧 Hipótesis por comprobar:\n1. Alternador defectuoso o placa de diodos quemada\n2. Bateria descargada o bornes sulfatados\n3. Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)\n\nComprueba alimentación, conexiones y caída de tensión antes de sustituir componentes.\n\nPara especificaciones exactas necesito marca, modelo, año y motorización.",
+      "diagnostico_ml": "Alternador defectuoso o placa de diodos quemada",
+      "confianza_ml": 0.7829,
+      "contexto_manual": "Código de Falla Asociado: DTC P0562 (Voltaje del Sistema Bajo) / DTC P0620 (Circuito de Control del Alternador) / Falla de Batería y Carga\nModelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Swift\nGravedad: Alta | Tiempo Estimado de Taller: 60 minutos\nSíntomas: Testigo de batería encendido en el tablero, el alternador no carga y la batería se descarga rápido, pérdida de luces o dificultad para arrancar.\nInstrucciones paso a paso:\n1. Mida el voltaje de la batería en reposo con multímetro (debe registrar 12.4V a 12.7V con motor apagado).\n2. Encienda el motor y mida el voltaje de carga entre bornes a 2000 RPM (debe registrar entre 13.8V y 14.5V). Si marca menos de 13.0V o más de 15.0V, el alternador o regulador de voltaje está defectuoso.\n3. Realice prueba de caída de tensión en el cable positivo (+) del alternador a la batería (máximo 0.2V) y en el circuito de masa (-) (máximo 0.1V).\n4. Verifique la tensión y estado de la faja serpentina de accesorios.\n5. Desmonte el alternador, revise la placa de diodos rectificadores, los carbones/escobillas y el rotor.\n6. Si la batería no retiene carga tras prueba de conductancia con analizador digital, reemplace la batería automotriz y limpie bornes sulfatados.",
+      "titulo_manual": "PROCEDIMIENTO: DIAGNÓSTICO Y REPARACIÓN DE ALTERNADOR, REGULADOR DE VOLTAJE Y BATERÍA (DTC P0562 / P0620 / EL ALTERNADOR NO CARGA Y BATERÍA DESCARGADA)",
+      "similitud_rag": 0.7124,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1788,
+      "tokens_salida": 336,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "el cliente dice que se prende la luz de batería andando. medí 12.1 v con motor encendido y baja al prender luces. la correa está puesta y los bornes están firmes.",
+      "predicciones_ml": [
+        {
+          "falla": "Alternador defectuoso o placa de diodos quemada",
+          "probabilidad": 0.7829
+        },
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "probabilidad": 0.141
+        },
+        {
+          "falla": "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)",
+          "probabilidad": 0.076
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Alternador defectuoso o placa de diodos quemada",
+          "probabilidad": 0.7829
+        },
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "probabilidad": 0.1213
+        },
+        {
+          "falla": "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)",
+          "probabilidad": 0.0948
+        }
+      ],
+      "motivo_prioridad": "",
+      "respuesta_limitada": true,
+      "tiempo_ml_ms": 31,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 3911,
+      "tiempo_total_ms": 3952,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 3.95
+  },
+  {
+    "id": 4,
+    "sistema": "Arranque",
+    "esperado": "batería/bornes",
+    "texto": "Al dar arranque hace varios clics rápidos y las luces se apagan. La batería marca 12 V en reposo y cae a 7 V al intentar arrancar. Con batería de apoyo arranca.",
+    "criterios": [
+      "bateria",
+      "batería",
+      "borne"
+    ],
+    "resultado": {
+      "respuesta_texto": "🔧 Hipótesis por comprobar:\n1. Bateria descargada o bornes sulfatados\n2. Fuga parasita de corriente en reposo (consumo nocturno de bateria)\n3. Alternador defectuoso o placa de diodos quemada\n\nComprueba alimentación, conexiones y caída de tensión antes de sustituir componentes.\n\nPara especificaciones exactas necesito marca, modelo, año y motorización.",
+      "diagnostico_ml": "Bateria descargada o bornes sulfatados",
+      "confianza_ml": 0.6322,
+      "contexto_manual": "",
+      "titulo_manual": "Sin procedimiento compatible verificado",
+      "similitud_rag": 0.0,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1340,
+      "tokens_salida": 295,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "al dar arranque hace varios clics rápidos y las luces se apagan. la batería marca 12 v en reposo y cae a 7 v al intentar arrancar. con batería de apoyo arranca.",
+      "predicciones_ml": [
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "probabilidad": 0.6322
+        },
+        {
+          "falla": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+          "probabilidad": 0.239
+        },
+        {
+          "falla": "Alternador defectuoso o placa de diodos quemada",
+          "probabilidad": 0.129
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "probabilidad": 0.6322
+        },
+        {
+          "falla": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+          "probabilidad": 0.1641
+        },
+        {
+          "falla": "Alternador defectuoso o placa de diodos quemada",
+          "probabilidad": 0.1485
+        }
+      ],
+      "motivo_prioridad": "",
+      "respuesta_limitada": true,
+      "tiempo_ml_ms": 35,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 1764,
+      "tiempo_total_ms": 1807,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 1.81
+  },
+  {
+    "id": 5,
+    "sistema": "Embrague",
+    "esperado": "embrague",
+    "texto": "Caja manual: en cuarta al acelerar las revoluciones suben mucho pero la velocidad no aumenta. En subida empeora y huele a forro quemado. El motor no tironea.",
+    "criterios": [
+      "embrague"
+    ],
+    "resultado": {
+      "respuesta_texto": "🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**\n- Hipótesis Principal: Disco de embrague desgastado o patinando (83%).\n- Diagnóstico Diferencial: El síntoma de RPM elevadas sin incremento de velocidad y olor a forro quemado apunta claramente al embrague. Se diferencia de la falta de aceite en caja (Top 2) porque esta última genera ruidos de zumbido o dureza al engranar marchas, no patinamiento por fricción. La falla en caja automática (Top 3) se descarta por tratarse de una transmisión manual declarada.\n\n📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**\n- Realiza una inspección visual en la ventana inferior de la campana de embrague para descartar contaminación del disco por fugas de aceite de motor o valvulina antes de proceder al desmontaje.\n\n⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**\n- Gravedad alta por pérdida total de tracción en pendientes. *Precaución:* No se publican tiempos ni torques por falta de datos específicos del vehículo. ¿Cuál es la marca, modelo y año exactos del vehículo para verificar las tolerancias del fabricante?",
+      "diagnostico_ml": "Disco de embrague desgastado o patinando",
+      "confianza_ml": 0.8332,
+      "contexto_manual": "Código de Falla Asociado: Falla de Embrague / Disco Desgastado / Patina en Subida / RPM Suben sin Aceleración\nModelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Alto/Celerio\nGravedad: Alta | Tiempo Estimado de Taller: 90 minutos\nSíntomas: Al acelerar en carretera o pendiente pronunciada, las revoluciones del motor aumentan bruscamente (sube el tacómetro) pero el vehículo no incrementa su velocidad; olor penetrante a forro quemado (ferodo recalentado); pedal de embrague con punto de acople excesivamente alto.\nTolerancias y Parámetros Metrológicos OEM:\n- Carrera libre del pedal de embrague: 15 mm a 25 mm.\n- Recorrido total del pedal: 130 mm a 145 mm.\n- Espesor total del disco de embrague nuevo: 7.8 mm a 8.4 mm.\n- Profundidad mínima de la cabeza de remaches respecto a la superficie de fricción: 0.30 mm (límite de descarte; disco nuevo = 1.20 mm).\n- Alabeo máximo permisible del volante de motor: 0.10 mm (medido con reloj comparador centesimal).\n- Alabeo máximo del plato de presión: 0.12 mm.\nInstrucciones paso a paso:\n1. Prueba de calado dinámico en taller (Stall Test):\n   a. Ubicar el vehículo sobre piso horizontal sin obstáculos al frente.\n   b. Accionar el freno de estacionamiento a máxima retención y mantener pisado el freno de servicio.\n   c. Arrancar el motor, pisar el embrague a fondo y engranar 4ta marcha (o 3ra).\n   d. Acelerar el motor progresivamente hasta 2,200 - 2,500 RPM.\n   e. Soltar el pedal de embrague con rapidez controlada.\n   f. Interpretación metrológica: Si el motor se apaga y cala de golpe en menos de 1.5 segundos, el embrague conserva suficiente adherencia mecánica. Si el motor permanece funcionando con el pedal completamente suelto o tarda más de 2 segundos en calarse, el disco de embrague patina críticamente y está cristalizado o desgastado.\n2. Descartar contaminación por aceite: inspeccionar la ventana de inspección inferior de la campana de la caja de cambios buscando restos de aceite de motor (fuga por retén de cigüeñal) o valvulina (fuga por retén de eje piloto).\n3. Inspeccionar el sistema hidráulico: verificar que el bombín esclavo y cilindro maestro retornen libremente y purgar el líquido DOT 4 si hay degradación térmica.\n4. Desmontaje y metrología: si el embrague patina, desmontar la transmisión, medir espesor de remaches con micrómetro de profundidad y comprobar el temple de las lengüetas del diafragma de la prensa.",
+      "titulo_manual": "PROCEDIMIENTO: DIAGNÓSTICO DE PATINAMIENTO DE DISCO DE EMBRAGUE Y PRUEBA DE CALADO EN 4TA MARCHA",
+      "similitud_rag": 0.7369,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 2044,
+      "tokens_salida": 270,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "caja manual: en cuarta al acelerar las revoluciones suben mucho pero la velocidad no aumenta. en subida empeora y huele a forro quemado. el motor no tironea.",
+      "predicciones_ml": [
+        {
+          "falla": "Disco de embrague desgastado o patinando",
+          "probabilidad": 0.8332
+        },
+        {
+          "falla": "Falta o degradacion de aceite de caja de cambios",
+          "probabilidad": 0.108
+        },
+        {
+          "falla": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+          "probabilidad": 0.058
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Disco de embrague desgastado o patinando",
+          "probabilidad": 0.8332
+        },
+        {
+          "falla": "Falta o degradacion de aceite de caja de cambios",
+          "probabilidad": 0.0964
+        },
+        {
+          "falla": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+          "probabilidad": 0.0332
+        }
+      ],
+      "motivo_prioridad": "",
+      "respuesta_limitada": false,
+      "tiempo_ml_ms": 28,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 1510,
+      "tiempo_total_ms": 1543,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 1.54
+  },
+  {
+    "id": 6,
+    "sistema": "Refrigeración",
+    "esperado": "electroventilador",
+    "texto": "Sube la temperatura parado en tráfico, pero en carretera vuelve a normal. Hay refrigerante y no veo fugas. El electroventilador no gira cuando calienta.",
+    "criterios": [
+      "ventilador",
+      "refrigeracion",
+      "refrigeración"
+    ],
+    "resultado": {
+      "respuesta_texto": "🔧 Hipótesis por comprobar:\n1. Falla en termostato o motoventilador de radiador\n2. Fuga en mangueras de refrigerante o radiador picado\n3. Empaque de culata soplado o danado\n\nConfirma la hipótesis mediante una prueba de taller antes de sustituir componentes.\n\nPara especificaciones exactas necesito marca, modelo, año y motorización.",
+      "diagnostico_ml": "Falla en termostato o motoventilador de radiador",
+      "confianza_ml": 0.9525,
+      "contexto_manual": "Codigo de Falla Asociado: DTC P0128 (Temperatura de Refrigerante por Debajo de Rango) / Recalentamiento / Bolsa de Aire en Radiador\nModelos Compatibles Frecuentes en Peru: Toyota Yaris/Corolla, Nissan Versa/Tiida, Hyundai Accent/Tucson, Kia Rio/Sportage, Chevrolet Sail\nGravedad: Alta | Tiempo Estimado de Taller: 50 minutos\nSintomas: Aguja de temperatura oscilante o en tope rojo al exigir en subida, manguera superior de radiador caliente e inferior fría, calefacción de cabina sale fría por bolsas de aire, motoventilador no enciende a tiempo.\nInstrucciones paso a paso:\n1. Con motor frío, retirar la tapa del radiador e instalar un embudo anti-derrames sellado herméticamente para purga de refrigerante.\n2. Extraer el termostato e inspeccionar el estado del sello de jebe perimetral y la válvula de alivio o sangrado (jiggle valve), la cual debe montarse siempre orientada hacia las 12 horas (arriba).\n3. Prueba de banco del termostato: sumergir en recipiente metálico con agua y termómetro industrial. Monitorear temperatura con calentador:\n   - Inicio de apertura: entre 82°C y 88°C según especificación de fabricante grabada en el cuerpo metálico.\n   - Apertura completa: entre 95°C y 100°C con una carrera mínima de elevación del vástago de 8.0 mm a 10.0 mm. Si no abre o abre a destiempo, sustituir por termostato original.\n4. Instalar termostato nuevo aplicando 10 Nm a los pernos de la toma de agua.\n5. Rellenar con refrigerante orgánico OAT/HOAT al 50/50 (no usar agua de grifo para evitar cavitación en bomba y picadura de culata de aluminio).\n6. Encender el motor a 2000 RPM con la calefacción en temperatura máxima y ventilador en baja hasta que el motoventilador cicle dos veces completas, expulsando todo el aire atrapado en el circuito.",
+      "titulo_manual": "PROCEDIMIENTO: DIAGNÓSTICO DE TERMOSTATO Y PURGA ASISTIDA DEL SISTEMA DE REFRIGERACIÓN (DTC P0128 / RECALENTAMIENTO EN SUBIDA)",
+      "similitud_rag": 0.5587,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1872,
+      "tokens_salida": 298,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "sube la temperatura parado en tráfico, pero en carretera vuelve a normal. hay refrigerante y no veo fugas. el electroventilador no gira cuando calienta.",
+      "predicciones_ml": [
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "probabilidad": 0.9525
+        },
+        {
+          "falla": "Fuga en mangueras de refrigerante o radiador picado",
+          "probabilidad": 0.033
+        },
+        {
+          "falla": "Empaque de culata soplado o danado",
+          "probabilidad": 0.017
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "probabilidad": 0.9525
+        },
+        {
+          "falla": "Fuga en mangueras de refrigerante o radiador picado",
+          "probabilidad": 0.0392
+        },
+        {
+          "falla": "Empaque de culata soplado o danado",
+          "probabilidad": 0.0059
+        }
+      ],
+      "motivo_prioridad": "",
+      "respuesta_limitada": true,
+      "tiempo_ml_ms": 28,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 2411,
+      "tiempo_total_ms": 2448,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 2.45
+  },
+  {
+    "id": 7,
+    "sistema": "Suspensión",
+    "esperado": "bujes/rótulas",
+    "texto": "Suena cloc cloc adelante al pasar baches. En pista lisa no suena. En elevador encontré juego en la rótula inferior y goma del buje rota. Al frenar no vibra.",
+    "criterios": [
+      "rotula",
+      "rótula",
+      "buje",
+      "suspension",
+      "suspensión"
+    ],
+    "resultado": {
+      "respuesta_texto": "🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**\n- Hipótesis Principal: Amortiguadores reventados o bujes de suspensión gastados (37%).\n- Diagnóstico Diferencial: La evidencia física en la rótula y buje confirma un origen mecánico directo (\"cloc cloc\" en baches). Aunque el modelo estadístico sugiere llantas desbalanceadas o desalineadas (61%), estas generan vibración constante o deriva, no golpes secos al impactar irregularidades. El rodamiento descartado produciría zumbido continuo. \n\n📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**\n- Realice una prueba de holgura con barra de palanca en la suspensión delantera sobre el elevador para confirmar el juego axial y radial en la rótula y el estado de los bujes. Al no haber documento RAG verificado, consulte el manual OEM para el torque de apriete.\n\n⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**\n- Falla de gravedad moderada por afectación en la estabilidad direccional. \n\n¿Cuál es la marca, modelo, año y motorización exacta del vehículo para verificar los procedimientos específicos del fabricante?",
+      "diagnostico_ml": "Amortiguadores reventados o bujes de suspension gastados",
+      "confianza_ml": 0.3751,
+      "contexto_manual": "",
+      "titulo_manual": "Sin procedimiento compatible verificado",
+      "similitud_rag": 0.0,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1390,
+      "tokens_salida": 271,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "suena cloc cloc adelante al pasar baches. en pista lisa no suena. en elevador encontré juego en la rótula inferior y goma del buje rota. al frenar no vibra.",
+      "predicciones_ml": [
+        {
+          "falla": "Amortiguadores reventados o bujes de suspension gastados",
+          "probabilidad": 0.3751
+        },
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "probabilidad": 0.615
+        },
+        {
+          "falla": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+          "probabilidad": 0.0078
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Llantas desbalanceadas o desalineadas",
+          "probabilidad": 0.615
+        },
+        {
+          "falla": "Amortiguadores reventados o bujes de suspension gastados",
+          "probabilidad": 0.3751
+        },
+        {
+          "falla": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+          "probabilidad": 0.0078
+        }
+      ],
+      "motivo_prioridad": "Hallazgo físico declarado en rótula/buje; priorizado sobre balanceo.",
+      "respuesta_limitada": false,
+      "tiempo_ml_ms": 28,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 2186,
+      "tiempo_total_ms": 2221,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 2.22
+  },
+  {
+    "id": 8,
+    "sistema": "Dirección",
+    "esperado": "homocinética",
+    "texto": "Cuando giro todo el volante y avanzo despacio acelerando suena tac tac tac cerca de la rueda. En línea recta no suena. El guardapolvo de la junta exterior está roto y salió grasa.",
+    "criterios": [
+      "homocinetica",
+      "homocinética",
+      "junta"
+    ],
+    "resultado": {
+      "respuesta_texto": "🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**\n- **Hipótesis Principal (92%):** Juntas homocinéticas o palieres dañados (respaldado por el fuelle roto, pérdida de grasa y el ruido \"tac tac\" al girar y acelerar).\n- **Diagnóstico Diferencial:** Se diferencia de la holgura en la cremallera de dirección (Top 2, 4%) porque esta última genera juego en el volante o golpeteos al pasar baches, y del rodamiento de maza (Top 3, 2%) porque este produce un zumbido constante en línea recta que aumenta con la velocidad, no un clic al virar.\n\n📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**\n- Inspeccione visualmente el palier y verifique manualmente el juego axial y radial de la junta homocinética exterior. \n- *Nota:* Falta verificar el manual OEM para confirmar los torques específicos de la tuerca central de la rueda y componentes de suspensión según la marca y motorización exacta.\n\n⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**\n- Gravedad moderada-alta: evite seguir circulando con la junta sin grasa para prevenir el s<b>b</b>loqueo total del eje. \n\n¿Cuál es la marca, modelo y año exacto del vehículo para consultar las especificaciones OEM de torque?",
+      "diagnostico_ml": "Juntas homocineticas o palieres danados",
+      "confianza_ml": 0.9278,
+      "contexto_manual": "Código de Falla Asociado: Falla de Tracción Delantera / Palier / Junta Homocinética\nModelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Suzuki Swift, Chery, Changan\nGravedad: Alta | Tiempo Estimado de Taller: 75 minutos\nSíntomas: Sonido metálico repetitivo (\"clac clac clac\") en las ruedas delanteras al virar la dirección o dar vueltas en U.\nInstrucciones paso a paso:\n1. Desafloje la tuerca central del eje de la rueda con dado de 30mm o 32mm mientras el auto está apoyado en el piso.\n2. Levante el vehículo, retire la rueda, el cáliper de freno y el terminal de dirección.\n3. Desconecte la rótula de suspensión inferior para desacoplar el mangueta del eje del palier.\n4. Retire las abrazaderas metálicas del cubrepolvo roto y retire la grasa contaminada.\n5. Desmonte la junta homocinética exterior del eje usando un extractor de rodajes o golpeteo controlado con martillo de bronce.\n6. Limpie la canastilla y esferas. Si presenta surcos o picaduras, reemplace la junta completa.\n7. Instale el nuevo fuelle de neopreno, empaque abundante grasa de bisulfuro de molibdeno (grasa negra) y apriete las abrazaderas.",
+      "titulo_manual": "PROCEDIMIENTO: REEMPLAZO DE JUNTA HOMOCINÉTICA Y CUBREPOLVOS DE PALIER (CLAC CLAC AL DOBLAR)",
+      "similitud_rag": 0.2379,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1703,
+      "tokens_salida": 313,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "cuando giro todo el volante y avanzo despacio acelerando suena tac tac tac cerca de la rueda. en línea recta no suena. el guardapolvo de la junta exterior está roto y salió grasa.",
+      "predicciones_ml": [
+        {
+          "falla": "Juntas homocineticas o palieres danados",
+          "probabilidad": 0.9278
+        },
+        {
+          "falla": "Cremallera de direccion asistida con holgura o fuga",
+          "probabilidad": 0.047
+        },
+        {
+          "falla": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+          "probabilidad": 0.025
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Juntas homocineticas o palieres danados",
+          "probabilidad": 0.9278
+        },
+        {
+          "falla": "Cremallera de direccion asistida con holgura o fuga",
+          "probabilidad": 0.0411
+        },
+        {
+          "falla": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+          "probabilidad": 0.0303
+        }
+      ],
+      "motivo_prioridad": "",
+      "respuesta_limitada": false,
+      "tiempo_ml_ms": 29,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 1675,
+      "tiempo_total_ms": 1710,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 1.71
+  },
+  {
+    "id": 9,
+    "sistema": "Climatización",
+    "esperado": "refrigerante/fuga AC",
+    "texto": "El aire acondicionado sopla fuerte pero no enfría. El compresor acopla. Detectamos fuga de refrigerante en una unión y presión baja. La temperatura del motor es normal.",
+    "criterios": [
+      "refrigerante",
+      "fuga",
+      "aire acondicionado"
+    ],
+    "resultado": {
+      "respuesta_texto": "🛠️ **1. Posible Falla Vehicular y Diagnóstico Diferencial**\n- **Hipótesis Principal (97%):** Falla en el compresor o fuga de gas R134a, respaldada por la baja presión y el acople del compresor.\n- **Diferencial:** La Hipótesis Top 2 (fuga en mangueras/radiador) comparte la pérdida de refrigerante, mientras que la Top 3 (falla en termostato/motoventilador) alteraría la temperatura del motor (reportada como normal). El acople del compresor con baja presión apunta directamente a una fuga o ineficiencia interna.\n\n📖 **2. Procedimiento Técnico de Reparación y Pruebas Físicas**\n- Realice una inspección con lámpara UV para rastrear tinte fluorescente en uniones y el sello del compresor. Dado que el documento RAG requiere verificación OEM y faltan datos exactos, consulte el manual del fabricante para las presiones nominales de operación.\n\n⏱️ **3. Tiempo Estimado, Gravedad y Recomendación de Taller**\n- Gravedad Media-Alta. Evite manipular componentes sin confirmar la marca, modelo y año exactos del vehículo para aplicar el procedimiento OEM correcto. \n\n¿Cuál es la marca, modelo, año y cilindrada exacta del vehículo para validar los torques y especificaciones del fabricante?",
+      "diagnostico_ml": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+      "confianza_ml": 0.974,
+      "contexto_manual": "Código de Falla Asociado: DTC B1010 / Falla en compresor de aire acondicionado o fuga de gas R134a\nModelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, DFSK Glory\nGravedad: Media-Alta | Tiempo Estimado de Taller: 120 minutos\nSíntomas Principales:\n- Sale aire por las rejillas de ventilación pero casi no enfría o sale a temperatura ambiente.\n- En movimiento o carretera enfría un poco más, pero al detenerse en tráfico o semáforo vuelve a calentar.\n- Blower / ventilador interior sopla con normalidad pero sin aire frío.\n- Pérdida progresiva de refrigerante o condensador sucio por insectos y lodo.\n\nDiagnóstico Diferencial Técnico de Taller:\n1. Diferenciar falta de flujo de aire en condensador vs falta de gas refrigerante vs fallo de acople del compresor.\n2. Si el aire enfría en movimiento pero calienta al detenerse, el flujo de aire exterior forzado está compensando la falta de disipación térmica del motoventilador frontal o un panal tapado de suciedad.\n3. No aplicar presiones genéricas universales; las presiones de alta y baja dependen de la temperatura ambiente y de la ficha técnica OEM del fabricante (requires_oem_spec = true).\n\nSecuencia de Pruebas Cualitativas Paso a Paso:\nPaso 1: Con motor en marcha y A/C encendido al máximo, comprobar visualmente si el motoventilador del condensador enciende inmediatamente. Si no gira, revisar fusible de A/C fan, relé de alta/baja velocidad y señal del presostato.\nPaso 2: Inspección física de panal: Revisar el espacio entre el radiador del motor y el condensador. Retirar hojas, tierra o doblamiento de aletas que impidan el intercambio de calor.\nPaso 3: Verificar acople físico del clutch electromagnético del compresor o desplazamiento de carrera de la válvula reguladora PWM.\nPaso 4: Inspección de fugas de gas: Conectar equipo con lámpara UV para rastrear tinte fluorescente en uniones del condensador, tuberías y sello frontal del eje del compresor.\nPaso 5: Evacuación y recarga: Efectuar vacío de mínimo 30 minutos a 29 inHg y recargar la masa exacta de R134a/R1234yf especificada en la placa del fabricante bajo el capó.",
+      "titulo_manual": "PROCEDIMIENTO: DIAGNÓSTICO DE CONDENSADOR Y FUGAS EN EL RADIADOR DE CALEFACCIÓN / EVAPORADOR (DTC B1010 / REFRIGERANTE EN ALFOMBRA / LÍNEA AC SECA)",
+      "similitud_rag": 0.7936,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1976,
+      "tokens_salida": 299,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "el aire acondicionado sopla fuerte pero no enfría. el compresor acopla. detectamos fuga de refrigerante en una unión y presión baja. la temperatura del motor es normal.",
+      "predicciones_ml": [
+        {
+          "falla": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+          "probabilidad": 0.974
+        },
+        {
+          "falla": "Fuga en mangueras de refrigerante o radiador picado",
+          "probabilidad": 0.033
+        },
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "probabilidad": 0.017
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+          "probabilidad": 0.974
+        },
+        {
+          "falla": "Fuga en mangueras de refrigerante o radiador picado",
+          "probabilidad": 0.0186
+        },
+        {
+          "falla": "Falla en termostato o motoventilador de radiador",
+          "probabilidad": 0.0069
+        }
+      ],
+      "motivo_prioridad": "",
+      "respuesta_limitada": false,
+      "tiempo_ml_ms": 28,
+      "tiempo_rag_ms": 3,
+      "tiempo_llm_ms": 1644,
+      "tiempo_total_ms": 1678,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 1.68
+  },
+  {
+    "id": 10,
+    "sistema": "Transmisión",
+    "esperado": "transmisión automática",
+    "texto": "Carro automático: en D entra normal. En R demora varios segundos, debo acelerar un poco y entra con golpe. Hacia adelante cambia normal. Sin luces en tablero. No he revisado nada.",
+    "criterios": [
+      "transmision",
+      "transmisión",
+      "caja",
+      "atf",
+      "solenoide"
+    ],
+    "resultado": {
+      "respuesta_texto": "🔧 Hipótesis por comprobar:\n1. Falta o degradacion de aceite de caja de cambios\n2. Cuerpo de aceleracion o valvula IAC sucia\n3. Bateria descargada o bornes sulfatados\n\nComprueba el acoplamiento y el estado del fluido según el procedimiento del fabricante; no fuerces la marcha.\nQueja de acoplamiento de transmisión; componente exacto pendiente de comprobación.\nPara especificaciones exactas necesito marca, modelo, año y motorización.",
+      "diagnostico_ml": "Falta o degradacion de aceite de caja de cambios",
+      "confianza_ml": 0.2558,
+      "contexto_manual": "Codigo de Falla Asociado: TRANSMISION_002 (Rodajes Gastados) / TRANSMISION_003 (Degradacion de Valvulina)\nModelos Compatibles Frecuentes en Peru: Toyota Yaris/Hilux, Hyundai Accent/H1, Kia Rio, Nissan Versa/NP300, Suzuki Swift, Changan\nGravedad: Alta | Tiempo Estimado de Taller: 120 minutos\nSintomas: Zumbido continuo tipo rodamiento que aumenta con la velocidad del vehiculo pero no cambia al girar el timon, dificultad para engranar marchas o presencia de limallas metalicas en el tapon magnetico de drenaje.\nInstrucciones paso a paso:\n1. Levantar el vehiculo en elevador y retirar el tapon de drenaje de la caja de cambios/diferencial.\n2. Inspeccionar la valvulina drenada: verificar viscosidad, color y presencia de viruta en el iman del tapon de vaciado.\n3. Si el aceite esta negro o con agua, realizar lavado interno de la carcasa y rellenar con aceite sintetico para engranajes segun especificacion de fabricante (GL-4 75W-90 para cajas sincronizadas de bronce; GL-5 80W-90 o 85W-140 para diferenciales de corona y piñon).\n4. Si el zumbido persiste con aceite nuevo: desacoplar la caja de cambios, abrir la carcasa e inspeccionar los rodamientos conicos del eje primario, secundario y pistas de la corona del diferencial.\n5. Extraer los rodamientos picados con extractor de garras y prensa hidraulica, montar rodamientos nuevos y calibrar la precarga con lainas de ajuste (shim measurement).\n6. Sellar carcasas con formador de juntas RTV anaerobico resistente a hidrocarburos y verificar el engrane suave de todas las marchas.",
+      "titulo_manual": "PROCEDIMIENTO: SERVICIO A CAJA DE CAMBIOS MECANICA Y RODAJES DE DIFERENCIAL (TRANSMISION_002 / TRANSMISION_003)",
+      "similitud_rag": 0.2268,
+      "requiere_revision_humana": true,
+      "estado_sesion": "completado",
+      "modo_diagnostico": "completo_ml_rag_llm",
+      "llm_usado": true,
+      "llm_modelo": "gemini-3.5-flash-lite",
+      "tokens_entrada": 1818,
+      "tokens_salida": 357,
+      "posicion_cola": 0,
+      "tiempo_espera_cola": 0.0,
+      "solicitud_id": null,
+      "sintoma_evaluado": "carro automático: en d entra normal. en r demora varios segundos, debo acelerar un poco y entra con golpe. hacia adelante cambia normal. sin luces en tablero. no he revisado nada.",
+      "predicciones_ml": [
+        {
+          "falla": "Falta o degradacion de aceite de caja de cambios",
+          "probabilidad": 0.2558
+        },
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "probabilidad": 0.4198
+        },
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "probabilidad": 0.1058
+        }
+      ],
+      "predicciones_ml_raw": [
+        {
+          "falla": "Cuerpo de aceleracion o valvula IAC sucia",
+          "probabilidad": 0.4198
+        },
+        {
+          "falla": "Falta o degradacion de aceite de caja de cambios",
+          "probabilidad": 0.2558
+        },
+        {
+          "falla": "Bateria descargada o bornes sulfatados",
+          "probabilidad": 0.1058
+        }
+      ],
+      "motivo_prioridad": "Queja de acoplamiento de transmisión; componente exacto pendiente de comprobación.",
+      "respuesta_limitada": true,
+      "tiempo_ml_ms": 28,
+      "tiempo_rag_ms": 2,
+      "tiempo_llm_ms": 2235,
+      "tiempo_total_ms": 2270,
+      "desde_cache": false,
+      "tipo_consulta": "diagnostico"
+    },
+    "familia_top1": true,
+    "familia_top3": true,
+    "segundos": 2.27
+  }
+]

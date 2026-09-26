@@ -42,6 +42,16 @@ CTX.check_hostname = False
 CTX.verify_mode = ssl.CERT_NONE
 
 
+def obtener_credenciales_indecopi() -> tuple[str, str]:
+    username = os.getenv("INDECOPI_API_USERNAME", "").strip()
+    password = os.getenv("INDECOPI_API_PASSWORD", "").strip()
+    if not username or not password:
+        raise RuntimeError(
+            "Configure INDECOPI_API_USERNAME e INDECOPI_API_PASSWORD en el entorno antes de descargar INDECOPI."
+        )
+    return username, password
+
+
 def sha256_file(filepath: Path) -> str:
     h = hashlib.sha256()
     with open(filepath, "rb") as f:
@@ -85,11 +95,12 @@ def extraer_indecopi() -> Dict[str, Any]:
 
     # 1. Obtener Token OAuth2
     token_url = "https://apiconnect.indecopi.gob.pe/auth/realms/RLM-Indecopi-Produccion/protocol/openid-connect/token"
+    username, password = obtener_credenciales_indecopi()
     auth_data = {
         "grant_type": "password",
         "client_id": "CLI_appDPCAlertasConsumoExt",
-        "username": "usr_appdpcalertasconsumoext",
-        "password": "iN@%26",
+        "username": username,
+        "password": password,
         "scope": "openid"
     }
     print("  [1/3] Solicitando token de autenticación a Keycloak INDECOPI...")

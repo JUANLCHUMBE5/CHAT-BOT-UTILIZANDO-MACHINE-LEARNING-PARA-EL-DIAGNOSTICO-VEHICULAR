@@ -34,7 +34,7 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     environment:
-      ENVIRONMENT: development
+      ENVIRONMENT: ${ENVIRONMENT:-development}
       DATABASE_ENABLED: "true"
       DATABASE_REQUIRED: "true"
       POSTGRES_HOST: postgres
@@ -67,7 +67,7 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     environment:
-      ENVIRONMENT: development
+      ENVIRONMENT: ${ENVIRONMENT:-development}
       DATABASE_ENABLED: "true"
       DATABASE_REQUIRED: "true"
       POSTGRES_HOST: postgres

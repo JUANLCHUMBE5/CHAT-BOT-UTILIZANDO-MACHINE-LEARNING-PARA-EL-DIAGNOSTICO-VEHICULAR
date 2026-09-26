@@ -5,7 +5,7 @@ sin memorizar códigos ni introducir regresiones en casos sin DTC ni en otros si
 """
 
 import pytest
-from src.core.diagnostico.politica_fusion import PoliticaFusionDiagnostica
+
 from src.core.diagnostico.taxonomia_sistemas import obtener_macro_sistema
 from src.core.gestor_diagnostico import GestorDiagnostico
 

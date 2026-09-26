@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import date, datetime
+from decimal import Decimal
 from typing import Any
 
 from sqlalchemy import func, or_, select
@@ -216,14 +217,14 @@ class ValidacionTallerRepository:
         vehiculo_kilometraje: int | None,
         vehiculo_combustible: str | None,
         vehiculo_transmision: str | None,
-        falla_real: str,
+        falla_real: str | None,
         chatbot_prediccion: str,
         sistema_afectado_probable: str | None,
         campos_completos: int,
         cantidad_campos_completos: int,
         detalles_campos: dict[str, Any],
-        tiempo_diagnostico_minutos: int,
-        prediccion_correcta: int,
+        tiempo_diagnostico_minutos: int | None,
+        prediccion_correcta: int | None,
         metodo_confirmacion: str | None,
         evidencia_ref: str | None,
         estado_registro: str = "borrador",

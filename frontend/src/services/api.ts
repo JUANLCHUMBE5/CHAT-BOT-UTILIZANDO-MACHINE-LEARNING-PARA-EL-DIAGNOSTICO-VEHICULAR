@@ -22,7 +22,7 @@ import {
 } from './api/client';
 
 import { login, cambiarPassword, logout } from './api/authApi';
-import { getDiagnosticos, getResumenMetricas, getMetricasColas } from './api/diagnosticosApi';
+import { getDiagnosticos, getResumenMetricas, getMetricasColas, getConversacionDiagnostico } from './api/diagnosticosApi';
 import {
   getMecanicos,
   registrarMecanico,
@@ -41,6 +41,8 @@ import {
   getCasosValidacion,
   getMetricasValidacion,
   crearCasoValidacion,
+  crearBorradorPosttest,
+  confirmarPosttest,
   getExportarTrackerCsvUrl,
   descargarValidacionCsv,
   getExportarFichasAnexo2CsvUrl,
@@ -151,6 +153,10 @@ export class ApiService {
     return getDiagnosticos(params);
   }
 
+  getConversacionDiagnostico(diagnosticoId: string): Promise<import('../types').MensajeConversacion[]> {
+    return getConversacionDiagnostico(diagnosticoId);
+  }
+
   getClientes(busqueda?: string): Promise<Cliente[]> {
     return getClientes(busqueda);
   }
@@ -206,6 +212,14 @@ export class ApiService {
     return crearCasoValidacion(dto);
   }
 
+  crearBorradorPosttest(diagnosticoId: string): Promise<CasoValidacionDTO> {
+    return crearBorradorPosttest(diagnosticoId);
+  }
+
+  confirmarPosttest(casoId: string, datos: { falla_real: string; tiempo_diagnostico_minutos: number; prediccion_correcta: 0 | 1; metodo_confirmacion: string; evidencia_ref?: string }): Promise<CasoValidacionDTO> {
+    return confirmarPosttest(casoId, datos);
+  }
+
   getExportarTrackerCsvUrl(): string {
     return getExportarTrackerCsvUrl();
   }
@@ -237,6 +251,7 @@ export {
   getResumenMetricas,
   getMetricasColas,
   getDiagnosticos,
+  getConversacionDiagnostico,
   getMecanicos,
   registrarMecanico,
   actualizarMecanico,

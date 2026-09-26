@@ -1,0 +1,211 @@
+﻿[
+  {
+    "caso": "SIMULACION_POST_V2_011",
+    "placa": "SIMPOSTV2-011",
+    "solicitud_id": "8e8b1712-9023-4c22-a294-d5c2bcfc91fc",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_012",
+    "placa": "SIMPOSTV2-012",
+    "solicitud_id": "3c6ad5d6-a7c4-45ac-8817-9f2e524b0be0",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_013",
+    "placa": "SIMPOSTV2-013",
+    "solicitud_id": "b3bfcab1-8d18-4ffe-bdee-cd0efbc5f2f7",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_014",
+    "placa": "SIMPOSTV2-014",
+    "solicitud_id": "80f67086-871b-4d7d-8c60-883d9e353054",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_015",
+    "placa": "SIMPOSTV2-015",
+    "solicitud_id": "16921f94-6084-4517-be2b-ce34c5829901",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_016",
+    "placa": "SIMPOSTV2-016",
+    "solicitud_id": "9b56e813-8764-4c06-8a0b-e1c0d9984856",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_018",
+    "placa": "SIMPOSTV2-018",
+    "solicitud_id": "4327d3ed-0de0-4d3f-9413-b8c6fd108861",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_019",
+    "placa": "SIMPOSTV2-019",
+    "solicitud_id": "77ac8bf9-9658-4058-bccc-510efee06dbb",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_020",
+    "placa": "SIMPOSTV2-020",
+    "solicitud_id": "8d5d960e-9726-457e-bb09-4567c21d843b",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_021",
+    "placa": "SIMPOSTV2-021",
+    "solicitud_id": "6d05a673-135b-46ab-8c2e-c4f1878b1174",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_022",
+    "placa": "SIMPOSTV2-022",
+    "solicitud_id": "169fc48c-9136-443d-b544-b9e2adccfd5c",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_023",
+    "placa": "SIMPOSTV2-023",
+    "solicitud_id": "1b2f8217-de04-400a-9cbe-c0cddb79c2b9",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_024",
+    "placa": "SIMPOSTV2-024",
+    "solicitud_id": "e82229f9-4cbd-4933-9951-7280aae2293d",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_025",
+    "placa": "SIMPOSTV2-025",
+    "solicitud_id": "7afb19cb-1e97-4360-b1d3-e6b00cdb9907",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_026",
+    "placa": "SIMPOSTV2-026",
+    "solicitud_id": "6b52433e-ba40-4916-adaa-e0ceda60703a",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_027",
+    "placa": "SIMPOSTV2-027",
+    "solicitud_id": "4ccae989-3d62-46f9-9e85-6b0570801363",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_028",
+    "placa": "SIMPOSTV2-028",
+    "solicitud_id": "572bd676-28f5-4717-97f8-925f43002097",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_029",
+    "placa": "SIMPOSTV2-029",
+    "solicitud_id": "16478046-eb87-4cf0-978f-f4b4baa954c7",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  },
+  {
+    "caso": "SIMULACION_POST_V2_030",
+    "placa": "SIMPOSTV2-030",
+    "solicitud_id": "01802f1b-8137-4adb-94c7-f71202f34708",
+    "en_trabajos_gemini": false,
+    "estado_trabajo": null,
+    "diagnostico_id": null,
+    "conversacion_id": null,
+    "proveedor": null,
+    "error_ultimo": null
+  }
+]

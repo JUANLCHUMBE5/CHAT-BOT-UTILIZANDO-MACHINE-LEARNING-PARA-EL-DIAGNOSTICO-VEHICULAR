@@ -20,13 +20,17 @@ from src.core.gestor_diagnostico import ResultadoDiagnostico as DTOInternal
 from src.core.logger import logger
 from src.core.security import anonimizar_identificador
 from src.infrastructure.database.connection import database_configurada, obtener_engine
+from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
+from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
 from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
 from src.infrastructure.database.repositories.trabajo_sistema_repository import TrabajoSistemaRepository
+from src.infrastructure.database.repositories.vehiculo_repository import VehiculoRepository, normalizar_placa
 from src.interfaces.api.v1.dtos.diagnosticos import (
     ActualizarEstadoDTO,
     EtapaProcesamientoDTO,
     ItemDiagnosticoDTO,
+    MensajeConversacionDTO,
     PrediccionMLDTO,
 )
 from src.interfaces.api.v1.schemas import ConsultaDiagnostico, ResultadoDiagnostico
@@ -76,6 +80,8 @@ async def analizar_sintoma_asincrono(
     consulta: ConsultaDiagnostico,
     token_payload: dict = Depends(exigir_creacion_diagnosticos),
 ):
+    if not consulta.placa:
+        raise HTTPException(status_code=400, detail="La placa es obligatoria antes de iniciar un diagnostico.")
     if not database_configurada():
         raise HTTPException(status_code=503, detail="El procesamiento asíncrono requiere PostgreSQL.")
     if not consulta.sintoma.strip():
@@ -137,13 +143,16 @@ async def analizar_sintoma(
     token_payload: dict = Depends(exigir_creacion_diagnosticos),
     gestor: GestorDiagnostico = Depends(obtener_gestor_diagnostico),
 ):
+    if not consulta.placa:
+        raise HTTPException(status_code=400, detail="La placa es obligatoria antes de iniciar un diagnostico.")
     """Endpoint seguro con Autenticación JWT para analizar síntomas vehiculares."""
     if not consulta.sintoma.strip():
         raise HTTPException(status_code=400, detail="El síntoma no puede estar vacío.")
 
     t_inicio = time.time()
     try:
-        placa_anonima = anonimizar_identificador(consulta.placa or "REST-API")
+        placa_normalizada = normalizar_placa(consulta.placa)
+        placa_anonima = anonimizar_identificador(placa_normalizada)
         logger.info(f"Procesando petición HTTP REST autenticada para Placa: {placa_anonima}")
 
         marca_modelo = f"{consulta.marca or ''} {consulta.modelo or ''}".strip()
@@ -152,20 +161,80 @@ async def analizar_sintoma(
         if settings.gemini_api_key and database_configurada():
             slot_gemini, _ = await gemini_rate_limiter.intentar_adquirir_slot_db()
 
+        taller_id = uuid.UUID(token_payload["taller_id"])
+        mecanico_id = uuid.UUID(token_payload["usuario_id"])
+
         dto_resultado: DTOInternal = await run_in_threadpool(
             gestor.procesar_consulta_texto,
             consulta.sintoma,
-            placa=consulta.placa or "REST-API",
+            placa=placa_normalizada,
             marca_modelo=marca_modelo,
             session_id=consulta.session_id,
             proveedor="api",
             slot_gemini_preconcedido=slot_gemini,
+            diferir_encolado_persistente=True,
+            taller_id=str(taller_id),
+            usuario_id=str(mecanico_id),
         )
         await gemini_rate_limiter.persistir_estado_local_db()
 
         t_final = time.time()
         elapsed_ms = (t_final - t_inicio) * 1000
         confianza_pct = round(dto_resultado.confianza_ml * 100, 2)
+
+        # REST debe dejar la misma trazabilidad persistida que WhatsApp.
+        diagnostico_id = None
+        if database_configurada():
+            async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+                async with session.begin():
+                    conv_repo = ConversacionRepository(session)
+                    conversacion = await conv_repo.obtener_o_crear_activa(
+                        taller_id=taller_id, usuario_id=mecanico_id, canal="api"
+                    )
+                    vehiculo = await VehiculoRepository(session).obtener_o_crear(
+                        taller_id=taller_id, registrado_por_id=mecanico_id,
+                        placa_str=placa_normalizada, marca=consulta.marca or "Generico",
+                        modelo=consulta.modelo or "Generico", anio=consulta.anio,
+                    )
+                    repo = DiagnosticoRepository(session)
+                    diag = await repo.crear_diagnostico(
+                        taller_id=taller_id, mecanico_id=mecanico_id, vehiculo_id=vehiculo.id,
+                        conversacion_id=conversacion.id,
+                        sintoma_original=consulta.sintoma, falla_predicha=dto_resultado.diagnostico_ml,
+                        confianza=dto_resultado.confianza_ml, similitud_rag=dto_resultado.similitud_rag,
+                        fuente="hibrido", modo_diagnostico=dto_resultado.modo_diagnostico,
+                        duracion_ms=round(elapsed_ms), tiempo_inferencia_ml_ms=dto_resultado.tiempo_ml_ms,
+                        version_modelo_ml=settings.model_version,
+                        trazabilidad={"origen": "REST", "tiempo_total_ms": round(elapsed_ms)},
+                    )
+                    for orden, prediccion in enumerate(dto_resultado.predicciones_ml[:3], start=1):
+                        await repo.agregar_hipotesis(
+                            diag.id, orden, prediccion.falla, prediccion.probabilidad
+                        )
+                    if dto_resultado.modo_diagnostico == "en_cola_gemini" and dto_resultado.solicitud_id:
+                        await gemini_rate_limiter.persistir_solicitud_en_sesion(
+                            session,
+                            solicitud_id=dto_resultado.solicitud_id,
+                            sintoma=dto_resultado.sintoma_evaluado or consulta.sintoma,
+                            diagnostico_ml=dto_resultado.diagnostico_ml,
+                            confianza_ml=dto_resultado.confianza_ml,
+                            contexto_manual=dto_resultado.contexto_manual,
+                            titulo_manual=dto_resultado.titulo_manual,
+                            requiere_revision_humana=dto_resultado.requiere_revision_humana,
+                            diagnostico_id=str(diag.id),
+                            conversacion_id=str(conversacion.id),
+                            proveedor="api",
+                            taller_id=str(taller_id),
+                            usuario_id=str(mecanico_id),
+                        )
+                    diagnostico_id = str(diag.id)
+
+        modo_final = dto_resultado.modo_diagnostico
+        solicitud_id_final = dto_resultado.solicitud_id
+        if modo_final == "en_cola_gemini" and not diagnostico_id:
+            logger.error("[REST Diagnostico] modo en_cola_gemini sin persistencia; degradando a respuesta ML+RAG")
+            modo_final = "diagnostico_degradado_ml_rag"
+            solicitud_id_final = None
 
         return ResultadoDiagnostico(
             sintoma=consulta.sintoma,
@@ -176,6 +245,9 @@ async def analizar_sintoma(
             procedimiento_tecnico=dto_resultado.contexto_manual,
             respuesta_explicativa=dto_resultado.respuesta_texto,
             tiempo_respuesta_ms=round(elapsed_ms, 2),
+            modo_diagnostico=modo_final,
+            solicitud_id=solicitud_id_final,
+            diagnostico_id=diagnostico_id,
         )
     except Exception as e:
         logger.error(f"Error al procesar diagnóstico en API REST: {e}")
@@ -350,12 +422,42 @@ async def consultar_historial(
                         llm_modelo=gemini.get("modelo"),
                         tokens_entrada=int(gemini.get("tokens_entrada", 0)),
                         tokens_salida=int(gemini.get("tokens_salida", 0)),
+                        conversacion_id=str(d.conversacion_id) if d.conversacion_id else None,
                         desde_cache=bool(traza.get("desde_cache", False)),
                     )
                 )
             return res_items
 
     raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+
+
+@router.get("/vehiculos/{placa}/historial", summary="Historial exacto por placa")
+async def consultar_historial_por_placa(
+    placa: str,
+    token_payload: dict = Depends(exigir_lectura_diagnosticos),
+):
+    """Busca por HMAC normalizado, sin devolver ni persistir la placa completa."""
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+    try:
+        placa_normalizada = normalizar_placa(placa)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    taller_id = uuid.UUID(token_payload["taller_id"])
+    async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+        vehiculo = await VehiculoRepository(session).buscar_por_placa(taller_id, placa_normalizada)
+        if vehiculo is None:
+            return {"placa": "no_encontrada", "diagnosticos": []}
+        diagnosticos = await DiagnosticoRepository(session).listar_por_vehiculo(taller_id, vehiculo.id)
+        return {
+            "placa": f"***-{vehiculo.placa_ultimos4}", "vehiculo_id": str(vehiculo.id),
+            "diagnosticos": [
+                {"id": str(diag.id), "fecha": diag.creado_en.isoformat(), "sintoma": diag.sintoma_original,
+                 "prediccion": diag.falla_predicha, "estado": diag.estado, "tipo_registro": diag.tipo_registro,
+                 "duracion_ms": diag.duracion_ms}
+                for diag in diagnosticos
+            ],
+        }
 
 
 @router.patch("/{diagnostico_id}/confirmar", summary="Confirmar o modificar estado de diagnóstico")
@@ -394,3 +496,48 @@ async def confirmar_diagnostico(
             return {"mensaje": f"Diagnóstico {diagnostico_id} actualizado a {dto.nuevo_estado} en PostgreSQL."}
 
     raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+
+
+@router.get(
+    "/{diagnostico_id}/conversacion",
+    response_model=List[MensajeConversacionDTO],
+    summary="Obtener trazabilidad cronológica de mensajes de la conversación del diagnóstico",
+)
+async def obtener_conversacion_diagnostico(
+    diagnostico_id: str,
+    token_payload: dict = Depends(exigir_lectura_diagnosticos),
+):
+    """Retorna los mensajes cronológicos reales asociados a la conversación de un diagnóstico."""
+    try:
+        diag_uuid = uuid.UUID(diagnostico_id)
+    except ValueError:
+        raise HTTPException(status_code=400, detail="ID de diagnóstico inválido.")
+
+    taller_id_str = token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001")
+    taller_uuid = uuid.UUID(taller_id_str)
+
+    if not database_configurada():
+        raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
+
+    engine = obtener_engine()
+    async with AsyncSession(engine, expire_on_commit=False) as session:
+        diag_repo = DiagnosticoRepository(session)
+        diag = await diag_repo.obtener_por_id(diag_uuid)
+        if not diag or diag.taller_id != taller_uuid:
+            raise HTTPException(status_code=404, detail="Diagnóstico no encontrado en este taller.")
+
+        if not diag.conversacion_id:
+            return []
+
+        msg_repo = MensajeRepository(session)
+        mensajes = await msg_repo.listar_por_conversacion(diag.conversacion_id, limite=50)
+        return [
+            MensajeConversacionDTO(
+                id=str(m.id),
+                direccion=m.direccion,
+                texto=m.texto,
+                tipo=m.tipo,
+                fecha_hora=m.ocurrido_en.strftime("%Y-%m-%d %H:%M") if m.ocurrido_en else "Reciente",
+            )
+            for m in mensajes
+        ]

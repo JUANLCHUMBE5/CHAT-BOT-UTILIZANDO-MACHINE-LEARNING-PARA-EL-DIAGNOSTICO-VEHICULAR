@@ -1,6 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { CheckCheck, MessageSquare, Bot } from 'lucide-react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Bot, CheckCheck, MessageSquare, RefreshCw, User } from 'lucide-react';
 import type { Diagnostico } from '../../../../types';
+import type { MensajeConversacion } from '../../../../types/domain';
+import { apiService } from '../../../../services/api';
 
 interface DiagnosticoChatWhatsAppProps {
   diagnostico: Diagnostico;
@@ -9,10 +11,37 @@ interface DiagnosticoChatWhatsAppProps {
 export const DiagnosticoChatWhatsApp: React.FC<DiagnosticoChatWhatsAppProps> = ({
   diagnostico,
 }) => {
+  const [mensajes, setMensajes] = useState<MensajeConversacion[]>([]);
+  const [cargando, setCargando] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const chatBottomRef = useRef<HTMLDivElement>(null);
 
+  const cargarConversacion = useCallback(async () => {
+    if (!diagnostico.id) return;
+    setCargando(true);
+    setError(null);
+    try {
+      const data = await apiService.getConversacionDiagnostico(diagnostico.id);
+      setMensajes(data);
+    } catch {
+      setError('No se pudo cargar el historial de mensajes de la conversación.');
+    } finally {
+      setCargando(false);
+    }
+  }, [diagnostico.id]);
+
+  useEffect(() => {
+    void cargarConversacion();
+  }, [cargarConversacion]);
+
+  useEffect(() => {
+    if (chatBottomRef.current) {
+      chatBottomRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [mensajes]);
+
   const formatearHora = (fechaIso?: string) => {
-    if (!fechaIso) return 'Reciente';
+    if (!fechaIso) return '';
     try {
       return new Date(fechaIso).toLocaleTimeString('es-PE', {
         hour: '2-digit',
@@ -20,24 +49,9 @@ export const DiagnosticoChatWhatsApp: React.FC<DiagnosticoChatWhatsAppProps> = (
         hour12: true,
       });
     } catch {
-      return 'Reciente';
+      return '';
     }
   };
-
-  const horaConsulta = formatearHora(diagnostico.fecha_hora);
-  const horaConfirmacion = diagnostico.fecha_confirmacion
-    ? formatearHora(diagnostico.fecha_confirmacion)
-    : horaConsulta;
-
-  const tieneValidacion =
-    diagnostico.estado === 'confirmado' || diagnostico.estado === 'descartado';
-
-  // Mantener scroll natural al final del chat para ver el diálogo completo
-  useEffect(() => {
-    if (chatBottomRef.current) {
-      chatBottomRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [diagnostico]);
 
   return (
     <div
@@ -45,6 +59,8 @@ export const DiagnosticoChatWhatsApp: React.FC<DiagnosticoChatWhatsAppProps> = (
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
+        minHeight: '380px',
+        maxHeight: '520px',
         backgroundColor: '#efeae2',
         borderRadius: '10px',
         border: '1px solid #d1d7db',
@@ -52,7 +68,7 @@ export const DiagnosticoChatWhatsApp: React.FC<DiagnosticoChatWhatsAppProps> = (
         boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
       }}
     >
-      {/* Cabecera oficial WhatsApp Web */}
+      {/* Cabecera estilo WhatsApp */}
       <div
         style={{
           padding: '10px 14px',
@@ -75,38 +91,39 @@ export const DiagnosticoChatWhatsApp: React.FC<DiagnosticoChatWhatsAppProps> = (
               alignItems: 'center',
               justifyContent: 'center',
               color: '#ffffff',
-              fontWeight: 700,
-              fontSize: '13px',
             }}
           >
             <MessageSquare size={16} />
           </div>
           <div>
             <div style={{ fontSize: '13px', fontWeight: 700, lineHeight: 1.2 }}>
-              {diagnostico.mecanico_nombre || 'Mecánico de Taller'}
+              {diagnostico.mecanico_nombre || diagnostico.cliente_nombre || 'Mecánico de Taller'}
             </div>
             <div style={{ fontSize: '11px', color: '#bbf7d0' }}>
-              {diagnostico.cliente_telefono || '+51 9** *** ***'} · WhatsApp Webhook
+              {diagnostico.cliente_telefono || 'WhatsApp'} · Conversación Real
             </div>
           </div>
         </div>
 
-        <span
+        <button
+          type="button"
+          onClick={cargarConversacion}
+          title="Actualizar mensajes"
           style={{
-            fontSize: '10.5px',
-            backgroundColor: 'rgba(255, 255, 255, 0.18)',
-            padding: '3px 8px',
-            borderRadius: '12px',
-            fontWeight: 600,
+            background: 'transparent',
+            border: 'none',
+            color: '#ffffff',
+            cursor: 'pointer',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
-          {diagnostico.modo_diagnostico === 'diagnostico_degradado_ml_rag'
-            ? 'ML + RAG (Local)'
-            : 'Completo (ML + RAG + LLM)'}
-        </span>
+          <RefreshCw size={14} className={cargando ? 'spin' : ''} />
+        </button>
       </div>
 
-      {/* Área de Mensajes en Orden Cronológico (Flujo Conversacional Real) */}
+      {/* Cuerpo del Chat */}
       <div
         style={{
           flex: 1,
@@ -119,243 +136,149 @@ export const DiagnosticoChatWhatsApp: React.FC<DiagnosticoChatWhatsAppProps> = (
           backgroundSize: '16px 16px',
         }}
       >
-        {/* Indicador de Fecha */}
-        <div style={{ alignSelf: 'center', margin: '2px 0 6px' }}>
-          <span
-            style={{
-              fontSize: '10.5px',
-              backgroundColor: '#ffffff',
-              color: '#54656f',
-              padding: '3px 10px',
-              borderRadius: '6px',
-              boxShadow: '0 1px 1px rgba(0,0,0,0.08)',
-              fontWeight: 600,
-            }}
-          >
-            {diagnostico.fecha_hora ? diagnostico.fecha_hora.split(' ')[0] : 'Hoy'}
-          </span>
-        </div>
-
-        {/* ================= TURNO 1: MENSAJE DEL MECÁNICO (PREGUNTA / SÍNTOMA) ================= */}
-        <div
-          style={{
-            alignSelf: 'flex-start',
-            maxWidth: '92%',
-            backgroundColor: '#ffffff',
-            padding: '10px 12px',
-            borderRadius: '0 10px 10px 10px',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#128c7e' }}>
-              {diagnostico.mecanico_nombre || 'Mecánico'}
-            </span>
-            <span style={{ fontSize: '9.5px', color: '#64748b', backgroundColor: '#f1f5f9', padding: '1px 5px', borderRadius: '4px' }}>
-              Turno 1 · Consulta
-            </span>
+        {cargando && (
+          <div style={{ textAlign: 'center', padding: '24px', color: '#64748b', fontSize: '12px' }}>
+            Cargando trazabilidad conversacional...
           </div>
+        )}
 
+        {error && (
           <div
             style={{
-              fontSize: '12px',
-              color: '#111b21',
-              lineHeight: 1.45,
-              whiteSpace: 'pre-wrap',
-              maxHeight: '160px',
-              overflowY: 'auto',
-              paddingRight: '2px',
-            }}
-          >
-            "{diagnostico.sintoma_original}"
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '9.5px', color: '#667781', marginTop: '2px' }}>
-            {horaConsulta}
-          </div>
-        </div>
-
-        {/* ================= TURNO 2: RESPUESTA DEVUELTA POR CARBOT IA ================= */}
-        <div
-          style={{
-            alignSelf: 'flex-end',
-            maxWidth: '94%',
-            backgroundColor: '#d9fdd3',
-            padding: '10px 12px',
-            borderRadius: '10px 0 10px 10px',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '6px',
-            border: '1px solid #bbf7d0',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Bot size={14} style={{ color: '#047857' }} />
-              <span style={{ fontSize: '11px', fontWeight: 800, color: '#065f46' }}>
-                CarBot IA · Diagnóstico
-              </span>
-            </div>
-            <span
-              style={{
-                fontSize: '9.5px',
-                fontWeight: 800,
-                color: '#047857',
-                backgroundColor: '#ffffff',
-                padding: '1px 6px',
-                borderRadius: '4px',
-                border: '1px solid #86efac',
-              }}
-            >
-              {diagnostico.confianza}% Certeza
-            </span>
-          </div>
-
-          {/* Falla Principal */}
-          <div
-            style={{
-              backgroundColor: '#ffffff',
-              padding: '6px 8px',
-              borderRadius: '6px',
-              borderLeft: '3px solid #059669',
-            }}
-          >
-            <div style={{ fontSize: '10px', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
-              Falla diagnosticada:
-            </div>
-            <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#0f172a', marginTop: '1px' }}>
-              {diagnostico.falla_predicha}
-            </div>
-          </div>
-
-          {/* Procedimiento o Síntesis devuelta */}
-          <div
-            style={{
-              fontSize: '11.5px',
-              color: '#1e293b',
-              lineHeight: 1.4,
-              maxHeight: '140px',
-              overflowY: 'auto',
-              paddingRight: '2px',
-            }}
-          >
-            {diagnostico.sintesis_llm ? (
-              <div style={{ whiteSpace: 'pre-wrap' }}>{diagnostico.sintesis_llm}</div>
-            ) : (
-              <div>
-                <strong style={{ color: '#065f46' }}>Procedimiento de taller recomendado:</strong>
-                <div style={{ whiteSpace: 'pre-wrap', color: '#334155', marginTop: '2px' }}>
-                  {diagnostico.procedimiento_rag}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Comando para el mecánico */}
-          <div
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.75)',
-              padding: '5px 8px',
-              borderRadius: '5px',
-              fontSize: '10.5px',
-              color: '#065f46',
-            }}
-          >
-            👉 Responde <strong>CONFIRMAR</strong> o <strong>DESCARTAR [motivo]</strong> tras la inspección física.
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px', fontSize: '9.5px', color: '#667781' }}>
-            <span>{horaConsulta}</span>
-            <CheckCheck size={13} style={{ color: '#53bdeb' }} />
-          </div>
-        </div>
-
-        {/* ================= TURNO 3: RESPUESTA DE VALIDACIÓN DEL MECÁNICO (SI YA OCURRIÓ) ================= */}
-        {tieneValidacion && (
-          <div
-            style={{
-              alignSelf: 'flex-start',
-              maxWidth: '92%',
-              backgroundColor: '#ffffff',
+              backgroundColor: '#fee2e2',
+              color: '#991b1b',
               padding: '10px 12px',
-              borderRadius: '0 10px 10px 10px',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              borderLeft: `4px solid ${diagnostico.estado === 'confirmado' ? '#16a34a' : '#dc2626'}`,
+              borderRadius: '6px',
+              fontSize: '11.5px',
+              textAlign: 'center',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 700, color: '#128c7e' }}>
-                {diagnostico.mecanico_nombre || 'Mecánico'}
-              </span>
-              <span
+            {error}
+            <div style={{ marginTop: '6px' }}>
+              <button
+                type="button"
+                onClick={cargarConversacion}
                 style={{
-                  fontSize: '9.5px',
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  padding: '1px 6px',
-                  borderRadius: '4px',
-                  backgroundColor: diagnostico.estado === 'confirmado' ? '#dcfce7' : '#fee2e2',
-                  color: diagnostico.estado === 'confirmado' ? '#15803d' : '#b91c1c',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: '#991b1b',
+                  textDecoration: 'underline',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
                 }}
               >
-                Turno 3 · {diagnostico.estado.toUpperCase()}
-              </span>
-            </div>
-
-            <div style={{ fontSize: '12px', color: '#1e293b', lineHeight: 1.4 }}>
-              <strong>{diagnostico.estado === 'confirmado' ? 'CONFIRMAR' : 'DESCARTAR'}:</strong>{' '}
-              {diagnostico.notas_mecanico ||
-                (diagnostico.estado === 'confirmado'
-                  ? 'Falla confirmada físicamente tras inspección en taller.'
-                  : 'Falla descartada tras inspección en taller.')}
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '9.5px', color: '#667781', marginTop: '2px' }}>
-              {horaConfirmacion}
+                Reintentar
+              </button>
             </div>
           </div>
         )}
 
-        {/* ================= TURNO 4: CONFIRMACIÓN DE CARBOT (CIERRE DEL CASO) ================= */}
-        {tieneValidacion && (
-          <div
-            style={{
-              alignSelf: 'flex-end',
-              maxWidth: '92%',
-              backgroundColor: '#d9fdd3',
-              padding: '8px 12px',
-              borderRadius: '10px 0 10px 10px',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '4px',
-              border: '1px solid #bbf7d0',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Bot size={13} style={{ color: '#047857' }} />
-              <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#065f46' }}>
-                CarBot IA · Cierre de Caso
-              </span>
+        {!cargando && !error && mensajes.length === 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div
+              style={{
+                alignSelf: 'center',
+                backgroundColor: '#ffffff',
+                color: '#54656f',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                fontSize: '10.5px',
+                boxShadow: '0 1px 1px rgba(0,0,0,0.06)',
+              }}
+            >
+              Auditoría del registro
             </div>
 
-            <div style={{ fontSize: '11.5px', color: '#1e293b', lineHeight: 1.35 }}>
-              ✅ Validación registrada con éxito en el sistema como <strong>{diagnostico.estado.toUpperCase()}</strong>. Se actualizó el historial técnico del vehículo y la matriz de contrastación para las fichas de taller.
+            {/* Mensaje original del usuario */}
+            <div
+              style={{
+                alignSelf: 'flex-start',
+                maxWidth: '90%',
+                backgroundColor: '#ffffff',
+                padding: '8px 12px',
+                borderRadius: '0 10px 10px 10px',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '3px' }}>
+                <User size={12} style={{ color: '#128c7e' }} />
+                <span style={{ fontSize: '11px', fontWeight: 700, color: '#128c7e' }}>
+                  {diagnostico.mecanico_nombre || 'Mecánico'}
+                </span>
+              </div>
+              <div style={{ fontSize: '12px', color: '#111b21', whiteSpace: 'pre-wrap' }}>
+                {diagnostico.sintoma_original}
+              </div>
+              <div style={{ fontSize: '9.5px', color: '#667781', textAlign: 'right', marginTop: '3px' }}>
+                {formatearHora(diagnostico.fecha_hora)}
+              </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px', fontSize: '9.5px', color: '#667781' }}>
-              <span>{horaConfirmacion}</span>
-              <CheckCheck size={13} style={{ color: '#53bdeb' }} />
+            {/* Respuesta emitida por CarBot */}
+            <div
+              style={{
+                alignSelf: 'flex-end',
+                maxWidth: '90%',
+                backgroundColor: '#dcf8c6',
+                padding: '8px 12px',
+                borderRadius: '10px 0 10px 10px',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '3px' }}>
+                <Bot size={13} style={{ color: '#075e54' }} />
+                <span style={{ fontSize: '11px', fontWeight: 700, color: '#075e54' }}>
+                  CarBot IA
+                </span>
+              </div>
+              <div style={{ fontSize: '12px', color: '#111b21', whiteSpace: 'pre-wrap' }}>
+                {diagnostico.sintesis_llm || diagnostico.procedimiento_rag || `Diagnóstico: ${diagnostico.falla_predicha} (${diagnostico.confianza}%)`}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '3px', marginTop: '3px' }}>
+                <span style={{ fontSize: '9.5px', color: '#667781' }}>{formatearHora(diagnostico.fecha_hora)}</span>
+                <CheckCheck size={12} style={{ color: '#34b7f1' }} />
+              </div>
             </div>
           </div>
         )}
+
+        {!cargando && !error && mensajes.map((msg) => {
+          const esBot = msg.direccion === 'salida';
+          return (
+            <div
+              key={msg.id}
+              style={{
+                alignSelf: esBot ? 'flex-end' : 'flex-start',
+                maxWidth: '90%',
+                backgroundColor: esBot ? '#dcf8c6' : '#ffffff',
+                padding: '8px 12px',
+                borderRadius: esBot ? '10px 0 10px 10px' : '0 10px 10px 10px',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.12)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '3px' }}>
+                {esBot ? (
+                  <Bot size={13} style={{ color: '#075e54' }} />
+                ) : (
+                  <User size={12} style={{ color: '#128c7e' }} />
+                )}
+                <span style={{ fontSize: '11px', fontWeight: 700, color: esBot ? '#075e54' : '#128c7e' }}>
+                  {esBot ? 'CarBot IA' : (diagnostico.mecanico_nombre || 'Mecánico')}
+                </span>
+              </div>
+              <div style={{ fontSize: '12px', color: '#111b21', whiteSpace: 'pre-wrap', lineHeight: 1.4 }}>
+                {msg.texto || ''}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '3px', marginTop: '3px' }}>
+                <span style={{ fontSize: '9.5px', color: '#667781' }}>
+                  {formatearHora(msg.fecha_hora)}
+                </span>
+                {esBot && <CheckCheck size={12} style={{ color: '#34b7f1' }} />}
+              </div>
+            </div>
+          );
+        })}
 
         <div ref={chatBottomRef} />
       </div>

@@ -1,0 +1,16 @@
+{
+  "records_read": 30,
+  "records_accepted": 0,
+  "status_distribution": {
+    "pending_mechanical_review": 30
+  },
+  "discard_reasons": {
+    "not_mechanically_reviewed": 30
+  },
+  "policy": "Solo reviewed_by_mechanic con etiqueta canónica, revisor y confianza high/medium pueden formar parte del experimento. No equivale a datos oficiales de tesis.",
+  "generated_at_utc": "2026-09-26T01:12:50.332942+00:00",
+  "input_file": "C:\\Users\\leonc\\OneDrive\\Desktop\\CHAT_BOT_MACHINLEARNING\\outputs\\revision_mecanica_prioritaria_30_casos.xlsx",
+  "input_sha256": "4a3a3b6fd0c611a0142d4992d0ecacf5c9d5561405e924f85b77cd19d557b413",
+  "state": "blocked_pending_mechanical_review",
+  "dataset_output": null
+}

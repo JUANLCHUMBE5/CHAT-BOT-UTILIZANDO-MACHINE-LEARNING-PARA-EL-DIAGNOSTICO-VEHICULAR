@@ -1,0 +1,15 @@
+{
+  "nombre": "CAMPOS_COMPLETITUD_PENDIENTES_DE_VALIDACION",
+  "estado": "PENDIENTE_DE_VALIDACION_METODOLOGICA",
+  "regla": "No calcula PRDC hasta validar formalmente los 8 campos.",
+  "campos_observados_pipeline": [
+    "id_caso",
+    "fecha",
+    "sintoma",
+    "diagnostico_principal",
+    "alternativas_ml",
+    "contexto_rag",
+    "respuesta",
+    "tiempos"
+  ]
+}

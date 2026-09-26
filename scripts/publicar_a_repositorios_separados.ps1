@@ -28,7 +28,9 @@ param(
     [switch]$SoloBackend,
     [switch]$SoloFrontend,
     [switch]$SoloML,
-    [switch]$HaciaMain
+    [switch]$HaciaMain,
+    [ValidatePattern('^[A-Za-z0-9._/-]+$')]
+    [string]$RamaDestino = ""
 )
 
 $ErrorActionPreference = "Continue"
@@ -79,7 +81,7 @@ try {
         $url = $r.Url
         $cloneDir = Join-Path $tempBase $nombre
 
-        $targetBranch = if ($HaciaMain) { "main" } else { $r.RamaDev }
+        $targetBranch = if ($RamaDestino) { $RamaDestino } elseif ($HaciaMain) { "main" } else { $r.RamaDev }
 
         Write-Host "`n--> Procesando [$nombre] (Rama: $targetBranch)..." -ForegroundColor Green
         Write-Host "    Clonando rama '$targetBranch' desde GitHub..." -ForegroundColor Gray
@@ -95,6 +97,7 @@ try {
             robocopy (Join-Path $projectRoot "backend") $cloneDir /E /PURGE `
                 /XD ".git" "__pycache__" ".pytest_cache" ".ruff_cache" ".venv" "node_modules" `
                 /XF "*.pyc" "*.log" ".DS_Store" /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
+            Copy-Item (Join-Path $r.Origen "Dockerfile.standalone") (Join-Path $cloneDir "Dockerfile") -Force
         }
         elseif ($r.Tipo -eq "frontend") {
             robocopy (Join-Path $projectRoot "frontend") $cloneDir /E /PURGE `
@@ -107,12 +110,19 @@ try {
                 $src = Join-Path $projectRoot $d
                 $dst = Join-Path $cloneDir $d
                 if (Test-Path $src) {
-                    robocopy $src $dst /E /PURGE `
-                        /XD ".git" "__pycache__" ".pytest_cache" ".ruff_cache" ".venv" "sandbox_rag_experimental" "experimentos" "raw" "nhtsa_complaints" "nhtsa_recalls" `
+                    robocopy $src $dst /E `
+                        /XD ".git" "__pycache__" ".pytest_cache" ".ruff_cache" ".venv" "sandbox_rag_experimental" "experimentos" "experiments" "raw" "nhtsa_complaints" "nhtsa_recalls" `
                         /XF "*.pyc" "*.log" "*.pkl" "*.index" "*.zip" "*.tar.gz" "*.jsonl" `
                         /MAX:50000000 `
                         /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
                 }
+            }
+            $scriptsSource = Join-Path $projectRoot "scripts"
+            if (Test-Path $scriptsSource) {
+                robocopy $scriptsSource (Join-Path $cloneDir "scripts") /E `
+                    /XD ".git" "__pycache__" ".pytest_cache" ".ruff_cache" ".venv" `
+                    /XF "*.pyc" "*.log" "publicar_a_repositorios_separados.ps1" "preparar_tres_repos_locales.ps1" `
+                    /NFL /NDL /NJH /NJS /nc /ns /np | Out-Null
             }
             $mlReq = Join-Path $projectRoot "machine_learning\requirements.txt"
             if (Test-Path $mlReq) { Copy-Item $mlReq (Join-Path $cloneDir "requirements.txt") -Force }

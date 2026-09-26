@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { Cpu, FileCheck, LayoutGrid, Layers, MessageSquare } from 'lucide-react';
+import { FileText, MessageSquare, Wrench } from 'lucide-react';
 import { Modal } from '../../common/Modal';
 import { Badge } from '../../common/Badge';
 import type { Diagnostico } from '../../../types';
 import {
-  DiagnosticoMetaHeader,
   DiagnosticoPipelineStepper,
   DiagnosticoMlSection,
   DiagnosticoRagSection,
   DiagnosticoValidacionPanel,
   DiagnosticoChatWhatsApp,
-  DiagnosticoTallerPanel,
 } from './modal';
 
 export interface DiagnosticoDetalleModalProps {
@@ -26,8 +24,7 @@ export const DiagnosticoDetalleModal: React.FC<DiagnosticoDetalleModalProps> = (
   onClose,
   onCrearPostTest,
 }) => {
-  const [viewMode, setViewMode] = useState<'panoramica' | 'pestanas'>('panoramica');
-  const [activeTab, setActiveTab] = useState<'chat' | 'procesamiento' | 'validacion'>('chat');
+  const [tabActiva, setTabActiva] = useState<'tecnico' | 'conversacion'>('tecnico');
 
   if (!diagnostico) return null;
 
@@ -37,301 +34,234 @@ export const DiagnosticoDetalleModal: React.FC<DiagnosticoDetalleModalProps> = (
     !diagnostico.placa_vehiculo.toLowerCase().includes('sin placa');
 
   const tituloModal = tienePlaca
-    ? `Detalle de Diagnóstico — ${diagnostico.placa_vehiculo}`
-    : `Detalle de Diagnóstico #${diagnostico.id ? diagnostico.id.slice(0, 8) : ''}`;
+    ? `Diagnóstico ${diagnostico.placa_vehiculo} · ${diagnostico.marca_modelo || 'Vehículo'}`
+    : `Diagnóstico #${diagnostico.id ? diagnostico.id.slice(0, 8) : 'Consulta'}`;
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       title={tituloModal}
-      maxWidth="1420px"
+      maxWidth="1100px"
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {/* Barra superior unificada: Selector de vista y metadatos clave */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+        {/* Barra superior de pestañas del modal y metadatos */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            gap: '8px',
-            padding: '6px 12px',
+            gap: '10px',
+            padding: '8px 12px',
             backgroundColor: '#f8fafc',
             borderRadius: '8px',
             border: '1px solid var(--border-color)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-              Distribución:
-            </span>
             <button
               type="button"
-              onClick={() => setViewMode('panoramica')}
+              onClick={() => setTabActiva('tecnico')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '5px',
-                padding: '5px 10px',
+                gap: '6px',
+                padding: '6px 12px',
                 borderRadius: '6px',
-                fontSize: '11.5px',
+                fontSize: '12px',
                 fontWeight: 700,
                 border: '1px solid',
-                borderColor: viewMode === 'panoramica' ? '#2563eb' : 'var(--border-color)',
-                backgroundColor: viewMode === 'panoramica' ? '#eff6ff' : '#ffffff',
-                color: viewMode === 'panoramica' ? '#1d4ed8' : 'var(--text-secondary)',
+                borderColor: tabActiva === 'tecnico' ? 'var(--primary)' : 'var(--border-color)',
+                backgroundColor: tabActiva === 'tecnico' ? '#fff7ed' : '#ffffff',
+                color: tabActiva === 'tecnico' ? 'var(--primary)' : 'var(--text-secondary)',
                 cursor: 'pointer',
               }}
             >
-              <LayoutGrid size={13} />
-              <span>Panorámica Web (X | X | X)</span>
+              <FileText size={14} />
+              <span>Diagnóstico Técnico (A-E)</span>
             </button>
             <button
               type="button"
-              onClick={() => setViewMode('pestanas')}
+              onClick={() => setTabActiva('conversacion')}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '5px',
-                padding: '5px 10px',
+                gap: '6px',
+                padding: '6px 12px',
                 borderRadius: '6px',
-                fontSize: '11.5px',
+                fontSize: '12px',
                 fontWeight: 700,
                 border: '1px solid',
-                borderColor: viewMode === 'pestanas' ? '#2563eb' : 'var(--border-color)',
-                backgroundColor: viewMode === 'pestanas' ? '#eff6ff' : '#ffffff',
-                color: viewMode === 'pestanas' ? '#1d4ed8' : 'var(--text-secondary)',
+                borderColor: tabActiva === 'conversacion' ? '#16a34a' : 'var(--border-color)',
+                backgroundColor: tabActiva === 'conversacion' ? '#f0fdf4' : '#ffffff',
+                color: tabActiva === 'conversacion' ? '#166534' : 'var(--text-secondary)',
                 cursor: 'pointer',
               }}
             >
-              <Layers size={13} />
-              <span>Por Pestañas</span>
+              <MessageSquare size={14} />
+              <span>Trazabilidad WhatsApp (F)</span>
             </button>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-              Mecánico: <strong>{diagnostico.mecanico_nombre || 'Taller'}</strong> · Latencia total: <strong>{diagnostico.duracion_ms} ms</strong>
+            <span style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+              Latencia: <strong>{diagnostico.duracion_ms || 0} ms</strong>
             </span>
             <Badge type={diagnostico.estado} />
           </div>
         </div>
 
-        {/* MODO 1: VISTA PANORÁMICA EQUILIBRADA (X | X | X) */}
-        {viewMode === 'panoramica' ? (
-          <div className="diagnostico-modal-grid">
-            {/* ================= COLUMNA 1: CHAT WHATSAPP ================= */}
-            <div className="diagnostico-modal-col">
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '6px 10px',
-                  backgroundColor: '#f0fdf4',
-                  borderRadius: '6px',
-                  border: '1px solid #bbf7d0',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <MessageSquare size={13} style={{ color: '#16a34a' }} />
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    1. Chat WhatsApp (Pregunta y Devolución)
-                  </span>
-                </div>
-                <span style={{ fontSize: '9.5px', color: '#15803d', fontWeight: 700 }}>
-                  Canal Webhook
-                </span>
-              </div>
-
-              <DiagnosticoChatWhatsApp diagnostico={diagnostico} />
-            </div>
-
-            {/* ================= COLUMNA 2: PROCESAMIENTO IA (ML + RAG + LLM) ================= */}
-            <div className="diagnostico-modal-col">
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '6px 10px',
-                  backgroundColor: '#eff6ff',
-                  borderRadius: '6px',
-                  border: '1px solid #bfdbfe',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Cpu size={13} style={{ color: '#2563eb' }} />
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#1e40af', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    2. Procesamiento del Sistema (Pipeline IA)
-                  </span>
-                </div>
-                <span style={{ fontSize: '10px', fontWeight: 700, color: '#1d4ed8' }}>
-                  {diagnostico.duracion_ms} ms
-                </span>
-              </div>
-
-              <DiagnosticoPipelineStepper diagnostico={diagnostico} />
-              <DiagnosticoMlSection diagnostico={diagnostico} />
-              <DiagnosticoRagSection diagnostico={diagnostico} />
-            </div>
-
-            {/* ================= COLUMNA 3: TALLER, VALIDACIÓN & TESIS ================= */}
-            <div className="diagnostico-modal-col">
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '6px 10px',
-                  backgroundColor: '#faf5ff',
-                  borderRadius: '6px',
-                  border: '1px solid #e9d5ff',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <FileCheck size={13} style={{ color: '#7c3aed' }} />
-                  <span style={{ fontSize: '11px', fontWeight: 800, color: '#6b21a8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                    3. Taller & Ficha Oficial Post-test
-                  </span>
-                </div>
-                <span style={{ fontSize: '9.5px', color: '#7c3aed', fontWeight: 700 }}>
-                  Anexo 2 UCV
-                </span>
-              </div>
-
-              <DiagnosticoTallerPanel
-                diagnostico={diagnostico}
-                onCrearPostTest={onCrearPostTest}
-                onClose={onClose}
-              />
-            </div>
-          </div>
-        ) : (
-          /* MODO 2: VISTA POR PESTAÑAS TRADICIONAL */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        {/* TAB 1: ESTRUCTURA TÉCNICA A-E */}
+        {tabActiva === 'tecnico' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {/* A. IDENTIFICACIÓN */}
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                backgroundColor: '#f1f5f9',
-                padding: '3px',
-                borderRadius: '8px',
-                gap: '3px',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: '12px',
+                backgroundColor: '#ffffff',
+                border: '1px solid var(--border-color)',
+                borderRadius: '10px',
+                padding: '12px 14px',
               }}
             >
-              <button
-                type="button"
-                onClick={() => setActiveTab('chat')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  padding: '7px 10px',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  border: 'none',
-                  backgroundColor: activeTab === 'chat' ? '#ffffff' : 'transparent',
-                  color: activeTab === 'chat' ? 'var(--primary)' : 'var(--text-secondary)',
-                  cursor: 'pointer',
-                  boxShadow: activeTab === 'chat' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-                }}
-              >
-                <MessageSquare size={14} />
-                <span>Chat WhatsApp</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('procesamiento')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  padding: '7px 10px',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  border: 'none',
-                  backgroundColor: activeTab === 'procesamiento' ? '#ffffff' : 'transparent',
-                  color: activeTab === 'procesamiento' ? 'var(--primary)' : 'var(--text-secondary)',
-                  cursor: 'pointer',
-                  boxShadow: activeTab === 'procesamiento' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-                }}
-              >
-                <Cpu size={14} />
-                <span>Pipeline & ML ({diagnostico.duracion_ms}ms)</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveTab('validacion')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  padding: '7px 10px',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  border: 'none',
-                  backgroundColor: activeTab === 'validacion' ? '#ffffff' : 'transparent',
-                  color: activeTab === 'validacion' ? 'var(--primary)' : 'var(--text-secondary)',
-                  cursor: 'pointer',
-                  boxShadow: activeTab === 'validacion' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-                }}
-              >
-                <FileCheck size={14} />
-                <span>Validación Taller</span>
-              </button>
-            </div>
-
-            {activeTab === 'chat' && <DiagnosticoChatWhatsApp diagnostico={diagnostico} />}
-
-            {activeTab === 'procesamiento' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <DiagnosticoPipelineStepper diagnostico={diagnostico} />
-                <DiagnosticoMlSection diagnostico={diagnostico} />
-                <DiagnosticoRagSection diagnostico={diagnostico} />
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>ID Diagnóstico</div>
+                <div style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-main)', fontFamily: 'monospace' }}>
+                  {diagnostico.id || 'N/A'}
+                </div>
               </div>
-            )}
-
-            {activeTab === 'validacion' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <DiagnosticoMetaHeader diagnostico={diagnostico} />
-                {onCrearPostTest && (
-                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onCrearPostTest(diagnostico);
-                        onClose();
-                      }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '8px 14px',
-                        backgroundColor: '#1d4ed8',
-                        color: '#ffffff',
-                        border: 'none',
-                        borderRadius: '6px',
-                        fontSize: '12.5px',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <FileCheck size={15} />
-                      <span>Crear registro Post-test</span>
-                    </button>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>Fecha / Hora</div>
+                <div style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-main)' }}>
+                  {diagnostico.fecha_hora || 'N/A'}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>Mecánico / Solicitante</div>
+                <div style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-main)' }}>
+                  {diagnostico.mecanico_nombre || diagnostico.cliente_nombre || 'Mecánico'}
+                </div>
+                {diagnostico.cliente_telefono && (
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    {diagnostico.cliente_telefono}
                   </div>
                 )}
-                <DiagnosticoValidacionPanel diagnostico={diagnostico} />
+              </div>
+              <div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>Vehículo</div>
+                <div style={{ fontSize: '12.5px', fontWeight: 700, color: tienePlaca ? 'var(--primary)' : 'var(--text-main)' }}>
+                  {tienePlaca ? diagnostico.placa_vehiculo : 'Sin placa'}
+                </div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  {diagnostico.marca_modelo || 'Consulta general'}
+                </div>
+              </div>
+            </div>
+
+            {/* B. SÍNTOMA REPORTADO */}
+            <div
+              style={{
+                backgroundColor: '#ffffff',
+                border: '1px solid var(--border-color)',
+                borderRadius: '10px',
+                padding: '12px 14px',
+              }}
+            >
+              <div style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
+                B. Síntoma Reportado por el Mecánico
+              </div>
+              <div
+                style={{
+                  fontSize: '13px',
+                  color: 'var(--text-main)',
+                  backgroundColor: '#f8fafc',
+                  padding: '10px 12px',
+                  borderRadius: '6px',
+                  border: '1px solid #e2e8f0',
+                  lineHeight: 1.5,
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                {diagnostico.sintoma_original || 'No se registró texto de síntoma.'}
+              </div>
+            </div>
+
+            {/* C. PREDICCIÓN CARBOT & D. PROCEDIMIENTO */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                gap: '14px',
+              }}
+            >
+              {/* C. PREDICCIÓN CARBOT */}
+              <div>
+                <DiagnosticoMlSection diagnostico={diagnostico} />
+              </div>
+
+              {/* D. PROCEDIMIENTO / EVIDENCIA RAG */}
+              <div>
+                <DiagnosticoRagSection diagnostico={diagnostico} />
+              </div>
+            </div>
+
+            {/* E. RESULTADO (Generado / Confirmado / Descartado) */}
+            <div>
+              <div style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
+                E. Resultado y Validación de Taller
+              </div>
+              <DiagnosticoValidacionPanel diagnostico={diagnostico} />
+            </div>
+
+            {/* Trazabilidad de Pipeline */}
+            <div>
+              <div style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
+                Trazabilidad del Pipeline de Inferencia
+              </div>
+              <DiagnosticoPipelineStepper diagnostico={diagnostico} />
+            </div>
+
+            {/* Acción opcional de tesis (solo si se invoca desde el módulo de tesis) */}
+            {onCrearPostTest && (
+              <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '8px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onCrearPostTest(diagnostico);
+                    onClose();
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 14px',
+                    backgroundColor: '#1d4ed8',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Wrench size={15} />
+                  <span>Vincular a Ficha Post-test de Tesis</span>
+                </button>
               </div>
             )}
+          </div>
+        )}
+
+        {/* TAB 2: F. TRAZABILIDAD CONVERSACIONAL REAL */}
+        {tabActiva === 'conversacion' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+              Historial cronológico de la interacción para auditoría de preguntas y respuestas entre el mecánico y CarBot.
+            </div>
+            <DiagnosticoChatWhatsApp diagnostico={diagnostico} />
           </div>
         )}
       </div>

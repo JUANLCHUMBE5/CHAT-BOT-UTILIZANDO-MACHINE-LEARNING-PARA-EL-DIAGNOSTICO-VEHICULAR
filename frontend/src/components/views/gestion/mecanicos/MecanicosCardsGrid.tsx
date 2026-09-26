@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Calendar,
   FileSearch,
   Lock,
   Unlock,
   UserX,
   Wrench,
+  MoreVertical,
 } from 'lucide-react';
 import { Card } from '../../../common/Card';
 import { enmascararIdentificadorSensible } from '../../../../services/api';
+import { calcularVigenciaMecanico } from '../../../../utils/vigenciaMecanico';
 import type { Mecanico } from '../../../../types';
 
 interface MecanicosCardsGridProps {
@@ -28,15 +29,15 @@ export const MecanicosCardsGrid: React.FC<MecanicosCardsGridProps> = ({
   onConfirmBloquear,
   onConfirmRevocar,
 }) => {
+  const [menuAbiertoId, setMenuAbiertoId] = useState<string | null>(null);
+
   const formatearFecha = (fechaStr?: string) => {
     if (!fechaStr) return 'N/A';
     try {
       const d = new Date(fechaStr);
-      return d.toLocaleDateString('es-PE', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      });
+      return !isNaN(d.getTime())
+        ? d.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        : fechaStr;
     } catch {
       return fechaStr;
     }
@@ -55,11 +56,11 @@ export const MecanicosCardsGrid: React.FC<MecanicosCardsGridProps> = ({
       <Card style={{ padding: '40px 20px', textAlign: 'center' }}>
         <Wrench size={32} style={{ margin: '0 auto 10px auto', color: 'var(--text-muted)', opacity: 0.6 }} />
         <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-main)', margin: '0 0 4px 0' }}>
-          No se encontraron mecánicos autorizados
+          No se encontraron mecánicos
         </h4>
         <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>
           {busqueda
-            ? 'No hay resultados que coincidan con la búsqueda.'
+            ? 'No hay resultados que coincidan con la búsqueda o filtro seleccionado.'
             : 'Las solicitudes aprobadas desde WhatsApp aparecerán automáticamente aquí.'}
         </p>
       </Card>
@@ -67,165 +68,211 @@ export const MecanicosCardsGrid: React.FC<MecanicosCardsGridProps> = ({
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+    <div className="mecanicos-grid-container">
       {mecanicosFiltrados.map((m) => {
+        const vigencia = calcularVigenciaMecanico(m);
         const estaBloqueado = m.bloqueado;
         const telefonoSeguro = enmascararIdentificadorSensible(m.telefono, 'telefono') || m.telefono;
+        const esMenuAbierto = menuAbiertoId === m.id;
 
         return (
           <Card
             key={m.id}
             style={{
-              padding: '8px 12px',
+              padding: '12px 14px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '6px',
-              borderRadius: '8px',
+              justifyContent: 'space-between',
+              gap: '10px',
+              borderRadius: '10px',
               border: '1px solid var(--border-color)',
               backgroundColor: estaBloqueado ? 'rgba(239, 68, 68, 0.02)' : '#ffffff',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+              position: 'relative',
             }}
           >
-            {/* Top row: Name, Badge, Phone, Diagnostics */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', minWidth: 0 }}>
-                <Wrench size={13} style={{ color: estaBloqueado ? '#ef4444' : 'var(--primary)', flexShrink: 0 }} />
-                <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-main)', margin: 0 }}>
-                  {m.nombres}
-                </h4>
+            {/* Header de Card: Nombre y Badge de Vigencia */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                  <Wrench size={14} style={{ color: estaBloqueado ? '#ef4444' : 'var(--primary)', flexShrink: 0 }} />
+                  <h4
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      color: 'var(--text-main)',
+                      margin: 0,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                    title={m.nombres}
+                  >
+                    {m.nombres}
+                  </h4>
+                </div>
+
                 <span
                   style={{
-                    padding: '1px 5px',
-                    borderRadius: '6px',
-                    fontSize: '9px',
-                    fontWeight: 700,
-                    backgroundColor: estaBloqueado
-                      ? '#fee2e2'
-                      : !m.activo
-                        ? '#f1f5f9'
-                        : '#dcfce7',
-                    color: estaBloqueado
-                      ? '#b91c1c'
-                      : !m.activo
-                        ? '#64748b'
-                        : '#15803d',
+                    padding: '2px 8px',
+                    borderRadius: '10px',
+                    fontSize: '10px',
+                    fontWeight: 800,
+                    backgroundColor: vigencia.badgeStyle.bg,
+                    color: vigencia.badgeStyle.color,
+                    border: `1px solid ${vigencia.badgeStyle.border}`,
                     textTransform: 'uppercase',
+                    letterSpacing: '0.03em',
+                    flexShrink: 0,
                   }}
                 >
-                  {estaBloqueado ? 'Bloqueado' : (!m.activo ? 'Inactivo' : 'Activo')}
-                </span>
-                <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                  📱 {telefonoSeguro}
+                  {vigencia.etiquetaEstado}
                 </span>
               </div>
 
-              {/* Compact Diagnostics Pill */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '3px',
-                  padding: '2px 6px',
-                  backgroundColor: '#f8fafc',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '5px',
-                  fontSize: '10px',
-                  fontWeight: 700,
-                  color: 'var(--text-main)',
-                  flexShrink: 0,
-                }}
-              >
-                <span>{m.total_diagnosticos || 0}</span>
-                <span style={{ fontSize: '9px', color: 'var(--text-muted)', fontWeight: 500 }}>diag.</span>
+              {/* Teléfono y Total Diagnósticos */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                <span>📱 {telefonoSeguro}</span>
+                <span style={{ fontWeight: 700, color: 'var(--text-main)', backgroundColor: '#f1f5f9', padding: '1px 6px', borderRadius: '4px', fontSize: '11px' }}>
+                  {m.total_diagnosticos || 0} diagnósticos
+                </span>
+              </div>
+
+              {/* Fechas: Vigencia y Registro */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', fontSize: '11px', color: 'var(--text-muted)', backgroundColor: '#f8fafc', padding: '6px 8px', borderRadius: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Acceso hasta:</span>
+                  <strong style={{ color: vigencia.estadoVisual === 'vencido' ? '#b45309' : 'var(--text-main)' }}>
+                    {vigencia.fechaExpiracionStr}
+                  </strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px' }}>
+                  <span>Registro: {formatearFecha(m.fecha_registro)}</span>
+                  <span>Actividad: {formatearFecha(m.ultimo_acceso)}</span>
+                </div>
               </div>
             </div>
 
-            {/* Bottom row: Dates and Action Buttons inline */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '8px',
-                flexWrap: 'wrap',
-                fontSize: '10.5px',
-                color: 'var(--text-muted)',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                  <Calendar size={10} />
-                  Reg: {formatearFecha(m.fecha_registro)}
-                </span>
-                <span>•</span>
-                <span>Acceso: {formatearFecha(m.ultimo_acceso)}</span>
-              </div>
+            {/* Barra de Acciones: [Ver actividad] + Menú Contextual [⋮] */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', paddingTop: '8px', borderTop: '1px solid #f1f5f9', position: 'relative' }}>
+              {onVerConsultasMecanico && (
+                <button
+                  type="button"
+                  onClick={() => onVerConsultasMecanico(m.id)}
+                  style={{
+                    flex: 1,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '4px',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    border: '1px solid var(--border-color)',
+                    backgroundColor: '#ffffff',
+                    color: 'var(--primary)',
+                    fontSize: '11.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <FileSearch size={13} />
+                  <span>Ver actividad</span>
+                </button>
+              )}
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                {onVerConsultasMecanico && (
+              {/* Botón de Menú Contextual / Acciones Secundarias */}
+              <button
+                type="button"
+                onClick={() => setMenuAbiertoId(esMenuAbierto ? null : m.id)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border-color)',
+                  backgroundColor: esMenuAbierto ? '#f1f5f9' : '#ffffff',
+                  color: 'var(--text-secondary)',
+                  cursor: 'pointer',
+                }}
+                title="Más opciones"
+              >
+                <MoreVertical size={14} />
+              </button>
+
+              {/* Desplegable del Menú Contextual */}
+              {esMenuAbierto && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    bottom: '36px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
+                    zIndex: 20,
+                    minWidth: '150px',
+                    padding: '4px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '2px',
+                  }}
+                >
                   <button
                     type="button"
-                    onClick={() => onVerConsultasMecanico(m.id)}
+                    onClick={() => {
+                      setMenuAbiertoId(null);
+                      onConfirmBloquear(m, !estaBloqueado);
+                    }}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '3px',
-                      padding: '3px 7px',
-                      borderRadius: '4px',
-                      border: '1px solid var(--border-color)',
-                      backgroundColor: '#ffffff',
-                      color: 'var(--text-secondary)',
-                      fontSize: '10.5px',
+                      gap: '6px',
+                      padding: '7px 10px',
+                      border: 'none',
+                      backgroundColor: 'transparent',
+                      color: estaBloqueado ? '#059669' : '#d97706',
+                      fontSize: '11.5px',
                       fontWeight: 600,
+                      borderRadius: '4px',
                       cursor: 'pointer',
+                      textAlign: 'left',
+                      width: '100%',
                     }}
                   >
-                    <FileSearch size={11} />
-                    <span>Consultas</span>
+                    {estaBloqueado ? <Unlock size={13} /> : <Lock size={13} />}
+                    <span>{estaBloqueado ? 'Desbloquear' : 'Bloquear'}</span>
                   </button>
-                )}
 
-                <button
-                  type="button"
-                  onClick={() => onConfirmBloquear(m, !estaBloqueado)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '3px',
-                    padding: '3px 7px',
-                    borderRadius: '4px',
-                    border: '1px solid var(--border-color)',
-                    backgroundColor: '#ffffff',
-                    color: estaBloqueado ? '#059669' : '#d97706',
-                    fontSize: '10.5px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  {estaBloqueado ? <Unlock size={11} /> : <Lock size={11} />}
-                  <span>{estaBloqueado ? 'Desbloquear' : 'Bloquear'}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => onConfirmRevocar(m)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '3px',
-                    padding: '3px 7px',
-                    borderRadius: '4px',
-                    border: '1px solid #fecaca',
-                    backgroundColor: '#fff5f5',
-                    color: '#dc2626',
-                    fontSize: '10.5px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  <UserX size={11} />
-                  <span>Revocar</span>
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMenuAbiertoId(null);
+                      onConfirmRevocar(m);
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '7px 10px',
+                      border: 'none',
+                      backgroundColor: 'transparent',
+                      color: '#dc2626',
+                      fontSize: '11.5px',
+                      fontWeight: 600,
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      width: '100%',
+                    }}
+                  >
+                    <UserX size={13} />
+                    <span>Revocar acceso</span>
+                  </button>
+                </div>
+              )}
             </div>
           </Card>
         );

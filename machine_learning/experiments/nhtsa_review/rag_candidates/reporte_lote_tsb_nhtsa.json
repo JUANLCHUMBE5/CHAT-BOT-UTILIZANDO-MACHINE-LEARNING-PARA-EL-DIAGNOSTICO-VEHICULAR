@@ -1,0 +1,20 @@
+{
+  "source": "C:\\Users\\leonc\\OneDrive\\Desktop\\CHAT_BOT_MACHINLEARNING\\machine_learning\\data\\experimental_nhtsa\\nhtsa_tsbs_rag_candidates.jsonl",
+  "scanned_records": 31540,
+  "selected_records": 70,
+  "selected_by_system": {
+    "FRENOS": 10,
+    "MOTOR": 10,
+    "TRANSMISION": 10,
+    "SUSPENSION_CHASIS": 10,
+    "DIRECCION": 10,
+    "CLIMATIZACION": 10,
+    "ELECTRICO": 10
+  },
+  "discard_reasons": {
+    "duplicate_bulletin_text": 1237,
+    "missing_bulletin_or_short_text": 26147
+  },
+  "invariant": "No se construyó índice FAISS ni se modificó el corpus RAG oficial.",
+  "next_step": "Revisión individual de licencia y contenido técnico antes de cualquier indexación candidata."
+}

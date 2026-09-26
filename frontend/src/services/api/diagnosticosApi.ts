@@ -70,3 +70,19 @@ export async function getDiagnosticos(params?: {
     total: Number.isFinite(totalHeader) ? totalHeader : items.length,
   };
 }
+
+export async function getConversacionDiagnostico(diagnosticoId: string): Promise<import('../../types').MensajeConversacion[]> {
+  const res = await authFetch(`${API_BASE_URL}/diagnostico/${diagnosticoId}/conversacion`, {
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) {
+    throw new Error(await extractErrorMessage(res, 'Error consultando conversación del diagnóstico'));
+  }
+  return (await res.json()) as import('../../types').MensajeConversacion[];
+}
+
+export async function getHistorialVehiculoPorPlaca(placa: string): Promise<{ placa: string; vehiculo_id?: string; diagnosticos: Diagnostico[] }> {
+  const res = await authFetch(`${API_BASE_URL}/diagnostico/vehiculos/${encodeURIComponent(placa)}/historial`, { headers: getAuthHeaders() });
+  if (!res.ok) throw new Error(await extractErrorMessage(res, 'No se pudo consultar el historial del vehículo'));
+  return (await res.json()) as { placa: string; vehiculo_id?: string; diagnosticos: Diagnostico[] };
+}

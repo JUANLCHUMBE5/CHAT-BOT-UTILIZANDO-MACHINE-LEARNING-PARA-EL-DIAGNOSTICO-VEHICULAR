@@ -23,6 +23,11 @@ RECURSOS = [
         "archivo": DESTINO_OBDEX / "P0xxx_enriched.yaml",
     },
     {
+        "nombre": "OBDex Generic DTC Bundle (CDN oficial del proyecto)",
+        "url": "https://foerbsnavi.github.io/obdex/generic.min.json",
+        "archivo": DESTINO_BASE / "obdex_generic.min.json",
+    },
+    {
         "nombre": "OBDex C0xxx Enriched (Chassis / Frenos, ABS, Dirección)",
         "url": "https://raw.githubusercontent.com/foerbsnavi/OBDex/main/data/generic/C0xxx_enriched.yaml",
         "archivo": DESTINO_OBDEX / "C0xxx_enriched.yaml",

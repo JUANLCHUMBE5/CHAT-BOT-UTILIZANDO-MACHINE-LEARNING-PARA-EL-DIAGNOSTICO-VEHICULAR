@@ -1,11 +1,15 @@
+import argparse
 import hashlib
 import json
 import sys
 from pathlib import Path
 
-def verificar_hashes():
+
+def verificar_hashes(manifest_name: str) -> None:
     root = Path(__file__).resolve().parent.parent
-    manifest_path = root / "docs" / "fase11_6" / "CARBOT_PRECAMPO_FINAL_HASH_MANIFEST.json"
+    manifest_path = root / "docs" / "fase11_6" / manifest_name
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"No existe el manifiesto de integridad: {manifest_path}")
     data = json.loads(manifest_path.read_text(encoding="utf-8"))
     
     errors = []
@@ -28,7 +32,15 @@ def verificar_hashes():
             print(err)
         sys.exit(1)
     else:
-        print("\n[EXITO] TODOS LOS 13 COMPONENTES CONGELADOS PERMANECEN 100% IDENTICOS.")
+        total = len(data["hashes_sha256"])
+        print(f"\n[EXITO] TODOS LOS {total} COMPONENTES CONGELADOS PERMANECEN 100% IDENTICOS.")
 
 if __name__ == "__main__":
-    verificar_hashes()
+    parser = argparse.ArgumentParser(description="Verifica un manifiesto de integridad CarBot.")
+    parser.add_argument(
+        "--manifest",
+        default="CARBOT_PRECAMPO_COHERENCIA_HASH_MANIFEST.json",
+        help="Nombre de archivo dentro de docs/fase11_6/.",
+    )
+    args = parser.parse_args()
+    verificar_hashes(args.manifest)

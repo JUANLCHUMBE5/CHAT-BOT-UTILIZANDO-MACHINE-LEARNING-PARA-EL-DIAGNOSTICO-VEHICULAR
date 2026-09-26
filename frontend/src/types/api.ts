@@ -56,6 +56,7 @@ export type EstadoRegistro = 'borrador' | 'verificado' | 'excluido';
 export type TipoRegistro = 'DEVELOPMENT' | 'REGRESSION' | 'THESIS_PRETEST' | 'THESIS_POSTTEST' | 'PILOT';
 
 export interface CasoValidacionDTO {
+  id?: string;
   item: number;
   fase: string;
   fecha: string;
