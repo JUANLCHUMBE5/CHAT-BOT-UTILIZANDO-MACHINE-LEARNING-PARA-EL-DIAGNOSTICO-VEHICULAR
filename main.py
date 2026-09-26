@@ -34,7 +34,8 @@ from src.application.services import GestorDiagnostico
 from src.config import settings
 from src.core.logger import logger
 from src.core.services.retention_service import aplicar_retencion_datos
-from src.infrastructure.database.connection import cerrar_conexion, comprobar_conexion
+from src.infrastructure.database.connection import cerrar_conexion, comprobar_conexion, obtener_sesion_db
+from src.infrastructure.database.repositories.trabajo_sistema_repository import TrabajoSistemaRepository
 from src.interfaces.api.errors import (
     manejar_error_no_controlado,
     manejar_error_validacion,
@@ -205,6 +206,7 @@ async def health_ready(request: Request):
     componentes = {
         "postgresql": not settings.database.enabled,
         "worker_gemini_iniciado": worker_iniciado,
+        "worker_sistema_activo": False,
         "gemini_disponible": estado_gemini["disponible"],
         "gemini_estado": estado_gemini["estado"],
         "gemini_ultima_verificacion": estado_gemini["ultima_verificacion"],
@@ -219,6 +221,9 @@ async def health_ready(request: Request):
         try:
             await comprobar_conexion()
             componentes["postgresql"] = True
+            async for session in obtener_sesion_db():
+                worker = await TrabajoSistemaRepository(session).obtener_worker_activo()
+                componentes["worker_sistema_activo"] = worker is not None
         except Exception:
             componentes["postgresql"] = False
     gestor = getattr(request.app.state, "gestor_diagnostico", None)
@@ -226,6 +231,8 @@ async def health_ready(request: Request):
         componentes["modelo_ml"] = bool(getattr(gestor.modelo_ml, "modelo", None))
         componentes["rag"] = bool(getattr(gestor.motor_rag, "faiss_index", None))
     listo = componentes["postgresql"] and componentes["modelo_ml"] and componentes["rag"]
+    if settings.database.enabled:
+        listo = listo and componentes["worker_sistema_activo"]
     contenido = {"status": "ready" if listo else "not_ready"}
     if not settings.is_production or settings.expose_health_details:
         contenido["componentes"] = componentes

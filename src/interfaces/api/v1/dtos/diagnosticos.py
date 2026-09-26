@@ -57,5 +57,13 @@ class ItemDiagnosticoDTO(BaseModel):
     llm_usado: bool = False
     llm_modelo: Optional[str] = None
     tokens_entrada: int = 0
-    tokens_salida: int = 0
+    conversacion_id: Optional[str] = None
     desde_cache: bool = False
+
+
+class MensajeConversacionDTO(BaseModel):
+    id: str
+    direccion: str
+    texto: Optional[str] = None
+    tipo: str = "texto"
+    fecha_hora: str

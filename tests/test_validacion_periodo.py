@@ -39,15 +39,16 @@ def cliente(monkeypatch):
     return TestClient(app)
 
 
-def test_historial_diez_por_pagina_ascendente_y_aislado(cliente):
+def test_historial_diez_por_pagina_descendente_y_aislado(cliente):
     filtro = "?fecha_desde=2026-09-04&fecha_hasta=2026-09-04"
     primera = cliente.get('/validacion' + filtro).json()
     segunda = cliente.get('/validacion' + filtro + '&skip=10').json()
     ultima = cliente.get('/validacion' + filtro + '&skip=20').json()
     assert primera['total'] == segunda['total'] == 24
-    assert [c['item'] for c in primera['casos']] == list(range(1, 11))
-    assert [c['item'] for c in segunda['casos']] == list(range(11, 21))
-    assert [c['item'] for c in ultima['casos']] == list(range(21, 25))
+    # Los listados deben presentar primero el registro más reciente.
+    assert [c['item'] for c in primera['casos']] == list(range(24, 14, -1))
+    assert [c['item'] for c in segunda['casos']] == list(range(14, 4, -1))
+    assert [c['item'] for c in ultima['casos']] == list(range(4, 0, -1))
 
 
 def test_metricas_incluyen_todo_periodo_y_deterioros(cliente):
@@ -90,7 +91,7 @@ def test_sql_agrega_y_pagina_sin_cargar_todos_los_registros():
         sql = str(session.execute.call_args.args[0].compile(dialect=postgresql.dialect(), compile_kwargs={'literal_binds': True}))
         assert total == 21
         assert 'LIMIT 10 OFFSET 10' in sql
-        assert 'fecha ASC' in sql and 'item ASC' in sql and 'id ASC' in sql
+        assert 'fecha DESC' in sql and 'item DESC' in sql and 'id DESC' in sql
         assert str(taller) in sql and "2026-09-01" in sql and "2026-09-04" in sql
         agregado = MagicMock()
         agregado.mappings.return_value.all.return_value = []

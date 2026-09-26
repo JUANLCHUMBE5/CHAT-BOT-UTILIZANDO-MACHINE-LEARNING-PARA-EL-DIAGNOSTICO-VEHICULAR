@@ -400,7 +400,10 @@ async def test_contacto_bloqueado_o_inactivo_no_recibe_acceso():
 async def test_panel_promueve_cliente_y_revocacion_lo_regresa_a_cliente():
     """Registrar un teléfono cliente lo autoriza; quitar acceso conserva la cuenta como cliente."""
     engine = obtener_engine()
-    telefono = f"+51999444{uuid.uuid4().hex[:3]}"
+    # Un teléfono de prueba debe contener dígitos exclusivamente. Los prefijos
+    # hexadecimales incluían a-f, que el normalizador elimina y podía provocar
+    # el mismo whatsapp_hash entre ejecuciones contra PostgreSQL persistente.
+    telefono = f"+51{uuid.uuid4().int % 10_000_000_000:010d}"
     service = WebhookService()
 
     await service.procesar_mensaje(
@@ -422,7 +425,7 @@ async def test_panel_promueve_cliente_y_revocacion_lo_regresa_a_cliente():
             rol_id=roles["administrador"].id,
             nombres="Admin Promoción",
             whatsapp_hash=hash_identificador_persistencia(
-                f"+51999333{uuid.uuid4().hex[:3]}", "telefono"
+                f"+51{uuid.uuid4().int % 10_000_000_000:010d}", "telefono"
             ),
             whatsapp_ultimos4="3333",
         )

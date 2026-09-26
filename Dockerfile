@@ -9,11 +9,11 @@ WORKDIR /app/backend
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libgomp1 ffmpeg curl && rm -rf /var/lib/apt/lists/*
 
-COPY backend/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY backend/ /app/backend/
-COPY machine_learning/ /app/machine_learning/
+COPY . /app/backend/
+
 RUN useradd --create-home --uid 10001 carbot && chown -R carbot:carbot /app
 USER carbot
 

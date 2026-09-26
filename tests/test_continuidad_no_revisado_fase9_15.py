@@ -19,6 +19,8 @@ Auditoría y validación de:
 
 from __future__ import annotations
 
+from types import SimpleNamespace
+
 from src.core.conversacion.compatibilidad_preguntas import CompatibilidadPreguntas
 from src.core.conversacion.gestor_plan_b import GestorPlanB
 from src.core.conversacion.interprete_respuestas_cortas import InterpreteRespuestasCortas
@@ -53,10 +55,52 @@ class GestorDiagnosticoMock:
             {"falla": "Revisión preventiva", "probabilidad": 0.15},
         ]
 
+    def procesar_consulta_texto(self, *, texto_usuario, **kwargs):
+        predicciones = self.clasificar_sintomas(texto_usuario)
+        return SimpleNamespace(
+            diagnostico_ml=predicciones[0]["falla"],
+            confianza_ml=predicciones[0]["probabilidad"],
+            predicciones_ml=predicciones,
+        )
 
-def test_incidente_real_whatsapp_fase9_15_completo() -> None:
-    """Valida la conversación exacta de 3 turnos del incidente real de WhatsApp."""
+
+def test_diagnostico_sin_session_manager_no_falla():
+    """Ejercita suficiencia real y diagnóstico con sesión opcional ausente."""
     import asyncio
+
+    from src.core.conversacion.repositorio import InMemoryConversationRepository
+
+    async def ejecutar():
+        orquestador = OrquestadorConversacion(InMemoryConversationRepository())
+        resultado = await orquestador.procesar_turno(
+            "sin-session-manager",
+            "Cuando paso por baches escucho un golpeteo en la parte delantera. "
+            "En pista lisa casi no se escucha. Al frenar no vibra el volante "
+            "y el motor funciona normal. Todavía no he revisado la suspensión.",
+            GestorDiagnosticoMock(),
+        )
+        assert resultado["decision"] == "DIAGNOSTICAR"
+        assert "suspensión" in resultado["respuesta_texto"].lower()
+        assert "obd" not in resultado["respuesta_texto"].lower()
+        await orquestador.finalizar_caso("sin-session-manager", GestorDiagnosticoMock())
+
+    asyncio.run(ejecutar())
+
+
+def test_incidente_real_whatsapp_fase9_15_completo(monkeypatch) -> None:
+    """Valida Plan B con el incidente real en la ruta de interrogación.
+
+    La suficiencia se controla: el mensaje inicial ya puede producir una
+    hipótesis en el flujo actual. Esta prueba verifica la ruta de preguntas.
+    """
+    import asyncio
+
+    from src.core.conversacion.suficiencia_informacion import EvaluadorSuficiencia
+
+    monkeypatch.setattr(
+        EvaluadorSuficiencia, "evaluar",
+        lambda estado: (2, ["sintoma", "condicion"], False, "Interrogación controlada"),
+    )
 
     async def _run() -> None:
         orquestador = OrquestadorConversacion()

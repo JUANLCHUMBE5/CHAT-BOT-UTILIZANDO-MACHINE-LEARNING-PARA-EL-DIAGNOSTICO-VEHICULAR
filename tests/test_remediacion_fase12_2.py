@@ -19,9 +19,8 @@ Cumplimiento estricto de los 14 requerimientos obligatorios de la FASE 12.2:
 
 from __future__ import annotations
 
-import io
 import uuid
-from datetime import date, datetime, timezone
+from datetime import date
 from decimal import Decimal
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -33,9 +32,6 @@ from src.application.services.validacion_taller import (
 )
 from src.infrastructure.database.models.diagnostics import Diagnostico
 from src.infrastructure.database.models.validation import ValidacionTaller
-from src.infrastructure.database.repositories.validacion_taller_repository import (
-    ValidacionTallerRepository,
-)
 from src.interfaces.api.v1.dtos.validacion import CrearCasoValidacionDTO
 from src.interfaces.api.v1.endpoints.validacion_taller import exportar_fichas_anexo2_csv
 
@@ -63,6 +59,7 @@ def test_1_development_no_cuenta_como_oficial():
 async def test_2_pilot_no_cuenta_como_oficial():
     """Los casos PILOT no deben computarse en pretest/posttest oficial, pero sí en casos_piloto."""
     session_mock = AsyncMock()
+    session_mock.add = MagicMock()
     servicio = ServicioValidacionTaller(session_mock)
 
     # Mock del repositorio
@@ -96,6 +93,7 @@ def test_3_regression_no_cuenta_como_oficial():
 async def test_4_thesis_pretest_cuenta_unicamente_en_pre():
     """THESIS_PRETEST solo se permite en fase Pre-test y computa en casos_pretest."""
     session_mock = AsyncMock()
+    session_mock.add = MagicMock()
     servicio = ServicioValidacionTaller(session_mock)
 
     # 1. Error si se intenta crear THESIS_PRETEST con fase Post-test
@@ -129,6 +127,7 @@ async def test_4_thesis_pretest_cuenta_unicamente_en_pre():
 async def test_5_thesis_posttest_cuenta_unicamente_en_post():
     """THESIS_POSTTEST solo se permite en fase Post-test y computa en casos_posttest."""
     session_mock = AsyncMock()
+    session_mock.add = MagicMock()
     servicio = ServicioValidacionTaller(session_mock)
 
     # 1. Error si se intenta crear THESIS_POSTTEST con fase Pre-test
@@ -162,6 +161,7 @@ async def test_5_thesis_posttest_cuenta_unicamente_en_post():
 async def test_6_prueba_informal_nunca_se_convierte_automaticamente_a_thesis():
     """Si no se especifica tipo_registro o es None, el sistema asigna DEVELOPMENT por defecto."""
     session_mock = AsyncMock()
+    session_mock.add = MagicMock()
     servicio = ServicioValidacionTaller(session_mock)
 
     caso_creado = ValidacionTaller(
@@ -215,6 +215,7 @@ async def test_6_prueba_informal_nunca_se_convierte_automaticamente_a_thesis():
 async def test_7_post_puede_vincular_diagnostico_id():
     """POST vincula un Diagnostico real y hereda conversacion_id y tiempo_inferencia_ml_ms."""
     session_mock = AsyncMock()
+    session_mock.add = MagicMock()
     servicio = ServicioValidacionTaller(session_mock)
 
     diag_id = uuid.uuid4()
@@ -291,6 +292,7 @@ async def test_7_post_puede_vincular_diagnostico_id():
 async def test_8_pre_funciona_sin_diagnostico_id():
     """PRETEST representa diagnóstico tradicional sin CarBot y opera sin diagnostico_id."""
     session_mock = AsyncMock()
+    session_mock.add = MagicMock()
     servicio = ServicioValidacionTaller(session_mock)
 
     caso_creado = ValidacionTaller(
@@ -347,6 +349,7 @@ async def test_8_pre_funciona_sin_diagnostico_id():
 async def test_9_prediccion_vinculada_no_puede_alterarse():
     """Si el usuario envía una predicción modificada manualmente, el servicio restaura la del modelo."""
     session_mock = AsyncMock()
+    session_mock.add = MagicMock()
     servicio = ServicioValidacionTaller(session_mock)
 
     diag_id = uuid.uuid4()
@@ -591,6 +594,7 @@ def test_12_contador_oficial_inicia_0_de_60_tras_saneamiento():
 async def test_13_datos_precargados_coinciden_con_diagnosticos():
     """Comprueba que los datos técnicos heredados del diagnóstico correspondan fielmente."""
     session_mock = AsyncMock()
+    session_mock.add = MagicMock()
     servicio = ServicioValidacionTaller(session_mock)
 
     diag_id = uuid.uuid4()
