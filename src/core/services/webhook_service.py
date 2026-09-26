@@ -43,6 +43,7 @@ from src.infrastructure.database.repositories.conversacion_repository import Con
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
 from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
+from src.infrastructure.database.repositories.vehiculo_repository import normalizar_placa
 
 # Costos operativos estándar
 COSTO_META_MENSAJE_SERVICIO_USD = Decimal(str(settings.meta_message_price_usd))
@@ -241,6 +242,30 @@ class WebhookService:
                             "meta_message_id": meta_message_id,
                             "tiempo_ms": round((time.perf_counter() - inicio) * 1000, 2),
                         }
+
+                    # La placa es obligatoria antes de ejecutar un diagnóstico por WhatsApp.
+                    # Se conserva solo en el contexto efímero de la conversación; al persistir
+                    # el vehículo se transforma en hash y últimos cuatro caracteres.
+                    contexto_placa = dict(conversacion.contexto or {})
+                    if placa in ("WAPP-01", "SIN-PLACA", ""):
+                        if contexto_placa.get("posttest_placa_pendiente"):
+                            try:
+                                placa = normalizar_placa(texto_cliente)
+                            except ValueError:
+                                respuesta_placa = "Indique una placa válida para continuar el diagnóstico."
+                            else:
+                                contexto_placa["placa_posttest"] = placa
+                                contexto_placa.pop("posttest_placa_pendiente", None)
+                                conversacion.contexto = contexto_placa
+                                respuesta_placa = "Placa registrada. Ahora describa el síntoma del vehículo."
+                        else:
+                            contexto_placa["posttest_placa_pendiente"] = True
+                            conversacion.contexto = contexto_placa
+                            respuesta_placa = "Antes de iniciar el diagnóstico, indique la placa del vehículo."
+                        await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_placa)
+                        await session.commit()
+                        return {"status": "esperando_placa", "respuesta": respuesta_placa}
+                    placa = contexto_placa.get("placa_posttest", placa)
 
                     # Registrar costo operativo del mensaje entrante
                     await operaciones_repo.registrar_uso_api(

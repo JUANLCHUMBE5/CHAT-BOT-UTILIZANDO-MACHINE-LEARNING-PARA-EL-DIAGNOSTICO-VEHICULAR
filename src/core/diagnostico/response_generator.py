@@ -14,6 +14,7 @@ from src.core.diagnostico.prompt_builder import (
 from src.core.gemini_queue import SolicitudGeminiEncolada, gemini_rate_limiter
 from src.core.logger import logger
 from src.core.sanitizer import redactar_datos_sensibles_para_llm, sanitizar_prompt_usuario
+from src.infrastructure.database.connection import database_configurada
 
 
 def generar_respuesta_con_metadatos(
@@ -134,7 +135,7 @@ def generar_respuesta_con_metadatos(
                 p.model_dump() if hasattr(p, "model_dump") else (p if isinstance(p, dict) else {"falla": str(p)})
                 for p in (predicciones_ml or [])
             ]
-            if diferir_encolado_persistente:
+            if diferir_encolado_persistente and database_configurada() and taller_id and usuario_id:
                 solicitud = SolicitudGeminiEncolada(
                     id=str(uuid.uuid4()),
                     sintoma=pregunta,
@@ -154,20 +155,20 @@ def generar_respuesta_con_metadatos(
                 posicion = gemini_rate_limiter.tamaño_cola() + 1
                 espera_segundos = gemini_rate_limiter.tiempo_espera_estimado()
             else:
-                solicitud, posicion, espera_segundos = gemini_rate_limiter.encolar_solicitud(
-                    sintoma=pregunta,
-                    diagnostico_ml=diagnostico_ml,
-                    confianza_ml=confianza_ml,
+                logger.error(
+                    "[Gemini Queue] Se evito responder en_cola_gemini sin contexto durable "
+                    "(diferir=%s, taller=%s, usuario=%s).",
+                    diferir_encolado_persistente,
+                    bool(taller_id),
+                    bool(usuario_id),
+                )
+                return generar_respuesta_degradada(
+                    tipo_consulta=tipo_consulta,
                     contexto_manual=contexto_manual,
                     titulo_manual=titulo_manual,
-                    requiere_revision_humana=requiere_revision_humana,
-                    remitente=remitente,
-                    proveedor=proveedor_normalizado,
-                    taller_id=taller_id,
-                    usuario_id=usuario_id,
-                    conversacion_id=conversacion_id,
-                    tipo_consulta=tipo_consulta,
-                    predicciones_ml=predicciones_dicts,
+                    diagnostico_ml=diagnostico_ml,
+                    confianza_pct=confianza_pct,
+                    alerta_revision=alerta_revision,
                 )
             logger.info(
                 f"[Gemini Queue] Solicitud {solicitud.id[:8]} colocada en cola de espera (Posición: {posicion}, Espera: ~{espera_segundos}s, Proveedor: {proveedor})."
