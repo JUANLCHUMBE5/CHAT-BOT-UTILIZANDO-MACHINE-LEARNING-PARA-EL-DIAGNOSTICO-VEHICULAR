@@ -527,6 +527,11 @@ class OrquestadorConversacion:
                 nueva_evidencia=texto_limpio if hechos_extraidos else None,
             )
 
+            from src.core.conversacion.ruteador_sistema import detectar_ruta_sistema
+            ruta_sistema = detectar_ruta_sistema(estado, texto_limpio if hechos_extraidos else None)
+            if ruta_sistema.sistema:
+                estado.active_system = ruta_sistema.sistema
+
             tiene_descartada_en_top3 = any(
                 h.get("falla", "").strip().lower() in {d.strip().lower() for d in estado.hipotesis_descartadas}
                 for h in estado.top3_actual
@@ -538,6 +543,32 @@ class OrquestadorConversacion:
                     estado.confianza_actual = hipotesis_final_presentada[0]["probabilidad"]
                 else:
                     estado.confianza_actual = dto_resultado.confianza_ml
+
+            # La hipótesis persistida, la que se pregunta y la que se muestra deben
+            # provenir de la misma lista post-filtro. Si el filtro descartó el Top ML,
+            # no reutilizamos su procedimiento RAG para evitar instrucciones ajenas.
+            if hipotesis_final_presentada:
+                from src.core.diagnostico.models import PrediccionML
+
+                predicciones_presentadas = [PrediccionML(**item) for item in hipotesis_final_presentada]
+                top1_presentado = hipotesis_final_presentada[0]
+                se_corrigio_top_ml = (
+                    not top3_ml_raw
+                    or top1_presentado["falla"] != top3_ml_raw[0]["falla"]
+                )
+                dto_resultado = dto_resultado.model_copy(update={
+                    "diagnostico_ml": top1_presentado["falla"],
+                    "confianza_ml": top1_presentado["probabilidad"],
+                    "predicciones_ml": predicciones_presentadas,
+                    "requiere_revision_humana": (
+                        dto_resultado.requiere_revision_humana or se_corrigio_top_ml
+                    ),
+                    "contexto_manual": "" if se_corrigio_top_ml else dto_resultado.contexto_manual,
+                    "titulo_manual": (
+                        "Sin procedimiento compatible verificado"
+                        if se_corrigio_top_ml else dto_resultado.titulo_manual
+                    ),
+                })
 
             from src.core.conversacion.formateador_compacto import FormateadorCompacto
             hipotesis_formatear = estado.top3_actual or [

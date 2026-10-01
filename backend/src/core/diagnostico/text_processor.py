@@ -744,6 +744,7 @@ def procesar_consulta_texto(
         contexto_manual
         and "No se encontró" not in contexto_manual
         and "Manual técnico no indexado" not in contexto_manual
+        and "corpus local preliminar no validado como oem" not in contexto_manual.lower()
         and "Coincidencia baja" not in titulo_manual
         and "Desconocido" not in titulo_manual
         and "Error" not in titulo_manual
