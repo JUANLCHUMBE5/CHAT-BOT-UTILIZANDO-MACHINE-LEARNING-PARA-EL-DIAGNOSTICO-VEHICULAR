@@ -211,7 +211,7 @@ async def test_rest_flujo_completo_a_b_c_d(
     dummy_request = Request(scope)
     consulta = ConsultaDiagnostico(
         sintoma="El motor tiembla en ralenti, bota humo negro por el escape y el escaner arroja codigo P0301",
-        placa="DEV-DUR01",
+        placa="DUR01",
         marca="Toyota",
         modelo="Yaris",
     )
@@ -342,7 +342,7 @@ async def test_e_fallo_insert_commit_en_rest_nunca_devuelve_en_cola_gemini(
     dummy_request = Request({"type": "http", "method": "POST", "path": "/api/v1/diagnostico/analizar", "headers": [], "client": ("127.0.0.1", 12345)})
     consulta = ConsultaDiagnostico(
         sintoma="El motor tiembla en ralenti, bota humo negro por el escape y el escaner arroja codigo P0301",
-        placa="DEV-ERR01",
+        placa="ERR01",
         marca="Nissan",
         modelo="Sentra",
     )
@@ -386,7 +386,7 @@ def test_e_sin_base_de_datos_nunca_devuelve_en_cola_gemini(monkeypatch: pytest.M
 
     res = gestor.procesar_consulta_texto(
         "El embrague patina en tercera marcha, huele a quemado y no transmite fuerza al acelerar",
-        placa="DEV-NODB1",
+        placa="NODB1",
         marca_modelo="Toyota Yaris",
         proveedor="api",
         slot_gemini_preconcedido=False,
