@@ -38,6 +38,21 @@ def _nombre_hipotesis(hipotesis: Any) -> str:
     )
 
 
+def _respuesta_detalle_hipotesis(hipotesis: Any, orden: int) -> str:
+    """Devuelve una guía verificable para una selección Top-3, sin confirmarla aún."""
+
+    falla = _nombre_hipotesis(hipotesis) or "Hipótesis técnica bajo revisión"
+    prueba = str(getattr(hipotesis, "prueba_recomendada", None) or "").strip()
+    respuesta = (
+        f"🔎 Seleccionaste la hipótesis *{orden}*: *{falla}*.\n\n"
+        "Aún no la registraré como confirmada hasta contar con una verificación física."
+    )
+    if prueba:
+        respuesta += f"\n\n🔧 *Primero verifica:* {prueba}"
+    respuesta += "\n\nResponde *SÍ* si la comprobaste o *NO* para descartar y continuar el análisis."
+    return respuesta
+
+
 class ValidationWorkflow:
     """Gestiona la confirmación o descarte de diagnósticos por parte del mecánico."""
 
@@ -320,11 +335,34 @@ class ValidationWorkflow:
                 }
 
             if seleccion_top3 and seleccion_top3.accion == "CONFIRMAR":
-                orden_hipotesis_seleccionada = seleccion_top3.orden
-                metodo_seleccion = seleccion_top3.metodo
-                confirmacion = ConfirmacionDiagnosticoWhatsApp(
-                    estado="confirmado"
+                hipotesis_elegida = next(
+                    (
+                        h for h in (getattr(diagnostico_selector, "hipotesis", None) or [])
+                        if getattr(h, "orden", None) == seleccion_top3.orden
+                    ),
+                    None,
                 )
+                respuesta_texto = _respuesta_detalle_hipotesis(
+                    hipotesis_elegida,
+                    seleccion_top3.orden or 1,
+                )
+                await cls.guardar_respuesta_validacion_outbox(
+                    msg_repo,
+                    conversacion,
+                    usuario,
+                    meta_message_id,
+                    respuesta_texto,
+                    proveedor,
+                    remitente,
+                )
+                await session.commit()
+                return {
+                    "status": "esperando_confirmacion",
+                    "diagnostico_id": str(diagnostico_selector.id),
+                    "conversacion_id": str(conversacion.id),
+                    "respuesta": respuesta_texto,
+                    "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+                }
 
             elif seleccion_top3 and seleccion_top3.accion == "DESCARTAR":
                 # Reutilizar el flujo seguro existente de NO,

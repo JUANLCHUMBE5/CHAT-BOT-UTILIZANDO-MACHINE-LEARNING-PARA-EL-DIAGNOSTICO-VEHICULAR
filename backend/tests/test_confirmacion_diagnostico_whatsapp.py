@@ -11,6 +11,7 @@ from src.application.services.confirmacion_diagnostico import (
     interpretar_respuesta_validacion_whatsapp,
     interpretar_seleccion_top3,
 )
+from src.core.services.webhook.validation_workflow import _respuesta_detalle_hipotesis
 from src.core.services.webhook_service import WebhookService
 
 
@@ -127,3 +128,17 @@ def test_creo_que_es_la_segunda_confirma_top2_en_contexto():
     assert seleccion is not None
     assert seleccion.accion == "CONFIRMAR"
     assert seleccion.orden == 2
+
+
+def test_seleccionar_top3_entrega_prueba_sin_confirmar_automaticamente():
+    respuesta = _respuesta_detalle_hipotesis(
+        SimpleNamespace(
+            falla_probable="Inyectores sucios o filtro de combustible obstruido",
+            prueba_recomendada="Medir presión de combustible y revisar el patrón de pulverización.",
+        ),
+        2,
+    )
+
+    assert "hipótesis *2*" in respuesta
+    assert "Medir presión de combustible" in respuesta
+    assert "Aún no la registraré como confirmada" in respuesta
