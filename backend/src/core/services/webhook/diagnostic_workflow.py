@@ -127,7 +127,18 @@ class TechnicalDiagnosticWorkflow:
                 diagnostico_forzado=diagnostico_forzado,
             )
 
-        conversacion.contexto = gestor.session_manager.exportar_contexto(id_sesion)
+        # Fusión segura del contexto durable
+        contexto_previo = dict(conversacion.contexto or {})
+        contexto_exportado = dict(gestor.session_manager.exportar_contexto(id_sesion) or {})
+        contexto_actualizado = {**contexto_previo, **contexto_exportado}
+
+        # Preservar claves críticas de la conversación y del webhook
+        if "placa_posttest" in contexto_previo and "placa_posttest" not in contexto_actualizado:
+            contexto_actualizado["placa_posttest"] = contexto_previo["placa_posttest"]
+        if "placa" in contexto_previo and "placa" not in contexto_actualizado:
+            contexto_actualizado["placa"] = contexto_previo["placa"]
+
+        conversacion.contexto = contexto_actualizado
         return ResultadoFlujoDiagnostico(
             dto=dto,
             texto_cliente=texto_cliente,
@@ -149,18 +160,31 @@ class TechnicalDiagnosticWorkflow:
     ) -> ResultadoDiagnostico:
         from src.core.conversacion.models import ConversationState
         from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
-        from src.core.conversacion.repositorio import InMemoryConversationRepository
+        from src.core.conversacion.repositorio import PostgresConversationRepository
 
-        repo = InMemoryConversationRepository()
+        # Reutilizar / inyectar la infraestructura persistente existente
+        repo = getattr(gestor, "conversation_repo", None)
+        if repo is None:
+            repo = PostgresConversationRepository()
+            try:
+                setattr(gestor, "conversation_repo", repo)
+            except Exception:
+                pass
+
         if conversacion and getattr(conversacion, "contexto", None):
             ctx = conversacion.contexto
             if isinstance(ctx, dict):
                 st_dict = ctx.get("conversation_state") if "conversation_state" in ctx else ctx
-                if isinstance(st_dict, dict) and "hechos" in st_dict:
+                if isinstance(st_dict, dict) and ("hechos" in st_dict or "case_id" in st_dict):
                     try:
                         st_init = ConversationState.from_dict(st_dict)
                         st_init.session_id = id_sesion
-                        await repo.save_session(id_sesion, st_init)
+                        if placa and not st_init.placa:
+                            st_init.placa = placa
+                        if hasattr(repo, "_fallback"):
+                            await repo._fallback.save_session(id_sesion, st_init)
+                        else:
+                            await repo.save_session(id_sesion, st_init)
                     except Exception as e:
                         logger.warning(f"[DiagnosticWorkflow] Error al deserializar contexto previo: {e}")
 
@@ -181,19 +205,44 @@ class TechnicalDiagnosticWorkflow:
         )
 
         estado_actual = res_turno.get("estado")
-        if estado_actual:
-            conversacion.contexto = estado_actual.exportar_dict()
-            gestor.session_manager.cargar_contexto(
-                id_sesion,
-                {
-                    "conversation_state": conversacion.contexto,
-                    "case_id": estado_actual.case_id,
-                },
-            )
-
         decision = res_turno.get("decision")
-        if res_turno.get("status") in ("reinicio", "saludo") or decision in ("REINICIO", "SALUDO"):
-            es_saludo = (decision == "SALUDO" or res_turno.get("status") == "saludo")
+        decision_transicion = res_turno.get("decision_transicion")
+        es_cambio_caso = (decision == "REINICIO" or decision_transicion == "CAMBIO_DE_CASO")
+
+        if estado_actual:
+            contexto_previo = dict(conversacion.contexto or {}) if conversacion else {}
+            contexto_export_estado = estado_actual.exportar_dict()
+
+            # Fusión segura sin destruir claves persistidas
+            contexto_fusion = {**contexto_previo, "conversation_state": contexto_export_estado}
+            contexto_fusion["case_id"] = estado_actual.case_id
+
+            if es_cambio_caso:
+                contexto_fusion.pop("placa_posttest", None)
+                contexto_fusion.pop("placa", None)
+            else:
+                placa_efectiva = (
+                    estado_actual.placa
+                    or placa
+                    or contexto_previo.get("placa_posttest")
+                    or contexto_previo.get("placa")
+                )
+                if placa_efectiva and placa_efectiva not in ("WAPP-01", "SIN-PLACA", ""):
+                    contexto_fusion["placa"] = placa_efectiva
+                    contexto_fusion["placa_posttest"] = placa_efectiva
+
+            conversacion.contexto = contexto_fusion
+
+            # Sincronizar SessionManager
+            datos_sesion_manager = dict(contexto_fusion)
+            datos_sesion_manager["conversation_state"] = contexto_export_estado
+            datos_sesion_manager["case_id"] = estado_actual.case_id
+            if not es_cambio_caso and estado_actual.placa:
+                datos_sesion_manager["placa"] = estado_actual.placa
+            gestor.session_manager.cargar_contexto(id_sesion, datos_sesion_manager)
+
+        if res_turno.get("status") in ("reinicio", "saludo", "saludo_caso_activo") or decision in ("REINICIO", "SALUDO"):
+            es_saludo = (decision == "SALUDO" or res_turno.get("status") in ("saludo", "saludo_caso_activo"))
             return ResultadoDiagnostico(
                 respuesta_texto=res_turno["respuesta_texto"],
                 diagnostico_ml="Saludo / Bienvenida" if es_saludo else "Reinicio de sesión",
@@ -201,8 +250,8 @@ class TechnicalDiagnosticWorkflow:
                 contexto_manual="",
                 titulo_manual="",
                 requiere_revision_humana=False,
-                estado_sesion="inicio",
-                modo_diagnostico="inicio",
+                estado_sesion=estado_actual.fase.value if (estado_actual and res_turno.get("status") == "saludo_caso_activo") else "inicio",
+                modo_diagnostico=estado_actual.fase.value if (estado_actual and res_turno.get("status") == "saludo_caso_activo") else "inicio",
                 tipo_consulta="saludo" if es_saludo else "reinicio",
             )
         elif decision in ("PREGUNTAR", "PLAN_B") or (

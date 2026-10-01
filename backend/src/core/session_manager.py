@@ -60,6 +60,8 @@ class DiagnosticSession:
     def reiniciar(self):
         with self._lock:
             self.case_id = None
+            self.placa = None
+            self.marca_modelo = None
             self.sintomas = []
             self.conversation_state.reiniciar()
             self.consulta_tecnica_pendiente = None
@@ -148,6 +150,9 @@ class DiagnosticSession:
         with self._lock:
             return {
                 "case_id": self.case_id,
+                "placa": self.placa,
+                "marca_modelo": self.marca_modelo,
+                "sintomas": list(self.sintomas),
                 "perfil_vehiculo": dict(self.perfil_vehiculo),
                 "consulta_tecnica_pendiente": self.consulta_tecnica_pendiente,
                 "consulta_combustible_pendiente": self.consulta_combustible_pendiente,
@@ -159,16 +164,24 @@ class DiagnosticSession:
                 "campos_requeridos": list(self.campos_requeridos),
                 "kilometraje_por_aclarar": self.kilometraje_por_aclarar,
                 "estado": self.estado,
+                "contexto": dict(self.contexto),
                 "conversation_state": self.conversation_state.exportar_dict(),
             }
 
     def cargar_contexto(self, contexto: Dict[str, Any]) -> None:
         with self._lock:
             self.case_id = contexto.get("case_id")
+            placa_recuperada = contexto.get("placa") or contexto.get("placa_posttest")
+            if placa_recuperada and placa_recuperada not in ("WAPP-01", "SIN-PLACA", ""):
+                self.placa = placa_recuperada
             self.perfil_vehiculo = dict(contexto.get("perfil_vehiculo") or {})
             marca = self.perfil_vehiculo.get("marca")
             modelo = self.perfil_vehiculo.get("modelo")
-            self.marca_modelo = f"{marca} {modelo}" if marca and modelo else None
+            if marca and modelo:
+                self.marca_modelo = f"{marca} {modelo}"
+            elif contexto.get("marca_modelo"):
+                self.marca_modelo = contexto.get("marca_modelo")
+            self.sintomas = list(contexto.get("sintomas") or [])
             self.consulta_tecnica_pendiente = contexto.get("consulta_tecnica_pendiente")
             self.consulta_combustible_pendiente = contexto.get("consulta_combustible_pendiente")
             self.modo_falla_combustible = contexto.get("modo_falla_combustible")
@@ -179,12 +192,18 @@ class DiagnosticSession:
             self.campos_requeridos = list(contexto.get("campos_requeridos") or [])
             self.kilometraje_por_aclarar = bool(contexto.get("kilometraje_por_aclarar", False))
             self.estado = str(contexto.get("estado") or "inicio")
+            if isinstance(contexto.get("contexto"), dict):
+                self.contexto = dict(contexto["contexto"])
             if "conversation_state" in contexto and isinstance(contexto["conversation_state"], dict):
                 self.conversation_state = ConversationState.from_dict(contexto["conversation_state"])
                 if self.case_id and not self.conversation_state.case_id:
                     self.conversation_state.case_id = self.case_id
                 elif self.conversation_state.case_id and not self.case_id:
                     self.case_id = self.conversation_state.case_id
+                if self.placa and not self.conversation_state.placa:
+                    self.conversation_state.placa = self.placa
+                elif self.conversation_state.placa and not self.placa:
+                    self.placa = self.conversation_state.placa
             self.updated_at = time.time()
 
     def ha_expirado(self, ttl_segundos: int = 1800) -> bool:
@@ -239,6 +258,8 @@ class SessionManager:
                 sesion = self.obtener_o_crear_sesion(session_id)
             if placa and placa not in ("REST-API", "WAPP-01", "DESCONOCIDO"):
                 sesion.placa = placa
+                if sesion.conversation_state and not sesion.conversation_state.placa:
+                    sesion.conversation_state.placa = placa
             if marca_modelo and marca_modelo not in ("Vehiculo Generico", "Generico Generico", "Generico", ""):
                 sesion.marca_modelo = marca_modelo
 

@@ -100,7 +100,7 @@ class PathConfig(BaseModel):
     tracker_csv: Path = ML_ROOT / "data" / "tracker_diagnosticos.csv"
     manuals_dir: Path = ML_ROOT / "manuals"
     manual_file: Path = ML_ROOT / "manuals" / "manual_procedimientos.txt"
-    rag_version: str = Field(default_factory=lambda: os.getenv("CARBOT_RAG_VERSION", "baseline_f8_3").strip())
+    rag_version: str = Field(default_factory=lambda: os.getenv("CARBOT_RAG_VERSION", "candidate_v1").strip())
     model_pkl: Path = Field(default_factory=lambda: _default_model_paths()[0])
     vectorizer_pkl: Path = Field(default_factory=lambda: _default_model_paths()[1])
     modelo_sistema_pkl: Path = Field(default_factory=lambda: _default_model_paths()[2])

@@ -28,7 +28,12 @@ class GeneradorPreguntas:
             QuestionIntent.TEMPERATURA_MOTOR_EN_MARCHA,
             QuestionIntent.TEMPERATURA_AMBIENTAL_ARRANQUE,
         ):
-            return estado.obtener_hecho("temperatura") is not None or estado.obtener_hecho("temperatura_arranque") is not None
+            return (
+                estado.obtener_hecho("temperatura") is not None
+                or estado.obtener_hecho("temperatura_arranque") is not None
+                or any(h.categoria == "temperatura" for h in estado.hechos.values())
+                or estado.ya_preguntado(QuestionIntent.TEMPERATURA_APARICION)
+            )
 
         if intent == QuestionIntent.CONDICION_OPERACION:
             if estado.estado_operativo in (
@@ -36,9 +41,19 @@ class GeneradorPreguntas:
                 EstadoOperativo.RALENTI,
                 EstadoOperativo.MARCHA,
                 EstadoOperativo.FRENADO,
+                EstadoOperativo.ESTACIONADO,
             ):
                 return True
-            return estado.obtener_hecho("condicion_operacion") is not None
+            return (
+                estado.obtener_hecho("condicion_operacion") is not None
+                or any(
+                    w in str(h.valor).lower()
+                    for h in estado.hechos.values()
+                    if h.categoria == "condicion"
+                    for w in ("ralenti", "ralentí", "en_marcha", "acelerar", "frenado")
+                )
+                or estado.ya_preguntado(QuestionIntent.CONDICION_OPERACION)
+            )
 
         if intent in (QuestionIntent.COMPORTAMIENTO_ARRANQUE, QuestionIntent.CAIDA_TENSION_ARRANQUE):
             return bool(
@@ -51,8 +66,35 @@ class GeneradorPreguntas:
 
         if intent == QuestionIntent.CODIGO_DTC:
             return (
-                estado.dtc_status == DtcStatus.DTC_OBSERVADO
+                estado.dtc_status in (DtcStatus.DTC_OBSERVADO, DtcStatus.DTC_DESCONOCIDO)
                 or any(h.categoria == "dtc" for h in estado.hechos.values())
+                or estado.obtener_hecho("sintoma_testigo_check_engine") is not None
+                or estado.obtener_hecho("codigo_dtc") is not None
+                or estado.obtener_hecho("escaner_disponible") is not None
+                or any("check" in k.lower() or "testigo" in k.lower() for k in estado.hechos.keys())
+                or estado.ya_preguntado(QuestionIntent.CODIGO_DTC)
+            )
+
+        if intent == QuestionIntent.PRESENCIA_RUIDO:
+            return (
+                estado.obtener_hecho("ruido_arranque") is not None
+                or estado.obtener_hecho("presencia_ruido") is not None
+                or any(
+                    k in estado.hechos
+                    for k in (
+                        "sintoma_ruido_metálico",
+                        "sintoma_silbido___fuga_de_vacío",
+                        "sintoma_cascabeleo",
+                        "sintoma_golpeteo",
+                        "sintoma_chillido",
+                    )
+                )
+                or any(
+                    any(w in str(h.valor).lower() for w in ("cascabeleo", "silbido", "chillido", "golpeteo", "humo", "ruido"))
+                    for h in estado.hechos.values()
+                    if h.estado in (FactState.CONFIRMADO, FactState.AUSENTE_NEGADO)
+                )
+                or estado.ya_preguntado(QuestionIntent.PRESENCIA_RUIDO)
             )
 
         if intent == QuestionIntent.COMPONENTE_REVISADO:
@@ -69,6 +111,17 @@ class GeneradorPreguntas:
             return bool(estado.marca and estado.modelo)
 
         return False
+
+    @classmethod
+    def formular_pregunta_discriminante_post_descarte(
+        cls,
+        estado: ConversationState,
+        falla_descartada: str,
+    ) -> Tuple[str, QuestionIntent]:
+        """Formula pregunta técnica discriminante adaptativa excluyendo hechos ya conocidos."""
+        from src.core.conversacion.filtro_preguntas_discriminantes import FiltroPreguntasDiscriminantes
+
+        return FiltroPreguntasDiscriminantes.formular(estado, falla_descartada)
 
     @classmethod
     def puede_preguntar(cls, intent: QuestionIntent, estado: ConversationState) -> bool:
@@ -129,13 +182,21 @@ class GeneradorPreguntas:
                 return False, "PREGUNTA_REPETIDA"
 
         # 2. INTENT_YA_RESUELTO
-        if intent == QuestionIntent.CONDICION_OPERACION and estado.estado_operativo != EstadoOperativo.DESCONOCIDO:
-            return False, "INTENT_YA_RESUELTO"
-        if intent == QuestionIntent.TEMPERATURA_APARICION and estado.obtener_hecho("temperatura") is not None:
-            return False, "INTENT_YA_RESUELTO"
-        if intent == QuestionIntent.CODIGO_DTC and (
-            estado.dtc_status == DtcStatus.DTC_OBSERVADO or any(h.categoria == "dtc" for h in estado.hechos.values())
+        if intent == QuestionIntent.CONDICION_OPERACION and (
+            estado.estado_operativo != EstadoOperativo.DESCONOCIDO
+            or estado.obtener_hecho("condicion_operacion") is not None
+            or estado.ya_preguntado(QuestionIntent.CONDICION_OPERACION)
         ):
+            return False, "INTENT_YA_RESUELTO"
+        if intent == QuestionIntent.TEMPERATURA_APARICION and (
+            estado.obtener_hecho("temperatura") is not None
+            or any(h.categoria == "temperatura" for h in estado.hechos.values())
+            or estado.ya_preguntado(QuestionIntent.TEMPERATURA_APARICION)
+        ):
+            return False, "INTENT_YA_RESUELTO"
+        if intent == QuestionIntent.CODIGO_DTC and cls.already_known(QuestionIntent.CODIGO_DTC, estado):
+            return False, "INTENT_YA_RESUELTO"
+        if intent == QuestionIntent.PRESENCIA_RUIDO and cls.already_known(QuestionIntent.PRESENCIA_RUIDO, estado):
             return False, "INTENT_YA_RESUELTO"
 
         # 3. Aplicabilidad semántica por dominio. La ganancia de información
@@ -147,6 +208,16 @@ class GeneradorPreguntas:
             return False, motivo_dominio
 
         # 4. HECHO_YA_CONOCIDO
+        if re.search(r"\b(ralent[ií]|en\s+marcha|aceleraci[oó]n\s+en\s+marcha)\b", texto_l):
+            if estado.estado_operativo != EstadoOperativo.DESCONOCIDO or estado.obtener_hecho("condicion_operacion") is not None:
+                return False, "HECHO_YA_CONOCIDO"
+        if re.search(r"\b(check\s+engine|testigo\s+encendido|testigo\s+en\s+el\s+tablero)\b", texto_l):
+            if (
+                estado.obtener_hecho("sintoma_testigo_check_engine") is not None
+                or estado.dtc_status in (DtcStatus.DTC_OBSERVADO, DtcStatus.DTC_DESCONOCIDO)
+                or any("check" in k.lower() or "testigo" in k.lower() for k in estado.hechos.keys())
+            ):
+                return False, "HECHO_YA_CONOCIDO"
         if ("clic" in texto_l or "metralleta" in texto_l or "chasquido" in texto_l) and estado.obtener_hecho("ruido_arranque") is not None:
             return False, "HECHO_YA_CONOCIDO"
         if "luces" in texto_l and estado.obtener_hecho("luces_se_atenuan") is not None:

@@ -460,6 +460,9 @@ class SegmentadorCasos:
         """
         nuevo_id = nuevo_case_id or str(uuid.uuid4())
         estado.archivar_caso_actual(nuevo_id)
+        estado.placa = None
+        estado.marca = None
+        estado.modelo = None
         return nuevo_id
 
     @classmethod

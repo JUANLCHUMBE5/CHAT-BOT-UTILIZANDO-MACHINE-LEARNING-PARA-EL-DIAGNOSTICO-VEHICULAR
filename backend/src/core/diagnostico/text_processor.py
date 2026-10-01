@@ -785,9 +785,19 @@ def procesar_consulta_texto(
         confianza = predicciones_ml[0].probabilidad
         resultado_fusion.evidencia_confirmada.append(motivo_prioridad)
 
-    # Si la fusión cambió la hipótesis, el documento anterior ya no es evidencia aplicable.
+    # Si el RAG declara una falla específica y contradice la hipótesis fusionada,
+    # el documento deja de ser aplicable.
+    #
+    # Los procedimientos transversales/procedurales pueden tener falla=None;
+    # en ese caso NO deben descartarse únicamente por carecer de una clase ML.
+    falla_rag = (meta_rag_dict or {}).get("falla")
+    contradiccion_falla_rag = bool(
+        falla_rag
+        and diagnostico_predictivo != falla_rag
+    )
+
     if (
-        diagnostico_predictivo != (meta_rag_dict or {}).get("falla", diagnostico_predictivo)
+        contradiccion_falla_rag
         or not documento_compatible(texto_evaluar, titulo_manual, contexto_manual)
     ):
         contexto_manual, titulo_manual, similitud_rag = "", "Sin procedimiento compatible verificado", 0.0

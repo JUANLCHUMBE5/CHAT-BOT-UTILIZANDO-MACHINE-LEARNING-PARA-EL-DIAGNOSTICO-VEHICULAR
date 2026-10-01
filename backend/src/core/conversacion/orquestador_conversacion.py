@@ -96,19 +96,41 @@ class OrquestadorConversacion:
                 "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": ConversationState(session_id=session_id),
             }
 
-        # 2.1 Detección de saludo inicial ("hola", "buenas", "buenos días")
+        # 2.1 Detección de saludo ("hola", "buenas", "buenos días")
         if ExtractorHechos.es_saludo(texto_limpio):
-            if estado.fase == ConversationPhase.RESULTADO or not estado.hechos:
-                estado.iniciar_nuevo_caso()
-            resp_saludo = (
-                "👋 *¡Hola! Soy CarBot, chatbot de diagnóstico vehicular con Inteligencia Artificial.*\n\n"
-                "¿En qué te puedo ayudar hoy o qué falla presenta el auto? Para empezar, cuéntame el problema o síntomas que notas."
+            tiene_caso_activo = bool(
+                estado.placa
+                or estado.hechos
+                or estado.active_symptoms
+                or estado.completed_tests
+                or (estado.fase != ConversationPhase.INICIO and estado.fase != ConversationPhase.RESULTADO)
             )
-            return {
-                "status": "saludo", "respuesta_texto": resp_saludo, "diagnostico_ml": "Saludo / Bienvenida",
-                "confianza_ml": 1.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "SALUDO",
-                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
-            }
+            if not tiene_caso_activo:
+                if estado.fase == ConversationPhase.RESULTADO or not estado.hechos:
+                    estado.iniciar_nuevo_caso()
+                resp_saludo = (
+                    "👋 *¡Hola! Soy CarBot, chatbot de diagnóstico vehicular con Inteligencia Artificial.*\n\n"
+                    "¿En qué te puedo ayudar hoy o qué falla presenta el auto? Para empezar, cuéntame el problema o síntomas que notas."
+                )
+                return {
+                    "status": "saludo", "respuesta_texto": resp_saludo, "diagnostico_ml": "Saludo / Bienvenida",
+                    "confianza_ml": 1.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "SALUDO",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                }
+            else:
+                # Caso activo: preservar memoria de sesión y placa intactas
+                placa_txt = f" del vehículo con placa *{estado.placa}*" if estado.placa else ""
+                resp_saludo = (
+                    f"👋 *¡Hola! Continuamos con el diagnóstico activo{placa_txt}.*\n\n"
+                    "Cuéntame si tienes más síntomas que agregar o responde a la última indicación para continuar."
+                )
+                return {
+                    "status": "saludo_caso_activo", "respuesta_texto": resp_saludo,
+                    "diagnostico_ml": "Saludo en caso activo",
+                    "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
+                    "es_pregunta": False, "decision": "SALUDO",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                }
 
         # 2.2 Solicitud de profundización técnica ("más detalles", "cómo lo reviso")
         if ExtractorHechos.es_solicitud_detalle(texto_limpio) and (estado.top3_actual or getattr(estado, "falla_principal", None)):
@@ -180,6 +202,11 @@ class OrquestadorConversacion:
         hechos_extraidos = ExtractorHechos.extraer_y_actualizar(estado, texto_limpio)
         if interpretacion_corta and "hecho" in interpretacion_corta:
             hechos_extraidos.append(interpretacion_corta["hecho"])
+
+        if texto_limpio not in estado.historial_mensajes_usuario:
+            estado.historial_mensajes_usuario.append(texto_limpio)
+        if hechos_extraidos and texto_limpio not in estado.active_symptoms:
+            estado.active_symptoms.append(texto_limpio)
 
         # Detección de evidencia duplicada (Fase 11.3 - Caso D / T04)
         es_evidencia_duplicada = False
@@ -322,9 +349,17 @@ class OrquestadorConversacion:
                         related_system="COMBUSTIBLE",
                     )
                 elif campo_ic and "chispa" in campo_ic:
-                    pregunta_elegida = "Con el probador de chispa conectado: ¿se observa salto constante de chispa azulada al dar arranque?"
-                    intent_elegido, decision = QuestionIntent.COMPONENTE_REVISADO.value, "PREGUNTAR"
-                    motivo_decision = "Usuario cuenta con probador de chispa: solicitando comprobación"
+                    if "prueba_chispa" not in estado.completed_tests:
+                        pregunta_elegida = "Con el probador de chispa conectado: ¿se observa salto constante de chispa azulada al dar arranque?"
+                        intent_elegido, decision = QuestionIntent.COMPONENTE_REVISADO.value, "PREGUNTAR"
+                        motivo_decision = "Usuario cuenta con probador de chispa: solicitando comprobación"
+                        estado.establecer_pregunta_pendiente(
+                            intent=QuestionIntent.COMPONENTE_REVISADO,
+                            expected_quantity="resultado_prueba_chispa",
+                            related_system="ENCENDIDO",
+                        )
+                    else:
+                        motivo_decision = "Prueba de chispa ya completada: evitando repetición de la comprobación"
                 else:
                     pregunta_elegida = "Con el multímetro conectado en escala de 20 V DC: ¿cuánto marca en reposo y a cuánto baja al dar arranque?"
                     intent_elegido, decision = QuestionIntent.MEDICION_VOLTAJE.value, "PREGUNTAR"
@@ -335,6 +370,16 @@ class OrquestadorConversacion:
                         expected_units=["V", "mV"],
                         related_system="ELECTRICO",
                     )
+
+            if (
+                pregunta_elegida
+                and "probador de chispa" in pregunta_elegida.lower()
+                and "prueba_chispa" in estado.completed_tests
+            ):
+                pregunta_elegida = None
+                intent_elegido = None
+                decision = "DIAGNOSTICAR"
+                motivo_decision = "Prueba de chispa ya completada: pregunta repetida bloqueada"
 
             if pregunta_elegida and intent_elegido and not respuesta_texto:
                 estado.registrar_pregunta(intent=QuestionIntent(intent_elegido), texto=pregunta_elegida, incrementar_repregunta=False)
@@ -573,7 +618,10 @@ class OrquestadorConversacion:
             estado.trazabilidad = estado.trazabilidad[-15:]
 
         # 10. Persistir estado conversacional acumulativo
-        await self.repositorio.save_session(session_id, estado)
+        if diferir_encolado_persistente and hasattr(self.repositorio, "_fallback"):
+            await self.repositorio._fallback.save_session(session_id, estado)
+        else:
+            await self.repositorio.save_session(session_id, estado)
 
         elapsed_ms = round((time.perf_counter() - t0) * 1000, 2)
         logger.info(

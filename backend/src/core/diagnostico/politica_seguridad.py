@@ -88,6 +88,21 @@ BANNER_HV = (
 )
 
 
+BANNER_BATERIA_MOTOR_ENCENDIDO = (
+    "⚠️ **ADVERTENCIA DE SEGURIDAD: NO DESCONECTE LA BATERÍA CON EL MOTOR ENCENDIDO**\n"
+    "No retire ni desconecte los bornes de la batería mientras el motor esté funcionando. "
+    "Esta maniobra puede generar sobretensiones y dañar módulos electrónicos, alternador u otros componentes eléctricos. "
+    "Para comprobar el sistema de carga utilice mediciones apropiadas con multímetro o equipo de diagnóstico.\n\n"
+)
+
+BANNER_RADIADOR_CALIENTE = (
+    "⚠️ **ADVERTENCIA DE SEGURIDAD: NO ABRA EL SISTEMA DE REFRIGERACIÓN EN CALIENTE**\n"
+    "No retire el tapón del radiador ni abra el depósito presurizado mientras el motor o el refrigerante estén calientes. "
+    "El sistema puede expulsar vapor y refrigerante a presión y causar quemaduras graves. "
+    "Espere a que el motor se enfríe antes de realizar una inspección segura.\n\n"
+)
+
+
 class PoliticaSeguridad:
     """Capa centralizada de auditoría y aplicación de directivas de seguridad en respuestas."""
 
@@ -126,12 +141,12 @@ class PoliticaSeguridad:
         """
         sev, banner = cls.evaluar_severidad(texto_usuario, diagnostico_ml)
         if banner is None:
-            return respuesta_texto
+            return cls.interceptar_maniobras_peligrosas(respuesta_texto)
 
         # Si la respuesta ya incluye el banner exacto, no duplicar
         banner_clean = banner.strip()
         if banner_clean in respuesta_texto:
-            return respuesta_texto
+            return cls.interceptar_maniobras_peligrosas(respuesta_texto)
 
         # Para alta tensión, sanear posibles invitaciones peligrosas a reparar con guantes
         resp_modificada = respuesta_texto
@@ -144,4 +159,107 @@ class PoliticaSeguridad:
                 flags=re.IGNORECASE,
             )
 
+        # Sanear únicamente la respuesta generada.
+        # El banner oficial no debe volver a pasar por el interceptor,
+        # porque contiene expresiones preventivas que podrían parecer
+        # instrucciones peligrosas fuera de contexto.
+        resp_modificada = cls.interceptar_maniobras_peligrosas(
+            resp_modificada
+        )
+
         return f"{banner}{resp_modificada}".strip()
+
+    @classmethod
+    def interceptar_maniobras_peligrosas(
+        cls,
+        respuesta_texto: str,
+    ) -> str:
+        """
+        Intercepta instrucciones operativas peligrosas que pudieran aparecer
+        en una respuesta generada, aunque el síntoma del usuario no haya
+        activado previamente una condición crítica.
+        """
+        respuesta = respuesta_texto or ""
+        respuesta_l = respuesta.lower()
+
+        # ----------------------------------------------------
+        # Batería: nunca recomendar desconexión con motor activo
+        # ----------------------------------------------------
+        patron_bateria = re.compile(
+            r"\b(?:desconect(?:a|e|ar)|retir(?:a|e|ar)|quit(?:a|e|ar))"
+            r".{0,45}\b(?:borne|terminal|bater[ií]a)\b"
+            r".{0,80}\b(?:motor\s+(?:encendido|en\s+marcha|funcionando)|"
+            r"veh[ií]culo\s+encendido)\b",
+            re.IGNORECASE,
+        )
+
+        patron_bateria_inverso = re.compile(
+            r"\b(?:motor\s+(?:encendido|en\s+marcha|funcionando)|"
+            r"veh[ií]culo\s+encendido)\b"
+            r".{0,80}\b(?:desconect(?:a|e|ar)|retir(?:a|e|ar)|quit(?:a|e|ar))"
+            r".{0,45}\b(?:borne|terminal|bater[ií]a)\b",
+            re.IGNORECASE,
+        )
+
+        bateria_peligrosa = bool(
+            patron_bateria.search(respuesta)
+            or patron_bateria_inverso.search(respuesta)
+        )
+
+        # ----------------------------------------------------
+        # Refrigeración: nunca recomendar apertura en caliente
+        # ----------------------------------------------------
+        patron_radiador = re.compile(
+            r"\b(?:abr(?:e|ir)|retir(?:a|e|ar)|quit(?:a|e|ar))"
+            r".{0,50}\b(?:tap[oó]n|tapa)"
+            r".{0,40}\b(?:radiador|dep[oó]sito|refrigerante)\b"
+            r".{0,90}\b(?:caliente|motor\s+caliente|temperatura\s+alta)\b",
+            re.IGNORECASE,
+        )
+
+        patron_radiador_inverso = re.compile(
+            r"\b(?:motor\s+caliente|refrigerante\s+caliente|"
+            r"temperatura\s+alta)\b"
+            r".{0,90}\b(?:abr(?:e|ir)|retir(?:a|e|ar)|quit(?:a|e|ar))"
+            r".{0,50}\b(?:tap[oó]n|tapa)"
+            r".{0,40}\b(?:radiador|dep[oó]sito)\b",
+            re.IGNORECASE,
+        )
+
+        radiador_peligroso = bool(
+            patron_radiador.search(respuesta)
+            or patron_radiador_inverso.search(respuesta)
+        )
+
+        banners = []
+
+        if bateria_peligrosa:
+            banners.append(BANNER_BATERIA_MOTOR_ENCENDIDO.strip())
+
+        if radiador_peligroso:
+            banners.append(BANNER_RADIADOR_CALIENTE.strip())
+
+        if not banners:
+            return respuesta
+
+        # Ante una instrucción insegura generada, no conservar
+        # parcialmente la frase original: podría dejar fragmentos
+        # gramaticales o instrucciones ambiguas.
+        recomendaciones_seguras = []
+
+        if bateria_peligrosa:
+            recomendaciones_seguras.append(
+                "Para comprobar el sistema de carga, mida el voltaje con un multímetro "
+                "o equipo de diagnóstico sin desconectar la batería mientras el motor está en marcha."
+            )
+
+        if radiador_peligroso:
+            recomendaciones_seguras.append(
+                "Para revisar el sistema de refrigeración, apague el motor y espere a que "
+                "se enfríe completamente antes de abrir o retirar cualquier tapón presurizado."
+            )
+
+        prefijo = "\n\n".join(banners)
+        recomendacion = " ".join(recomendaciones_seguras)
+
+        return f"{prefijo}\n\n{recomendacion}".strip()

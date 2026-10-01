@@ -223,8 +223,15 @@ class ExtractorHechos:
 
         if re.search(r"\b(detenido\s+en\s+ralent[ií]|en\s+ralent[ií]|parado\s+en\s+el\s+sem[aá]foro)\b", texto_l):
             correcciones.append(("condicion_operacion", "detenido en ralentí", "condicion", FactType.CONDICION))
-        elif re.search(r"\b(al\s+acelerar\s+en\s+carretera|en\s+carretera\s+a\s+alta\s+velocidad)\b", texto_l):
-            correcciones.append(("condicion_operacion", "en carretera a velocidad", "condicion", FactType.CONDICION))
+            correcciones.append(("estado_operativo", "RALENTI", "condicion", FactType.CONDICION))
+        elif re.search(r"\b((?:tambi[eé]n\s+)?(?:ocurre\s+|pasa\s+)?acelerando|al\s+acelerar(?:\s+(?:en\s+carretera|bajo\s+carga))?|en\s+carretera\s+a\s+alta\s+velocidad|en\s+marcha)\b", texto_l):
+            correcciones.append(("condicion_operacion", "al acelerar en marcha", "condicion", FactType.CONDICION))
+            correcciones.append(("estado_operativo", "MARCHA", "condicion", FactType.CONDICION))
+
+        if re.search(r"\b(no\s+(?:tiene|hay|prende|est[aá]\s+encendido)\s+(?:el\s+)?check|check\s+(?:engine\s+)?apagado|sin\s+check)\b", texto_l):
+            correcciones.append(("sintoma_testigo_check_engine", "ausente", "polaridad", FactType.CONDICION))
+        elif re.search(r"\b(s[ií]\s+(?:tiene|prende)\s+check|check\s+(?:engine\s+)?(?:s[ií]\s+)?est[aá]\s+encendido)\b", texto_l):
+            correcciones.append(("sintoma_testigo_check_engine", "testigo check engine", "sintoma", FactType.SINTOMA))
 
         if any(w in texto_l for w in ("demora en arrancar", "demora en encender", "demora al arrancar", "tarda en arrancar", "cuesta prender", "le cuesta encender", "demora por las mañanas")):
             correcciones.append(("sintoma_demora_arranque", "demora en arrancar", "sintoma", FactType.SINTOMA))
@@ -254,11 +261,17 @@ class ExtractorHechos:
                     estado.eliminar_hecho("condicion_operacion")
                     estado.estado_operativo = EstadoOperativo.ARRANQUE
                     estado.dominio_probable = "ARRANQUE"
+                elif campo == "estado_operativo":
+                    try:
+                        estado.estado_operativo = EstadoOperativo(nuevo_val)
+                    except (ValueError, TypeError):
+                        pass
+                est_f = FactState.AUSENTE_NEGADO if (cat == "polaridad" and nuevo_val == "ausente") else FactState.CONFIRMADO
                 h = estado.registrar_hecho(
                     campo=campo,
                     valor=nuevo_val,
                     categoria=cat,
-                    estado=FactState.CONFIRMADO,
+                    estado=est_f,
                     texto_crudo=texto_usuario,
                     tipo=tipo_f,
                 )
@@ -351,6 +364,77 @@ class ExtractorHechos:
             )
             hechos_extraidos.append(h.to_dict())
 
+        # 5c.1 Resultado explícito de prueba de chispa (Hotfix Sentra H02)
+        # Diferencia disponibilidad de la herramienta de un resultado
+        # técnico ya observado durante la comprobación.
+        menciona_chispa = bool(
+            re.search(
+                r"\b(chispa|salto\s+de\s+chispa|probador\s+de\s+chispa)\b",
+                texto_l,
+            )
+        )
+
+        chispa_ausente = bool(
+            menciona_chispa
+            and re.search(
+                r"\b("
+                r"no\s+(?:hay|tiene|da|sale|se\s+observa|se\s+ve)\s+(?:ninguna\s+)?chispa"
+                r"|sin\s+chispa"
+                r"|no\s+salta\s+chispa"
+                r"|chispa\s+ausente"
+                r")\b",
+                texto_l,
+            )
+        )
+
+        chispa_presente = bool(
+            menciona_chispa
+            and not chispa_ausente
+            and re.search(
+                r"\b("
+                r"se\s+observa(?:\s+una)?\s+chispa"
+                r"|se\s+ve(?:\s+una)?\s+chispa"
+                r"|hay\s+chispa"
+                r"|da\s+chispa"
+                r"|chispa\s+(?:azul|azulada|constante|uniforme|fuerte)"
+                r"|salto\s+(?:constante\s+)?de\s+chispa"
+                r")\b",
+                texto_l,
+            )
+        )
+
+        if chispa_ausente:
+            h = estado.registrar_hecho(
+                "resultado_prueba_chispa",
+                "chispa ausente",
+                categoria="prueba_diagnostica",
+                estado=FactState.CONFIRMADO,
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            estado.registrar_prueba_completada(
+                "prueba_chispa",
+                "SIN_CHISPA",
+                detalles={"texto_crudo": texto_usuario},
+            )
+            hechos_extraidos.append(h.to_dict())
+
+        elif chispa_presente:
+            h = estado.registrar_hecho(
+                "resultado_prueba_chispa",
+                "chispa presente y observable",
+                categoria="prueba_diagnostica",
+                estado=FactState.CONFIRMADO,
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            estado.registrar_prueba_completada(
+                "prueba_chispa",
+                "CHISPA_PRESENTE",
+                detalles={"texto_crudo": texto_usuario},
+            )
+            hechos_extraidos.append(h.to_dict())
+
         # 5d. Disponibilidad o indisponibilidad explícita de herramientas del taller (Fase 11.3)
         if re.search(r"\b(s[ií]\s+(?:tengo|cuento|dispongo)|tengo\s+(?:un\s+)?|cuento\s+con\s+(?:un\s+)?|lo\s+tengo|ya\s+lo\s+conect[eé]|s[ií]\s+maestro.*(?:man[oó]metro|mult[ií]metro|esc[aá]ner|tester))\b", texto_l):
             if "manometro" in texto_l or "manómetro" in texto_l or "presion" in texto_l:
@@ -370,8 +454,8 @@ class ExtractorHechos:
                 h = estado.registrar_hecho("osciloscopio_disponible", "SI", categoria="herramienta", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
                 hechos_extraidos.append(h.to_dict())
 
-        if re.search(r"\b(no\s+(?:tengo|cuento|dispongo)|sin\s+)\b", texto_l):
-            if "escaner" in texto_l or "escáner" in texto_l or "scanner" in texto_l:
+        if re.search(r"\b(no\s+(?:tengo|cuento|dispongo|se\s+ha\s+conectado|est[aá]\s+conectado|conect[eé]|se\s+conect[oó])|sin\s+|todav[ií]a\s+no\s+(?:se\s+ha\s+)?conectado|a[uú]n\s+no\s+(?:se\s+ha\s+)?conectado)\b", texto_l):
+            if "escaner" in texto_l or "escáner" in texto_l or "scanner" in texto_l or "obd" in texto_l:
                 estado.marcar_herramienta_indisponible("escaner")
                 estado.dtc_status = DtcStatus.DTC_DESCONOCIDO
                 h = estado.registrar_hecho("escaner_disponible", "NO", categoria="herramienta", estado=FactState.NO_APLICA, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
@@ -614,7 +698,8 @@ class ExtractorHechos:
         # 10. Inferencia contextual de EstadoOperativo y detección de contradicciones (Fase 9.6 y 9.10)
         res_op = cls.inferir_estado_operativo(estado, texto_usuario)
         nuevo_estado_op, es_conflicto = res_op[0], res_op[1]
-        estado.estado_operativo = nuevo_estado_op
+        if nuevo_estado_op != EstadoOperativo.DESCONOCIDO or not any(c[0] == "estado_operativo" for c in corrs):
+            estado.estado_operativo = nuevo_estado_op
 
         if nuevo_estado_op == EstadoOperativo.FRENADO and not estado.obtener_hecho("condicion_operacion"):
             h_freno = estado.registrar_hecho("condicion_operacion", "al frenar", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
@@ -665,7 +750,7 @@ class ExtractorHechos:
         marcha_actual = bool(
             re.search(
                 r"\b(en\s+carretera|a\s+\d+\s*km/h|circulando|en\s+marcha|andando|anda|al\s+andar|a\s+velocidad|"
-                r"acelerando\s+con\s+fuerza|voy\s+a\s+\d+|cuando\s+voy\s+a|manejando|al\s+manejar|"
+                r"acelerando|al\s+acelerar|bajo\s+aceleraci[oó]n|acelerando\s+con\s+fuerza|voy\s+a\s+\d+|cuando\s+voy\s+a|manejando|al\s+manejar|"
                 r"despu[eé]s\s+de\s+\d+\s+minutos|pistas?\s+irregulares?|baches?|trocha|calamina|empedrado)\b",
                 texto_l,
             )

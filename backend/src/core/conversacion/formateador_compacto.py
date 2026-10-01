@@ -31,6 +31,29 @@ def _simplificar_nombre_falla(falla: str) -> str:
     return texto[0].upper() + texto[1:] if texto else "Revisión técnica general"
 
 
+_PATRONES_PASO_PREPARATORIO = re.compile(
+    r"(?:"
+    r"desconect(?:ar|e)\s+.*(?:borne|bater[ií]a|cable\s+negativo|alimentaci[oó]n|corriente)"
+    r"|borne\s+negativo"
+    r"|cable\s+negativo"
+    r"|retirar\s+.*(?:alimentaci[oó]n|bater[ií]a|borne)"
+    r"|aislar\s+.*(?:borne|cable|bater[ií]a)"
+    r"|por\s+seguridad"
+    r"|como\s+precauci[oó]n"
+    r"|precauci[oó]n\s+de\s+seguridad"
+    r"|(?:elevar|levantar)\s+el\s+veh[ií]culo"
+    r"|estacionar\s+en\s+superficie\s+plana"
+    r"|apagar\s+el\s+motor\s+y\s+esperar"
+    r")",
+    re.IGNORECASE,
+)
+
+
+def _es_paso_preparatorio(texto: str) -> bool:
+    """Detecta si un paso del manual RAG es preparatorio/seguridad y no una prueba diagnóstica."""
+    return bool(_PATRONES_PASO_PREPARATORIO.search(texto))
+
+
 def _extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optional[Any] = None) -> str:
     """Extrae una prueba física o acción concreta y breve (<140 caracteres)."""
     # 0. Consultar Plan B si hay herramientas bloqueadas (Fase 9.11)
@@ -55,6 +78,15 @@ def _extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Opti
     if "inyector" in falla_l or "filtro" in falla_l:
         return "presión en el riel de inyección y prueba de entrega/goteo en banco o probador."
     if "bujia" in falla_l or "bobina" in falla_l:
+        # Si la prueba de chispa ya fue realizada, no volver a
+        # recomendarla como primera acción. Esto no descarta
+        # automáticamente bobinas ni modifica la hipótesis ML.
+        prueba_chispa_completada = bool(
+            estado
+            and getattr(estado, "completed_tests", {}).get("prueba_chispa") is not None
+        )
+        if prueba_chispa_completada:
+            return "estado físico y calibración del electrodo de las bujías."
         return "salto de chispa en las bobinas y estado/calibración del electrodo de las bujías."
     if "desbalanceo" in falla_l or "llanta" in falla_l:
         return "balanceo dinámico de las ruedas en banco e inspección de deformación en neumáticos."
@@ -67,23 +99,30 @@ def _extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Opti
     if "termostato" in falla_l or "ventilador" in falla_l or "recalienta" in falla_l:
         return "temperatura en ambas mangueras del radiador y activación oportuna del electroventilador."
 
-    # 2. Utilizar prueba de la directriz taxonómica
+    # 2. Utilizar prueba de la directriz taxonómica oficial
     if directriz and directriz.prueba_sugerida:
         oraciones = directriz.prueba_sugerida.split(". ")
         primera = oraciones[0].strip()
         if not primera.endswith("."):
             primera += "."
-        # Si es concisa (< 160 caracteres), retornarla directamente
-        if len(primera) <= 160:
+        # Priorizar la directriz taxonómica oficial (hasta 250 caracteres)
+        if len(primera) <= 250:
             return primera[0].lower() + primera[1:]
+        # Truncado determinístico seguro si supera 250 caracteres
+        corte = primera[:240].rsplit(",", 1)[0].strip()
+        if not corte.endswith("."):
+            corte += "."
+        return corte[0].lower() + corte[1:]
 
-    # 3. Extraer del contexto RAG si hay instrucciones
-    if contexto_rag and "1." in contexto_rag:
-        match = re.search(r"1\.\s*([^\n\r.]+)", contexto_rag)
-        if match:
-            candidata = match.group(1).strip()
-            if len(candidata) <= 140:
-                return candidata[0].lower() + candidata[1:] + "."
+    # 3. Extraer del contexto RAG si hay instrucciones (omitiendo pasos preparatorios/seguridad)
+    if contexto_rag:
+        candidatos_rag = re.findall(r"(?:^|\n)\s*\d+\.\s*([^\n\r.]+)", contexto_rag)
+        for paso in candidatos_rag:
+            paso_limpio = paso.strip()
+            if not paso_limpio or _es_paso_preparatorio(paso_limpio):
+                continue
+            if len(paso_limpio) <= 180:
+                return paso_limpio[0].lower() + paso_limpio[1:] + "."
 
     return "inspección física directa del componente y sus conexiones principales en taller."
 

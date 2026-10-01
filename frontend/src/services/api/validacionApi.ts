@@ -5,6 +5,7 @@ import type {
 } from '../../types';
 import {
   API_BASE_URL,
+  crearUrlApi,
   authFetch,
   getAuthHeaders,
   extractErrorMessage,
@@ -22,7 +23,7 @@ export async function getCasosValidacion(params?: {
   skip?: number;
   limit?: number;
 }): Promise<{ total: number; skip: number; limit: number; casos: CasoValidacionDTO[] }> {
-  const url = new URL(`${API_BASE_URL}/validacion-taller`);
+  const url = crearUrlApi(`${API_BASE_URL}/validacion-taller`);
   if (params?.fecha_desde) url.searchParams.set('fecha_desde', params.fecha_desde);
   if (params?.fecha_hasta) url.searchParams.set('fecha_hasta', params.fecha_hasta);
   if (params?.fase) url.searchParams.append('fase', params.fase);
@@ -46,7 +47,7 @@ export async function getCasosValidacion(params?: {
 export async function getMetricasValidacion(
   periodo: { fecha_desde?: string; fecha_hasta?: string } = {},
 ): Promise<MetricasValidacionDTO> {
-  const url = new URL(`${API_BASE_URL}/validacion-taller/metricas`);
+  const url = crearUrlApi(`${API_BASE_URL}/validacion-taller/metricas`);
   for (const [key, value] of Object.entries(periodo)) if (value) url.searchParams.set(key, value);
   const res = await authFetch(url.toString(), {
     headers: getAuthHeaders(),
@@ -97,7 +98,7 @@ export function getExportarTrackerCsvUrl(): string {
 }
 
 export async function descargarValidacionCsv(periodo: { fecha_desde?: string; fecha_hasta?: string }): Promise<void> {
-  const url = new URL(getExportarTrackerCsvUrl());
+  const url = crearUrlApi(getExportarTrackerCsvUrl());
   for (const [key, value] of Object.entries(periodo)) if (value) url.searchParams.set(key, value);
   const res = await authFetch(url.toString(), { headers: getAuthHeaders() });
   if (!res.ok) throw new Error(await extractErrorMessage(res, 'No se pudo exportar el período'));
@@ -114,7 +115,7 @@ export function getExportarFichasAnexo2CsvUrl(): string {
 }
 
 export async function descargarFichasAnexo2Csv(periodo: { fecha_desde?: string; fecha_hasta?: string }): Promise<void> {
-  const url = new URL(getExportarFichasAnexo2CsvUrl());
+  const url = crearUrlApi(getExportarFichasAnexo2CsvUrl());
   for (const [key, value] of Object.entries(periodo)) if (value) url.searchParams.set(key, value);
   const res = await authFetch(url.toString(), { headers: getAuthHeaders() });
   if (!res.ok) throw new Error(await extractErrorMessage(res, 'No se pudo exportar el Anexo 2 oficial'));

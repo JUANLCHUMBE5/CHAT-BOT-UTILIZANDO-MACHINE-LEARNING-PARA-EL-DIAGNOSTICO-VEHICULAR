@@ -14,6 +14,7 @@ Coordina:
 from __future__ import annotations
 
 import asyncio
+import re
 import threading
 import time
 import uuid
@@ -27,6 +28,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.application.services.confirmacion_diagnostico import ConfirmacionDiagnosticoWhatsApp
 from src.config import settings
 from src.core.gestor_diagnostico import GestorDiagnostico
+from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.logger import logger
 from src.core.security import anonimizar_identificador
 from src.core.services.webhook import (
@@ -243,30 +245,6 @@ class WebhookService:
                             "tiempo_ms": round((time.perf_counter() - inicio) * 1000, 2),
                         }
 
-                    # La placa es obligatoria antes de ejecutar un diagnóstico por WhatsApp.
-                    # Se conserva solo en el contexto efímero de la conversación; al persistir
-                    # el vehículo se transforma en hash y últimos cuatro caracteres.
-                    contexto_placa = dict(conversacion.contexto or {})
-                    if placa in ("WAPP-01", "SIN-PLACA", ""):
-                        if contexto_placa.get("posttest_placa_pendiente"):
-                            try:
-                                placa = normalizar_placa(texto_cliente)
-                            except ValueError:
-                                respuesta_placa = "Indique una placa válida para continuar el diagnóstico."
-                            else:
-                                contexto_placa["placa_posttest"] = placa
-                                contexto_placa.pop("posttest_placa_pendiente", None)
-                                conversacion.contexto = contexto_placa
-                                respuesta_placa = "Placa registrada. Ahora describa el síntoma del vehículo."
-                        else:
-                            contexto_placa["posttest_placa_pendiente"] = True
-                            conversacion.contexto = contexto_placa
-                            respuesta_placa = "Antes de iniciar el diagnóstico, indique la placa del vehículo."
-                        await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_placa)
-                        await session.commit()
-                        return {"status": "esperando_placa", "respuesta": respuesta_placa}
-                    placa = contexto_placa.get("placa_posttest", placa)
-
                     # Registrar costo operativo del mensaje entrante
                     await operaciones_repo.registrar_uso_api(
                         taller_id=usuario.taller_id,
@@ -298,6 +276,79 @@ class WebhookService:
                         )
                         resultado_cliente["tiempo_total_ms"] = round(total_ms, 2)
                         return resultado_cliente
+
+                    # La placa es obligatoria únicamente para el flujo técnico/diagnóstico.
+                    # Los clientes ya fueron enrutados por ClientWorkflow y no deben quedar
+                    # bloqueados por este requisito.
+                    # Se conserva solo en el contexto efímero de la conversación; al persistir
+                    # el vehículo se transforma en hash y últimos cuatro caracteres.
+                    contexto_placa = dict(conversacion.contexto or {})
+
+                    # 1. Recuperar contexto persistido de la conversación activa antes de verificar si falta placa
+                    placa_persistida = (
+                        contexto_placa.get("placa_posttest")
+                        or contexto_placa.get("placa")
+                    )
+
+                    if placa_persistida and placa in ("WAPP-01", "SIN-PLACA", ""):
+                        placa = placa_persistida
+
+                    # Evaluar si realmente falta placa
+                    if placa in ("WAPP-01", "SIN-PLACA", ""):
+                        continuar_diagnostico_preplate = False
+
+                        if contexto_placa.get("posttest_placa_pendiente"):
+                            try:
+                                placa = normalizar_placa(texto_cliente)
+                            except ValueError:
+                                respuesta_placa = "Indique una placa válida para continuar el diagnóstico."
+                            else:
+                                contexto_placa["placa_posttest"] = placa
+                                contexto_placa["placa"] = placa
+                                contexto_placa.pop("posttest_placa_pendiente", None)
+
+                                # Si el usuario ya describió el vehículo/síntoma antes
+                                # de proporcionar la placa, recuperar ese turno y
+                                # procesarlo una sola vez por el flujo diagnóstico normal.
+                                texto_preplate = contexto_placa.pop(
+                                    "preplate_pending_input", None
+                                )
+
+                                conversacion.contexto = contexto_placa
+
+                                if texto_preplate:
+                                    texto_cliente = texto_preplate
+                                    continuar_diagnostico_preplate = True
+                                else:
+                                    respuesta_placa = (
+                                        "Placa registrada. Ahora describa el síntoma del vehículo."
+                                    )
+                        else:
+                            contexto_placa["posttest_placa_pendiente"] = True
+
+                            # El gate de placa ocurre antes del flujo diagnóstico.
+                            # Conservar información diagnóstica válida para procesarla
+                            # cuando se registre la placa.
+                            if ExtractorHechos.contiene_informacion_diagnostica(texto_cliente):
+                                contexto_placa["preplate_pending_input"] = texto_cliente
+
+                            conversacion.contexto = contexto_placa
+                            respuesta_placa = (
+                                "Hola, ¿qué tal? Soy CarBot y estoy aquí para apoyarte con el "
+                                "diagnóstico del vehículo. Para comenzar, ingresa la placa del vehículo."
+                            )
+
+                        if not continuar_diagnostico_preplate:
+                            await whatsapp_provider_service.enviar(
+                                proveedor, remitente, respuesta_placa
+                            )
+                            await session.commit()
+                            return {
+                                "status": "esperando_placa",
+                                "respuesta": respuesta_placa,
+                            }
+
+                    placa = contexto_placa.get("placa_posttest") or contexto_placa.get("placa") or placa
 
                     # 6. Flujo de validación técnica conversacional (SÍ / NO / Falla real)
                     resultado_validacion = await ValidationWorkflow.manejar_flujo_validacion(
