@@ -92,8 +92,11 @@ def detectar_ruta_sistema(estado: Any, nueva_evidencia: str | None = None) -> Ru
 def hipotesis_compatibles_con_ruta(falla: str, sistema: str | None) -> bool:
     """Evita mezclar sistemas cuando hay una ruta técnica fuerte."""
     if sistema != SISTEMA_INYECCION_MEZCLA:
-        if sistema in CATEGORIAS:
-            return any(_contiene(_normalizar(falla), t) for t in CATEGORIAS[sistema])
+        # Las categorías restantes orientan la entrevista, pero sus nombres no
+        # son una taxonomía completa de las etiquetas del Linear SVM. Filtrarlas
+        # por una lista corta de palabras vaciaría candidatos válidos (p. ej.
+        # climatización -> presión de refrigerante/electroventilador). La ruta
+        # de inyección/mezcla sí cuenta con evidencia y exclusiones explícitas.
         return True
     texto = _normalizar(falla)
     compatibles = (

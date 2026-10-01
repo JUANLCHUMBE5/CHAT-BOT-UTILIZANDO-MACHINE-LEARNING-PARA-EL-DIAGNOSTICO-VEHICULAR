@@ -27,11 +27,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.application.services.confirmacion_diagnostico import ConfirmacionDiagnosticoWhatsApp
 from src.config import settings
-from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.conversacion.extractor_hechos import ExtractorHechos
+from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.logger import logger
 from src.core.security import anonimizar_identificador
-from src.core.vehicle_profile import extraer_datos_vehiculo
 from src.core.services.webhook import (
     ClientWorkflow,
     DiagnosticPersister,
@@ -41,6 +40,7 @@ from src.core.services.webhook import (
     ValidationWorkflow,
 )
 from src.core.services.whatsapp_provider import whatsapp_provider_service
+from src.core.vehicle_profile import extraer_datos_vehiculo
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository

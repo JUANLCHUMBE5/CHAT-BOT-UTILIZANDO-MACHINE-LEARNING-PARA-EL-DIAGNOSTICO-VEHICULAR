@@ -149,10 +149,6 @@ def interpretar_seleccion_top3(
 
     # "no sé" jamás equivale a NO/descarte.
     if re.search(r"\b(no se|nose|no estoy seguro|no estoy segura)\b", t):
-        nums = {
-            int(n)
-            for n in re.findall(r"\b([123])\b", t)
-        }
         return SeleccionHipotesisTop3(
             accion="AMBIGUO",
             metodo="ambiguedad",
@@ -176,16 +172,6 @@ def interpretar_seleccion_top3(
     # "la 1 no, la 2 sí"
     # "no es la primera, es la segunda"
     # ------------------------------------------------------------
-    negativo_positivo = re.search(
-        r"(?:no\s+es\s+)?(?:la\s+|opcion\s+)?"
-        r"(1|2|3|primera|segunda|tercera)"
-        r"\s*(?:no|incorrecta|incorrecto)?"
-        r".{0,35}?"
-        r"(?:si|es)\s+(?:la\s+|opcion\s+)?"
-        r"(1|2|3|primera|segunda|tercera)",
-        t,
-    )
-
     mapa = {
         "1": 1, "primera": 1,
         "2": 2, "segunda": 2,

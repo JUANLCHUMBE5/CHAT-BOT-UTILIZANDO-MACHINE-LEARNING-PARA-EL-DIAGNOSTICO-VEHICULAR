@@ -1,8 +1,8 @@
 """Pruebas obligatorias para el hotfix de preguntas redundantes sobre hechos confirmados."""
 
 import pytest
+
 from src.core.conversacion.extractor_hechos import ExtractorHechos
-from src.core.conversacion.filtro_preguntas_discriminantes import FiltroPreguntasDiscriminantes
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 from src.core.conversacion.models import (
     ConversationState,
@@ -225,6 +225,7 @@ async def test_7_e2e_validation_workflow_sdf516_respuesta_discriminante():
     import uuid
     from types import SimpleNamespace
     from unittest.mock import AsyncMock, MagicMock
+
     from src.core.services.webhook.validation_workflow import ValidationWorkflow
 
     # 1. Preparar estado acumulado previo

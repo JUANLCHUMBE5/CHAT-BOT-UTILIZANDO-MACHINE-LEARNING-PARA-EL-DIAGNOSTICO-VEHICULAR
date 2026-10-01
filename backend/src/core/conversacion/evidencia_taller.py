@@ -81,7 +81,20 @@ def pregunta_mezcla(estado):
 
 def respuesta_evidencia_insuficiente(estado):
     """Separa los hallazgos reportados de una conclusión no sustentada por ML."""
-    if detectar_ruta_sistema(estado).sistema != "INYECCION_MEZCLA":
+    ruta = detectar_ruta_sistema(estado).sistema
+    if ruta == "CLIMATIZACION":
+        return (
+            "El acople del compresor ya quedó registrado. Sin confirmar una causa todavía, "
+            "el siguiente paso es verificar el electroventilador y medir las presiones del "
+            "refrigerante con el equipo adecuado; también inspecciona fugas en las tuberías."
+        )
+    if getattr(getattr(estado, "estado_operativo", None), "name", "") == "ARRANQUE":
+        return (
+            "Para continuar con el problema de arranque, confirma si el motor gira lento, "
+            "se escucha un clic o no gira. Luego mide el voltaje de batería y la caída de "
+            "tensión al dar arranque antes de sustituir componentes."
+        )
+    if ruta != "INYECCION_MEZCLA":
         return (
             "No hay una hipótesis con respaldo suficiente para este caso. "
             "Conservo los datos y los descartes registrados; hace falta una comprobación "

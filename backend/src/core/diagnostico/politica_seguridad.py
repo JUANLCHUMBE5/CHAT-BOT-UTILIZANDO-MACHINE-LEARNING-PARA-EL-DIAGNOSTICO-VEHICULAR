@@ -180,7 +180,6 @@ class PoliticaSeguridad:
         activado previamente una condición crítica.
         """
         respuesta = respuesta_texto or ""
-        respuesta_l = respuesta.lower()
 
         # ----------------------------------------------------
         # Batería: nunca recomendar desconexión con motor activo
