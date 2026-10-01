@@ -27,6 +27,17 @@ from src.infrastructure.database.repositories.operaciones_repository import Oper
 COSTO_META_MENSAJE_SERVICIO_USD = Decimal(str(settings.meta_message_price_usd))
 
 
+def _nombre_hipotesis(hipotesis: Any) -> str:
+    """Obtiene el texto persistible de una hipótesis sin serializar relaciones ORM."""
+
+    return str(
+        getattr(hipotesis, "falla_probable", None)
+        or getattr(hipotesis, "falla", None)
+        or getattr(hipotesis, "nombre", None)
+        or ""
+    )
+
+
 class ValidationWorkflow:
     """Gestiona la confirmación o descarte de diagnósticos por parte del mecánico."""
 
@@ -84,11 +95,7 @@ class ValidationWorkflow:
             if hipotesis.orden != orden_objetivo:
                 continue
 
-            falla_seleccionada = (
-                getattr(hipotesis, "falla", None)
-                or getattr(hipotesis, "nombre", None)
-                or getattr(hipotesis, "diagnostico", None)
-            )
+            falla_seleccionada = _nombre_hipotesis(hipotesis) or None
 
             if confirmacion.estado == "confirmado":
                 hipotesis.resultado = "confirmada"
@@ -248,12 +255,7 @@ class ValidationWorkflow:
                         hipotesis_persistidas,
                         key=lambda x: getattr(x, "orden", 999)
                     )[:3]:
-                        nombre_h = (
-                            getattr(h, "falla", None)
-                            or getattr(h, "nombre", None)
-                            or getattr(h, "diagnostico", None)
-                            or ""
-                        )
+                        nombre_h = _nombre_hipotesis(h)
                         if nombre_h:
                             hipotesis_selector.append({"falla": nombre_h})
 
@@ -386,12 +388,7 @@ class ValidationWorkflow:
                         getattr(diagnostico, "hipotesis", None) or []
                     ):
                         if getattr(h, "orden", None) == orden_hipotesis_seleccionada:
-                            falla_descartada = (
-                                getattr(h, "falla", None)
-                                or getattr(h, "nombre", None)
-                                or getattr(h, "diagnostico", None)
-                                or falla_descartada
-                            )
+                            falla_descartada = _nombre_hipotesis(h) or falla_descartada
                             h.resultado = "descartada"
                             break
 

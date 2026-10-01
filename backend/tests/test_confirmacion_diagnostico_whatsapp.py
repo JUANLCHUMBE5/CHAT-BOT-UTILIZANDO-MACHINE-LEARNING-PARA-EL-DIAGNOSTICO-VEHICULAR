@@ -9,6 +9,7 @@ from src.application.services.confirmacion_diagnostico import (
     instrucciones_confirmacion_whatsapp,
     interpretar_confirmacion_whatsapp,
     interpretar_respuesta_validacion_whatsapp,
+    interpretar_seleccion_top3,
 )
 from src.core.services.webhook_service import WebhookService
 
@@ -63,7 +64,12 @@ def test_instrucciones_piden_confirmacion_binaria():
 def test_respuesta_si_confirma_el_diagnostico_exacto_y_deja_auditoria():
     diagnostico_id = uuid.uuid4()
     usuario = SimpleNamespace(id=uuid.uuid4(), taller_id=uuid.uuid4())
-    hipotesis = SimpleNamespace(orden=1, resultado=None)
+    hipotesis = SimpleNamespace(
+        orden=1,
+        resultado=None,
+        falla_probable="Inyectores sucios o filtro de combustible obstruido",
+        diagnostico=object(),
+    )
     diagnostico = SimpleNamespace(
         id=diagnostico_id,
         estado="generado",
@@ -101,4 +107,23 @@ def test_respuesta_si_confirma_el_diagnostico_exacto_y_deja_auditoria():
     assert diagnostico.estado == "confirmado"
     assert hipotesis.resultado == "confirmada"
     assert diagnostico.trazabilidad["validacion_tecnica"]["canal"] == "whatsapp"
+    assert (
+        diagnostico.trazabilidad["validacion_tecnica"]["falla_seleccionada"]
+        == "Inyectores sucios o filtro de combustible obstruido"
+    )
     assert operaciones.auditoria["entidad_id"] == diagnostico_id
+
+
+def test_creo_que_es_la_segunda_confirma_top2_en_contexto():
+    seleccion = interpretar_seleccion_top3(
+        "Creo que es la segunda",
+        [
+            {"falla": "Falla en bujías o bobinas de encendido"},
+            {"falla": "Inyectores sucios o filtro de combustible obstruido"},
+            {"falla": "Falla de descarbonización GDI"},
+        ],
+    )
+
+    assert seleccion is not None
+    assert seleccion.accion == "CONFIRMAR"
+    assert seleccion.orden == 2
