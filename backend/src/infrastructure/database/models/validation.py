@@ -14,6 +14,7 @@ from sqlalchemy import (
     ForeignKey,
     Identity,
     Integer,
+    SmallInteger,
     String,
     Text,
     func,
@@ -64,15 +65,15 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
     estado_registro: Mapped[str] = mapped_column(
         String(20), nullable=False, default="borrador", server_default=text("'borrador'")
     )
-    sintoma_registrado_correctamente: Mapped[int | None] = mapped_column(Integer)
+    sintoma_registrado_correctamente: Mapped[int | None] = mapped_column(SmallInteger)
     validado_por_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("usuarios.id", ondelete="SET NULL"), index=True
     )
     fecha_validacion: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    normalizacion_correcta: Mapped[int | None] = mapped_column(Integer)
-    extraccion_correcta: Mapped[int | None] = mapped_column(Integer)
-    clasificacion_procesada: Mapped[int | None] = mapped_column(Integer)
-    procesamiento_validado: Mapped[int | None] = mapped_column(Integer)
+    normalizacion_correcta: Mapped[int | None] = mapped_column(SmallInteger)
+    extraccion_correcta: Mapped[int | None] = mapped_column(SmallInteger)
+    clasificacion_procesada: Mapped[int | None] = mapped_column(SmallInteger)
+    procesamiento_validado: Mapped[int | None] = mapped_column(SmallInteger)
     tiempo_inferencia_ml_ms: Mapped[int | None] = mapped_column(Integer)
     tipo_registro: Mapped[str] = mapped_column(
         String(30), nullable=False, default="DEVELOPMENT", server_default=text("'DEVELOPMENT'"), index=True
