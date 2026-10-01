@@ -36,6 +36,7 @@ async def setup_test_db():
 
     tel_autorizado = f"+51 987 {uuid.uuid4().int % 1000000:06d}"
     tel_no_autorizado = f"+51 911 {uuid.uuid4().int % 1000000:06d}"
+    tel_id_meta_test = f"META_TEL_{uuid.uuid4().hex[:8]}"
     w_hash = hash_identificador_persistencia(tel_autorizado, "telefono")
     ultimos4 = tel_autorizado[-4:]
 
@@ -47,6 +48,7 @@ async def setup_test_db():
             nombre="Taller Autorizado Carabayllo Test",
             ruc=f"20{uuid.uuid4().int % 1000000000:09d}",
             taller_id=taller_id,
+            telefono_id_meta=tel_id_meta_test,
         )
         roles = await user_repo.asegurar_roles_estandar()
         await user_repo.crear_usuario(
@@ -64,6 +66,7 @@ async def setup_test_db():
         "engine": engine,
         "telefono_autorizado": tel_autorizado,
         "telefono_no_autorizado": tel_no_autorizado,
+        "telefono_id_meta": tel_id_meta_test,
         "taller_id": taller_id,
         "mecanico_id": mecanico_id,
     }
@@ -106,6 +109,7 @@ async def test_webhook_mecanico_autorizado_guarda_en_tablas(setup_test_db, monke
         texto_cliente="Siento un chillido agudo al frenar el auto",
         placa="ABC-123",
         marca_modelo="Toyota Yaris",
+        telefono_id_meta=data["telefono_id_meta"],
     )
 
     assert resultado["status"] == "completado"
@@ -184,6 +188,8 @@ async def test_webhook_rechaza_mecanico_no_autorizado(setup_test_db, monkeypatch
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="Hola quiero un diagnóstico",
+        proveedor="meta",
+        telefono_id_meta=data["telefono_id_meta"],
     )
 
     assert resultado["status"] == "completado_cliente"
@@ -211,6 +217,9 @@ async def test_consulta_tecnica_autorizada_no_crea_diagnostico(setup_test_db):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="qué potencia deben tener los focos LED H4 para una Suzuki APV",
+        proveedor="meta",
+        telefono_id_meta=data["telefono_id_meta"],
+        placa="TEC-001",
     )
 
     assert resultado["status"] == "consulta_tecnica"
@@ -241,6 +250,9 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="El carro vibra al acelerar en subida",
+        proveedor="meta",
+        telefono_id_meta=data["telefono_id_meta"],
+        placa="DUP-001",
     )
     assert res1["status"] in ("completado", "aclaracion")
 
@@ -250,6 +262,9 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="El carro vibra al acelerar en subida",
+        proveedor="meta",
+        telefono_id_meta=data["telefono_id_meta"],
+        placa="DUP-001",
     )
     assert res2["status"] == "duplicado_ignorado"
     assert res2["meta_message_id"] == meta_msg_id

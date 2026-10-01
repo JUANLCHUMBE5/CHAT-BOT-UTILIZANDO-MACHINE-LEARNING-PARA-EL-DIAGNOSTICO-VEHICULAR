@@ -385,7 +385,7 @@ def test_e_sin_base_de_datos_nunca_devuelve_en_cola_gemini(monkeypatch: pytest.M
     gestor.api_key = "clave-prueba"
 
     res = gestor.procesar_consulta_texto(
-        "Falla de embrague patinando en tercera marcha sin tracción",
+        "El embrague patina en tercera marcha, huele a quemado y no transmite fuerza al acelerar",
         placa="DEV-NODB1",
         marca_modelo="Toyota Yaris",
         proveedor="api",

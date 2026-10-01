@@ -38,6 +38,23 @@ from src.infrastructure.database.repositories.taller_repository import TallerRep
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
 
 
+async def _crear_taller_meta_prueba(nombre: str = "Taller Meta Test") -> str:
+    """Crea un taller con telefono_id_meta para simular webhooks Meta en CI."""
+    engine = obtener_engine()
+    tel_id_meta_test = f"META_TEL_{uuid.uuid4().hex[:8]}"
+    async with AsyncSession(engine, expire_on_commit=False) as session:
+        taller_repo = TallerRepository(session)
+        await taller_repo.crear_taller(
+            nombre=f"{nombre} {uuid.uuid4().hex[:4]}",
+            direccion="Av. Central 123, Carabayllo",
+            telefono="+51 987654321",
+            horario_atencion="Lunes a Viernes 8am - 6pm",
+            telefono_id_meta=tel_id_meta_test,
+        )
+        await session.commit()
+    return tel_id_meta_test
+
+
 @pytest.mark.anyio
 async def test_contacto_nuevo_creado_como_cliente_y_recibe_bienvenida():
     """Un número desconocido que escribe por WhatsApp debe registrarse automáticamente como rol cliente y recibir menú sin ML."""
@@ -109,6 +126,7 @@ async def test_contacto_solo_user_id_meta_no_genera_error_400():
     if not database_configurada():
         pytest.skip("PostgreSQL no disponible")
 
+    tel_id_meta_test = await _crear_taller_meta_prueba("Taller Prueba User ID")
     meta_user_id = f"meta_user_{uuid.uuid4().hex[:10]}"
     msg_id = f"meta_test_uid_{uuid.uuid4().hex[:8]}"
 
@@ -120,6 +138,7 @@ async def test_contacto_solo_user_id_meta_no_genera_error_400():
         texto_cliente="Buenas tardes",
         proveedor="meta",
         tipo_identificador="user_id",
+        telefono_id_meta=tel_id_meta_test,
         nombre_contacto="Usuario Meta",
     )
 
@@ -133,6 +152,7 @@ async def test_cliente_solicita_servicios_y_ubicacion():
     if not database_configurada():
         pytest.skip("PostgreSQL no disponible")
 
+    tel_id_meta_test = await _crear_taller_meta_prueba("Taller Prueba Servicios")
     tel_cliente = f"+51999333{uuid.uuid4().hex[:3]}"
     service = WebhookService()
 
@@ -142,6 +162,8 @@ async def test_cliente_solicita_servicios_y_ubicacion():
         meta_message_id=f"msg_srv_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="1",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
     assert "Servicios ofrecidos" in res_servicios["respuesta"]
     assert "Precios referenciales" in res_servicios["respuesta"]
@@ -152,6 +174,8 @@ async def test_cliente_solicita_servicios_y_ubicacion():
         meta_message_id=f"msg_ubi_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="donde quedan y cual es su direccion",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
     assert "Ubicación" in res_ubicacion["respuesta"]
     assert "Horario de atención" in res_ubicacion["respuesta"]
@@ -164,6 +188,7 @@ async def test_cliente_solicita_acceso_crea_solicitud_pendiente():
         pytest.skip("PostgreSQL no disponible")
 
     engine = obtener_engine()
+    tel_id_meta_test = await _crear_taller_meta_prueba("Taller Prueba Acceso")
     unique_suffix = uuid.uuid4().hex[:4]
     tel_solicitante = f"+51999555{unique_suffix}"
     service = WebhookService()
@@ -174,6 +199,8 @@ async def test_cliente_solicita_acceso_crea_solicitud_pendiente():
         meta_message_id=f"msg_acc_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="Soy mecánico y quiero acceso al diagnóstico técnico",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
 
     assert "Solicitud de Acceso como Mecánico Registrada" in resultado["respuesta"]
@@ -184,6 +211,8 @@ async def test_cliente_solicita_acceso_crea_solicitud_pendiente():
         meta_message_id=f"msg_acc2_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="4",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
     assert "Solicitud de Mecánico en Trámite" in resultado_duplicado["respuesta"]
     assert "Ya tienes una solicitud pendiente" in resultado_duplicado["respuesta"]
@@ -211,6 +240,7 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
 
     monkeypatch.setattr(settings, "gemini_api_key", "")
     engine = obtener_engine()
+    tel_id_meta_test = await _crear_taller_meta_prueba("Taller Prueba Promocion")
     tel_mecanico_futuro = f"+51999888{uuid.uuid4().hex[:3]}"
     service = WebhookService()
     service.gestor.api_key = ""
@@ -221,6 +251,8 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         meta_message_id=f"msg_init_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="Soy mecanico",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
 
     # 2. Obtener datos de la solicitud y del taller
@@ -276,6 +308,9 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         meta_message_id=f"msg_diag_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="El motor cascabelea fuertemente y pierde potencia al subir pendientes",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
+        placa="PROM-001",
     )
 
     assert res_diagnostico["status"] == "completado"
@@ -289,6 +324,8 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         meta_message_id=f"msg_no_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="NO",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
     assert res_no["status"] in ("aclaracion", "esperando_falla_real")
     assert "falla" in res_no["respuesta"].lower() or "descart" in res_no["respuesta"].lower()
@@ -300,6 +337,8 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         meta_message_id=f"msg_fix_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente=falla_real,
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
     assert res_correccion["status"] == "validacion_tecnica"
     assert res_correccion["diagnostico_id"] == res_diagnostico["diagnostico_id"]
@@ -367,6 +406,7 @@ async def test_contacto_bloqueado_o_inactivo_no_recibe_acceso():
         pytest.skip("PostgreSQL no disponible")
 
     engine = obtener_engine()
+    tel_id_meta_test = await _crear_taller_meta_prueba("Taller Prueba Bloqueo")
     tel_bloqueado = f"+51999000{uuid.uuid4().hex[:3]}"
     service = WebhookService()
 
@@ -375,6 +415,8 @@ async def test_contacto_bloqueado_o_inactivo_no_recibe_acceso():
         remitente=tel_bloqueado,
         meta_message_id=f"msg_blk_{uuid.uuid4().hex[:6]}",
         texto_cliente="Hola",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
 
     # 2. Bloquearlo en base de datos
@@ -391,6 +433,8 @@ async def test_contacto_bloqueado_o_inactivo_no_recibe_acceso():
         remitente=tel_bloqueado,
         meta_message_id=f"msg_blk_att_{uuid.uuid4().hex[:6]}",
         texto_cliente="Quiero hacer una consulta",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
 
     assert resultado["status"] == "bloqueado"
@@ -400,6 +444,7 @@ async def test_contacto_bloqueado_o_inactivo_no_recibe_acceso():
 async def test_panel_promueve_cliente_y_revocacion_lo_regresa_a_cliente():
     """Registrar un teléfono cliente lo autoriza; quitar acceso conserva la cuenta como cliente."""
     engine = obtener_engine()
+    tel_id_meta_test = await _crear_taller_meta_prueba("Taller Prueba Panel")
     # Un teléfono de prueba debe contener dígitos exclusivamente. Los prefijos
     # hexadecimales incluían a-f, que el normalizador elimina y podía provocar
     # el mismo whatsapp_hash entre ejecuciones contra PostgreSQL persistente.
@@ -412,6 +457,7 @@ async def test_panel_promueve_cliente_y_revocacion_lo_regresa_a_cliente():
         tipo_mensaje="text",
         texto_cliente="Hola",
         proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
 
     async with AsyncSession(engine, expire_on_commit=False) as session:
@@ -478,6 +524,7 @@ async def test_deduplicacion_webhooks_idempotencia():
     if not database_configurada():
         pytest.skip("PostgreSQL no disponible")
 
+    tel_id_meta_test = await _crear_taller_meta_prueba("Taller Prueba Dedup")
     dup_id = f"meta_dup_{uuid.uuid4().hex}"
     service = WebhookService()
     tel_dup = f"+51999444{uuid.uuid4().hex[:3]}"
@@ -487,6 +534,8 @@ async def test_deduplicacion_webhooks_idempotencia():
         remitente=tel_dup,
         meta_message_id=dup_id,
         texto_cliente="Consulta inicial",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
     assert res1["status"] in ("completado_cliente", "completado")
 
@@ -495,5 +544,7 @@ async def test_deduplicacion_webhooks_idempotencia():
         remitente=tel_dup,
         meta_message_id=dup_id,
         texto_cliente="Consulta repetida",
+        proveedor="meta",
+        telefono_id_meta=tel_id_meta_test,
     )
     assert res2["status"] == "duplicado_ignorado"
