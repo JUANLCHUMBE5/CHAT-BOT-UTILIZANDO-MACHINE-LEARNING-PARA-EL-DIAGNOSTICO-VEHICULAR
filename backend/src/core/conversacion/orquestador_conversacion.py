@@ -470,7 +470,12 @@ class OrquestadorConversacion:
 
         # Caso A: Información insuficiente y aún con margen de repregunta (< 3)
         pregunta_dirigida = pregunta_mezcla(estado)
-        if not respuesta_texto and pregunta_dirigida and pregunta_dirigida[0]:
+        if (
+            not respuesta_texto
+            and pregunta_dirigida
+            and pregunta_dirigida[0]
+            and estado.turnos_repregunta < estado.max_repreguntas
+        ):
             pregunta_elegida, intent = pregunta_dirigida
             estado.registrar_pregunta(intent=intent, texto=pregunta_elegida)
             respuesta_texto, es_pregunta = pregunta_elegida, True

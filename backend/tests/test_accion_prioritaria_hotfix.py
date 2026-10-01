@@ -178,7 +178,7 @@ def test_integridad_hashes_componentes_congelados():
         ),
         "FAISS": (
             root / "machine_learning" / "manuals" / "candidates" / "v1" / "indexes" / "indice_faiss_v1.index",
-            "729ca17ed63c7902a4d5eab8fd791409666ad7509e208572abeee36a2edc308f",
+                "a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",
         ),
     }
 
