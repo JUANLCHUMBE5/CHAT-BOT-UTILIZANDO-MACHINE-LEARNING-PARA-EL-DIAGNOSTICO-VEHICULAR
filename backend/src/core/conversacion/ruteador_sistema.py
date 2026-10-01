@@ -14,6 +14,24 @@ from typing import Any
 
 SISTEMA_INYECCION_MEZCLA = "INYECCION_MEZCLA"
 
+# Términos específicos: evitar palabras transversales como "bomba" o "aire".
+CATEGORIAS = {
+    "ENCENDIDO": ("bobina", "bujia", "chispa", "p030"),
+    "PROGRAMACION": ("reprogramacion", "programacion", "inmovilizador", "codificacion", "ecu"),
+    "REFRIGERACION": ("refrigerante", "termostato", "radiador", "bomba de agua", "sobrecalentamiento"),
+    "ADMISION_RALENTI": ("iac", "tps", "cuerpo de aceleracion", "mariposa"),
+    "LUBRICACION": ("presion de aceite", "bomba de aceite", "consumo de aceite"),
+    "ARRANQUE_CARGA": ("alternador", "bateria", "bornes", "motor de arranque", "solenoide de arranque"),
+    "FRENOS": ("freno", "pastillas", "discos", "abs"),
+    "SUSPENSION_DIRECCION": ("rotula", "bieleta", "amortiguador", "desbalanceo", "alineacion"),
+    "TRANSMISION": ("embrague", "caja de cambios", "transmision", "cvt"),
+    "CLIMATIZACION": ("aire acondicionado", "compresor de ac", "evaporador"),
+}
+
+
+def _contiene(texto: str, termino: str) -> bool:
+    return bool(re.search(r"\b" + re.escape(termino) + r"\w*\b", texto))
+
 
 @dataclass(frozen=True)
 class RutaSistema:
@@ -44,6 +62,7 @@ def detectar_ruta_sistema(estado: Any, nueva_evidencia: str | None = None) -> Ru
     texto = _texto_caso(estado, nueva_evidencia)
     marcadores = {
         "inyector": "inyector",
+        "injector": "inyector",
         "mezcla pobre": "mezcla pobre",
         "p0171": "DTC P0171",
         "p0174": "DTC P0174",
@@ -59,17 +78,27 @@ def detectar_ruta_sistema(estado: Any, nueva_evidencia: str | None = None) -> Ru
     evidencia = tuple(valor for patron, valor in marcadores.items() if patron in texto)
     if evidencia:
         return RutaSistema(SISTEMA_INYECCION_MEZCLA, evidencia)
+    detectadas = [
+        (categoria, tuple(t for t in terminos if _contiene(texto, t)))
+        for categoria, terminos in CATEGORIAS.items()
+    ]
+    detectadas = [(c, e) for c, e in detectadas if e]
+    if len(detectadas) == 1:
+        return RutaSistema(*detectadas[0])
+    # Con evidencia de varios sistemas no forzar una clasificación arbitraria.
     return RutaSistema(None, ())
 
 
 def hipotesis_compatibles_con_ruta(falla: str, sistema: str | None) -> bool:
     """Evita mezclar sistemas cuando hay una ruta técnica fuerte."""
     if sistema != SISTEMA_INYECCION_MEZCLA:
+        if sistema in CATEGORIAS:
+            return any(_contiene(_normalizar(falla), t) for t in CATEGORIAS[sistema])
         return True
     texto = _normalizar(falla)
     compatibles = (
-        "inyector", "inyeccion", "combustible", "bomba", "filtro",
-        "oxigeno", "lambda", "mezcla", "maf", "aire", "vacio", "admi",
+        "inyector", "inyeccion", "combustible",
+        "oxigeno", "lambda", "mezcla", "maf", "aire no medido", "vacio", "admision",
         "p017", "evap", "riel",
     )
     if any(token in texto for token in compatibles):
@@ -79,37 +108,47 @@ def hipotesis_compatibles_con_ruta(falla: str, sistema: str | None) -> bool:
     return "presion" in texto and any(token in texto for token in ("combustible", "riel", "inyeccion"))
 
 
+def requisito_tecnico_ausente(estado: Any, falla: str, evidencia: str | None = None) -> str | None:
+    """No asumir equipamiento específico solo porque el ML lo predijo."""
+    texto = _texto_caso(estado, evidencia)
+    candidato = _normalizar(falla)
+    requisitos = (
+        (("flex", "etanol", "alcohol", "bi-combustible"), ("flex", "etanol", "e85", "alcohol")),
+        (("gdi", "inyeccion directa"), ("gdi", "inyeccion directa", "fsi", "tfsi")),
+        (("glp",), ("glp", "gas licuado")),
+        (("gnv",), ("gnv", "gas natural")),
+        (("diesel", "adblue", "dpf"), ("diesel", "adblue", "dpf")),
+    )
+    for etiquetas, evidencias in requisitos:
+        if any(_contiene(candidato, t) for t in etiquetas):
+            if not any(_contiene(texto, t) for t in evidencias):
+                return "Equipamiento o combustible no confirmado por el mecánico"
+    return None
+
+
 def hipotesis_de_respaldo(sistema: str | None) -> list[dict[str, Any]]:
     """Hipótesis orientativas solo si el Top ML no contiene opciones del sistema detectado."""
     if sistema != SISTEMA_INYECCION_MEZCLA:
         return []
-    return [
-        {
-            "falla": "Caudal insuficiente de inyectores o presión de combustible (evidencia reportada)",
-            "probabilidad": 0.65,
-        },
-        {
-            "falla": "Señal o circuito del sensor de oxígeno (O2/lambda)",
-            "probabilidad": 0.55,
-        },
-        {
-            "falla": "Entrada de aire no medida o lectura MAF fuera de rango",
-            "probabilidad": 0.45,
-        },
-    ]
+    # No fabricar clases ni probabilidades cuando el modelo no ofrece candidatos.
+    return []
 
 
 def tiene_descarte_de_componente(estado: Any, falla: str) -> bool:
     """Relaciona un descarte escrito por el mecánico con la hipótesis propuesta."""
     candidato = _normalizar(falla)
-    texto = _texto_caso(estado, None)
+    mensajes = getattr(estado, "historial_mensajes_usuario", []) or []
     componentes = {
         "iac": ("iac", "valvula iac", "minimo"),
         "termostato": ("termostato",),
         "ventilador": ("ventilador", "electroventilador"),
     }
     for clave, sinonimos in componentes.items():
-        if clave in candidato and any(s in texto for s in sinonimos):
-            if re.search(r"\b(ya\s+revise|ya\s+revice|descart|no\s+es|esta\s+bien)\b", texto):
-                return True
+        if clave in candidato:
+            for mensaje in mensajes:
+                for clausula in re.split(r"[.;]|\bpero\b", _normalizar(mensaje)):
+                    if any(s in clausula for s in sinonimos) and re.search(
+                        r"\b(descartado|descartada|esta\s+bien|funciona\s+bien)\b", clausula
+                    ):
+                        return True
     return False

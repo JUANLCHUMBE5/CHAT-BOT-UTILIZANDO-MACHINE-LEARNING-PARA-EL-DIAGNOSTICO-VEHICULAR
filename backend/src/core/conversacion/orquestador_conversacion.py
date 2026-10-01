@@ -200,6 +200,8 @@ class OrquestadorConversacion:
         # 4. Extracción acumulativa obligatoria de hechos clínicos
         estado_previo_hechos = dict(estado.hechos)
         hechos_extraidos = ExtractorHechos.extraer_y_actualizar(estado, texto_limpio)
+        from src.core.conversacion.evidencia_taller import pregunta_mezcla, registrar_evidencia
+        hechos_extraidos.extend(registrar_evidencia(estado, texto_limpio))
         if interpretacion_corta and "hecho" in interpretacion_corta:
             hechos_extraidos.append(interpretacion_corta["hecho"])
 
@@ -467,6 +469,17 @@ class OrquestadorConversacion:
                 es_pregunta = False
 
         # Caso A: Información insuficiente y aún con margen de repregunta (< 3)
+        pregunta_dirigida = pregunta_mezcla(estado)
+        if not respuesta_texto and pregunta_dirigida and pregunta_dirigida[0]:
+            pregunta_elegida, intent = pregunta_dirigida
+            estado.registrar_pregunta(intent=intent, texto=pregunta_elegida)
+            respuesta_texto, es_pregunta = pregunta_elegida, True
+            intent_elegido, decision = intent.value, "PREGUNTAR"
+            motivo_decision = "Solicitar evidencia específica del sistema de mezcla"
+        elif pregunta_dirigida is not None:
+            # Ya agotadas las preguntas pertinentes: no volver a preguntas genéricas.
+            es_suficiente = True
+
         if not respuesta_texto and not es_suficiente and not falla_forzada_alternativa and estado.turnos_repregunta < estado.max_repreguntas:
             seleccion = GeneradorPreguntas.seleccionar_pregunta_con_filtro(estado)
             if seleccion:
@@ -526,23 +539,33 @@ class OrquestadorConversacion:
                 estado=estado,
                 nueva_evidencia=texto_limpio if hechos_extraidos else None,
             )
+            # No convertir un resultado de baja confianza en un diagnóstico al
+            # reformatearlo para WhatsApp. Los candidatos quedan en la traza RAW.
+            if hipotesis_final_presentada and hipotesis_final_presentada[0]["probabilidad"] < 0.10:
+                hipotesis_final_presentada = []
 
             from src.core.conversacion.ruteador_sistema import detectar_ruta_sistema
             ruta_sistema = detectar_ruta_sistema(estado, texto_limpio if hechos_extraidos else None)
             if ruta_sistema.sistema:
                 estado.active_system = ruta_sistema.sistema
 
-            tiene_descartada_en_top3 = any(
-                h.get("falla", "").strip().lower() in {d.strip().lower() for d in estado.hipotesis_descartadas}
-                for h in estado.top3_actual
+            estado.top3_actual = hipotesis_final_presentada
+            estado.falla_principal = (
+                hipotesis_final_presentada[0]["falla"] if hipotesis_final_presentada else None
             )
-            if not (es_evidencia_duplicada and estado.top3_actual and not tiene_descartada_en_top3):
-                estado.top3_actual = hipotesis_final_presentada or top3_ml_raw or []
-                if hipotesis_final_presentada:
-                    estado.falla_principal = hipotesis_final_presentada[0]["falla"]
-                    estado.confianza_actual = hipotesis_final_presentada[0]["probabilidad"]
-                else:
-                    estado.confianza_actual = dto_resultado.confianza_ml
+            estado.confianza_actual = (
+                hipotesis_final_presentada[0]["probabilidad"] if hipotesis_final_presentada else 0.0
+            )
+            if not hipotesis_final_presentada:
+                dto_resultado = dto_resultado.model_copy(update={
+                    "diagnostico_ml": "Sin hipótesis compatible: requiere revisión técnica",
+                    "confianza_ml": 0.0,
+                    "predicciones_ml": [],
+                    "contexto_manual": "",
+                    "titulo_manual": "Sin procedimiento compatible verificado",
+                    "requiere_revision_humana": True,
+                    "modo_diagnostico": "baja_confianza",
+                })
 
             # La hipótesis persistida, la que se pregunta y la que se muestra deben
             # provenir de la misma lista post-filtro. Si el filtro descartó el Top ML,
@@ -571,16 +594,16 @@ class OrquestadorConversacion:
                 })
 
             from src.core.conversacion.formateador_compacto import FormateadorCompacto
-            hipotesis_formatear = estado.top3_actual or [
-                {"falla": dto_resultado.diagnostico_ml, "probabilidad": dto_resultado.confianza_ml}
-            ]
+            hipotesis_formatear = estado.top3_actual
             preg_ctx, intent_ctx = FormateadorCompacto.obtener_pregunta_contextual(
                 top1_falla_o_hipotesis=hipotesis_formatear,
                 sintoma_original=texto_limpio,
                 estado=estado,
             )
+            if pregunta_dirigida is not None:
+                preg_ctx, intent_ctx = pregunta_dirigida
             if preg_ctx and estado.ya_preguntado_texto(preg_ctx):
-                preg_ctx = None
+                preg_ctx = ""
                 intent_ctx = None
             scores_pres = FormateadorCompacto.calcular_scores_presentacion(hipotesis_formatear)
             respuesta_texto = FormateadorCompacto.formatear_respuesta_diagnostico(
@@ -590,6 +613,9 @@ class OrquestadorConversacion:
                 pregunta_personalizada=preg_ctx,
                 estado=estado,
             )
+            if not hipotesis_formatear:
+                from src.core.conversacion.evidencia_taller import respuesta_evidencia_insuficiente
+                respuesta_texto = respuesta_evidencia_insuficiente(estado)
             if es_caso_b:
                 decision = "DIFERENCIAL"
                 motivo_decision = "Límite de 3 repreguntas alcanzado: forzando diagnóstico diferencial"

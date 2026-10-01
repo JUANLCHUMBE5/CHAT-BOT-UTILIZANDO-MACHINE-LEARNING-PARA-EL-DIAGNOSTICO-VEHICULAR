@@ -264,10 +264,9 @@ class FormateadorCompacto:
         """
         if not top_hipotesis:
             return (
-                "🔧 *Posibles causas*\n\n"
-                "1. Falla mecánica en evaluación — 50%\n\n"
-                "🛠️ Primero revisa: inspección física en elevador para identificar holguras o fugas.\n\n"
-                "¿Puedes describir más detalles del comportamiento del vehículo?"
+                "No tengo una hipótesis ML compatible con la evidencia y los descartes de este caso. "
+                "Conservo las comprobaciones registradas. Se requiere revisión técnica antes de "
+                "proponer otra falla; puedes aportar el resultado de una prueba pendiente."
             )
 
         # 1. Determinación del tipo de combustible si está disponible
@@ -317,7 +316,7 @@ class FormateadorCompacto:
             accion += "."
 
         # 3. Pregunta contextual
-        if pregunta_personalizada:
+        if pregunta_personalizada is not None:
             pregunta = pregunta_personalizada
         else:
             pregunta, _ = cls.obtener_pregunta_contextual(top1_falla, sintoma_original, estado)

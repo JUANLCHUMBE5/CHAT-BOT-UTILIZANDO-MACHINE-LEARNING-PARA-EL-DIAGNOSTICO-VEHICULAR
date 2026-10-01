@@ -14,6 +14,7 @@ from src.core.diagnostico.coherencia_evidencia import (
     limitar_respuesta,
     priorizar_evidencia,
 )
+from src.core.diagnostico.filtro_evidencia import filtrar_predicciones, resultado_sin_candidatas
 from src.core.diagnostico.models import PrediccionML, ResultadoDiagnostico
 from src.core.intent_classifier import clasificar_intencion_consulta
 from src.core.logger import logger
@@ -489,7 +490,7 @@ def procesar_consulta_texto(
         placa=placa_evaluar or "",
     )
     resultado_en_cache = diagnostico_cache.obtener(clave_cache)
-    if resultado_en_cache is not None:
+    if resultado_en_cache is not None and not clave_sesion:
         logger.info("⚡ Diagnóstico obtenido instantáneamente desde Memoria Caché LRU (< 5ms)")
         return resultado_en_cache.model_copy(
             update={
@@ -524,7 +525,9 @@ def procesar_consulta_texto(
                 PrediccionML(falla=alt_nombre, probabilidad=probs_diff[i] if i < len(probs_diff) else 0.05)
             )
     elif hasattr(gestor.modelo_ml, "predecir_top_fallas"):
-        predicciones_raw = gestor.modelo_ml.predecir_top_fallas(texto_ml, limite=3)
+        # Recuperar candidatos antes de filtrar; no limitar la búsqueda a tres
+        # clases que podrían pertenecer a sistemas incompatibles.
+        predicciones_raw = gestor.modelo_ml.predecir_top_fallas(texto_ml, limite=48)
         predicciones_ml = [PrediccionML(**item) for item in predicciones_raw]
         diagnostico_predictivo = predicciones_ml[0].falla
         confianza = predicciones_ml[0].probabilidad
@@ -658,6 +661,11 @@ def procesar_consulta_texto(
             ya_aclarado = True
 
     predicciones_ml, motivo_prioridad = priorizar_evidencia(texto_evaluar, predicciones_ml)
+    predicciones_ml, exclusiones_evidencia = filtrar_predicciones(predicciones_ml, texto_evaluar, ses_chk)
+    if not predicciones_ml:
+        return resultado_sin_candidatas(texto_evaluar, predicciones_originales)
+    diagnostico_predictivo = predicciones_ml[0].falla
+    confianza = predicciones_ml[0].probabilidad
     if motivo_prioridad:
         diagnostico_predictivo = predicciones_ml[0].falla
         confianza = predicciones_ml[0].probabilidad
@@ -750,6 +758,11 @@ def procesar_consulta_texto(
         and "Error" not in titulo_manual
     )
 
+    if not rag_valido:
+        contexto_manual = ""
+        meta_rag_dict = {}
+        similitud_rag = 0.0
+
     # PASO 2.5: Fusión Multiseñal y Prioridad de Evidencia (DTC + Metrología Física + Descarte + RAG)
     from src.core.diagnostico.politica_fusion import PoliticaFusionDiagnostica, ResultadoFusion
     if not diagnostico_predictivo.startswith("Sistema GNV/GLP"):
@@ -785,6 +798,13 @@ def procesar_consulta_texto(
         diagnostico_predictivo = predicciones_ml[0].falla
         confianza = predicciones_ml[0].probabilidad
         resultado_fusion.evidencia_confirmada.append(motivo_prioridad)
+
+    # La fusión no puede reintroducir candidatos rechazados por el caso.
+    predicciones_ml, _ = filtrar_predicciones(predicciones_ml, texto_evaluar, ses_chk)
+    if not predicciones_ml:
+        return resultado_sin_candidatas(texto_evaluar, predicciones_originales)
+    diagnostico_predictivo = predicciones_ml[0].falla
+    confianza = predicciones_ml[0].probabilidad
 
     # Si el RAG declara una falla específica y contradice la hipótesis fusionada,
     # el documento deja de ser aplicable.
@@ -859,6 +879,17 @@ def procesar_consulta_texto(
                 perfil_vehiculo_str = pv_fmt
 
     # PASO 3: Gemini LLM
+    if ses_chk and getattr(ses_chk, "conversation_state", None):
+        estado_llm = ses_chk.conversation_state
+        resultado_fusion.componentes_descartados = list(dict.fromkeys(
+            resultado_fusion.componentes_descartados + estado_llm.hipotesis_descartadas
+        ))
+        resultado_fusion.evidencia_confirmada = list(dict.fromkeys(
+            resultado_fusion.evidencia_confirmada + [
+                "Reportado por el mecánico: " + h.valor for h in estado_llm.hechos.values()
+                if h.campo.startswith(("evidencia_taller_", "medicion_taller_"))
+            ]
+        ))
     inicio_llm = time.perf_counter()
     respuesta_explicativa, uso_llm = gestor._generar_respuesta_con_metadatos(
         pregunta=texto_evaluar,

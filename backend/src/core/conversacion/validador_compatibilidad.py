@@ -14,7 +14,7 @@ from src.core.conversacion.models import ConversationState, FactState
 from src.core.conversacion.ruteador_sistema import (
     detectar_ruta_sistema,
     hipotesis_compatibles_con_ruta,
-    hipotesis_de_respaldo,
+    requisito_tecnico_ausente,
     tiene_descarte_de_componente,
 )
 
@@ -134,6 +134,15 @@ class ValidadorCompatibilidad:
             prob = pred.get("probabilidad", 0.0)
             falla_l = falla.strip().lower()
 
+            requisito = requisito_tecnico_ausente(estado, falla, nueva_evidencia)
+            if requisito:
+                compatible, motivo = cls.validar_compatibilidad_hipotesis(falla, estado)
+                exclusiones.append({"falla": falla, "probabilidad_raw": prob,
+                                    "motivo": ("EQUIPAMIENTO_NO_CONFIRMADO" if compatible
+                                               else "INCOMPATIBLE_CON_HECHO_CONFIRMADO"),
+                                    "detalle": requisito if compatible else motivo})
+                continue
+
             if not hipotesis_compatibles_con_ruta(falla, ruta.sistema):
                 exclusiones.append({
                     "falla": falla,
@@ -167,7 +176,10 @@ class ValidadorCompatibilidad:
             if falla_l in descartadas_previas:
                 # Comprobar si la nueva evidencia menciona explícitamente el componente para reconsiderarlo
                 reconsiderable = False
-                if nueva_evidencia:
+                if nueva_evidencia and re.search(
+                    r"\b(?:me equivoqu[eé]|retiro el descarte|corrijo el descarte)\b",
+                    nueva_evidencia.lower(),
+                ):
                     palabras_falla = [w for w in re.findall(r"\w+", falla_l) if len(w) > 4]
                     if any(w in nueva_evidencia.lower() for w in palabras_falla):
                         reconsiderable = True
@@ -185,22 +197,6 @@ class ValidadorCompatibilidad:
                 "falla": falla,
                 "probabilidad": prob,
             })
-
-        # Si todas fueron filtradas, nunca rescatar una opción de un sistema incompatible.
-        # Para rutas con evidencia técnica concreta se ofrecen hipótesis orientativas de
-        # ese sistema y se solicita verificación física, sin alterar el modelo entrenado.
-        if not candidatas_compatibles:
-            respaldo = hipotesis_de_respaldo(ruta.sistema)
-            if respaldo:
-                return respaldo, exclusiones
-            for pred in predicciones_raw:
-                falla = pred.get("falla", "")
-                es_comp, _ = cls.validar_compatibilidad_hipotesis(falla, estado)
-                if es_comp:
-                    candidatas_compatibles.append({
-                        "falla": falla,
-                        "probabilidad": pred.get("probabilidad", 0.0),
-                    })
 
         # Limitar a Top 3 para presentación
         return candidatas_compatibles[:3], exclusiones

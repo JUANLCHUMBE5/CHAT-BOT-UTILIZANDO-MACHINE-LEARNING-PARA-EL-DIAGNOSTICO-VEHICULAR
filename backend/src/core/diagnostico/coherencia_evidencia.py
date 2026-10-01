@@ -19,6 +19,10 @@ def priorizar_evidencia(texto, predicciones):
     )
     motivo = ""
     compatibles = []
+    # Una negación de caudal es evidencia positiva de una anomalía, no un descarte.
+    if re.search(r"\b(?:inyectores|injectores)\b.{0,70}(?:no inyectan|caudal (?:bajo|insuficiente))", txt):
+        compatibles = [p for p in predicciones if "inyector" in normalizar(p.falla)]
+        motivo = "Caudal insuficiente reportado por el mecánico; método de comprobación pendiente."
     # Síntoma de acoplamiento + contexto de caja, no solo la letra R o D.
     caja = re.search(r"\b(automatic[oa]|transmision|caja|reversa|marcha atras)\b", positivas)
     acoplamiento = re.search(
