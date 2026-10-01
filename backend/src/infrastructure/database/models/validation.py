@@ -67,7 +67,7 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
     )
     sintoma_registrado_correctamente: Mapped[int | None] = mapped_column(SmallInteger)
     validado_por_id: Mapped[uuid.UUID | None] = mapped_column(
-        ForeignKey("usuarios.id", ondelete="SET NULL"), index=True
+        ForeignKey("usuarios.id", ondelete="SET NULL")
     )
     fecha_validacion: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     normalizacion_correcta: Mapped[int | None] = mapped_column(SmallInteger)
