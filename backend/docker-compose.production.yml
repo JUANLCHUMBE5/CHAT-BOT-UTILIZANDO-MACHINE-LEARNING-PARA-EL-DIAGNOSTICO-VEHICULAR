@@ -27,10 +27,14 @@ services:
 
   api:
     build:
-      context: .
-      dockerfile: Dockerfile
+      # Este archivo vive en backend/, pero el Dockerfile copia backend/ y
+      # machine_learning/ desde la raíz del monorepo.
+      context: ..
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
-    env_file: .env
+    # En AWS se indica CARBOT_PRODUCTION_ENV_FILE con la ruta del .env
+    # existente. Ese archivo nunca se copia al repositorio ni a la release.
+    env_file: ${CARBOT_PRODUCTION_ENV_FILE:-.env}
     environment:
       ENVIRONMENT: production
       DATABASE_ENABLED: "true"
@@ -52,18 +56,20 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: ["sh", "-c", "python -m alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+    # Las migraciones se ejecutan explícitamente en una operación controlada,
+    # nunca como efecto secundario de recrear la API.
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
 
   worker:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     # El worker es un proceso de cola, no un servidor HTTP. Evita heredar el
     # HEALTHCHECK del Dockerfile que consulta incorrectamente el puerto 8000.
     healthcheck:
       disable: true
-    env_file: .env
+    env_file: ${CARBOT_PRODUCTION_ENV_FILE:-.env}
     environment:
       ENVIRONMENT: production
       DATABASE_ENABLED: "true"
