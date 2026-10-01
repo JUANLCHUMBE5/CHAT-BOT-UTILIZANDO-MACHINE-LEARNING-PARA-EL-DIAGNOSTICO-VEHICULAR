@@ -6,6 +6,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
+from src.config import settings
 from src.core.gemini_queue.models import SolicitudGeminiEncolada
 from src.core.gemini_queue.rate_limiter import GeminiRateLimiter
 from src.core.gemini_queue.worker_processor import (
@@ -53,7 +54,10 @@ async def test_tokens_de_salida_ajustados_para_latencia():
         }
         return mock_resp
 
-    with patch.object(_obtener_http_session_gemini(), "post", side_effect=mock_post):
+    with (
+        patch.object(_obtener_http_session_gemini(), "post", side_effect=mock_post),
+        patch.object(settings, "gemini_api_key", "ci_gemini_key"),
+    ):
         texto, meta = await procesar_solicitud_encolada(solicitud_diag, limiter)
 
     assert payload_capturado.get("generationConfig", {}).get("maxOutputTokens") == 420
@@ -87,7 +91,10 @@ async def test_consulta_tecnica_tokens_reducidos_a_140():
         }
         return mock_resp
 
-    with patch.object(_obtener_http_session_gemini(), "post", side_effect=mock_post):
+    with (
+        patch.object(_obtener_http_session_gemini(), "post", side_effect=mock_post),
+        patch.object(settings, "gemini_api_key", "ci_gemini_key"),
+    ):
         texto, meta = await procesar_solicitud_encolada(solicitud_info, limiter)
 
     assert payload_capturado.get("generationConfig", {}).get("maxOutputTokens") == 140

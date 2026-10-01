@@ -21,6 +21,8 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
+import pytest
+
 from src.core.conversacion.formateador_compacto import (
     FormateadorCompacto,
     _es_paso_preparatorio,
@@ -159,6 +161,7 @@ def test_regresion_acciones_existentes_y_protecciones():
     assert "reloj comparador" in accion_disc
 
 
+@pytest.mark.requires_frozen_ml_artifacts
 def test_integridad_hashes_componentes_congelados():
     """TEST 4: Verifica que los hashes de los artefactos congelados no hayan sufrido alteración."""
     root = Path(__file__).resolve().parent.parent.parent

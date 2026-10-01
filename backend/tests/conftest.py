@@ -15,6 +15,7 @@ os.environ["JWT_SECRET_KEY"] = "test_jwt_secret_key_with_more_than_32_chars"
 os.environ["PRIVACY_SECRET_KEY"] = "test_privacy_secret_with_more_than_32_chars"
 os.environ["LOCAL_AUTH_USERNAME"] = "admin"
 os.environ["LOCAL_AUTH_PASSWORD"] = "carbot2026"
+os.environ["META_VERIFY_TOKEN"] = "ci_meta_verify_token"
 
 import pytest
 
@@ -25,6 +26,34 @@ from src.core.gemini_queue import gemini_rate_limiter
 from src.core.login_attempt_store import login_attempt_store
 from src.core.refresh_token_store import refresh_token_store
 from src.limiter import limiter
+
+
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers",
+        "requires_frozen_ml_artifacts: requiere los artefactos C1 congelados fuera de Git.",
+    )
+
+
+def _frozen_ml_artifacts_available() -> bool:
+    root = Path(__file__).resolve().parents[2]
+    required = (
+        root / "machine_learning" / "models" / "c1_fase10_final" / "modelo_diagnostico_c1.pkl",
+        root / "machine_learning" / "models" / "c1_fase10_final" / "vectorizador_c1.pkl",
+        root / "machine_learning" / "models" / "c1_fase10_final" / "modelo_sistema_c1_macrofix.pkl",
+    )
+    return all(path.exists() for path in required)
+
+
+def pytest_collection_modifyitems(config, items):
+    if _frozen_ml_artifacts_available():
+        return
+    skip_frozen = pytest.mark.skip(
+        reason="Artefactos C1 congelados no disponibles en este entorno; se validan en local/AWS."
+    )
+    for item in items:
+        if "requires_frozen_ml_artifacts" in item.keywords:
+            item.add_marker(skip_frozen)
 
 # Asegurar habilitación de base de datos para pruebas si están configuradas
 test_database_url = os.getenv("TEST_DATABASE_URL", "").strip()

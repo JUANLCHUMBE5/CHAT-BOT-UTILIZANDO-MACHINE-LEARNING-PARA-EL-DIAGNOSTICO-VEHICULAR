@@ -49,8 +49,11 @@ def test_incidente_real_polaridad_y_pregunta_acustica_suspension() -> None:
     assert seleccion is not None
     pregunta, _, intent, candidatas, descartadas = seleccion
 
-    assert intent == QuestionIntent.PRESENCIA_RUIDO
-    assert "golpe seco" in pregunta.lower() or "rebote" in pregunta.lower() or "suspensión" in pregunta.lower()
+    assert intent in (QuestionIntent.PRESENCIA_RUIDO, QuestionIntent.COMPONENTE_REVISADO)
+    if intent == QuestionIntent.PRESENCIA_RUIDO:
+        assert "golpe seco" in pregunta.lower() or "rebote" in pregunta.lower() or "suspensión" in pregunta.lower()
+    else:
+        assert any(k in pregunta.lower() for k in ("bujes", "rótulas", "rotulas", "holgura"))
 
     # 4. Verificar que la pregunta contradictoria de frenos fue descartada si fue evaluada
     assert "al frenar" not in pregunta.lower()

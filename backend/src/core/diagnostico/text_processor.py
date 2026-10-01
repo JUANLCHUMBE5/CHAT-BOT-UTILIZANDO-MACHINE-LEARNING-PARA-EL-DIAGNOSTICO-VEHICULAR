@@ -634,9 +634,24 @@ def procesar_consulta_texto(
             predicciones_ml.insert(0, PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza))
             predicciones_ml = predicciones_ml[:3]
 
+    texto_gas_l = texto_evaluar.lower()
+    es_falla_solo_gas = (
+        modo_falla_combustible == "solo_gas"
+        or (
+            (
+                "solo usando gnv" in texto_gas_l
+                or "solo usando glp" in texto_gas_l
+                or "solo falla en gnv" in texto_gas_l
+                or "solo falla en glp" in texto_gas_l
+                or "solo pasa en gnv" in texto_gas_l
+                or "solo pasa en glp" in texto_gas_l
+            )
+            and "gasolina funciona bien" in texto_gas_l
+        )
+    )
     if (
         gestor._es_perdida_potencia_bajo_carga(texto_evaluar)
-        and modo_falla_combustible == "solo_gas"
+        and es_falla_solo_gas
         and confianza < settings.diagnostic.confidence_threshold
         and not tiene_dtc
         and not tiene_componente_especifico
@@ -662,6 +677,25 @@ def procesar_consulta_texto(
 
     predicciones_ml, motivo_prioridad = priorizar_evidencia(texto_evaluar, predicciones_ml)
     predicciones_ml, exclusiones_evidencia = filtrar_predicciones(predicciones_ml, texto_evaluar, ses_chk)
+    if (
+        (
+            gestor._es_perdida_potencia_bajo_carga(texto_evaluar)
+            or "solo usando gnv" in texto_gas_l
+            or "solo usando glp" in texto_gas_l
+            or "solo falla en gnv" in texto_gas_l
+            or "solo falla en glp" in texto_gas_l
+            or "solo pasa en gnv" in texto_gas_l
+            or "solo pasa en glp" in texto_gas_l
+        )
+        and es_falla_solo_gas
+        and not tiene_dtc
+    ):
+        diagnostico_gas = "Sistema GNV/GLP: diferenciar calibración, presión, filtros e inyectores"
+        predicciones_ml = [
+            p for p in predicciones_ml
+            if not p.falla.startswith("Sistema GNV/GLP")
+        ]
+        predicciones_ml.insert(0, PrediccionML(falla=diagnostico_gas, probabilidad=max(confianza, 0.20)))
     if not predicciones_ml:
         return resultado_sin_candidatas(texto_evaluar, predicciones_originales)
     diagnostico_predictivo = predicciones_ml[0].falla
@@ -801,6 +835,13 @@ def procesar_consulta_texto(
 
     # La fusión no puede reintroducir candidatos rechazados por el caso.
     predicciones_ml, _ = filtrar_predicciones(predicciones_ml, texto_evaluar, ses_chk)
+    if es_falla_solo_gas and not tiene_dtc:
+        diagnostico_gas = "Sistema GNV/GLP: diferenciar calibración, presión, filtros e inyectores"
+        predicciones_ml = [
+            p for p in predicciones_ml
+            if not p.falla.startswith("Sistema GNV/GLP")
+        ]
+        predicciones_ml.insert(0, PrediccionML(falla=diagnostico_gas, probabilidad=max(confianza, 0.20)))
     if not predicciones_ml:
         return resultado_sin_candidatas(texto_evaluar, predicciones_originales)
     diagnostico_predictivo = predicciones_ml[0].falla

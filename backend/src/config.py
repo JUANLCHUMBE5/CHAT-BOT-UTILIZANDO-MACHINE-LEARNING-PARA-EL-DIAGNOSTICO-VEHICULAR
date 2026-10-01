@@ -79,10 +79,17 @@ def _trusted_hosts() -> tuple[str, ...]:
 def _default_model_paths() -> tuple[Path, Path, Path]:
     model_ver = os.getenv("MODEL_VERSION", "C1_FASE10_FINAL").strip()
     c1_dir = ML_ROOT / "models" / "c1_fase10_final"
-    if model_ver.upper() in {"C1", "C1_FASE10_FINAL", "C1_FINAL"} and c1_dir.exists():
-        default_model = c1_dir / "modelo_diagnostico_c1.pkl"
-        default_vec = c1_dir / "vectorizador_c1.pkl"
-        default_sistema = c1_dir / "modelo_sistema_c1_macrofix.pkl"
+    c1_model = c1_dir / "modelo_diagnostico_c1.pkl"
+    c1_vec = c1_dir / "vectorizador_c1.pkl"
+    c1_sistema = c1_dir / "modelo_sistema_c1_macrofix.pkl"
+    if (
+        model_ver.upper() in {"C1", "C1_FASE10_FINAL", "C1_FINAL"}
+        and c1_model.exists()
+        and c1_vec.exists()
+    ):
+        default_model = c1_model
+        default_vec = c1_vec
+        default_sistema = c1_sistema
     else:
         default_model = ML_ROOT / "models" / "modelo_diagnostico.pkl"
         default_vec = ML_ROOT / "models" / "vectorizador_tfidf.pkl"

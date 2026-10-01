@@ -127,10 +127,7 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
     # condición de operación. Pedimos el síntoma libre antes de derivar al
     # clasificador ML y a las preguntas técnicas por dominio.
     if texto_limpio in frases_ambiguas:
-        return True, (
-            "👋 Cuéntame qué problema presenta el vehículo: qué ocurre, "
-            "cuándo sucede y si aparece alguna luz en el tablero o un código de falla."
-        )
+        return True, "👋 Especifique qué ocurre, cuándo sucede y si aparece luz o código."
 
     # Si el mensaje es descriptivo (>= 6 palabras) no declararlo ambiguo ciegamente
     if len(words) >= 6:

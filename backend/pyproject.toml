@@ -63,6 +63,7 @@ testpaths = ["tests"]
 pythonpath = [".", "../machine_learning"]
 markers = [
     "real_gemini: prueba de integración externa que consume cuota real de Google Gemini",
+    "requires_frozen_ml_artifacts: prueba que requiere artefactos C1 congelados no versionados en Git",
 ]
 
 [tool.coverage.run]

@@ -7,6 +7,7 @@ import csv
 import io
 import uuid
 
+import pytest
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -106,6 +107,8 @@ def test_ppcf_rdc_tprd_pre_post_y_zero_division():
 
 
 def test_persistencia_e2e_development_y_exclusion_oficial():
+    if not settings.database.url and not settings.database.password.get_secret_value():
+        pytest.skip("PostgreSQL no configurado para la validacion E2E local.")
     asyncio.run(_persistencia_e2e_development_y_exclusion_oficial())
 
 

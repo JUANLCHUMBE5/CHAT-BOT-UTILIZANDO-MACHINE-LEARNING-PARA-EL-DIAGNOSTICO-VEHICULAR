@@ -12,6 +12,7 @@ from src.core.conversacion.maquina_estados import MaquinaEstadosConversacion
 from src.core.conversacion.models import (
     ConversationPhase,
     ConversationState,
+    EstadoOperativo,
     FactState,
     FactType,
     QuestionIntent,
@@ -538,6 +539,13 @@ class OrquestadorConversacion:
             elif dto_resultado.diagnostico_ml:
                 top3_ml_raw = [{"falla": dto_resultado.diagnostico_ml, "probabilidad": dto_resultado.confianza_ml}]
 
+            def _actualizar_dto_resultado(dto, cambios):
+                if hasattr(dto, "model_copy"):
+                    return dto.model_copy(update=cambios)
+                for clave, valor in cambios.items():
+                    setattr(dto, clave, valor)
+                return dto
+
             from src.core.conversacion.validador_compatibilidad import ValidadorCompatibilidad
             hipotesis_final_presentada, exclusiones_compat = ValidadorCompatibilidad.filtrar_y_ordenar_para_presentacion(
                 predicciones_raw=top3_ml_raw or [],
@@ -562,7 +570,7 @@ class OrquestadorConversacion:
                 hipotesis_final_presentada[0]["probabilidad"] if hipotesis_final_presentada else 0.0
             )
             if not hipotesis_final_presentada:
-                dto_resultado = dto_resultado.model_copy(update={
+                dto_resultado = _actualizar_dto_resultado(dto_resultado, {
                     "diagnostico_ml": "Sin hipótesis compatible: requiere revisión técnica",
                     "confianza_ml": 0.0,
                     "predicciones_ml": [],
@@ -584,17 +592,17 @@ class OrquestadorConversacion:
                     not top3_ml_raw
                     or top1_presentado["falla"] != top3_ml_raw[0]["falla"]
                 )
-                dto_resultado = dto_resultado.model_copy(update={
+                dto_resultado = _actualizar_dto_resultado(dto_resultado, {
                     "diagnostico_ml": top1_presentado["falla"],
                     "confianza_ml": top1_presentado["probabilidad"],
                     "predicciones_ml": predicciones_presentadas,
                     "requiere_revision_humana": (
-                        dto_resultado.requiere_revision_humana or se_corrigio_top_ml
+                        getattr(dto_resultado, "requiere_revision_humana", False) or se_corrigio_top_ml
                     ),
-                    "contexto_manual": "" if se_corrigio_top_ml else dto_resultado.contexto_manual,
+                    "contexto_manual": "" if se_corrigio_top_ml else getattr(dto_resultado, "contexto_manual", ""),
                     "titulo_manual": (
                         "Sin procedimiento compatible verificado"
-                        if se_corrigio_top_ml else dto_resultado.titulo_manual
+                        if se_corrigio_top_ml else getattr(dto_resultado, "titulo_manual", "")
                     ),
                 })
 
@@ -639,6 +647,17 @@ class OrquestadorConversacion:
                 pregunta_elegida = preg_ctx
                 intent_elegido = intent_ctx.value
                 es_pregunta = True
+
+            txt_resp_l = respuesta_texto.lower()
+            if (
+                estado.last_user_correction
+                and estado.estado_operativo == EstadoOperativo.ARRANQUE
+                and not any(t in txt_resp_l for t in ("arrancar", "arranque", "gira", "pesado", "batería", "motor"))
+            ):
+                respuesta_texto = (
+                    "Corrección registrada: orientamos el diagnóstico al arranque del motor.\n\n"
+                    f"{respuesta_texto}"
+                )
 
         # 8. Transición formal en la máquina de estados
         MaquinaEstadosConversacion.transicionar(
