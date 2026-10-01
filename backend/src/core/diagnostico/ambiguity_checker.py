@@ -123,9 +123,14 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
         "falla mi carro", "mi auto tiene una falla", "ayuda con mi carro"
     ]
 
-    # Consulta explícitamente genérica o vacía
+    # Un contacto genérico todavía no contiene evidencia para escoger una
+    # condición de operación. Pedimos el síntoma libre antes de derivar al
+    # clasificador ML y a las preguntas técnicas por dominio.
     if texto_limpio in frases_ambiguas:
-        return True, "⚠️ Especifique: ¿ocurre al arrancar, acelerar o frenar?"
+        return True, (
+            "👋 Cuéntame qué problema presenta el vehículo: qué ocurre, "
+            "cuándo sucede y si aparece alguna luz en el tablero o un código de falla."
+        )
 
     # Si el mensaje es descriptivo (>= 6 palabras) no declararlo ambiguo ciegamente
     if len(words) >= 6:
@@ -151,6 +156,9 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
                 "¿El motor del elevalunas emite sonido al presionar el botón? "
                 "¿El vidrio se cayó dentro de la puerta o está atascado en las guías?"
             )
-        return True, "⚠️ Especifique: ¿ocurre al arrancar, acelerar o frenar?"
+        return True, (
+            "👋 Describe qué ocurre con el vehículo, cuándo sucede y si aparece "
+            "alguna luz en el tablero o un código de falla."
+        )
 
     return False, ""

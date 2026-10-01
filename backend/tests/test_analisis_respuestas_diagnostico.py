@@ -139,7 +139,18 @@ def test_consulta_demasiado_corta_o_vaga_solicita_detalles(gestor):
     resultado = gestor.procesar_consulta_texto("mi carro falla")
     assert resultado.modo_diagnostico == "esperando_clarificacion"
     assert resultado.requiere_revision_humana is True
-    assert "especifique" in resultado.respuesta_texto.lower() or "detalle" in resultado.respuesta_texto.lower()
+    assert "qué ocurre" in resultado.respuesta_texto.lower() or "que ocurre" in resultado.respuesta_texto.lower()
+
+
+@pytest.mark.parametrize("consulta", ["tengo un problema", "ayuda", "mi carro falla"])
+def test_contacto_generico_pide_descripcion_sin_suponer_sistema(gestor, consulta):
+    """El primer contacto genérico no debe adelantar una pregunta de motor o frenos."""
+    resultado = gestor.procesar_consulta_texto(consulta)
+    texto = resultado.respuesta_texto.lower()
+
+    assert resultado.modo_diagnostico == "esperando_clarificacion"
+    assert "qué ocurre" in texto or "que ocurre" in texto
+    assert "al arrancar, acelerar o frenar" not in texto
 
 
 @pytest.mark.parametrize(
