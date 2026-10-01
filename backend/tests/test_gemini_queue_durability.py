@@ -171,6 +171,7 @@ async def test_rest_flujo_completo_a_b_c_d(
     """Prueba A, B, C, D: encolado vía REST persiste UUID, worker lo procesa y resultado es durable."""
     from starlette.requests import Request
 
+    from src.config import settings
     from src.core.gemini_queue import gemini_rate_limiter
     from src.core.gestor_diagnostico import GestorDiagnostico
     from src.infrastructure.database.models.diagnostics import HipotesisDiagnostico, Vehiculo
@@ -199,6 +200,7 @@ async def test_rest_flujo_completo_a_b_c_d(
     async def slot_bloqueado():
         return False, "rpd_excedido"
 
+    monkeypatch.setattr(settings, "gemini_api_key", "clave-simulada")
     monkeypatch.setattr(gemini_rate_limiter, "intentar_adquirir_slot_db", slot_bloqueado)
 
     scope = {
@@ -306,6 +308,7 @@ async def test_e_fallo_insert_commit_en_rest_nunca_devuelve_en_cola_gemini(
     from fastapi import HTTPException
     from starlette.requests import Request
 
+    from src.config import settings
     from src.core.gemini_queue import gemini_rate_limiter
     from src.core.gestor_diagnostico import GestorDiagnostico
     from src.infrastructure.database.models.diagnostics import HipotesisDiagnostico, Vehiculo
@@ -331,6 +334,7 @@ async def test_e_fallo_insert_commit_en_rest_nunca_devuelve_en_cola_gemini(
     async def slot_bloqueado():
         return False, "rpd_excedido"
 
+    monkeypatch.setattr(settings, "gemini_api_key", "clave-simulada")
     monkeypatch.setattr(gemini_rate_limiter, "intentar_adquirir_slot_db", slot_bloqueado)
 
     # Inducir fallo en persistencia del trabajo
