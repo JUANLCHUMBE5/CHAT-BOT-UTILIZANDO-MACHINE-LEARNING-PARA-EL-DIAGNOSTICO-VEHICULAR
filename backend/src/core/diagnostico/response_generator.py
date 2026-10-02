@@ -12,6 +12,7 @@ from src.core.diagnostico.prompt_builder import (
     construir_prompt_diagnostico,
 )
 from src.core.gemini_queue import SolicitudGeminiEncolada, gemini_rate_limiter
+from src.core.llm import generar_respuesta_groq
 from src.core.logger import logger
 from src.core.sanitizer import redactar_datos_sensibles_para_llm, sanitizar_prompt_usuario
 from src.infrastructure.database.connection import database_configurada
@@ -75,6 +76,20 @@ def generar_respuesta_con_metadatos(
             datos_faltantes=datos_faltantes,
         )
 
+    def _respuesta_groq_si_disponible() -> Tuple[str, dict] | None:
+        if not settings.groq_api_key or not settings.groq_chat_enabled:
+            return None
+        try:
+            texto_groq, metadata_groq = generar_respuesta_groq(
+                prompt_sistema,
+                tipo_consulta=tipo_consulta,
+            )
+            logger.info("[Groq LLM] Respuesta generada como fallback del proveedor principal.")
+            return texto_groq, metadata_groq
+        except Exception as exc:
+            logger.warning(f"[Groq LLM] Fallback no disponible: {type(exc).__name__}")
+            return None
+
     if gestor.api_key:
         slot_disponible = (
             gemini_rate_limiter.intentar_adquirir_slot()
@@ -108,6 +123,7 @@ def generar_respuesta_con_metadatos(
                     return texto_gemini, {
                         "usado": True,
                         "modelo": modelo,
+                        "proveedor": "gemini",
                         "modo": "consulta_tecnica" if tipo_consulta == "consulta_tecnica" else "completo_ml_rag_llm",
                         "tokens_entrada": int(metadata.get("promptTokenCount", max(1, len(prompt_sistema) // 4))),
                         "tokens_salida": int(metadata.get("candidatesTokenCount", max(1, len(texto_gemini) // 4))),
@@ -129,7 +145,13 @@ def generar_respuesta_con_metadatos(
                     error=f"{type(e).__name__}: {e}",
                 )
                 logger.error(f"[Gemini API Error] Fallo al consultar Gemini: {e}. Activando fallback degradado.")
+            respuesta_groq = _respuesta_groq_si_disponible()
+            if respuesta_groq:
+                return respuesta_groq
         else:
+            respuesta_groq = _respuesta_groq_si_disponible()
+            if respuesta_groq:
+                return respuesta_groq
             proveedor_normalizado = "meta" if proveedor.lower() in ("meta", "whatsapp") else proveedor.lower()
             predicciones_dicts = [
                 p.model_dump() if hasattr(p, "model_dump") else (p if isinstance(p, dict) else {"falla": str(p)})
@@ -206,6 +228,10 @@ def generar_respuesta_con_metadatos(
                 "posicion_cola": posicion,
                 "tiempo_espera_cola": espera_segundos,
             }
+
+    respuesta_groq = _respuesta_groq_si_disponible()
+    if respuesta_groq:
+        return respuesta_groq
 
     # Fallback local determinista cuando no hay LLM o ante fallo de conexión
     return generar_respuesta_degradada(
