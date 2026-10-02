@@ -104,7 +104,13 @@ def _default_model_paths() -> tuple[Path, Path, Path]:
 class PathConfig(BaseModel):
     data_dir: Path = ML_ROOT / "data"
     dataset_csv: Path = ML_ROOT / "data" / "dataset_sintomas.csv"
-    tracker_csv: Path = ML_ROOT / "data" / "tracker_diagnosticos.csv"
+    # En producción los artefactos ML se montan de solo lectura. El tracker se
+    # puede redirigir a un volumen de aplicación persistente y escribible.
+    tracker_csv: Path = Field(
+        default_factory=lambda: Path(
+            os.getenv("TRACKER_CSV_PATH") or ML_ROOT / "data" / "tracker_diagnosticos.csv"
+        )
+    )
     manuals_dir: Path = ML_ROOT / "manuals"
     manual_file: Path = ML_ROOT / "manuals" / "manual_procedimientos.txt"
     rag_version: str = Field(default_factory=lambda: os.getenv("CARBOT_RAG_VERSION", "candidate_v1").strip())

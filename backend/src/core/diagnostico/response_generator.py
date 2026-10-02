@@ -87,7 +87,7 @@ def generar_respuesta_con_metadatos(
             logger.info("[Groq LLM] Respuesta generada como fallback del proveedor principal.")
             return texto_groq, metadata_groq
         except Exception as exc:
-            logger.warning(f"[Groq LLM] Fallback no disponible: {type(exc).__name__}")
+            logger.warning(f"[Groq LLM] Fallback no disponible: {type(exc).__name__}: {exc}")
             return None
 
     if gestor.api_key:

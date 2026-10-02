@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from types import SimpleNamespace
 
-from src.config import settings
+from src.config import PathConfig, settings
 from src.core.audio_processor import AudioProcessor
 from src.core.diagnostico.response_generator import generar_respuesta_con_metadatos
 from src.core.llm import transcribir_audio_groq
@@ -89,3 +90,11 @@ def test_respuesta_usa_groq_si_no_hay_gemini(monkeypatch):
     assert "presión de combustible" in texto
     assert metadata["proveedor"] == "groq"
     assert metadata["usado"] is True
+
+
+def test_tracker_csv_permite_ruta_persistente_separada_del_ml(monkeypatch):
+    monkeypatch.setenv("TRACKER_CSV_PATH", "/app/backend/data/tracker_diagnosticos.csv")
+
+    paths = PathConfig()
+
+    assert paths.tracker_csv == Path("/app/backend/data/tracker_diagnosticos.csv")

@@ -47,8 +47,10 @@ services:
       REDIS_URL: redis://redis:6379/0
       QUEUE_EMBEDDED_WORKER: "false"
       ML_ROOT: /app/machine_learning
+      TRACKER_CSV_PATH: /app/backend/data/tracker_diagnosticos.csv
     volumes:
       - ${ML_HOST_PATH:?Set ML_HOST_PATH to the machine_learning directory}:/app/machine_learning:ro
+      - carbot_tracker_data:/app/backend/data
     ports:
       - "127.0.0.1:${API_PORT:-8000}:8000"
     depends_on:
@@ -82,8 +84,10 @@ services:
       REDIS_URL: redis://redis:6379/0
       QUEUE_EMBEDDED_WORKER: "false"
       ML_ROOT: /app/machine_learning
+      TRACKER_CSV_PATH: /app/backend/data/tracker_diagnosticos.csv
     volumes:
       - ${ML_HOST_PATH:?Set ML_HOST_PATH to the machine_learning directory}:/app/machine_learning:ro
+      - carbot_tracker_data:/app/backend/data
     depends_on:
       api:
         condition: service_started
@@ -96,3 +100,5 @@ services:
 volumes:
   carbot_postgres:
   carbot_redis:
+  # Telemetría CSV persistente, separada del montaje ML de solo lectura.
+  carbot_tracker_data:

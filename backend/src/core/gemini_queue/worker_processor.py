@@ -206,7 +206,7 @@ async def procesar_solicitud_encolada(
             error_reintentable = None
             logger.info("[Groq Worker] Respuesta generada como fallback de Gemini.")
         except Exception as exc:
-            logger.warning(f"[Groq Worker] Fallback no disponible: {type(exc).__name__}")
+            logger.warning(f"[Groq Worker] Fallback no disponible: {type(exc).__name__}: {exc}")
 
     if error_reintentable and settings.database.enabled:
         await marcar_trabajo_reintento_db(
