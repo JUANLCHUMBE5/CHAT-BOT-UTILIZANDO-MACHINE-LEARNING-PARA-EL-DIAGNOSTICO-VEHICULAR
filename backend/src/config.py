@@ -167,7 +167,7 @@ class AppSettings(BaseModel):
     gemini_max_requests_per_minute: int = _env_int("GEMINI_MAX_REQUESTS_PER_MINUTE", 10)
     gemini_max_requests_per_day: int = _env_int("GEMINI_MAX_REQUESTS_PER_DAY", 450)
     groq_api_key: str = os.getenv("GROQ_API_KEY", "")
-    groq_model: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+    groq_model: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
     groq_audio_model: str = os.getenv("GROQ_AUDIO_MODEL", "whisper-large-v3-turbo")
     groq_chat_enabled: bool = _env_bool("GROQ_CHAT_ENABLED", default=True)
     groq_audio_enabled: bool = _env_bool("GROQ_AUDIO_ENABLED", default=True)
