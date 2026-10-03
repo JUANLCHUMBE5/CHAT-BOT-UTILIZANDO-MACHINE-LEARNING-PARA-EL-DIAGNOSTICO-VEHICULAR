@@ -80,6 +80,11 @@ TERMINOS_AUTOMOTRICES = {
     "mordazas", "bombeo", "bombazo", "bombazos", "purga", "purgado", "sangrado",
     "crapodina", "collarin", "maza", "bobina", "bobinas", "resorte", "maxi-brake",
     "acumulador", "parasito", "bcm", "corriente", "fuga", "multimetro",
+    # Evidencia de inyección/mezcla: aunque sea un mensaje corto, nunca es
+    # texto ajeno al taller (p. ej. “sonda en 0.1”, “MAF incoherente”).
+    "sensor", "oxigeno", "sonda", "lambda", "maf", "map", "stft", "ltft",
+    "mezcla", "riel", "inyeccion", "inyección", "presion de combustible",
+    "presión de combustible", "fuel trim",
     "arrancar", "encender", "prender", "luces", "potencia", "perdida", "climatizacion",
     "climatización", "manejar", "manejando", "conducir", "conduciendo",
     "temperatura", "vapor", "capo", "capó", "aguja",

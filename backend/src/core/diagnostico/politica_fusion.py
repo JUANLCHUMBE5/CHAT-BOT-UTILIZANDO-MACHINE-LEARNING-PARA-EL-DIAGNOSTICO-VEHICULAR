@@ -111,9 +111,17 @@ class PoliticaFusionDiagnostica:
                 evidencia_confirmada.append(f"Compresión baja medida en manómetro de cilindro: {valor} {unidad}")
 
         # Sensor de oxígeno / sonda lambda trabada o STFT anormal
-        es_sensor_oxigeno_lambda = any(
-            w in texto_norm for w in ("sensor lambda", "sensor de oxigeno", "sonda lambda", "0.9v", "0.1v", "stft", "ltft")
-        ) and any(w in texto_norm for w in ("humo negro", "consumo excesivo", "mezcla rica", "correccion", "trabado"))
+        menciona_sonda_lambda = any(
+            w in texto_norm for w in ("sensor lambda", "sensor de oxigeno", "sonda lambda", "sensor o2", "stft", "ltft")
+        )
+        lectura_lambda_trabada = bool(
+            re.search(r"\b0[.,]1\s*(?:v|volt(?:ios?)?)?\b", texto_norm)
+            and any(w in texto_norm for w in ("queda", "fijo", "fija", "trabado", "trabada", "no corrige"))
+        )
+        es_sensor_oxigeno_lambda = menciona_sonda_lambda and (
+            lectura_lambda_trabada
+            or any(w in texto_norm for w in ("0.9v", "0.1v", "humo negro", "consumo excesivo", "mezcla rica", "correccion", "trabado"))
+        )
         if es_sensor_oxigeno_lambda:
             evidencia_confirmada.append("Telemetría de sensor lambda / STFT confirma falla en sensor de oxígeno o mezcla")
 

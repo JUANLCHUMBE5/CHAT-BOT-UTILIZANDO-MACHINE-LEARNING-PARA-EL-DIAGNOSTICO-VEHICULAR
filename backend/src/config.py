@@ -167,6 +167,7 @@ class AppSettings(BaseModel):
 
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
+    gemini_timeout_seconds: int = _env_int("GEMINI_TIMEOUT_SECONDS", 10)
     gemini_use_free_tier: bool = _env_bool("GEMINI_USE_FREE_TIER", default=True)
     gemini_input_price_per_million: float = _env_float("GEMINI_INPUT_PRICE_PER_MILLION", 0.30)
     gemini_output_price_per_million: float = _env_float("GEMINI_OUTPUT_PRICE_PER_MILLION", 2.50)

@@ -4,9 +4,11 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from src.config import settings
 from src.core.conversacion.models import ConversationState
 from src.core.conversacion.ruteador_sistema import SISTEMA_INYECCION_MEZCLA, detectar_ruta_sistema
 from src.core.conversacion.validador_compatibilidad import ValidadorCompatibilidad
+from src.core.gestor_diagnostico import GestorDiagnostico
 
 
 def test_mezcla_pobre_e_inyectores_bloquean_hipotesis_de_refrigeracion_y_iac() -> None:
@@ -66,10 +68,137 @@ def test_top3_omite_duplicados_y_recupera_siguiente_alternativa_compatible() -> 
     assert any(item["motivo"] == "DUPLICADA_EN_TOP" for item in exclusiones)
 
 
+@pytest.mark.parametrize(
+    "mensaje",
+    [
+        "El escáner marca P0171 y mezcla pobre.",
+        "El sensor de oxígeno queda fijo en 0.1 V.",
+        "Los inyectores no inyectan suficiente combustible.",
+        "La presión de combustible en el riel está baja.",
+        "P0174 aparece cuando el motor ya está caliente.",
+        "El MAF reporta una medición de aire incoherente.",
+        "Hay fuga de vacío y el ajuste de mezcla se va pobre.",
+        "El escáner muestra mezcla pobre en ambos bancos.",
+        "El inyector tiene bajo caudal en la prueba de banco.",
+        "La sonda lambda no corrige y mantiene mezcla pobre.",
+    ],
+)
+def test_lote_aislado_de_diez_consultas_de_inyeccion_no_cruza_categorias(mensaje: str) -> None:
+    """Prueba sin Meta/WhatsApp para las consultas técnicas del piloto."""
+    estado = ConversationState(session_id="piloto-aislado-inyeccion")
+    estado.historial_mensajes_usuario = [mensaje]
+    finales, exclusiones = ValidadorCompatibilidad.filtrar_y_ordenar_para_presentacion(
+        predicciones_raw=[
+            {"falla": "Cuerpo de aceleración o válvula IAC sucia", "probabilidad": 0.98},
+            {"falla": "Termostato o motoventilador defectuoso", "probabilidad": 0.91},
+            {"falla": "Baja presión de aceite", "probabilidad": 0.80},
+            {"falla": "Inyectores sucios o con bajo caudal", "probabilidad": 0.72},
+            {"falla": "Baja presión de combustible en el riel", "probabilidad": 0.68},
+        ],
+        estado=estado,
+        nueva_evidencia=mensaje,
+    )
+
+    assert [item["falla"] for item in finales] == [
+        "Inyectores sucios o con bajo caudal",
+        "Baja presión de combustible en el riel",
+    ]
+    assert {item["motivo"] for item in exclusiones} == {"SISTEMA_INCOMPATIBLE_CON_EVIDENCIA"}
+
+
 def test_componentes_ajenos_no_se_admiten_por_palabras_genericas():
     from src.core.conversacion.ruteador_sistema import hipotesis_compatibles_con_ruta
     for falla in ("Bomba de agua defectuosa", "Aire acondicionado no enfría", "Filtro de aceite"):
         assert not hipotesis_compatibles_con_ruta(falla, SISTEMA_INYECCION_MEZCLA)
+
+
+def test_secuencia_real_anonimizada_conserva_rag_de_mezcla_compatible(monkeypatch):
+    """No consume LLM ni envía WhatsApp; ejecuta ML + RAG reales con evidencia de taller."""
+    gestor = GestorDiagnostico(gemini_api_key="")
+    monkeypatch.setattr(settings, "groq_api_key", "")
+    monkeypatch.setattr(settings, "groq_chat_enabled", False)
+    monkeypatch.setattr(gestor, "_registrar_en_tracker", lambda **_kwargs: None)
+    recibido_llm = {}
+
+    def llm_simulado(**kwargs):
+        recibido_llm.update(kwargs)
+        return "Síntesis aislada simulada.", {
+            "usado": True,
+            "modelo": "simulado-local",
+            "modo": "completo_ml_rag_llm",
+            "tokens_entrada": 0,
+            "tokens_salida": 0,
+        }
+
+    monkeypatch.setattr(gestor, "_generar_respuesta_con_metadatos", llm_simulado)
+    resultado = gestor.procesar_consulta_texto(
+        "Nissan Versa 2016. Escáner marca P0171, mezcla pobre y Check Engine. "
+        "En ralentí y caliente sigue el DTC. IAC revisada y está bien. "
+        "Los inyectores no inyectan suficiente. Sensor de oxígeno queda en 0.1 V; "
+        "lo cambié y sigue igual.",
+        proveedor="api",
+    )
+
+    assert resultado.modo_diagnostico == "completo_ml_rag_llm"
+    assert "MEZCLA POBRE" in resultado.titulo_manual
+    assert "inyector" in resultado.diagnostico_ml.lower()
+    assert "MEZCLA POBRE" in recibido_llm["titulo_manual"]
+    assert "termostato" not in recibido_llm["diagnostico_ml"].lower()
+
+
+def test_caso_carga_absoluta_usa_rag_map_y_llm_sin_inyectar_clases_ajenas(monkeypatch):
+    """Cuando C1 no tiene clase MAP, conserva la respuesta técnica basada en RAG."""
+    gestor = GestorDiagnostico(gemini_api_key="")
+    monkeypatch.setattr(settings, "groq_api_key", "")
+    monkeypatch.setattr(settings, "groq_chat_enabled", False)
+    monkeypatch.setattr(gestor, "_registrar_en_tracker", lambda **_kwargs: None)
+    recibido_llm = {}
+
+    def llm_simulado(**kwargs):
+        recibido_llm.update(kwargs)
+        return "Revisemos DTC y señal MAP con el manual del vehículo; no confirmo pieza aún.", {
+            "usado": True,
+            "modelo": "simulado-local",
+            "modo": "completo_ml_rag_llm",
+            "tokens_entrada": 0,
+            "tokens_salida": 0,
+        }
+
+    monkeypatch.setattr(gestor, "_generar_respuesta_con_metadatos", llm_simulado)
+    resultado = gestor.procesar_consulta_texto(
+        "La carga absoluta está fuera de rango; cabecea y pierde potencia en ralentí y andando.",
+        proveedor="api",
+    )
+
+    assert resultado.modo_diagnostico == "completo_ml_rag_llm"
+    assert "MAP" in resultado.titulo_manual
+    assert "Bosch Automotive Testing" in resultado.contexto_manual
+    assert resultado.confianza_ml == 0.0
+    assert resultado.requiere_revision_humana
+    assert recibido_llm["contexto_manual"] == resultado.contexto_manual
+    assert recibido_llm["predicciones_ml"] == []
+    assert "EVAP" not in resultado.respuesta_texto
+    assert "termostato" not in resultado.respuesta_texto.lower()
+
+
+def test_carga_absoluta_map_filtra_hipotesis_fuera_de_inyeccion():
+    """MAP/carga absoluta no debe derivar a IAC, encendido ni refrigeración."""
+    from src.core.diagnostico.filtro_evidencia import filtrar_predicciones, resultado_sin_candidatas
+    from src.core.diagnostico.models import PrediccionML
+
+    texto = "Carga absoluta fuera de rango, cabecea y pierde potencia en ralentí y marcha"
+    predicciones = [
+        PrediccionML(falla="Cuerpo de aceleración o válvula IAC sucia", probabilidad=0.8),
+        PrediccionML(falla="Falla en bujías o bobinas de encendido (misfire)", probabilidad=0.15),
+        PrediccionML(falla="Falla en termostato o motoventilador de radiador", probabilidad=0.05),
+    ]
+
+    filtradas, _ = filtrar_predicciones(predicciones, texto, ConversationState(session_id="map"))
+
+    assert filtradas == []
+    respuesta = resultado_sin_candidatas(texto, predicciones)
+    assert "map" in respuesta.respuesta_texto.lower()
+    assert "5 v" in respuesta.respuesta_texto.lower()
 
 
 @pytest.mark.parametrize("falla", [
@@ -153,6 +282,21 @@ def test_categorias_especificas():
         estado = ConversationState(session_id="categorias")
         estado.historial_mensajes_usuario = [mensaje]
         assert detectar_ruta_sistema(estado).sistema == esperado
+
+
+def test_ralenti_bajo_filtra_sistemas_ajenos_sin_eliminar_inyeccion():
+    from src.core.conversacion.ruteador_sistema import (
+        hipotesis_compatibles_con_ruta,
+    )
+
+    estado = ConversationState(session_id="ralenti-bajo")
+    estado.historial_mensajes_usuario = ["El motor queda con el ralentí muy bajo"]
+    ruta = detectar_ruta_sistema(estado)
+    assert ruta.sistema == "ADMISION_RALENTI"
+    assert hipotesis_compatibles_con_ruta("Cuerpo de aceleración o válvula IAC sucia", ruta.sistema)
+    assert hipotesis_compatibles_con_ruta("Fuga de vacío de admisión", ruta.sistema)
+    assert not hipotesis_compatibles_con_ruta("Falla del termostato", ruta.sistema)
+    assert not hipotesis_compatibles_con_ruta("Falla en válvula EVAP", ruta.sistema)
 
 
 def test_formateador_respeta_supresion_de_pregunta_repetida():

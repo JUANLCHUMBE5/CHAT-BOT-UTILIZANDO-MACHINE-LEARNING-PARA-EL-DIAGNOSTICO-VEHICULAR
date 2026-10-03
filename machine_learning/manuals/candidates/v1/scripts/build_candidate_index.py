@@ -12,7 +12,7 @@ import numpy as np
 import faiss
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-PROJECT_ROOT = Path("c:/Users/leonc/OneDrive/Desktop/CHAT_BOT_MACHINLEARNING")
+PROJECT_ROOT = Path(__file__).resolve().parents[5]
 BACKEND_DIR = PROJECT_ROOT / "backend"
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -85,7 +85,7 @@ def build_and_validate_candidate():
         elif is_transversal:
             k_type = KnowledgeType.TRANSVERSAL
             ev_level = EvidenceLevel.TRANSVERSAL
-        elif is_content_enhanced or is_metadata_reconciled:
+        elif is_content_enhanced or is_metadata_reconciled or doc_id == "RAG_PROC_116":
             k_type = KnowledgeType.PROCEDURAL
             ev_level = EvidenceLevel.PARTIAL_SOURCE
         else:

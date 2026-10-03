@@ -1,12 +1,12 @@
 {
   "candidate_version": "RAG_CANDIDATO_V1",
-  "dimension": 32708,
+  "dimension": 32802,
   "document_count": 239,
   "chunk_count": 239,
   "FAISS_ntotal": 239,
-  "index_hash": "a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",
-  "metadata_hash": "af5c5edebdebbdbe7f97c488dad274c306e4782fb4c273cfab2e42e531c2e2b3",
-  "manifest_hash": "a0fce3dc39bb6344388a18cc6f2a10d8298d5d47ae1f365e4ae226eab1b16bba",
+  "index_hash": "dc5174ee7e63195e0532550a7667e3e942e99c66b26b589f40948a4c5fb0ba8d",
+  "metadata_hash": "0f4e456847f8b9c9ad1abc902aff5cdaeb95e2bc02202d6b66aeff4f9683c1a3",
+  "manifest_hash": "7789d5dcc3c5346f4c94acfee94dff46e8730465a3e07496789c7ef439f78c85",
   "vectorizer_config": {
     "lowercase": true,
     "strip_accents": "unicode",

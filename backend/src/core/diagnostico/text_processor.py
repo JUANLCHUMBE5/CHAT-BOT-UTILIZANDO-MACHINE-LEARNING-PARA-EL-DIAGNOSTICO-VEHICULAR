@@ -696,7 +696,87 @@ def procesar_consulta_texto(
             if not p.falla.startswith("Sistema GNV/GLP")
         ]
         predicciones_ml.insert(0, PrediccionML(falla=diagnostico_gas, probabilidad=max(confianza, 0.20)))
-    if not predicciones_ml:
+    if not predicciones_ml or any(
+        termino in texto_evaluar.lower()
+        for termino in ("sensor map", "carga absoluta", "presion absoluta", "presión absoluta")
+    ):
+        evidencia_map = any(
+            termino in texto_evaluar.lower()
+            for termino in ("sensor map", "carga absoluta", "presion absoluta", "presión absoluta")
+        )
+        if evidencia_map:
+            inicio_rag_map = time.perf_counter()
+            contexto_map, titulo_map, similitud_map, meta_map = gestor.motor_rag.recuperar_procedimiento_hibrido(
+                consulta=texto_evaluar,
+                macro_sistema="MOTOR",
+                top_fallas=None,
+                codigos_dtc=[
+                    codigo.upper()
+                    for codigo in re.findall(r"\b[pbcu]\d{4}\b", texto_evaluar, re.IGNORECASE)
+                ],
+                marca=marca_evaluar,
+                modelo=None,
+            )
+            tiempo_rag_map = max(0, int((time.perf_counter() - inicio_rag_map) * 1000))
+            documento_map_valido = (
+                meta_map.get("doc_id") == "RAG_PROC_116"
+                and "map" in (titulo_map or "").lower()
+                and contexto_map
+                and "No se encontró" not in contexto_map
+                and "Coincidencia baja" not in titulo_map
+            )
+            if documento_map_valido:
+                inicio_llm_map = time.perf_counter()
+                respuesta_map, uso_llm_map = gestor._generar_respuesta_con_metadatos(
+                    pregunta=texto_evaluar,
+                    diagnostico_ml="Sin hipótesis ML compatible; lectura MAP/carga absoluta pendiente de confirmar",
+                    confianza_ml=0.0,
+                    contexto_manual=contexto_map,
+                    titulo_manual=titulo_map,
+                    requiere_revision_humana=True,
+                    remitente=remitente,
+                    proveedor=proveedor,
+                    taller_id=taller_id,
+                    usuario_id=usuario_id,
+                    conversacion_id=conversacion_id,
+                    slot_gemini_preconcedido=slot_gemini_preconcedido,
+                    diferir_encolado_persistente=diferir_encolado_persistente,
+                    tipo_consulta="diagnostico",
+                    predicciones_ml=[],
+                    evidencia_confirmada=[
+                        "El mecánico reporta una lectura de carga absoluta fuera de rango; falta verificarla con el procedimiento del vehículo."
+                    ],
+                    datos_faltantes=[
+                        "DTC exacto y cuadro congelado, si existen",
+                        "lecturas MAP/BARO, unidades y condición de prueba",
+                        "marca, modelo, año, motor y especificación eléctrica OEM",
+                    ],
+                )
+                tiempo_llm_map = max(0, int((time.perf_counter() - inicio_llm_map) * 1000))
+                return ResultadoDiagnostico(
+                    respuesta_texto=respuesta_map,
+                    diagnostico_ml="Sin hipótesis ML compatible: lectura MAP pendiente de verificar",
+                    confianza_ml=0.0,
+                    contexto_manual=contexto_map,
+                    titulo_manual=titulo_map,
+                    similitud_rag=similitud_map,
+                    requiere_revision_humana=True,
+                    modo_diagnostico=uso_llm_map.get("modo", "diagnostico_degradado_ml_rag"),
+                    llm_usado=uso_llm_map.get("usado", False),
+                    llm_modelo=uso_llm_map.get("modelo"),
+                    tokens_entrada=uso_llm_map.get("tokens_entrada", 0),
+                    tokens_salida=uso_llm_map.get("tokens_salida", 0),
+                    solicitud_id=uso_llm_map.get("solicitud_id"),
+                    posicion_cola=uso_llm_map.get("posicion_cola", 0),
+                    tiempo_espera_cola=uso_llm_map.get("tiempo_espera_cola", 0.0),
+                    sintoma_evaluado=texto_evaluar,
+                    predicciones_ml_raw=predicciones_originales,
+                    tiempo_ml_ms=tiempo_ml_ms,
+                    tiempo_rag_ms=tiempo_rag_map,
+                    tiempo_llm_ms=tiempo_llm_map,
+                    tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
+                    tipo_consulta="diagnostico",
+                )
         return resultado_sin_candidatas(texto_evaluar, predicciones_originales)
     diagnostico_predictivo = predicciones_ml[0].falla
     confianza = predicciones_ml[0].probabilidad
@@ -760,13 +840,35 @@ def procesar_consulta_texto(
     from src.core.diagnostico.taxonomia_sistemas import obtener_macro_sistema
     macro_sis_ml = obtener_macro_sistema(diagnostico_predictivo) if diagnostico_predictivo else None
     dtcs_encontrados = [d.upper() for d in re.findall(r"\b[pbcu]\d{4}\b", texto_evaluar, re.IGNORECASE)]
+    evidencia_map = any(
+        termino in texto_evaluar.lower()
+        for termino in ("sensor map", "carga absoluta", "presion absoluta", "presión absoluta")
+    )
 
     meta_rag_dict = {}
     if hasattr(gestor.motor_rag, "recuperar_procedimiento_hibrido"):
+        from src.core.conversacion.models import ConversationState
+        from src.core.conversacion.ruteador_sistema import (
+            SISTEMA_INYECCION_MEZCLA,
+            detectar_ruta_sistema,
+        )
+
+        estado_ruta_rag = getattr(ses_chk, "conversation_state", None)
+        if not isinstance(estado_ruta_rag, ConversationState):
+            estado_ruta_rag = ConversationState(session_id="rag-ruta-explicita")
+        ruta_rag = detectar_ruta_sistema(estado_ruta_rag, texto_evaluar)
+        evidencia_inyeccion_explicita = ruta_rag.sistema == SISTEMA_INYECCION_MEZCLA
+        top_fallas_rag = (
+            None
+            if evidencia_map or evidencia_inyeccion_explicita
+            else [p.model_dump() for p in predicciones_ml] if predicciones_ml else None
+        )
         contexto_manual, titulo_manual, similitud_rag, meta_rag_dict = gestor.motor_rag.recuperar_procedimiento_hibrido(
             consulta=texto_evaluar,
             macro_sistema=macro_sis_ml,
-            top_fallas=[p.model_dump() for p in predicciones_ml] if predicciones_ml else None,
+            # La evidencia explícita de MAP o inyección/mezcla debe guiar el
+            # documento técnico; el Top ML no debe desviar O2/P0171 a otra guía.
+            top_fallas=top_fallas_rag,
             codigos_dtc=dtcs_encontrados,
             marca=marca_evaluar,
             modelo=None,
@@ -835,6 +937,26 @@ def procesar_consulta_texto(
 
     # La fusión no puede reintroducir candidatos rechazados por el caso.
     predicciones_ml, _ = filtrar_predicciones(predicciones_ml, texto_evaluar, ses_chk)
+    # Un síntoma explícito de ralentí bajo es una ruta propia: conservar
+    # admisión/ralentí e inyección plausibles, pero quitar sistemas ajenos como
+    # refrigeración o EVAP antes de que el Top-3 llegue al LLM.
+    from src.core.conversacion.models import ConversationState
+    from src.core.conversacion.ruteador_sistema import (
+        detectar_ruta_sistema,
+        hipotesis_compatibles_con_ruta,
+    )
+
+    estado_ruta_respuesta = getattr(ses_chk, "conversation_state", None)
+    if not isinstance(estado_ruta_respuesta, ConversationState):
+        estado_ruta_respuesta = ConversationState(session_id="filtrado-ruta")
+    ruta_respuesta = detectar_ruta_sistema(estado_ruta_respuesta, texto_evaluar)
+    if ruta_respuesta.sistema == "ADMISION_RALENTI":
+        predicciones_filtradas = [
+            p for p in predicciones_ml
+            if hipotesis_compatibles_con_ruta(p.falla, ruta_respuesta.sistema)
+        ]
+        if predicciones_filtradas:
+            predicciones_ml = predicciones_filtradas
     if es_falla_solo_gas and not tiene_dtc:
         diagnostico_gas = "Sistema GNV/GLP: diferenciar calibración, presión, filtros e inyectores"
         predicciones_ml = [
@@ -858,9 +980,33 @@ def procesar_consulta_texto(
         and diagnostico_predictivo != falla_rag
     )
 
+    # En inyección/mezcla, un procedimiento de sonda lambda, inyectores o
+    # presión de combustible puede ser compatible aunque no use exactamente la
+    # misma etiqueta canónica que el Top-1. No se debe perder RAG por esa
+    # diferencia semántica ni regresar a IAC/termostato.
+    documento_es_map = evidencia_map and "map" in (titulo_manual or "").lower()
+    rag_compatible_con_ruta = documento_es_map
+    if contradiccion_falla_rag:
+        from src.core.conversacion.models import ConversationState
+        from src.core.conversacion.ruteador_sistema import (
+            SISTEMA_INYECCION_MEZCLA,
+            detectar_ruta_sistema,
+            hipotesis_compatibles_con_ruta,
+        )
+
+        estado_ruta = getattr(ses_chk, "conversation_state", None)
+        if not isinstance(estado_ruta, ConversationState):
+            estado_ruta = ConversationState(session_id="rag-compatibilidad")
+        ruta = detectar_ruta_sistema(estado_ruta, texto_evaluar)
+        rag_compatible_con_ruta = documento_es_map or (
+            ruta.sistema == SISTEMA_INYECCION_MEZCLA
+            and hipotesis_compatibles_con_ruta(diagnostico_predictivo, ruta.sistema)
+            and hipotesis_compatibles_con_ruta(falla_rag, ruta.sistema)
+        )
+
     if (
-        contradiccion_falla_rag
-        or not documento_compatible(texto_evaluar, titulo_manual, contexto_manual)
+        (contradiccion_falla_rag and not rag_compatible_con_ruta)
+        or (not documento_es_map and not documento_compatible(texto_evaluar, titulo_manual, contexto_manual))
     ):
         contexto_manual, titulo_manual, similitud_rag = "", "Sin procedimiento compatible verificado", 0.0
         rag_valido = False
@@ -869,6 +1015,15 @@ def procesar_consulta_texto(
         if rag_valido:
             diagnostico_predictivo = f"Hipótesis ML de baja confianza: {diagnostico_predictivo}"
             requiere_revision_humana = True
+        elif evidencia_map:
+            resultado_map = resultado_sin_candidatas(texto_evaluar, predicciones_originales)
+            return resultado_map.model_copy(
+                update={
+                    "tiempo_ml_ms": tiempo_ml_ms,
+                    "tiempo_rag_ms": tiempo_rag_ms,
+                    "tiempo_total_ms": max(0, int((time.perf_counter() - inicio_total) * 1000)),
+                }
+            )
         else:
             return ResultadoDiagnostico(
                 respuesta_texto=(

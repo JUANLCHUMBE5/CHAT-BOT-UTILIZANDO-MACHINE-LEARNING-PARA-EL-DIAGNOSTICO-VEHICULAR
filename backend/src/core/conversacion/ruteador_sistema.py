@@ -19,7 +19,10 @@ CATEGORIAS = {
     "ENCENDIDO": ("bobina", "bujia", "chispa", "p030"),
     "PROGRAMACION": ("reprogramacion", "programacion", "inmovilizador", "codificacion", "ecu"),
     "REFRIGERACION": ("refrigerante", "termostato", "radiador", "bomba de agua", "sobrecalentamiento"),
-    "ADMISION_RALENTI": ("iac", "tps", "cuerpo de aceleracion", "mariposa"),
+    "ADMISION_RALENTI": (
+        "iac", "tps", "cuerpo de aceleracion", "mariposa", "ralenti",
+        "minimo bajo", "ralenti inestable", "bajas revoluciones",
+    ),
     "LUBRICACION": ("presion de aceite", "bomba de aceite", "consumo de aceite"),
     "ARRANQUE_CARGA": ("alternador", "bateria", "bornes", "motor de arranque", "solenoide de arranque"),
     "FRENOS": ("freno", "pastillas", "discos", "abs"),
@@ -64,6 +67,7 @@ def detectar_ruta_sistema(estado: Any, nueva_evidencia: str | None = None) -> Ru
         "inyector": "inyector",
         "injector": "inyector",
         "mezcla pobre": "mezcla pobre",
+        "ajuste de mezcla": "ajuste de mezcla",
         "p0171": "DTC P0171",
         "p0174": "DTC P0174",
         "sensor de oxigeno": "sensor O2",
@@ -74,6 +78,10 @@ def detectar_ruta_sistema(estado: Any, nueva_evidencia: str | None = None) -> Ru
         "presion de combustible": "presión de combustible",
         "presion en el riel": "presión de combustible",
         "maf": "medición de aire MAF",
+        "sensor map": "sensor MAP / presión absoluta",
+        "carga absoluta": "sensor MAP / presión absoluta",
+        "presion absoluta": "sensor MAP / presión absoluta",
+        "fuga de vacio": "fuga de vacío de admisión",
     }
     evidencia = tuple(valor for patron, valor in marcadores.items() if patron in texto)
     if evidencia:
@@ -91,6 +99,14 @@ def detectar_ruta_sistema(estado: Any, nueva_evidencia: str | None = None) -> Ru
 
 def hipotesis_compatibles_con_ruta(falla: str, sistema: str | None) -> bool:
     """Evita mezclar sistemas cuando hay una ruta técnica fuerte."""
+    texto = _normalizar(falla)
+    if sistema == "ADMISION_RALENTI":
+        compatibles_ralenti = (
+            "ralenti", "minimo", "iac", "aceleracion", "acelerador", "mariposa",
+            "tps", "admision", "vacio", "aire", "inyector", "inyeccion",
+            "combustible", "presion de combustible",
+        )
+        return any(token in texto for token in compatibles_ralenti)
     if sistema != SISTEMA_INYECCION_MEZCLA:
         # Las categorías restantes orientan la entrevista, pero sus nombres no
         # son una taxonomía completa de las etiquetas del Linear SVM. Filtrarlas
@@ -98,10 +114,9 @@ def hipotesis_compatibles_con_ruta(falla: str, sistema: str | None) -> bool:
         # climatización -> presión de refrigerante/electroventilador). La ruta
         # de inyección/mezcla sí cuenta con evidencia y exclusiones explícitas.
         return True
-    texto = _normalizar(falla)
     compatibles = (
         "inyector", "inyeccion", "combustible",
-        "oxigeno", "lambda", "mezcla", "maf", "aire no medido", "vacio", "admision",
+        "oxigeno", "lambda", "mezcla", "maf", "map", "presion absoluta", "aire no medido", "vacio", "admision",
         "p017", "evap", "riel",
     )
     if any(token in texto for token in compatibles):

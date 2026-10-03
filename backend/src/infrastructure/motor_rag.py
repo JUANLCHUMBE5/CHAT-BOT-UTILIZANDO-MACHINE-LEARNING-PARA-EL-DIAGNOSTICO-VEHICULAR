@@ -353,6 +353,9 @@ class MotorRAG:
             "cerradura": "chapa cerradura pestillo puerta trinquete",
             "humo blanco": "empaquetadura culata refrigerante motor sobrecalentamiento",
             "humo negro": "mezcla rica inyectores filtro aire maf map sensor oxigeno",
+            "carga absoluta": "sensor map baro presion absoluta colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
+            "sensor map": "baro presion absoluta colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
+            "presion absoluta": "sensor map baro colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
             "vibra": "vibracion volante asiento pedal velocidad balanceo alineacion freno soportes",
             "pierde fuerza": "perdida potencia aceleracion subida combustible aire escape transmision",
             "pierde potencia": "perdida potencia aceleracion subida combustible aire escape transmision",
@@ -484,7 +487,14 @@ class MotorRAG:
             consulta_vec = self.vectorizador.transform([consulta_expandida]).toarray().astype(np.float32)
             faiss.normalize_L2(consulta_vec)
 
-            k_busqueda = min(k_candidatos, len(self.documentos))
+            consulta_map_explicita = any(
+                termino in consulta.lower()
+                for termino in ("sensor map", "carga absoluta", "presion absoluta", "presión absoluta")
+            )
+            # Para MAP, explorar el corpus completo antes de restringirlo a la
+            # ficha con fuente verificable: los documentos históricos retirados
+            # aún pueden puntuar alto por compartir DTC/título.
+            k_busqueda = len(self.documentos) if consulta_map_explicita else min(k_candidatos, len(self.documentos))
             similitudes, indices = self.faiss_index.search(consulta_vec, k=k_busqueda)
 
             candidatos = []
@@ -503,6 +513,12 @@ class MotorRAG:
                             else {}
                         ),
                     })
+
+            if consulta_map_explicita:
+                candidatos = [
+                    candidato for candidato in candidatos
+                    if (candidato.get("metadatos") or {}).get("id_procedimiento") == "RAG_PROC_116"
+                ]
 
             # Reordenar ponderando por Macro-Sistema ML, códigos DTC y Top-2 de fallas
             conf_ml_val = None
@@ -633,4 +649,3 @@ class MotorRAG:
         """Busca el procedimiento técnico más relevante (compatibilidad retroactiva)."""
         cuerpo, titulo, _, _ = self.recuperar_procedimiento_con_metadatos(consulta, umbral)
         return cuerpo, titulo
-

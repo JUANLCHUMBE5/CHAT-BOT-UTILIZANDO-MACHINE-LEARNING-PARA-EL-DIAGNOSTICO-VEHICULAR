@@ -5,6 +5,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+import requests
 
 from src.config import settings
 from src.core.gemini_queue.models import SolicitudGeminiEncolada
@@ -13,6 +14,7 @@ from src.core.gemini_queue.worker_processor import (
     _obtener_http_session_gemini,
     procesar_solicitud_encolada,
 )
+from src.core.gestor_diagnostico import GestorDiagnostico
 
 
 def test_pool_http_session_gemini_es_singleton_y_reutiliza_sockets():
@@ -99,6 +101,87 @@ async def test_consulta_tecnica_tokens_reducidos_a_140():
 
     assert payload_capturado.get("generationConfig", {}).get("maxOutputTokens") == 140
     assert meta.get("modo") == "consulta_tecnica"
+
+
+@pytest.mark.anyio
+async def test_timeout_de_gemini_usa_groq_sin_enviar_whatsapp():
+    """Simula timeout local: Groq responde y no se toca DB ni WhatsApp."""
+    limiter = GeminiRateLimiter(max_por_minuto=15, max_por_dia=1500)
+    solicitud = SolicitudGeminiEncolada(
+        sintoma="sensor de oxígeno con mezcla pobre",
+        diagnostico_ml="Mezcla pobre en sistema de inyección",
+        confianza_ml=0.82,
+        contexto_manual="Verificar señal de sonda lambda y presión de combustible.",
+        titulo_manual="Manual Inyección",
+    )
+    timeout_capturado = {}
+
+    def gemini_lento(*_args, **kwargs):
+        timeout_capturado["segundos"] = kwargs["timeout"]
+        raise requests.Timeout("simulación aislada de Gemini lento")
+
+    def groq_local(_prompt_sistema, *, tipo_consulta="diagnostico"):
+        assert tipo_consulta == "diagnostico"
+        return "Respuesta simulada de Groq para mezcla pobre.", {
+            "usado": True,
+            "modelo": "modelo-prueba",
+            "proveedor": "groq",
+            "modo": "completo_ml_rag_llm",
+            "tokens_entrada": 1,
+            "tokens_salida": 1,
+        }
+
+    with (
+        patch.object(_obtener_http_session_gemini(), "post", side_effect=gemini_lento),
+        patch.object(settings, "gemini_api_key", "clave-solo-prueba"),
+        patch.object(settings, "gemini_timeout_seconds", 7),
+        patch.object(settings, "groq_api_key", "clave-solo-prueba"),
+        patch.object(settings, "groq_chat_enabled", True),
+        patch.object(settings.database, "enabled", False),
+        patch("src.core.gemini_queue.worker_processor.generar_respuesta_groq", side_effect=groq_local),
+    ):
+        texto, meta = await procesar_solicitud_encolada(solicitud, limiter)
+
+    assert timeout_capturado["segundos"] == 7
+    assert texto == "Respuesta simulada de Groq para mezcla pobre."
+    assert meta["proveedor"] == "groq"
+    assert meta["usado"] is True
+
+
+def test_generador_directo_respeta_timeout_configurable_de_gemini(monkeypatch):
+    """El flujo directo local comparte el mismo límite antes de pasar a Groq."""
+    gestor = GestorDiagnostico(gemini_api_key="clave-solo-prueba")
+    capturado = {}
+
+    def gemini_lento(_url, **kwargs):
+        capturado["timeout"] = kwargs["timeout"]
+        raise requests.Timeout("simulación aislada")
+
+    def groq_local(_prompt_sistema, *, tipo_consulta="diagnostico"):
+        return "Respuesta local simulada.", {
+            "usado": True,
+            "modelo": "modelo-prueba",
+            "proveedor": "groq",
+            "modo": "completo_ml_rag_llm",
+            "tokens_entrada": 0,
+            "tokens_salida": 0,
+        }
+
+    monkeypatch.setattr(gestor._http_session, "post", gemini_lento)
+    monkeypatch.setattr(settings, "gemini_timeout_seconds", 7)
+    monkeypatch.setattr(settings, "groq_api_key", "clave-solo-prueba")
+    monkeypatch.setattr(settings, "groq_chat_enabled", True)
+    monkeypatch.setattr("src.core.diagnostico.response_generator.generar_respuesta_groq", groq_local)
+
+    texto, meta = gestor._generar_respuesta_con_metadatos(
+        pregunta="mezcla pobre con P0171",
+        diagnostico_ml="Falla de inyección",
+        contexto_manual="Comprobar combustible.",
+    )
+
+    assert capturado["timeout"] == 7
+    assert texto == "Respuesta local simulada."
+    assert meta["proveedor"] == "groq"
 
 
 @pytest.mark.anyio
