@@ -7,6 +7,7 @@ import os
 import json
 import sqlite3
 import glob
+from datetime import date
 from pathlib import Path
 import pandas as pd
 
@@ -118,9 +119,16 @@ def auditar_obdex():
     }
 
 def generar_reporte_markdown(res: dict):
+    def valor(fuente: str, campo: str, predeterminado: str = "NO DESCARGADO"):
+        """Evita que una fuente opcional impida auditar las demás."""
+        return res.get(fuente, {}).get(campo, predeterminado)
+
+    def estado_fuente(fuente: str) -> str:
+        return "DISPONIBLE" if res.get(fuente, {}).get("status") == "ok" else "NO DESCARGADO"
+
     md = f"""# Auditoría de Compatibilidad de Datasets Abiertos para CarBot
 
-**Fecha de ejecución:** 2026-09-19  
+**Fecha de ejecución:** {date.today().isoformat()}
 **Ubicación de almacenamiento:** `machine_learning/data/fuentes_abiertas/`  
 **Directrices metodológicas aplicadas:** [AGENTS.md](file:///c:/Users/leonc/OneDrive/Desktop/CHAT_BOT_MACHINLEARNING/AGENTS.md) (Reglas 1, 2, 6 y 9).
 
@@ -130,14 +138,12 @@ def generar_reporte_markdown(res: dict):
 
 | # | Dataset | Formato / Tamaño | Registros Clave | Licencia | Uso Recomendado en CarBot |
 |---|---|---|---|---|---|
-| 1 | **Automotive Faults Dataset (Zenodo)** | JSON ({res['zenodo']['tam_kb']} KB) | {res['zenodo']['items']} componentes, {res['zenodo']['total_sintomas']} síntomas, {res['zenodo']['total_pasos']} procedimientos | CC BY 4.0 | **RAG / Procedimientos OEM** + Expansión sintomática supervisada |
-| 2 | **DTC Database (Wal33D)** | SQLite ({res['dtc_db']['tam_mb']} MB) | {res['dtc_db'].get('tablas', {})} | MIT | **Base de Datos Offline DTC** (lookup rápido OBD-II) |
-| 3 | **OBDex (foerbsnavi)** | YAML ({res['obdex']['total_lineas']} líneas) | Familias P0xxx, B0xxx, C0xxx con PIDs y causas | CC0 (Dominio público) | **Enriquecimiento RAG** (causas raíz, componentes y síntomas técnicos) |
-| 4 | **MechanicDB Public Sample** | CSV ({res['mechanicdb']['joined']} pares DTC-procedimiento) | {res['mechanicdb']['fixes']} procedimientos, {res['mechanicdb']['parts']} repuestos vinculados | ODbL | **RAG Procedimientos de Reparación** (pasos de solución y repuestos) |
-| 5 | **obd-trouble-codes (mytrile)** | CSV / JSON / SQLite ({res['obd_mytrile']['total_dtc']} códigos) | {res['obd_mytrile']['total_dtc']} definiciones estándar | MIT | **Lookup complementario de códigos estándar** |
-| 6 | **EngineFaultDB (Leo-Thomas)** | CSV ({res['engine_fault']['tam_mb']} MB) | {res['engine_fault']['total_filas']} lecturas de sensores de motor | Académico (IEEE Access) | **Telemetría / Señales auxiliares** (no para clasificación textual) |
-| 7 | **LEVIN Open Data (YunSolutions)** | Git Repo (OBD temporal) | 30 vehículos, 4 meses de lecturas OBD | CC BY-NC-SA | **Validación de señales de sensores** |
-| 8 | **carOBD (Toyota Etios Brasil)** | Git Repo / Logs OBD | Telemetría real de ECU | Código abierto | **Referencia de PIDs Toyota** |
+| 1 | **Automotive Faults Dataset (Zenodo)** | JSON ({valor('zenodo', 'tam_kb')} KB) | {valor('zenodo', 'items')} componentes, {valor('zenodo', 'total_sintomas')} síntomas, {valor('zenodo', 'total_pasos')} procedimientos | CC BY 4.0 | {estado_fuente('zenodo')} — RAG / procedimientos candidatos |
+| 2 | **DTC Database (Wal33D)** | SQLite ({valor('dtc_db', 'tam_mb')} MB) | {valor('dtc_db', 'tablas', {})} | MIT | {estado_fuente('dtc_db')} — lookup offline DTC |
+| 3 | **OBDex (foerbsnavi)** | YAML ({valor('obdex', 'total_lineas')} líneas) | Familias P0xxx, B0xxx, C0xxx con PIDs y causas | CC0 (dominio público) | {estado_fuente('obdex')} — enriquecimiento RAG candidato |
+| 4 | **MechanicDB Public Sample** | CSV ({valor('mechanicdb', 'joined')} pares DTC-procedimiento) | {valor('mechanicdb', 'fixes')} procedimientos, {valor('mechanicdb', 'parts')} repuestos | ODbL | {estado_fuente('mechanicdb')} — requiere revisión de licencia |
+| 5 | **obd-trouble-codes (mytrile)** | CSV / JSON / SQLite ({valor('obd_mytrile', 'total_dtc')} códigos) | {valor('obd_mytrile', 'total_dtc')} definiciones estándar | MIT | {estado_fuente('obd_mytrile')} — lookup complementario |
+| 6 | **EngineFaultDB (Leo-Thomas)** | CSV ({valor('engine_fault', 'tam_mb')} MB) | {valor('engine_fault', 'total_filas')} lecturas de sensores | Académico | {estado_fuente('engine_fault')} — telemetría auxiliar, no clasificación textual |
 
 ---
 
