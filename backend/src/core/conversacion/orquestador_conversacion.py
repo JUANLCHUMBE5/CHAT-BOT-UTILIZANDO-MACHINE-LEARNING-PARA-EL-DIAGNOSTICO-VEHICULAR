@@ -534,7 +534,11 @@ class OrquestadorConversacion:
                         "falla": getattr(p, "falla", None) or (p.get("falla") if isinstance(p, dict) else str(p)),
                         "probabilidad": getattr(p, "probabilidad", 0.0) if hasattr(p, "probabilidad") else (p.get("probabilidad", 0.0) if isinstance(p, dict) else 0.0),
                     }
-                    for p in dto_resultado.predicciones_ml[:3]
+                    # Filtrar después de recibir todos los candidatos: si una de
+                    # las tres primeras opciones contradice evidencia técnica o
+                    # fue descartada, el mecánico debe poder ver la siguiente
+                    # alternativa compatible, no una lista incompleta.
+                    for p in dto_resultado.predicciones_ml
                 ]
             elif dto_resultado.diagnostico_ml:
                 top3_ml_raw = [{"falla": dto_resultado.diagnostico_ml, "probabilidad": dto_resultado.confianza_ml}]

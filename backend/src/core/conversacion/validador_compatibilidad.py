@@ -8,6 +8,7 @@ rechazadas a menos que exista nueva evidencia clínica que lo justifique.
 from __future__ import annotations
 
 import re
+import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.core.conversacion.models import ConversationState, FactState
@@ -106,6 +107,21 @@ class ValidadorCompatibilidad:
 
         return True, None
 
+    @staticmethod
+    def _clave_hipotesis(falla: str) -> str:
+        """Genera una clave estable para no presentar dos veces la misma falla.
+
+        El Linear SVM puede devolver la misma etiqueta con diferencias menores de
+        mayúsculas, tildes o puntuación. Para el mecánico eso no constituye una
+        alternativa diagnóstica distinta.
+        """
+        sin_tildes = unicodedata.normalize("NFD", falla or "")
+        sin_tildes = "".join(
+            caracter for caracter in sin_tildes
+            if unicodedata.category(caracter) != "Mn"
+        )
+        return re.sub(r"[^a-z0-9]+", " ", sin_tildes.lower()).strip()
+
     @classmethod
     def filtrar_y_ordenar_para_presentacion(
         cls,
@@ -126,6 +142,7 @@ class ValidadorCompatibilidad:
 
         candidatas_compatibles: List[Dict[str, Any]] = []
         exclusiones: List[Dict[str, Any]] = []
+        claves_presentadas: set[str] = set()
         ruta = detectar_ruta_sistema(estado, nueva_evidencia)
 
         # Evaluar cada predicción de la lista RAW
@@ -193,10 +210,21 @@ class ValidadorCompatibilidad:
                     })
                     continue
 
+            clave = cls._clave_hipotesis(falla)
+            if not clave or clave in claves_presentadas:
+                exclusiones.append({
+                    "falla": falla,
+                    "probabilidad_raw": prob,
+                    "motivo": "DUPLICADA_EN_TOP",
+                    "detalle": "La misma hipótesis ya está presentada como una alternativa anterior.",
+                })
+                continue
+
             candidatas_compatibles.append({
                 "falla": falla,
                 "probabilidad": prob,
             })
+            claves_presentadas.add(clave)
 
         # Limitar a Top 3 para presentación
         return candidatas_compatibles[:3], exclusiones

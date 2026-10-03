@@ -46,6 +46,26 @@ def test_sin_ruta_tecnica_no_se_descartan_candidatas_ml() -> None:
     assert finales[0]["falla"] == "Termostato defectuoso"
 
 
+def test_top3_omite_duplicados_y_recupera_siguiente_alternativa_compatible() -> None:
+    estado = ConversationState(session_id="top-unico")
+    finales, exclusiones = ValidadorCompatibilidad.filtrar_y_ordenar_para_presentacion(
+        predicciones_raw=[
+            {"falla": "Falla en bujías o bobinas de encendido", "probabilidad": 0.97},
+            {"falla": "falla en bujias o bobinas de encendido", "probabilidad": 0.91},
+            {"falla": "Inyectores sucios", "probabilidad": 0.80},
+            {"falla": "Baja presión de combustible", "probabilidad": 0.72},
+        ],
+        estado=estado,
+    )
+
+    assert [item["falla"] for item in finales] == [
+        "Falla en bujías o bobinas de encendido",
+        "Inyectores sucios",
+        "Baja presión de combustible",
+    ]
+    assert any(item["motivo"] == "DUPLICADA_EN_TOP" for item in exclusiones)
+
+
 def test_componentes_ajenos_no_se_admiten_por_palabras_genericas():
     from src.core.conversacion.ruteador_sistema import hipotesis_compatibles_con_ruta
     for falla in ("Bomba de agua defectuosa", "Aire acondicionado no enfría", "Filtro de aceite"):
