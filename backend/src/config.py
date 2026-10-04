@@ -178,7 +178,11 @@ class AppSettings(BaseModel):
     groq_audio_model: str = os.getenv("GROQ_AUDIO_MODEL", "whisper-large-v3-turbo")
     groq_chat_enabled: bool = _env_bool("GROQ_CHAT_ENABLED", default=True)
     groq_audio_enabled: bool = _env_bool("GROQ_AUDIO_ENABLED", default=True)
+    groq_vision_enabled: bool = _env_bool("GROQ_VISION_ENABLED", default=False)
+    groq_vision_model: str = os.getenv("GROQ_VISION_MODEL", "qwen/qwen3.6-27b")
     groq_timeout_seconds: int = _env_int("GROQ_TIMEOUT_SECONDS", 12)
+    image_vision_enabled: bool = _env_bool("IMAGE_VISION_ENABLED", default=False)
+    image_max_bytes: int = _env_int("IMAGE_MAX_BYTES", 8_388_608)
 
     # META_ACCESS_TOKEN y META_PHONE_NUMBER_ID son los nombres preferidos.
     # TOKEN_WHATSAPP y TELEFONO_ID se mantienen como compatibilidad temporal.

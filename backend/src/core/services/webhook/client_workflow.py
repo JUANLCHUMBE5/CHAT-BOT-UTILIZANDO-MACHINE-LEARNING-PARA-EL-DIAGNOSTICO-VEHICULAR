@@ -29,12 +29,19 @@ class ClientWorkflow:
         meta_message_id: str,
         proveedor: str,
         remitente: str,
+        tipo_mensaje: str = "text",
     ) -> dict[str, Any]:
-        respuesta_texto = await ClienteService(session).procesar_mensaje_cliente(
-            usuario=usuario,
-            taller=usuario.taller,
-            texto_usuario=texto_cliente,
-        )
+        if tipo_mensaje == "image":
+            respuesta_texto = (
+                "📷 Recibí la imagen. La interpretación visual está disponible para el personal técnico; "
+                "si necesitas atención, describe tu consulta por texto."
+            )
+        else:
+            respuesta_texto = await ClienteService(session).procesar_mensaje_cliente(
+                usuario=usuario,
+                taller=usuario.taller,
+                texto_usuario=texto_cliente,
+            )
         await MensajeRepository(session).crear_mensaje(
             conversacion_id=conversacion.id,
             taller_id=usuario.taller_id,

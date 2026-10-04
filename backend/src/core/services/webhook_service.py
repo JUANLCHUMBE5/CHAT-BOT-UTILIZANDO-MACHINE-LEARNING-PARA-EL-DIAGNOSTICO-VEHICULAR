@@ -178,6 +178,7 @@ class WebhookService:
         tipo_mensaje: str = "text",
         texto_cliente: str = "",
         audio_id: str = "",
+        image_id: str = "",
         placa: str = "WAPP-01",
         marca_modelo: str = "Vehiculo Generico",
         proveedor: str = "meta",
@@ -204,6 +205,7 @@ class WebhookService:
                     tipo_mensaje=tipo_mensaje,
                     texto_cliente=texto_cliente,
                     audio_id=audio_id,
+                    image_id=image_id,
                     placa=placa,
                     marca_modelo=marca_modelo,
                     session_id=session_id,
@@ -266,8 +268,16 @@ class WebhookService:
                                 usuario_id=usuario.id,
                                 meta_message_id=meta_message_id or f"in_{msg_in_id}",
                                 direccion="entrada",
-                                tipo="texto" if tipo_mensaje == "text" else "audio",
-                                texto=texto_cliente if tipo_mensaje == "text" else f"[Audio Meta: {audio_id}]",
+                                tipo={"text": "texto", "audio": "audio", "image": "imagen"}.get(
+                                    tipo_mensaje, "texto"
+                                ),
+                                texto=(
+                                    texto_cliente
+                                    if tipo_mensaje == "text"
+                                    else f"[Imagen WhatsApp] {texto_cliente}".strip()
+                                    if tipo_mensaje == "image"
+                                    else f"[Audio Meta: {audio_id}]"
+                                ),
                                 categoria_cobro="servicio",
                                 estado_entrega="recibido",
                                 costo_estimado=COSTO_META_MENSAJE_SERVICIO_USD,
@@ -305,7 +315,8 @@ class WebhookService:
 
                     if codigo_rol not in roles_tecnicos:
                         resultado_cliente = await ClientWorkflow.procesar_y_persistir(
-                            session, usuario, conversacion, texto_cliente, meta_message_id, proveedor, remitente
+                            session, usuario, conversacion, texto_cliente, meta_message_id, proveedor, remitente,
+                            tipo_mensaje=tipo_mensaje,
                         )
                         total_ms = (time.perf_counter() - inicio) * 1000
                         logger.info(
@@ -432,14 +443,19 @@ class WebhookService:
                             # El gate de placa ocurre antes del flujo diagnóstico.
                             # Conservar información diagnóstica válida para procesarla
                             # cuando se registre la placa.
-                            if ExtractorHechos.contiene_informacion_diagnostica(texto_cliente):
+                            if tipo_mensaje == "image":
+                                respuesta_placa = (
+                                    "📷 Para asociar la foto al vehículo, primero indica su placa y luego "
+                                    "vuelve a enviar la imagen. No guardamos el archivo de la foto."
+                                )
+                            elif ExtractorHechos.contiene_informacion_diagnostica(texto_cliente):
                                 contexto_placa["preplate_pending_input"] = texto_cliente
-
+                            if tipo_mensaje != "image":
+                                respuesta_placa = (
+                                    "Hola, ¿qué tal? Soy CarBot y estoy aquí para apoyarte con el "
+                                    "diagnóstico del vehículo. Para comenzar, ingresa la placa del vehículo."
+                                )
                             conversacion.contexto = contexto_placa
-                            respuesta_placa = (
-                                "Hola, ¿qué tal? Soy CarBot y estoy aquí para apoyarte con el "
-                                "diagnóstico del vehículo. Para comenzar, ingresa la placa del vehículo."
-                            )
 
                         if not continuar_diagnostico_preplate:
                             await whatsapp_provider_service.enviar(
@@ -500,7 +516,7 @@ class WebhookService:
                     # 7. Diagnóstico Técnico ML + RAG + Gemini
                     flujo_diagnostico = await TechnicalDiagnosticWorkflow.preparar(
                         self.gestor, conversacion, usuario, remitente, proveedor, tipo_mensaje,
-                        texto_cliente, audio_id, placa, marca_modelo,
+                        texto_cliente, audio_id, placa, marca_modelo, image_id=image_id,
                         diagnostico_forzado=diagnostico_forzado_alternativa,
                     )
                     dto = flujo_diagnostico.dto
