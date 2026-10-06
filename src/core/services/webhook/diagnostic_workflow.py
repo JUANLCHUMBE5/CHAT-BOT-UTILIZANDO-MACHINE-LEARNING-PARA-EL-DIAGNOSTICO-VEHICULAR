@@ -7,6 +7,7 @@ import time
 from dataclasses import dataclass
 from typing import Any, Optional
 
+from src.config import settings
 from src.core.gemini_queue import gemini_rate_limiter
 from src.core.gestor_diagnostico import ResultadoDiagnostico
 from src.core.logger import logger
@@ -37,6 +38,7 @@ class TechnicalDiagnosticWorkflow:
         audio_id: str,
         placa: str,
         marca_modelo: str,
+        image_id: str = "",
         diagnostico_forzado: Optional[str] = None,
     ) -> ResultadoFlujoDiagnostico:
         inicio = time.perf_counter()
@@ -126,6 +128,68 @@ class TechnicalDiagnosticWorkflow:
                         "Por favor, escribe el síntoma del vehículo en texto."
                     ),
                     diagnostico_ml="Audio pendiente de transcripción",
+                    confianza_ml=0.0,
+                    contexto_manual="",
+                    titulo_manual="",
+                    requiere_revision_humana=True,
+                    estado_sesion="esperando_clarificacion",
+                    modo_diagnostico="esperando_clarificacion",
+                    tipo_consulta="aclaracion",
+                )
+            else:
+                dto = await TechnicalDiagnosticWorkflow._procesar_texto(
+                    gestor, texto_cliente, placa, marca_modelo, id_sesion, remitente, proveedor, usuario, conversacion,
+                    diagnostico_forzado=diagnostico_forzado,
+                )
+        elif tipo_mensaje == "image":
+            try:
+                if not image_id:
+                    raise ValueError("Meta/Twilio no incluyó la referencia de la imagen.")
+                image_bytes, mime_type = await whatsapp_provider_service.descargar_imagen(
+                    proveedor, image_id
+                )
+                permitir_gemini = False
+                if settings.gemini_api_key:
+                    permitir_gemini, _ = await gemini_rate_limiter.intentar_adquirir_slot_db()
+                if not permitir_gemini and not (
+                    settings.groq_vision_enabled and settings.groq_api_key
+                ):
+                    raise RuntimeError("No hay proveedor visual disponible o se alcanzó su cuota.")
+                from src.core.image_processor import ImageProcessor
+
+                observaciones, proveedor_vision = await asyncio.to_thread(
+                    ImageProcessor().interpretar_imagen,
+                    image_bytes,
+                    mime_type,
+                    permitir_gemini=permitir_gemini,
+                )
+                try:
+                    await gemini_rate_limiter.persistir_estado_local_db()
+                except Exception as persist_exc:
+                    logger.warning(
+                        "[Imagen WhatsApp] No se pudo replicar el estado de cuota Gemini: "
+                        f"{type(persist_exc).__name__}"
+                    )
+                logger.info(f"[Imagen WhatsApp] Imagen interpretada por {proveedor_vision}.")
+                texto_cliente = (
+                    f"{texto_cliente.strip()}\n\n" if texto_cliente.strip() else ""
+                ) + f"Observaciones de la imagen adjunta: {observaciones}"
+            except Exception as exc:
+                try:
+                    await gemini_rate_limiter.persistir_estado_local_db()
+                except Exception as persist_exc:
+                    logger.warning(
+                        "[Imagen WhatsApp] No se pudo replicar el estado de cuota Gemini: "
+                        f"{type(persist_exc).__name__}"
+                    )
+                logger.warning(f"[Imagen WhatsApp] No se pudo analizar la imagen: {type(exc).__name__}")
+                dto = ResultadoDiagnostico(
+                    respuesta_texto=(
+                        "📷 Recibí la imagen, pero no pude analizarla ahora. "
+                        "Escribe qué componente aparece y qué observas (o vuelve a enviar una foto "
+                        "JPEG, PNG o WEBP clara) para continuar."
+                    ),
+                    diagnostico_ml="Imagen pendiente de análisis",
                     confianza_ml=0.0,
                     contexto_manual="",
                     titulo_manual="",

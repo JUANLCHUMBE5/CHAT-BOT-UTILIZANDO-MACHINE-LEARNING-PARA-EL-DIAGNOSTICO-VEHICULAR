@@ -19,7 +19,6 @@ Verifica:
 from __future__ import annotations
 
 import hashlib
-from pathlib import Path
 
 from src.core.conversacion.formateador_compacto import (
     FormateadorCompacto,
@@ -161,7 +160,9 @@ def test_regresion_acciones_existentes_y_protecciones():
 
 def test_integridad_hashes_componentes_congelados():
     """TEST 4: Verifica que los hashes de los artefactos congelados no hayan sufrido alteración."""
-    root = Path(__file__).resolve().parent.parent.parent
+    from src.config import ML_ROOT
+
+    root = ML_ROOT.parent
 
     artefactos = {
         "C1": (

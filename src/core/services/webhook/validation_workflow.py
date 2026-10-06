@@ -16,6 +16,7 @@ from src.application.services.confirmacion_diagnostico import (
     _normalizar,
     interpretar_confirmacion_whatsapp,
     interpretar_respuesta_validacion_whatsapp,
+    interpretar_seleccion_top3,
 )
 from src.config import settings
 from src.core.security import cifrar_texto_reversible
@@ -24,6 +25,32 @@ from src.infrastructure.database.repositories.mensaje_repository import MensajeR
 from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
 
 COSTO_META_MENSAJE_SERVICIO_USD = Decimal(str(settings.meta_message_price_usd))
+
+
+def _nombre_hipotesis(hipotesis: Any) -> str:
+    """Obtiene el texto persistible de una hipótesis sin serializar relaciones ORM."""
+
+    return str(
+        getattr(hipotesis, "falla_probable", None)
+        or getattr(hipotesis, "falla", None)
+        or getattr(hipotesis, "nombre", None)
+        or ""
+    )
+
+
+def _respuesta_detalle_hipotesis(hipotesis: Any, orden: int) -> str:
+    """Devuelve una guía verificable para una selección Top-3, sin confirmarla aún."""
+
+    falla = _nombre_hipotesis(hipotesis) or "Hipótesis técnica bajo revisión"
+    prueba = str(getattr(hipotesis, "prueba_recomendada", None) or "").strip()
+    respuesta = (
+        f"🔎 Seleccionaste la hipótesis *{orden}*: *{falla}*.\n\n"
+        "Aún no la registraré como confirmada hasta contar con una verificación física."
+    )
+    if prueba:
+        respuesta += f"\n\n🔧 *Primero verifica:* {prueba}"
+    respuesta += "\n\nResponde *SÍ* si la comprobaste o *NO* para descartar y continuar el análisis."
+    return respuesta
 
 
 class ValidationWorkflow:
@@ -36,6 +63,8 @@ class ValidationWorkflow:
         diag_repo: DiagnosticoRepository,
         operaciones_repo: OperacionesRepository,
         diagnostico_id: uuid.UUID | None = None,
+        orden_hipotesis: int | None = None,
+        metodo_seleccion: str | None = None,
     ) -> tuple[str, uuid.UUID | None]:
         """Actualiza el último diagnóstico del mecánico y deja trazabilidad del canal."""
 
@@ -74,9 +103,15 @@ class ValidationWorkflow:
         else:
             diagnostico.conclusion_mecanico = "Diagnóstico dejado en revisión por el mecánico."
 
+        orden_objetivo = orden_hipotesis or 1
+        falla_seleccionada = None
+
         for hipotesis in diagnostico.hipotesis:
-            if hipotesis.orden != 1:
+            if hipotesis.orden != orden_objetivo:
                 continue
+
+            falla_seleccionada = _nombre_hipotesis(hipotesis) or None
+
             if confirmacion.estado == "confirmado":
                 hipotesis.resultado = "confirmada"
             elif confirmacion.estado == "descartado":
@@ -90,6 +125,9 @@ class ValidationWorkflow:
             "mecanico_id": str(usuario.id),
             "validado_en": validado_en,
             "tiene_observacion": bool(observacion),
+            "orden_hipotesis": orden_objetivo,
+            "falla_seleccionada": falla_seleccionada,
+            "metodo_seleccion": metodo_seleccion or "binario",
         }
         diagnostico.trazabilidad = trazabilidad
 
@@ -217,11 +255,169 @@ class ValidationWorkflow:
             etapa_validacion = None
 
         confirmacion = None
+        orden_hipotesis_seleccionada = None
+        metodo_seleccion = None
+
         if tipo_mensaje == "text" and etapa_validacion == "esperando_confirmacion":
-            respuesta_binaria = interpretar_respuesta_validacion_whatsapp(texto_cliente)
-            if respuesta_binaria == "si":
-                confirmacion = ConfirmacionDiagnosticoWhatsApp(estado="confirmado")
-            elif respuesta_binaria == "no":
+
+            diagnostico_selector = (
+                await diag_repo.obtener_pendiente_mecanico_por_id(
+                    diagnostico_id=diagnostico_contexto_id,
+                    taller_id=usuario.taller_id,
+                    mecanico_id=usuario.id,
+                )
+                if diagnostico_contexto_id
+                else await diag_repo.obtener_ultimo_pendiente_mecanico(
+                    taller_id=usuario.taller_id,
+                    mecanico_id=usuario.id,
+                )
+            )
+
+            hipotesis_selector = []
+
+            if diagnostico_selector:
+                # Fuente principal: hipótesis persistidas del diagnóstico.
+                hipotesis_persistidas = list(
+                    getattr(diagnostico_selector, "hipotesis", None) or []
+                )
+
+                if hipotesis_persistidas:
+                    for h in sorted(
+                        hipotesis_persistidas,
+                        key=lambda x: getattr(x, "orden", 999)
+                    )[:3]:
+                        nombre_h = _nombre_hipotesis(h)
+                        if nombre_h:
+                            hipotesis_selector.append({"falla": nombre_h})
+
+                # Compatibilidad histórica:
+                # algunos diagnósticos/tests conservan Top-3 únicamente
+                # dentro de trazabilidad["predicciones_ml"].
+                if not hipotesis_selector:
+                    trazabilidad_selector = (
+                        getattr(diagnostico_selector, "trazabilidad", None)
+                        or {}
+                    )
+
+                    predicciones_ml = (
+                        trazabilidad_selector.get("predicciones_ml")
+                        or []
+                    )
+
+                    for pred in predicciones_ml[:3]:
+                        if isinstance(pred, dict):
+                            nombre_h = (
+                                pred.get("falla")
+                                or pred.get("nombre")
+                                or pred.get("diagnostico")
+                                or ""
+                            )
+                            if nombre_h:
+                                hipotesis_selector.append(
+                                    {"falla": nombre_h}
+                                )
+
+            seleccion_top3 = (
+                interpretar_seleccion_top3(
+                    texto_cliente,
+                    hipotesis_selector,
+                )
+                if hipotesis_selector
+                else None
+            )
+
+            if seleccion_top3 and seleccion_top3.accion == "AMBIGUO":
+                respuesta_texto = (
+                    "🤔 Entendido. No voy a confirmar una falla mientras exista duda.\n"
+                    "Indica cuál verificaste físicamente: *1, 2 o 3*, "
+                    "o escribe el nombre de la falla."
+                )
+                await cls.guardar_respuesta_validacion_outbox(
+                    msg_repo,
+                    conversacion,
+                    usuario,
+                    meta_message_id,
+                    respuesta_texto,
+                    proveedor,
+                    remitente,
+                )
+                await session.commit()
+                return {
+                    "status": "esperando_confirmacion",
+                    "diagnostico_id": str(diagnostico_selector.id) if diagnostico_selector else None,
+                    "conversacion_id": str(conversacion.id),
+                    "respuesta": respuesta_texto,
+                    "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+                }
+
+            if seleccion_top3 and seleccion_top3.accion == "CONFIRMAR":
+                hipotesis_elegida = next(
+                    (
+                        h for h in (getattr(diagnostico_selector, "hipotesis", None) or [])
+                        if getattr(h, "orden", None) == seleccion_top3.orden
+                    ),
+                    None,
+                )
+                respuesta_texto = _respuesta_detalle_hipotesis(
+                    hipotesis_elegida,
+                    seleccion_top3.orden or 1,
+                )
+                await cls.guardar_respuesta_validacion_outbox(
+                    msg_repo,
+                    conversacion,
+                    usuario,
+                    meta_message_id,
+                    respuesta_texto,
+                    proveedor,
+                    remitente,
+                )
+                await session.commit()
+                return {
+                    "status": "esperando_confirmacion",
+                    "diagnostico_id": str(diagnostico_selector.id),
+                    "conversacion_id": str(conversacion.id),
+                    "respuesta": respuesta_texto,
+                    "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+                }
+
+            elif seleccion_top3 and seleccion_top3.accion == "DESCARTAR":
+                # Reutilizar el flujo seguro existente de NO,
+                # pero contra la hipótesis seleccionada.
+                orden_hipotesis_seleccionada = seleccion_top3.orden
+                metodo_seleccion = seleccion_top3.metodo
+                respuesta_binaria = "no"
+
+            elif (
+                seleccion_top3
+                and seleccion_top3.accion == "DESCARTAR_Y_CONFIRMAR"
+            ):
+                # Persistir descarte específico antes de confirmar la alternativa.
+                for h in (
+                    getattr(diagnostico_selector, "hipotesis", None) or []
+                ):
+                    if getattr(h, "orden", None) == seleccion_top3.orden_descartado:
+                        h.resultado = "descartada"
+
+                orden_hipotesis_seleccionada = seleccion_top3.orden
+                metodo_seleccion = seleccion_top3.metodo
+                confirmacion = ConfirmacionDiagnosticoWhatsApp(
+                    estado="confirmado"
+                )
+                respuesta_binaria = None
+
+            else:
+                respuesta_binaria = interpretar_respuesta_validacion_whatsapp(
+                    texto_cliente
+                )
+
+            if confirmacion is None and respuesta_binaria == "si":
+                confirmacion = ConfirmacionDiagnosticoWhatsApp(
+                    estado="confirmado"
+                )
+                orden_hipotesis_seleccionada = 1
+                metodo_seleccion = "binario"
+
+            elif confirmacion is None and respuesta_binaria == "no":
                 diagnostico = (
                     await diag_repo.obtener_pendiente_mecanico_por_id(
                         diagnostico_id=diagnostico_contexto_id,
@@ -235,7 +431,21 @@ class ValidationWorkflow:
                     )
                 )
 
-                falla_descartada = diagnostico.falla_predicha if diagnostico else "la hipótesis principal"
+                falla_descartada = (
+                    diagnostico.falla_predicha
+                    if diagnostico
+                    else "la hipótesis principal"
+                )
+
+                if diagnostico and orden_hipotesis_seleccionada:
+                    for h in (
+                        getattr(diagnostico, "hipotesis", None) or []
+                    ):
+                        if getattr(h, "orden", None) == orden_hipotesis_seleccionada:
+                            falla_descartada = _nombre_hipotesis(h) or falla_descartada
+                            h.resultado = "descartada"
+                            break
+
                 sintoma_base = diagnostico.sintoma_original if diagnostico else ""
 
                 from src.core.conversacion.models import ConversationState, FactType
@@ -471,6 +681,8 @@ class ValidationWorkflow:
                 diag_repo,
                 operaciones_repo,
                 diagnostico_id=diagnostico_contexto_id,
+                orden_hipotesis=orden_hipotesis_seleccionada,
+                metodo_seleccion=metodo_seleccion,
             )
             if diagnostico_confirmado_id:
                 contexto_conversacion.pop("validacion_diagnostico", None)

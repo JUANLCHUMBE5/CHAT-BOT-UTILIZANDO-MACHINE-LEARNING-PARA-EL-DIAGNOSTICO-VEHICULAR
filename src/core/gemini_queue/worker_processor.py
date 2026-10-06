@@ -146,7 +146,7 @@ async def procesar_solicitud_encolada(
 
             http_sess = _obtener_http_session_gemini()
             response = await asyncio.to_thread(
-                http_sess.post, url, json=payload, headers=headers, timeout=10
+                http_sess.post, url, json=payload, headers=headers, timeout=settings.gemini_timeout_seconds
             )
             if response.status_code == 200:
                 rate_limiter.registrar_estado_gemini(exitoso=True, codigo_http=200)

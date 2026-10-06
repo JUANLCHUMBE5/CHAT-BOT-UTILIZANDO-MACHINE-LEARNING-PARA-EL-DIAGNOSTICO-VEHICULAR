@@ -556,7 +556,7 @@ def procesar_consulta_texto(
         placa=placa_evaluar or "",
     )
     resultado_en_cache = diagnostico_cache.obtener(clave_cache)
-    if resultado_en_cache is not None:
+    if resultado_en_cache is not None and not clave_sesion:
         logger.info("⚡ Diagnóstico obtenido instantáneamente desde Memoria Caché LRU (< 5ms)")
         return resultado_en_cache.model_copy(
             update={

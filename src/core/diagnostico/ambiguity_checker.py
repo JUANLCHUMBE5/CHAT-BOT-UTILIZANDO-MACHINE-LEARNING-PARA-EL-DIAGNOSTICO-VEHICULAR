@@ -94,6 +94,14 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
         return False, ""
     texto_limpio = texto.strip().lower()
     words = texto_limpio.split()
+    if re.fullmatch(r"\d{2,4}\s*rpm", texto_limpio):
+        return True, "El valor de RPM por sí solo no identifica una falla: ¿ocurre al arrancar, acelerar o frenar? ¿Tiembla o solo observaste esa lectura?"
+
+    # Una lectura explícita de MAP/carga absoluta ya aporta un sistema y una
+    # medición técnica. No debe convertirse en la pregunta genérica de
+    # vibración aunque el normalizador haya traducido "cabecea" a vibración.
+    if any(termino in texto_limpio for termino in ("sensor map", "carga absoluta", "presion absoluta")):
+        return False, ""
 
     if any(v in texto_limpio for v in ("vibracion", "vibración", "vibraciones", "vibra")) and not any(
         detalle in texto_limpio
@@ -108,6 +116,8 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
             "km/h",
             "en minimo",
             "en ralenti",
+            "en mínimo",
+            "en ralentí",
             "volante",
             "asiento",
             "pedal",
@@ -123,9 +133,11 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
         "falla mi carro", "mi auto tiene una falla", "ayuda con mi carro"
     ]
 
-    # Consulta explícitamente genérica o vacía
+    # Un contacto genérico todavía no contiene evidencia para escoger una
+    # condición de operación. Pedimos el síntoma libre antes de derivar al
+    # clasificador ML y a las preguntas técnicas por dominio.
     if texto_limpio in frases_ambiguas:
-        return True, "⚠️ Especifique: ¿ocurre al arrancar, acelerar o frenar?"
+        return True, "👋 Especifique qué ocurre, cuándo sucede y si aparece luz o código."
 
     # Si el mensaje es descriptivo (>= 6 palabras) no declararlo ambiguo ciegamente
     if len(words) >= 6:
@@ -151,6 +163,9 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
                 "¿El motor del elevalunas emite sonido al presionar el botón? "
                 "¿El vidrio se cayó dentro de la puerta o está atascado en las guías?"
             )
-        return True, "⚠️ Especifique: ¿ocurre al arrancar, acelerar o frenar?"
+        return True, (
+            "👋 Describe qué ocurre con el vehículo, cuándo sucede y si aparece "
+            "alguna luz en el tablero o un código de falla."
+        )
 
     return False, ""

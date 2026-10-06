@@ -24,9 +24,28 @@ from src.infrastructure.database.repositories.vehiculo_repository import Vehicul
 
 COSTO_META_MENSAJE_SERVICIO_USD = Decimal(str(settings.meta_message_price_usd))
 
+MODOS_DIAGNOSTICO_PERSISTIBLES = frozenset({
+    "completo_ml_rag_llm",
+    "diagnostico_degradado_ml_rag",
+    "en_cola_gemini",
+    "audio_espectral",
+    "saludo",
+    "baja_confianza",
+    "esperando_clarificacion",
+})
+
 
 class DiagnosticPersister:
     """Persiste los resultados del motor diagnóstico y genera mensajes de salida."""
+
+    @staticmethod
+    def _modo_diagnostico_persistible(dto: ResultadoDiagnostico) -> str:
+        """Convierte estados conversacionales a los valores aceptados por PostgreSQL."""
+        if dto.llm_usado:
+            return "completo_ml_rag_llm"
+        if dto.modo_diagnostico in MODOS_DIAGNOSTICO_PERSISTIBLES:
+            return dto.modo_diagnostico
+        return "diagnostico_degradado_ml_rag"
 
     @staticmethod
     async def persistir_y_responder(
@@ -147,7 +166,7 @@ class DiagnosticPersister:
             flags=re.IGNORECASE,
         )
 
-        modo_diag = dto.modo_diagnostico
+        modo_diag = DiagnosticPersister._modo_diagnostico_persistible(dto)
         if modo_diag == "saludo":
             fuente_diag = "regla"
             conclusion_diag = "[SALUDO] Contacto inicial o saludo conversacional"

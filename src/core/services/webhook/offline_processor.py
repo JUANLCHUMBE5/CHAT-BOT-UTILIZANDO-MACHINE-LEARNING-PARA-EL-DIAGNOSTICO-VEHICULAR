@@ -23,6 +23,7 @@ class OfflineProcessor:
         marca_modelo: str,
         session_id: Optional[str],
         proveedor: str = "meta",
+        image_id: str = "",
     ) -> dict[str, Any]:
         t0 = time.perf_counter()
         if tipo_mensaje == "audio":
@@ -31,6 +32,13 @@ class OfflineProcessor:
                 "Envia el sintoma por texto para continuar de forma segura."
             )
             diag_ml = "Audio no procesado"
+            conf = 0.0
+        elif tipo_mensaje == "image":
+            respuesta = (
+                "📷 Recibí la imagen, pero no puedo analizarla sin persistencia y control de cuota activos. "
+                "Describe por texto el componente y lo que observas para continuar."
+            )
+            diag_ml = "Imagen no procesada"
             conf = 0.0
         else:
             dto = gestor.procesar_consulta_texto(

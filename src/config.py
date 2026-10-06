@@ -79,10 +79,17 @@ def _trusted_hosts() -> tuple[str, ...]:
 def _default_model_paths() -> tuple[Path, Path, Path]:
     model_ver = os.getenv("MODEL_VERSION", "C1_FASE10_FINAL").strip()
     c1_dir = ML_ROOT / "models" / "c1_fase10_final"
-    if model_ver.upper() in {"C1", "C1_FASE10_FINAL", "C1_FINAL"} and c1_dir.exists():
-        default_model = c1_dir / "modelo_diagnostico_c1.pkl"
-        default_vec = c1_dir / "vectorizador_c1.pkl"
-        default_sistema = c1_dir / "modelo_sistema_c1_macrofix.pkl"
+    c1_model = c1_dir / "modelo_diagnostico_c1.pkl"
+    c1_vec = c1_dir / "vectorizador_c1.pkl"
+    c1_sistema = c1_dir / "modelo_sistema_c1_macrofix.pkl"
+    if (
+        model_ver.upper() in {"C1", "C1_FASE10_FINAL", "C1_FINAL"}
+        and c1_model.exists()
+        and c1_vec.exists()
+    ):
+        default_model = c1_model
+        default_vec = c1_vec
+        default_sistema = c1_sistema
     else:
         default_model = ML_ROOT / "models" / "modelo_diagnostico.pkl"
         default_vec = ML_ROOT / "models" / "vectorizador_tfidf.pkl"
@@ -97,7 +104,13 @@ def _default_model_paths() -> tuple[Path, Path, Path]:
 class PathConfig(BaseModel):
     data_dir: Path = ML_ROOT / "data"
     dataset_csv: Path = ML_ROOT / "data" / "dataset_sintomas.csv"
-    tracker_csv: Path = ML_ROOT / "data" / "tracker_diagnosticos.csv"
+    # En producción los artefactos ML se montan de solo lectura. El tracker se
+    # puede redirigir a un volumen de aplicación persistente y escribible.
+    tracker_csv: Path = Field(
+        default_factory=lambda: Path(
+            os.getenv("TRACKER_CSV_PATH") or ML_ROOT / "data" / "tracker_diagnosticos.csv"
+        )
+    )
     manuals_dir: Path = ML_ROOT / "manuals"
     manual_file: Path = ML_ROOT / "manuals" / "manual_procedimientos.txt"
     rag_version: str = Field(default_factory=lambda: os.getenv("CARBOT_RAG_VERSION", "candidate_v1").strip())
@@ -154,17 +167,22 @@ class AppSettings(BaseModel):
 
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
+    gemini_timeout_seconds: int = _env_int("GEMINI_TIMEOUT_SECONDS", 10)
     gemini_use_free_tier: bool = _env_bool("GEMINI_USE_FREE_TIER", default=True)
     gemini_input_price_per_million: float = _env_float("GEMINI_INPUT_PRICE_PER_MILLION", 0.30)
     gemini_output_price_per_million: float = _env_float("GEMINI_OUTPUT_PRICE_PER_MILLION", 2.50)
     gemini_max_requests_per_minute: int = _env_int("GEMINI_MAX_REQUESTS_PER_MINUTE", 10)
     gemini_max_requests_per_day: int = _env_int("GEMINI_MAX_REQUESTS_PER_DAY", 450)
     groq_api_key: str = os.getenv("GROQ_API_KEY", "")
-    groq_model: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+    groq_model: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
     groq_audio_model: str = os.getenv("GROQ_AUDIO_MODEL", "whisper-large-v3-turbo")
     groq_chat_enabled: bool = _env_bool("GROQ_CHAT_ENABLED", default=True)
     groq_audio_enabled: bool = _env_bool("GROQ_AUDIO_ENABLED", default=True)
+    groq_vision_enabled: bool = _env_bool("GROQ_VISION_ENABLED", default=False)
+    groq_vision_model: str = os.getenv("GROQ_VISION_MODEL", "qwen/qwen3.6-27b")
     groq_timeout_seconds: int = _env_int("GROQ_TIMEOUT_SECONDS", 12)
+    image_vision_enabled: bool = _env_bool("IMAGE_VISION_ENABLED", default=False)
+    image_max_bytes: int = _env_int("IMAGE_MAX_BYTES", 8_388_608)
 
     # META_ACCESS_TOKEN y META_PHONE_NUMBER_ID son los nombres preferidos.
     # TOKEN_WHATSAPP y TELEFONO_ID se mantienen como compatibilidad temporal.

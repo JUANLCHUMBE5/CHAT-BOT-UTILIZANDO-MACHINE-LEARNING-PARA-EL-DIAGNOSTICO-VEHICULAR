@@ -111,7 +111,12 @@ def generar_respuesta_con_metadatos(
                         "maxOutputTokens": 140 if tipo_consulta == "consulta_tecnica" else 1200,
                     },
                 }
-                response = gestor._http_session.post(url, json=payload, headers=headers, timeout=10)
+                response = gestor._http_session.post(
+                    url,
+                    json=payload,
+                    headers=headers,
+                    timeout=settings.gemini_timeout_seconds,
+                )
                 if response.status_code == 200:
                     gemini_rate_limiter.registrar_estado_gemini(exitoso=True, codigo_http=200)
                     data = response.json()
