@@ -26,6 +26,7 @@ def test_tier4_multiturn_diagnostic_conversation_lifecycle():
     # Turn 1: Initial Greeting
     res1 = client.post("/api/v1/diagnostico/analizar", json={
         "sintoma": "Hola buenas tardes consulta",
+        "placa": "TEST-E2E1",
         "session_id": session_id
     }, headers=headers)
     assert res1.status_code == 200
@@ -36,6 +37,7 @@ def test_tier4_multiturn_diagnostic_conversation_lifecycle():
     # Turn 2: Ambiguous Symptom (Triggers slot filling prompt)
     res2 = client.post("/api/v1/diagnostico/analizar", json={
         "sintoma": "mi carro falla",
+        "placa": "TEST-E2E1",
         "session_id": session_id
     }, headers=headers)
     assert res2.status_code == 200
@@ -58,7 +60,8 @@ def test_tier4_multiturn_diagnostic_conversation_lifecycle():
     # Turn 4: New Independent Session Post-Reset
     res4 = client.post("/api/v1/diagnostico/analizar", json={
         "sintoma": "el timon esta duro al doblar",
-        "session_id": session_id
+        "placa": "TEST-E2E2",
+        "session_id": session_id + "_nuevo"
     }, headers=headers)
     assert res4.status_code == 200
     data4 = res4.json()
