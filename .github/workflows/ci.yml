@@ -66,7 +66,7 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements-dev.txt
       - run: pip install -r requirements-dev.txt
-      - run: pip install matplotlib==3.10.8
+      - run: pip install matplotlib==3.11.1
       - run: python -m alembic upgrade head
       - run: ruff check src tests main.py scripts
       - run: ruff check src main.py --select S --ignore S104,S105,S110,S603
