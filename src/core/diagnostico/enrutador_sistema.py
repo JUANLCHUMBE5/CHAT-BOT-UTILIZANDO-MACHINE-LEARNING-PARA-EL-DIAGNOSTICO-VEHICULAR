@@ -98,7 +98,7 @@ _TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
     "FRENOS": ("freno", "pastilla", "disco", "abs", "frenar"),
     "TRANSMISION": ("embrague", "transmision", "caja de cambios", "sincronizador"),
     "SUSPENSION_DIRECCION": (
-        "suspension", "direccion", "amortiguador", "rotula", "desbalanceo", "alineacion", "bache",
+        "suspension", "direccion", "amortiguador", "rotula", "desbalance", "desaline", "alineacion", "llanta", "bache",
     ),
     "ELECTRICO_ECU": ("ecu", "computadora", "red can", "corto electrico", "comunicacion electrica", "alternador", "bateria"),
 }
@@ -225,6 +225,8 @@ def detectar_sistema_ruteo(texto: str, usar_modelo: bool = True) -> str | None:
         normalizado,
     ):
         normalizado = re.sub(r"\bfrenar\b", "", normalizado)
+        if re.search(r"\b(?:volante|timon)\s+(?:vibra|tiembla)\b", normalizado):
+            return "suspension_direccion"
     # Regla determinista previa al SVM: temblor/misfire junto con ralentí bajo
     # es una ruta de encendido aunque ambas señales estén separadas en la frase.
     texto_sin_negaciones_de_irregularidad = re.sub(
