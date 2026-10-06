@@ -21,6 +21,10 @@ def _normalizar(texto: str) -> str:
 
 
 _REGLAS: dict[str, tuple[str, ...]] = {
+    "CLIMATIZACION": (
+        r"\baire acondicionado\b", r"\bclimatizacion\b", r"\ba/c\b",
+        r"\bcompresor\b", r"\bcondensador\b", r"\br134a\b",
+    ),
     "INYECCION_MEZCLA": (
         r"\binyector(?:es)?\b", r"\binyeccion\b", r"\bmezcla\s+pobre\b",
         r"\bmezcla\s+rica\b", r"\bsensor\s+(?:de\s+)?oxigeno\b",
@@ -74,6 +78,7 @@ _REGLAS: dict[str, tuple[str, ...]] = {
 }
 
 _TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
+    "CLIMATIZACION": ("aire acondicionado", "climatizacion", "compresor", "condensador", "r134a"),
     "INYECCION_MEZCLA": (
         "inyector", "inyeccion", "mezcla pobre", "mezcla rica", "oxigeno", "lambda",
         "fuel trim", "stft", "ltft", "p0171", "p0172", "presion de combustible",
@@ -96,6 +101,7 @@ _TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
     "ELECTRICO_ECU": ("ecu", "computadora", "red can", "corto electrico", "comunicacion electrica", "alternador", "bateria"),
 }
 ETIQUETAS_AREA = {
+    "CLIMATIZACION": "climatización",
     "INYECCION_MEZCLA": "inyección / mezcla",
     "ADMISION_MAP": "admisión / sensor MAP-MAF",
     "RALENTI": "ralentí",
@@ -108,6 +114,7 @@ ETIQUETAS_AREA = {
 }
 
 _ETIQUETA_A_SISTEMA = {
+    "CLIMATIZACION": "climatizacion",
     "INYECCION_MEZCLA": "combustible_admision",
     "ADMISION_MAP": "combustible_admision",
     "RALENTI": "combustible_admision",
@@ -120,6 +127,7 @@ _ETIQUETA_A_SISTEMA = {
 }
 
 _ALIAS_SISTEMA_A_AREA = {
+    "climatizacion": "CLIMATIZACION",
     "refrigeracion": "REFRIGERACION",
     "combustible_admision": "INYECCION_MEZCLA",
     "encendido": "ENCENDIDO",
@@ -130,6 +138,7 @@ _ALIAS_SISTEMA_A_AREA = {
 }
 
 _MARCADORES_CAUSA = {
+    "climatizacion": ("compresor", "aire acondicionado", "condensador", "r134a", "climatizacion"),
     "refrigeracion": ("refriger", "radiador", "termostato", "ventilador", "bomba de agua", "refrigerante", "ect"),
     "combustible_admision": (
         "inyector", "inyeccion", "mezcla", "maf", "map", "oxigeno", "lambda", "o2",
@@ -143,6 +152,7 @@ _MARCADORES_CAUSA = {
 }
 
 _CAUSAS_PROHIBIDAS = {
+    "climatizacion": ("bujia", "embrague", "pastilla", "inyector", "bateria de traccion", "inversor"),
     "refrigeracion": ("oxigeno", "o2", "lambda", "mezcla", "llanta", "embrague", "bujia", "bobina", "inyector", "maf", "freno"),
     "combustible_admision": ("radiador", "termostato", "ventilador", "llanta", "embrague", "pastilla", "amortiguador"),
     "encendido": ("radiador", "termostato", "llanta", "embrague", "pastilla", "amortiguador"),
@@ -266,7 +276,7 @@ def detectar_sistema_ruteo(texto: str, usar_modelo: bool = True) -> str | None:
     if not filtradas:
         return "ambiguo"
     # En frases con más de un indicio, la señal causal explícita gana sobre síntomas secundarios.
-    for area in ("REFRIGERACION", "INYECCION_MEZCLA", "ADMISION_MAP", "ENCENDIDO", "FRENOS", "TRANSMISION", "SUSPENSION_DIRECCION", "ELECTRICO_ECU", "RALENTI"):
+    for area in ("CLIMATIZACION", "REFRIGERACION", "INYECCION_MEZCLA", "ADMISION_MAP", "ENCENDIDO", "FRENOS", "TRANSMISION", "SUSPENSION_DIRECCION", "ELECTRICO_ECU", "RALENTI"):
         if area in filtradas:
             return _ETIQUETA_A_SISTEMA[area]
     return "ambiguo"
