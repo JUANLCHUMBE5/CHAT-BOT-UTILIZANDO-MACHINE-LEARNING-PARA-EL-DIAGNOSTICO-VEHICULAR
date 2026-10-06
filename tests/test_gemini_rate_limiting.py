@@ -172,11 +172,19 @@ async def test_trabajo_gemini_repository_skip_locked_y_transiciones(async_db_ses
 
 
 @pytest.mark.anyio
-async def test_cuota_gemini_repository_sincronizacion_rpm_y_rpd(async_db_session: AsyncSession):
+async def test_cuota_gemini_repository_sincronizacion_rpm_y_rpd(async_db_session: AsyncSession, monkeypatch):
     """
     Verifica que CuotaGeminiRepository limite atómicamente RPM (12) y RPD (18)
     en PostgreSQL para compartir cuota entre múltiples instancias/servidores.
     """
+    import time
+    from types import SimpleNamespace
+
+    from src.infrastructure.database.repositories import cuota_gemini_repository as modulo_cuota
+
+    # Congelar solo el reloj del repositorio, no el reloj global del worker.
+    reloj = {"epoch": int(time.time())}
+    monkeypatch.setattr(modulo_cuota, "time", SimpleNamespace(time=lambda: reloj["epoch"]))
     cuota_repo = CuotaGeminiRepository(async_db_session)
 
     # 1. Resetear cuota para prueba limpia
@@ -198,6 +206,13 @@ async def test_cuota_gemini_repository_sincronizacion_rpm_y_rpd(async_db_session
     concedido, motivo, hoy, min_cnt = await cuota_repo.adquirir_slot_compartido(max_rpm=12, max_rpd=18)
     assert concedido is False
     assert "rpm_excedido" in motivo
+
+    # El cambio de minuto sí debe reiniciar RPM sin perder el acumulado diario.
+    reloj["epoch"] += 60
+    concedido, motivo, hoy, min_cnt = await cuota_repo.adquirir_slot_compartido(max_rpm=12, max_rpd=18)
+    assert concedido is True
+    assert hoy == 13
+    assert min_cnt == 1
 
     # 4. Simular que se alcanzó el límite diario RPD (18)
     stmt_set_rpd = select(CuotaGeminiGlobal).where(CuotaGeminiGlobal.id == 1).with_for_update()
