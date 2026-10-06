@@ -55,6 +55,8 @@ _REGLAS: dict[str, tuple[str, ...]] = {
         r"\b(?:p030[0-9])\b",
     ),
     "FRENOS": (
+        r"\b(?:vibra|tiembla)\b.{0,80}\bal\s+frenar\b",
+        r"\bdisco(?:s)?\s+alabeado(?:s)?\b",
         r"\bruido\s+(?:al|cuando)\s+frenar\b", r"\b(?:frena|frenado)\b",
         r"\bpedal\s+de\s+freno\b", r"\bdisco(?:s)?\s+de\s+freno\b",
         r"\bpastillas?\s+(?:de\s+)?freno\b", r"\babs\b",

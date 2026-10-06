@@ -169,6 +169,9 @@ async def test_rest_flujo_completo_a_b_c_d(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Prueba A, B, C, D: encolado vía REST persiste UUID, worker lo procesa y resultado es durable."""
+    from src.config import settings
+
+    monkeypatch.setattr(settings, "gemini_api_key", "mock-only")
     from starlette.requests import Request
 
     from src.core.gemini_queue import gemini_rate_limiter
@@ -303,6 +306,9 @@ async def test_e_fallo_insert_commit_en_rest_nunca_devuelve_en_cola_gemini(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Condición E: si el INSERT/commit falla, el endpoint lanza error 500 y nunca devuelve éxito en cola."""
+    from src.config import settings
+
+    monkeypatch.setattr(settings, "gemini_api_key", "mock-only")
     from fastapi import HTTPException
     from starlette.requests import Request
 
