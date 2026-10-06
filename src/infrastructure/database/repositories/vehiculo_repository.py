@@ -13,10 +13,23 @@ from src.infrastructure.database.models.diagnostics import Vehiculo
 
 
 def normalizar_placa(placa: str) -> str:
-    """Normaliza una placa antes de calcular su identificador pseudónimo."""
-    normalizada = "".join(caracter for caracter in placa.upper() if caracter.isalnum())
-    if len(normalizada) < 3:
-        raise ValueError("La placa debe contener al menos 3 caracteres alfanuméricos.")
+    """Normaliza y valida una placa antes de calcular su identificador pseudónimo."""
+    normalizada = "".join(
+        caracter for caracter in (placa or "").upper()
+        if caracter.isalnum()
+    )
+
+    # Evitar que texto conversacional como "hola" sea interpretado como placa.
+    # Se admite placa con o sin guion, pero debe contener letras y números.
+    if not (5 <= len(normalizada) <= 7):
+        raise ValueError("La placa debe contener entre 5 y 7 caracteres alfanuméricos.")
+
+    if not any(c.isalpha() for c in normalizada):
+        raise ValueError("La placa debe contener al menos una letra.")
+
+    if not any(c.isdigit() for c in normalizada):
+        raise ValueError("La placa debe contener al menos un número.")
+
     return normalizada
 
 

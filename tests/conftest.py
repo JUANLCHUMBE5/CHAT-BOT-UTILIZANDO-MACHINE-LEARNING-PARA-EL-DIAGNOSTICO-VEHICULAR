@@ -15,6 +15,7 @@ os.environ["JWT_SECRET_KEY"] = "test_jwt_secret_key_with_more_than_32_chars"
 os.environ["PRIVACY_SECRET_KEY"] = "test_privacy_secret_with_more_than_32_chars"
 os.environ["LOCAL_AUTH_USERNAME"] = "admin"
 os.environ["LOCAL_AUTH_PASSWORD"] = "carbot2026"
+os.environ.setdefault("META_VERIFY_TOKEN", "isolated-test-webhook-verification")
 
 import pytest
 
@@ -240,6 +241,12 @@ def mock_gemini_en_todas_las_pruebas(request, monkeypatch):
         raise AssertionError(f"Llamada HTTP externa no simulada durante pruebas: {url}")
 
     monkeypatch.setattr(requests, "post", mocked_requests_post)
+    # El cliente Gemini reutiliza Session.post. Simular también ese camino:
+    # requests.post solamente no evita llamadas externas ni sus timeouts.
+    monkeypatch.setattr(
+        requests.Session, "post",
+        lambda self, url, *args, **kwargs: mocked_requests_post(url, *args, **kwargs),
+    )
     yield
 
 

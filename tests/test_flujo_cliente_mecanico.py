@@ -38,6 +38,18 @@ from src.infrastructure.database.repositories.taller_repository import TallerRep
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
 
 
+@pytest.fixture(autouse=True)
+def metadata_meta_del_taller_de_prueba(monkeypatch):
+    """Simula el phone_number_id explícito que entrega Meta, sin escoger un taller por orden."""
+    procesar = WebhookService.procesar_mensaje
+
+    async def con_metadata(self, *args, **kwargs):
+        kwargs.setdefault("telefono_id_meta", settings.meta_phone_number_id or "META_TEST_DEFAULT")
+        return await procesar(self, *args, **kwargs)
+
+    monkeypatch.setattr(WebhookService, "procesar_mensaje", con_metadata)
+
+
 @pytest.mark.anyio
 async def test_contacto_nuevo_creado_como_cliente_y_recibe_bienvenida():
     """Un número desconocido que escribe por WhatsApp debe registrarse automáticamente como rol cliente y recibir menú sin ML."""
@@ -276,6 +288,7 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         meta_message_id=f"msg_diag_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="El motor cascabelea fuertemente y pierde potencia al subir pendientes",
+        placa="PRM001",
     )
 
     assert res_diagnostico["status"] == "completado"

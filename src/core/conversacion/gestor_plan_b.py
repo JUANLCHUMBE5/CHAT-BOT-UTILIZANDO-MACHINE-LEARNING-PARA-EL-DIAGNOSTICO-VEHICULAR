@@ -184,13 +184,24 @@ class GestorPlanB:
         """Detecta herramientas que el usuario confirmó tener, consiguió o le prestaron."""
         texto_l = texto.lower().strip()
         texto_preg_l = texto_preg.lower().strip() if texto_preg else ""
-        es_afirmacion_directa = any(
-            w in texto_l
-            for w in (
-                "si", "sí", "si tengo", "sí tengo", "tengo uno", "tengo tester",
-                "dispongo", "lo tengo", "ya lo conecte", "ya lo conecté", "cuento con",
-                "sí maestro", "si maestro", "tengo un", "tengo una",
-            )
+        afirmaciones_exactas = {
+            "si", "sí",
+            "si maestro", "sí maestro",
+        }
+
+        frases_afirmativas = (
+            "si tengo", "sí tengo",
+            "tengo uno", "tengo tester",
+            "dispongo",
+            "lo tengo",
+            "ya lo conecte", "ya lo conecté",
+            "cuento con",
+            "tengo un", "tengo una",
+        )
+
+        es_afirmacion_directa = (
+            texto_l in afirmaciones_exactas
+            or any(frase in texto_l for frase in frases_afirmativas)
         )
         tiene_mencion_herramienta_usuario = any(
             h.patron_mencion.search(texto_l) for clave, h in CATALOGO_HERRAMIENTAS.items() if clave != "general"

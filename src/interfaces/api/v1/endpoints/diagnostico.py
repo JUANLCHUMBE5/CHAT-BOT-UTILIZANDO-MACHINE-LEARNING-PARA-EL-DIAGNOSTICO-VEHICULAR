@@ -149,9 +149,13 @@ async def analizar_sintoma(
     if not consulta.sintoma.strip():
         raise HTTPException(status_code=400, detail="El síntoma no puede estar vacío.")
 
-    t_inicio = time.time()
     try:
         placa_normalizada = normalizar_placa(consulta.placa)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    t_inicio = time.time()
+    try:
         placa_anonima = anonimizar_identificador(placa_normalizada)
         logger.info(f"Procesando petición HTTP REST autenticada para Placa: {placa_anonima}")
 

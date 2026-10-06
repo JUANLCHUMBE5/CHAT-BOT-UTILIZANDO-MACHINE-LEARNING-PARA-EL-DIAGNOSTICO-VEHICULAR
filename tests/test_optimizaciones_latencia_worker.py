@@ -28,8 +28,11 @@ def test_pool_http_session_gemini_es_singleton_y_reutiliza_sockets():
 
 
 @pytest.mark.anyio
-async def test_tokens_de_salida_ajustados_para_latencia():
+async def test_tokens_de_salida_ajustados_para_latencia(monkeypatch):
     """Verifica que el payload enviado a Gemini configure los tokens óptimos."""
+    from src.config import settings
+
+    monkeypatch.setattr(settings, "gemini_api_key", "mock-only")
     limiter = GeminiRateLimiter(max_por_minuto=15, max_por_dia=1500)
     solicitud_diag = SolicitudGeminiEncolada(
         sintoma="falla en encendido",
@@ -62,8 +65,11 @@ async def test_tokens_de_salida_ajustados_para_latencia():
 
 
 @pytest.mark.anyio
-async def test_consulta_tecnica_tokens_reducidos_a_140():
+async def test_consulta_tecnica_tokens_reducidos_a_140(monkeypatch):
     """Verifica que para consultas informativas maxOutputTokens sea 140."""
+    from src.config import settings
+
+    monkeypatch.setattr(settings, "gemini_api_key", "mock-only")
     limiter = GeminiRateLimiter(max_por_minuto=15, max_por_dia=1500)
     solicitud_info = SolicitudGeminiEncolada(
         sintoma="¿qué presión de aceite lleva un Corolla 1.8?",

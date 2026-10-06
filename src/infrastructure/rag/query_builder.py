@@ -19,6 +19,7 @@ def construir_consulta_hibrida(
     codigos_dtc: Optional[List[str]] = None,
     marca: Optional[str] = None,
     modelo: Optional[str] = None,
+    areas_consulta: Optional[List[str]] = None,
 ) -> str:
     """Construye un string de búsqueda denso combinando todas las fuentes de evidencia técnica."""
     partes: List[str] = []
@@ -37,8 +38,32 @@ def construir_consulta_hibrida(
     if macro_sistema and macro_sistema != "DESCONOCIDO":
         partes.append(f"SISTEMA {macro_sistema}")
 
-    # 4. Top 3 candidatos del clasificador ML Level 2
+    # 4. Enrutamiento por señales explícitas para evitar que una clase ML
+    # incompatible contamine la búsqueda técnica.
+    terminos_area = {
+        "INYECCION_MEZCLA": "inyección combustible mezcla pobre sensor oxígeno lambda fuel trim P0171",
+        "ADMISION_MAP": "admisión sensor MAP presión múltiple carga absoluta P0106",
+        "RALENTI": "ralentí marcha mínima cuerpo aceleración IAC",
+        "REFRIGERACION": "refrigeración temperatura motor termostato radiador ventilador",
+        "ENCENDIDO": "encendido bujías bobinas chispa misfire P0300",
+    }
+    if areas_consulta:
+        partes.extend(terminos_area[area] for area in areas_consulta if area in terminos_area)
+
+    # 5. Top 3 candidatos del clasificador Level 2; al haber señal específica,
+    # solo se añaden candidatos del mismo tema (sin alterar sus probabilidades).
     if top_fallas:
+        if areas_consulta:
+            from src.core.diagnostico.enrutador_sistema import falla_coincide_con_areas
+
+            top_fallas = [
+                item
+                for item in top_fallas
+                if falla_coincide_con_areas(
+                    item.get("falla", "") if isinstance(item, dict) else getattr(item, "falla", str(item)),
+                    areas_consulta,
+                )
+            ]
         nombres_fallas = []
         for item in top_fallas[:3]:
             f_nom = item.get("falla") if isinstance(item, dict) else getattr(item, "falla", str(item))
@@ -47,7 +72,7 @@ def construir_consulta_hibrida(
         if nombres_fallas:
             partes.append(" ".join(nombres_fallas))
 
-    # 5. Datos vehiculares si no están ya en la consulta
+    # 6. Datos vehiculares si no están ya en la consulta
     if marca and marca.lower() not in base.lower() and marca not in ("Generico", "Vehiculo Generico"):
         partes.append(marca)
     if modelo and modelo.lower() not in base.lower():

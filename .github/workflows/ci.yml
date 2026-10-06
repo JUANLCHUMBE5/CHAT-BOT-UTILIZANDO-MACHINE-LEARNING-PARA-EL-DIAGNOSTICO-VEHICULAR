@@ -1,0 +1,77 @@
+name: Backend CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: carbot_test
+          POSTGRES_USER: carbot_app
+          POSTGRES_PASSWORD: test_password_only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U carbot_app -d carbot_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      ENVIRONMENT: test
+      DATABASE_ENABLED: 'true'
+      DATABASE_REQUIRED: 'true'
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: '5432'
+      POSTGRES_DB: carbot_test
+      POSTGRES_USER: carbot_app
+      POSTGRES_PASSWORD: test_password_only
+      TEST_DATABASE_URL: postgresql+asyncpg://carbot_app:test_password_only@127.0.0.1:5432/carbot_test
+      DATABASE_POOL_SIZE: '0'
+      GEMINI_API_KEY: ''
+      GROQ_API_KEY: ''
+      GROQ_CHAT_ENABLED: 'false'
+      JWT_SECRET_KEY: ci_jwt_secret_only_not_for_production_123456789
+      PRIVACY_SECRET_KEY: ci_privacy_secret_only_not_for_production_123456
+      META_APP_SECRET: ci_meta_secret
+      META_VERIFY_TOKEN: ${{ github.run_id }}-isolated-verification
+      ML_ROOT: ${{ github.workspace }}/ml/machine_learning
+      PYTHONPATH: ${{ github.workspace }}/backend:${{ github.workspace }}/ml:${{ github.workspace }}/ml/machine_learning
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: backend
+      - name: Require read-only access and pinned ML revision
+        env:
+          READ_TOKEN: ${{ secrets.CARBOT_ML_READ_TOKEN }}
+          ML_SHA: ${{ vars.CARBOT_ML_SHA }}
+        run: |
+          test -n "$READ_TOKEN" || { echo 'Missing CARBOT_ML_READ_TOKEN for private ML repository'; exit 1; }
+          [[ "$ML_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'Set CARBOT_ML_SHA to validated full commit SHA'; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          repository: JUANLCHUMBE5/carbot-machine-learning
+          ref: ${{ vars.CARBOT_ML_SHA }}
+          token: ${{ secrets.CARBOT_ML_READ_TOKEN }}
+          path: ml
+          persist-credentials: false
+      - name: Preserve compatibility with historical test paths
+        run: ln -s "$ML_ROOT" ../machine_learning
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - run: pip install matplotlib==3.11.1
+      - run: python -m alembic upgrade head
+      - run: ruff check src tests main.py scripts
+      - run: ruff check src main.py --select S --ignore S104,S105,S110,S603
+      - run: coverage run --source=src -m pytest -q -m "not real_gemini"
+      - run: coverage report --fail-under=55
+      - run: python -m alembic check
+      - run: pip-audit -r requirements.txt

@@ -324,6 +324,10 @@ class MotorRAG:
             "p0087": "presion combustible riel common rail bomba alta",
             "p2135": "cuerpo de aceleracion mariposa electronica tps",
             "p0011": "valvula solenoide ocv sincronizacion variable vvt",
+            "mezcla pobre": "P0171 P0174 mezcla pobre fuel trim STFT LTFT sensor oxigeno presion combustible caudal inyectores",
+            "mezcla rica": "P0172 P0175 mezcla rica fuel trim STFT LTFT sensor oxigeno inyectores presion combustible",
+            "inyectores no inyectan": "inyectores caudal flujo de combustible presion riel balance de cilindros circuito electrico inyector",
+            "map": "sensor de presion absoluta del multiple admision carga absoluta P0105 P0106",
             "p0700": "transmision automatica cvt caja solenoide sobrecalentamiento",
             "p0841": "sensor presion fluido transmision cvt",
             "cvt": "transmision continuamente variable cvt poleas fluido ns3 nissan",
@@ -353,6 +357,9 @@ class MotorRAG:
             "cerradura": "chapa cerradura pestillo puerta trinquete",
             "humo blanco": "empaquetadura culata refrigerante motor sobrecalentamiento",
             "humo negro": "mezcla rica inyectores filtro aire maf map sensor oxigeno",
+            "carga absoluta": "sensor map baro presion absoluta colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
+            "sensor map": "baro presion absoluta colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
+            "presion absoluta": "sensor map baro colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
             "vibra": "vibracion volante asiento pedal velocidad balanceo alineacion freno soportes",
             "pierde fuerza": "perdida potencia aceleracion subida combustible aire escape transmision",
             "pierde potencia": "perdida potencia aceleracion subida combustible aire escape transmision",
@@ -469,8 +476,14 @@ class MotorRAG:
 
         umbral_efectivo = settings.diagnostic.rag_min_similarity if umbral is None else umbral
         try:
+            from src.core.diagnostico.enrutador_sistema import (
+                detectar_areas_tecnicas,
+                filtrar_candidatos_por_area,
+            )
             from src.infrastructure.rag.query_builder import construir_consulta_hibrida
             from src.infrastructure.rag.relevance_filter import reordenar_candidatos_rag
+
+            areas_consulta = detectar_areas_tecnicas(consulta)
 
             consulta_hibrida = construir_consulta_hibrida(
                 consulta_usuario=consulta,
@@ -479,12 +492,20 @@ class MotorRAG:
                 codigos_dtc=codigos_dtc,
                 marca=marca,
                 modelo=modelo,
+                areas_consulta=areas_consulta,
             )
             consulta_expandida = self._expandir_consulta(consulta_hibrida)
             consulta_vec = self.vectorizador.transform([consulta_expandida]).toarray().astype(np.float32)
             faiss.normalize_L2(consulta_vec)
 
-            k_busqueda = min(k_candidatos, len(self.documentos))
+            consulta_map_explicita = any(
+                termino in consulta.lower()
+                for termino in ("sensor map", "carga absoluta", "presion absoluta", "presión absoluta")
+            )
+            # Para MAP, explorar el corpus completo antes de restringirlo a la
+            # ficha con fuente verificable: los documentos históricos retirados
+            # aún pueden puntuar alto por compartir DTC/título.
+            k_busqueda = len(self.documentos) if consulta_map_explicita else min(k_candidatos, len(self.documentos))
             similitudes, indices = self.faiss_index.search(consulta_vec, k=k_busqueda)
 
             candidatos = []
@@ -503,6 +524,22 @@ class MotorRAG:
                             else {}
                         ),
                     })
+
+            if consulta_map_explicita:
+                candidatos = [
+                    candidato for candidato in candidatos
+                    if (candidato.get("metadatos") or {}).get("id_procedimiento") == "RAG_PROC_116"
+                ]
+            # Una mención explícita de subsistema prevalece sobre una clase ML
+            # genérica: el documento recuperado debe tratar el área consultada.
+            candidatos = filtrar_candidatos_por_area(candidatos, areas_consulta)
+            if not candidatos:
+                return (
+                    "No se encontró un procedimiento compatible con el sistema mencionado.",
+                    "Sin procedimiento compatible verificado",
+                    0.0,
+                    {},
+                )
 
             # Reordenar ponderando por Macro-Sistema ML, códigos DTC y Top-2 de fallas
             conf_ml_val = None
@@ -633,4 +670,3 @@ class MotorRAG:
         """Busca el procedimiento técnico más relevante (compatibilidad retroactiva)."""
         cuerpo, titulo, _, _ = self.recuperar_procedimiento_con_metadatos(consulta, umbral)
         return cuerpo, titulo
-

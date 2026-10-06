@@ -2,9 +2,9 @@
 
 import hashlib
 import uuid
-from pathlib import Path
 
 from src.application.services.validacion_taller import resumir_fases
+from src.config import ML_ROOT
 from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.models import ConversationState
@@ -20,13 +20,16 @@ from src.infrastructure.container import ServiceContainer
 # =====================================================================
 
 def test_artefactos_ml_y_rag_hashes_estrictos():
-    base_dir = Path(__file__).resolve().parent.parent.parent
+    base_dir = ML_ROOT.parent
     ml_artifacts = {
         base_dir / "machine_learning" / "models" / "c1_fase10_final" / "vectorizador_c1.pkl": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
         base_dir / "machine_learning" / "models" / "c1_fase10_final" / "modelo_diagnostico_c1.pkl": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
         base_dir / "machine_learning" / "models" / "c1_fase10_final" / "modelo_sistema_c1_macrofix.pkl": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
-        base_dir / "machine_learning" / "manuals" / "candidates" / "v1" / "indexes" / "indice_faiss_v1.index": "a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",
-        base_dir / "machine_learning" / "manuals" / "candidates" / "v1" / "metadata" / "metadatos_manuales_v1.json": "8b4244713cfdc2f59af66b4e43bea8532196366ee5b53a98721e96ca6c781dbb",
+        # Candidate RAG de la revisión ML 42d6070: identidad exacta verificada
+        # también por scripts/ci/artefactos_sha256.json en ese repositorio.
+        # No equivale a corpus OEM validado; C1/TF-IDF/macro siguen congelados.
+        base_dir / "machine_learning" / "manuals" / "candidates" / "v1" / "indexes" / "indice_faiss_v1.index": "729ca17ed63c7902a4d5eab8fd791409666ad7509e208572abeee36a2edc308f",
+        base_dir / "machine_learning" / "manuals" / "candidates" / "v1" / "metadata" / "metadatos_manuales_v1.json": "1c8c8b523b5728ab92f0a74d05deafe82961754e3b25ec75da0a8112072a3d40",
     }
     for file_path, expected_hash in ml_artifacts.items():
         assert file_path.exists(), f"El archivo {file_path} debe existir"

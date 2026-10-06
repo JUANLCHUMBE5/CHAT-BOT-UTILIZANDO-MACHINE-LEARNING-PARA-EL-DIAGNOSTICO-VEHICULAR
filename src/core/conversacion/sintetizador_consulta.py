@@ -117,11 +117,15 @@ class SintetizadorConsulta:
 
         # 8. Mediciones técnicas confirmadas
         meds = [
-            h.valor for h in estado.hechos.values()
-            if h.categoria == "medicion" and h.estado == FactState.CONFIRMADO
+            h.valor for campo, h in estado.hechos.items()
+            if (
+                h.categoria == "medicion"
+                and h.estado == FactState.CONFIRMADO
+                and campo not in {"valor_medicion", "unidad_medicion", "condicion_medicion"}
+            )
         ]
         if meds:
-            partes.append(f"medición {', '.join(meds)}")
+            partes.append(f"medición/evidencia técnica {', '.join(meds)}")
 
         # 8.1 Modificadores ambientales o eléctricos
         mods = [
@@ -150,6 +154,47 @@ class SintetizadorConsulta:
         ]
         if no_rev:
             partes.append(f"pendiente revisar: {', '.join(no_rev)}")
+
+        # 11. Pruebas, mediciones y correcciones aportadas durante la sesión.
+        # Se incluyen explícitamente para que ML/LLM no pierdan una pista que el
+        # extractor aún no haya normalizado a un campo conocido.
+        if estado.completed_tests:
+            resultados = ", ".join(
+                f"{nombre}: {resultado}"
+                for nombre, resultado in estado.completed_tests.items()
+            )
+            partes.append(f"pruebas ya realizadas (resultado reportado): {resultados}")
+
+        if estado.measurements:
+            mediciones = []
+            for medicion in estado.measurements.values():
+                if not isinstance(medicion, dict):
+                    continue
+                tipo = medicion.get("tipo", "medición")
+                valor = medicion.get("valor", "")
+                unidad = medicion.get("unidad", "")
+                contexto = medicion.get("contexto")
+                dato = f"{tipo}: {valor} {unidad}".strip()
+                if contexto:
+                    dato += f" ({contexto})"
+                mediciones.append(dato)
+            if mediciones:
+                partes.append(f"mediciones reportadas: {', '.join(mediciones)}")
+
+        if estado.hipotesis_descartadas:
+            partes.append(
+                "hipótesis descartadas explícitamente por el mecánico: "
+                + ", ".join(estado.hipotesis_descartadas)
+            )
+
+        aportes_recientes = list(dict.fromkeys(
+            texto.strip() for texto in estado.historial_mensajes_usuario[-4:] if texto.strip()
+        ))
+        if aportes_recientes:
+            partes.append(
+                "últimos aportes textuales del mecánico (declaraciones, conservar su sentido): "
+                + " | ".join(aportes_recientes)
+            )
 
         # Si no hubo hechos estructurados, usar el último mensaje limpio como salvaguarda
         if not partes:

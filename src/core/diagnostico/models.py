@@ -19,6 +19,7 @@ class ResultadoDiagnostico(BaseModel):
     confianza_ml: float
     contexto_manual: str
     titulo_manual: str
+    contexto_manual_verificado: str = ""
     similitud_rag: float = 0.0
     requiere_revision_humana: bool = False
     estado_sesion: str = "completado"

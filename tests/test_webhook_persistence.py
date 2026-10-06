@@ -33,6 +33,7 @@ async def setup_test_db():
     engine = obtener_engine()
     taller_id = uuid.uuid4()
     mecanico_id = uuid.uuid4()
+    telefono_id_meta = f"META_TEST_{taller_id.hex}"
 
     tel_autorizado = f"+51 987 {uuid.uuid4().int % 1000000:06d}"
     tel_no_autorizado = f"+51 911 {uuid.uuid4().int % 1000000:06d}"
@@ -47,6 +48,7 @@ async def setup_test_db():
             nombre="Taller Autorizado Carabayllo Test",
             ruc=f"20{uuid.uuid4().int % 1000000000:09d}",
             taller_id=taller_id,
+            telefono_id_meta=telefono_id_meta,
         )
         roles = await user_repo.asegurar_roles_estandar()
         await user_repo.crear_usuario(
@@ -66,6 +68,7 @@ async def setup_test_db():
         "telefono_no_autorizado": tel_no_autorizado,
         "taller_id": taller_id,
         "mecanico_id": mecanico_id,
+        "telefono_id_meta": telefono_id_meta,
     }
 
     # Limpieza de registros creados en PostgreSQL
@@ -184,6 +187,7 @@ async def test_webhook_rechaza_mecanico_no_autorizado(setup_test_db, monkeypatch
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="Hola quiero un diagnóstico",
+        telefono_id_meta=data["telefono_id_meta"],
     )
 
     assert resultado["status"] == "completado_cliente"
@@ -211,6 +215,7 @@ async def test_consulta_tecnica_autorizada_no_crea_diagnostico(setup_test_db):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="qué potencia deben tener los focos LED H4 para una Suzuki APV",
+        placa="INF001",
     )
 
     assert resultado["status"] == "consulta_tecnica"
@@ -241,6 +246,7 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="El carro vibra al acelerar en subida",
+        placa="DUP001",
     )
     assert res1["status"] in ("completado", "aclaracion")
 
@@ -250,6 +256,7 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="El carro vibra al acelerar en subida",
+        placa="DUP001",
     )
     assert res2["status"] == "duplicado_ignorado"
     assert res2["meta_message_id"] == meta_msg_id

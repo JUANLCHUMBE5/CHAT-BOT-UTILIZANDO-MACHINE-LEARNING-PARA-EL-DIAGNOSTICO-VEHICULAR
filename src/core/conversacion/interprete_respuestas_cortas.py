@@ -8,6 +8,7 @@ from typing import Any, Dict, Optional, Tuple
 from src.core.conversacion.gestor_plan_b import GestorPlanB
 from src.core.conversacion.models import (
     ConversationState,
+    EstadoOperativo,
     FactState,
     FactType,
     QuestionIntent,
@@ -40,6 +41,7 @@ PATRON_NUMERICO_MEDICION = re.compile(
 CUES_RESPUESTA_CORTA = (
     "la 1", "la 2", "la 3", "opcion 1", "opcion 2", "opcion 3",
     "ya lo cambie", "ya lo cambié", "eso ya lo revise", "eso ya lo revisé",
+    "ya lo revise y eso esta bien", "ya lo revisé y eso está bien",
     "solo caliente", "solo en frio", "solo en semaforo", "solo parado",
     "no se", "no sé", "ni idea", "creo que si", "creo que sí", "a veces",
     "no aplica", "eso no aplica", "ninguno", "ninguna", "no tengo",
@@ -172,6 +174,137 @@ class InterpreteRespuestasCortas:
         texto_l = texto_usuario.strip().lower()
         hipotesis = ultima_preg.get("hipotesis") or []
 
+        if intent_str == QuestionIntent.MEDICION_TECNICA.value and texto_l in (
+            "no", "no se", "no sé", "no lo tengo", "no tengo ese dato"
+        ):
+            hecho = estado.registrar_hecho(
+                campo="medicion_tecnica_pendiente",
+                valor="no disponible",
+                categoria="inspeccion_pendiente",
+                estado=FactState.NO_REVISADO,
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "NO_REVISADO",
+                "campo": "medicion_tecnica_pendiente",
+                "valor": "no disponible",
+                "hecho": hecho.to_dict(),
+            }
+
+        if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and texto_l in (
+            "no", "no aun", "todavia no", "aun no"
+        ):
+            hecho = estado.registrar_hecho(
+                campo="estado_inspeccion_previa",
+                valor="no revisado",
+                categoria="inspeccion_pendiente",
+                estado=FactState.NO_REVISADO,
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "NO_REVISADO",
+                "campo": "estado_inspeccion_previa",
+                "valor": "no revisado",
+                "hecho": hecho.to_dict(),
+            }
+
+        if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and texto_l in (
+            "si", "sí", "ya", "correcto", "lo revise", "lo revisé"
+        ):
+            hecho = estado.registrar_hecho(
+                campo="revision_componente_pendiente",
+                valor=texto_usuario,
+                categoria="inspeccion",
+                estado=FactState.AMBIGUO,
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "REVISION_AMBIGUA",
+                "campo": "revision_componente_pendiente",
+                "valor": texto_usuario,
+                "hecho": hecho.to_dict(),
+            }
+
+        # Una afirmación genérica sobre una revisión no identifica por sí sola
+        # cuál pieza se comprobó. No se debe descartar automáticamente el Top-1.
+        if re.search(
+            r"\b(?:ya\s+)?(?:lo|la|eso)\s+revis[eé]\b.*\b(?:est[aá]\s+bien|correcto|normal)\b",
+            texto_l,
+        ) or re.search(
+            r"\b(?:eso|ya)\s+(?:lo\s+)?(?:revis[eé]|prob[eé])\s+y\s+(?:eso\s+)?(?:est[aá]\s+bien|est[aá]\s+normal)\b",
+            texto_l,
+        ):
+            if intent_str == QuestionIntent.CONFIRMACION_ALTERNATIVA.value or "verificar este punto" in texto_preg:
+                diagnostico_actual = next(
+                    (
+                        str(h.get("falla", "")) if isinstance(h, dict) else str(h)
+                        for h in hipotesis
+                        if (h.get("falla") if isinstance(h, dict) else h)
+                    ),
+                    estado.falla_principal or "",
+                )
+                if diagnostico_actual:
+                    hecho = estado.registrar_hecho(
+                        "confirmacion_diagnostico_usuario",
+                        "NO",
+                        categoria="confirmacion_diagnostico",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+                    return {
+                        "categoria_respuesta": "DIAGNOSTICO_DESCARTADO",
+                        "campo": "confirmacion_diagnostico_usuario",
+                        "valor": "NO",
+                        "diagnostico": diagnostico_actual,
+                        "hecho": hecho.to_dict(),
+                    }
+            return {
+                "categoria_respuesta": "REVISION_AMBIGUA",
+                "campo": "revision_componente_pendiente",
+                "valor": texto_usuario,
+                "hecho": estado.registrar_hecho(
+                    "revision_componente_pendiente",
+                    texto_usuario,
+                    categoria="inspeccion",
+                    estado=FactState.AMBIGUO,
+                    texto_crudo=texto_usuario,
+                    tipo=FactType.CONDICION,
+                ).to_dict(),
+            }
+
+        # “Sí/No” responde a la pregunta de validación del diagnóstico actual;
+        # no debe volver a disparar ML ni repetir la misma lista de hipótesis.
+        if intent_str == QuestionIntent.CONFIRMACION_ALTERNATIVA.value:
+            es_si = texto_l in ("si", "sí", "correcto", "afirmativo", "así es", "asi es")
+            es_no = texto_l in ("no", "negativo", "incorrecto")
+            if es_si or es_no:
+                diagnostico = next(
+                    (
+                        str(h.get("falla", "")) if isinstance(h, dict) else str(h)
+                        for h in hipotesis
+                        if (h.get("falla") if isinstance(h, dict) else h)
+                    ),
+                    estado.falla_principal or "",
+                )
+                valor = "SI" if es_si else "NO"
+                hecho = estado.registrar_hecho(
+                    "confirmacion_diagnostico_usuario",
+                    valor,
+                    categoria="confirmacion_diagnostico",
+                    texto_crudo=texto_usuario,
+                    tipo=FactType.CONDICION,
+                )
+                return {
+                    "categoria_respuesta": "DIAGNOSTICO_CONFIRMADO" if es_si else "DIAGNOSTICO_DESCARTADO",
+                    "campo": "confirmacion_diagnostico_usuario",
+                    "valor": valor,
+                    "diagnostico": diagnostico,
+                    "hecho": hecho.to_dict(),
+                }
+
         # 0. Manejo de 'No aplica'
         if PATRON_NO_APLICA.search(texto_l):
             campo = "herramienta_disponible" if "multimetro" in texto_preg or "manometro" in texto_preg else "condicion_operacion"
@@ -293,14 +426,21 @@ class InterpreteRespuestasCortas:
                 }
 
         # 2. Respuestas técnicas numéricas (voltaje, presión, etc.)
-        if re.search(r"\d+(?:[.,]\d+)?", texto_l) and (
+        # Un año de vehículo suele llegar como respuesta adicional mientras hay
+        # una medición pendiente. Sin unidad explícita, jamás lo reinterpretamos
+        # como PSI/voltios/u otra lectura técnica heredada.
+        es_anio_sin_unidad = bool(
+            re.search(r"\b(?:19[89]\d|20[0-2]\d)\b", texto_l)
+            and not re.search(r"\b(?:psi|bar|kpa|mv|v|voltios?|volts?|ohmios?|rpm|km/h|%|mm|ms)\b", texto_l)
+        )
+        if not es_anio_sin_unidad and re.search(r"\d+(?:[.,]\d+)?", texto_l) and (
             intent_str in (
                 QuestionIntent.MEDICION_TECNICA.value,
                 QuestionIntent.MEDICION_VOLTAJE.value,
                 QuestionIntent.MEDICION_PRESION.value,
                 QuestionIntent.DISPONIBILIDAD_HERRAMIENTA.value,
             )
-            or any(u in texto_l for u in ("v", "volt", "psi", "bar", "kpa", "baja a", "marca", "da"))
+            or any(u in texto_l for u in ("v", "volt", "psi", "bar", "kpa", "rpm", "baja a", "marca", "da"))
             or any(k in texto_preg for k in ("voltaje", "multimetro", "presion", "manometro", "psi"))
             or (estado.pending_question and estado.pending_question.get("intent") in (QuestionIntent.MEDICION_PRESION.value, QuestionIntent.MEDICION_VOLTAJE.value))
         ):
@@ -325,14 +465,24 @@ class InterpreteRespuestasCortas:
                     unidad = "PSI"
                     tipo_med = "presion_combustible"
                     contexto_med = "riel_inyeccion"
+                elif unidad == "RPM":
+                    campo = "medicion_rpm"
+                    tipo_med = "rpm_motor"
+                    contexto_med = "ralenti" if any(
+                        w in texto_l or w in texto_preg for w in ("ralenti", "ralentí", "detenido", "idle")
+                    ) else "motor"
                 else:
                     campo = f"medicion_{unidad.lower()}"
                     tipo_med = "medicion_tecnica"
                     contexto_med = "general"
 
+                valor_medicion = f"{val} {unidad}" + (f" ({condicion})" if condicion else "")
+                if unidad == "RPM" and contexto_med == "ralenti":
+                    valor_medicion = f"{val} {unidad} en ralentí"
+                    estado.estado_operativo = EstadoOperativo.RALENTI
                 h = estado.registrar_hecho(
                     campo=campo,
-                    valor=f"{val} {unidad}" + (f" ({condicion})" if condicion else ""),
+                    valor=valor_medicion,
                     categoria="medicion",
                     estado=FactState.CONFIRMADO,
                     texto_crudo=texto_usuario,

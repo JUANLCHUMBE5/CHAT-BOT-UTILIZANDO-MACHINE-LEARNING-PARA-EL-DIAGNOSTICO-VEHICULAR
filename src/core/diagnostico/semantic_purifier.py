@@ -11,8 +11,14 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
     por el conductor (ej: 'la batería tiene fuerza pero no da marcha y suena clac')
     induzcan sesgo espurio en el vectorizador TF-IDF del SVM o en la búsqueda RAG.
     """
-    limpio = texto.lower()
-    texto_filtrado = texto
+    # La síntesis clínica ya contiene hechos vigentes y pruebas realizadas.
+    # El anexo textual es trazabilidad para el LLM/auditoría, no nueva evidencia
+    # independiente: repetirlo en TF-IDF amplifica síntomas antiguos/corregidos.
+    texto_filtrado = re.split(
+        r"últimos aportes textuales del mecánico\s*\(", texto, maxsplit=1,
+        flags=re.IGNORECASE,
+    )[0].strip()
+    limpio = texto_filtrado.lower()
 
     # 1. Descarte de batería con síntomas de motor de arranque / solenoide / carbones
     descarte_bateria = any(

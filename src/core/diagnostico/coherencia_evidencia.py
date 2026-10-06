@@ -19,6 +19,14 @@ def priorizar_evidencia(texto, predicciones):
     )
     motivo = ""
     compatibles = []
+    # Una negación de caudal es evidencia positiva de una anomalía, no un descarte.
+    if re.search(r"\b(?:inyectores|injectores)\b.{0,70}(?:no inyectan|caudal (?:bajo|insuficiente))", txt):
+        compatibles = [p for p in predicciones if "inyector" in normalizar(p.falla)]
+        motivo = "Caudal insuficiente reportado por el mecánico; método de comprobación pendiente."
+    if re.search(r"\b(?:humo|vapor) blanco\b", positivas) and "refrigerante" in positivas:
+        compatibles = [p for p in predicciones if re.search(r"culata|junta", normalizar(p.falla))]
+        if compatibles:
+            motivo = "Humo blanco y consumo de refrigerante: comprobar estanqueidad, sin confirmar culata."
     # Síntoma de acoplamiento + contexto de caja, no solo la letra R o D.
     caja = re.search(r"\b(automatic[oa]|transmision|caja|reversa|marcha atras)\b", positivas)
     acoplamiento = re.search(
@@ -28,6 +36,14 @@ def priorizar_evidencia(texto, predicciones):
     if caja and acoplamiento and not re.search(r"se apaga|ralenti inestable|motor tironea", positivas):
         compatibles = [p for p in predicciones if obtener_macro_sistema(p.falla) == "TRANSMISION"]
         motivo = "Queja de acoplamiento de transmisión; componente exacto pendiente de comprobación."
+    if re.search(
+        r"\b(?:inyectores?|injectores?)\b.{0,65}\b(?:no\s+inyectan\s+(?:lo\s+)?suficiente|"
+        r"inyectan\s+(?:poco|insuficiente)|caudal\s+(?:bajo|insuficiente))\b",
+        txt,
+    ):
+        compatibles = [p for p in predicciones if re.search(r"inyector", normalizar(p.falla))]
+        if compatibles:
+            motivo = "Hallazgo reportado de caudal de inyectores priorizado para comprobación, no confirmado."
     # Hallazgo mecánico explícito, sin convertir una mera mención en confirmación.
     if re.search(r"\b(rotula|buje|bieleta)s?\b", positivas) and re.search(
         r"(?:encontre|detecte|observe|comprobe|med[ií]|en elevador).{0,100}(?:juego|holgura|rot[oa])|"
@@ -61,15 +77,73 @@ def documento_compatible(texto, titulo, contexto):
     return not ((automatico and doc_manual and not doc_auto) or (manual and doc_auto and not doc_manual))
 
 
-def limitar_respuesta(respuesta, predicciones, motivo="", sin_documento=False):
+def preparar_contexto_rag_para_llm(contexto, titulo, metadatos, corpus_validado):
+    """Solo entrega al LLM procedimientos OEM con validación documental y de taller."""
+    meta = metadatos or {}
+    auditoria = meta.get("auditoria") or {}
+    estado = normalizar(str(meta.get("estado_validacion", ""))).replace(" ", "_")
+    fuente = normalizar(str(meta.get("manual_oem", "")))
+    fuente_generica = any(
+        palabra in fuente
+        for palabra in ("multimarca", "referencial", "universal", "estandar", "generico")
+    )
+    verificado = bool(
+        corpus_validado
+        and estado in {"validado_oem", "validado_oem_taller", "verificado_oem"}
+        and auditoria.get("verificado_documental") is True
+        and auditoria.get("auditoria_mecanica_formal_firmada") is True
+        and fuente
+        and not fuente_generica
+    )
+    if not verificado or not contexto:
+        return "", "Fuente RAG omitida: pendiente de validación OEM y de taller"
+    return contexto, titulo
+
+
+def limitar_respuesta(
+    respuesta,
+    predicciones,
+    motivo="",
+    sin_documento=False,
+    contexto_verificado="",
+    pregunta="",
+):
     """La orientación inicial no publica especificaciones OEM sin verificación por vehículo.
 
     Se aplica también al fallback. El detalle técnico queda para una consulta
     identificada por vehículo; un texto RAG multimarca no acredita aplicabilidad.
     """
-    unidades = r"\b\d+(?:[.,]\d+)?\s*(?:nm|n·m|psi|bar|kpa|mm|rpm|°c|v|voltios|minutos)\b"
-    if not sin_documento and len(respuesta) <= 1200 and not re.search(unidades, respuesta, re.I):
+    unidades = r"(?<!\w)\d+(?:[.,]\d+)?\s*(?:nm|n·m|psi|bar|kpa|mm|rpm|°c|v|voltios|minutos)\b"
+    cifras_respuesta = re.findall(unidades, respuesta or "", re.I)
+    fuente_norm = normalizar(contexto_verificado or "")
+    cifra_sin_respaldo = any(normalizar(cifra).replace(" ", "") not in fuente_norm.replace(" ", "") for cifra in cifras_respuesta)
+    respuesta_norm = normalizar(respuesta or "")
+    operacion_riesgosa = bool(
+        re.search(
+            r"desconect(?:a|e|ar|ando|e\w*)\s+(?:las?\s+)?(?:bobinas?|inyectores?).{0,80}"
+            r"(?:ralenti|motor\s+en\s+marcha)|(?:ralenti|motor\s+en\s+marcha).{0,80}"
+            r"desconect(?:a|e|ar|ando|e\w*)\s+(?:las?\s+)?(?:bobinas?|inyectores?)|"
+            r"(?:rocia|roc[ií]a|aplica|usa).{0,70}(?:limpiador\s+de\s+(?:carburador|frenos)|"
+            r"limpiador\s+de\s+contactos).{0,70}(?:motor\s+en\s+marcha|admision|cuerpo\s+de\s+aceleracion)|"
+            r"(?:prueba|reaccion|enriquece).{0,100}limpiador\s+de\s+(?:carburador|frenos)",
+            respuesta_norm,
+        )
+    )
+    if (
+        not sin_documento
+        and not cifra_sin_respaldo
+        and not operacion_riesgosa
+        and len(respuesta) <= 1200
+    ):
         return respuesta, False
+    if not predicciones:
+        return (
+            "No tengo una hipótesis ML pertinente ni un procedimiento verificado suficiente para "
+            "indicar valores o una prueba específica. Comparte el dato técnico que corresponda "
+            "para orientar el siguiente paso sin adivinar ni desconectar componentes. "
+            f"{_pregunta_aclaratoria_por_area(pregunta)}",
+            True,
+        )
     primera = predicciones[0].falla
     macro = obtener_macro_sistema(primera)
     prueba = {
@@ -83,8 +157,28 @@ def limitar_respuesta(respuesta, predicciones, motivo="", sin_documento=False):
     if motivo.startswith("Queja de acoplamiento"):
         presentables = [p for p in predicciones if obtener_macro_sistema(p.falla) == "TRANSMISION"]
     opciones = "\n".join(f"{i}. {p.falla}" for i, p in enumerate(presentables[:3], 1))
-    aviso = "No hay procedimiento compatible verificado. " if sin_documento else ""
+    aviso = (
+        "No hay procedimiento compatible verificado. "
+        if sin_documento or cifra_sin_respaldo or operacion_riesgosa
+        else ""
+    )
     return (
         f"🔧 Hipótesis por comprobar:\n{opciones}\n\n{prueba}\n"
         f"{motivo}\n{aviso}Para especificaciones exactas necesito marca, modelo, año y motorización."
     ).strip(), True
+
+
+def _pregunta_aclaratoria_por_area(pregunta):
+    """Pide una sola evidencia útil, sin saltar a sistemas ajenos al síntoma."""
+    from src.core.diagnostico.enrutador_sistema import detectar_areas_tecnicas
+
+    areas = detectar_areas_tecnicas(pregunta or "")
+    if "INYECCION_MEZCLA" in areas:
+        return "¿Qué DTC aparece y qué valores STFT/LTFT o presión de combustible registraste?"
+    if "ADMISION_MAP" in areas:
+        return "¿Qué DTC aparece y qué valor de MAP/carga absoluta muestra el escáner, indicando unidad y condición de medición?"
+    if "RALENTI" in areas:
+        return "¿A cuántas RPM queda el motor y ocurre en frío, caliente o en ambas condiciones?"
+    if "ENCENDIDO" in areas:
+        return "¿Qué DTC aparece y en qué cilindro se presenta la falla, si el escáner lo identifica?"
+    return "¿Qué código DTC aparece y qué lectura exacta del componente mostró el escáner?"

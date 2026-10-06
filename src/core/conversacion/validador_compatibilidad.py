@@ -8,9 +8,16 @@ rechazadas a menos que exista nueva evidencia clínica que lo justifique.
 from __future__ import annotations
 
 import re
+import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.core.conversacion.models import ConversationState, FactState
+from src.core.conversacion.ruteador_sistema import (
+    detectar_ruta_sistema,
+    hipotesis_compatibles_con_ruta,
+    requisito_tecnico_ausente,
+    tiene_descarte_de_componente,
+)
 
 
 class ValidadorCompatibilidad:
@@ -100,6 +107,21 @@ class ValidadorCompatibilidad:
 
         return True, None
 
+    @staticmethod
+    def _clave_hipotesis(falla: str) -> str:
+        """Genera una clave estable para no presentar dos veces la misma falla.
+
+        El Linear SVM puede devolver la misma etiqueta con diferencias menores de
+        mayúsculas, tildes o puntuación. Para el mecánico eso no constituye una
+        alternativa diagnóstica distinta.
+        """
+        sin_tildes = unicodedata.normalize("NFD", falla or "")
+        sin_tildes = "".join(
+            caracter for caracter in sin_tildes
+            if unicodedata.category(caracter) != "Mn"
+        )
+        return re.sub(r"[^a-z0-9]+", " ", sin_tildes.lower()).strip()
+
     @classmethod
     def filtrar_y_ordenar_para_presentacion(
         cls,
@@ -120,12 +142,41 @@ class ValidadorCompatibilidad:
 
         candidatas_compatibles: List[Dict[str, Any]] = []
         exclusiones: List[Dict[str, Any]] = []
+        claves_presentadas: set[str] = set()
+        ruta = detectar_ruta_sistema(estado, nueva_evidencia)
 
         # Evaluar cada predicción de la lista RAW
         for pred in predicciones_raw:
             falla = pred.get("falla", "")
             prob = pred.get("probabilidad", 0.0)
             falla_l = falla.strip().lower()
+
+            requisito = requisito_tecnico_ausente(estado, falla, nueva_evidencia)
+            if requisito:
+                compatible, motivo = cls.validar_compatibilidad_hipotesis(falla, estado)
+                exclusiones.append({"falla": falla, "probabilidad_raw": prob,
+                                    "motivo": ("EQUIPAMIENTO_NO_CONFIRMADO" if compatible
+                                               else "INCOMPATIBLE_CON_HECHO_CONFIRMADO"),
+                                    "detalle": requisito if compatible else motivo})
+                continue
+
+            if not hipotesis_compatibles_con_ruta(falla, ruta.sistema):
+                exclusiones.append({
+                    "falla": falla,
+                    "probabilidad_raw": prob,
+                    "motivo": "SISTEMA_INCOMPATIBLE_CON_EVIDENCIA",
+                    "detalle": f"Ruta activa {ruta.sistema}: {', '.join(ruta.evidencia)}",
+                })
+                continue
+
+            if tiene_descarte_de_componente(estado, falla):
+                exclusiones.append({
+                    "falla": falla,
+                    "probabilidad_raw": prob,
+                    "motivo": "COMPONENTE_DESCARTADO_POR_MECANICO",
+                    "detalle": "El mecánico ya informó que este componente fue revisado o descartado.",
+                })
+                continue
 
             # 1. Validar compatibilidad con hechos confirmados
             es_compatible, motivo_incomp = cls.validar_compatibilidad_hipotesis(falla, estado)
@@ -142,7 +193,10 @@ class ValidadorCompatibilidad:
             if falla_l in descartadas_previas:
                 # Comprobar si la nueva evidencia menciona explícitamente el componente para reconsiderarlo
                 reconsiderable = False
-                if nueva_evidencia:
+                if nueva_evidencia and re.search(
+                    r"\b(?:me equivoqu[eé]|retiro el descarte|corrijo el descarte)\b",
+                    nueva_evidencia.lower(),
+                ):
                     palabras_falla = [w for w in re.findall(r"\w+", falla_l) if len(w) > 4]
                     if any(w in nueva_evidencia.lower() for w in palabras_falla):
                         reconsiderable = True
@@ -156,21 +210,21 @@ class ValidadorCompatibilidad:
                     })
                     continue
 
+            clave = cls._clave_hipotesis(falla)
+            if not clave or clave in claves_presentadas:
+                exclusiones.append({
+                    "falla": falla,
+                    "probabilidad_raw": prob,
+                    "motivo": "DUPLICADA_EN_TOP",
+                    "detalle": "La misma hipótesis ya está presentada como una alternativa anterior.",
+                })
+                continue
+
             candidatas_compatibles.append({
                 "falla": falla,
                 "probabilidad": prob,
             })
-
-        # Si todas fueron filtradas, rescatar las compatibles aunque hayan sido descartadas
-        if not candidatas_compatibles:
-            for pred in predicciones_raw:
-                falla = pred.get("falla", "")
-                es_comp, _ = cls.validar_compatibilidad_hipotesis(falla, estado)
-                if es_comp:
-                    candidatas_compatibles.append({
-                        "falla": falla,
-                        "probabilidad": pred.get("probabilidad", 0.0),
-                    })
+            claves_presentadas.add(clave)
 
         # Limitar a Top 3 para presentación
         return candidatas_compatibles[:3], exclusiones

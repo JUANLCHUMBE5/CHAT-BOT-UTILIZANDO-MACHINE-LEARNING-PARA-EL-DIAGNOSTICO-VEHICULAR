@@ -7,6 +7,8 @@ from typing import Any, Dict, List, Tuple
 
 # Mapeo de términos directos y piezas mecánicas a su forma canónica
 EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
+    # Error ortográfico frecuente en mensajes de WhatsApp de taller.
+    (re.compile(r"\binjector(es)?\b", re.IGNORECASE), r"inyector\1"),
     # Frenos
     (re.compile(r"\b(mordaza(s)?)\b", re.IGNORECASE), "cáliper"),
     (re.compile(r"\b(caliper(s)?)\b", re.IGNORECASE), "cáliper"),
