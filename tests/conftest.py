@@ -15,6 +15,7 @@ os.environ["JWT_SECRET_KEY"] = "test_jwt_secret_key_with_more_than_32_chars"
 os.environ["PRIVACY_SECRET_KEY"] = "test_privacy_secret_with_more_than_32_chars"
 os.environ["LOCAL_AUTH_USERNAME"] = "admin"
 os.environ["LOCAL_AUTH_PASSWORD"] = "carbot2026"
+os.environ.setdefault("META_VERIFY_TOKEN", "isolated-test-webhook-verification")
 
 import pytest
 

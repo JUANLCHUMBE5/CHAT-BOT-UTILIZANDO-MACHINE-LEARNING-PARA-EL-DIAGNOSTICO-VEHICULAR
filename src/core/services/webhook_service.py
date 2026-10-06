@@ -342,6 +342,7 @@ class WebhookService:
                             "perfil_vehiculo", "placa", "placa_posttest",
                         ):
                             contexto_placa.pop(clave, None)
+                        contexto_placa["posttest_placa_pendiente"] = True
                         conversacion.contexto = contexto_placa
                         respuesta_cancelar = (
                             "🛑 Consulta cancelada. El historial anterior se conserva.\n\n"

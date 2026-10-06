@@ -52,5 +52,5 @@ def test_rate_limiter_reset_header():
     """T1-RATELIMIT: Rate limiter handles request limit cycle gracefully."""
     token = crear_jwt_token(sub="reset_user")
     headers = {"Authorization": f"Bearer {token}"}
-    response = client.post("/api/v1/diagnostico/analizar", json={"sintoma": "luces parpadean", "placa": "TEST-RL2"}, headers=headers)
+    response = client.post("/api/v1/diagnostico/analizar", json={"sintoma": "luces parpadean", "placa": "TST003"}, headers=headers)
     assert response.status_code in (200, 429)

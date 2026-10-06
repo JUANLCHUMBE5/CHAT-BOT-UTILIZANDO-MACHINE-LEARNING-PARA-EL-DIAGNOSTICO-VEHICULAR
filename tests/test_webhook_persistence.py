@@ -215,7 +215,7 @@ async def test_consulta_tecnica_autorizada_no_crea_diagnostico(setup_test_db):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="qué potencia deben tener los focos LED H4 para una Suzuki APV",
-        placa="TEST-INFO1",
+        placa="INF001",
     )
 
     assert resultado["status"] == "consulta_tecnica"
@@ -246,7 +246,7 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="El carro vibra al acelerar en subida",
-        placa="TEST-DUP1",
+        placa="DUP001",
     )
     assert res1["status"] in ("completado", "aclaracion")
 
@@ -256,7 +256,7 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
         texto_cliente="El carro vibra al acelerar en subida",
-        placa="TEST-DUP1",
+        placa="DUP001",
     )
     assert res2["status"] == "duplicado_ignorado"
     assert res2["meta_message_id"] == meta_msg_id

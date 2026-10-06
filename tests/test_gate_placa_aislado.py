@@ -78,11 +78,13 @@ async def test_placa_sintoma_cancelar_nueva_placa_sin_bd_ni_envio(monkeypatch, s
     assert "preplate_pending_input" not in conversacion.contexto
     assert conversacion.contexto["conversation_state"]["active_system"] == "refrigeracion"
     await turno("Cancelar")
-    limpio = conversacion.contexto["conversation_state"]
-    assert limpio["active_system"] is None
-    assert not limpio["hechos"]
+    assert "conversation_state" not in conversacion.contexto
+    assert "preplate_pending_input" not in conversacion.contexto
+    assert "placa" not in conversacion.contexto
     await turno("XYZ789")
     assert conversacion.contexto["placa"] == "XYZ789"
+    perfil = await turno("Toyota Yaris 2020")
+    assert perfil["status"] == "esperando_sintoma"
     nuevo = await turno("El motor tiembla en ralentí")
     assert nuevo["status"] == "completado"
     assert conversacion.contexto["conversation_state"]["active_system"] == "encendido"
