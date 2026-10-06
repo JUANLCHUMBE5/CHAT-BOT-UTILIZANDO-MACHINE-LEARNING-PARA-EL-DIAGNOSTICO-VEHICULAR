@@ -374,6 +374,7 @@ class ConversationState:
         anterior = self.hechos.get(campo)
         if anterior and anterior.estado == FactState.CONFIRMADO and anterior.valor != valor:
             anterior.estado = FactState.CORREGIDO
+            self.hechos_historicos.append(anterior.to_dict())
         hecho = DiagnosticFact(
             campo=campo, valor=valor, estado=estado, turno_origen=self.turno_actual,
             confianza=confianza, texto_crudo=texto_crudo, categoria=categoria, tipo=tipo,
@@ -663,6 +664,7 @@ class ConversationState:
             "conversation_evidence_level": self.conversation_evidence_level.value,
             "dtc_status": self.dtc_status.value,
             "top3_actual": list(self.top3_actual),
+            "falla_principal": self.falla_principal,
             "hechos": {k: v.to_dict() for k, v in self.hechos.items()},
             "hechos_historicos": list(self.hechos_historicos),
             "herramientas_no_disponibles": list(self.herramientas_no_disponibles),
@@ -701,6 +703,7 @@ class ConversationState:
             created_at=float(data.get("created_at", time.time())),
             updated_at=float(data.get("updated_at", time.time())),
         )
+        state.falla_principal = data.get("falla_principal")
         state.active_problem_id = data.get("active_problem_id")
         state.active_system = data.get("active_system")
         state.active_symptoms = list(data.get("active_symptoms") or [])

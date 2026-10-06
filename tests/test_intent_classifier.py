@@ -34,6 +34,20 @@ def test_pedal_de_freno_hundiendose_es_diagnostico_y_no_consulta_tecnica():
 
 
 @pytest.mark.parametrize(
+    "mensaje",
+    [
+        "Por qué mi vehículo Nissan Versa arroja en el escáner mezcla pobre en el sistema",
+        "Encontré que los inyectores no inyectan lo suficiente",
+        "Tengo problemas con la carga absoluta, esta fueron de rango",
+        "El sensor de oxígeno se queda en 0.1",
+    ],
+)
+def test_reportes_de_mezcla_inyectores_map_y_o2_son_diagnosticos(mensaje):
+    normalizado = normalizar_jerga_peruana(mensaje)
+    assert clasificar_intencion_consulta(normalizado) == "diagnostico"
+
+
+@pytest.mark.parametrize(
     ("pregunta", "intencion_esperada"),
     [
         ("¿A cuántas libras se calibra la bujía?", "consulta_tecnica"),

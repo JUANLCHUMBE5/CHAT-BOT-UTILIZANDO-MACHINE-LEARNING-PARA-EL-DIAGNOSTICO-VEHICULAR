@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 from typing import Any, Dict, Optional
 
@@ -64,6 +65,38 @@ class OrquestadorConversacion:
         estado = await self.repositorio.get_session(session_id)
         if estado is None:
             estado = ConversationState(session_id=session_id)
+
+        es_opcion_menu = texto_limpio.isdecimal() and len(texto_limpio) <= 2
+        es_menu = texto_limpio.casefold() in {"menu", "menú"}
+        pregunta_sin_respuesta = (
+            bool(estado.preguntas_realizadas)
+            and len(estado.respuestas_obtenidas) < len(estado.preguntas_realizadas)
+        )
+        if (
+            not texto_limpio
+            or not any(caracter.isalnum() for caracter in texto_limpio)
+            or es_menu
+            or (
+                es_opcion_menu
+                and not estado.pending_question
+                and not estado.top3_actual
+                and not pregunta_sin_respuesta
+            )
+        ):
+            return {
+                "status": "entrada_insuficiente",
+                "respuesta_texto": (
+                    "No recibí un síntoma que pueda evaluar. Describe qué falla presenta el vehículo."
+                ),
+                "diagnostico_ml": "Entrada insuficiente",
+                "confianza_ml": 0.0,
+                "fase": estado.fase.value,
+                "es_pregunta": True,
+                "decision": "PEDIR_TEXTO",
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
+            }
+
         if not estado.case_id:
             import uuid
             estado.case_id = str(uuid.uuid4())
@@ -86,29 +119,57 @@ class OrquestadorConversacion:
             await self.repositorio.reset_session(session_id)
             if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager:
                 gestor_diagnostico.session_manager.reiniciar_sesion(session_id)
-            resp_reinicio = (
-                "🚗 *Caso finalizado.* He limpiado la memoria para registrar un nuevo vehículo.\n\n"
-                "¿Cuál es la marca, modelo y la falla o síntoma que presenta el nuevo auto?"
-            )
+            if ExtractorHechos.es_cancelacion_solicitada(texto_limpio):
+                resp_reinicio = (
+                    "🚗 *Caso cancelado.* He limpiado la memoria y no continuaré con este diagnóstico. "
+                    "Cuando quieras iniciar otro, envía la placa del vehículo."
+                )
+            else:
+                resp_reinicio = (
+                    "🚗 *Caso anterior cerrado.* La memoria está limpia para otro problema.\n\n"
+                    "Envía la placa y el síntoma del nuevo vehículo."
+                )
             return {
                 "status": "reinicio", "respuesta_texto": resp_reinicio, "diagnostico_ml": "Reinicio de sesión",
                 "confianza_ml": 1.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "REINICIO",
                 "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": ConversationState(session_id=session_id),
             }
 
-        # 2.1 Detección de saludo inicial ("hola", "buenas", "buenos días")
+        # 2.1 Detección de saludo ("hola", "buenas", "buenos días")
         if ExtractorHechos.es_saludo(texto_limpio):
-            if estado.fase == ConversationPhase.RESULTADO or not estado.hechos:
-                estado.iniciar_nuevo_caso()
-            resp_saludo = (
-                "👋 *¡Hola! Soy CarBot, chatbot de diagnóstico vehicular con Inteligencia Artificial.*\n\n"
-                "¿En qué te puedo ayudar hoy o qué falla presenta el auto? Para empezar, cuéntame el problema o síntomas que notas."
+            tiene_caso_activo = bool(
+                estado.placa
+                or estado.hechos
+                or estado.active_symptoms
+                or estado.completed_tests
+                or (estado.fase != ConversationPhase.INICIO and estado.fase != ConversationPhase.RESULTADO)
             )
-            return {
-                "status": "saludo", "respuesta_texto": resp_saludo, "diagnostico_ml": "Saludo / Bienvenida",
-                "confianza_ml": 1.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "SALUDO",
-                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
-            }
+            if not tiene_caso_activo:
+                if estado.fase == ConversationPhase.RESULTADO or not estado.hechos:
+                    estado.iniciar_nuevo_caso()
+                resp_saludo = (
+                    "👋 *¡Hola! Soy CarBot, chatbot de diagnóstico vehicular con Inteligencia Artificial.*\n\n"
+                    "¿En qué te puedo ayudar hoy o qué falla presenta el auto? Para empezar, cuéntame el problema o síntomas que notas."
+                )
+                return {
+                    "status": "saludo", "respuesta_texto": resp_saludo, "diagnostico_ml": "Saludo / Bienvenida",
+                    "confianza_ml": 1.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "SALUDO",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                }
+            else:
+                # Caso activo: preservar memoria de sesión y placa intactas
+                placa_txt = f" del vehículo con placa *{estado.placa}*" if estado.placa else ""
+                resp_saludo = (
+                    f"👋 *¡Hola! Continuamos con el diagnóstico activo{placa_txt}.*\n\n"
+                    "Cuéntame si tienes más síntomas que agregar o responde a la última indicación para continuar."
+                )
+                return {
+                    "status": "saludo_caso_activo", "respuesta_texto": resp_saludo,
+                    "diagnostico_ml": "Saludo en caso activo",
+                    "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
+                    "es_pregunta": False, "decision": "SALUDO",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                }
 
         # 2.2 Solicitud de profundización técnica ("más detalles", "cómo lo reviso")
         if ExtractorHechos.es_solicitud_detalle(texto_limpio) and (estado.top3_actual or getattr(estado, "falla_principal", None)):
@@ -181,6 +242,28 @@ class OrquestadorConversacion:
         if interpretacion_corta and "hecho" in interpretacion_corta:
             hechos_extraidos.append(interpretacion_corta["hecho"])
 
+        if texto_limpio not in estado.historial_mensajes_usuario:
+            estado.historial_mensajes_usuario.append(texto_limpio)
+        from src.core.diagnostico.enrutador_sistema import resolver_sistema_activo
+
+        texto_ruteo = texto_limpio
+        if estado.active_system == "ambiguo":
+            texto_ruteo = " ".join(estado.historial_mensajes_usuario[-2:])
+        estado.active_system = resolver_sistema_activo(texto_ruteo, estado.active_system)
+        from src.core.conversacion.revision_mezcla import registrar_revision_mezcla
+
+        revision_mezcla = registrar_revision_mezcla(estado, texto_limpio)
+        if revision_mezcla:
+            hechos_extraidos.append(revision_mezcla)
+            # La referencia ya fue resuelta contra una pieza concreta; avanzar
+            # con su descarte en lugar de una aclaración o medición genérica.
+            if interpretacion_corta and interpretacion_corta.get("categoria_respuesta") in (
+                "REVISION_AMBIGUA", "DIAGNOSTICO_DESCARTADO",
+            ):
+                interpretacion_corta = None
+        if hechos_extraidos and texto_limpio not in estado.active_symptoms:
+            estado.active_symptoms.append(texto_limpio)
+
         # Detección de evidencia duplicada (Fase 11.3 - Caso D / T04)
         es_evidencia_duplicada = False
         if hechos_extraidos and estado.top3_actual:
@@ -243,6 +326,47 @@ class OrquestadorConversacion:
 
         # 5. Evaluación de suficiencia de información
         score, categorias_vistas, es_suficiente, motivo_suficiencia = EvaluadorSuficiencia.evaluar(estado)
+        medicion_area_pendiente = GeneradorPreguntas.falta_medicion_discriminante_por_area(estado)
+        if (
+            estado.obtener_hecho("revision_concreta_mezcla")
+            and not estado.obtener_hecho("caudal_inyectores_reportado")
+            and not any(
+                hecho.categoria == "dtc"
+                or re.search(r"\b(?:STFT|LTFT)\b.*\d", f"{hecho.campo} {hecho.valor}", re.IGNORECASE)
+                for hecho in estado.hechos.values()
+            )
+        ):
+            es_suficiente = False
+            motivo_suficiencia = "Revisión concreta registrada: avanzar a otra comprobación del mismo sistema"
+        texto_historial_normalizado = " ".join(estado.historial_mensajes_usuario).lower()
+        if (
+            estado.active_system == "electrico_ecu"
+            and re.search(
+                r"(?:cambie|cambio|cambiar|cambiaron|reemplazaron|reemplazo).{0,45}"
+                r"(?:ecu|computadora)",
+                texto_historial_normalizado,
+            )
+        ):
+            es_suficiente = False
+            motivo_suficiencia = "Antecedente de reemplazo ECU y error de codificación requiere comprobación específica"
+        if "sensor_maf_lectura_anomala_reportada" in estado.hechos:
+            es_suficiente = False
+            motivo_suficiencia = "Hallazgo MAF explícito requiere seguimiento específico del sensor"
+        if (
+            estado.active_system == "ambiguo"
+            and re.search(r"\b500\s*rpm\b", texto_historial_normalizado)
+            and not re.search(
+                r"\b(?:tiembla|vibra|misfire|ratea|cabecea)\b",
+                " ".join(estado.historial_mensajes_usuario).lower(),
+            )
+        ):
+            es_suficiente = False
+            motivo_suficiencia = "RPM baja sin síntomas discriminantes: solicitar contexto antes de clasificar"
+        if medicion_area_pendiente:
+            es_suficiente = False
+            motivo_suficiencia = (
+                "Falta la lectura técnica mínima para confirmar la ruta explícita de mezcla o MAP"
+            )
 
         # 6. Reconstrucción de la consulta clínica consolidada y protección con guardia de contexto
         consulta_consolidada = SintetizadorConsulta.sintetizar(estado)
@@ -271,8 +395,73 @@ class OrquestadorConversacion:
             valor_ic = str(interpretacion_corta.get("valor", "")).upper()
             cat_ic = interpretacion_corta.get("categoria_respuesta", "")
 
-            # 0.1 Activación de Plan B ante herramientas no disponibles o falta de procedimiento/conocimiento
-            if (
+            if cat_ic == "REVISION_AMBIGUA":
+                pregunta_elegida = (
+                    "Entiendo que ya revisaste algo y está bien. Para actualizar este caso sin asumir: "
+                    "¿qué componente o prueba revisaste y cuál fue el resultado concreto?"
+                )
+                intent_elegido = QuestionIntent.COMPONENTE_REVISADO.value
+                estado.registrar_pregunta(
+                    intent=QuestionIntent.COMPONENTE_REVISADO,
+                    texto=pregunta_elegida,
+                    incrementar_repregunta=False,
+                )
+                decision = "PREGUNTAR"
+                motivo_decision = "Resultado de revisión sin componente identificable: solicitando aclaración sin repetir hipótesis"
+                respuesta_texto = pregunta_elegida
+                es_pregunta = True
+            elif cat_ic == "DIAGNOSTICO_CONFIRMADO":
+                respuesta_texto = (
+                    "Gracias, registré que la hipótesis principal fue confirmada por tu respuesta. "
+                    "Si identificaste una falla física específica, indícala para dejarla diferenciada."
+                )
+                decision = "CONFIRMACION"
+                motivo_decision = "Respuesta afirmativa vinculada a la pregunta de validación del diagnóstico"
+            elif valor_ic == "NO" and "sensor_maf_lectura_anomala_reportada" in estado.hechos:
+                respuesta_texto = (
+                    "Entiendo. Mantengo el hallazgo del MAF sin darlo por confirmado. Revisa primero "
+                    "conector/cableado y compara su señal o flujo en datos en vivo; si no puedes leerlo, "
+                    "inspecciona también una posible entrada de aire no medida. ¿Qué resultado obtienes?"
+                )
+                decision = "PREGUNTAR"
+                motivo_decision = "Respuesta negativa: conservar hallazgo MAF y avanzar en admisión"
+                pregunta_elegida = respuesta_texto
+                intent_elegido = QuestionIntent.MEDICION_TECNICA.value
+                estado.registrar_pregunta(
+                    intent=QuestionIntent.MEDICION_TECNICA,
+                    texto=pregunta_elegida,
+                    incrementar_repregunta=False,
+                )
+                es_pregunta = True
+            elif cat_ic == "DIAGNOSTICO_DESCARTADO":
+                falla_descartada = str(
+                    interpretacion_corta.get("diagnostico") or estado.falla_principal or ""
+                )
+                if falla_descartada and falla_descartada not in estado.hipotesis_descartadas:
+                    estado.hipotesis_descartadas.append(falla_descartada)
+                pregunta_especifica, intent_especifico = (
+                    GeneradorPreguntas.formular_pregunta_discriminante_post_descarte(
+                        estado,
+                        falla_descartada,
+                    )
+                )
+                respuesta_texto = (
+                    "Entendido: descarto esa hipótesis por ahora. "
+                    "Para seguir en el mismo sistema: " + pregunta_especifica
+                )
+                decision = "PREGUNTAR"
+                motivo_decision = "Respuesta negativa vinculada al diagnóstico; solicitando hallazgo sin reiniciar el caso"
+                pregunta_elegida = respuesta_texto
+                intent_elegido = intent_especifico.value
+                estado.registrar_pregunta(
+                    intent=intent_especifico,
+                    texto=pregunta_elegida,
+                    incrementar_repregunta=False,
+                )
+                es_pregunta = True
+
+            # Activación de Plan B ante herramientas no disponibles o falta de procedimiento/conocimiento
+            elif (
                 cat_ic in ("HERRAMIENTA_INDISPONIBLE", "NO_SABE_REALIZAR_PRUEBA", "NO_REVISADO")
                 or (valor_ic == "NO" and campo_ic and "disponible" in campo_ic)
             ):
@@ -308,6 +497,42 @@ class OrquestadorConversacion:
                     )
                     intent_elegido, decision = QuestionIntent.PLAN_B_SIN_HERRAMIENTAS.value, "PLAN_B"
                     motivo_decision = "Sin método ni comprobación observable viable: orientando a derivación profesional"
+                elif cat_ic == "NO_REVISADO":
+                    from src.core.diagnostico.enrutador_sistema import detectar_areas_tecnicas
+
+                    areas_actuales = detectar_areas_tecnicas(
+                        " ".join(estado.historial_mensajes_usuario)
+                    )
+                    if "sensor_maf_lectura_anomala_reportada" in estado.hechos:
+                        respuesta_texto = (
+                            "Entiendo que no tienes la lectura. El hallazgo sigue siendo del MAF, no "
+                            "lo doy por confirmado ni lo cambio por MAP/STFT. Como siguiente paso, "
+                            "revisa conector y cableado del MAF y busca una entrada de aire no medida. "
+                            "¿Encontraste conexión floja, daño o fuga visible?"
+                        )
+                    elif estado.obtener_hecho("caudal_inyectores_reportado"):
+                        respuesta_texto = (
+                            "Entiendo que aún no tienes resultados de la comprobación. Mantengo "
+                            "el hallazgo de inyectores sin confirmar ni descartar la predicción ML. "
+                            "¿Se comprobó el caudal/patrón de pulverización de cada inyector y su "
+                            "alimentación eléctrica, o solo se observó que inyectan poco?"
+                        )
+                    elif "ADMISION_MAP" in areas_actuales:
+                        respuesta_texto = (
+                            "Queda pendiente la medición del MAP. Cuando tengas el valor "
+                            "de presión MAP en kPa, con la condición del motor, envíalo para continuar. "
+                            "La carga calculada (%) y el flujo MAF (g/s) son datos distintos. Sin esa lectura "
+                            "no confirmaré una causa."
+                        )
+                    else:
+                        respuesta_texto = (
+                            "Entendido. Sin esa lectura o comprobación no puedo confirmar una causa "
+                            "ni repetir hipótesis como si fueran evidencia. Dejo pendiente este mismo "
+                            "caso; cuando tengas el dato del área consultada, compártelo y continúo "
+                            "desde aquí."
+                        )
+                    decision = "PREGUNTAR" if estado.obtener_hecho("caudal_inyectores_reportado") else "CONCLUSION_TECNICA"
+                    motivo_decision = "Medición solicitada no disponible: se conserva el caso sin volver a clasificar"
 
             # 0.2 Herramienta disponible confirmada: solicitar medición técnica
             elif cat_ic == "HERRAMIENTA_RECUPERADA" or (valor_ic == "SI" and campo_ic and "disponible" in campo_ic):
@@ -322,9 +547,17 @@ class OrquestadorConversacion:
                         related_system="COMBUSTIBLE",
                     )
                 elif campo_ic and "chispa" in campo_ic:
-                    pregunta_elegida = "Con el probador de chispa conectado: ¿se observa salto constante de chispa azulada al dar arranque?"
-                    intent_elegido, decision = QuestionIntent.COMPONENTE_REVISADO.value, "PREGUNTAR"
-                    motivo_decision = "Usuario cuenta con probador de chispa: solicitando comprobación"
+                    if "prueba_chispa" not in estado.completed_tests:
+                        pregunta_elegida = "Con el probador de chispa conectado: ¿se observa salto constante de chispa azulada al dar arranque?"
+                        intent_elegido, decision = QuestionIntent.COMPONENTE_REVISADO.value, "PREGUNTAR"
+                        motivo_decision = "Usuario cuenta con probador de chispa: solicitando comprobación"
+                        estado.establecer_pregunta_pendiente(
+                            intent=QuestionIntent.COMPONENTE_REVISADO,
+                            expected_quantity="resultado_prueba_chispa",
+                            related_system="ENCENDIDO",
+                        )
+                    else:
+                        motivo_decision = "Prueba de chispa ya completada: evitando repetición de la comprobación"
                 else:
                     pregunta_elegida = "Con el multímetro conectado en escala de 20 V DC: ¿cuánto marca en reposo y a cuánto baja al dar arranque?"
                     intent_elegido, decision = QuestionIntent.MEDICION_VOLTAJE.value, "PREGUNTAR"
@@ -335,6 +568,16 @@ class OrquestadorConversacion:
                         expected_units=["V", "mV"],
                         related_system="ELECTRICO",
                     )
+
+            if (
+                pregunta_elegida
+                and "probador de chispa" in pregunta_elegida.lower()
+                and "prueba_chispa" in estado.completed_tests
+            ):
+                pregunta_elegida = None
+                intent_elegido = None
+                decision = "DIAGNOSTICAR"
+                motivo_decision = "Prueba de chispa ya completada: pregunta repetida bloqueada"
 
             if pregunta_elegida and intent_elegido and not respuesta_texto:
                 estado.registrar_pregunta(intent=QuestionIntent(intent_elegido), texto=pregunta_elegida, incrementar_repregunta=False)
@@ -423,8 +666,58 @@ class OrquestadorConversacion:
 
         # Caso A: Información insuficiente y aún con margen de repregunta (< 3)
         if not respuesta_texto and not es_suficiente and not falla_forzada_alternativa and estado.turnos_repregunta < estado.max_repreguntas:
-            seleccion = GeneradorPreguntas.seleccionar_pregunta_con_filtro(estado)
-            if seleccion:
+            seleccion_area = GeneradorPreguntas.pregunta_por_area(estado)
+            if seleccion_area:
+                pregunta_elegida, intent_elegido = seleccion_area
+                opciones_preg = []
+                candidatas_traza = []
+                descartadas_traza = []
+                estado.registrar_pregunta(
+                    intent=intent_elegido,
+                    texto=pregunta_elegida,
+                    incrementar_repregunta=False,
+                )
+                decision = "PREGUNTAR"
+                motivo_decision = "Señal técnica explícita: solicitando una medición de la misma categoría"
+                respuesta_texto = pregunta_elegida
+                es_pregunta = True
+            else:
+                from src.core.diagnostico.enrutador_sistema import detectar_areas_tecnicas
+
+                areas_explicitas = detectar_areas_tecnicas(" ".join(estado.historial_mensajes_usuario))
+                if areas_explicitas:
+                    if medicion_area_pendiente:
+                        if "ADMISION_MAP" in areas_explicitas:
+                            respuesta_texto = (
+                                "Queda pendiente la medición del MAP. Cuando tengas el valor "
+                                "de presión MAP en kPa, con la condición del motor, envíalo para continuar. "
+                                "La carga calculada (%) y el flujo MAF (g/s) son datos distintos. Sin esa lectura "
+                                "no confirmaré una causa."
+                            )
+                            motivo_decision = "Lectura MAP ausente: mantener el caso pendiente sin confirmar causa"
+                        else:
+                            respuesta_texto = (
+                                "La mezcla sigue pendiente de una medición objetiva: envía el DTC exacto "
+                                "o los valores STFT/LTFT cuando los tengas. No confirmaré una causa sin ese dato."
+                            )
+                            motivo_decision = "Evidencia de mezcla insuficiente: mantener el caso pendiente"
+                        decision = "PENDIENTE_MEDICION"
+                        es_pregunta = False
+                        seleccion = None
+                    else:
+                    # Si ya se pidió la medición del área, no sustituirla por
+                    # preguntas genéricas de temperatura/frenado; avanzar con
+                    # abstención ML y apoyo RAG/LLM dentro de la categoría.
+                        es_suficiente = True
+                        motivo_suficiencia = (
+                            "El caso ya tiene una categoría técnica explícita; evitando una repregunta ajena"
+                        )
+                        seleccion = None
+                else:
+                    seleccion = GeneradorPreguntas.seleccionar_pregunta_con_filtro(estado)
+            if seleccion_area:
+                pass
+            elif seleccion:
                 txt_preg, opciones_preg, intent_preg, candidatas_traza, descartadas_traza = seleccion
                 estado.registrar_pregunta(
                     intent=intent_preg,
@@ -510,10 +803,49 @@ class OrquestadorConversacion:
             respuesta_texto = FormateadorCompacto.formatear_respuesta_diagnostico(
                 top_hipotesis=hipotesis_formatear,
                 sintoma_original=texto_limpio,
-                contexto_rag=getattr(dto_resultado, "contexto_manual", "") or "",
+                contexto_rag=getattr(dto_resultado, "contexto_manual_verificado", "") or "",
                 pregunta_personalizada=preg_ctx,
                 estado=estado,
             )
+            respuesta_texto = FormateadorCompacto.integrar_respuesta_llm(
+                respuesta_llm=getattr(dto_resultado, "respuesta_texto", ""),
+                respuesta_determinista=respuesta_texto,
+                llm_usado=getattr(dto_resultado, "llm_usado", False) is True,
+                respuesta_limitada=getattr(dto_resultado, "respuesta_limitada", False) is True,
+            )
+            hallazgo_inyectores = estado.obtener_hecho("caudal_inyectores_reportado")
+            if hallazgo_inyectores and not (
+                estado.top3_actual and "inyector" in estado.top3_actual[0].get("falla", "").lower()
+            ):
+                respuesta_texto = (
+                    "Tomo como hallazgo reportado que los inyectores no entregan caudal suficiente; "
+                    "todavía no lo doy por confirmado. Prioricemos una prueba de balance/caudal de "
+                    "inyectores y la presión/alimentación de combustible. ¿Tienes el resultado de "
+                    "alguna de esas comprobaciones?"
+                )
+                decision = "PREGUNTAR"
+                motivo_decision = "Hallazgo explícito de inyectores priorizado ante salida ML no pertinente"
+                estado.registrar_pregunta(
+                    intent=QuestionIntent.MEDICION_TECNICA,
+                    texto=respuesta_texto,
+                    incrementar_repregunta=False,
+                )
+                pregunta_elegida = respuesta_texto
+                intent_elegido = QuestionIntent.MEDICION_TECNICA.value
+                es_pregunta = True
+                # La revisión solicita resultados del hallazgo mostrado, no
+                # valida el Top-1 ML (que se conserva intacto en dto/traza RAW).
+                estado.registrar_hecho(
+                    "hipotesis_en_evaluacion", "Caudal insuficiente de inyectores (hallazgo reportado)",
+                    categoria="flujo", texto_crudo=hallazgo_inyectores.texto_crudo,
+                    tipo=FactType.CONDICION,
+                )
+                estado.top3_actual = []
+                estado.falla_principal = "Caudal insuficiente de inyectores (hallazgo reportado)"
+                estado.confianza_actual = 0.0
+                preg_ctx = respuesta_texto
+                intent_ctx = QuestionIntent.MEDICION_TECNICA
+                hipotesis_formatear = []
             if es_caso_b:
                 decision = "DIFERENCIAL"
                 motivo_decision = "Límite de 3 repreguntas alcanzado: forzando diagnóstico diferencial"
@@ -534,6 +866,17 @@ class OrquestadorConversacion:
                 es_pregunta = True
 
         # 8. Transición formal en la máquina de estados
+        from src.core.conversacion.avance_preguntas import asegurar_pregunta_util
+
+        respuesta_texto, pregunta_final_real = asegurar_pregunta_util(
+            estado, respuesta_texto, contexto_previo.get("preguntas_realizadas", []),
+        )
+        if pregunta_final_real:
+            pregunta_elegida = pregunta_final_real
+            es_pregunta = True
+        elif not re.search(r"¿[^?]*\?", respuesta_texto):
+            es_pregunta = False
+            pregunta_elegida = None
         MaquinaEstadosConversacion.transicionar(
             estado=estado,
             es_reinicio=False,
@@ -573,7 +916,10 @@ class OrquestadorConversacion:
             estado.trazabilidad = estado.trazabilidad[-15:]
 
         # 10. Persistir estado conversacional acumulativo
-        await self.repositorio.save_session(session_id, estado)
+        if diferir_encolado_persistente and hasattr(self.repositorio, "_fallback"):
+            await self.repositorio._fallback.save_session(session_id, estado)
+        else:
+            await self.repositorio.save_session(session_id, estado)
 
         elapsed_ms = round((time.perf_counter() - t0) * 1000, 2)
         logger.info(

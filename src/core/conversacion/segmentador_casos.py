@@ -99,6 +99,12 @@ class SegmentadorCasos:
             txt,
         ):
             return SubsistemaVehicular.CLIMATIZACION
+        # "En marcha" describe una condición del motor, no un cambio de vehículo/sistema.
+        if re.search(
+            r"\b(recalienta|recalentar|recalntar|refrigeraci[oó]n|refrigerante|"
+            r"temperatura\s+(?:del\s+motor\s+)?(?:sube|subiendo)|sube\s+la\s+temperatura)\b", txt,
+        ) and not re.search(r"\b(caja|transmisi[oó]n|embrague|clutch)\b", txt):
+            return SubsistemaVehicular.MARCHA_MOTOR
         if re.search(
             r"\b(caja(?:\s+de\s+cambios|\s+autom[aá]tica)?|transmisi[oó]n|embrague|clutch|"
             r"palanca(?:\s+de\s+cambios)?|selector(?:\s+de\s+marchas)?|cambio(?:s)?|marcha(?:s)?|"
@@ -460,6 +466,9 @@ class SegmentadorCasos:
         """
         nuevo_id = nuevo_case_id or str(uuid.uuid4())
         estado.archivar_caso_actual(nuevo_id)
+        estado.placa = None
+        estado.marca = None
+        estado.modelo = None
         return nuevo_id
 
     @classmethod

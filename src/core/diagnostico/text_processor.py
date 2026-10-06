@@ -12,6 +12,7 @@ from src.core.diagnostico.coherencia_evidencia import (
     bateria_ya_comprobada,
     documento_compatible,
     limitar_respuesta,
+    preparar_contexto_rag_para_llm,
     priorizar_evidencia,
 )
 from src.core.diagnostico.models import PrediccionML, ResultadoDiagnostico
@@ -21,6 +22,7 @@ from src.core.sanitizer import sanitizar_prompt_usuario
 from src.core.security import anonimizar_identificador
 from src.core.traductor_jerga import normalizar_jerga_peruana
 from src.core.vehicle_profile import (
+    es_mensaje_solo_datos_vehiculo,
     extraer_datos_vehiculo,
     extraer_datos_vehiculo_contextual,
     kilometraje_es_ambiguo,
@@ -137,6 +139,64 @@ def procesar_consulta_texto(
 
     clave_sesion = session_id or (placa if placa not in (None, "REST-API", "WAPP-01") else None)
     sesion_pendiente = gestor.session_manager.obtener_sesion(clave_sesion) if clave_sesion else None
+
+    if (
+        es_mensaje_solo_datos_vehiculo(texto_normalizado)
+        and not (sesion_pendiente and sesion_pendiente.estado == "esperando_datos_vehiculo")
+    ):
+        datos_vehiculo = extraer_datos_vehiculo(texto_normalizado)
+        if marca_modelo and marca_modelo not in ("Vehiculo Generico", "Generico", ""):
+            datos_vehiculo.update(extraer_datos_vehiculo(marca_modelo))
+        sesion_vehiculo = sesion_pendiente
+        if clave_sesion:
+            sesion_vehiculo = sesion_vehiculo or gestor.session_manager.obtener_o_crear_sesion(clave_sesion)
+            sesion_vehiculo.actualizar_perfil(datos_vehiculo)
+            perfil_texto = gestor._formatear_perfil_vehiculo(sesion_vehiculo.perfil_vehiculo)
+            marca_modelo = sesion_vehiculo.marca_modelo or marca_modelo
+        else:
+            perfil_texto = gestor._formatear_perfil_vehiculo(datos_vehiculo)
+
+        sintoma_existente = sesion_vehiculo.obtener_sintoma_completo() if sesion_vehiculo else ""
+        if sesion_vehiculo and sesion_vehiculo.estado in (
+            "esperando_autopregunta",
+            "esperando_aclaracion_sintoma",
+            "esperando_combustible",
+        ):
+            respuesta_vehiculo = (
+                f"Anoté {perfil_texto or 'los datos del vehículo'} como contexto. "
+                "Conservo la pregunta técnica pendiente; responde esa indicación para continuar."
+            )
+            return ResultadoDiagnostico(
+                respuesta_texto=respuesta_vehiculo,
+                diagnostico_ml="Dato de vehículo registrado; se conserva el paso pendiente",
+                confianza_ml=0.0,
+                contexto_manual="",
+                titulo_manual="",
+                modo_diagnostico="esperando_contexto",
+                estado_sesion=sesion_vehiculo.estado,
+                tipo_consulta="aclaracion",
+                sintoma_evaluado=sintoma_existente,
+            )
+        if not sintoma_existente:
+            return ResultadoDiagnostico(
+                respuesta_texto=(
+                    f"Anoté {perfil_texto or 'los datos del vehículo'}. "
+                    "Ahora cuéntame qué síntoma o falla presenta para iniciar el diagnóstico."
+                ),
+                diagnostico_ml="Datos de vehículo; falta describir la falla",
+                confianza_ml=0.0,
+                contexto_manual="",
+                titulo_manual="",
+                modo_diagnostico="esperando_sintoma",
+                estado_sesion="esperando_sintoma",
+                tipo_consulta="aclaracion",
+            )
+
+        texto_con_vehiculo = f"{sintoma_existente}\nDATOS CONFIRMADOS DEL VEHÍCULO: {perfil_texto}".strip()
+        sesion_vehiculo.sintomas = [texto_con_vehiculo]
+        sesion_vehiculo.estado = "en_proceso"
+        texto_normalizado = texto_con_vehiculo
+        sesion_pendiente = sesion_vehiculo
 
     if sesion_pendiente and sesion_pendiente.estado in ("esperando_autopregunta", "esperando_aclaracion_sintoma"):
         from src.core.diagnostico.auto_interrogador import (
@@ -372,6 +432,13 @@ def procesar_consulta_texto(
             )
 
             texto_evaluar = sesion.obtener_sintoma_completo()
+            perfil_recibido = extraer_datos_vehiculo(texto_evaluar)
+            if marca_modelo and marca_modelo not in ("Vehiculo Generico", "Generico", ""):
+                perfil_recibido.update(extraer_datos_vehiculo(marca_modelo))
+            if perfil_recibido:
+                sesion.actualizar_perfil(perfil_recibido)
+            marca_evaluar = marca_modelo or sesion.marca_modelo
+            placa_evaluar = placa or sesion.placa
             marca_evaluar = marca_modelo or sesion.marca_modelo
             placa_evaluar = placa or sesion.placa
     else:
@@ -498,6 +565,57 @@ def procesar_consulta_texto(
             }
         )
 
+    from src.core.diagnostico.enrutador_sistema import (
+        ETIQUETAS_AREA,
+        areas_para_sistema,
+        detectar_areas_tecnicas,
+        falla_coincide_con_areas,
+        filtrar_causas,
+        resolver_sistema_activo,
+        respuesta_menciona_causa_fuera_de_sistema,
+    )
+
+    sesion_ruteo = gestor.session_manager.obtener_sesion(clave_sesion) if clave_sesion else None
+    estado_ruteo = getattr(sesion_ruteo, "conversation_state", None)
+    texto_ruteo = texto_normalizado
+    if estado_ruteo is not None and estado_ruteo.active_system == "ambiguo":
+        texto_ruteo = " ".join(estado_ruteo.historial_mensajes_usuario[-2:]) or texto_normalizado
+    sistema_activo = resolver_sistema_activo(
+        texto_ruteo,
+        getattr(estado_ruteo, "active_system", None),
+    )
+    if estado_ruteo is not None:
+        estado_ruteo.active_system = sistema_activo
+    areas_consulta = detectar_areas_tecnicas(texto_normalizado)
+    if sistema_activo and sistema_activo != "ambiguo":
+        areas_consulta = areas_para_sistema(sistema_activo, texto_normalizado) or areas_para_sistema(
+            sistema_activo,
+            texto_evaluar,
+        )
+    elif not areas_consulta and sistema_activo is None:
+        areas_consulta = detectar_areas_tecnicas(texto_evaluar)
+    if sistema_activo == "ambiguo":
+        pregunta_aclaratoria = (
+            "Entiendo el dato de 500 rpm, pero por sí solo no identifica la causa. "
+            "¿El motor tiembla o ratea, se apaga, o solo observaste ese valor en el escáner?"
+            if re.search(r"\b500\s*rpm\b", texto_normalizado.lower())
+            else "Aún no puedo ubicar el sistema sin asumir una causa. "
+            "¿Qué síntoma concreto presenta el vehículo y en qué momento ocurre?"
+        )
+        return ResultadoDiagnostico(
+            respuesta_texto=pregunta_aclaratoria,
+            diagnostico_ml="Se requiere contexto para clasificar el sistema",
+            confianza_ml=0.0,
+            contexto_manual="",
+            titulo_manual="",
+            requiere_revision_humana=True,
+            modo_diagnostico="ruteo_ambiguo",
+            sintoma_evaluado=texto_evaluar,
+            tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
+            predicciones_ml=[],
+            predicciones_ml_raw=[],
+        )
+
     # PASO 1: Machine Learning Supervisado
     inicio_ml = time.perf_counter()
     texto_ml = gestor._purificar_sintoma_para_vectorizador_ml(texto_evaluar)
@@ -524,7 +642,11 @@ def procesar_consulta_texto(
                 PrediccionML(falla=alt_nombre, probabilidad=probs_diff[i] if i < len(probs_diff) else 0.05)
             )
     elif hasattr(gestor.modelo_ml, "predecir_top_fallas"):
-        predicciones_raw = gestor.modelo_ml.predecir_top_fallas(texto_ml, limite=3)
+        limite_candidatos = 12 if areas_consulta else 3
+        predicciones_raw = gestor.modelo_ml.predecir_top_fallas(
+            texto_ml,
+            limite=limite_candidatos,
+        )
         predicciones_ml = [PrediccionML(**item) for item in predicciones_raw]
         diagnostico_predictivo = predicciones_ml[0].falla
         confianza = predicciones_ml[0].probabilidad
@@ -532,7 +654,26 @@ def procesar_consulta_texto(
         diagnostico_predictivo, confianza = gestor.modelo_ml.predecir_falla_con_confianza(texto_ml)
         predicciones_ml = [PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza)]
 
-    predicciones_originales = [p.model_copy() for p in predicciones_ml]
+    predicciones_originales = [p.model_copy() for p in predicciones_ml[:3]]
+    motivo_enrutamiento_area = ""
+    if areas_consulta and not diagnostico_forzado:
+        compatibles_area = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
+        compatibles_area = [
+            prediccion
+            for prediccion in compatibles_area
+            if falla_coincide_con_areas(prediccion.falla, areas_consulta)
+        ]
+        if compatibles_area:
+            # Busca hasta 12 clases para no perder candidatos del área que
+            # quedaron fuera del Top-3 global. Conserva sus probabilidades SVM.
+            predicciones_ml = compatibles_area[:3]
+            diagnostico_predictivo = compatibles_area[0].falla
+            confianza = compatibles_area[0].probabilidad
+            motivo_enrutamiento_area = (
+                "Enrutamiento por señal explícita del mecánico: "
+                + ", ".join(ETIQUETAS_AREA.get(area, area) for area in areas_consulta)
+                + "; probabilidades SVM originales conservadas."
+            )
     # Especialización técnica: motor de arranque / clac seco
     es_sintoma_arrancador = any(
         p in texto_evaluar.lower()
@@ -566,6 +707,25 @@ def procesar_consulta_texto(
         if predicciones_ml:
             predicciones_ml.insert(0, PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza))
             predicciones_ml = predicciones_ml[:3]
+
+    if areas_consulta and not diagnostico_forzado:
+        # Aplicar el límite temático antes del auto-interrogador para impedir
+        # que un Top-1 ajeno dispare preguntas de otro sistema.
+        predicciones_ml = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
+        predicciones_ml = [
+            prediccion
+            for prediccion in predicciones_ml
+            if falla_coincide_con_areas(prediccion.falla, areas_consulta)
+        ][:3]
+        if not predicciones_ml:
+            etiquetas_area = ", ".join(
+                ETIQUETAS_AREA.get(area, area) for area in areas_consulta
+            )
+            diagnostico_predictivo = f"Sin hipótesis ML pertinente para {etiquetas_area}"
+            confianza = 0.0
+        else:
+            diagnostico_predictivo = predicciones_ml[0].falla
+            confianza = predicciones_ml[0].probabilidad
 
     # Especialización técnica: parpadeo de Check Engine / luz del motor bajo carga (Misfire severo)
     # Diferenciación: Componente individual reemplazado vs Sistema completo de encendido descartado
@@ -658,6 +818,11 @@ def procesar_consulta_texto(
             ya_aclarado = True
 
     predicciones_ml, motivo_prioridad = priorizar_evidencia(texto_evaluar, predicciones_ml)
+    motivo_prioridad_fisica = motivo_prioridad
+    if motivo_enrutamiento_area:
+        motivo_prioridad = "; ".join(
+            motivo for motivo in (motivo_prioridad, motivo_enrutamiento_area) if motivo
+        )
     if motivo_prioridad:
         diagnostico_predictivo = predicciones_ml[0].falla
         confianza = predicciones_ml[0].probabilidad
@@ -688,6 +853,7 @@ def procesar_consulta_texto(
         and not ya_aclarado
         and not es_critico_seguridad
         and not motivo_prioridad
+        and not (areas_consulta and not predicciones_ml)
         and not bateria_ya_comprobada(texto_evaluar)
     ):
         ses_auto = gestor.session_manager.obtener_o_crear_sesion(clave_sesion)
@@ -779,21 +945,31 @@ def procesar_consulta_texto(
         )
 
     # La fusión no debe deshacer la prioridad física ni inventar su confianza.
-    if motivo_prioridad:
+    if motivo_prioridad_fisica:
         predicciones_ml, _ = priorizar_evidencia(texto_evaluar, predicciones_originales)
         diagnostico_predictivo = predicciones_ml[0].falla
         confianza = predicciones_ml[0].probabilidad
         resultado_fusion.evidencia_confirmada.append(motivo_prioridad)
 
-    # Si la fusión cambió la hipótesis, el documento anterior ya no es evidencia aplicable.
+    # Si el RAG declara una falla específica y contradice la hipótesis fusionada,
+    # el documento deja de ser aplicable.
+    #
+    # Los procedimientos transversales/procedurales pueden tener falla=None;
+    # en ese caso NO deben descartarse únicamente por carecer de una clase ML.
+    falla_rag = (meta_rag_dict or {}).get("falla")
+    contradiccion_falla_rag = bool(
+        falla_rag
+        and diagnostico_predictivo != falla_rag
+    )
+
     if (
-        diagnostico_predictivo != (meta_rag_dict or {}).get("falla", diagnostico_predictivo)
+        contradiccion_falla_rag
         or not documento_compatible(texto_evaluar, titulo_manual, contexto_manual)
     ):
         contexto_manual, titulo_manual, similitud_rag = "", "Sin procedimiento compatible verificado", 0.0
         rag_valido = False
 
-    if confianza < 0.10:
+    if confianza < 0.10 and not areas_consulta:
         if rag_valido:
             diagnostico_predictivo = f"Hipótesis ML de baja confianza: {diagnostico_predictivo}"
             requiere_revision_humana = True
@@ -817,11 +993,34 @@ def procesar_consulta_texto(
                 tiempo_rag_ms=tiempo_rag_ms,
                 tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
             )
+    elif confianza < 0.10:
+        # Con un área técnica explícita, la abstención del SVM no debe cortar
+        # la ruta RAG/LLM. El filtro de categoría retirará antes cualquier
+        # candidato ML ajeno y el fallback solicitará evidencia pertinente.
+        requiere_revision_humana = True
     else:
         requiere_revision_humana = confianza < settings.diagnostic.confidence_threshold
 
     if rag_valido and not getattr(gestor.motor_rag, "corpus_validado", False):
         requiere_revision_humana = True
+
+    if areas_consulta and not diagnostico_forzado:
+        predicciones_en_area = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
+        predicciones_en_area = [
+            prediccion
+            for prediccion in predicciones_en_area
+            if falla_coincide_con_areas(prediccion.falla, areas_consulta)
+        ][:3]
+        if not predicciones_en_area:
+            etiquetas = ", ".join(ETIQUETAS_AREA.get(area, area) for area in areas_consulta)
+            diagnostico_predictivo = f"Sin hipótesis ML pertinente para {etiquetas}"
+            confianza = 0.0
+            predicciones_ml = []
+            requiere_revision_humana = True
+        else:
+            predicciones_ml = predicciones_en_area
+            diagnostico_predictivo = predicciones_en_area[0].falla
+            confianza = predicciones_en_area[0].probabilidad
 
     # Enriquecimiento con Catálogo Oficial DTC (18,805 códigos en SQLite)
     info_dtc_texto = ""
@@ -849,12 +1048,21 @@ def procesar_consulta_texto(
 
     # PASO 3: Gemini LLM
     inicio_llm = time.perf_counter()
+    predicciones_llm = predicciones_ml
+    diagnostico_llm = diagnostico_predictivo
+    confianza_llm = confianza
+    contexto_llm, titulo_llm = preparar_contexto_rag_para_llm(
+        contexto_manual,
+        titulo_manual,
+        meta_rag_dict,
+        bool(getattr(gestor.motor_rag, "corpus_validado", False)),
+    )
     respuesta_explicativa, uso_llm = gestor._generar_respuesta_con_metadatos(
         pregunta=texto_evaluar,
-        diagnostico_ml=diagnostico_predictivo,
-        confianza_ml=confianza,
-        contexto_manual=contexto_manual,
-        titulo_manual=titulo_manual,
+        diagnostico_ml=diagnostico_llm,
+        confianza_ml=confianza_llm,
+        contexto_manual=contexto_llm,
+        titulo_manual=titulo_llm,
         requiere_revision_humana=requiere_revision_humana,
         remitente=remitente,
         proveedor=proveedor,
@@ -863,15 +1071,45 @@ def procesar_consulta_texto(
         conversacion_id=conversacion_id,
         slot_gemini_preconcedido=slot_gemini_preconcedido,
         diferir_encolado_persistente=diferir_encolado_persistente,
-        predicciones_ml=predicciones_ml,
+        predicciones_ml=predicciones_llm,
         dtc_info=info_dtc_texto,
         perfil_vehiculo=perfil_vehiculo_str,
         evidencia_confirmada=resultado_fusion.evidencia_confirmada,
         componentes_descartados=resultado_fusion.componentes_descartados,
         datos_faltantes=resultado_fusion.datos_faltantes,
     )
+    if sistema_activo and sistema_activo != "ambiguo" and respuesta_menciona_causa_fuera_de_sistema(
+        sistema_activo,
+        respuesta_explicativa,
+        evidencia=texto_evaluar,
+    ):
+        etiqueta = {
+            "refrigeracion": "refrigeración",
+            "combustible_admision": "combustible/admisión",
+            "encendido": "encendido",
+            "frenos": "frenos",
+            "transmision": "transmisión",
+            "suspension_direccion": "suspensión/dirección",
+            "electrico_ecu": "eléctrico/ECU",
+        }.get(sistema_activo, "sistema indicado")
+        respuesta_explicativa = (
+            f"Mantendré el análisis en {etiqueta} para no mezclar causas de otros sistemas. "
+            "No hay una hipótesis compatible suficientemente sustentada todavía. "
+            "¿Qué resultado observaste en la última comprobación realizada?"
+        )
     respuesta_explicativa, respuesta_limitada = limitar_respuesta(
-        respuesta_explicativa, predicciones_ml, motivo_prioridad, sin_documento=not rag_valido,
+        respuesta_explicativa,
+        predicciones_llm,
+        motivo_prioridad,
+        # El corpus candidate_v1 actual es preliminar: aunque recupere un
+        # texto pertinente, no se presentan sus pasos como procedimiento OEM
+        # validado hasta que pase la revisión documental/mecánica.
+        sin_documento=(
+            not rag_valido
+            or not getattr(gestor.motor_rag, "corpus_validado", False)
+        ),
+        contexto_verificado=f"{contexto_llm}\n{info_dtc_texto}",
+        pregunta=texto_evaluar,
     )
     tiempo_llm_ms = max(0, int((time.perf_counter() - inicio_llm) * 1000))
 
@@ -902,6 +1140,7 @@ def procesar_consulta_texto(
         confianza_ml=confianza,
         contexto_manual=contexto_manual,
         titulo_manual=titulo_manual,
+        contexto_manual_verificado=contexto_llm,
         similitud_rag=similitud_rag,
         requiere_revision_humana=requiere_revision_humana,
         modo_diagnostico=modo,

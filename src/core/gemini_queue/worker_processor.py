@@ -17,6 +17,7 @@ from src.core.gemini_queue.db_persistence import (
 )
 from src.core.gemini_queue.models import SolicitudGeminiEncolada
 from src.core.gemini_queue.summary_formatter import crear_resumen_whatsapp
+from src.core.llm import generar_respuesta_groq
 from src.core.logger import logger
 from src.core.sanitizer import redactar_datos_sensibles_para_llm, sanitizar_prompt_usuario
 
@@ -163,6 +164,7 @@ async def procesar_solicitud_encolada(
                 metadatos = {
                     "usado": True,
                     "modelo": modelo,
+                    "proveedor": "gemini",
                     "modo": "consulta_tecnica" if solicitud.tipo_consulta == "consulta_tecnica" else "completo_ml_rag_llm",
                     "tokens_entrada": tokens_in,
                     "tokens_salida": tokens_out,
@@ -193,6 +195,18 @@ async def procesar_solicitud_encolada(
             await rate_limiter.persistir_estado_local_db()
             logger.error(f"[Gemini Worker Error] Falló llamada HTTP a Gemini: {e}")
             error_reintentable = f"Error temporal Gemini: {type(e).__name__}"
+
+    if not texto_respuesta and not forzar_degradado and settings.groq_api_key and settings.groq_chat_enabled:
+        try:
+            texto_respuesta, metadatos = await asyncio.to_thread(
+                generar_respuesta_groq,
+                prompt_sistema,
+                tipo_consulta=solicitud.tipo_consulta,
+            )
+            error_reintentable = None
+            logger.info("[Groq Worker] Respuesta generada como fallback de Gemini.")
+        except Exception as exc:
+            logger.warning(f"[Groq Worker] Fallback no disponible: {type(exc).__name__}")
 
     if error_reintentable and settings.database.enabled:
         await marcar_trabajo_reintento_db(

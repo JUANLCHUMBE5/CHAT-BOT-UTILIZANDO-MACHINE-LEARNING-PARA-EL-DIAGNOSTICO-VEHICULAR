@@ -100,7 +100,7 @@ class PathConfig(BaseModel):
     tracker_csv: Path = ML_ROOT / "data" / "tracker_diagnosticos.csv"
     manuals_dir: Path = ML_ROOT / "manuals"
     manual_file: Path = ML_ROOT / "manuals" / "manual_procedimientos.txt"
-    rag_version: str = Field(default_factory=lambda: os.getenv("CARBOT_RAG_VERSION", "baseline_f8_3").strip())
+    rag_version: str = Field(default_factory=lambda: os.getenv("CARBOT_RAG_VERSION", "candidate_v1").strip())
     model_pkl: Path = Field(default_factory=lambda: _default_model_paths()[0])
     vectorizer_pkl: Path = Field(default_factory=lambda: _default_model_paths()[1])
     modelo_sistema_pkl: Path = Field(default_factory=lambda: _default_model_paths()[2])
@@ -159,6 +159,12 @@ class AppSettings(BaseModel):
     gemini_output_price_per_million: float = _env_float("GEMINI_OUTPUT_PRICE_PER_MILLION", 2.50)
     gemini_max_requests_per_minute: int = _env_int("GEMINI_MAX_REQUESTS_PER_MINUTE", 10)
     gemini_max_requests_per_day: int = _env_int("GEMINI_MAX_REQUESTS_PER_DAY", 450)
+    groq_api_key: str = os.getenv("GROQ_API_KEY", "")
+    groq_model: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+    groq_audio_model: str = os.getenv("GROQ_AUDIO_MODEL", "whisper-large-v3-turbo")
+    groq_chat_enabled: bool = _env_bool("GROQ_CHAT_ENABLED", default=True)
+    groq_audio_enabled: bool = _env_bool("GROQ_AUDIO_ENABLED", default=True)
+    groq_timeout_seconds: int = _env_int("GROQ_TIMEOUT_SECONDS", 12)
 
     # META_ACCESS_TOKEN y META_PHONE_NUMBER_ID son los nombres preferidos.
     # TOKEN_WHATSAPP y TELEFONO_ID se mantienen como compatibilidad temporal.

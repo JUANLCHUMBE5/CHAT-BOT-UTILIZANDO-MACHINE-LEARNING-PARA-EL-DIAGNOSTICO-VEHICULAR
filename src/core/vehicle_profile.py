@@ -161,6 +161,27 @@ def extraer_datos_vehiculo_contextual(
     return datos
 
 
+def es_mensaje_solo_datos_vehiculo(texto: str) -> bool:
+    """Detecta marca/modelo/año sin convertirlos en un síntoma de avería."""
+    datos = extraer_datos_vehiculo(texto)
+    if not datos.get("marca") or not datos.get("modelo"):
+        return False
+
+    restante = _normalizar(texto)
+    for valor in (datos.get("marca"), datos.get("modelo"), datos.get("anio")):
+        if valor in (None, ""):
+            continue
+        patron = rf"(?<!\w){re.escape(_normalizar(str(valor)))}(?!\w)"
+        restante = re.sub(patron, " ", restante)
+
+    restante = re.sub(
+        r"\b(?:vehiculo|auto|carro|marca|modelo|ano|del|de|es|el|la|un|una)\b",
+        " ",
+        restante,
+    )
+    return not re.sub(r"[^a-z0-9]+", "", restante)
+
+
 def kilometraje_es_ambiguo(texto: str) -> bool:
     """Detecta cifras pequeñas que suelen representar una omisión de «mil»."""
 

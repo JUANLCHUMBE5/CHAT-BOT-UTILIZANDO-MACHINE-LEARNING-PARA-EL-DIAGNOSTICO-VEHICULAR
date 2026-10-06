@@ -183,6 +183,22 @@ class ValidationWorkflow:
         flujo_validacion = dict(contexto_conversacion.get("validacion_diagnostico") or {})
         etapa_validacion = flujo_validacion.get("etapa")
 
+        # Un Sí/No a una medición del hallazgo mostrado no valida el Top-1
+        # original guardado en BD, aunque hubiera un contexto viejo de validación.
+        estado_hilo = contexto_conversacion.get("conversation_state") or {}
+        preguntas_hilo = estado_hilo.get("preguntas_realizadas") or []
+        hallazgo_mostrado = (estado_hilo.get("hechos") or {}).get("hipotesis_en_evaluacion")
+        if (
+            tipo_mensaje == "text"
+            and texto_cliente.strip().casefold() in {"si", "sí", "no", "correcto", "negativo"}
+            and hallazgo_mostrado
+            and preguntas_hilo
+            and preguntas_hilo[-1].get("intent") != "CONFIRMACION_ALTERNATIVA"
+        ):
+            contexto_conversacion.pop("validacion_diagnostico", None)
+            conversacion.contexto = contexto_conversacion
+            return None
+
         # Si el mecánico indica que es otro carro o nuevo diagnóstico, liberar validación anterior
         if tipo_mensaje == "text" and ExtractorHechos.es_reinicio_solicitado(texto_cliente):
             contexto_conversacion.pop("validacion_diagnostico", None)
@@ -266,28 +282,57 @@ class ValidationWorkflow:
                         "diagnostico_forzado": None,
                     }
 
-                # Si no hay nueva evidencia suficiente, realizar pregunta discriminante (no mostrar Top2 ciego)
-                from src.core.conversacion.models import EstadoOperativo
-                es_arranque = getattr(estado_obj, "estado_operativo", None) == EstadoOperativo.ARRANQUE
-                if not es_arranque and estado_obj:
-                    es_arranque = any("arranc" in str(getattr(h, "valor", "")).lower() for h in estado_obj.hechos.values() if getattr(h, "categoria", "") == "sintoma")
+                # Si no hay nueva evidencia suficiente, realizar pregunta discriminante adaptativa (excluyendo hechos conocidos)
+                from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 
-                if es_arranque:
-                    respuesta_texto = (
-                        f"❌ Registrado: se descarta *{falla_descartada}*.\n\n"
-                        f"🔧 *Pregunta técnica discriminante:*\n"
-                        f"Al intentar dar arranque: ¿el motor gira con lentitud o desgano, o únicamente hace un clic seco sin que el motor gire en absoluto?\n\n"
-                        f"💬 Escribe la observación adicional o prueba realizada para reorientar el análisis."
-                    )
-                else:
-                    respuesta_texto = (
-                        f"❌ Registrado: se descarta *{falla_descartada}*.\n\n"
-                        f"🔧 *Pregunta técnica discriminante:*\n"
-                        f"Para aislar la causa real y reevaluar el diagnóstico:\n"
-                        f"¿La falla se manifiesta con el motor en ralentí o bajo aceleración en marcha? "
-                        f"¿Se detecta algún sonido (cascabeleo, silbido), humo o testigo encendido en el tablero?\n\n"
-                        f"💬 Escribe la observación adicional o prueba realizada para reorientar el análisis."
-                    )
+                pregunta_disc, intent_disc = GeneradorPreguntas.formular_pregunta_discriminante_post_descarte(
+                    estado=estado_obj,
+                    falla_descartada=falla_descartada,
+                )
+
+                # Registrar la respuesta del usuario ("NO") y la pregunta técnica discriminante formulada
+                estado_obj.registrar_respuesta(texto_cliente, interpretacion=f"Descarte de hipótesis: {falla_descartada}")
+                estado_obj.registrar_pregunta(
+                    intent=intent_disc,
+                    texto=pregunta_disc,
+                    incrementar_repregunta=False,
+                )
+
+                # Preservar atributos de caso y memoria estructurada
+                placa_activa = (
+                    estado_obj.placa
+                    or contexto_conversacion.get("placa_posttest")
+                    or contexto_conversacion.get("placa")
+                    or getattr(conversacion, "placa", None)
+                )
+                if placa_activa:
+                    estado_obj.placa = placa_activa
+                case_id_activo = (
+                    estado_obj.case_id
+                    or contexto_conversacion.get("case_id")
+                    or (str(diagnostico.id) if diagnostico else None)
+                )
+                if case_id_activo:
+                    estado_obj.case_id = str(case_id_activo)
+
+                if diagnostico and diagnostico.sintoma_original and diagnostico.sintoma_original not in estado_obj.active_symptoms:
+                    estado_obj.active_symptoms.append(diagnostico.sintoma_original)
+
+                contexto_conversacion["conversation_state"] = estado_obj.exportar_dict()
+                contexto_conversacion["estado_conversacion"] = estado_obj.exportar_dict()
+                if placa_activa:
+                    contexto_conversacion["placa"] = placa_activa
+                    contexto_conversacion["placa_posttest"] = placa_activa
+                if case_id_activo:
+                    contexto_conversacion["case_id"] = str(case_id_activo)
+
+                respuesta_texto = (
+                    f"❌ Registrado: se descarta *{falla_descartada}*.\n\n"
+                    f"🔧 *Pregunta técnica discriminante:*\n"
+                    f"Para aislar la causa real y reevaluar el diagnóstico:\n"
+                    f"{pregunta_disc}\n\n"
+                    f"💬 Escribe la observación adicional o prueba realizada para reorientar el análisis."
+                )
 
                 flujo_validacion["etapa"] = "esperando_falla_real"
                 flujo_validacion["diagnostico_id"] = str(diagnostico.id) if diagnostico else None
@@ -366,6 +411,16 @@ class ValidationWorkflow:
 
             # Si el mecánico describe nueva evidencia o responde la pregunta discriminante
             if not es_confirmacion_fisica_concreta and len(falla_real.split()) >= 2:
+                from src.core.conversacion.extractor_hechos import ExtractorHechos
+                from src.core.conversacion.models import ConversationState
+
+                raw_st = contexto_conversacion.get("conversation_state") or contexto_conversacion.get("estado_conversacion")
+                if raw_st and isinstance(raw_st, dict):
+                    estado_obj = ConversationState.from_dict(raw_st)
+                    ExtractorHechos.extraer_y_actualizar(estado_obj, falla_real)
+                    contexto_conversacion["conversation_state"] = estado_obj.exportar_dict()
+                    contexto_conversacion["estado_conversacion"] = estado_obj.exportar_dict()
+
                 contexto_conversacion.pop("validacion_diagnostico", None)
                 conversacion.contexto = contexto_conversacion
                 await session.commit()

@@ -112,10 +112,27 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     ),
     (
         "testigo check engine",
-        re.compile(r"\b(testigo\s+prendido|check\s+engine\s+encendido|luz\s+en\s+el\s+tablero)\b", re.IGNORECASE),
         re.compile(
-            r"\b(no\s+(?:aparece|hay|se\s+enciende|se\s+prende|prende)\s+(?:ninguna?\s+)?(?:luz|testigo|check|aviso)(?:\s+en\s+el\s+tablero)?|"
-            r"sin\s+luces?\s+de\s+advertencia|ninguna\s+luz\s+de\s+advertencia)\b",
+            r"\b("
+            r"(?:el\s+)?testigo(?:\s+check\s+engine)?\s+(?:est[aá]\s+)?(?:prendido|encendido|activo)"
+            r"|check\s+engine(?:\s+est[aá])?\s+(?:prendido|encendido|activo)"
+            r"|luz\s+(?:en\s+el\s+tablero|del\s+motor|del\s+check)(?:\s+est[aá])?\s+(?:prendida|encendida)?"
+            r"|testigo\s+prendido"
+            r"|check\s+engine\s+encendido"
+            r"|luz\s+en\s+el\s+tablero"
+            r")\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b("
+            r"no\s+(?:aparece|hay|se\s+enciende|se\s+prende|prende|est[aá]\s+(?:prendido|encendido))\s+(?:ninguna?\s+)?(?:el\s+|la\s+)?(?:luz|testigo|check|aviso)(?:\s+en\s+el\s+tablero)?|"
+            r"no\s+(?:tiene|muestra)\s+(?:ning[uú]n\s+)?(?:testigo|check|luz)|"
+            r"sin\s+luces?\s+de\s+advertencia|"
+            r"sin\s+testigos?|"
+            r"ninguna\s+luz\s+de\s+advertencia|"
+            r"check\s+(?:engine\s+)?apagado|"
+            r"testigo\s+apagado"
+            r")\b",
             re.IGNORECASE,
         ),
     ),

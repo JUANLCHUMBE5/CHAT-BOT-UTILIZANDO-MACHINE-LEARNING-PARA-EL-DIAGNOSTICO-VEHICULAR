@@ -93,3 +93,19 @@ def test_sin_documento_no_remite_a_manual_inexistente():
     assert limitado
     assert "manual adjunto" not in texto
     assert "No hay procedimiento compatible verificado" in texto
+
+
+@pytest.mark.parametrize(
+    ("pregunta", "espera"),
+    [
+        ("mezcla pobre e inyectores", "STFT/LTFT"),
+        ("carga absoluta del sensor MAP fuera de rango", "MAP/carga absoluta"),
+        ("ralentí bajo", "RPM"),
+    ],
+)
+def test_fallback_sin_prediccion_pide_evidencia_de_la_categoria(pregunta, espera):
+    texto, limitado = limitar_respuesta(
+        "No hay una respuesta LLM verificable.", [], pregunta=pregunta, sin_documento=True
+    )
+    assert limitado
+    assert espera in texto

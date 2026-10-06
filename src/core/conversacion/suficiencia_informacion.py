@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import List, Tuple
 
 from src.core.conversacion.models import ConversationState, EvidenceLevel, FactState
@@ -43,7 +44,11 @@ class EvaluadorSuficiencia:
             return True, f"Evidencia fuerte: DTC OBD-II confirmado ({', '.join(codigos)})"
 
         # 2. Medición técnica cuantitativa (compresión, presión de combustible, voltaje)
-        tiene_medicion = any(h.categoria == "medicion" for h in hechos_confirmados)
+        tiene_medicion = any(
+            h.categoria == "medicion"
+            and re.search(r"\d+(?:[.,]\d+)?", str(h.valor))
+            for h in hechos_confirmados
+        )
         if tiene_medicion:
             meds = [h.valor for h in hechos_confirmados if h.categoria == "medicion"]
             return True, f"Evidencia fuerte: Medición técnica confirmada ({', '.join(meds)})"

@@ -1,0 +1,10 @@
+# Usar junto al Compose productivo, nunca como reemplazo de .env o volúmenes.
+# Override controlado: Gemini para texto; sin fallback Groq y sin Alembic al arrancar.
+services:
+  api:
+    environment:
+      GROQ_CHAT_ENABLED: 'false'
+    command: ['uvicorn', 'main:app', '--host', '0.0.0.0', '--port', '8000', '--proxy-headers']
+  worker:
+    environment:
+      GROQ_CHAT_ENABLED: 'false'
