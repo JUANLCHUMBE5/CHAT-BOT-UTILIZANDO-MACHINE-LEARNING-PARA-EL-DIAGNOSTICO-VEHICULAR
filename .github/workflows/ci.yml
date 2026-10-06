@@ -35,6 +35,7 @@ jobs:
       JWT_SECRET_KEY: ci_jwt_secret_only_not_for_production_123456789
       PRIVACY_SECRET_KEY: ci_privacy_secret_only_not_for_production_123456
       META_APP_SECRET: ci_meta_secret
+      META_VERIFY_TOKEN: ${{ github.run_id }}-isolated-verification
       ML_ROOT: ${{ github.workspace }}/ml/machine_learning
       PYTHONPATH: ${{ github.workspace }}/backend:${{ github.workspace }}/ml:${{ github.workspace }}/ml/machine_learning
     defaults:

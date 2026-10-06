@@ -77,6 +77,17 @@ class GeneradorPreguntas:
             )
 
         if intent == QuestionIntent.PRESENCIA_RUIDO:
+            # Conocer que hay ruido no identifica aún su carácter acústico.
+            # En suspensión se necesita distinguir golpe/rebote/cascabeleo,
+            # sin volver a preguntar una discriminante ya realizada.
+            if estado.dominio_probable == "SUSPENSION" and not estado.ya_preguntado(intent):
+                return any(
+                    any(token in str(h.valor).lower() for token in (
+                        "golpe seco", "cascabeleo metálico", "crujido", "rebote continuo",
+                    ))
+                    for h in estado.hechos.values()
+                    if h.estado == FactState.CONFIRMADO
+                )
             return (
                 estado.obtener_hecho("ruido_arranque") is not None
                 or estado.obtener_hecho("presencia_ruido") is not None

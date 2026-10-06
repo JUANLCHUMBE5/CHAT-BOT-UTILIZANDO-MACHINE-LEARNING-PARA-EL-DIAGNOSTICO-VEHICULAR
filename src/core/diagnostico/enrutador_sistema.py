@@ -65,6 +65,7 @@ _REGLAS: dict[str, tuple[str, ...]] = {
         r"\b(?:timon|volante)\s+vibra\b.{0,35}\b(?:\d{2,3}\s*km/?h|velocidad)\b",
     ),
     "ELECTRICO_ECU": (
+        r"\balternador\b", r"\bbateria\s+(?:se\s+)?descarga\w*\b",
         r"\b(?:ecu|computadora)\s+(?:incompatible|de\s+otra\s+version|no\s+comunica)\b",
         r"\b(?:cambie|cambio|cambiar|cambiaron|reemplazaron|reemplazo)\s+(?:la\s+)?(?:ecu|computadora)\b",
         r"\b(?:error|falla)\s+(?:de\s+)?codificacion\b",
@@ -91,7 +92,7 @@ _TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
     "SUSPENSION_DIRECCION": (
         "suspension", "direccion", "amortiguador", "rotula", "desbalanceo", "alineacion", "bache",
     ),
-    "ELECTRICO_ECU": ("ecu", "computadora", "red can", "corto electrico", "comunicacion electrica"),
+    "ELECTRICO_ECU": ("ecu", "computadora", "red can", "corto electrico", "comunicacion electrica", "alternador", "bateria"),
 }
 ETIQUETAS_AREA = {
     "INYECCION_MEZCLA": "inyección / mezcla",
@@ -137,7 +138,7 @@ _MARCADORES_CAUSA = {
     "frenos": ("freno", "pastilla", "disco", "abs", "liquido de freno"),
     "transmision": ("embrague", "transmision", "transmisión", "caja", "sincronizador", "collarin"),
     "suspension_direccion": ("suspension", "suspensión", "direccion", "dirección", "llanta", "alineacion", "rotula", "amortiguador"),
-    "electrico_ecu": ("ecu", "computadora", "corto", "can", "cableado", "masa electrica", "eléctrica"),
+    "electrico_ecu": ("ecu", "computadora", "corto", "can", "cableado", "masa electrica", "eléctrica", "alternador", "bateria", "bornes"),
 }
 
 _CAUSAS_PROHIBIDAS = {
@@ -332,6 +333,10 @@ def filtrar_causas(sistema_activo: str | None, causas_propuestas: list[Any], evi
     bloqueos = list(_CAUSAS_PROHIBIDAS.get(sistema, ()))
     if sistema == "refrigeracion":
         bloqueos.extend(_CAUSAS_EV)
+        # Humo blanco junto con consumo de refrigerante respalda investigar
+        # estanqueidad de culata; no habilitar esa rama por temperatura sola.
+        if "humo blanco" in evidencia_normalizada and "refrigerante" in evidencia_normalizada:
+            marcadores = (*marcadores, "culata", "junta")
     if sistema == "combustible_admision" and re.search(r"\binyectores?\s+no\s+inyectan?\b", evidencia_normalizada):
         bloqueos.extend(("iac", "cuerpo de aceleracion"))
     resultado = []
