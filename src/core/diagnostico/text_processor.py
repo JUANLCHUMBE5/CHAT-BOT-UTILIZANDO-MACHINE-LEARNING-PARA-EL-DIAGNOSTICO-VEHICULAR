@@ -664,6 +664,7 @@ def procesar_consulta_texto(
             if falla_coincide_con_areas(prediccion.falla, areas_consulta)
         ]
         if compatibles_area:
+            compatibles_area, _ = priorizar_evidencia(texto_evaluar, compatibles_area)
             # Busca hasta 12 clases para no perder candidatos del área que
             # quedaron fuera del Top-3 global. Conserva sus probabilidades SVM.
             predicciones_ml = compatibles_area[:3]

@@ -19,6 +19,10 @@ def priorizar_evidencia(texto, predicciones):
     )
     motivo = ""
     compatibles = []
+    if re.search(r"\b(?:humo|vapor) blanco\b", positivas) and "refrigerante" in positivas:
+        compatibles = [p for p in predicciones if re.search(r"culata|junta", normalizar(p.falla))]
+        if compatibles:
+            motivo = "Humo blanco y consumo de refrigerante: comprobar estanqueidad, sin confirmar culata."
     # Síntoma de acoplamiento + contexto de caja, no solo la letra R o D.
     caja = re.search(r"\b(automatic[oa]|transmision|caja|reversa|marcha atras)\b", positivas)
     acoplamiento = re.search(

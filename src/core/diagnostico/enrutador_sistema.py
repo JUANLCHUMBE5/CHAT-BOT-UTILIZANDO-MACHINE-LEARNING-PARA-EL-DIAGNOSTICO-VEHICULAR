@@ -85,6 +85,7 @@ _TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
     "RALENTI": ("ralenti", "marcha minima", "minimo", "valvula iac", "cuerpo de aceleracion", "mariposa"),
     "REFRIGERACION": (
         "refrigeracion", "recalent", "refrigerante", "radiador", "termostato", "motoventilador",
+        "culata", "junta",
     ),
     "ENCENDIDO": ("bujia", "bobina", "chispa", "misfire", "p030"),
     "FRENOS": ("freno", "pastilla", "disco", "abs", "frenar"),
@@ -335,7 +336,7 @@ def filtrar_causas(sistema_activo: str | None, causas_propuestas: list[Any], evi
         bloqueos.extend(_CAUSAS_EV)
         # Humo blanco junto con consumo de refrigerante respalda investigar
         # estanqueidad de culata; no habilitar esa rama por temperatura sola.
-        if "humo blanco" in evidencia_normalizada and "refrigerante" in evidencia_normalizada:
+        if re.search(r"\b(?:humo|vapor) blanco\b", evidencia_normalizada) and "refrigerante" in evidencia_normalizada:
             marcadores = (*marcadores, "culata", "junta")
     if sistema == "combustible_admision" and re.search(r"\binyectores?\s+no\s+inyectan?\b", evidencia_normalizada):
         bloqueos.extend(("iac", "cuerpo de aceleracion"))

@@ -12,7 +12,9 @@ from src.core.traductor_jerga import normalizar_jerga_peruana
 
 @pytest.fixture
 def gestor():
-    return GestorDiagnostico(gemini_api_key="mock_test_key")
+    instancia = GestorDiagnostico(gemini_api_key="")
+    instancia.api_key = ""
+    return instancia
 
 
 # ==============================================================================
