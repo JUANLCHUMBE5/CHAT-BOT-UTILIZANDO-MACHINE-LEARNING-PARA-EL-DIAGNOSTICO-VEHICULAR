@@ -22,8 +22,15 @@ def preguntas(texto: str) -> list[str]:
 
 def asegurar_pregunta_util(
     estado: ConversationState, respuesta: str, previas: list[dict],
+    permitir_preguntas: bool = True,
 ) -> tuple[str, str | None]:
     """Comprueba la salida final (incluido formateador/LLM) contra el historial real."""
+    if not permitir_preguntas:
+        respuesta = re.sub(r"¿[^?]*\?", "", respuesta, flags=re.DOTALL).strip()
+        return (
+            respuesta + "\nEl caso permanece sin confirmar. Se requiere revisión presencial antes de concluir la falla.",
+            None,
+        )
     anteriores = {
         _clave(p)
         for registro in previas

@@ -870,6 +870,7 @@ class OrquestadorConversacion:
 
         respuesta_texto, pregunta_final_real = asegurar_pregunta_util(
             estado, respuesta_texto, contexto_previo.get("preguntas_realizadas", []),
+            permitir_preguntas=decision != "DIFERENCIAL",
         )
         if pregunta_final_real:
             pregunta_elegida = pregunta_final_real

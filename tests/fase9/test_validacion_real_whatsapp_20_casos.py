@@ -375,7 +375,11 @@ async def test_caso_11_correccion_de_hechos(gestor_singleton):
     assert hecho_temp.valor == "caliente"
     assert hecho_temp.estado == FactState.CONFIRMADO
     assert "ocurre en caliente" in res_corr["consulta_consolidada"]
-    assert "frío" not in res_corr["consulta_consolidada"]
+    from src.core.diagnostico.semantic_purifier import purificar_sintoma_para_vectorizador_ml
+
+    # La auditoría conserva el mensaje original, pero ML solo recibe hechos vigentes.
+    assert "frío" not in purificar_sintoma_para_vectorizador_ml(res_corr["consulta_consolidada"])
+    assert st.historial_mensajes_usuario[0] == "Toyota Yaris falla cuando está frío"
 
 
 @pytest.mark.anyio
