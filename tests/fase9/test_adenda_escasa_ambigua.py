@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from src.core.conversacion.models import EvidenceLevel, FactState
+from src.core.conversacion.models import EvidenceLevel, FactState, QuestionIntent
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
 from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.gestor_diagnostico import GestorDiagnostico
@@ -31,7 +31,18 @@ async def test_20_escenarios_adenda_informacion_escasa(orquestador, gestor):
         sid = f"adenda_{caso['id']}"
         res_final = None
 
-        for turno_txt in caso["turnos"]:
+        for indice_turno, turno_txt in enumerate(caso["turnos"]):
+            # Estos dos escenarios prueban una respuesta desconocida a una
+            # pregunta específica, no que el router siempre la elija primero.
+            campo_desconocido = caso.get("debe_registrar_desconocido")
+            if indice_turno == 1 and campo_desconocido:
+                estado_pregunta = await orquestador.repositorio.get_session(sid)
+                intent, pregunta = {
+                    "temperatura": (QuestionIntent.TEMPERATURA_APARICION, "¿La falla ocurre en frío o caliente?"),
+                    "condicion_operacion": (QuestionIntent.CONDICION_OPERACION, "¿En qué condición aparece la falla?"),
+                }[campo_desconocido]
+                estado_pregunta.registrar_pregunta(intent, pregunta)
+                await orquestador.repositorio.save_session(sid, estado_pregunta)
             res_final = await orquestador.procesar_turno(
                 session_id=sid,
                 texto_usuario=turno_txt,

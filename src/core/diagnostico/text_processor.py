@@ -1014,7 +1014,8 @@ def procesar_consulta_texto(
         ][:3]
         if not predicciones_en_area:
             etiquetas = ", ".join(ETIQUETAS_AREA.get(area, area) for area in areas_consulta)
-            diagnostico_predictivo = f"Sin hipótesis ML pertinente para {etiquetas}"
+            if not diagnostico_predictivo.startswith("Sistema GNV/GLP"):
+                diagnostico_predictivo = f"Sin hipótesis ML pertinente para {etiquetas}"
             confianza = 0.0
             predicciones_ml = []
             requiere_revision_humana = True

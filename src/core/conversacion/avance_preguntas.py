@@ -64,6 +64,13 @@ def asegurar_pregunta_util(
                 "¿Qué resultado concreto dio la última comprobación del componente en evaluación?",
             ],
         }.get(estado.active_system, [])
+        if estado.active_system == "combustible_admision" and estado.obtener_hecho("caudal_inyectores_reportado"):
+            opciones = [
+                "¿Con el manómetro conectado al riel, qué presión mediste, en qué unidad y bajo qué condición?",
+                "¿Qué diferencia de caudal o caída de presión mostró la prueba de balance entre los inyectores?",
+            ]
+            if any("presion" in str(nombre).lower() for nombre in estado.measurements):
+                opciones = opciones[1:]
         siguiente = next((p for p in opciones if _clave(p) not in anteriores), None)
         if siguiente is None:
             area = {
