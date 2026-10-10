@@ -56,6 +56,7 @@ def finalizar_diagnostico(
     tiempo_rag_ms: Any,
     inicio_total: Any,
     clave_cache: Any,
+    case_id: Any,
 ) -> ResultadoDiagnostico:
     """Cierra el pipeline sin cambiar la selección ni las probabilidades del SVM."""
     # Si el RAG declara una falla específica y contradice la hipótesis fusionada,
@@ -179,6 +180,7 @@ def finalizar_diagnostico(
         conversacion_id=conversacion_id,
         slot_gemini_preconcedido=slot_gemini_preconcedido,
         diferir_encolado_persistente=diferir_encolado_persistente,
+        case_id=case_id,
         predicciones_ml=predicciones_llm,
         dtc_info=info_dtc_texto,
         perfil_vehiculo=perfil_vehiculo_str,
@@ -270,6 +272,9 @@ def finalizar_diagnostico(
         tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
     )
 
-    if resultado_final.modo_diagnostico not in ("en_cola_gemini", "consulta_tecnica_en_cola"):
+    if clave_cache and resultado_final.modo_diagnostico not in (
+        "en_cola_gemini",
+        "consulta_tecnica_en_cola",
+    ):
         diagnostico_cache.guardar(clave_cache, resultado_final)
     return resultado_final

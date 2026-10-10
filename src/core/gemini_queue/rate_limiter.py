@@ -255,6 +255,7 @@ class GeminiRateLimiter:
         tipo_consulta: str = "diagnostico",
         predicciones_ml: Optional[list[dict]] = None,
         solicitud_id: Optional[str] = None,
+        case_id: Optional[str] = None,
     ) -> Tuple[SolicitudGeminiEncolada, int, float]:
         """Encola una solicitud para procesamiento asíncrono respetando la cuota."""
         kwargs_solicitud = {}
@@ -271,6 +272,7 @@ class GeminiRateLimiter:
             requiere_revision_humana=requiere_revision_humana,
             callback_completado=callback_completado,
             diagnostico_id=diagnostico_id,
+            case_id=case_id,
             remitente=remitente,
             taller_id=taller_id,
             usuario_id=usuario_id,
@@ -340,6 +342,7 @@ class GeminiRateLimiter:
         usuario_id: Optional[str] = None,
         conversacion_id: Optional[str] = None,
         diagnostico_id: Optional[str] = None,
+        case_id: Optional[str] = None,
         tipo_consulta: str = "diagnostico",
     ) -> None:
         """Persiste el trabajo de Gemini en la misma transacción del webhook."""
@@ -358,6 +361,7 @@ class GeminiRateLimiter:
             usuario_id=usuario_id,
             conversacion_id=conversacion_id,
             diagnostico_id=diagnostico_id,
+            case_id=case_id,
             tipo_consulta=tipo_consulta,
         )
 
@@ -509,6 +513,7 @@ class GeminiRateLimiter:
                             taller_id=str(trabajo_db.taller_id) if trabajo_db.taller_id else None,
                             usuario_id=str(trabajo_db.usuario_id) if trabajo_db.usuario_id else None,
                             conversacion_id=str(trabajo_db.conversacion_id) if trabajo_db.conversacion_id else None,
+                            case_id=str(trabajo_db.case_id) if trabajo_db.case_id else None,
                             remitente=remitente_descifrado,
                             proveedor=trabajo_db.proveedor or "meta",
                             sintoma=trabajo_db.sintoma,

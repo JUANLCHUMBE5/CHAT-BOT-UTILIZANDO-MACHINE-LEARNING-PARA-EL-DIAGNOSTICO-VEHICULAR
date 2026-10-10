@@ -132,6 +132,7 @@ async def test_contacto_solo_user_id_meta_no_genera_error_400():
         texto_cliente="Buenas tardes",
         proveedor="meta",
         tipo_identificador="user_id",
+        telefono_id_meta=settings.meta_phone_number_id or "META_TEST_DEFAULT",
         nombre_contacto="Usuario Meta",
     )
 
@@ -154,6 +155,7 @@ async def test_cliente_solicita_servicios_y_ubicacion():
         meta_message_id=f"msg_srv_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="1",
+        telefono_id_meta=settings.meta_phone_number_id or "META_TEST_DEFAULT",
     )
     assert "Servicios ofrecidos" in res_servicios["respuesta"]
     assert "Precios referenciales" in res_servicios["respuesta"]
@@ -186,6 +188,7 @@ async def test_cliente_solicita_acceso_crea_solicitud_pendiente():
         meta_message_id=f"msg_acc_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="Soy mecánico y quiero acceso al diagnóstico técnico",
+        telefono_id_meta=settings.meta_phone_number_id or "META_TEST_DEFAULT",
     )
 
     assert "Solicitud de Acceso como Mecánico Registrada" in resultado["respuesta"]
@@ -233,6 +236,7 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         meta_message_id=f"msg_init_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="Soy mecanico",
+        telefono_id_meta=settings.meta_phone_number_id or "META_TEST_DEFAULT",
     )
 
     # 2. Obtener datos de la solicitud y del taller
@@ -282,13 +286,20 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         usuario_promovido = await usuario_repo.obtener_por_id(usuario.id)
         assert usuario_promovido.rol.codigo == "mecanico"
 
-    # 5. El mecánico ahora envía un síntoma vehicular y SÍ se ejecuta el diagnóstico técnico
-    res_diagnostico = await service.procesar_mensaje(
+    # 5. El gate conserva el síntoma y pide placa antes de ejecutar el diagnóstico.
+    res_espera_placa = await service.procesar_mensaje(
         remitente=tel_mecanico_futuro,
         meta_message_id=f"msg_diag_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="El motor cascabelea fuertemente y pierde potencia al subir pendientes",
-        placa="PRM001",
+    )
+    assert res_espera_placa["status"] == "esperando_placa"
+
+    res_diagnostico = await service.procesar_mensaje(
+        remitente=tel_mecanico_futuro,
+        meta_message_id=f"msg_placa_{uuid.uuid4().hex[:6]}",
+        tipo_mensaje="text",
+        texto_cliente="TST754",
     )
 
     assert res_diagnostico["status"] == "completado"
@@ -388,6 +399,7 @@ async def test_contacto_bloqueado_o_inactivo_no_recibe_acceso():
         remitente=tel_bloqueado,
         meta_message_id=f"msg_blk_{uuid.uuid4().hex[:6]}",
         texto_cliente="Hola",
+        telefono_id_meta=settings.meta_phone_number_id or "META_TEST_DEFAULT",
     )
 
     # 2. Bloquearlo en base de datos
@@ -425,6 +437,7 @@ async def test_panel_promueve_cliente_y_revocacion_lo_regresa_a_cliente():
         tipo_mensaje="text",
         texto_cliente="Hola",
         proveedor="meta",
+        telefono_id_meta=settings.meta_phone_number_id or "META_TEST_DEFAULT",
     )
 
     async with AsyncSession(engine, expire_on_commit=False) as session:
@@ -500,6 +513,7 @@ async def test_deduplicacion_webhooks_idempotencia():
         remitente=tel_dup,
         meta_message_id=dup_id,
         texto_cliente="Consulta inicial",
+        telefono_id_meta=settings.meta_phone_number_id or "META_TEST_DEFAULT",
     )
     assert res1["status"] in ("completado_cliente", "completado")
 

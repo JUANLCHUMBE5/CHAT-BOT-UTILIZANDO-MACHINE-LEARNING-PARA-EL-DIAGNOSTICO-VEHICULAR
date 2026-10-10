@@ -59,4 +59,3 @@ def test_reportes_de_mezcla_inyectores_map_y_o2_son_diagnosticos(mensaje):
 def test_consultas_tecnicas_vs_fuera_de_alcance(pregunta, intencion_esperada):
     normalizado = normalizar_jerga_peruana(pregunta)
     assert clasificar_intencion_consulta(normalizado) == intencion_esperada
-

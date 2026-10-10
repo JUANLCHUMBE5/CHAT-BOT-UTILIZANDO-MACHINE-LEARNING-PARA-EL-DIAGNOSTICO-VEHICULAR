@@ -4,8 +4,18 @@ from __future__ import annotations
 
 import re
 import time
+import uuid
 from typing import Any, Dict, Optional
 
+from src.config import settings
+from src.core.conversacion.clasificador_mensajes import clasificar_mensaje
+from src.core.conversacion.control_aclaraciones import (
+    aclaraciones_emitidas,
+    dato_desconocido,
+    debe_avanzar,
+    desconocidos_consecutivos,
+    hay_evidencia_diagnostica,
+)
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 from src.core.conversacion.interprete_respuestas_cortas import InterpreteRespuestasCortas
@@ -65,6 +75,7 @@ class OrquestadorConversacion:
         estado = await self.repositorio.get_session(session_id)
         if estado is None:
             estado = ConversationState(session_id=session_id)
+        estado.max_repreguntas = settings.diagnostic.max_clarifications
 
         es_opcion_menu = texto_limpio.isdecimal() and len(texto_limpio) <= 2
         es_menu = texto_limpio.casefold() in {"menu", "menú"}
@@ -98,41 +109,122 @@ class OrquestadorConversacion:
             }
 
         if not estado.case_id:
-            import uuid
             estado.case_id = str(uuid.uuid4())
             if not estado.active_problem_id:
                 estado.active_problem_id = str(uuid.uuid4())
 
-        # Sincronizar con SessionManager si existe y su caso fue reiniciado/finalizado
+        # La sesión conversacional persistida es la fuente de verdad. No reemplazar
+        # su caso por un case_id potencialmente obsoleto del caché en memoria.
         if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager is not None:
-            sesion_mgr = getattr(gestor_diagnostico.session_manager, "obtener_sesion", lambda _: None)(session_id)
-            if sesion_mgr and isinstance(getattr(sesion_mgr, "case_id", None), str) and sesion_mgr.case_id != estado.case_id:
-                estado.iniciar_nuevo_caso(sesion_mgr.case_id)
+            gestor_diagnostico.session_manager.cargar_contexto(
+                session_id,
+                {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+            )
 
         contexto_previo = estado.exportar_dict(incluir_trazabilidad=False)
+        aclaraciones_previas = aclaraciones_emitidas(estado)
 
-        # 2. Detección de reinicio de caso ("otro carro", "nuevo diagnóstico")
+        solicitud_caso = ExtractorHechos.clasificar_solicitud_caso(texto_limpio)
+        if solicitud_caso and solicitud_caso.get("accion") == "reanudar":
+            case_id_objetivo = solicitud_caso.get("case_id")
+            if not case_id_objetivo and solicitud_caso.get("caso_anterior"):
+                case_id_objetivo = next(
+                    (
+                        caso.get("case_id")
+                        for caso in reversed(estado.hechos_historicos)
+                        if caso.get("case_id") and caso.get("case_id") != estado.case_id
+                    ),
+                    None,
+                )
+            if case_id_objetivo and estado.restaurar_caso_archivado(str(case_id_objetivo)):
+                await self.repositorio.save_session(session_id, estado)
+                session_manager = getattr(gestor_diagnostico, "session_manager", None)
+                if session_manager is not None:
+                    session_manager.cargar_contexto(
+                        session_id,
+                        {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+                    )
+                return {
+                    "status": "caso_reanudado",
+                    "respuesta_texto": (
+                        "Retomé exclusivamente el caso anterior solicitado. Su contexto queda aislado "
+                        "del caso que acabamos de cerrar."
+                    ),
+                    "diagnostico_ml": "Caso anterior reanudado",
+                    "confianza_ml": estado.confianza_actual,
+                    "fase": estado.fase.value,
+                    "es_pregunta": False,
+                    "decision": "REANUDAR_CASO",
+                    "case_id": estado.case_id,
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                    "estado": estado,
+                }
+            return {
+                "status": "reanudar_no_encontrado",
+                "respuesta_texto": (
+                    "No encontré ese caso en el historial de esta conversación. Indica el case_id "
+                    "o solicita retomar el caso anterior disponible. No cambié el caso activo."
+                ),
+                "diagnostico_ml": "Caso histórico no encontrado",
+                "confianza_ml": 0.0,
+                "fase": estado.fase.value,
+                "es_pregunta": True,
+                "decision": "ACLARAR_REANUDACION",
+                "case_id": estado.case_id,
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
+            }
+
         if (
-            ExtractorHechos.es_reinicio_solicitado(texto_limpio)
+            solicitud_caso
+            and solicitud_caso.get("accion") in ("nuevo_caso", "cancelar")
             and not ExtractorHechos.contiene_informacion_diagnostica(texto_limpio)
         ):
-            await self.repositorio.reset_session(session_id)
-            if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager:
-                gestor_diagnostico.session_manager.reiniciar_sesion(session_id)
-            if ExtractorHechos.es_cancelacion_solicitada(texto_limpio):
+            es_cancelacion = solicitud_caso["accion"] == "cancelar"
+            preservar_vehiculo = bool(
+                solicitud_caso.get("preservar_vehiculo")
+                and any((estado.placa, estado.marca, estado.modelo))
+            )
+            estado.iniciar_nuevo_caso(
+                None if es_cancelacion else str(uuid.uuid4()),
+                preservar_vehiculo=preservar_vehiculo,
+            )
+            if es_cancelacion:
+                estado.case_id = None
+                estado.active_problem_id = None
+            await self.repositorio.save_session(session_id, estado)
+            session_manager = getattr(gestor_diagnostico, "session_manager", None)
+            if session_manager is not None:
+                session_manager.cargar_contexto(
+                    session_id,
+                    {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+                )
+            if es_cancelacion:
                 resp_reinicio = (
-                    "🚗 *Caso cancelado.* He limpiado la memoria y no continuaré con este diagnóstico. "
-                    "Cuando quieras iniciar otro, envía la placa del vehículo."
+                    "🚗 *Caso cancelado.* Conservé su historial y limpié el contexto activo. "
+                    "Cuando quieras, envía la placa del siguiente vehículo."
                 )
             else:
                 resp_reinicio = (
-                    "🚗 *Caso anterior cerrado.* La memoria está limpia para otro problema.\n\n"
-                    "Envía la placa y el síntoma del nuevo vehículo."
+                    "🚗 *Caso anterior cerrado.* Conservé su historial y limpié la memoria activa. "
+                    "Envía la placa y el síntoma para iniciar un caso nuevo."
                 )
+                if preservar_vehiculo and estado.placa:
+                    resp_reinicio = (
+                        "🚗 *Caso anterior cerrado.* Conservé el historial y mantengo únicamente "
+                        "los datos confirmados del mismo vehículo. Indica el nuevo síntoma."
+                    )
             return {
-                "status": "reinicio", "respuesta_texto": resp_reinicio, "diagnostico_ml": "Reinicio de sesión",
-                "confianza_ml": 1.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "REINICIO",
-                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": ConversationState(session_id=session_id),
+                "status": "reinicio",
+                "respuesta_texto": resp_reinicio,
+                "diagnostico_ml": "Reinicio de sesión",
+                "confianza_ml": 1.0,
+                "fase": ConversationPhase.INICIO.value,
+                "es_pregunta": False,
+                "decision": "REINICIO",
+                "case_id": estado.case_id,
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
             }
 
         # 2.1 Detección de saludo ("hola", "buenas", "buenos días")
@@ -212,6 +304,7 @@ class OrquestadorConversacion:
         # 2.3 Segmentación automática de casos y aislamiento de contexto (Fase 9.10)
         from src.core.conversacion.segmentador_casos import SegmentadorCasos
 
+        tipo_mensaje = clasificar_mensaje(texto_limpio, estado)
         ret_trans, transicion = SegmentadorCasos.resolver_transicion_turno(
             estado=estado,
             texto_limpio=texto_limpio,
@@ -219,6 +312,7 @@ class OrquestadorConversacion:
             session_id=session_id,
             t0=t0,
             contexto_previo=contexto_previo,
+            tipo_mensaje=tipo_mensaje,
         )
         if ret_trans is not None:
             await self.repositorio.save_session(session_id, estado)
@@ -328,6 +422,26 @@ class OrquestadorConversacion:
         score, categorias_vistas, es_suficiente, motivo_suficiencia = EvaluadorSuficiencia.evaluar(estado)
         medicion_area_pendiente = GeneradorPreguntas.falta_medicion_discriminante_por_area(estado)
         if (
+            medicion_area_pendiente
+            and estado.active_system == "combustible_admision"
+            and estado.ya_preguntado_texto("STFT/LTFT")
+            and re.search(
+                r"\b(?:al acelerar|cuando acelera|en caliente|en frío|en frio|"
+                r"en marcha|pierde fuerza|pierde potencia|se apaga|ratea|tiembla)\b",
+                texto_limpio,
+                re.IGNORECASE,
+            )
+        ):
+            # Ya se pidió el dato objetivo una vez. Si el mecánico aporta
+            # contexto operativo pertinente, permitir una orientación ML de
+            # baja evidencia en vez de dejar el caso atrapado en "pendiente".
+            medicion_area_pendiente = False
+            es_suficiente = True
+            motivo_suficiencia = (
+                "Se solicitó DTC/STFT una vez y se recibió contexto operativo; "
+                "continuar con diagnóstico orientativo sin confirmar una causa"
+            )
+        if (
             estado.obtener_hecho("revision_concreta_mezcla")
             and not estado.obtener_hecho("caudal_inyectores_reportado")
             and not any(
@@ -366,6 +480,18 @@ class OrquestadorConversacion:
             es_suficiente = False
             motivo_suficiencia = (
                 "Falta la lectura técnica mínima para confirmar la ruta explícita de mezcla o MAP"
+            )
+        forzar_avance = debe_avanzar(estado, texto_limpio)
+        sin_evidencia = not hay_evidencia_diagnostica(estado)
+        if sin_evidencia and dato_desconocido(texto_limpio):
+            # Una queja genérica no justifica inferencia ML; dar hasta N
+            # oportunidades de aportar un síntoma sin repetir indefinidamente.
+            forzar_avance = desconocidos_consecutivos(estado) >= max(1, estado.max_repreguntas - 1)
+        if forzar_avance and dato_desconocido(texto_limpio):
+            estado.registrar_hecho(
+                "dato_solicitado_desconocido", "DESCONOCIDO", categoria="flujo",
+                estado=FactState.NO_REVISADO, texto_crudo=texto_limpio,
+                tipo=FactType.CONDICION,
             )
 
         # 6. Reconstrucción de la consulta clínica consolidada y protección con guardia de contexto
@@ -409,6 +535,36 @@ class OrquestadorConversacion:
                 decision = "PREGUNTAR"
                 motivo_decision = "Resultado de revisión sin componente identificable: solicitando aclaración sin repetir hipótesis"
                 respuesta_texto = pregunta_elegida
+                es_pregunta = True
+            elif cat_ic == "MEDICION_INCOMPLETA":
+                pregunta_anterior = str((estado.ultima_pregunta() or {}).get("texto", "")).lower()
+                if "caudal_inyectores_reportado" in estado.hechos:
+                    solicitud = (
+                        "¿Qué presión de combustible registró el manómetro o qué resultado "
+                        "dio la prueba de balance/caudal de inyectores?"
+                    )
+                elif "maf" in pregunta_anterior:
+                    solicitud = (
+                        "¿Qué flujo del MAF marca el escáner en g/s y a qué RPM o condición del motor?"
+                    )
+                elif "map" in pregunta_anterior or "carga absoluta" in pregunta_anterior:
+                    solicitud = (
+                        "¿Qué valor numérico muestra el MAP, con su unidad (kPa) y condición del motor?"
+                    )
+                elif "stft" in pregunta_anterior or "ltft" in pregunta_anterior or "dtc" in pregunta_anterior:
+                    solicitud = "¿Cuál es el DTC exacto o qué valores STFT/LTFT (%) aparecen?"
+                else:
+                    solicitud = "¿Cuál es el valor exacto, con unidad y condición de medición?"
+                pregunta_elegida = "Entiendo que sí tienes el dato. " + solicitud
+                intent_elegido = QuestionIntent.MEDICION_TECNICA.value
+                estado.registrar_pregunta(
+                    intent=QuestionIntent.MEDICION_TECNICA,
+                    texto=pregunta_elegida,
+                    incrementar_repregunta=False,
+                )
+                respuesta_texto = pregunta_elegida
+                decision = "PREGUNTAR"
+                motivo_decision = "Afirmación sin valor/unidad: solicitar el dato técnico concreto sin cambiar de sistema"
                 es_pregunta = True
             elif cat_ic == "DIAGNOSTICO_CONFIRMADO":
                 respuesta_texto = (
@@ -664,7 +820,35 @@ class OrquestadorConversacion:
                 motivo_decision = f"Observación de luces de tablero procesada: {valor_ic}"
                 es_pregunta = False
 
-        # Caso A: Información insuficiente y aún con margen de repregunta (< 3)
+        # Los caminos de medición/Plan B también consumen aclaraciones. Si el
+        # dato no está disponible o el tope previo se agotó, orientar con ML
+        # sin convertir una hipótesis débil en una causa confirmada.
+        if forzar_avance and (
+            decision in {"PREGUNTAR", "PENDIENTE_MEDICION", "CONCLUSION_TECNICA"}
+            or (
+                decision == "PLAN_B"
+                and aclaraciones_emitidas(estado) >= estado.max_repreguntas
+            )
+        ):
+            respuesta_texto = ""
+            pregunta_elegida = None
+            intent_elegido = None
+            es_pregunta = False
+            es_suficiente = False
+            estado.turnos_repregunta = estado.max_repreguntas
+            motivo_suficiencia = "Dato desconocido o límite de aclaraciones: orientación ML de baja evidencia"
+
+        if not respuesta_texto and forzar_avance and sin_evidencia:
+            respuesta_texto = (
+                "Límite de aclaraciones alcanzado. Aún no hay síntomas concretos ni un DTC "
+                "registrado para orientar una hipótesis. Conservé este caso; cuando puedas, "
+                "indica qué falla observaste o solicita una revisión presencial."
+            )
+            decision = "DATOS_INSUFICIENTES"
+            motivo_decision = "Sin evidencia diagnóstica tras el límite de aclaraciones"
+            es_pregunta = False
+
+        # Caso A: Información insuficiente y aún con margen de repregunta
         if not respuesta_texto and not es_suficiente and not falla_forzada_alternativa and estado.turnos_repregunta < estado.max_repreguntas:
             seleccion_area = GeneradorPreguntas.pregunta_por_area(estado)
             if seleccion_area:
@@ -755,6 +939,7 @@ class OrquestadorConversacion:
                 diagnostico_forzado=falla_diag,
                 orquestado=True,
                 diferir_encolado_persistente=diferir_encolado_persistente,
+                case_id=estado.case_id,
             )
             top3_ml_raw = None
             if getattr(dto_resultado, "predicciones_ml", None):
@@ -762,13 +947,25 @@ class OrquestadorConversacion:
                     {
                         "falla": getattr(p, "falla", None) or (p.get("falla") if isinstance(p, dict) else str(p)),
                         "probabilidad": getattr(p, "probabilidad", 0.0) if hasattr(p, "probabilidad") else (p.get("probabilidad", 0.0) if isinstance(p, dict) else 0.0),
+                        "origen_probabilidad": (
+                            getattr(p, "origen_probabilidad", "SVM")
+                            if hasattr(p, "origen_probabilidad")
+                            else (p.get("origen_probabilidad", "SVM") if isinstance(p, dict) else "SVM")
+                        ),
                     }
                     for p in dto_resultado.predicciones_ml[:3]
                 ]
-            elif dto_resultado.diagnostico_ml:
-                top3_ml_raw = [{"falla": dto_resultado.diagnostico_ml, "probabilidad": dto_resultado.confianza_ml}]
+            elif dto_resultado.diagnostico_ml and dto_resultado.confianza_ml > 0:
+                top3_ml_raw = [{
+                    "falla": dto_resultado.diagnostico_ml,
+                    "probabilidad": dto_resultado.confianza_ml,
+                    "origen_probabilidad": getattr(dto_resultado, "origen_confianza", "SVM"),
+                }]
 
-            from src.core.conversacion.validador_compatibilidad import ValidadorCompatibilidad
+            from src.core.conversacion.validador_compatibilidad import (
+                ValidadorCompatibilidad,
+                hipotesis_rechazada_en_texto,
+            )
             hipotesis_final_presentada, exclusiones_compat = ValidadorCompatibilidad.filtrar_y_ordenar_para_presentacion(
                 predicciones_raw=top3_ml_raw or [],
                 estado=estado,
@@ -776,26 +973,27 @@ class OrquestadorConversacion:
             )
 
             tiene_descartada_en_top3 = any(
-                h.get("falla", "").strip().lower() in {d.strip().lower() for d in estado.hipotesis_descartadas}
+                hipotesis_rechazada_en_texto(
+                    str(h.get("falla", "")), estado.hipotesis_descartadas,
+                )
                 for h in estado.top3_actual
             )
             if not (es_evidencia_duplicada and estado.top3_actual and not tiene_descartada_en_top3):
-                estado.top3_actual = hipotesis_final_presentada or top3_ml_raw or []
+                estado.top3_actual = hipotesis_final_presentada
                 if hipotesis_final_presentada:
                     estado.falla_principal = hipotesis_final_presentada[0]["falla"]
                     estado.confianza_actual = hipotesis_final_presentada[0]["probabilidad"]
                 else:
-                    estado.confianza_actual = dto_resultado.confianza_ml
+                    estado.falla_principal = None
+                    estado.confianza_actual = 0.0
 
             from src.core.conversacion.formateador_compacto import FormateadorCompacto
-            hipotesis_formatear = estado.top3_actual or [
-                {"falla": dto_resultado.diagnostico_ml, "probabilidad": dto_resultado.confianza_ml}
-            ]
-            preg_ctx, intent_ctx = FormateadorCompacto.obtener_pregunta_contextual(
+            hipotesis_formatear = estado.top3_actual
+            preg_ctx, intent_ctx = (FormateadorCompacto.obtener_pregunta_contextual(
                 top1_falla_o_hipotesis=hipotesis_formatear,
                 sintoma_original=texto_limpio,
                 estado=estado,
-            )
+            ) if hipotesis_formatear else (None, None))
             if preg_ctx and estado.ya_preguntado_texto(preg_ctx):
                 preg_ctx = None
                 intent_ctx = None
@@ -812,6 +1010,7 @@ class OrquestadorConversacion:
                 respuesta_determinista=respuesta_texto,
                 llm_usado=getattr(dto_resultado, "llm_usado", False) is True,
                 respuesta_limitada=getattr(dto_resultado, "respuesta_limitada", False) is True,
+                hipotesis_rechazadas=estado.hipotesis_descartadas,
             )
             hallazgo_inyectores = estado.obtener_hecho("caudal_inyectores_reportado")
             if hallazgo_inyectores and not (
@@ -848,7 +1047,10 @@ class OrquestadorConversacion:
                 hipotesis_formatear = []
             if es_caso_b:
                 decision = "DIFERENCIAL"
-                motivo_decision = "Límite de 3 repreguntas alcanzado: forzando diagnóstico diferencial"
+                motivo_decision = (
+                    f"Límite de {settings.diagnostic.max_clarifications} repreguntas alcanzado: "
+                    "forzando diagnóstico diferencial"
+                )
             else:
                 decision = "DIAGNOSTICAR"
                 motivo_decision = f"Diagnóstico completado con {score} categorías y certidumbre {int(dto_resultado.confianza_ml*100)}%"
@@ -872,12 +1074,81 @@ class OrquestadorConversacion:
             estado, respuesta_texto, contexto_previo.get("preguntas_realizadas", []),
             permitir_preguntas=decision != "DIFERENCIAL",
         )
+        from src.core.conversacion.formateador_compacto import FormateadorCompacto
+
+        categoria_respuesta = (
+            interpretacion_corta.get("categoria_respuesta", "")
+            if interpretacion_corta else ""
+        )
+        respuesta_sin_repetir = (
+            respuesta_texto
+            if categoria_respuesta in ("DIAGNOSTICO_CONFIRMADO", "MEDICION_INCOMPLETA")
+            else FormateadorCompacto.evitar_respuesta_repetida(
+                respuesta_texto, estado, es_evidencia_duplicada,
+            )
+        )
+        if respuesta_sin_repetir != respuesta_texto:
+            respuesta_texto = respuesta_sin_repetir
+            pregunta_final_real = None
+            pregunta_elegida = None
+            intent_elegido = None
+            es_pregunta = False
+            decision = "SIN_EVIDENCIA_NUEVA"
+            motivo_decision = "Se evita repetir el mismo resumen: no cambió la evidencia del caso"
+            estado.preguntas_realizadas = [
+                pregunta for pregunta in estado.preguntas_realizadas
+                if pregunta.get("turno") != estado.turno_actual
+            ]
+        preguntas_unicas = []
+        claves_preguntas = set()
+        for pregunta_registrada in estado.preguntas_realizadas:
+            clave = " ".join(str(pregunta_registrada.get("texto", "")).casefold().split())
+            if clave and clave not in claves_preguntas:
+                claves_preguntas.add(clave)
+                preguntas_unicas.append(pregunta_registrada)
+        estado.preguntas_realizadas = preguntas_unicas
+        if (
+            aclaraciones_previas >= estado.max_repreguntas
+            or aclaraciones_emitidas(estado) > estado.max_repreguntas
+            or (
+                forzar_avance and dato_desconocido(texto_limpio)
+                and decision != "PLAN_B"
+            )
+        ):
+            # El límite cuenta preguntas realmente mostradas. No persistir
+            # preguntas creadas internamente en este turno pero no enviadas.
+            respuesta_texto = re.sub(r"¿[^?]*\?", "", respuesta_texto).strip()
+            if not respuesta_texto:
+                respuesta_texto = (
+                    "Con los datos disponibles no confirmo una causa. Conservo el caso y "
+                    "sus descartes; aporta una medición nueva cuando la tengas o solicita "
+                    "revisión presencial."
+                )
+            estado.preguntas_realizadas = [
+                p for p in estado.preguntas_realizadas
+                if p.get("turno") != estado.turno_actual
+            ]
+            pregunta_final_real = None
+            pregunta_elegida = None
+            es_pregunta = False
         if pregunta_final_real:
             pregunta_elegida = pregunta_final_real
             es_pregunta = True
         elif not re.search(r"¿[^?]*\?", respuesta_texto):
             es_pregunta = False
             pregunta_elegida = None
+        if estado.last_user_correction == texto_limpio:
+            sintomas_corregidos = [
+                str(hecho.get("valor", "")).strip()
+                for hecho in hechos_extraidos
+                if hecho.get("categoria") == "sintoma" and hecho.get("valor")
+            ]
+            if sintomas_corregidos:
+                resumen_correccion = ", ".join(dict.fromkeys(sintomas_corregidos))
+                respuesta_texto = (
+                    f"Entendido, actualicé el síntoma a: {resumen_correccion}. "
+                    f"{respuesta_texto}"
+                )
         MaquinaEstadosConversacion.transicionar(
             estado=estado,
             es_reinicio=False,
@@ -890,6 +1161,9 @@ class OrquestadorConversacion:
             hechos_nuevos_extraidos=hechos_extraidos,
             hechos_actualizados=[h.to_dict() for h in estado.hechos.values() if h.estado == FactState.CONFIRMADO],
             consulta_consolidada=consulta_consolidada, top3=estado.top3_actual, confianza=estado.confianza_actual,
+            origen_confianza=(
+                str((estado.top3_actual or [{}])[0].get("origen_probabilidad", "NO_REGISTRADO"))
+            ),
             decision=decision, motivo_decision=motivo_decision, respuesta_enviada=respuesta_texto,
             estado_operativo=estado.estado_operativo.value, question_intent=intent_elegido,
             preguntas_candidatas=candidatas_traza, preguntas_descartadas=descartadas_traza,
@@ -911,6 +1185,7 @@ class OrquestadorConversacion:
             plan_b_activado=intent_elegido if decision == "PLAN_B" else None,
             herramientas_bloqueadas=list(estado.herramientas_no_disponibles),
             version_orquestador=ORCHESTRATOR_VERSION,
+            tipo_mensaje=tipo_mensaje,
         )
         estado.trazabilidad.append(traza.to_dict())
         if len(estado.trazabilidad) > 15:

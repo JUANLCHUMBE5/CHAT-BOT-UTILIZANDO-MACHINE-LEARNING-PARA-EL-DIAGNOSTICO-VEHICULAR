@@ -51,7 +51,7 @@ def test_incidente_real_cambia_de_caso_y_no_hereda_interrogatorio() -> None:
 
     resultado = SegmentadorCasos.evaluar_transicion(
         estado=estado,
-        texto_usuario=MENSAJE_TRANSMISION,
+        texto_usuario=f"Nuevo caso: {MENSAJE_TRANSMISION}",
         estado_detectado_mensaje=EstadoOperativo.MARCHA,
         seniales_mensaje={"senial_marcha": True},
         seniales_heredadas={"senial_marcha": True},

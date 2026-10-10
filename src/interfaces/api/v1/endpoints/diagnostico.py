@@ -244,6 +244,7 @@ async def analizar_sintoma(
             sintoma=consulta.sintoma,
             falla_predicha=dto_resultado.diagnostico_ml,
             confianza=confianza_pct,
+            origen_confianza=dto_resultado.origen_confianza,
             similitud_rag=round(dto_resultado.similitud_rag * 100, 2),
             requiere_revision_humana=dto_resultado.requiere_revision_humana,
             procedimiento_tecnico=dto_resultado.contexto_manual,
@@ -333,6 +334,7 @@ async def consultar_historial(
                             orden=indice,
                             falla=str(item.get("falla", "Sin clasificación")),
                             probabilidad=round(float(item.get("probabilidad", 0)) * 100, 1),
+                            origen_probabilidad=str(item.get("origen_probabilidad", "NO_REGISTRADO")),
                         )
                         for indice, item in enumerate(predicciones_traza[:3], start=1)
                     ]
@@ -342,6 +344,7 @@ async def consultar_historial(
                             orden=hipotesis.orden,
                             falla=hipotesis.falla_probable,
                             probabilidad=round(float(hipotesis.confianza or 0) * 100, 1),
+                            origen_probabilidad="NO_REGISTRADO",
                         )
                         for hipotesis in d.hipotesis[:3]
                     ]
@@ -351,6 +354,7 @@ async def consultar_historial(
                                 orden=1,
                                 falla=d.falla_predicha or "Sin falla predicha",
                                 probabilidad=confianza_val,
+                                origen_probabilidad="NO_REGISTRADO",
                             )
                         ]
 
@@ -400,6 +404,7 @@ async def consultar_historial(
                         sintoma_normalizado=d.sintoma_normalizado or d.sintoma_original,
                         falla_predicha=d.falla_predicha or "Sin falla predicha",
                         confianza=confianza_val,
+                        origen_confianza=traza.get("origen_confianza", "NO_REGISTRADO"),
                         similitud_rag=similitud_val,
                         modo_diagnostico=d.modo_diagnostico or "completo_ml_rag_llm",
                         estado=d.estado or "generado",

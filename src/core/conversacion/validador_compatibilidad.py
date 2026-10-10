@@ -11,6 +11,7 @@ import re
 import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
 
+from src.config import settings
 from src.core.conversacion.models import ConversationState, FactState
 from src.core.conversacion.ruteador_sistema import (
     detectar_ruta_sistema,
@@ -18,6 +19,79 @@ from src.core.conversacion.ruteador_sistema import (
     requisito_tecnico_ausente,
     tiene_descarte_de_componente,
 )
+
+_COMPONENTES_HIPOTESIS = (
+    ("bobina", re.compile(r"\b(?:bobinas?|coil(?:s|\s+pack)?)\b")),
+    ("bujia", re.compile(r"\b(?:buj[ií]as?|spark\s+plugs?)\b")),
+    ("inyector", re.compile(r"\b(?:inyectores?|injectores?|inyector[a-z]*)\b")),
+    ("bateria", re.compile(r"\b(?:bater[ií]as?|acumulador)\b")),
+    ("alternador", re.compile(r"\b(?:alternadores?)\b")),
+    ("motor_arranque", re.compile(r"\b(?:motor\s+de\s+arranque|arrancador|solenoide)\b")),
+    ("maf", re.compile(r"\b(?:maf|sensor\s+de\s+flujo\s+de\s+aire)\b")),
+    ("map", re.compile(r"\b(?:map|sensor\s+de\s+presi[oó]n\s+del\s+m[uú]ltiple)\b")),
+    ("iac", re.compile(r"\b(?:iac|v[aá]lvula\s+de\s+control\s+de\s+aire)\b")),
+    ("cuerpo_aceleracion", re.compile(r"\b(?:cuerpo\s+de\s+aceleraci[oó]n|mariposa)\b")),
+    ("bomba_combustible", re.compile(r"\b(?:bomba\s+de\s+combustible|bomba\s+de\s+gasolina)\b")),
+    ("sensor_oxigeno", re.compile(r"\b(?:sensor\s+de\s+ox[ií]geno|sonda\s+lambda|sensor\s+o2)\b")),
+    ("termostato", re.compile(r"\b(?:termostato)\b")),
+    ("radiador", re.compile(r"\b(?:radiador|mangueras?\s+del\s+radiador)\b")),
+    ("frenos", re.compile(r"\b(?:frenos?|pastillas?|discos?\s+de\s+freno)\b")),
+    ("suspension", re.compile(r"\b(?:suspensi[oó]n|amortiguadores?|r[oó]tulas?)\b")),
+    ("embrague", re.compile(r"\b(?:embrague|clutch)\b")),
+)
+_PATRON_EVIDENCIA_ANOMALA = re.compile(
+    r"\b(?:detect[eéó]|encontr[eéó]|registr[eéó]|marc[oó]|mide|midi[oó]|sali[oó]|result[oó]|"
+    r"presenta|confirm[oó]|se observa|se ve)\b.{0,70}\b(?:anormal|irregular|bajo|baja|alt[oa]|"
+    r"fuera de rango|d[eé]bil|intermitente|defectuos[oa]|dañad[oa]|sin chispa|no funciona)\b",
+    re.IGNORECASE,
+)
+_PATRON_RESULTADO_NORMAL = re.compile(
+    r"\b(?:est[aá] bien|est[aá] normal|funciona bien|funciona normal|sal[ií]o normal|"
+    r"resultado normal|sin anomal[ií]a|no presenta falla)\b",
+    re.IGNORECASE,
+)
+
+
+def _normalizar_hipotesis(texto: str) -> str:
+    texto = unicodedata.normalize("NFD", str(texto or "").casefold())
+    return " ".join(
+        "".join(c for c in texto if unicodedata.category(c) != "Mn").split()
+    )
+
+
+def _familias_componente(texto: str) -> set[str]:
+    normalizado = _normalizar_hipotesis(texto)
+    return {familia for familia, patron in _COMPONENTES_HIPOTESIS if patron.search(normalizado)}
+
+
+def _evidencia_nueva_reabre(falla: str, evidencia: Optional[str]) -> bool:
+    """Solo permite reconsiderar tras un resultado anómalo explícito del mismo componente."""
+    if not evidencia:
+        return False
+    familias = _familias_componente(falla) & _familias_componente(evidencia)
+    if not familias or _PATRON_RESULTADO_NORMAL.search(evidencia):
+        return False
+    return bool(_PATRON_EVIDENCIA_ANOMALA.search(evidencia))
+
+
+def hipotesis_rechazada_en_texto(texto: str, descartadas: Optional[List[str]]) -> bool:
+    """Detecta una causa rechazada en una síntesis libre, incluyendo alias de componentes."""
+    salida = _normalizar_hipotesis(texto)
+    if not salida:
+        return False
+    for rechazada in descartadas or []:
+        if rechazada.startswith("componente:"):
+            familia = rechazada.split(":", 1)[1]
+            if familia in _familias_componente(salida):
+                return True
+            continue
+        label = _normalizar_hipotesis(rechazada)
+        familias = _familias_componente(label)
+        if label and label in salida:
+            return True
+        if familias and familias & _familias_componente(salida):
+            return True
+    return False
 
 
 class ValidadorCompatibilidad:
@@ -136,9 +210,9 @@ class ValidadorCompatibilidad:
         if not predicciones_raw:
             return [], []
 
-        descartadas_previas = set()
-        if estado and getattr(estado, "hipotesis_descartadas", None):
-            descartadas_previas = {h.strip().lower() for h in estado.hipotesis_descartadas}
+        descartadas_previas = list(
+            getattr(estado, "hipotesis_descartadas", []) if estado else []
+        )
 
         candidatas_compatibles: List[Dict[str, Any]] = []
         exclusiones: List[Dict[str, Any]] = []
@@ -149,7 +223,7 @@ class ValidadorCompatibilidad:
         for pred in predicciones_raw:
             falla = pred.get("falla", "")
             prob = pred.get("probabilidad", 0.0)
-            falla_l = falla.strip().lower()
+            origen_probabilidad = str(pred.get("origen_probabilidad", "SVM")).upper()
 
             requisito = requisito_tecnico_ausente(estado, falla, nueva_evidencia)
             if requisito:
@@ -189,24 +263,51 @@ class ValidadorCompatibilidad:
                 })
                 continue
 
-            # 2. Validar descarte previo si no hay nueva evidencia que justifique reconsideración
-            if falla_l in descartadas_previas:
-                # Comprobar si la nueva evidencia menciona explícitamente el componente para reconsiderarlo
-                reconsiderable = False
-                if nueva_evidencia and re.search(
-                    r"\b(?:me equivoqu[eé]|retiro el descarte|corrijo el descarte)\b",
-                    nueva_evidencia.lower(),
-                ):
-                    palabras_falla = [w for w in re.findall(r"\w+", falla_l) if len(w) > 4]
-                    if any(w in nueva_evidencia.lower() for w in palabras_falla):
-                        reconsiderable = True
+            if (
+                origen_probabilidad == "SVM"
+                and float(prob or 0) < settings.diagnostic.min_presentable_confidence
+            ):
+                exclusiones.append({
+                    "falla": falla, "probabilidad_raw": prob,
+                    "motivo": "CONFIANZA_INSUFICIENTE_PARA_PRESENTAR",
+                })
+                continue
 
-                if not reconsiderable:
+            # El descarte del mecánico rige por componente/hipótesis, no solo
+            # por coincidencia literal. Se conserva como rechazo reportado,
+            # no como confirmación física. Solo evidencia anómala nueva del
+            # mismo componente permite reconsiderar la candidata.
+            familias_falla = _familias_componente(falla)
+            rechazos_aplicables = []
+            for rechazada in descartadas_previas:
+                if rechazada.startswith("componente:"):
+                    aplica = rechazada.split(":", 1)[1] in familias_falla
+                else:
+                    etiqueta_rechazada = _normalizar_hipotesis(rechazada)
+                    aplica = bool(
+                        etiqueta_rechazada == _normalizar_hipotesis(falla)
+                        or (
+                            familias_falla
+                            and familias_falla & _familias_componente(etiqueta_rechazada)
+                        )
+                    )
+                if aplica:
+                    rechazos_aplicables.append(rechazada)
+
+            if rechazos_aplicables:
+                if _evidencia_nueva_reabre(falla, nueva_evidencia):
+                    exclusiones.append({
+                        "falla": falla,
+                        "probabilidad_raw": prob,
+                        "motivo": "RECONSIDERADA_CON_EVIDENCIA_NUEVA",
+                        "detalle": "Se conserva la candidata por un resultado anómalo nuevo del mismo componente; no confirma la falla.",
+                    })
+                else:
                     exclusiones.append({
                         "falla": falla,
                         "probabilidad_raw": prob,
                         "motivo": "RECHAZADA_PREVIAMENTE_SIN_NUEVA_EVIDENCIA",
-                        "detalle": f"Hipótesis '{falla}' descartada por el usuario en turno previo",
+                        "detalle": f"Hipótesis o componente rechazado por el usuario: {', '.join(rechazos_aplicables)}",
                     })
                     continue
 
@@ -223,6 +324,7 @@ class ValidadorCompatibilidad:
             candidatas_compatibles.append({
                 "falla": falla,
                 "probabilidad": prob,
+                "origen_probabilidad": origen_probabilidad,
             })
             claves_presentadas.add(clave)
 

@@ -33,6 +33,7 @@ class SolicitudGeminiEncolada:
 
     # Contexto para persistencia en DB y notificación WhatsApp
     diagnostico_id: Optional[str] = None
+    case_id: Optional[str] = None
     remitente: Optional[str] = None
     taller_id: Optional[str] = None
     usuario_id: Optional[str] = None

@@ -10,6 +10,7 @@ Genera salidas directas, limpias y orientadas a la acción en taller:
 from __future__ import annotations
 
 import re
+import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.core.conversacion.models import QuestionIntent
@@ -214,6 +215,7 @@ class FormateadorCompacto:
         respuesta_determinista: str,
         llm_usado: bool,
         respuesta_limitada: bool,
+        hipotesis_rechazadas: Optional[List[str]] = None,
     ) -> str:
         """Usa la síntesis LLM segura y conserva una sola pregunta del flujo determinista."""
         if not llm_usado or respuesta_limitada or not respuesta_llm:
@@ -224,9 +226,52 @@ class FormateadorCompacto:
         resumen = re.sub(r"\n[ \t]*\n(?:[ \t]*\n)+", "\n\n", resumen).strip()
         if not resumen:
             return respuesta_determinista
+        from src.core.conversacion.validador_compatibilidad import hipotesis_rechazada_en_texto
+
+        if hipotesis_rechazada_en_texto(resumen, hipotesis_rechazadas):
+            return respuesta_determinista
 
         pregunta_siguiente = preguntas[-1].strip() if preguntas else ""
         return f"{resumen}\n\n{pregunta_siguiente}".strip()
+
+    @classmethod
+    def evitar_respuesta_repetida(
+        cls,
+        respuesta: str,
+        estado: Optional[Any],
+        evidencia_duplicada: bool,
+    ) -> str:
+        """Evita volver a enviar el mismo resumen cuando no cambió la evidencia del caso."""
+        if not evidencia_duplicada or not estado or not getattr(estado, "trazabilidad", None):
+            return respuesta
+        respuestas_previas = [
+            str(traza.get("respuesta_enviada", "")).strip()
+            for traza in estado.trazabilidad[-5:]
+            if str(traza.get("respuesta_enviada", "")).strip()
+        ]
+        if not respuestas_previas or not respuesta:
+            return respuesta
+
+        def tokens(texto: str) -> set[str]:
+            normalizado = unicodedata.normalize("NFD", texto.casefold())
+            limpio = "".join(c for c in normalizado if not unicodedata.combining(c))
+            return {
+                palabra for palabra in re.findall(r"[a-z0-9]+", limpio)
+                if len(palabra) > 2 and palabra not in {"con", "para", "por", "que", "del", "una", "los", "las", "esta", "este"}
+            }
+
+        actuales = tokens(respuesta)
+        repetida = any(
+            len(actuales & previos) >= 5
+            and len(actuales & previos) / max(1, len(actuales | previos)) >= 0.72
+            for previos in (tokens(anterior) for anterior in respuestas_previas)
+        )
+        if not repetida:
+            return respuesta
+        return (
+            "No hay evidencia nueva que cambie la orientación anterior. La causa sigue sin confirmar; "
+            "cuando tengas un resultado de prueba distinto, compártelo y actualizaré este mismo caso."
+        )
 
     @classmethod
     def calcular_scores_presentacion(
@@ -240,8 +285,15 @@ class FormateadorCompacto:
             return []
 
         items = list(top_hipotesis[:3])
-        probs = [float(item.get("probabilidad", 0.0)) for item in items]
-        pcts = [int(round(p * 100)) if p <= 1.0 else int(round(p)) for p in probs]
+        origenes = [str(item.get("origen_probabilidad", "SVM")).upper() for item in items]
+        probs = [
+            float(item.get("probabilidad", 0.0)) if origen == "SVM" else 0.0
+            for item, origen in zip(items, origenes)
+        ]
+        pcts = [
+            int(round(p * 100)) if p <= 1.0 else int(round(p))
+            for p in probs
+        ]
         suma_pcts = sum(pcts)
 
         # Si representan una distribución conjunta o diferencial (sum <= 1.05), no pueden sumar > 100%
@@ -262,6 +314,7 @@ class FormateadorCompacto:
                 "probabilidad_raw": item.get("probabilidad", 0.0),
                 "porcentaje_presentacion": pct,
                 "es_distribucion_conjunta": es_conjunta,
+                "origen_probabilidad": str(item.get("origen_probabilidad", "SVM")).upper(),
             })
         return resultado
 
@@ -287,6 +340,36 @@ class FormateadorCompacto:
         [Pregunta contextual]
         """
         if not top_hipotesis:
+            dominio = str(getattr(estado, "dominio_probable", "") or "").upper()
+            sistema = str(getattr(estado, "active_system", "") or "").lower()
+            sintomas = " ".join(getattr(estado, "active_symptoms", []) or []).lower()
+            pruebas = getattr(estado, "completed_tests", {}) or {}
+            if sistema == "encendido" and ("tiembla" in sintomas or "misfire" in sintomas):
+                return (
+                    "🔧 *Orientación de encendido, aún sin causa ML priorizable.* "
+                    "Con el temblor reportado, comprueba bujías y bobinas con una prueba "
+                    "de chispa adecuada y revisa el ralentí. La causa queda pendiente de "
+                    "medición; no atribuyo porcentaje ni confirmación física."
+                )
+            if sistema in {"suspension_direccion", "suspension"} or (
+                sistema in {"", "ambiguo"}
+                and re.search(r"\b(?:baches?|pistas? irregulares|golpeteo)\b", sintomas)
+            ):
+                return (
+                    "🔧 *Suspensión/dirección: sin hipótesis ML priorizable por ahora.* "
+                    "Si el ruido aparece en baches, realiza una inspección física "
+                    "de bujes, "
+                    "rótulas y bieletas en un taller; no afirmo cuál pieza falló ni "
+                    "atribuyo un porcentaje sin respaldo del modelo."
+                )
+            if dominio == "CLIMATIZACION" and pruebas.get("acople_compresor") == "SI":
+                return (
+                    "🔧 *Sin hipótesis ML pertinente por ahora.* Ya registré que el compresor "
+                    "acopla; no repetiré esa prueba. El siguiente paso es comprobar si funciona "
+                    "el electroventilador y medir la presión del circuito con equipo adecuado "
+                    "según la especificación del vehículo. No atribuyo un porcentaje ni una "
+                    "causa sin respaldo del modelo."
+                )
             return (
                 "No tengo una hipótesis ML compatible con la evidencia y los descartes de este caso. "
                 "Conservo las comprobaciones registradas. Se requiere revisión técnica antes de "
@@ -312,20 +395,27 @@ class FormateadorCompacto:
         for item in scores_pres:
             falla_nom = _simplificar_nombre_falla(item.get("falla", ""))
             conf_pct = item.get("porcentaje_presentacion", 0)
+            origen_probabilidad = item.get("origen_probabilidad", "SVM")
             falla_l = falla_nom.lower()
+            if origen_probabilidad != "SVM":
+                etiqueta_confianza = "priorizada por evidencia; sin porcentaje SVM"
+            else:
+                etiqueta_confianza = f"{conf_pct}% (SVM)"
 
             es_diesel_exclusivo = any(k in falla_l for k in ("diesel", "dpf", "fap", "adblue", "def "))
             if es_diesel_exclusivo:
                 if combustible_str in ("gasolina", "glp", "gnv", "nafta"):
                     continue
                 elif not combustible_str:
-                    lineas_hipotesis.append(f"{num_mostrado}. {falla_nom} — {conf_pct}% *(solo si es Diésel)*")
+                    lineas_hipotesis.append(
+                        f"{num_mostrado}. {falla_nom} — {etiqueta_confianza} *(solo si es Diésel)*"
+                    )
                     num_mostrado += 1
                     if num_mostrado > 3:
                         break
                     continue
 
-            lineas_hipotesis.append(f"{num_mostrado}. {falla_nom} — {conf_pct}%")
+            lineas_hipotesis.append(f"{num_mostrado}. {falla_nom} — {etiqueta_confianza}")
             num_mostrado += 1
             if num_mostrado > 3:
                 break

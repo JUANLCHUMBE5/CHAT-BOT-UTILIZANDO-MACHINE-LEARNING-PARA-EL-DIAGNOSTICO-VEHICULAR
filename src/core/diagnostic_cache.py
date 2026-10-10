@@ -43,9 +43,17 @@ class DiagnosticoLRUCache:
         self._misses: int = 0
 
     @staticmethod
-    def generar_clave(sintoma: str, marca_modelo: str = "", placa: str = "") -> str:
+    def generar_clave(
+        sintoma: str,
+        marca_modelo: str = "",
+        placa: str = "",
+        case_id: str = "",
+    ) -> str:
         """Genera un hash SHA-256 normalizado para la clave de consulta."""
-        normalizado = f"{sintoma.strip().lower()}|{marca_modelo.strip().lower()}"
+        normalizado = (
+            f"{case_id.strip()}|{sintoma.strip().lower()}|{marca_modelo.strip().lower()}|"
+            f"{placa.strip().lower()}"
+        )
         return hashlib.sha256(normalizado.encode("utf-8")).hexdigest()
 
     def obtener(self, clave_hash: str) -> Optional[Any]:

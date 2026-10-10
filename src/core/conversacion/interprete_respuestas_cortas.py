@@ -192,6 +192,15 @@ class InterpreteRespuestasCortas:
                 "hecho": hecho.to_dict(),
             }
 
+        if intent_str == QuestionIntent.MEDICION_TECNICA.value and texto_l in (
+            "si", "sí", "afirmativo", "correcto"
+        ):
+            return {
+                "categoria_respuesta": "MEDICION_INCOMPLETA",
+                "campo": "medicion_tecnica_pendiente",
+                "valor": "disponible_sin_valor",
+            }
+
         if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and texto_l in (
             "no", "no aun", "todavia no", "aun no"
         ):

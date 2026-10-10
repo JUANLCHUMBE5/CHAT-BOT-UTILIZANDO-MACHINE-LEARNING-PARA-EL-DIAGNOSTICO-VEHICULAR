@@ -39,6 +39,7 @@ class ResultadoFusion:
     componentes_descartados: List[str]
     datos_faltantes: List[str]
     origen_decision: str  # "ML_TOP1", "RESCATE_DTC", "RESCATE_EVIDENCIA_FISICA", "FUSION_RAG"
+    origen_confianza: str = "SVM"
     requiere_autopregunta: bool = False
     pregunta_sugerida: Optional[str] = None
 
@@ -55,6 +56,7 @@ class PoliticaFusionDiagnostica:
         rag_meta: Dict[str, Any],
         rag_similitud: float,
         codigos_dtc: Optional[List[str]] = None,
+        rag_evidencia_validada: bool = False,
     ) -> ResultadoFusion:
         texto_norm = _norm(sintoma_texto)
         dtcs = [d.strip().upper() for d in (codigos_dtc or []) if d]
@@ -63,7 +65,23 @@ class PoliticaFusionDiagnostica:
         top1_ml = fallas_ml[0] if fallas_ml else "DESCONOCIDO"
         conf1_ml = probs_ml[0] if probs_ml else 0.50
 
-        rag_falla = rag_meta.get("falla", "")
+        rag_falla = str(rag_meta.get("falla", "") or "").strip()
+        rag_macro = obtener_macro_sistema(rag_falla) if rag_falla else ""
+        rag_macro_declarado = str(
+            rag_meta.get("macro_sistema") or rag_meta.get("sistema") or ""
+        ).strip().upper()
+        macro_compatible = bool(
+            macro_sistema_ml
+            and rag_macro == macro_sistema_ml
+            and (not rag_macro_declarado or rag_macro_declarado == macro_sistema_ml)
+        )
+        # La similitud por sí sola no acredita fuente ni aplicabilidad.
+        rag_evidencia_compatible = bool(
+            rag_evidencia_validada
+            and rag_similitud >= 0.80
+            and rag_falla
+            and macro_compatible
+        )
         evidencia_confirmada: List[str] = []
         componentes_descartados: List[str] = []
         datos_faltantes: List[str] = []
@@ -360,7 +378,10 @@ class PoliticaFusionDiagnostica:
                     # Si la falla primaria de este DTC está en Top 2 o Top 3 ML
                     if fallas_prioritarias[0] in fallas_ml[:3]:
                         candidata_rescate = fallas_prioritarias[0]
-                    elif rag_falla == fallas_prioritarias[0] and rag_similitud >= 0.50:
+                    elif (
+                        rag_evidencia_compatible
+                        and rag_falla == fallas_prioritarias[0]
+                    ):
                         candidata_rescate = fallas_prioritarias[0]
                     elif len(fallas_prioritarias) > 1 and fallas_prioritarias[1] in fallas_ml[:3]:
                         candidata_rescate = fallas_prioritarias[1]
@@ -386,9 +407,9 @@ class PoliticaFusionDiagnostica:
                         break
 
         # C. Rescate por RAG de Alta Certidumbre y Consistencia (sin degradar ML Top 1 fuerte)
-        elif rag_similitud >= 0.80 and rag_falla in fallas_ml[1:3] and conf1_ml < 0.65:
+        elif rag_evidencia_compatible and rag_falla in fallas_ml[1:3] and conf1_ml < 0.65:
             falla_elegida = rag_falla
-            confianza_res = max(conf1_ml, 0.78)
+            confianza_res = probs_ml[fallas_ml.index(rag_falla)]
             origen = "FUSION_RAG"
 
         # D. Restricción física: Vehículo en marcha excluye motor de arranque eléctrico
@@ -408,20 +429,31 @@ class PoliticaFusionDiagnostica:
         # ---------------------------------------------------------------------
         # 4. CONSTRUCCIÓN DEL DIAGNÓSTICO DIFERENCIAL Y POLÍTICA DE INCERTIDUMBRE
         # ---------------------------------------------------------------------
-        diferenciales = []
-        candidatas_diff = [f for f in fallas_ml if f != falla_elegida]
-        if rag_falla and rag_falla != falla_elegida and rag_falla not in candidatas_diff:
-            candidatas_diff.append(rag_falla)
-
-        # Asignar probabilidades decrecientes realistas al diferencial
-        prob_restante = max(0.05, 1.0 - confianza_res)
-        prob_d2 = round(prob_restante * 0.65, 3)
-        prob_d3 = round(prob_restante * 0.35, 3)
-
-        if candidatas_diff:
-            diferenciales.append({"falla": candidatas_diff[0], "probabilidad": prob_d2})
-        if len(candidatas_diff) > 1:
-            diferenciales.append({"falla": candidatas_diff[1], "probabilidad": prob_d3})
+        # Los diferenciales del modelo conservan sus probabilidades originales;
+        # el RAG nunca recibe porcentajes SVM calculados o redistribuidos por reglas.
+        diferenciales = [
+            {
+                "falla": falla,
+                "probabilidad": probabilidad if origen_probabilidad == "SVM" else 0.0,
+                "origen_probabilidad": origen_probabilidad,
+            }
+            for prediccion, falla, probabilidad in zip(predicciones_ml, fallas_ml, probs_ml)
+            for origen_probabilidad in [
+                str(prediccion.get("origen_probabilidad", "SVM")).upper()
+            ]
+            if falla and falla != falla_elegida
+        ][:2]
+        if (
+            rag_evidencia_compatible
+            and rag_falla != falla_elegida
+            and rag_falla not in {item["falla"] for item in diferenciales}
+        ):
+            diferenciales.append({
+                "falla": rag_falla,
+                "probabilidad": 0.0,
+                "origen_probabilidad": "RAG_VALIDADO",
+            })
+            diferenciales = diferenciales[:2]
 
         # Manejo de política de incertidumbre para casos ambiguos
         distancia_top = 1.0
@@ -439,12 +471,32 @@ class PoliticaFusionDiagnostica:
                 f"Ambigüedad técnica detectada entre {falla_elegida} y {diferenciales[0]['falla']}. Requiere verificación discriminante en taller."
             )
 
+        prediccion_principal = next(
+            (
+                pred
+                for pred in predicciones_ml
+                if pred.get("falla") == falla_elegida
+            ),
+            None,
+        )
+        origen_confianza = (
+            str(prediccion_principal.get("origen_probabilidad", "SVM")).upper()
+            if prediccion_principal
+            else origen
+        )
+        confianza_reportable = (
+            float(prediccion_principal.get("probabilidad", 0.0) or 0.0)
+            if origen_confianza == "SVM" and prediccion_principal
+            else 0.0
+        )
+
         return ResultadoFusion(
             falla_principal=falla_elegida,
-            confianza_final=round(confianza_res, 4),
+            confianza_final=round(confianza_reportable, 4),
             diferenciales=diferenciales,
             evidencia_confirmada=evidencia_confirmada,
             componentes_descartados=componentes_descartados,
             datos_faltantes=datos_faltantes,
             origen_decision=origen,
+            origen_confianza=origen_confianza,
         )

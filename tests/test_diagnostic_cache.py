@@ -66,16 +66,25 @@ def test_cache_expiracion_por_ttl():
     assert cache.obtener(clave) is None
 
 
-def test_gestor_diagnostico_reutiliza_cache_en_segunda_llamada():
+def test_gestor_diagnostico_reutiliza_cache_en_segunda_llamada(monkeypatch):
     gestor = GestorDiagnostico(gemini_api_key="mock_key")
     sintoma = "pastillas de freno chillan en bajada prueba cache"
+    monkeypatch.setattr(
+        gestor,
+        "_generar_respuesta_con_metadatos",
+        lambda **_: ("Respuesta determinista de prueba", {"usado": False}),
+    )
 
     # Primera llamada: procesa y guarda en caché
-    res1 = gestor.procesar_consulta_texto(sintoma, marca_modelo="Toyota Corolla")
+    res1 = gestor.procesar_consulta_texto(
+        sintoma, marca_modelo="Toyota Corolla", case_id="cache-case-1"
+    )
 
     # Segunda llamada idéntica: debe responder desde caché en tiempo récord (< 10 ms)
     t1 = time.time()
-    res2 = gestor.procesar_consulta_texto(sintoma, marca_modelo="Toyota Corolla")
+    res2 = gestor.procesar_consulta_texto(
+        sintoma, marca_modelo="Toyota Corolla", case_id="cache-case-1"
+    )
     t_segunda = (time.time() - t1) * 1000
 
     assert res1.diagnostico_ml == res2.diagnostico_ml

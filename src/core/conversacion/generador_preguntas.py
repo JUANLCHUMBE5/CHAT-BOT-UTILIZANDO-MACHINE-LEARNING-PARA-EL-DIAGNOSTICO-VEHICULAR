@@ -22,6 +22,28 @@ class GeneradorPreguntas:
     """Gestiona la formulación de preguntas discriminantes y garantiza el escape de bucles."""
 
     @staticmethod
+    def permite_caracterizar_ruido_suspension(
+        estado: ConversationState,
+        texto_pregunta: Optional[str] = None,
+    ) -> bool:
+        """Permite precisar un ruido ya reportado, sin repetir una pregunta de presencia."""
+        condicion = str(estado.obtener_valor_confirmado("condicion_operacion") or "").lower()
+        dominio = str(getattr(estado, "dominio_probable", "") or "").upper()
+        condicion_bache = "bache" in condicion or "irregular" in condicion
+        if dominio != "SUSPENSION" or not condicion_bache:
+            return False
+        if estado.ya_preguntado(QuestionIntent.PRESENCIA_RUIDO):
+            return False
+        if texto_pregunta is None:
+            return True
+
+        texto = texto_pregunta.lower()
+        return any(
+            marcador in texto
+            for marcador in ("golpe seco", "rebote", "cascabeleo", "crujido al comprimir")
+        )
+
+    @staticmethod
     def already_known(intent: QuestionIntent, estado: ConversationState) -> bool:
         """Determina si la información requerida ya está confirmada o abordada en el estado conversacional."""
         if intent in (
@@ -139,6 +161,16 @@ class GeneradorPreguntas:
             if getattr(hecho, "categoria", "") == "medicion"
         ).lower()
         pregunta_anterior = (estado.ultima_pregunta() or {}).get("texto", "").lower()
+
+        if (
+            estado.active_system == "refrigeracion"
+            and len(estado.historial_mensajes_usuario) == 1
+            and re.fullmatch(r"\s*(?:se\s+)?calienta\s*", historial_original)
+        ):
+            return (
+                "¿Se calienta detenido en ralentí, en carretera o en ambas condiciones?",
+                QuestionIntent.CONDICION_OPERACION,
+            )
 
         if (
             estado.active_system == "ambiguo"
@@ -327,7 +359,10 @@ class GeneradorPreguntas:
             return False
 
         # 2. Dato ya conocido o respondido previamente
-        if cls.already_known(intent, estado):
+        if cls.already_known(intent, estado) and not (
+            intent == QuestionIntent.PRESENCIA_RUIDO
+            and cls.permite_caracterizar_ruido_suspension(estado)
+        ):
             return False
 
         # 3. Detección semántica de preguntas repetidas: máximo 1 vez si hubo respuesta
@@ -392,7 +427,11 @@ class GeneradorPreguntas:
             return False, "INTENT_YA_RESUELTO"
         if intent == QuestionIntent.CODIGO_DTC and cls.already_known(QuestionIntent.CODIGO_DTC, estado):
             return False, "INTENT_YA_RESUELTO"
-        if intent == QuestionIntent.PRESENCIA_RUIDO and cls.already_known(QuestionIntent.PRESENCIA_RUIDO, estado):
+        if (
+            intent == QuestionIntent.PRESENCIA_RUIDO
+            and cls.already_known(QuestionIntent.PRESENCIA_RUIDO, estado)
+            and not cls.permite_caracterizar_ruido_suspension(estado, texto_pregunta)
+        ):
             return False, "INTENT_YA_RESUELTO"
 
         # 3. Aplicabilidad semántica por dominio. La ganancia de información

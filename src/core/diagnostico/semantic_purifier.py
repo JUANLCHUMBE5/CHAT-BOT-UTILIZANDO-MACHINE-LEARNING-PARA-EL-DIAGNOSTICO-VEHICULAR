@@ -65,6 +65,13 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         r"\b(?:sin\s+pisar\s+(?:el\s+)?freno\s+vibra|vibra\s+sin\s+frenar|tiembla\s+sin\s+frenar|frenos\s+descartados|frenos\s+no\s+son)\b",
         limpio
     ))
+    niega_freno = niega_freno or bool(
+        re.search(
+            r"\bsin\s+(?:tocar|pisar|apretar)\s+(?:(?:el|los)\s+)?(?:pedal\s+de\s+)?freno\b",
+            limpio,
+        )
+        and re.search(r"\b(?:vibra|tiembla|vibraci[oó]n)\b", limpio)
+    )
 
     afirma_freno = not niega_freno and any(
         p in limpio for p in (

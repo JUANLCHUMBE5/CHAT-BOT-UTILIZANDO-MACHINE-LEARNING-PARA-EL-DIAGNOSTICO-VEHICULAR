@@ -7,7 +7,9 @@ from src.core.gestor_diagnostico import GestorDiagnostico
 
 @pytest.fixture
 def gestor():
-    return GestorDiagnostico(gemini_api_key="mock_key")
+    instancia = GestorDiagnostico()
+    instancia.api_key = ""
+    return instancia
 
 
 def test_control_remoto_no_desbloquea_puerta(gestor):
@@ -33,7 +35,9 @@ def test_chapa_o_pestillo_mecanico_trabado(gestor):
     respuesta = resultado.respuesta_texto.lower()
     diagnostico = resultado.diagnostico_ml.lower()
     assert any(termino in f"{respuesta} {diagnostico}" for termino in ("chapa", "cerradura", "pestillo"))
-    assert resultado.contexto_manual == ""
+    # La recuperación exploratoria puede encontrar un fragmento candidato;
+    # solo el contexto validado podría respaldar la respuesta del LLM.
+    assert resultado.contexto_manual_verificado == ""
 
 
 def test_elevalunas_electrico_guaya_rota(gestor):

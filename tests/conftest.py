@@ -20,6 +20,10 @@ os.environ.setdefault("META_VERIFY_TOKEN", "isolated-test-webhook-verification")
 import pytest
 
 from src.config import settings
+
+# El entorno local puede desactivar Meta y dejar el token vacío. Las pruebas
+# del handshake usan siempre una credencial ficticia, independiente de .env.
+settings.meta_verify_token = "carbot_test_verify_token"
 from src.core.access_token_store import access_token_store
 from src.core.diagnostic_cache import diagnostico_cache
 from src.core.gemini_queue import gemini_rate_limiter

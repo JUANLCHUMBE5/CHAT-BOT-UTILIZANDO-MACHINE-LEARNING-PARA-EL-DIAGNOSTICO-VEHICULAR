@@ -82,6 +82,13 @@ def test_manual_de_caja_mecanica_no_aplica_a_automatica():
     assert not documento_compatible("Caja manual raspa", "Servicio de transmisión automática CVT", "")
 
 
+def test_procedimiento_gnv_glp_requiere_combustible_confirmado():
+    titulo = "Calibración y diagnóstico de sistema GNV / GLP 5ta generación"
+    assert not documento_compatible("Mezcla pobre e inyectores", titulo, "Rampa de inyectores y reductor")
+    assert not documento_compatible("Mezcla pobre en gasolina", titulo, "Rampa de inyectores y reductor")
+    assert documento_compatible("Mezcla pobre usando GNV", titulo, "Rampa de inyectores y reductor")
+
+
 def test_fallback_no_recomienda_motor_en_queja_de_acoplamiento():
     ordenadas, motivo = priorizar_evidencia("Caja automática entra con golpe", preds())
     texto, _ = limitar_respuesta("Apretar a 100 Nm", ordenadas, motivo)

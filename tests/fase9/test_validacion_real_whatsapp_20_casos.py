@@ -356,7 +356,8 @@ async def test_casos_09_10_reinicio_de_caso(gestor_singleton):
     await orq.procesar_turno(session_id=s_id, texto_usuario="Honda Civic no prende", gestor_diagnostico=gestor_singleton)
     st_civic = await repo.get_session(s_id)
     assert st_civic.marca == "Honda"
-    assert "Nissan" not in str(st_civic.exportar_dict())
+    assert "Nissan" not in f"{st_civic.marca} {st_civic.modelo} {st_civic.active_symptoms} {st_civic.hechos}"
+    assert any(caso.get("marca") == "Nissan" for caso in st_civic.hechos_historicos)
 
 
 @pytest.mark.anyio
@@ -477,10 +478,10 @@ async def test_caso_17_escape_del_loop(gestor_singleton):
     await orq.procesar_turno(session_id=s_id, texto_usuario="ni idea", gestor_diagnostico=gestor_singleton)
     r_escape = await orq.procesar_turno(session_id=s_id, texto_usuario="tampoco sé", gestor_diagnostico=gestor_singleton)
 
-    # Debe forzar diagnóstico diferencial sin entrar en bucle infinito
-    assert r_escape["decision"] in ("DIFERENCIAL", "DIAGNOSTICAR")
+    # Sin un síntoma identificable, el límite cierra la ronda sin inventar causas.
+    assert r_escape["decision"] == "DATOS_INSUFICIENTES"
     assert not r_escape["es_pregunta"]
-    assert "Posibles causas" in r_escape["respuesta_texto"] or "Hipótesis" in r_escape["respuesta_texto"]
+    assert "Límite de aclaraciones" in r_escape["respuesta_texto"]
 
 
 @pytest.mark.anyio

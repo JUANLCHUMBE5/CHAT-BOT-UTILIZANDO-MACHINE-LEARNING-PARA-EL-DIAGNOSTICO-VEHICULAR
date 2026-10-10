@@ -69,14 +69,16 @@ ESCENARIOS_20_ADENDA_ESCASOS: List[Dict[str, Any]] = [
         "evidence_level_esperado": "BAJA",
         "sintoma_esperado": "anomalía en frenos",
     },
-    # 9. Respuesta 'no sé' a pregunta de temperatura -> NO debe repetir la pregunta
+    # 9. La primera respuesta pide confirmar una comprobación, no temperatura.
+    # Registrar el dato desconocido sin atribuirlo a una medición no solicitada.
     {
         "id": "adenda_09_no_se_temperatura",
         "turnos": [
             "el motor ratea en ralentí y pierde fuerza",
             "no sé",
         ],
-        "debe_registrar_desconocido": "temperatura",
+        "debe_registrar_desconocido": "medicion_tecnica_pendiente",
+        "estado_desconocido_esperado": "NO_REVISADO",
         "no_debe_repetir_intent": "TEMPERATURA_APARICION",
     },
     # 10. Respuesta 'ni idea' a pregunta de condición de operación

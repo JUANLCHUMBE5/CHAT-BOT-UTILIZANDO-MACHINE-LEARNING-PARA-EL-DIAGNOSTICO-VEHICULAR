@@ -16,6 +16,7 @@ class PrediccionMLDTO(BaseModel):
     orden: int
     falla: str
     probabilidad: float
+    origen_probabilidad: str = "SVM"
 
 
 class EtapaProcesamientoDTO(BaseModel):
@@ -32,6 +33,7 @@ class ItemDiagnosticoDTO(BaseModel):
     sintoma_normalizado: str
     falla_predicha: str
     confianza: float
+    origen_confianza: str = "NO_REGISTRADO"
     similitud_rag: float = 0.0
     modo_diagnostico: str
     estado: str

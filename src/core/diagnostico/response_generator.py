@@ -11,11 +11,36 @@ from src.core.diagnostico.prompt_builder import (
     construir_prompt_consulta_tecnica,
     construir_prompt_diagnostico,
 )
+from src.core.diagnostico.respuesta_llm_estructurada import (
+    INSTRUCCION_JSON,
+    validar_y_formatear,
+)
 from src.core.gemini_queue import SolicitudGeminiEncolada, gemini_rate_limiter
 from src.core.llm import generar_respuesta_groq
 from src.core.logger import logger
 from src.core.sanitizer import redactar_datos_sensibles_para_llm, sanitizar_prompt_usuario
 from src.infrastructure.database.connection import database_configurada
+
+
+def _validar_respuesta_llm_diagnostico(
+    texto: str,
+    diagnostico_ml: str,
+    predicciones_ml: Optional[list[Any]],
+) -> str:
+    """Acota la hipótesis generada a candidatos presentes en el resultado recibido."""
+    permitidas = []
+    diagnostico = (diagnostico_ml or "").strip()
+    if diagnostico and not diagnostico.casefold().startswith("sin hipótesis ml pertinente"):
+        permitidas.append(diagnostico)
+    for prediccion in predicciones_ml or []:
+        falla = (
+            prediccion.get("falla", "")
+            if isinstance(prediccion, dict)
+            else getattr(prediccion, "falla", "")
+        )
+        if isinstance(falla, str) and falla.strip():
+            permitidas.append(falla.strip())
+    return validar_y_formatear(texto, hipotesis_permitidas=permitidas or None)
 
 
 def generar_respuesta_con_metadatos(
@@ -40,6 +65,7 @@ def generar_respuesta_con_metadatos(
     evidencia_confirmada: Optional[list[str]] = None,
     componentes_descartados: Optional[list[str]] = None,
     datos_faltantes: Optional[list[str]] = None,
+    case_id: Optional[str] = None,
 ) -> Tuple[str, dict]:
     """Sintetiza la respuesta final con Gemini LLM integrando Síntoma + ML + RAG."""
     confianza_pct = int(confianza_ml * 100)
@@ -75,6 +101,34 @@ def generar_respuesta_con_metadatos(
             componentes_descartados=componentes_descartados,
             datos_faltantes=datos_faltantes,
         )
+        prompt_sistema += "\n\nFORMATO OBLIGATORIO FINAL: " + INSTRUCCION_JSON
+
+    def _respuesta_groq_si_disponible() -> Tuple[str, dict] | None:
+        if not settings.groq_api_key or not settings.groq_chat_enabled:
+            return None
+        try:
+            texto_groq, metadata_groq = generar_respuesta_groq(
+                prompt_sistema,
+                tipo_consulta=tipo_consulta,
+            )
+            if tipo_consulta == "diagnostico":
+                try:
+                    texto_groq = _validar_respuesta_llm_diagnostico(
+                        texto_groq,
+                        diagnostico_ml,
+                        predicciones_ml,
+                    )
+                except ValueError:
+                    logger.warning(
+                        "[Groq LLM] Respuesta de diagnóstico no cumplió el contrato JSON; "
+                        "se usará el fallback local."
+                    )
+                    return None
+            logger.info("[Groq LLM] Respuesta generada como fallback del proveedor principal.")
+            return texto_groq, metadata_groq
+        except Exception as exc:
+            logger.warning(f"[Groq LLM] Fallback no disponible: {type(exc).__name__}")
+            return None
 
     def _respuesta_groq_si_disponible() -> Tuple[str, dict] | None:
         if not settings.groq_api_key or not settings.groq_chat_enabled:
@@ -107,7 +161,7 @@ def generar_respuesta_con_metadatos(
                 payload = {
                     "contents": [{"parts": [{"text": prompt_sistema}]}],
                     "generationConfig": {
-                        "temperature": 0.2,
+                        "temperature": 0.1 if tipo_consulta == "diagnostico" else 0.2,
                         "maxOutputTokens": 140 if tipo_consulta == "consulta_tecnica" else 1200,
                     },
                 }
@@ -118,13 +172,37 @@ def generar_respuesta_con_metadatos(
                     timeout=settings.gemini_timeout_seconds,
                 )
                 if response.status_code == 200:
-                    gemini_rate_limiter.registrar_estado_gemini(exitoso=True, codigo_http=200)
                     data = response.json()
                     metadata = data.get("usageMetadata", {})
                     texto_gemini = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    if tipo_consulta == "diagnostico":
+                        try:
+                            texto_gemini = _validar_respuesta_llm_diagnostico(
+                                texto_gemini,
+                                diagnostico_ml,
+                                predicciones_ml,
+                            )
+                        except ValueError:
+                            payload["contents"][0]["parts"][0]["text"] = (
+                                prompt_sistema + "\nLa respuesta anterior no cumplió el JSON. "
+                                "Reintenta una vez, solo con las cuatro claves indicadas."
+                            )
+                            reintento = gestor._http_session.post(
+                                url, json=payload, headers=headers, timeout=10,
+                            )
+                            if reintento.status_code != 200:
+                                raise ValueError("Reintento JSON del LLM falló")
+                            data = reintento.json()
+                            metadata = data.get("usageMetadata", {})
+                            texto_gemini = _validar_respuesta_llm_diagnostico(
+                                data["candidates"][0]["content"]["parts"][0]["text"].strip(),
+                                diagnostico_ml,
+                                predicciones_ml,
+                            )
                     texto_gemini = texto_gemini[: settings.gemini_output_max_chars]
                     if not texto_gemini:
                         raise ValueError("Gemini devolvió una respuesta vacía.")
+                    gemini_rate_limiter.registrar_estado_gemini(exitoso=True, codigo_http=200)
                     return texto_gemini, {
                         "usado": True,
                         "modelo": modelo,
@@ -176,6 +254,7 @@ def generar_respuesta_con_metadatos(
                     taller_id=taller_id,
                     usuario_id=usuario_id,
                     conversacion_id=conversacion_id,
+                    case_id=case_id,
                     tipo_consulta=tipo_consulta,
                     predicciones_ml=predicciones_dicts,
                 )

@@ -161,6 +161,7 @@ class TurnTrace:
     consulta_consolidada: str = ""
     top3: List[Dict[str, Any]] = field(default_factory=list)
     confianza: float = 0.0
+    origen_confianza: str = "NO_REGISTRADO"
     evidence_level: str = "BAJA"
     dtc_status: str = "SIN_DTC"
     estado_operativo: str = "DESCONOCIDO"
@@ -184,18 +185,21 @@ class TurnTrace:
     plan_b_activado: Optional[str] = None
     herramientas_bloqueadas: List[str] = field(default_factory=list)
     version_orquestador: str = "9.13.0"
+    tipo_mensaje: str = "sintoma_nuevo"
     timestamp: float = field(default_factory=time.time)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "turno": self.turno,
             "mensaje_original": self.mensaje_original,
+            "tipo_mensaje": self.tipo_mensaje,
             "contexto_previo": self.contexto_previo,
             "hechos_nuevos_extraidos": self.hechos_nuevos_extraidos,
             "hechos_actualizados": self.hechos_actualizados,
             "consulta_consolidada": self.consulta_consolidada,
             "top3": self.top3,
             "confianza": round(self.confianza, 4),
+            "origen_confianza": self.origen_confianza,
             "decision": self.decision,
             "motivo_decision": self.motivo_decision,
             "respuesta_enviada": self.respuesta_enviada,
@@ -539,37 +543,49 @@ class ConversationState:
 
     def _archivar_estado_activo(self) -> None:
         """Conserva el estado específico del caso solo dentro del histórico."""
-        if self.hechos and self.case_id:
-            ya_archivado = any(h.get("case_id") == self.case_id for h in self.hechos_historicos)
-            if not ya_archivado:
-                self.hechos_historicos.append({
-                    "case_id": self.case_id,
-                    "active_problem_id": self.active_problem_id,
-                    "estado_operativo": self.estado_operativo.value,
-                    "turno_cierre": self.turno_actual,
-                    "hechos": [h.to_dict() for h in self.hechos.values()],
-                    "completed_tests": dict(self.completed_tests),
-                    "measurements": dict(self.measurements),
-                    "top3": list(self.top3_actual),
-                    "dominio_probable": self.dominio_probable,
-                    "preguntas_realizadas": list(self.preguntas_realizadas),
-                    "respuestas_obtenidas": list(self.respuestas_obtenidas),
-                    "herramientas_no_disponibles": list(self.herramientas_no_disponibles),
-                    "pruebas_no_disponibles": list(self.pruebas_no_disponibles),
-                    "historial_mensajes_usuario": list(self.historial_mensajes_usuario),
-                    "timestamp": time.time(),
-                })
+        tiene_estado = bool(
+            self.hechos
+            or self.active_symptoms
+            or self.top3_actual
+            or self.preguntas_realizadas
+            or self.pending_question
+        )
+        if not self.case_id or not tiene_estado:
+            return
 
-    def archivar_caso_actual(self, nuevo_case_id: Optional[str] = None) -> str:
+        snapshot = self.exportar_dict()
+        snapshot.pop("hechos_historicos", None)
+        snapshot["turno_cierre"] = self.turno_actual
+        snapshot["timestamp"] = time.time()
+        for indice, archivado in enumerate(self.hechos_historicos):
+            if archivado.get("case_id") == self.case_id:
+                self.hechos_historicos[indice] = snapshot
+                break
+        else:
+            self.hechos_historicos.append(snapshot)
+
+    def archivar_caso_actual(
+        self,
+        nuevo_case_id: Optional[str] = None,
+        preservar_vehiculo: bool = False,
+    ) -> str:
         """Archiva los hechos del caso activo en el historial y genera un nuevo case_id limpio."""
         self._archivar_estado_activo()
         nuevo_id = nuevo_case_id or str(uuid.uuid4())
-        self.iniciar_nuevo_caso(nuevo_id)
+        self.iniciar_nuevo_caso(nuevo_id, preservar_vehiculo=preservar_vehiculo)
         return nuevo_id
 
-    def iniciar_nuevo_caso(self, case_id: Optional[str] = None) -> None:
-        """Inicia un nuevo caso diagnóstico limpiando hechos y manteniendo trazabilidad."""
+    def iniciar_nuevo_caso(
+        self,
+        case_id: Optional[str] = None,
+        preservar_vehiculo: bool = False,
+    ) -> None:
+        """Archiva el caso activo y crea otro sin transferir evidencia diagnóstica."""
         self._archivar_estado_activo()
+        vehiculo = {
+            campo: getattr(self, campo)
+            for campo in ("placa", "marca", "modelo", "anio", "motor", "combustible", "transmision")
+        } if preservar_vehiculo else {}
         self.case_id = case_id or str(uuid.uuid4())
         self.active_problem_id = str(uuid.uuid4())
         self.active_system = None
@@ -594,42 +610,53 @@ class ConversationState:
         self.hechos.clear()
         self.herramientas_no_disponibles.clear()
         self.pruebas_no_disponibles.clear()
-        self.preguntas_realizadas.clear()
-        self.respuestas_obtenidas.clear()
-        self.historial_mensajes_usuario.clear()
-        self.updated_at = time.time()
-
-    def reiniciar(self) -> None:
-        """Limpia el estado conversacional para iniciar un nuevo vehículo."""
-        self.case_id, self.placa, self.marca, self.modelo = None, None, None, None
-        self.anio, self.motor, self.combustible, self.transmision = None, None, None, None
-        self.active_problem_id = None
-        self.active_system = None
-        self.active_symptoms.clear()
-        self.pending_question = None
-        self.pending_test = None
-        self.completed_tests.clear()
-        self.measurements.clear()
         self.tools_available.clear()
         self.tools_unavailable.clear()
-        self.last_user_correction = None
-        self.last_diagnostic_action = None
-        self.fase, self.estado_operativo = ConversationPhase.INICIO, EstadoOperativo.DESCONOCIDO
-        self.dominio_probable = "DESCONOCIDO"
-        self.turno_actual, self.turnos_repregunta = 0, 0
-        self.confianza_actual, self.conversation_evidence_level = 0.0, EvidenceLevel.BAJA
-        self.dtc_status = DtcStatus.SIN_DTC
-        self.top3_actual.clear()
-        self.hipotesis_descartadas.clear()
-        self.hechos.clear()
-        self.hechos_historicos.clear()
-        self.herramientas_no_disponibles.clear()
-        self.pruebas_no_disponibles.clear()
         self.preguntas_realizadas.clear()
         self.respuestas_obtenidas.clear()
         self.historial_mensajes_usuario.clear()
         self.trazabilidad.clear()
+        self.placa = None
+        self.marca = None
+        self.modelo = None
+        self.anio = None
+        self.motor = None
+        self.combustible = None
+        self.transmision = None
+        if preservar_vehiculo:
+            for campo, valor in vehiculo.items():
+                setattr(self, campo, valor)
         self.updated_at = time.time()
+
+    def restaurar_caso_archivado(self, case_id: str) -> bool:
+        """Reabre solo una instantánea histórica identificada explícitamente."""
+        if not case_id:
+            return False
+        snapshot = next(
+            (caso for caso in reversed(self.hechos_historicos) if caso.get("case_id") == case_id),
+            None,
+        )
+        if not snapshot:
+            return False
+        if self.case_id == case_id:
+            return True
+
+        self._archivar_estado_activo()
+        historial = list(self.hechos_historicos)
+        estado_restaurado = type(self).from_dict(snapshot)
+        estado_restaurado.session_id = self.session_id
+        estado_restaurado.hechos_historicos = historial
+        estado_restaurado.updated_at = time.time()
+        self.__dict__.update(estado_restaurado.__dict__)
+        return True
+
+    def reiniciar(self) -> None:
+        """Limpia el caso activo y conserva los diagnósticos previos en el historial."""
+        self._archivar_estado_activo()
+        historial = list(self.hechos_historicos)
+        estado_vacio = type(self)(session_id=self.session_id)
+        estado_vacio.hechos_historicos = historial
+        self.__dict__.update(estado_vacio.__dict__)
 
     def exportar_dict(self, incluir_trazabilidad: bool = True) -> Dict[str, Any]:
         return {

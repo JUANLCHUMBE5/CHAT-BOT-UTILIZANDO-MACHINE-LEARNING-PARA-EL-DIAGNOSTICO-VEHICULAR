@@ -310,24 +310,26 @@ async def test_t09_new_workshop_case(
 ) -> None:
     """
     Caso anterior: A/C.
-    Caso nuevo: 'El cliente dejó su vehículo porque presenta una fuga de líquido en la parte delantera y la temperatura está subiendo.'
+    Caso nuevo explícito: el mensaje indica el cambio de caso y aporta fuga/calentamiento.
     PASS: No aparecen preguntas de A/C por contaminación residual.
     """
     session_id = "test_t09_session"
     # Turno 1: A/C
-    await orquestador_inmem.procesar_mensaje(
+    r1 = await orquestador_inmem.procesar_mensaje(
         session_id=session_id,
         texto_usuario="El aire acondicionado no enfría, sopla aire tibio.",
         gestor_diagnostico=gestor_real,
     )
+    case_id_anterior = r1["estado"].case_id
 
     # Turno 2: Nuevo caso de taller con fuga y calentamiento
     r2 = await orquestador_inmem.procesar_mensaje(
         session_id=session_id,
-        texto_usuario="El cliente dejó su vehículo porque presenta una fuga de líquido en la parte delantera y la temperatura está subiendo.",
+        texto_usuario="Nuevo caso: el cliente dejó su vehículo porque presenta una fuga de líquido en la parte delantera y la temperatura está subiendo.",
         gestor_diagnostico=gestor_real,
     )
 
+    assert r2["estado"].case_id != case_id_anterior
     txt_r2 = r2["respuesta_texto"].lower()
     assert re.search(r"(?<!turbo)compresor", txt_r2) is None
     assert "r134a" not in txt_r2
@@ -343,26 +345,29 @@ async def test_t10_same_vehicle_new_problem(
     gestor_real: GestorDiagnostico,
 ) -> None:
     """
-    'Ya revisaré eso después. Ahora el problema es que el aire acondicionado no enfría.'
+    'Ya revisaré eso después. En el mismo vehículo, ahora el problema es que el aire acondicionado no enfría.'
     PASS: Cambia problema activo a climatización sin arrastrar hipótesis motor irrelevantes.
     """
     session_id = "test_t10_session"
     # Turno 1: Falla de motor
-    await orquestador_inmem.procesar_mensaje(
+    r1 = await orquestador_inmem.procesar_mensaje(
         session_id=session_id,
         texto_usuario="El motor tironea al acelerar en subida.",
         gestor_diagnostico=gestor_real,
     )
+    case_id_anterior = r1["estado"].case_id
 
     # Turno 2: Transición explícita a A/C
     r2 = await orquestador_inmem.procesar_mensaje(
         session_id=session_id,
-        texto_usuario="Ya revisaré eso después. Ahora el problema es que el aire acondicionado no enfría.",
+        texto_usuario="Ya revisaré eso después. En el mismo vehículo, ahora el problema es que el aire acondicionado no enfría.",
         gestor_diagnostico=gestor_real,
     )
 
     estado_actual = r2["estado"]
     assert estado_actual.dominio_probable == "CLIMATIZACION"
+    assert estado_actual.case_id != case_id_anterior
+    assert "tironea" not in " ".join(estado_actual.historial_mensajes_usuario).lower()
     txt_r2 = r2["respuesta_texto"].lower()
     assert "bujía" not in txt_r2 and "bobina" not in txt_r2
 

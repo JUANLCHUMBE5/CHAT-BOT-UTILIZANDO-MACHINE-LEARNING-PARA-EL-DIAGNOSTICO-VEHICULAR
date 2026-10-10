@@ -109,7 +109,13 @@ async def test_auditoria_completa_8_metricas_fase9(orquestador, gestor):
                 hechos_extraidos_correctos += 1
 
         # Evaluar respuestas cortas / de seguimiento
-        if "respuesta_corta_turno" in caso or caso.get("debe_tener_estado_ambiguo") or caso.get("debe_registrar_desconocido"):
+        # Una respuesta de seguimiento solo es evaluable si el bot formuló
+        # una pregunta. "Sí" o "ya lo cambié" sin pregunta previa no deben
+        # inflar ni penalizar esta métrica; son aportes espontáneos del usuario.
+        if (
+            ("respuesta_corta_turno" in caso or caso.get("debe_tener_estado_ambiguo") or caso.get("debe_registrar_desconocido"))
+            and estado_final.preguntas_realizadas
+        ):
             total_respuestas_seguimiento += 1
             if len(estado_final.respuestas_obtenidas) > 0:
                 respuestas_seguimiento_correctas += 1

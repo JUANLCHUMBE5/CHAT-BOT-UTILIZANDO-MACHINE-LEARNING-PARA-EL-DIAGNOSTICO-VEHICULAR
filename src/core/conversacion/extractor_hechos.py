@@ -17,6 +17,7 @@ from src.core.conversacion.models import (
     EstadoOperativo,
     FactState,
     FactType,
+    QuestionIntent,
 )
 
 PATRONES_REINICIO = [
@@ -200,6 +201,72 @@ class ExtractorHechos:
         return bool(PATRONES_REINICIO[0].fullmatch(texto.strip()))
 
     @staticmethod
+    def clasificar_solicitud_caso(texto: str) -> Dict[str, Any] | None:
+        """Reconoce comandos explícitos de caso nuevo o reanudación, no alusiones vagas."""
+        if not texto:
+            return None
+        normalizado = "".join(
+            caracter
+            for caracter in unicodedata.normalize("NFD", texto.casefold())
+            if unicodedata.category(caracter) != "Mn"
+        )
+        limpio = " ".join(normalizado.split())
+
+        if re.fullmatch(r"(?:quiero\s+)?cancelar(?:\s+(?:el\s+)?(?:caso|diagnostico|consulta))?[.!]*", limpio):
+            return {"accion": "cancelar", "preservar_vehiculo": False}
+
+        patron_uuid = (
+            r"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
+        )
+        reanudar = re.search(
+            rf"\b(?:retomar|reanudar|continuar|volver\s+a)\s+(?:el\s+)?"
+            rf"(?:caso|diagnostico)(?:\s+(?:anterior|previo))?(?:\s+{patron_uuid})?\b",
+            limpio,
+        )
+        if reanudar:
+            objetivo = reanudar.group(1)
+            return {
+                "accion": "reanudar",
+                "case_id": objetivo,
+                "caso_anterior": "anterior" in reanudar.group(0) or "previo" in reanudar.group(0),
+            }
+
+        mismo_vehiculo = bool(
+            re.search(r"\b(?:mismo|misma)\s+(?:vehiculo|carro|auto|coche|placa)\b", limpio)
+            or re.search(r"\bcon\s+la\s+misma\s+placa\b", limpio)
+        )
+        otro_vehiculo = bool(
+            re.search(r"\b(?:otro|otra)\s+(?:vehiculo|carro|auto|coche)\b", limpio)
+            or re.search(r"\bcambio\s+de\s+vehiculo\b", limpio)
+        )
+        nuevo_caso = bool(
+            re.search(
+                r"\b(?:nuevo|otro)\s+(?:caso|diagnostico|problema)\b|"
+            r"\b(?:falla|problema)\s+diferente\b|"
+            r"\btengo\s+otra\s+(?:falla|consulta)\b|"
+                r"\ben\s+el\s+mismo\s+vehiculo[, ]+ahora\s+"
+                r"(?:el\s+)?(?:problema|falla)\s+es\b|"
+            r"\b(?:cambiemos|pasemos)\s+(?:a\s+)?otro\s+caso\b|"
+                r"\b(?:empezar|empecemos|comenzar|comencemos|iniciar|iniciemos)\s+"
+                r"(?:todo\s+)?(?:de\s+nuevo|desde\s+cero)\b|"
+                r"\breiniciar\s+(?:el\s+)?(?:caso|diagnostico)\b|"
+                r"\botro\s+(?:vehiculo|carro|auto|coche)\b|"
+                r"\b(?:tengo|llego|lleg[oó])\s+(?:un\s+)?otro\s+"
+                r"(?:vehiculo|carro|auto|coche|caso|problema)\b|"
+                r"\b(?:olvida|olvidemos)\s+lo\s+anterior\b|"
+                r"^nuevo[.!]*$",
+                limpio,
+            )
+        )
+        if nuevo_caso:
+            return {
+                "accion": "nuevo_caso",
+                "preservar_vehiculo": mismo_vehiculo and not otro_vehiculo,
+                "otro_vehiculo": otro_vehiculo,
+            }
+        return None
+
+    @staticmethod
     def contiene_informacion_diagnostica(texto: str) -> bool:
         """Detecta si un mensaje de nuevo caso ya incluye sintomas, pruebas o mediciones."""
         if not texto:
@@ -212,11 +279,19 @@ class ExtractorHechos:
             PATRON_DEMORA_ARRANQUE,
             PATRON_DTC,
             PATRON_MEDICION,
+            PATRON_MEZCLA_REPORTADA,
+            PATRON_CAUSAL_INYECCION,
+            PATRON_HALLAZGO_MAF,
+            re.compile(
+                r"\b(?:aire\s+acondicionado|climatizaci[o\u00f3]n|compresor|no\s+enfr[i\u00ed]a)\b",
+                re.IGNORECASE,
+            ),
             re.compile(
                 r"\b(recalienta|recalentar|recalntar|se\s+calienta|temperatura\s+(?:del\s+motor\s+)?(?:sube|empieza\s+a\s+subir|alta)|"
                 r"pierde\s+(?:agua|refrigerante|l[iÃ­]quido)|fuga|gotea|"
                 r"no\s+enfr[iÃ­]a|sale\s+aire\s+(?:caliente|tibio)|"
-                r"vibra|tiembla|jalonea|tironea|pierde\s+fuerza|no\s+jala|"
+                r"vibra|vibraci[oó]n|tiembla|jalonea|tironea|cascabelea|cascabeleo|"
+                r"pierde\s+(?:fuerza|potencia)|no\s+jala|"
                 r"demora\s+en\s+(?:enganchar|entrar|acoplar)|reversa|"
                 r"golpe|ruido|zumbido|chillido|frena\s+mal|pedal\s+esponjoso)\b",
                 re.IGNORECASE,
@@ -270,6 +345,121 @@ class ExtractorHechos:
             correcciones.append(("sintoma_demora_arranque", "demora en arrancar", "sintoma", FactType.SINTOMA))
             correcciones.append(("estado_operativo", "ARRANQUE", "condicion", FactType.CONDICION))
         return correcciones
+
+    @staticmethod
+    def _registrar_rechazos_explicitos(estado: ConversationState, texto: str) -> List[Dict[str, Any]]:
+        """Guarda rechazos conversacionales sin convertirlos en fallas físicamente confirmadas."""
+        normalizado = "".join(
+            c for c in unicodedata.normalize("NFD", (texto or "").casefold())
+            if unicodedata.category(c) != "Mn"
+        )
+        componentes = (
+            ("bobina", r"\b(?:bobinas?|coil(?:s|\s+pack)?)\b"),
+            ("bujia", r"\b(?:bujias?|spark\s+plugs?)\b"),
+            ("inyector", r"\b(?:inyectores?|injectores?)\b"),
+            ("bateria", r"\b(?:baterias?|acumulador)\b"),
+            ("alternador", r"\balternadores?\b"),
+            ("maf", r"\bmaf\b"),
+            ("map", r"\bmap\b"),
+            ("iac", r"\biac\b"),
+            ("cuerpo_aceleracion", r"\bcuerpo(?:\s+de)?\s+aceleracion\b"),
+            ("bomba_combustible", r"\bbomba\s+de\s+(?:combustible|gasolina)\b"),
+            ("sensor_oxigeno", r"\b(?:sensor\s+de\s+oxigeno|sonda\s+lambda|o2)\b"),
+            ("termostato", r"\btermostato\b"),
+            ("radiador", r"\bradiador\b"),
+            ("frenos", r"\b(?:frenos?|pastillas?|discos?\s+de\s+freno)\b"),
+            ("suspension", r"\b(?:suspension|amortiguadores?|rotulas?)\b"),
+            ("embrague", r"\b(?:embrague|clutch)\b"),
+        )
+        salida: List[Dict[str, Any]] = []
+        normalidad = re.compile(
+            r"\b(?:esta\s+bien|estan\s+bien|esta\s+normal|estan\s+normales|"
+            r"funciona\s+(?:bien|normal)|salio\s+normal|resultado\s+normal|"
+            r"ya\s+(?:la|lo|las|los)?\s*revis(?:e|aron)|se\s+reviso\s+y\s+salio\s+normal)\b"
+        )
+        revision_contextual = bool(re.search(
+            r"\b(?:(?:eso|esa\s+parte|ese\s+componente|ese\s+punto)\s+)?"
+            r"(?:ya\s+(?:(?:lo|la|las|los)\s+)?(?:revise|cheque|probe)|"
+            r"esta\s+bien|esta\s+normal|salio\s+normal)\b",
+            normalizado,
+        ))
+        ultima_pregunta = estado.ultima_pregunta() or {}
+        pregunta_texto = str(ultima_pregunta.get("texto", ""))
+        pregunta_normalizada = "".join(
+            c for c in unicodedata.normalize("NFD", pregunta_texto.casefold())
+            if unicodedata.category(c) != "Mn"
+        )
+        familias_pregunta = {
+            familia for familia, patron in componentes
+            if re.search(patron, pregunta_normalizada)
+        }
+        componentes_por_contexto = (
+            familias_pregunta if revision_contextual and len(familias_pregunta) == 1 else set()
+        )
+        for familia, patron in componentes:
+            if not re.search(patron, normalizado) and familia not in componentes_por_contexto:
+                continue
+            rechazo_explicito = bool(
+                re.search(r"\b(?:no\s+es|descart[ea]|no\s+corresponde|no\s+falla)\b", normalizado)
+                or normalidad.search(normalizado)
+            )
+            if not rechazo_explicito:
+                continue
+            marcador = f"componente:{familia}"
+            if marcador not in estado.hipotesis_descartadas:
+                estado.hipotesis_descartadas.append(marcador)
+            hecho = estado.registrar_hecho(
+                campo=f"rechazo_usuario_{familia}",
+                valor="componente reportado como revisado/descartado; sin confirmación física independiente",
+                categoria="rechazo_hipotesis_usuario",
+                estado=FactState.AMBIGUO,
+                texto_crudo=texto,
+                tipo=FactType.CONDICION,
+            )
+            salida.append(hecho.to_dict())
+
+        rechazo_generico = bool(
+            re.search(
+                r"\b(?:esa|esta|la misma)\s+(?:falla|hipotesis)\s+(?:ya\s+)?"
+                r"(?:fue\s+)?(?:descartada|no\s+coincide)\b|"
+                r"\bno\s+coincide\s+con\s+mi\s+vehiculo\b|"
+                r"\bte\s+(?:estoy\s+diciendo|dije)\b.{0,55}\b(?:descartada|ya\s+la\s+revise)\b|"
+                r"\bya\s+hice\s+esa\s+prueba\s+y\s+salio\s+normal\b",
+                normalizado,
+            )
+        )
+        if rechazo_generico:
+            pregunta = ultima_pregunta
+            pregunta_hipotesis = pregunta.get("hipotesis") or []
+            if pregunta_hipotesis or (
+                pregunta.get("intent") == QuestionIntent.CONFIRMACION_ALTERNATIVA.value
+                or re.search(r"\b(?:falla|hipotesis)\b", pregunta.get("texto", ""), re.IGNORECASE)
+            ):
+                hecho_evaluado = estado.obtener_hecho("hipotesis_en_evaluacion")
+                objetivo_activo = (
+                    hecho_evaluado.valor if hecho_evaluado else estado.falla_principal
+                )
+                if not objetivo_activo and pregunta_hipotesis:
+                    objetivo_activo = pregunta_hipotesis[0]
+                objetivos = [objetivo_activo] if objetivo_activo else []
+            else:
+                objetivos = []
+            for indice, objetivo in enumerate(objetivos):
+                nombre = str(objetivo.get("falla", "") if isinstance(objetivo, dict) else objetivo).strip()
+                if not nombre:
+                    continue
+                if nombre not in estado.hipotesis_descartadas:
+                    estado.hipotesis_descartadas.append(nombre)
+                hecho = estado.registrar_hecho(
+                    campo=f"rechazo_usuario_hipotesis_{indice + 1}",
+                    valor="rechazo verbal del mecánico; no equivale a una falla física confirmada",
+                    categoria="rechazo_hipotesis_usuario",
+                    estado=FactState.AMBIGUO,
+                    texto_crudo=texto,
+                    tipo=FactType.CONDICION,
+                )
+                salida.append(hecho.to_dict())
+        return salida
 
     @classmethod
     def extraer_y_actualizar(
@@ -431,6 +621,8 @@ class ExtractorHechos:
                 tipo=FactType.CONDICION,
             )
             hechos_extraidos.append(h_sensor.to_dict())
+
+        hechos_extraidos.extend(cls._registrar_rechazos_explicitos(estado, texto_usuario))
 
         # 5. Componentes revisados o reemplazados
         texto_l = texto_usuario.lower()
@@ -684,6 +876,36 @@ class ExtractorHechos:
 
         # 7.1 Hechos de transmision: el estado operativo puede seguir en MARCHA,
         # pero la queja principal pertenecer a la caja automatica.
+        menciona_caja_automatica = bool(re.search(
+            r"\b(?:caja\s+(?:de\s+cambios\s+)?autom[aá]tica|transmisi[oó]n\s+autom[aá]tica|dsg|cvt)\b",
+            texto_l,
+        ))
+        if menciona_caja_automatica:
+            tipo_caja = "DSG" if re.search(r"\bdsg\b", texto_l) else (
+                "CVT" if re.search(r"\bcvt\b", texto_l) else "automática"
+            )
+            estado.transmision = tipo_caja
+
+        golpe_cambios = bool(
+            re.search(r"\b(?:golpe(?:a|teo|tea)?|patea|tironea)\b", texto_l)
+            and re.search(r"\b(?:pasar|cambiar|meter|seleccionar|entrar)\b", texto_l)
+            and re.search(r"\b(?:cambios?|marchas?|velocidades?|d|r)\b", texto_l)
+            and (
+                menciona_caja_automatica
+                or estado.transmision
+                or re.search(r"\b(?:caja|transmisi[oó]n|embrague|clutch|cambios?)\b", texto_l)
+            )
+        )
+        if golpe_cambios:
+            h = estado.registrar_hecho(
+                "sintoma_golpeteo_al_cambiar",
+                "golpeteo al pasar cambios",
+                categoria="sintoma",
+                texto_crudo=texto_usuario,
+                tipo=FactType.SINTOMA,
+            )
+            hechos_extraidos.append(h.to_dict())
+
         es_reversa = bool(re.search(r"\b(reversa|retroceso|marcha\s+atr[aá]s)\b", texto_l))
         demora_acople = bool(
             re.search(r"\b(demora|tarda)\b.{0,45}\b(enganchar|entrar|acoplar)\b", texto_l)
@@ -744,6 +966,8 @@ class ExtractorHechos:
 
         # 9. Síntomas primarios con polaridad explícita (Fase 9.14)
         for campo_s, val_s, estado_s in DetectorPolaridad.extraer_sintomas(texto_usuario):
+            if golpe_cambios and campo_s == "sintoma_ruido_anómalo":
+                continue
             h = estado.registrar_hecho(
                 campo_s, val_s, categoria="sintoma", estado=estado_s,
                 texto_crudo=texto_usuario, tipo=FactType.SINTOMA,

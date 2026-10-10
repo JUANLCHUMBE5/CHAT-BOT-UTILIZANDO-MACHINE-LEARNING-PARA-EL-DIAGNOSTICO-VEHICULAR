@@ -189,6 +189,7 @@ class GestorDiagnostico:
         diferir_encolado_persistente: bool = False,
         diagnostico_forzado: Optional[str] = None,
         orquestado: bool = False,
+        case_id: Optional[str] = None,
     ) -> ResultadoDiagnostico:
         """
         Flujo tripartito secuencial THREAD-SAFE para consultas de texto:
@@ -213,6 +214,7 @@ class GestorDiagnostico:
             diferir_encolado_persistente=diferir_encolado_persistente,
             diagnostico_forzado=diagnostico_forzado,
             orquestado=orquestado,
+            case_id=case_id,
         )
 
     def procesar_consulta_audio(self, audio_id: str, datos_audio_vector: Optional[np.ndarray] = None) -> str:
@@ -259,6 +261,7 @@ class GestorDiagnostico:
         evidencia_confirmada: Optional[list[str]] = None,
         componentes_descartados: Optional[list[str]] = None,
         datos_faltantes: Optional[list[str]] = None,
+        case_id: Optional[str] = None,
     ) -> tuple[str, dict]:
         """Sintetiza la respuesta final con Gemini LLM integrando Síntoma + ML + RAG."""
         from src.core.diagnostico.response_generator import generar_respuesta_con_metadatos
@@ -285,6 +288,7 @@ class GestorDiagnostico:
             evidencia_confirmada=evidencia_confirmada,
             componentes_descartados=componentes_descartados,
             datos_faltantes=datos_faltantes,
+            case_id=case_id,
         )
 
     def generar_respuesta_conversacional(

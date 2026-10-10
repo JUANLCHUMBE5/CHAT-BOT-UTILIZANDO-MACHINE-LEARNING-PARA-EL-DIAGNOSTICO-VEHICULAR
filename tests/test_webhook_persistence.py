@@ -66,9 +66,9 @@ async def setup_test_db():
         "engine": engine,
         "telefono_autorizado": tel_autorizado,
         "telefono_no_autorizado": tel_no_autorizado,
+        "telefono_id_meta": telefono_id_meta,
         "taller_id": taller_id,
         "mecanico_id": mecanico_id,
-        "telefono_id_meta": telefono_id_meta,
     }
 
     # Limpieza de registros creados en PostgreSQL
@@ -109,6 +109,7 @@ async def test_webhook_mecanico_autorizado_guarda_en_tablas(setup_test_db, monke
         texto_cliente="Siento un chillido agudo al frenar el auto",
         placa="ABC-123",
         marca_modelo="Toyota Yaris",
+        telefono_id_meta=data["telefono_id_meta"],
     )
 
     assert resultado["status"] == "completado"

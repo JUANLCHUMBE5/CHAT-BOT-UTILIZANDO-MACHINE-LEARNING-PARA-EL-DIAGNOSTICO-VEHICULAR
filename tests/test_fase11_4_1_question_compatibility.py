@@ -52,6 +52,7 @@ def test_seccion_15_mensaje_real_tras_suspension(gestor_diag, orquestador):
         )
         res1 = await orquestador.procesar_mensaje(session_id=session_id, texto_usuario=msg1, gestor_diagnostico=gestor_diag)
         assert res1["estado"].dominio_probable == "SUSPENSION"
+        caso_suspension = res1["estado"].case_id
 
         # Turno 2: Mensaje real de WhatsApp reportado en Fase 11.4.1
         msg2 = (
@@ -60,8 +61,18 @@ def test_seccion_15_mensaje_real_tras_suspension(gestor_diag, orquestador):
             "Todavía no he revisado batería, arranque ni sistema de combustible. ¿Qué debería revisar primero?"
         )
         res2 = await orquestador.procesar_mensaje(session_id=session_id, texto_usuario=msg2, gestor_diagnostico=gestor_diag)
-        
-        estado2 = res2["estado"]
+
+        # El mensaje no identifica inequívocamente otro vehículo. El flujo
+        # debe pedir confirmación antes de archivar el caso de suspensión.
+        assert res2["decision"] == "ACLARACION_CASO"
+        assert res2["estado"].case_id == caso_suspension
+        res3 = await orquestador.procesar_mensaje(
+            session_id=session_id,
+            texto_usuario="Es otro vehículo, nuevo caso: demora en encender por las mañanas.",
+            gestor_diagnostico=gestor_diag,
+        )
+        estado2 = res3["estado"]
+        assert estado2.case_id != caso_suspension
         assert estado2.estado_operativo == EstadoOperativo.ARRANQUE
         assert estado2.dominio_probable == "ARRANQUE"
         assert "sintoma_demora_arranque" in estado2.hechos
@@ -74,7 +85,7 @@ def test_seccion_15_mensaje_real_tras_suspension(gestor_diag, orquestador):
             assert "golpeteo" not in k.lower()
 
         # La pregunta seleccionada JAMÁS debe ser de suspensión
-        resp_texto = res2["respuesta_texto"]
+        resp_texto = res3["respuesta_texto"]
         assert "bujes" not in resp_texto.lower()
         assert "rótulas" not in resp_texto.lower()
         assert "rotulas" not in resp_texto.lower()
