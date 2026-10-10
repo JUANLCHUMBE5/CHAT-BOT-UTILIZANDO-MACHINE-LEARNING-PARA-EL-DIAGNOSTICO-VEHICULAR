@@ -114,17 +114,15 @@ async def test_flujo_no_pregunta_discriminante_sin_pop_ciego():
         )
 
         assert res is not None
-        assert res["status"] == "esperando_falla_real"
-        # Verificar que no ofrece simplemente opción 2 o 3 ni hace pop a Top2
-        assert "Pregunta técnica discriminante" in res["respuesta"]
-        assert "Bateria descargada" in res["respuesta"]
+        assert res["status"] == "esperando_aclaracion_confirmacion"
+        assert "confirmación ni un descarte" in res["respuesta"]
 
-        # Ahora el mecánico aporta nueva evidencia respondiendo a la pregunta
-        res_evidencia = await ValidationWorkflow.manejar_flujo_validacion(
+        # El mecánico puede continuar sin que el NO descarte el Top-1.
+        res_continuar = await ValidationWorkflow.manejar_flujo_validacion(
             session=session,
             conversacion=conversacion,
             usuario=usuario,
-            texto_cliente="en caliente el motor jalonea a fondo",
+            texto_cliente="quiero continuar el diagnóstico",
             tipo_mensaje="text",
             meta_message_id="msg_no_2",
             proveedor="meta",
@@ -132,11 +130,9 @@ async def test_flujo_no_pregunta_discriminante_sin_pop_ciego():
             t_inicio=0.0,
         )
 
-        assert res_evidencia is not None
-        assert res_evidencia["status"] == "evaluar_alternativa"
-        assert res_evidencia["diagnostico_forzado"] is None, "NO debe forzar Top 2"
-        assert "Descarte previo: no es Bateria descargada" in res_evidencia["texto_evaluar"]
-        assert "en caliente el motor jalonea a fondo" in res_evidencia["texto_evaluar"]
+        assert res_continuar is not None
+        assert res_continuar["status"] == "continuar_diagnostico"
+        assert "validacion_diagnostico" not in conversacion.contexto
 
 
 @pytest.mark.anyio

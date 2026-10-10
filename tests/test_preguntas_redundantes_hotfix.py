@@ -298,31 +298,20 @@ async def test_7_e2e_validation_workflow_sdf516_respuesta_discriminante():
         )
 
         assert resultado_no is not None
-        assert resultado_no["status"] == "esperando_falla_real"
+        assert resultado_no["status"] == "esperando_aclaracion_confirmacion"
         resp_texto = resultado_no["respuesta"]
         resp_l = resp_texto.lower()
 
-        # Debe descartar la hipótesis principal
-        assert "se descarta *cuerpo de aceleracion o valvula iac sucia*" in resp_l
-        assert "pregunta técnica discriminante" in resp_l
+        # Un NO aislado no prueba que la hipótesis principal se descartó.
+        assert "confirmación ni un descarte" in resp_l
+        assert "cuerpo de aceleracion" not in resp_l
 
-        # NO debe preguntar por ralentí
-        assert "ralentí" not in resp_l and "ralenti" not in resp_l
-        assert "bajo aceleración en marcha" not in resp_l
-
-        # NO debe preguntar por Check Engine
-        assert "check engine" not in resp_l
-        assert "testigo encendido" not in resp_l
-
-        # Debe haber preguntado por dimensión desconocida (sonido/humo)
-        assert any(w in resp_l for w in ("sonido", "cascabeleo", "silbido", "humo"))
-
-        # Paso 2: Usuario responde aportando nueva evidencia o corrección
-        resultado_evidencia = await ValidationWorkflow.manejar_flujo_validacion(
+        # Paso 2: el mecánico puede continuar sin desmontar el contexto del caso.
+        resultado_continuar = await ValidationWorkflow.manejar_flujo_validacion(
             session=session_mock,
             conversacion=conversacion,
             usuario=usuario,
-            texto_cliente="No se detecta ningún sonido extraño ni humo, solo la vibración",
+            texto_cliente="Quiero continuar el diagnóstico",
             tipo_mensaje="text",
             meta_message_id="wamid_sdf516_02",
             proveedor="meta",
@@ -330,6 +319,6 @@ async def test_7_e2e_validation_workflow_sdf516_respuesta_discriminante():
             t_inicio=0.0,
         )
 
-        assert resultado_evidencia is not None
-        assert resultado_evidencia["status"] == "evaluar_alternativa"
-        assert "No se detecta ningún sonido" in resultado_evidencia["texto_evaluar"]
+        assert resultado_continuar is not None
+        assert resultado_continuar["status"] == "continuar_diagnostico"
+        assert "validacion_diagnostico" not in conversacion.contexto
