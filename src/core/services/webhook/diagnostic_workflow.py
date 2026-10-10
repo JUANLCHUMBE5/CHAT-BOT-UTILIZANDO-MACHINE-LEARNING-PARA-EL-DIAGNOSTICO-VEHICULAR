@@ -47,13 +47,11 @@ class TechnicalDiagnosticWorkflow:
 
         # Si el caso previo fue completado o finalizado, reiniciar memoria para el nuevo caso
         if contexto_actual.get("caso_finalizado"):
-            gestor.session_manager.finalizar_caso(id_sesion)
-            contexto_actual.pop("caso_finalizado", None)
-            contexto_actual.pop("conversation_state", None)
-            contexto_actual.pop("estado_conversacion", None)
-            contexto_actual.pop("validacion_diagnostico", None)
-            conversacion.contexto = contexto_actual
             gestor.session_manager.cargar_contexto(id_sesion, contexto_actual)
+            gestor.session_manager.finalizar_caso(id_sesion)
+            contexto_actual = dict(gestor.session_manager.exportar_contexto(id_sesion))
+            contexto_actual.pop("caso_finalizado", None)
+            conversacion.contexto = contexto_actual
         else:
             gestor.session_manager.cargar_contexto(id_sesion, contexto_actual)
 
@@ -212,13 +210,32 @@ class TechnicalDiagnosticWorkflow:
         # Fusión segura del contexto durable
         contexto_previo = dict(conversacion.contexto or {})
         contexto_exportado = dict(gestor.session_manager.exportar_contexto(id_sesion) or {})
-        contexto_actualizado = {**contexto_previo, **contexto_exportado}
+        estado_previo = contexto_previo.get("conversation_state")
+        case_id_previo = contexto_previo.get("case_id") or (
+            estado_previo.get("case_id") if isinstance(estado_previo, dict) else None
+        )
+        case_id_actual = contexto_exportado.get("case_id")
+        cambio_de_caso = bool(case_id_actual and case_id_previo != case_id_actual)
+        if cambio_de_caso:
+            estado_actual = contexto_exportado.get("conversation_state") or {}
+            contexto_actualizado = {
+                "case_id": case_id_actual,
+                "conversation_state": estado_actual,
+            }
+            if contexto_exportado.get("placa"):
+                contexto_actualizado["placa"] = contexto_exportado["placa"]
+                contexto_actualizado["placa_posttest"] = contexto_exportado["placa"]
+            else:
+                contexto_actualizado["posttest_placa_pendiente"] = True
+        else:
+            contexto_actualizado = {**contexto_previo, **contexto_exportado}
 
-        # Preservar claves críticas de la conversación y del webhook
-        if "placa_posttest" in contexto_previo and "placa_posttest" not in contexto_actualizado:
-            contexto_actualizado["placa_posttest"] = contexto_previo["placa_posttest"]
-        if "placa" in contexto_previo and "placa" not in contexto_actualizado:
-            contexto_actualizado["placa"] = contexto_previo["placa"]
+        # Las placas externas solo se conservan mientras permanezca el mismo caso.
+        if not cambio_de_caso:
+            if "placa_posttest" in contexto_previo and "placa_posttest" not in contexto_actualizado:
+                contexto_actualizado["placa_posttest"] = contexto_previo["placa_posttest"]
+            if "placa" in contexto_previo and "placa" not in contexto_actualizado:
+                contexto_actualizado["placa"] = contexto_previo["placa"]
 
         conversacion.contexto = contexto_actualizado
         return ResultadoFlujoDiagnostico(
@@ -289,20 +306,28 @@ class TechnicalDiagnosticWorkflow:
         estado_actual = res_turno.get("estado")
         decision = res_turno.get("decision")
         decision_transicion = res_turno.get("decision_transicion")
-        es_cambio_caso = (decision == "REINICIO" or decision_transicion == "CAMBIO_DE_CASO")
+        es_cambio_caso = (
+            decision in ("REINICIO", "REANUDAR_CASO")
+            or decision_transicion == "CAMBIO_DE_CASO"
+        )
 
         if estado_actual:
             contexto_previo = dict(conversacion.contexto or {}) if conversacion else {}
             contexto_export_estado = estado_actual.exportar_dict()
 
-            # Fusión segura sin destruir claves persistidas
-            contexto_fusion = {**contexto_previo, "conversation_state": contexto_export_estado}
-            contexto_fusion["case_id"] = estado_actual.case_id
-
             if es_cambio_caso:
-                contexto_fusion.pop("placa_posttest", None)
-                contexto_fusion.pop("placa", None)
+                contexto_fusion = {
+                    "case_id": estado_actual.case_id,
+                    "conversation_state": contexto_export_estado,
+                }
+                if estado_actual.placa:
+                    contexto_fusion["placa"] = estado_actual.placa
+                    contexto_fusion["placa_posttest"] = estado_actual.placa
+                elif decision != "REANUDAR_CASO":
+                    contexto_fusion["posttest_placa_pendiente"] = True
             else:
+                contexto_fusion = {**contexto_previo, "conversation_state": contexto_export_estado}
+                contexto_fusion["case_id"] = estado_actual.case_id
                 placa_efectiva = (
                     estado_actual.placa
                     or placa

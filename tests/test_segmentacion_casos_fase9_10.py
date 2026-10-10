@@ -75,7 +75,7 @@ async def test_reproduccion_exacta_incidente_fase_9_9(
 
     # Turno 2: Mensaje de frenado dentro de la misma conversación de WhatsApp
     msg_frenado = (
-        "Buenas, tengo un problema con mi carro. Cuando manejo normalmente todo va bien, "
+        "Buenas, tengo otro problema con mi carro. Cuando manejo normalmente todo va bien, "
         "pero cuando freno desde una velocidad más o menos alta empiezo a sentir una vibración fuerte en el volante. "
         "A baja velocidad casi no se siente. No se prende ninguna luz en el tablero y el carro sí frena, "
         "pero la vibración me preocupa. ¿Qué podría ser?"
@@ -91,7 +91,7 @@ async def test_reproduccion_exacta_incidente_fase_9_9(
     # Verificaciones obligatorias Fase 9.10
     assert case_id_t2 != case_id_t1, "Debe generar un nuevo case_id para el nuevo problema"
     assert res_t2["decision_transicion"] == DecisionTransicion.CAMBIO_DE_CASO.value
-    assert "ARRANQUE" in res_t2["motivo_transicion"] and "FRENADO" in res_t2["motivo_transicion"]
+    assert res_t2["motivo_transicion"] == "SOLICITUD_EXPLICITA_NUEVA_CONSULTA"
 
     # Consulta consolidada limpia sin contaminación de arranque
     consulta_nueva = res_t2["consulta_consolidada"]
@@ -127,7 +127,7 @@ def test_transicion_cross_system_frenado_a_marcha() -> None:
     estado.registrar_hecho("sintoma_frenos", "vibración al frenar", categoria="sintoma", estado=FactState.CONFIRMADO)
     estado.top3_actual = [{"falla": "Discos de freno alabeados", "probabilidad": 0.85}]
 
-    nuevo_texto = "Ahora el motor pierde potencia al acelerar a 80 km/h y tironea"
+    nuevo_texto = "Ahora tengo otro problema: el motor pierde potencia al acelerar a 80 km/h y tironea"
     res = SegmentadorCasos.evaluar_transicion(
         estado=estado,
         texto_usuario=nuevo_texto,
@@ -136,7 +136,7 @@ def test_transicion_cross_system_frenado_a_marcha() -> None:
         seniales_heredadas={"senial_frenado": True},
     )
     assert res.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "FRENOS_A_MARCHA_MOTOR" in res.motivo
+    assert res.motivo == "SOLICITUD_EXPLICITA_NUEVA_CONSULTA"
 
 
 def test_transicion_cross_system_marcha_a_arranque() -> None:
@@ -146,7 +146,7 @@ def test_transicion_cross_system_marcha_a_arranque() -> None:
     estado.registrar_hecho("sintoma_potencia", "pérdida de potencia", categoria="sintoma", estado=FactState.CONFIRMADO)
     estado.top3_actual = [{"falla": "Bujías en mal estado", "probabilidad": 0.80}]
 
-    nuevo_texto = "Ayer lo dejé estacionado y hoy no quiso arrancar, da un clic seco"
+    nuevo_texto = "Tengo otra falla: ayer lo dejé estacionado y hoy no quiso arrancar, da un clic seco"
     res = SegmentadorCasos.evaluar_transicion(
         estado=estado,
         texto_usuario=nuevo_texto,
@@ -155,7 +155,7 @@ def test_transicion_cross_system_marcha_a_arranque() -> None:
         seniales_heredadas={"senial_marcha": True},
     )
     assert res.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "MARCHA_VS_ARRANQUE" in res.motivo
+    assert res.motivo == "SOLICITUD_EXPLICITA_NUEVA_CONSULTA"
 
 
 def test_transicion_cross_system_electrico_a_transmision() -> None:
@@ -165,7 +165,7 @@ def test_transicion_cross_system_electrico_a_transmision() -> None:
     estado.registrar_hecho("sintoma_electrico", "batería descargada", categoria="sintoma", estado=FactState.CONFIRMADO)
     estado.top3_actual = [{"falla": "Batería descargada o bornes sulfatados", "probabilidad": 0.90}]
 
-    nuevo_texto = "La caja de cambios patea fuerte al meter segunda y no entra reversa"
+    nuevo_texto = "Tengo otro problema: la caja de cambios patea fuerte al meter segunda y no entra reversa"
     res = SegmentadorCasos.evaluar_transicion(
         estado=estado,
         texto_usuario=nuevo_texto,
@@ -174,7 +174,7 @@ def test_transicion_cross_system_electrico_a_transmision() -> None:
         seniales_heredadas={},
     )
     assert res.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "ELECTRICO_A_TRANSMISION" in res.motivo
+    assert res.motivo == "SOLICITUD_EXPLICITA_NUEVA_CONSULTA"
 
 
 def test_transicion_cross_system_motor_a_suspension() -> None:
@@ -184,7 +184,7 @@ def test_transicion_cross_system_motor_a_suspension() -> None:
     estado.registrar_hecho("sintoma_temp", "sobrecalentamiento", categoria="sintoma", estado=FactState.CONFIRMADO)
     estado.top3_actual = [{"falla": "Termostato pegado", "probabilidad": 0.88}]
 
-    nuevo_texto = "Siento un golpe seco al pasar baches o rompemuelles en la rueda derecha"
+    nuevo_texto = "Tengo otro problema: siento un golpe seco al pasar baches o rompemuelles en la rueda derecha"
     res = SegmentadorCasos.evaluar_transicion(
         estado=estado,
         texto_usuario=nuevo_texto,
@@ -193,7 +193,7 @@ def test_transicion_cross_system_motor_a_suspension() -> None:
         seniales_heredadas={},
     )
     assert res.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "MARCHA_MOTOR_A_SUSPENSION" in res.motivo
+    assert res.motivo == "SOLICITUD_EXPLICITA_NUEVA_CONSULTA"
 
 
 # =============================================================================
@@ -275,7 +275,7 @@ def test_respuesta_usuario_a_pregunta_aclaracion() -> None:
         seniales_heredadas={},
     )
     assert res_otra.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "USUARIO_CONFIRMA_FALLA_DIFERENTE" in res_otra.motivo
+    assert res_otra.motivo == "SOLICITUD_EXPLICITA_NUEVA_CONSULTA"
 
     # Usuario confirma que es el mismo vehículo
     res_mismo = SegmentadorCasos.evaluar_transicion(

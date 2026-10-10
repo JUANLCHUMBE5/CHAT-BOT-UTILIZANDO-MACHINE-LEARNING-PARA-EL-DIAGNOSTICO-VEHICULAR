@@ -218,28 +218,9 @@ class SegmentadorCasos:
 
     @staticmethod
     def es_nueva_queja_principal(texto: str) -> bool:
-        """Detecta marcadores de una queja nueva sin depender del sistema."""
-        txt = "".join(
-            c for c in unicodedata.normalize("NFD", (texto or "").lower().strip())
-            if unicodedata.category(c) != "Mn"
-        )
-        if re.search(r"\bayer\b.*\bhoy\b", txt):
-            return True
-        if re.search(
-            r"\b(el\s+cliente\s+(?:dejo|trajo|dice\s+que|indica|comenta|comenta\s+que|menciona|menciona\s+que|reporta|reporta\s+que|refiere|refiere\s+que)|"
-            r"otro\s+vehiculo|otro\s+veh.culo|otro\s+carro|otro\s+auto|este\s+es\s+otro|nuevo\s+caso|ahora\s+el\s+problema|"
-            r"tengo\s+(?:un\s+|otro\s+)?(?:vehiculo|veh.culo|auto|carro|caso)\s+(?:en\s+el\s+taller|en\s+taller)|"
-            r"ahora\s+revisemos|ya\s+revisare\s+eso|tengo\s+otro\s+problema|olvida\s+lo\s+anterior)\b",
-            txt,
-        ):
-            return True
-        return bool(
-            re.search(
-                r"^(?:(?:hola|buenas(?:\s+d[ií]as|\s+tardes|\s+noches)?)[,.:;!]?\s*)?"
-                r"(?:tengo|presenta|traigo|vengo\s+por|me\s+llego|nos\s+llego)\s+(?:otro\s+|un\s+)?(?:problema|falla|consulta|vehiculo|veh.culo|auto|carro|caso)\b",
-                txt,
-            )
-        )
+        """Solo marca cambio con una solicitud explícita; la diferencia de síntomas no basta."""
+        solicitud = ExtractorHechos.clasificar_solicitud_caso(texto)
+        return bool(solicitud and solicitud.get("accion") == "nuevo_caso")
 
     @classmethod
     def evaluar_transicion(
@@ -259,6 +240,19 @@ class SegmentadorCasos:
             c for c in unicodedata.normalize("NFD", (texto_usuario or "").lower().strip())
             if unicodedata.category(c) != "Mn"
         )
+
+        solicitud_caso = ExtractorHechos.clasificar_solicitud_caso(texto_usuario)
+        if solicitud_caso and solicitud_caso.get("accion") == "nuevo_caso":
+            sub_det = cls.detectar_subsistema_texto(texto_usuario)
+            sufijo_vehiculo = "_MISMO_VEHICULO" if solicitud_caso.get("preservar_vehiculo") else ""
+            return TransicionCasoResultado(
+                decision=DecisionTransicion.CAMBIO_DE_CASO,
+                motivo=f"SOLICITUD_EXPLICITA_NUEVA_CONSULTA{sufijo_vehiculo}",
+                nuevo_case_id=str(uuid.uuid4()),
+                estado_previo=estado_previo,
+                estado_detectado_mensaje=estado_detectado_mensaje,
+                dominio_detectado_mensaje=sub_det,
+            )
 
         # 0. Si la última pregunta fue de aclaración de alcance, interpretar la respuesta directa
         if estado.preguntas_realizadas:
@@ -281,13 +275,38 @@ class SegmentadorCasos:
                     )
 
         # 1. Si no hay hechos activos previos, siempre se mantiene el caso actual
-        if not estado.hechos:
+        if not estado.hechos and not estado.active_symptoms:
             return TransicionCasoResultado(
                 decision=DecisionTransicion.MANTENER_CASO,
                 motivo="SIN_HECHOS_PREVIOS",
                 estado_previo=estado_previo,
                 estado_detectado_mensaje=estado_detectado_mensaje,
             )
+
+        # Una corrección explícita de sistema debe archivar las hipótesis viejas
+        # y reevaluar el síntoma bajo el sistema que el mecánico acaba de precisar.
+        correccion_sistema = bool(
+            re.search(r"\bno\s+es\s+(?:un\s+)?(?:problema\s+de\s+)?(?:motor|mecanico|combustion)\b", texto_l)
+            and re.search(r"\b(?:ruido|falla|problema)\b.{0,45}\b(?:suspension|frenos?|transmision|embrague|electric[oa])\b", texto_l)
+        ) or bool(
+            re.search(
+                r"\b(?:ruido|falla)\s+(?:viene|proviene)\s+de\s+(?:la\s+|el\s+)?(?:suspension|frenos?|transmision)\b",
+                texto_l,
+            )
+            and re.search(r"\b(?:no\s+es|me\s+equivoque|corrijo|quise\s+decir)\b", texto_l)
+        )
+        if correccion_sistema:
+            anterior = cls.obtener_subsistema_estado(estado)
+            actual = cls.detectar_subsistema_texto(texto_usuario)
+            if actual != SubsistemaVehicular.DESCONOCIDO and actual != anterior:
+                return TransicionCasoResultado(
+                    decision=DecisionTransicion.CAMBIO_DE_CASO,
+                    motivo=f"CORRECCION_SISTEMA_{anterior.value}_A_{actual.value}",
+                    nuevo_case_id=str(uuid.uuid4()),
+                    estado_previo=estado_previo,
+                    estado_detectado_mensaje=estado_detectado_mensaje,
+                    dominio_detectado_mensaje=actual,
+                )
 
         # 1.5 Corrección explícita del usuario sobre el problema/síntoma activo (Fase 11.3 - Caso F / T08)
         corrs_usuario = ExtractorHechos.detectar_correcciones(texto_usuario)
@@ -296,23 +315,6 @@ class SegmentadorCasos:
             return TransicionCasoResultado(
                 decision=DecisionTransicion.MANTENER_CASO,
                 motivo="CORRECCION_USUARIO_REEMPLAZA_SISTEMA",
-                estado_previo=estado_previo,
-                estado_detectado_mensaje=estado_detectado_mensaje,
-                dominio_detectado_mensaje=sub_det,
-            )
-
-        # 2. Solicitud explícita de nuevo diagnóstico / vehículo / caso de taller
-        if re.search(
-            r"\b(otro\s+problema|falla\s+diferente|tengo\s+otra\s+consulta|otro\s+auto|otro\s+carro|"
-            r"el\s+cliente\s+dejo|nuevo\s+caso|este\s+es\s+otro\s+carro|otro\s+vehiculo|otro\s+veh.culo|"
-            r"ahora\s+el\s+problema\s+es|ya\s+revisare\s+eso\s+despues)\b",
-            texto_l,
-        ):
-            sub_det = cls.detectar_subsistema_texto(texto_usuario)
-            return TransicionCasoResultado(
-                decision=DecisionTransicion.CAMBIO_DE_CASO,
-                motivo="SOLICITUD_EXPLICITA_NUEVA_CONSULTA",
-                nuevo_case_id=str(uuid.uuid4()),
                 estado_previo=estado_previo,
                 estado_detectado_mensaje=estado_detectado_mensaje,
                 dominio_detectado_mensaje=sub_det,
@@ -406,13 +408,17 @@ class SegmentadorCasos:
                         estado_previo=estado_previo,
                         estado_detectado_mensaje=estado_detectado_mensaje,
                     )
-                # Transición de sistema nítida (ej. FRENADO->MARCHA, ELECTRICO->TRANSMISION, MOTOR->SUSPENSION)
+                # Un sistema distinto puede ser un síntoma adicional del mismo
+                # vehículo; sin una orden explícita no se debe segmentar a ciegas.
                 return TransicionCasoResultado(
-                    decision=DecisionTransicion.CAMBIO_DE_CASO,
-                    motivo=f"TRANSICION_SISTEMA: {subsistema_previo.value}_A_{subsistema_actual.value}",
-                    nuevo_case_id=str(uuid.uuid4()),
+                    decision=DecisionTransicion.ACLARACION_REQUERIDA,
+                    motivo=(
+                        f"AMBIGUEDAD_TRANSICION_SISTEMA: {subsistema_previo.value}_VS_"
+                        f"{subsistema_actual.value}"
+                    ),
                     estado_previo=estado_previo,
                     estado_detectado_mensaje=estado_detectado_mensaje,
+                    pregunta_aclaracion=cls.PREGUNTA_ACLARACION_CANONICA,
                 )
 
         # Regla D: Ambigüedad operacional genuina (condiciones contrapuestas en el mismo mensaje)
@@ -459,16 +465,17 @@ class SegmentadorCasos:
         cls,
         estado: ConversationState,
         nuevo_case_id: Optional[str] = None,
+        preservar_vehiculo: bool = False,
     ) -> str:
         """
         Archiva los hechos del caso activo en hechos_historicos y resetea
         la memoria activa para el nuevo caso clínico.
         """
         nuevo_id = nuevo_case_id or str(uuid.uuid4())
-        estado.archivar_caso_actual(nuevo_id)
-        estado.placa = None
-        estado.marca = None
-        estado.modelo = None
+        estado.archivar_caso_actual(
+            nuevo_id,
+            preservar_vehiculo=preservar_vehiculo,
+        )
         return nuevo_id
 
     @classmethod
@@ -480,6 +487,7 @@ class SegmentadorCasos:
         session_id: str,
         t0: float,
         contexto_previo: Dict[str, Any],
+        tipo_mensaje: str = "sintoma_nuevo",
     ) -> Tuple[Optional[Dict[str, Any]], TransicionCasoResultado]:
         """
         Evalúa y aplica la transición de caso en el estado conversacional.
@@ -488,22 +496,48 @@ class SegmentadorCasos:
         res_op = ExtractorHechos.inferir_estado_operativo(estado, texto_limpio)
         estado_op_det, _, meta_op = res_op[0], res_op[1], res_op[2]
 
-        transicion = cls.evaluar_transicion(
-            estado=estado,
-            texto_usuario=texto_limpio,
-            estado_detectado_mensaje=estado_op_det,
-            seniales_mensaje=meta_op.get("seniales_mensaje", {}),
-            seniales_heredadas=meta_op.get("seniales_heredadas", {}),
+        solicitud_caso = ExtractorHechos.clasificar_solicitud_caso(texto_limpio)
+        es_nuevo_caso_explicito = bool(
+            solicitud_caso and solicitud_caso.get("accion") == "nuevo_caso"
         )
+        if (
+            tipo_mensaje not in ("sintoma_nuevo", "correccion_sistema")
+            and not es_nuevo_caso_explicito
+            and (estado.hechos or estado.active_symptoms)
+        ):
+            transicion = TransicionCasoResultado(
+                decision=DecisionTransicion.MANTENER_CASO,
+                motivo=f"CONTINUIDAD_{tipo_mensaje.upper()}",
+                estado_previo=estado.estado_operativo,
+                estado_detectado_mensaje=estado_op_det,
+            )
+        else:
+            transicion = cls.evaluar_transicion(
+                estado=estado,
+                texto_usuario=texto_limpio,
+                estado_detectado_mensaje=estado_op_det,
+                seniales_mensaje=meta_op.get("seniales_mensaje", {}),
+                seniales_heredadas=meta_op.get("seniales_heredadas", {}),
+            )
         transicion.dominio_previo = cls.obtener_subsistema_estado(estado)
         transicion.dominio_detectado_mensaje = cls.detectar_subsistema_texto(texto_limpio)
 
         if transicion.decision == DecisionTransicion.CAMBIO_DE_CASO:
-            cls.archivar_y_limpiar_caso(estado, transicion.nuevo_case_id)
+            cls.archivar_y_limpiar_caso(
+                estado,
+                transicion.nuevo_case_id,
+                preservar_vehiculo=(
+                    transicion.motivo.startswith("CORRECCION_SISTEMA_")
+                    or transicion.motivo.endswith("_MISMO_VEHICULO")
+                ),
+            )
             if transicion.dominio_detectado_mensaje and transicion.dominio_detectado_mensaje != SubsistemaVehicular.DESCONOCIDO:
                 estado.dominio_probable = transicion.dominio_detectado_mensaje.value
             if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager is not None:
-                gestor_diagnostico.session_manager.reiniciar_sesion(session_id)
+                gestor_diagnostico.session_manager.cargar_contexto(
+                    session_id,
+                    {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+                )
             return None, transicion
 
         if transicion.decision == DecisionTransicion.ACLARACION_REQUERIDA:

@@ -55,7 +55,7 @@ class MaquinaEstadosConversacion:
         # Si se superó el límite de repreguntas, ir directo a RESULTADO
         if estado.turnos_repregunta >= estado.max_repreguntas:
             estado.fase = ConversationPhase.RESULTADO
-            return ConversationPhase.RESULTADO, "Límite máximo de 3 repreguntas alcanzado: emitiendo conclusión diferencial"
+            return ConversationPhase.RESULTADO, "Límite de aclaraciones alcanzado: emitiendo orientación diferencial"
 
         if suficiente:
             estado.fase = ConversationPhase.DIAGNOSTICANDO

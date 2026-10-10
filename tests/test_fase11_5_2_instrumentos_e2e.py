@@ -5,8 +5,11 @@ from __future__ import annotations
 import asyncio
 import csv
 import io
+import os
 import uuid
+from urllib.parse import urlparse
 
+import pytest
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -106,6 +109,10 @@ def test_ppcf_rdc_tprd_pre_post_y_zero_division():
 
 
 def test_persistencia_e2e_development_y_exclusion_oficial():
+    db_url = os.getenv("TEST_DATABASE_URL", "").strip()
+    nombre_db = urlparse(db_url).path.rstrip("/").split("/")[-1].lower()
+    if not db_url or not nombre_db.endswith("_test"):
+        pytest.skip("E2E PostgreSQL requiere TEST_DATABASE_URL apuntando a una base *_test.")
     asyncio.run(_persistencia_e2e_development_y_exclusion_oficial())
 
 

@@ -18,6 +18,8 @@ from src.core.conversacion.segmentador_casos import (
     SegmentadorCasos,
     SubsistemaVehicular,
 )
+from src.core.conversacion.sintetizador_consulta import SintetizadorConsulta
+from src.core.diagnostico.semantic_purifier import purificar_sintoma_para_vectorizador_ml
 
 MENSAJE_INCIDENTE_914 = (
     "Hola, ahora quisiera revisar otro problema. Cuando paso por pistas irregulares o baches escucho un "
@@ -124,6 +126,32 @@ def test_dominio_transmision_con_negaciones_no_pregunta_patinado() -> None:
     assert estado.es_hecho_negado("sintoma_patinado_de_transmisión___embrague")
     pregunta_patinado = "¿Sientes que el embrague o la caja patina al acelerar en subida?"
     assert CompatibilidadPreguntas.contradice_hecho_negado(pregunta_patinado, estado)
+
+
+def test_dsg_golpeteo_al_cambiar_se_conserva_en_consulta_consolidada() -> None:
+    estado = ConversationState(session_id="test-dsg-multiturno", case_id="case-dsg")
+    ExtractorHechos.extraer_y_actualizar(estado, "Volkswagen con caja automática DSG")
+    ExtractorHechos.extraer_y_actualizar(estado, "golpea al pasar los cambios cuando calienta")
+
+    consulta = SintetizadorConsulta.sintetizar(estado).lower()
+
+    assert estado.transmision == "DSG"
+    assert "golpeteo al pasar cambios" in consulta
+    assert "transmisión dsg" in consulta
+    assert "refrigerante" not in consulta
+
+
+def test_vibracion_sin_tocar_freno_no_se_rutea_como_falla_de_frenos() -> None:
+    texto = (
+        "Volante vibra en carretera a 90 km/h sin tocar el pedal de freno; "
+        "llantas desbalanceadas."
+    )
+
+    limpio = purificar_sintoma_para_vectorizador_ml(texto).lower()
+
+    assert "llantas desbalanceadas" in limpio
+    assert "frenos alabeados" not in limpio
+    assert "discos de freno alabeados" not in limpio
 
 
 def test_dominio_frenos_con_negaciones_pedal() -> None:

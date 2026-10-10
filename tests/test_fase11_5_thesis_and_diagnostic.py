@@ -2,9 +2,10 @@
 
 import hashlib
 import uuid
+from pathlib import Path
 
 from src.application.services.validacion_taller import resumir_fases
-from src.config import ML_ROOT
+from src.config import ML_ROOT, settings
 from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.models import ConversationState
@@ -14,6 +15,7 @@ from src.core.diagnostico.semantic_purifier import purificar_sintoma_para_vector
 from src.core.diagnostico.taxonomia_sistemas import obtener_macro_sistema
 from src.core.taxonomy.directrices_mecanicas import DIRECTRICES_MECANICAS
 from src.infrastructure.container import ServiceContainer
+from src.infrastructure.modelo_ml import ModeloML
 
 # =====================================================================
 # 1. PRUEBAS DE INTEGRIDAD DE ARTEFACTOS ML Y RAG (CONGELADOS)
@@ -36,6 +38,11 @@ def test_artefactos_ml_y_rag_hashes_estrictos():
         content = file_path.read_bytes()
         computed_hash = hashlib.sha256(content).hexdigest()
         assert computed_hash == expected_hash, f"Hash mismatch en {file_path.name}: {computed_hash} != {expected_hash}"
+
+
+def test_modelo_ml_usa_ruta_macro_configurada_para_c1():
+    modelo = ModeloML()
+    assert Path(modelo.modelo_sistema_path).resolve() == Path(settings.paths.modelo_sistema_pkl).resolve()
 
 
 # =====================================================================

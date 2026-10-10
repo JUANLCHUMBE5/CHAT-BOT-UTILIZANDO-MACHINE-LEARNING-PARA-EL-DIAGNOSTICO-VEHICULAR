@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import re
+import unicodedata
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -42,6 +43,46 @@ SPANISH_STOP_WORDS = [
     "tuyo", "tuyos", "un", "una", "unas", "uno", "unos", "vosotras", "vosotros",
     "vuestra", "vuestras", "vuestro", "vuestros", "y", "ya", "yo"
 ]
+
+
+def _normalizar_texto_rag(texto: str) -> str:
+    texto = unicodedata.normalize("NFD", str(texto or "").lower())
+    return "".join(caracter for caracter in texto if unicodedata.category(caracter) != "Mn")
+
+
+def _consulta_indica_fuga_refrigerante(consulta: str) -> bool:
+    texto = _normalizar_texto_rag(consulta)
+    fluido = r"(?:refrigerante|anticongelante|agua|coolant)"
+    fuga_negada = re.search(
+        rf"\b(?:no\s+(?:hay|presenta|tiene|se observa|se detecta)|sin)\b"
+        rf".{{0,30}}\b(?:fuga|perdida|goteo)\b.{{0,45}}\b{fluido}\b|"
+        rf"\bno\s+(?:pierde|esta perdiendo|consume|gotea)\b.{{0,35}}\b{fluido}\b",
+        texto,
+    )
+    if fuga_negada:
+        return False
+
+    tiene_fluido = re.search(rf"\b{fluido}\b", texto)
+    tiene_fuga = re.search(r"\b(?:fuga|fugas|pierde|perdiendo|perdida|gotea|goteando)\b", texto)
+    if tiene_fluido and tiene_fuga:
+        return True
+
+    contexto_refrigeracion = re.search(
+        r"\b(?:recalienta|sobrecalentamiento|temperatura|radiador|refrigeracion)\b", texto
+    )
+    evidencia_goteo = re.search(r"\b(?:mancha|charco|goteo|gotea)\b.{0,35}\b(?:piso|suelo)\b", texto)
+    return bool(contexto_refrigeracion and evidencia_goteo)
+
+
+def _candidato_trata_fuga_refrigerante(candidato: Dict[str, Any]) -> bool:
+    meta = candidato.get("metadatos") or {}
+    texto = _normalizar_texto_rag(
+        f"{meta.get('falla', '')} {candidato.get('titulo', '')}"
+    )
+    return bool(
+        re.search(r"\bfuga\b.{0,60}\b(?:refrigerante|radiador|enfriamiento)\b", texto)
+        or re.search(r"\b(?:refrigerante|radiador|enfriamiento)\b.{0,60}\bfuga\b", texto)
+    )
 
 
 class MotorRAG:
@@ -327,6 +368,10 @@ class MotorRAG:
             "mezcla pobre": "P0171 P0174 mezcla pobre fuel trim STFT LTFT sensor oxigeno presion combustible caudal inyectores",
             "mezcla rica": "P0172 P0175 mezcla rica fuel trim STFT LTFT sensor oxigeno inyectores presion combustible",
             "inyectores no inyectan": "inyectores caudal flujo de combustible presion riel balance de cilindros circuito electrico inyector",
+            "carga absoluta": (
+                "sensor MAP presión absoluta del múltiple admisión carga absoluta P0105 P0106 "
+                "lectura escáner baro colector admisión P0107 P0108 P0109 vacío señal voltaje frecuencia"
+            ),
             "map": "sensor de presion absoluta del multiple admision carga absoluta P0105 P0106",
             "p0700": "transmision automatica cvt caja solenoide sobrecalentamiento",
             "p0841": "sensor presion fluido transmision cvt",
@@ -357,7 +402,6 @@ class MotorRAG:
             "cerradura": "chapa cerradura pestillo puerta trinquete",
             "humo blanco": "empaquetadura culata refrigerante motor sobrecalentamiento",
             "humo negro": "mezcla rica inyectores filtro aire maf map sensor oxigeno",
-            "carga absoluta": "sensor map baro presion absoluta colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
             "sensor map": "baro presion absoluta colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
             "presion absoluta": "sensor map baro colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
             "vibra": "vibracion volante asiento pedal velocidad balanceo alineacion freno soportes",
@@ -554,6 +598,38 @@ class MotorRAG:
                 codigos_dtc=codigos_dtc,
                 confianza_ml=conf_ml_val,
             )
+
+            from src.core.diagnostico.coherencia_evidencia import documento_compatible
+
+            candidatos_reordenados = [
+                candidato
+                for candidato in candidatos_reordenados
+                if documento_compatible(
+                    consulta,
+                    candidato.get("titulo", ""),
+                    candidato.get("documento", ""),
+                )
+            ]
+
+            # Una fuga de refrigerante es un hallazgo explícito y más específico
+            # que el síntoma general de recalentamiento. Si existe un procedimiento
+            # compatible de fuga en el conjunto recuperado, debe preceder al de
+            # termostato/ventilador para que text_processor no lo descarte después
+            # por discrepancia con la falla ML ya afinada por evidencia.
+            if _consulta_indica_fuga_refrigerante(consulta):
+                candidatos_fuga = [
+                    candidato
+                    for candidato in candidatos_reordenados
+                    if _candidato_trata_fuga_refrigerante(candidato)
+                ]
+                if candidatos_fuga:
+                    ids_fuga = {candidato["indice"] for candidato in candidatos_fuga}
+                    restantes = [
+                        candidato
+                        for candidato in candidatos_reordenados
+                        if candidato["indice"] not in ids_fuga
+                    ]
+                    candidatos_reordenados = candidatos_fuga + restantes
 
             if not candidatos_reordenados or candidatos_reordenados[0]["similitud"] < umbral_efectivo:
                 return (

@@ -17,6 +17,7 @@ from sqlalchemy import (
     Numeric,
     String,
     Text,
+    Uuid,
     text,
 )
 from sqlalchemy.dialects.postgresql import JSONB
@@ -82,6 +83,7 @@ class Mensaje(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     usuario_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("usuarios.id", ondelete="SET NULL"), index=True
     )
+    case_id: Mapped[str | None] = mapped_column(Uuid(as_uuid=False), nullable=True, index=True)
     meta_message_id: Mapped[str] = mapped_column(String(150), nullable=False, unique=True)
     direccion: Mapped[str] = mapped_column(String(10), nullable=False)
     tipo: Mapped[str] = mapped_column(String(20), nullable=False)

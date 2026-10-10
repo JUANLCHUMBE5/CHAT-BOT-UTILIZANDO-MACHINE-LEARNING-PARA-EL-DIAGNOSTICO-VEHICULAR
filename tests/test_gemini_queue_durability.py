@@ -203,6 +203,10 @@ async def test_rest_flujo_completo_a_b_c_d(
         return False, "rpd_excedido"
 
     monkeypatch.setattr(gemini_rate_limiter, "intentar_adquirir_slot_db", slot_bloqueado)
+    monkeypatch.setattr(
+        "src.interfaces.api.v1.endpoints.diagnostico.settings.gemini_api_key",
+        "clave-simulada",
+    )
 
     scope = {
         "type": "http",
@@ -338,6 +342,10 @@ async def test_e_fallo_insert_commit_en_rest_nunca_devuelve_en_cola_gemini(
         return False, "rpd_excedido"
 
     monkeypatch.setattr(gemini_rate_limiter, "intentar_adquirir_slot_db", slot_bloqueado)
+    monkeypatch.setattr(
+        "src.interfaces.api.v1.endpoints.diagnostico.settings.gemini_api_key",
+        "clave-simulada",
+    )
 
     # Inducir fallo en persistencia del trabajo
     async def fallo_persistir(*args, **kwargs):

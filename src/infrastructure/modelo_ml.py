@@ -32,7 +32,11 @@ class ModeloML:
         self.vectorizador_path = vectorizador_path
         self.temperatura = float(temperatura)
         if modelo_sistema_path is None:
-            self.modelo_sistema_path = str(Path(self.modelo_path).parent / "modelo_sistema.pkl")
+            modelo_configurado = Path(settings.paths.model_pkl)
+            if Path(self.modelo_path).resolve() == modelo_configurado.resolve():
+                self.modelo_sistema_path = str(settings.paths.modelo_sistema_pkl)
+            else:
+                self.modelo_sistema_path = str(Path(self.modelo_path).parent / "modelo_sistema.pkl")
         else:
             self.modelo_sistema_path = modelo_sistema_path
 

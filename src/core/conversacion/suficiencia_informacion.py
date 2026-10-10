@@ -126,6 +126,16 @@ class EvaluadorSuficiencia:
         lista_cat = sorted(list(categorias_vistas))
         score = len(lista_cat)
 
+        # Un único "se calienta" puede generar síntoma + temperatura + sistema
+        # a partir de la misma frase; no son tres observaciones independientes.
+        if (
+            len(estado.historial_mensajes_usuario) == 1
+            and re.fullmatch(r"\s*(?:se\s+)?calienta\s*", estado.historial_mensajes_usuario[0], re.IGNORECASE)
+            and not (estado.marca or estado.modelo or estado.anio)
+        ):
+            estado.conversation_evidence_level = EvidenceLevel.BAJA
+            return score, lista_cat, False, "Síntoma único de calentamiento sin condición discriminante"
+
         if score >= 3:
             estado.conversation_evidence_level = EvidenceLevel.MEDIA
             return (

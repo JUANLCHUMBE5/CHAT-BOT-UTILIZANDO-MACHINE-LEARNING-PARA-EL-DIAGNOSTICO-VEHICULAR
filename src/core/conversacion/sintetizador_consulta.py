@@ -8,6 +8,15 @@ from typing import List
 from src.core.conversacion.models import ConversationState, FactState
 
 
+def _retirar_condicion_obsoleta(texto: str, temperatura_confirmada: str | None) -> str:
+    """Evita que una frase histórica contradiga la corrección estructurada del mecánico."""
+    if temperatura_confirmada == "caliente":
+        texto = re.sub(r"\b(?:cuando\s+est[aá]\s+)?fr[ií]o\b", "", texto, flags=re.IGNORECASE)
+    elif temperatura_confirmada == "frío":
+        texto = re.sub(r"\b(?:cuando\s+est[aá]\s+)?caliente\b", "", texto, flags=re.IGNORECASE)
+    return re.sub(r"\s+", " ", texto).strip()
+
+
 class SintetizadorConsulta:
     """Reconstruye una consulta diagnóstica limpia a partir de hechos estructurados confirmados."""
 
@@ -26,6 +35,8 @@ class SintetizadorConsulta:
             vehiculo_tokens.append(f"año {estado.anio}")
         if estado.combustible:
             vehiculo_tokens.append(f"a {estado.combustible}")
+        if estado.transmision:
+            vehiculo_tokens.append(f"transmisión {estado.transmision}")
 
         if vehiculo_tokens:
             partes.append(" ".join(vehiculo_tokens))
@@ -49,12 +60,7 @@ class SintetizadorConsulta:
             sintomas_str = ", ".join(sintomas_confirmados)
             partes.append(f"presenta {sintomas_str}")
         elif estado.historial_mensajes_usuario:
-            msg_base = estado.historial_mensajes_usuario[0]
-            if temp == "caliente":
-                msg_base = re.sub(r"\b(?:cuando\s+est[aá]\s+)?fr[ií]o\b", "", msg_base, flags=re.IGNORECASE)
-            elif temp == "frío":
-                msg_base = re.sub(r"\b(?:cuando\s+est[aá]\s+)?caliente\b", "", msg_base, flags=re.IGNORECASE)
-            msg_base = re.sub(r"\s+", " ", msg_base).strip()
+            msg_base = _retirar_condicion_obsoleta(estado.historial_mensajes_usuario[0], temp)
             if msg_base:
                 partes.append(msg_base)
 
@@ -188,7 +194,8 @@ class SintetizadorConsulta:
             )
 
         aportes_recientes = list(dict.fromkeys(
-            texto.strip() for texto in estado.historial_mensajes_usuario[-4:] if texto.strip()
+            _retirar_condicion_obsoleta(texto, temp)
+            for texto in estado.historial_mensajes_usuario[-4:] if texto.strip()
         ))
         if aportes_recientes:
             partes.append(

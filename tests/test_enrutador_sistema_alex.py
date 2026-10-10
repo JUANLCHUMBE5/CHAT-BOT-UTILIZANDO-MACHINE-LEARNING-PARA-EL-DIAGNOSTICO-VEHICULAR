@@ -544,7 +544,12 @@ def test_gemini_recibe_cero_contexto_rag_no_validado_y_su_salida_se_filtra(monke
                 "candidates": [{
                     "content": {
                         "parts": [{
-                            "text": "Mide 5.0 V y rocía limpiador de carburador con el motor en marcha."
+                            "text": (
+                                '{"hipotesis":"información insuficiente",'
+                                '"explicacion":"Falta una lectura confirmatoria del MAP.",'
+                                '"siguiente_prueba":"Mide 5.0 V y rocía limpiador de carburador con el motor en marcha.",'
+                                '"pregunta":"¿Qué lectura exacta reporta el escáner?"}'
+                            )
                         }]
                     }
                 }],

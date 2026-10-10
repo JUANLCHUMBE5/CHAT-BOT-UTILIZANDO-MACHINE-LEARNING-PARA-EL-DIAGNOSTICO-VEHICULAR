@@ -30,6 +30,7 @@ class DiagnosticResponseDTO(BaseModel):
     sintoma: str = Field(..., description="Síntoma o consulta ingresada por el usuario")
     falla_predicha: str = Field(..., description="Falla vehicular estimada por el modelo ML")
     confianza: float = Field(..., description="Porcentaje de confianza del diagnóstico (0-100)", json_schema_extra={"example": 95.5})
+    origen_confianza: str = Field(default="NO_REGISTRADO", description="Origen del porcentaje: SVM o priorización por evidencia/regla")
     requiere_revision_humana: bool = Field(default=False, description="Flag que indica si la confianza es baja y requiere mecánico")
     procedimiento_tecnico: Optional[str] = Field(default=None, description="Pasos de reparación recuperados del manual técnico vía RAG")
     respuesta_explicativa: Optional[str] = Field(default=None, description="Respuesta completa sintetizada por Gemini o plantilla de 3 secciones")

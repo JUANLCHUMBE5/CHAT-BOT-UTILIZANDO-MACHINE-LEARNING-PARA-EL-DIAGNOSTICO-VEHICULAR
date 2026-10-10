@@ -145,9 +145,8 @@ class PostgresConversationRepository(ConversationStateRepository):
                     if "conversation_state" in contexto and isinstance(contexto["conversation_state"], dict):
                         st = ConversationState.from_dict(contexto["conversation_state"])
                         st.session_id = session_id
-                        placa = contexto.get("placa_posttest") or contexto.get("placa")
-                        if placa and not st.placa:
-                            st.placa = placa
+                        # El estado anidado es autoridad para el vehículo activo.
+                        # No rellenar sus campos ausentes con claves externas viejas.
                         return st
                     if "hechos" in contexto:
                         st = ConversationState.from_dict(contexto)
@@ -212,6 +211,36 @@ class PostgresConversationRepository(ConversationStateRepository):
                             select(Conversacion.contexto).where(Conversacion.id == conv_id)
                         )
                         ctx = dict(res.scalar_one_or_none() or {})
+                        estado_previo = ctx.get("conversation_state")
+                        case_id_previo = ctx.get("case_id") or (
+                            estado_previo.get("case_id")
+                            if isinstance(estado_previo, dict)
+                            else None
+                        )
+                        cambio_de_caso = bool(
+                            case_id_previo and str(case_id_previo) != str(state.case_id or "")
+                        )
+                        if cambio_de_caso:
+                            for clave in (
+                                "placa",
+                                "placa_posttest",
+                                "marca_modelo",
+                                "perfil_vehiculo",
+                                "sintomas",
+                                "validacion_diagnostico",
+                                "consulta_tecnica_pendiente",
+                                "consulta_combustible_pendiente",
+                                "modo_falla_combustible",
+                                "autopregunta_sintoma_base",
+                                "autopregunta_opciones",
+                                "autopregunta_hipotesis",
+                                "ultimas_hipotesis_diferenciales",
+                                "campos_requeridos",
+                                "caso_finalizado",
+                                "preplate_pending_input",
+                            ):
+                                ctx.pop(clave, None)
+                            ctx["posttest_placa_pendiente"] = True
                         ctx["conversation_state"] = state.exportar_dict()
                         ctx["case_id"] = state.case_id
                         if state.placa:
@@ -244,36 +273,5 @@ class PostgresConversationRepository(ConversationStateRepository):
         self, session_id: str, nuevo_case_id: Optional[str] = None
     ) -> ConversationState:
         state = await self._fallback.finalizar_caso(session_id, nuevo_case_id)
-        if database_configurada():
-            try:
-                from sqlalchemy import select, update
-                from sqlalchemy.ext.asyncio import AsyncSession
-
-                from src.infrastructure.database.models.messaging import Conversacion
-
-                engine = obtener_engine()
-                async with AsyncSession(engine, expire_on_commit=False) as session:
-                    import uuid
-                    try:
-                        conv_id = uuid.UUID(session_id)
-                    except ValueError:
-                        return state
-
-                    async with session.begin():
-                        res = await session.execute(
-                            select(Conversacion.contexto).where(Conversacion.id == conv_id)
-                        )
-                        ctx = dict(res.scalar_one_or_none() or {})
-                        ctx.pop("conversation_state", None)
-                        ctx.pop("estado_conversacion", None)
-                        ctx.pop("validacion_diagnostico", None)
-                        ctx["caso_finalizado"] = True
-                        ctx["case_id"] = state.case_id
-                        await session.execute(
-                            update(Conversacion)
-                            .where(Conversacion.id == conv_id)
-                            .values(contexto=ctx)
-                        )
-            except Exception as exc:
-                logger.warning(f"[PostgresConversationRepository] Error al finalizar caso {session_id}: {exc}")
+        await self.save_session(session_id, state)
         return state

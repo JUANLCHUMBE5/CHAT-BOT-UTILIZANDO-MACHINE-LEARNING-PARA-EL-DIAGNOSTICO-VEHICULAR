@@ -10,6 +10,8 @@ from src.config import settings
 from src.core.diagnostic_cache import diagnostico_cache
 from src.core.diagnostico.coherencia_evidencia import (
     bateria_ya_comprobada,
+    documento_compatible,
+    preparar_contexto_rag_para_llm,
     priorizar_evidencia,
 )
 from src.core.diagnostico.models import PrediccionML, ResultadoDiagnostico
@@ -99,7 +101,6 @@ def procesar_consulta_tecnica(
         tipo_consulta="consulta_tecnica",
     )
 
-
 def procesar_consulta_texto(
     gestor: Any,
     texto_usuario: str,
@@ -115,6 +116,7 @@ def procesar_consulta_texto(
     diferir_encolado_persistente: bool = False,
     diagnostico_forzado: Optional[str] = None,
     orquestado: bool = False,
+    case_id: Optional[str] = None,
 ) -> ResultadoDiagnostico:
     """
     Flujo tripartito secuencial THREAD-SAFE para consultas de texto:
@@ -135,6 +137,65 @@ def procesar_consulta_texto(
 
     clave_sesion = session_id or (placa if placa not in (None, "REST-API", "WAPP-01") else None)
     sesion_pendiente = gestor.session_manager.obtener_sesion(clave_sesion) if clave_sesion else None
+    case_id_actual = case_id or getattr(sesion_pendiente, "case_id", None)
+
+    if (
+        es_mensaje_solo_datos_vehiculo(texto_normalizado)
+        and not (sesion_pendiente and sesion_pendiente.estado == "esperando_datos_vehiculo")
+    ):
+        datos_vehiculo = extraer_datos_vehiculo(texto_normalizado)
+        if marca_modelo and marca_modelo not in ("Vehiculo Generico", "Generico", ""):
+            datos_vehiculo.update(extraer_datos_vehiculo(marca_modelo))
+        sesion_vehiculo = sesion_pendiente
+        if clave_sesion:
+            sesion_vehiculo = sesion_vehiculo or gestor.session_manager.obtener_o_crear_sesion(clave_sesion)
+            sesion_vehiculo.actualizar_perfil(datos_vehiculo)
+            perfil_texto = gestor._formatear_perfil_vehiculo(sesion_vehiculo.perfil_vehiculo)
+            marca_modelo = sesion_vehiculo.marca_modelo or marca_modelo
+        else:
+            perfil_texto = gestor._formatear_perfil_vehiculo(datos_vehiculo)
+
+        sintoma_existente = sesion_vehiculo.obtener_sintoma_completo() if sesion_vehiculo else ""
+        if sesion_vehiculo and sesion_vehiculo.estado in (
+            "esperando_autopregunta",
+            "esperando_aclaracion_sintoma",
+            "esperando_combustible",
+        ):
+            respuesta_vehiculo = (
+                f"Anoté {perfil_texto or 'los datos del vehículo'} como contexto. "
+                "Conservo la pregunta técnica pendiente; responde esa indicación para continuar."
+            )
+            return ResultadoDiagnostico(
+                respuesta_texto=respuesta_vehiculo,
+                diagnostico_ml="Dato de vehículo registrado; se conserva el paso pendiente",
+                confianza_ml=0.0,
+                contexto_manual="",
+                titulo_manual="",
+                modo_diagnostico="esperando_contexto",
+                estado_sesion=sesion_vehiculo.estado,
+                tipo_consulta="aclaracion",
+                sintoma_evaluado=sintoma_existente,
+            )
+        if not sintoma_existente:
+            return ResultadoDiagnostico(
+                respuesta_texto=(
+                    f"Anoté {perfil_texto or 'los datos del vehículo'}. "
+                    "Ahora cuéntame qué síntoma o falla presenta para iniciar el diagnóstico."
+                ),
+                diagnostico_ml="Datos de vehículo; falta describir la falla",
+                confianza_ml=0.0,
+                contexto_manual="",
+                titulo_manual="",
+                modo_diagnostico="esperando_sintoma",
+                estado_sesion="esperando_sintoma",
+                tipo_consulta="aclaracion",
+            )
+
+        texto_con_vehiculo = f"{sintoma_existente}\nDATOS CONFIRMADOS DEL VEHÍCULO: {perfil_texto}".strip()
+        sesion_vehiculo.sintomas = [texto_con_vehiculo]
+        sesion_vehiculo.estado = "en_proceso"
+        texto_normalizado = texto_con_vehiculo
+        sesion_pendiente = sesion_vehiculo
 
     if (
         es_mensaje_solo_datos_vehiculo(texto_normalizado)
@@ -374,7 +435,13 @@ def procesar_consulta_texto(
             tipo_consulta="conversacional",
         )
 
-    if clave_sesion:
+    if orquestado:
+        # El orquestador ya consolidó exclusivamente los hechos del case_id
+        # activo. No volver a acumular ni segmentar contra la sesión legacy.
+        texto_evaluar = texto_normalizado
+        marca_evaluar = marca_modelo
+        placa_evaluar = placa
+    elif clave_sesion:
         sesion_anterior = gestor.session_manager.obtener_sesion(clave_sesion)
         from src.core.conversacion.segmentador_casos import SegmentadorCasos
 
@@ -546,13 +613,16 @@ def procesar_consulta_texto(
         )
 
     # Consultar Caché LRU en Memoria
-    clave_cache = diagnostico_cache.generar_clave(
-        sintoma=texto_evaluar,
-        marca_modelo=marca_evaluar or "",
-        placa=placa_evaluar or "",
-    )
-    resultado_en_cache = diagnostico_cache.obtener(clave_cache)
-    if resultado_en_cache is not None and not clave_sesion:
+    clave_cache = None
+    if case_id_actual:
+        clave_cache = diagnostico_cache.generar_clave(
+            sintoma=texto_evaluar,
+            marca_modelo=marca_evaluar or "",
+            placa=placa_evaluar or "",
+            case_id=case_id_actual,
+        )
+    resultado_en_cache = diagnostico_cache.obtener(clave_cache) if clave_cache else None
+    if resultado_en_cache is not None:
         logger.info("⚡ Diagnóstico obtenido instantáneamente desde Memoria Caché LRU (< 5ms)")
         return resultado_en_cache.model_copy(
             update={
@@ -617,7 +687,11 @@ def procesar_consulta_texto(
     if diagnostico_forzado:
         diagnostico_predictivo = diagnostico_forzado
         confianza = 0.80
-        predicciones_ml = [PrediccionML(falla=diagnostico_forzado, probabilidad=0.80)]
+        predicciones_ml = [PrediccionML(
+            falla=diagnostico_forzado,
+            probabilidad=0.0,
+            origen_probabilidad="REGLA",
+        )]
         alts_fallas = []
         if clave_sesion:
             ses_act = gestor.session_manager.obtener_sesion(clave_sesion)
@@ -631,10 +705,13 @@ def procesar_consulta_texto(
                 if f_nom and f_nom != diagnostico_forzado and f_nom not in alts_fallas:
                     alts_fallas.append(f_nom)
 
-        probs_diff = [0.13, 0.07]
         for i, alt_nombre in enumerate(alts_fallas[:2]):
             predicciones_ml.append(
-                PrediccionML(falla=alt_nombre, probabilidad=probs_diff[i] if i < len(probs_diff) else 0.05)
+                PrediccionML(
+                    falla=alt_nombre,
+                    probabilidad=0.0,
+                    origen_probabilidad="REGLA",
+                )
             )
     elif hasattr(gestor.modelo_ml, "predecir_top_fallas"):
         limite_candidatos = 12 if areas_consulta else 3
@@ -687,7 +764,11 @@ def procesar_consulta_texto(
     ):
         diagnostico_predictivo = "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)"
         if predicciones_ml:
-            predicciones_ml[0] = PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza)
+            predicciones_ml[0] = PrediccionML(
+                falla=diagnostico_predictivo,
+                probabilidad=0.0,
+                origen_probabilidad="REGLA",
+            )
 
     # Especialización técnica: bombín de embrague pegado al piso
     es_bombin = any(
@@ -701,7 +782,11 @@ def procesar_consulta_texto(
         diagnostico_predictivo = "Falla en bombin o bomba hidraulica de embrague"
         confianza = max(confianza, 0.75)
         if predicciones_ml:
-            predicciones_ml.insert(0, PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza))
+            predicciones_ml.insert(0, PrediccionML(
+                falla=diagnostico_predictivo,
+                probabilidad=0.0,
+                origen_probabilidad="REGLA",
+            ))
             predicciones_ml = predicciones_ml[:3]
 
     if areas_consulta and not diagnostico_forzado:
@@ -778,13 +863,21 @@ def procesar_consulta_texto(
         confianza = max(confianza, 0.78)
         if predicciones_ml:
             predicciones_ml = [p for p in predicciones_ml if "bujia" not in p.falla.lower()]
-            predicciones_ml.insert(0, PrediccionML(falla=promovida, probabilidad=confianza))
+            predicciones_ml.insert(0, PrediccionML(
+                falla=promovida,
+                probabilidad=0.0,
+                origen_probabilidad="REGLA",
+            ))
             predicciones_ml = predicciones_ml[:3]
     elif (es_parpadeo_check or mencion_bobina_falla) and diagnostico_predictivo != "Falla en bujias o bobinas de encendido (misfire)":
         diagnostico_predictivo = "Falla en bujias o bobinas de encendido (misfire)"
         confianza = max(confianza, 0.75)
         if predicciones_ml:
-            predicciones_ml.insert(0, PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza))
+            predicciones_ml.insert(0, PrediccionML(
+                falla=diagnostico_predictivo,
+                probabilidad=0.0,
+                origen_probabilidad="REGLA",
+            ))
             predicciones_ml = predicciones_ml[:3]
 
     if (
@@ -910,10 +1003,38 @@ def procesar_consulta_texto(
         and "Desconocido" not in titulo_manual
         and "Error" not in titulo_manual
     )
+    rag_corpus_validado = bool(getattr(gestor.motor_rag, "corpus_validado", False))
+    contexto_rag_validado, _ = preparar_contexto_rag_para_llm(
+        contexto_manual,
+        titulo_manual,
+        meta_rag_dict,
+        rag_corpus_validado,
+    )
+    falla_rag = str((meta_rag_dict or {}).get("falla") or "").strip()
+    macro_rag_declarado = str(
+        (meta_rag_dict or {}).get("macro_sistema")
+        or (meta_rag_dict or {}).get("sistema")
+        or ""
+    ).strip().upper()
+    macro_rag = obtener_macro_sistema(falla_rag) if falla_rag else macro_rag_declarado
+    sistema_rag_compatible = bool(
+        macro_sis_ml
+        and macro_rag == macro_sis_ml
+        and (not macro_rag_declarado or macro_rag_declarado == macro_sis_ml)
+    )
+    umbral_evidencia_rag = max(0.80, float(settings.diagnostic.rag_min_similarity))
+    rag_evidencia_validada = bool(
+        rag_valido
+        and contexto_rag_validado
+        and documento_compatible(texto_evaluar, titulo_manual, contexto_manual)
+        and sistema_rag_compatible
+        and similitud_rag >= umbral_evidencia_rag
+    )
 
     # PASO 2.5: Fusión Multiseñal y Prioridad de Evidencia (DTC + Metrología Física + Descarte + RAG)
     from src.core.diagnostico.politica_fusion import PoliticaFusionDiagnostica, ResultadoFusion
     if not diagnostico_predictivo.startswith("Sistema GNV/GLP"):
+        predicciones_pre_fusion = list(predicciones_ml)
         resultado_fusion = PoliticaFusionDiagnostica.fusionar_evidencia(
             sintoma_texto=texto_evaluar,
             predicciones_ml=[p.model_dump() for p in predicciones_ml] if predicciones_ml else [],
@@ -921,14 +1042,46 @@ def procesar_consulta_texto(
             rag_meta=meta_rag_dict or {},
             rag_similitud=similitud_rag,
             codigos_dtc=dtcs_encontrados,
+            rag_evidencia_validada=rag_evidencia_validada,
         )
         diagnostico_predictivo = resultado_fusion.falla_principal
-        confianza = resultado_fusion.confianza_final
-        if resultado_fusion.diferenciales:
-            nuevas_preds = [PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza)]
-            for dif in resultado_fusion.diferenciales:
-                nuevas_preds.append(PrediccionML(falla=dif["falla"], probabilidad=dif["probabilidad"]))
-            predicciones_ml = nuevas_preds
+        probabilidades_svm = {
+            pred.falla: pred.probabilidad
+            for pred in predicciones_pre_fusion
+            if pred.origen_probabilidad == "SVM"
+        }
+        fuentes_candidatas = {
+            pred.falla: pred.origen_probabilidad for pred in predicciones_pre_fusion
+        }
+        confianza_principal_svm = probabilidades_svm.get(diagnostico_predictivo)
+        origen_principal = (
+            "SVM" if confianza_principal_svm is not None
+            else fuentes_candidatas.get(
+                diagnostico_predictivo,
+                resultado_fusion.origen_confianza,
+            )
+        )
+        nuevas_preds = [PrediccionML(
+            falla=diagnostico_predictivo,
+            probabilidad=(
+                confianza_principal_svm
+                if confianza_principal_svm is not None
+                else 0.0
+            ),
+            origen_probabilidad=origen_principal,
+        )]
+        for dif in resultado_fusion.diferenciales:
+            nuevas_preds.append(PrediccionML(
+                falla=dif["falla"],
+                probabilidad=float(dif.get("probabilidad", 0.0) or 0.0),
+                origen_probabilidad=dif.get("origen_probabilidad", "SVM"),
+            ))
+        predicciones_ml = nuevas_preds
+        confianza = (
+            float(confianza_principal_svm)
+            if origen_principal == "SVM" and confianza_principal_svm is not None
+            else 0.0
+        )
     else:
         resultado_fusion = ResultadoFusion(
             falla_principal=diagnostico_predictivo,
@@ -938,6 +1091,7 @@ def procesar_consulta_texto(
             componentes_descartados=[],
             datos_faltantes=[],
             origen_decision="COMBUSTIBLE_DUAL",
+            origen_confianza="REGLA",
         )
 
     # La fusión no debe deshacer la prioridad física ni inventar su confianza.
@@ -971,6 +1125,7 @@ def procesar_consulta_texto(
         marca_evaluar=marca_evaluar,
         placa_evaluar=placa_evaluar,
         clave_sesion=clave_sesion,
+        case_id=case_id_actual,
         remitente=remitente,
         proveedor=proveedor,
         taller_id=taller_id,
@@ -978,6 +1133,7 @@ def procesar_consulta_texto(
         conversacion_id=conversacion_id,
         slot_gemini_preconcedido=slot_gemini_preconcedido,
         diferir_encolado_persistente=diferir_encolado_persistente,
+
         tiempo_ml_ms=tiempo_ml_ms,
         tiempo_rag_ms=tiempo_rag_ms,
         inicio_total=inicio_total,

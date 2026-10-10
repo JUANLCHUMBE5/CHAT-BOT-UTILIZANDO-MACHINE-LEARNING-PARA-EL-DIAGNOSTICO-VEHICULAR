@@ -11,8 +11,15 @@ from src.core.conversacion.repositorio import InMemoryConversationRepository
 
 
 @pytest.fixture
-def gestor_real() -> GestorDiagnostico:
-    return GestorDiagnostico()
+def gestor_real(monkeypatch: pytest.MonkeyPatch) -> GestorDiagnostico:
+    """Usa el pipeline local y sustituye la síntesis para impedir llamadas externas."""
+    gestor = GestorDiagnostico()
+    monkeypatch.setattr(
+        gestor,
+        "_generar_respuesta_con_metadatos",
+        lambda **_: ("Respuesta simulada para prueba de aislamiento", {"usado": False}),
+    )
+    return gestor
 
 
 @pytest.fixture

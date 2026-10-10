@@ -70,6 +70,14 @@ class DiagnosticPersister:
         vehiculo_repo = VehiculoRepository(session)
         msg_repo = MensajeRepository(session)
         operaciones_repo = OperacionesRepository(session)
+        contexto_actual = dict(conversacion.contexto or {})
+        estado_actual = contexto_actual.get("conversation_state")
+        case_id_actual = (
+            estado_actual.get("case_id")
+            if isinstance(estado_actual, dict)
+            else contexto_actual.get("case_id")
+        )
+        case_id_actual = str(case_id_actual) if case_id_actual else None
 
         # 1. Manejo de consultas informativas
         if dto.tipo_consulta != "diagnostico":
@@ -89,6 +97,7 @@ class DiagnosticPersister:
                     taller_id=str(usuario.taller_id),
                     usuario_id=str(usuario.id),
                     conversacion_id=str(conversacion.id),
+                    case_id=case_id_actual,
                     tipo_consulta="consulta_tecnica",
                 )
 
@@ -207,6 +216,7 @@ class DiagnosticPersister:
             version_corpus_rag=corpus_version,
             trazabilidad={
                 "version": 1,
+                "case_id": case_id_actual,
                 "predicciones_ml": [pred.model_dump() for pred in dto.predicciones_ml],
                 "top3_ml_raw": [pred.model_dump() for pred in dto.predicciones_ml[:3]],
                 "hipotesis_final_presentada": [{"falla": dto.diagnostico_ml, "probabilidad": dto.confianza_ml}],
@@ -282,6 +292,7 @@ class DiagnosticPersister:
                 taller_id=str(usuario.taller_id),
                 usuario_id=str(usuario.id),
                 conversacion_id=str(conversacion.id),
+                case_id=case_id_actual,
             )
 
         # 8. Guardar hipótesis diagnóstica priorizada
@@ -364,6 +375,7 @@ class DiagnosticPersister:
             proveedor=proveedor,
             destinatario_cifrado=cifrar_texto_reversible(remitente),
             disponible_entrega_en=datetime.now(timezone.utc),
+            case_id=case_id_actual,
         )
 
         await session.commit()

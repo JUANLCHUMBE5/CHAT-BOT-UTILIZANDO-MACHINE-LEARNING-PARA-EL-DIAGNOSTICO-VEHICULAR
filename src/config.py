@@ -121,6 +121,10 @@ class PathConfig(BaseModel):
 
 
 class DiagnosticConfig(BaseModel):
+    max_clarifications: int = Field(default=_env_int("CARBOT_MAX_ACLARACIONES", 4), ge=1, le=8)
+    min_presentable_confidence: float = Field(
+        default=_env_float("ML_MIN_PRESENTABLE_CONFIDENCE", 0.20), ge=0.0, le=1.0,
+    )
     rag_min_similarity: float = Field(
         default=_env_float("RAG_MIN_SIMILARITY", 0.10),
         ge=0.0,

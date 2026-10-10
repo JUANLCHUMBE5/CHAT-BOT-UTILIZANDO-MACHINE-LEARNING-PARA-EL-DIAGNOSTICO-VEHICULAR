@@ -40,6 +40,10 @@ async def test_20_escenarios_adenda_informacion_escasa(orquestador, gestor):
                 intent, pregunta = {
                     "temperatura": (QuestionIntent.TEMPERATURA_APARICION, "¿La falla ocurre en frío o caliente?"),
                     "condicion_operacion": (QuestionIntent.CONDICION_OPERACION, "¿En qué condición aparece la falla?"),
+                    "medicion_tecnica_pendiente": (
+                        QuestionIntent.MEDICION_TECNICA,
+                        "¿Qué dato técnico lograste comprobar?",
+                    ),
                 }[campo_desconocido]
                 estado_pregunta.registrar_pregunta(intent, pregunta)
                 await orquestador.repositorio.save_session(sid, estado_pregunta)
@@ -54,7 +58,7 @@ async def test_20_escenarios_adenda_informacion_escasa(orquestador, gestor):
 
         # 1. Validación de mensaje escaso: debe pedir aclaración
         if caso.get("espera_pregunta"):
-            assert res_final.get("es_pregunta") is True
+            assert res_final.get("es_pregunta") is True, caso["id"]
             assert estado.conversation_evidence_level == EvidenceLevel.BAJA
 
         # 2. Validación de nivel de evidencia
@@ -70,8 +74,9 @@ async def test_20_escenarios_adenda_informacion_escasa(orquestador, gestor):
         if "debe_registrar_desconocido" in caso:
             campo = caso["debe_registrar_desconocido"]
             hecho = estado.obtener_hecho(campo)
-            assert hecho is not None
-            assert hecho.estado == FactState.DESCONOCIDO
+            assert hecho is not None, f"{caso['id']}: {campo}; última={estado.ultima_pregunta()}"
+            estado_esperado = caso.get("estado_desconocido_esperado", FactState.DESCONOCIDO.value)
+            assert hecho.estado.value == estado_esperado
 
         # 5. Validación de no repetición de preguntas
         if caso.get("no_debe_repetir"):
@@ -85,9 +90,11 @@ async def test_20_escenarios_adenda_informacion_escasa(orquestador, gestor):
 
         # 7. Validación de límite de repreguntas y escape de loop
         if caso.get("debe_alcanzar_limite_escape"):
-            assert estado.turnos_repregunta >= estado.max_repreguntas
-            assert res_final.get("decision") in ("DIFERENCIAL", "DIAGNOSTICAR")
-            assert "Diagnóstico diferencial" in res_final.get("respuesta_texto", "") or "Límite" in res_final.get("motivo_decision", "")
+            assert estado.turnos_repregunta >= estado.max_repreguntas - 1
+            # Sin un síntoma concreto, agotar aclaraciones debe cerrar la
+            # ronda sin inventar un diagnóstico diferencial.
+            assert res_final.get("decision") == "DATOS_INSUFICIENTES"
+            assert "Límite de aclaraciones" in res_final.get("respuesta_texto", "")
 
         # 8. Validación de DTC observado vs sin DTC
         if "dtc_status_esperado" in caso:

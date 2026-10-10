@@ -273,12 +273,15 @@ async def procesar_solicitud_encolada(
 
     if solicitud.conversacion_id and settings.database.enabled:
         resumen_whatsapp = crear_resumen_whatsapp(solicitud, texto_respuesta)
-        await persistir_mensaje_saliente_db(solicitud, resumen_whatsapp, "pendiente")
-        try:
-            from src.core.gemini_queue.db_persistence import procesar_siguiente_entrega_whatsapp
-            await procesar_siguiente_entrega_whatsapp()
-        except Exception as e:
-            logger.debug(f"[Gemini Worker Outbox Inmediato] {e}")
+        respuesta_vinculada_al_caso = await persistir_mensaje_saliente_db(
+            solicitud, resumen_whatsapp, "pendiente"
+        )
+        if respuesta_vinculada_al_caso:
+            try:
+                from src.core.gemini_queue.db_persistence import procesar_siguiente_entrega_whatsapp
+                await procesar_siguiente_entrega_whatsapp()
+            except Exception as e:
+                logger.debug(f"[Gemini Worker Outbox Inmediato] {e}")
 
     if solicitud.callback_completado:
         try:

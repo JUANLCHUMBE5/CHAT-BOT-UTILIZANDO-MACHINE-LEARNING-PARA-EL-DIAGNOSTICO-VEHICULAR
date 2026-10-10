@@ -50,7 +50,8 @@ async def test_regresion_incidente_caso_a_cerrado_caso_b_limpio():
     assert "pérdida de potencia" in consulta_b or "pierde fuerza" in consulta_b
     assert res_b["estado"].case_id != case_id_a, "El case_id debe ser nuevo"
     assert res_b["top3_actual"] is not None, "El modelo ML debe calcular un Top 3 nuevo"
-    assert len(res_b["top3_actual"]) == 3, "Debe retornar 3 hipótesis"
+    assert 1 <= len(res_b["top3_actual"]) <= 3, "Debe conservar solo hipótesis compatibles"
+    assert all("arranque" not in item["falla"].lower() for item in res_b["top3_actual"])
 
 
 @pytest.mark.anyio

@@ -41,7 +41,7 @@ def _estado_diagnosticado(
                 falla="Falla en bujias o bobinas de encendido (misfire)",
             ),
             (
-                "Hola, tengo un problema con mi carro automatico. La palanca entra normal en D, "
+                "Hola, tengo otro problema con mi carro automatico. La palanca entra normal en D, "
                 "pero la reversa demora en enganchar y luego entra con un golpe."
             ),
             "TRANSMISION",
@@ -109,7 +109,7 @@ def test_incidente_no_confunde_y_cuando_interno_con_coexistencia() -> None:
         falla="Falla en bujias o bobinas de encendido (misfire)",
     )
     mensaje = (
-        "Hola, tengo un problema con mi carro automatico. Cuando pongo la palanca en D entra normal, "
+        "Hola, tengo otro problema con mi carro automatico. Cuando pongo la palanca en D entra normal, "
         "pero cuando paso a R demora en enganchar y cuando entra da un golpe."
     )
 
@@ -122,7 +122,7 @@ def test_incidente_no_confunde_y_cuando_interno_con_coexistencia() -> None:
     )
 
     assert resultado.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert resultado.motivo == "NUEVA_QUEJA_PRINCIPAL: MARCHA_MOTOR_A_TRANSMISION"
+    assert resultado.motivo == "SOLICITUD_EXPLICITA_NUEVA_CONSULTA"
 
 
 def test_incidente_genera_consulta_ml_limpia_y_especifica_de_transmision() -> None:

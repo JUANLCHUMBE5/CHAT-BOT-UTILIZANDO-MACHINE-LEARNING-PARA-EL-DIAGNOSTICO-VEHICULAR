@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 class PrediccionML(BaseModel):
     falla: str
     probabilidad: float
+    origen_probabilidad: str = "SVM"
 
 
 class ResultadoDiagnostico(BaseModel):
@@ -17,6 +18,7 @@ class ResultadoDiagnostico(BaseModel):
     respuesta_texto: str
     diagnostico_ml: str
     confianza_ml: float
+    origen_confianza: str = "SVM"
     contexto_manual: str
     titulo_manual: str
     contexto_manual_verificado: str = ""

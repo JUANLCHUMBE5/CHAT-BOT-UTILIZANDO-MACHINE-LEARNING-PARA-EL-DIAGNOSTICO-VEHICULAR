@@ -29,7 +29,7 @@ def registrar_revision_mezcla(estado: ConversationState, texto: str) -> dict | N
     if not (normal or (revisada and referencia)):
         return None
     patrones = (
-        ("cuerpo_aceleracion", r"cuerpo\s+de\s+aceleracion|\biac\b"),
+        ("cuerpo_aceleracion", r"\bcuerpo(?:\s+de\s+aceleracion)?\b|\biac\b"),
         ("maf", r"\bmaf\b"),
         ("inyectores", r"\b(?:inyectores?|injectores?)\b"),
         ("presion_combustible", r"presion\s+(?:de\s+)?combustible"),

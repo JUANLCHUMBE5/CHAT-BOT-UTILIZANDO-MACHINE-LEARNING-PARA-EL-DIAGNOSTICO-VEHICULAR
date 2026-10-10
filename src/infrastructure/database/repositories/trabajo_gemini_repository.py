@@ -36,6 +36,7 @@ class TrabajoGeminiRepository:
         conversacion_id: Optional[uuid.UUID] = None,
         diagnostico_id: Optional[uuid.UUID] = None,
         trabajo_id: Optional[uuid.UUID] = None,
+        case_id: Optional[str] = None,
     ) -> TrabajoGemini:
         """Crea un nuevo trabajo persistente cifrando el remitente para proteger la privacidad."""
         conf_decimal = Decimal(str(round(float(confianza_ml), 4))) if confianza_ml is not None else None
@@ -47,6 +48,7 @@ class TrabajoGeminiRepository:
             taller_id=taller_id,
             usuario_id=usuario_id,
             conversacion_id=conversacion_id,
+            case_id=case_id,
             proveedor=proveedor or "meta",
             tipo_consulta=tipo_consulta,
             remitente_cifrado=remitente_cifrado,

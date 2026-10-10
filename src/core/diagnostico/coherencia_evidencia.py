@@ -67,14 +67,31 @@ def bateria_ya_comprobada(texto):
 
 
 def documento_compatible(texto, titulo, contexto):
-    """Distingue transmisión manual/automática aunque compartan clase ML."""
+    """Descarta documentos incompatibles con transmisión o combustible declarados."""
     consulta = normalizar(texto)
     documento = normalizar(f"{titulo} {contexto}")
     automatico = bool(re.search(r"\b(automatic[oa]|cvt|dsg)\b", consulta))
     manual = bool(re.search(r"\b(?:caja|transmision) manual\b", consulta))
     doc_manual = bool(re.search(r"\b(?:caja de cambios|caja|transmision) (?:manual|mecanica)\b", documento))
     doc_auto = bool(re.search(r"\b(automatic[oa]|cvt|dsg)\b", documento))
-    return not ((automatico and doc_manual and not doc_auto) or (manual and doc_auto and not doc_manual))
+    transmision_compatible = not (
+        (automatico and doc_manual and not doc_auto)
+        or (manual and doc_auto and not doc_manual)
+    )
+
+    documento_gas_dedicado = bool(
+        re.search(
+            r"\b(?:gnv|glp|quinta generacion|5ta generacion|reductor de gas|rampa de gas)\b",
+            normalizar(titulo),
+        )
+    )
+    combustible_declarado = bool(
+        re.search(r"\b(?:gnv|glp|gasolina|diesel|di[eé]sel|gasohol)\b", consulta)
+    )
+    combustible_coincide = not documento_gas_dedicado or bool(
+        combustible_declarado and re.search(r"\b(?:gnv|glp)\b", consulta)
+    )
+    return transmision_compatible and combustible_coincide
 
 
 def preparar_contexto_rag_para_llm(contexto, titulo, metadatos, corpus_validado):
@@ -95,7 +112,9 @@ def preparar_contexto_rag_para_llm(contexto, titulo, metadatos, corpus_validado)
         and fuente
         and not fuente_generica
     )
-    if not verificado or not contexto:
+    if not contexto:
+        return "", "Sin procedimiento RAG recuperado aplicable"
+    if not verificado:
         return "", "Fuente RAG omitida: pendiente de validación OEM y de taller"
     return contexto, titulo
 
