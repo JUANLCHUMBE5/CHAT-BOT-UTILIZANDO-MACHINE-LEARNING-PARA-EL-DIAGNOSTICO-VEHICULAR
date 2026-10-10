@@ -239,3 +239,103 @@ def test_orientacion_provisional_sistema_no_frenos():
     assert "revisión presencial en taller" in resp.lower() or "revision presencial en taller" in resp.lower()
     assert "sistema de frenos" not in resp.lower()
     assert "riesgo de pérdida de frenado" not in resp.lower()
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize("respuesta_binaria_usuario", ["SÍ", "si", "NO", "no"])
+async def test_feedback_binario_si_no_nunca_modifica_confirmacion_fisica_ni_exactitud_tesis(
+    monkeypatch, respuesta_binaria_usuario
+):
+    """Garantizar que una respuesta binaria SÍ o NO recibida como feedback
+    a una orientación provisional NUNCA altera el estado de confirmación
+    física ni corrompe el Indicador 3 de Exactitud ML de la tesis."""
+    usuario, conversacion, diagnostico, diagnosticos, mensajes = _crear_escenario_frenos()
+    session = AsyncMock()
+
+    monkeypatch.setattr(
+        "src.core.services.webhook.validation_workflow.DiagnosticoRepository",
+        lambda _session: diagnosticos,
+    )
+    monkeypatch.setattr(
+        "src.core.services.webhook.validation_workflow.MensajeRepository",
+        lambda _session: mensajes,
+    )
+
+    resultado = await ValidationWorkflow.manejar_flujo_validacion(
+        session=session,
+        conversacion=conversacion,
+        usuario=usuario,
+        texto_cliente=respuesta_binaria_usuario,
+        tipo_mensaje="text",
+        meta_message_id=f"msg-binario-{respuesta_binaria_usuario}",
+        proveedor="api",
+        remitente="mecanico-frenos",
+        t_inicio=0.0,
+    )
+
+    assert resultado is not None
+    assert resultado["status"] == "feedback_registrado"
+    assert "retroalimentación" in resultado["respuesta"].lower() or "retroalimentacion" in resultado["respuesta"].lower()
+    assert "sin confirmación física" in resultado["respuesta"].lower() or "sin confirmacion fisica" in resultado["respuesta"].lower()
+
+    # Integridad metodológica estricta:
+    # 1. El diagnóstico nunca pasa a "confirmado" (ni a "descartado")
+    assert diagnostico.estado == "generado"
+    assert diagnostico.estado != "confirmado"
+
+    # 2. Las hipótesis diagnósticas nunca se computan como confirmadas físicamente
+    for h in diagnostico.hipotesis:
+        assert h.resultado is None
+        assert h.resultado != "confirmada"
+        assert h.resultado != "descartada"
+
+    # 3. La etapa de validación se libera sin bucles
+    assert "validacion_diagnostico" not in conversacion.contexto
+
+
+@pytest.mark.anyio
+async def test_conservacion_integral_case_id_vehiculo_sintomas_descartes():
+    """Comprobar que una orientación provisional preserva fielmente case_id,
+    vehículo, síntomas reportados y descartes acumulados."""
+    gestor = GestorDiagnostico()
+    orq = OrquestadorConversacion()
+    sid = "test-conservacion-frenos-completa"
+
+    # Turno 1: Reporte con datos de vehículo y síntomas
+    res1 = await orq.procesar_turno(
+        session_id=sid,
+        texto_usuario="Nissan Sentra 2018 placa B4V-123 chirrido metálico al frenar",
+        gestor_diagnostico=gestor,
+    )
+    estado1 = res1["estado"]
+    case_id_original = estado1.case_id
+    assert case_id_original is not None
+
+    # Agregar descarte explícito previo
+    estado1.hipotesis_descartadas.append("Falla en servofreno")
+    estado1.placa = "B4V-123"
+    estado1.marca = "Nissan"
+    estado1.modelo = "Sentra"
+    await orq.repositorio.save_session(sid, estado1)
+
+    # Turno 2: Declaración de imposibilidad física y de síntomas
+    res2 = await orq.procesar_turno(
+        session_id=sid,
+        texto_usuario="No puedo realizar comprobaciones físicas ni confirmar síntomas adicionales",
+        gestor_diagnostico=gestor,
+    )
+
+    assert res2["decision"] == "ORIENTACION_PROVISIONAL"
+    assert res2["es_pregunta"] is False
+    estado2 = res2["estado"]
+
+    # Invariantes de persistencia y contexto:
+    assert estado2.case_id == case_id_original
+    assert estado2.placa == "B4V-123"
+    assert estado2.marca == "Nissan"
+    assert estado2.modelo == "Sentra"
+    assert "Falla en servofreno" in estado2.hipotesis_descartadas
+    assert len(estado2.active_symptoms) > 0
+    assert any("frenar" in s.lower() or "chirrido" in s.lower() for s in estado2.active_symptoms)
+    assert estado2.trazabilidad[-1]["decision"] == "ORIENTACION_PROVISIONAL"
+

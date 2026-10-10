@@ -19,11 +19,9 @@ def _normalizar(texto: str) -> str:
 PATRONES_IMPOSIBILIDAD_FISICA = (
     r"\bno\s+(?:puedo|podemos|tengo\s+forma\s+de|tengo\s+como)\s+(?:realizar|hacer|efectuar|ejecutar)?\s*(?:m[aá]s\s+)?(?:comprobaciones?|pruebas?|revisiones?|mediciones?|inspecciones?|desarmes?)\b",
     r"\bno\s+(?:puedo|podemos|tengo\s+como)\s+(?:revisar|comprobar|probar|medir|desmontar|desarmar|verificar)\b",
-    r"\bno\s+(?:tengo|cuento\s+con)\s+(?:herramientas?|elevador|taller|mult[ií]metro|esc[aá]ner|escaner|man[oó]metro)\b",
     r"\b(?:imposible|no\s+es\s+posible)\s+(?:realizar|hacer|revisar|comprobar)\s+(?:comprobaciones?|pruebas?)\b",
     r"\bno\s+(?:puedo|podemos)\s+desmontar\s+(?:la\s+)?rueda\b",
     r"\bno\s+(?:puedo|podemos|tengo\s+c[oó]mo)\s+verificar(?:lo)?\b",
-    r"\bsin\s+(?:herramientas?|elevador|taller|forma\s+de\s+probar)\b",
 )
 
 PATRONES_SIN_MAS_SINTOMAS = (
@@ -125,9 +123,9 @@ def generar_orientacion_provisional(
         if h2 and h2 != h1:
             txt_hipotesis += f" (y como alternativa técnica: *{h2}*)"
         partes.append(
-            f"Con los datos recopilados ({sintomas_txt}), {txt_hipotesis} queda solo como hipótesis "
-            "de trabajo para la revisión presencial. No confirma una falla ni justifica reemplazar "
-            "piezas sin verificación física."
+            f"Con los datos recopilados ({sintomas_txt}), la orientación preliminar apunta a {txt_hipotesis}, "
+            "quedando solo como hipótesis de trabajo para la revisión presencial. No confirma una falla ni justifica "
+            "reemplazar piezas sin verificación física."
         )
     else:
         area = getattr(estado, "active_system", "") or "el sistema en evaluación"

@@ -327,7 +327,12 @@ class OrquestadorConversacion:
             generar_orientacion_provisional,
         )
 
-        if tipo_mensaje == "imposibilidad_comprobacion" or es_imposibilidad_completa(texto_limpio):
+        es_imposible_declarado = (
+            (tipo_mensaje == "imposibilidad_comprobacion" or es_imposibilidad_completa(texto_limpio))
+            and not ExtractorHechos.contiene_informacion_diagnostica(texto_limpio)
+        )
+
+        if es_imposible_declarado:
             if texto_limpio not in estado.historial_mensajes_usuario:
                 estado.historial_mensajes_usuario.append(texto_limpio)
             estado.registrar_hecho(
@@ -370,12 +375,6 @@ class OrquestadorConversacion:
                 hipotesis_disponibles=estado.top3_actual,
                 falla_principal=estado.falla_principal,
             )
-            await self.repositorio.save_session(session_id, estado)
-            if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager is not None:
-                gestor_diagnostico.session_manager.cargar_contexto(
-                    session_id,
-                    {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
-                )
             from src.core.gestor_diagnostico import ResultadoDiagnostico
 
             dto_orientacion = ResultadoDiagnostico(
@@ -390,14 +389,52 @@ class OrquestadorConversacion:
                 tipo_consulta="orientacion_provisional",
                 es_orientacion_provisional=True,
             )
+
+            traza = TurnTrace(
+                turno=estado.turno_actual,
+                mensaje_original=texto_limpio,
+                contexto_previo=contexto_previo,
+                hechos_nuevos_extraidos=[],
+                hechos_actualizados=[h.to_dict() for h in estado.hechos.values() if h.estado == FactState.CONFIRMADO],
+                consulta_consolidada=texto_limpio,
+                top3=estado.top3_actual,
+                confianza=estado.confianza_actual,
+                origen_confianza="NO_REGISTRADO",
+                decision="ORIENTACION_PROVISIONAL",
+                motivo_decision="Imposibilidad de comprobación física declarada",
+                respuesta_enviada=resp_orientacion,
+                estado_operativo=estado.estado_operativo.value,
+                question_intent=None,
+                preguntas_candidatas=[],
+                preguntas_descartadas=[],
+                pregunta_final=None,
+                hipotesis_rechazadas_usuario=list(estado.hipotesis_descartadas),
+                version_orquestador=ORCHESTRATOR_VERSION,
+                tipo_mensaje=tipo_mensaje,
+            )
+            estado.trazabilidad.append(traza.to_dict())
+            if len(estado.trazabilidad) > 15:
+                estado.trazabilidad = estado.trazabilidad[-15:]
+
+            await self.repositorio.save_session(session_id, estado)
+            if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager is not None:
+                gestor_diagnostico.session_manager.cargar_contexto(
+                    session_id,
+                    {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+                )
+
             return {
                 "status": "orientacion_provisional",
                 "respuesta_texto": resp_orientacion,
                 "diagnostico_ml": estado.falla_principal or "Orientación provisional",
                 "confianza_ml": estado.confianza_actual or 0.5,
+                "top3_actual": estado.top3_actual,
+                "scores_presentacion": {},
                 "fase": estado.fase.value,
                 "es_pregunta": False,
                 "decision": "ORIENTACION_PROVISIONAL",
+                "motivo_decision": "Imposibilidad de comprobación física declarada",
+                "pregunta_final": None,
                 "case_id": estado.case_id,
                 "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
                 "estado": estado,
