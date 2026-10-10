@@ -53,6 +53,40 @@ def _respuesta_detalle_hipotesis(hipotesis: Any, orden: int) -> str:
     return respuesta
 
 
+def _solicita_continuar_sin_confirmacion(texto: str) -> bool:
+    """Detecta que el mecánico aún no aporta evidencia física y quiere seguir."""
+
+    normalizado = _normalizar(texto)
+    patrones = (
+        r"\bquiero\s+(?:seguir|continuar)\b",
+        r"\b(?:sigamos|continuemos|sigue|continua)\b",
+        r"\bno\s+(?:he\s+)?(?:verificado|confirmado|comprobado|revisado|inspeccionado)\b",
+        r"\bno\s+(?:puedo|podemos)\b",
+        r"^no\s+se(?:\s+(?:todavia|aun))?$",
+        r"\bnecesito\s+otra\s+(?:prueba|comprobacion)\b",
+    )
+    return any(re.search(patron, normalizado) for patron in patrones)
+
+
+def _respuesta_para_continuar_diagnostico(texto: str) -> str:
+    """Mantiene la hipótesis pendiente y propone una vía segura para continuar."""
+
+    normalizado = _normalizar(texto)
+    if "desmont" in normalizado or "rueda" in normalizado:
+        return (
+            "Entendido. La hipótesis queda pendiente: no registraré una confirmación "
+            "ni un descarte sin evidencia física.\n\n"
+            "Para continuar sin desmontar la rueda, indica si el chirrido cambia entre "
+            "frenado suave y fuerte y si la vibración se siente solo en el pedal."
+        )
+    return (
+        "Entendido. La hipótesis queda pendiente: no registraré una confirmación "
+        "ni un descarte sin evidencia física.\n\n"
+        "Podemos continuar el diagnóstico. Describe la siguiente observación o una "
+        "comprobación que sí puedas realizar de forma segura."
+    )
+
+
 class ValidationWorkflow:
     """Gestiona la confirmación o descarte de diagnósticos por parte del mecánico."""
 
@@ -258,6 +292,32 @@ class ValidationWorkflow:
         orden_hipotesis_seleccionada = None
         metodo_seleccion = None
 
+        if (
+            tipo_mensaje == "text"
+            and etapa_validacion in {"esperando_confirmacion", "esperando_aclaracion_confirmacion"}
+            and _solicita_continuar_sin_confirmacion(texto_cliente)
+        ):
+            contexto_conversacion.pop("validacion_diagnostico", None)
+            conversacion.contexto = contexto_conversacion
+            respuesta_texto = _respuesta_para_continuar_diagnostico(texto_cliente)
+            await cls.guardar_respuesta_validacion_outbox(
+                msg_repo,
+                conversacion,
+                usuario,
+                meta_message_id,
+                respuesta_texto,
+                proveedor,
+                remitente,
+            )
+            await session.commit()
+            return {
+                "status": "continuar_diagnostico",
+                "diagnostico_id": str(diagnostico_contexto_id) if diagnostico_contexto_id else None,
+                "conversacion_id": str(conversacion.id),
+                "respuesta": respuesta_texto,
+                "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+            }
+
         if tipo_mensaje == "text" and etapa_validacion == "esperando_confirmacion":
 
             diagnostico_selector = (
@@ -328,10 +388,13 @@ class ValidationWorkflow:
 
             if seleccion_top3 and seleccion_top3.accion == "AMBIGUO":
                 respuesta_texto = (
-                    "🤔 Entendido. No voy a confirmar una falla mientras exista duda.\n"
-                    "Indica cuál verificaste físicamente: *1, 2 o 3*, "
-                    "o escribe el nombre de la falla."
+                    "🤔 No registraré una confirmación ni un descarte con esa respuesta.\n"
+                    "Si quieres continuar, describe una observación o una comprobación "
+                    "que sí puedas realizar de forma segura."
                 )
+                flujo_validacion["etapa"] = "esperando_aclaracion_confirmacion"
+                contexto_conversacion["validacion_diagnostico"] = flujo_validacion
+                conversacion.contexto = contexto_conversacion
                 await cls.guardar_respuesta_validacion_outbox(
                     msg_repo,
                     conversacion,
@@ -343,7 +406,7 @@ class ValidationWorkflow:
                 )
                 await session.commit()
                 return {
-                    "status": "esperando_confirmacion",
+                    "status": "esperando_aclaracion_confirmacion",
                     "diagnostico_id": str(diagnostico_selector.id) if diagnostico_selector else None,
                     "conversacion_id": str(conversacion.id),
                     "respuesta": respuesta_texto,
@@ -418,6 +481,40 @@ class ValidationWorkflow:
                 metodo_seleccion = "binario"
 
             elif confirmacion is None and respuesta_binaria == "no":
+                if _normalizar(texto_cliente).strip(" .,!¡¿?") in {
+                    "no",
+                    "incorrecto",
+                    "incorrecta",
+                    "fue incorrecto",
+                    "fue incorrecta",
+                    "esta mal",
+                }:
+                    respuesta_texto = (
+                        "Entendido. Ese NO no registrará una confirmación ni un descarte "
+                        "por sí solo. Indica si descartas una hipótesis por una comprobación "
+                        "o escribe que deseas continuar el diagnóstico."
+                    )
+                    flujo_validacion["etapa"] = "esperando_aclaracion_confirmacion"
+                    contexto_conversacion["validacion_diagnostico"] = flujo_validacion
+                    conversacion.contexto = contexto_conversacion
+                    await cls.guardar_respuesta_validacion_outbox(
+                        msg_repo,
+                        conversacion,
+                        usuario,
+                        meta_message_id,
+                        respuesta_texto,
+                        proveedor,
+                        remitente,
+                    )
+                    await session.commit()
+                    return {
+                        "status": "esperando_aclaracion_confirmacion",
+                        "diagnostico_id": str(diagnostico_selector.id) if diagnostico_selector else None,
+                        "conversacion_id": str(conversacion.id),
+                        "respuesta": respuesta_texto,
+                        "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+                    }
+
                 diagnostico = (
                     await diag_repo.obtener_pendiente_mecanico_por_id(
                         diagnostico_id=diagnostico_contexto_id,
