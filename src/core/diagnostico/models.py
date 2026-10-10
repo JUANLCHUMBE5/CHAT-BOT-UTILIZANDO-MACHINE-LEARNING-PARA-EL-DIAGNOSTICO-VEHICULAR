@@ -44,3 +44,4 @@ class ResultadoDiagnostico(BaseModel):
     tiempo_total_ms: int = 0
     desde_cache: bool = False
     tipo_consulta: str = "diagnostico"
+    es_orientacion_provisional: bool = False

@@ -322,6 +322,125 @@ class OrquestadorConversacion:
         if transicion.decision.value == "CAMBIO_DE_CASO":
             contexto_previo = estado.exportar_dict(incluir_trazabilidad=False)
 
+        from src.core.conversacion.orientacion_provisional import (
+            es_imposibilidad_completa,
+            generar_orientacion_provisional,
+        )
+
+        es_imposible_declarado = (
+            (tipo_mensaje == "imposibilidad_comprobacion" or es_imposibilidad_completa(texto_limpio))
+            and not ExtractorHechos.contiene_informacion_diagnostica(texto_limpio)
+        )
+
+        if es_imposible_declarado:
+            if texto_limpio not in estado.historial_mensajes_usuario:
+                estado.historial_mensajes_usuario.append(texto_limpio)
+            estado.registrar_hecho(
+                "comprobacion_fisica_imposible",
+                "SI",
+                categoria="flujo",
+                texto_crudo=texto_limpio,
+                tipo=FactType.CONDICION,
+            )
+            if not estado.top3_actual and estado.active_symptoms:
+                sintomas_validos = [s for s in estado.active_symptoms if not es_imposibilidad_completa(s)]
+                consulta_base = " ".join(sintomas_validos)
+                if consulta_base:
+                    try:
+                        dto_tmp = gestor_diagnostico.procesar_consulta_texto(
+                            texto_usuario=consulta_base,
+                            placa=estado.placa or "WAPP-01",
+                            marca_modelo=f"{estado.marca or 'Vehiculo'} {estado.modelo or 'Generico'}",
+                            session_id=session_id,
+                            orquestado=True,
+                            diferir_encolado_persistente=True,
+                            case_id=estado.case_id,
+                        )
+                        if dto_tmp and getattr(dto_tmp, "predicciones_ml", None):
+                            estado.top3_actual = [
+                                {
+                                    "falla": getattr(p, "falla", str(p)),
+                                    "probabilidad": getattr(p, "probabilidad", 0.5),
+                                }
+                                for p in dto_tmp.predicciones_ml[:3]
+                            ]
+                            if estado.top3_actual:
+                                estado.falla_principal = estado.top3_actual[0]["falla"]
+                                estado.confianza_actual = estado.top3_actual[0]["probabilidad"]
+                    except Exception:
+                        pass
+
+            resp_orientacion = generar_orientacion_provisional(
+                estado=estado,
+                hipotesis_disponibles=estado.top3_actual,
+                falla_principal=estado.falla_principal,
+            )
+            from src.core.gestor_diagnostico import ResultadoDiagnostico
+
+            dto_orientacion = ResultadoDiagnostico(
+                respuesta_texto=resp_orientacion,
+                diagnostico_ml=estado.falla_principal or "Orientación provisional",
+                confianza_ml=estado.confianza_actual or 0.5,
+                contexto_manual="",
+                titulo_manual="",
+                requiere_revision_humana=True,
+                estado_sesion="en_revision",
+                modo_diagnostico="orientacion_provisional",
+                tipo_consulta="orientacion_provisional",
+                es_orientacion_provisional=True,
+            )
+
+            traza = TurnTrace(
+                turno=estado.turno_actual,
+                mensaje_original=texto_limpio,
+                contexto_previo=contexto_previo,
+                hechos_nuevos_extraidos=[],
+                hechos_actualizados=[h.to_dict() for h in estado.hechos.values() if h.estado == FactState.CONFIRMADO],
+                consulta_consolidada=texto_limpio,
+                top3=estado.top3_actual,
+                confianza=estado.confianza_actual,
+                origen_confianza="NO_REGISTRADO",
+                decision="ORIENTACION_PROVISIONAL",
+                motivo_decision="Imposibilidad de comprobación física declarada",
+                respuesta_enviada=resp_orientacion,
+                estado_operativo=estado.estado_operativo.value,
+                question_intent=None,
+                preguntas_candidatas=[],
+                preguntas_descartadas=[],
+                pregunta_final=None,
+                hipotesis_rechazadas_usuario=list(estado.hipotesis_descartadas),
+                version_orquestador=ORCHESTRATOR_VERSION,
+                tipo_mensaje=tipo_mensaje,
+            )
+            estado.trazabilidad.append(traza.to_dict())
+            if len(estado.trazabilidad) > 15:
+                estado.trazabilidad = estado.trazabilidad[-15:]
+
+            await self.repositorio.save_session(session_id, estado)
+            if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager is not None:
+                gestor_diagnostico.session_manager.cargar_contexto(
+                    session_id,
+                    {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+                )
+
+            return {
+                "status": "orientacion_provisional",
+                "respuesta_texto": resp_orientacion,
+                "diagnostico_ml": estado.falla_principal or "Orientación provisional",
+                "confianza_ml": estado.confianza_actual or 0.5,
+                "top3_actual": estado.top3_actual,
+                "scores_presentacion": {},
+                "fase": estado.fase.value,
+                "es_pregunta": False,
+                "decision": "ORIENTACION_PROVISIONAL",
+                "motivo_decision": "Imposibilidad de comprobación física declarada",
+                "pregunta_final": None,
+                "case_id": estado.case_id,
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
+                "dto": dto_orientacion,
+            }
+
         # 3. Interpretación de respuestas cortas ("caliente", "la 2", "sí", etc.)
         falla_forzada_alternativa = diagnostico_forzado
         interpretacion_corta = None

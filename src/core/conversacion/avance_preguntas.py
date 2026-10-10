@@ -105,6 +105,17 @@ def asegurar_pregunta_util(
             respuesta + "\nEl caso permanece sin confirmar. Se requiere revisión presencial antes de concluir la falla.",
             None,
         )
+    from src.core.conversacion.orientacion_provisional import (
+        es_imposibilidad_completa,
+        generar_orientacion_provisional,
+    )
+    ultimo_mensaje = getattr(estado, "historial_mensajes_usuario", [])[-1:]
+    if (
+        (ultimo_mensaje and es_imposibilidad_completa(ultimo_mensaje[0]))
+        or getattr(estado, "obtener_hecho", lambda _: None)("comprobacion_fisica_imposible")
+    ):
+        return generar_orientacion_provisional(estado), None
+
     anteriores = {
         _clave(p)
         for registro in previas
@@ -148,19 +159,8 @@ def asegurar_pregunta_util(
                 opciones = opciones[1:]
         siguiente = next((p for p in opciones if _clave(p) not in anteriores), None)
         if siguiente is None:
-            area = {
-                "refrigeracion": "refrigeración: termostato, ventilador y circuito de refrigerante",
-                "encendido": "encendido: chispa, bujías y bobinas",
-                "frenos": "frenos: circuito hidráulico y comprobación física",
-                "combustible_admision": "admisión/combustible: comprobación del hallazgo reportado",
-                "electrico_ecu": "ECU/codificación: compatibilidad y mensaje exacto",
-            }.get(estado.active_system, "el sistema en evaluación")
-            return (
-                f"Mantengo los datos y descartes de este caso en {area}. No repetiré las preguntas anteriores. "
-                "El diagnóstico sigue sin confirmar; continúa con la comprobación pendiente "
-                "y aporta su resultado, o solicita revisión presencial si no puedes realizarla.",
-                None,
-            )
+            from src.core.conversacion.orientacion_provisional import generar_orientacion_provisional
+            return generar_orientacion_provisional(estado), None
         respuesta = "Conservo la información que ya aportaste. " + siguiente
         actuales = [siguiente]
     final = actuales[-1]

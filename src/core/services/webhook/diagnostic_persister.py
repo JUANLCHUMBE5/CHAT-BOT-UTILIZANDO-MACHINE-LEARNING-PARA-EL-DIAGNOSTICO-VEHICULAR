@@ -39,6 +39,34 @@ class DiagnosticPersister:
     """Persiste los resultados del motor diagnóstico y genera mensajes de salida."""
 
     @staticmethod
+    def debe_solicitar_feedback(dto: ResultadoDiagnostico) -> bool:
+        """El feedback se pide solo para un diagnóstico final, nunca para una orientación pendiente."""
+        respuesta = dto.respuesta_texto.lower()
+        tiene_pregunta_activa = bool(
+            getattr(dto, "es_pregunta", False)
+            or getattr(dto, "modo_diagnostico", "") in ("esperando_clarificacion", "aclaracion")
+            or getattr(dto, "tipo_consulta", "") == "aclaracion"
+        )
+        es_orientacion_o_sin_confirmar = bool(
+            getattr(dto, "es_orientacion_provisional", False)
+            or getattr(dto, "modo_diagnostico", "") in ("orientacion_provisional", "sin_confirmar")
+            or getattr(dto, "tipo_consulta", "") in ("orientacion_provisional", "sin_confirmar")
+            or "sigue sin confirmar" in respuesta
+            or "sin confirmar" in respuesta
+            or "revisión presencial" in respuesta
+            or "revision presencial" in respuesta
+            or "orientación provisional" in respuesta
+            or "orientacion provisional" in respuesta
+            or "orientación preliminar" in respuesta
+            or "orientacion preliminar" in respuesta
+        )
+        return (
+            dto.modo_diagnostico != "en_cola_gemini"
+            and not tiene_pregunta_activa
+            and not es_orientacion_o_sin_confirmar
+        )
+
+    @staticmethod
     def _modo_diagnostico_persistible(dto: ResultadoDiagnostico) -> str:
         """Convierte estados conversacionales a los valores aceptados por PostgreSQL."""
         if dto.llm_usado:
@@ -135,12 +163,8 @@ class DiagnosticPersister:
 
         # 2. Agregar instrucciones de confirmación solo si no quedó en cola y no hay pregunta diagnóstica pendiente
         respuesta_texto = dto.respuesta_texto
-        tiene_pregunta_activa = bool(
-            getattr(dto, "es_pregunta", False)
-            or getattr(dto, "modo_diagnostico", "") in ("esperando_clarificacion", "aclaracion")
-            or getattr(dto, "tipo_consulta", "") == "aclaracion"
-        )
-        if dto.modo_diagnostico != "en_cola_gemini" and not tiene_pregunta_activa:
+        solicitar_feedback = DiagnosticPersister.debe_solicitar_feedback(dto)
+        if solicitar_feedback:
             respuesta_texto = (
                 respuesta_texto.rstrip()
                 + instrucciones_confirmacion_whatsapp()
@@ -263,14 +287,14 @@ class DiagnosticPersister:
         )
 
         # 6. Actualizar validación diagnóstica en conversación si no está en cola y no hay pregunta activa
-        if dto.modo_diagnostico != "en_cola_gemini" and not tiene_pregunta_activa:
+        if solicitar_feedback:
             contexto_conversacion = dict(conversacion.contexto or {})
             contexto_conversacion["validacion_diagnostico"] = {
                 "diagnostico_id": str(diag.id),
                 "etapa": "esperando_confirmacion",
             }
             conversacion.contexto = contexto_conversacion
-        elif tiene_pregunta_activa and conversacion and getattr(conversacion, "contexto", None):
+        elif conversacion and getattr(conversacion, "contexto", None):
             contexto_conversacion = dict(conversacion.contexto or {})
             contexto_conversacion.pop("validacion_diagnostico", None)
             conversacion.contexto = contexto_conversacion
