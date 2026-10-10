@@ -23,6 +23,10 @@ def clasificar_mensaje(texto: str, estado: ConversationState) -> str:
     )
     if correccion_de_sistema:
         return "correccion_sistema"
+    from src.core.conversacion.orientacion_provisional import es_imposibilidad_completa
+
+    if es_imposibilidad_completa(mensaje):
+        return "imposibilidad_comprobacion"
     if re.fullmatch(r"(?:s[ií]|correcto|confirmo|exacto)", mensaje):
         return "confirmacion"
     if re.fullmatch(r"(?:no|incorrecto|descarto|no es esa)", mensaje):

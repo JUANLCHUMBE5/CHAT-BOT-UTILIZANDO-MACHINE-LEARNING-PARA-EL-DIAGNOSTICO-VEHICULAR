@@ -292,14 +292,77 @@ class ValidationWorkflow:
         orden_hipotesis_seleccionada = None
         metodo_seleccion = None
 
+        from src.core.conversacion.orientacion_provisional import (
+            es_feedback_conversacional,
+            es_imposibilidad_comprobacion_fisica,
+            es_sin_mas_sintomas,
+            generar_orientacion_provisional,
+        )
+
+        es_imposible_declarado = bool(
+            es_imposibilidad_comprobacion_fisica(texto_cliente)
+            or es_sin_mas_sintomas(texto_cliente)
+        )
+
         if (
             tipo_mensaje == "text"
             and etapa_validacion in {"esperando_confirmacion", "esperando_aclaracion_confirmacion"}
-            and _solicita_continuar_sin_confirmacion(texto_cliente)
+            and (es_imposible_declarado or _solicita_continuar_sin_confirmacion(texto_cliente))
         ):
             contexto_conversacion.pop("validacion_diagnostico", None)
             conversacion.contexto = contexto_conversacion
-            respuesta_texto = _respuesta_para_continuar_diagnostico(texto_cliente)
+
+            es_solo_rueda = (
+                "desmont" in _normalizar(texto_cliente)
+                and "rueda" in _normalizar(texto_cliente)
+                and not es_sin_mas_sintomas(texto_cliente)
+                and "no puedo realizar comprobaciones" not in _normalizar(texto_cliente)
+            )
+
+            if es_imposible_declarado and not es_solo_rueda:
+                diagnostico_selector = (
+                    await diag_repo.obtener_pendiente_mecanico_por_id(
+                        diagnostico_id=diagnostico_contexto_id,
+                        taller_id=usuario.taller_id,
+                        mecanico_id=usuario.id,
+                    )
+                    if diagnostico_contexto_id
+                    else await diag_repo.obtener_ultimo_pendiente_mecanico(
+                        taller_id=usuario.taller_id,
+                        mecanico_id=usuario.id,
+                    )
+                )
+                hipotesis_selector = []
+                if diagnostico_selector:
+                    for h in sorted(
+                        list(getattr(diagnostico_selector, "hipotesis", None) or []),
+                        key=lambda x: getattr(x, "orden", 999),
+                    )[:3]:
+                        nombre_h = _nombre_hipotesis(h)
+                        if nombre_h:
+                            hipotesis_selector.append({"falla": nombre_h})
+
+                from src.core.conversacion.models import ConversationState
+
+                raw_estado = (
+                    contexto_conversacion.get("conversation_state")
+                    or contexto_conversacion.get("estado_conversacion")
+                )
+                estado_obj = (
+                    ConversationState.from_dict(raw_estado)
+                    if raw_estado and isinstance(raw_estado, dict)
+                    else ConversationState(session_id=str(conversacion.id))
+                )
+                respuesta_texto = generar_orientacion_provisional(
+                    estado=estado_obj,
+                    hipotesis_disponibles=hipotesis_selector,
+                    falla_principal=getattr(diagnostico_selector, "falla_predicha", None),
+                )
+                status_salida = "orientacion_provisional"
+            else:
+                respuesta_texto = _respuesta_para_continuar_diagnostico(texto_cliente)
+                status_salida = "continuar_diagnostico"
+
             await cls.guardar_respuesta_validacion_outbox(
                 msg_repo,
                 conversacion,
@@ -311,7 +374,7 @@ class ValidationWorkflow:
             )
             await session.commit()
             return {
-                "status": "continuar_diagnostico",
+                "status": status_salida,
                 "diagnostico_id": str(diagnostico_contexto_id) if diagnostico_contexto_id else None,
                 "conversacion_id": str(conversacion.id),
                 "respuesta": respuesta_texto,
@@ -509,6 +572,45 @@ class ValidationWorkflow:
                         "respuesta": respuesta_texto,
                         "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
                     }
+
+            traz_sel = getattr(diagnostico_selector, "trazabilidad", None) or {}
+            conclusion_sel = str(getattr(diagnostico_selector, "conclusion_mecanico", "") or "").lower()
+            falla_sel = str(getattr(diagnostico_selector, "falla_predicha", "") or "").lower()
+            es_orientacion_previa = bool(
+                traz_sel.get("orientacion_provisional")
+                or "orientación provisional" in conclusion_sel
+                or "orientacion provisional" in conclusion_sel
+                or "sin confirmar" in conclusion_sel
+                or "revisión presencial" in conclusion_sel
+                or "revision presencial" in conclusion_sel
+                or "orientación provisional" in falla_sel
+            )
+
+            if confirmacion is None and (es_orientacion_previa or es_feedback_conversacional(texto_cliente)):
+                respuesta_texto = (
+                    "Entendido. Tomo tu respuesta como retroalimentación sobre la orientación recibida.\n\n"
+                    "El diagnóstico se mantiene en revisión y sin confirmación física hasta contar con "
+                    "una inspección presencial en taller especializado."
+                )
+                contexto_conversacion.pop("validacion_diagnostico", None)
+                conversacion.contexto = contexto_conversacion
+                await cls.guardar_respuesta_validacion_outbox(
+                    msg_repo,
+                    conversacion,
+                    usuario,
+                    meta_message_id,
+                    respuesta_texto,
+                    proveedor,
+                    remitente,
+                )
+                await session.commit()
+                return {
+                    "status": "feedback_registrado",
+                    "diagnostico_id": str(diagnostico_selector.id) if diagnostico_selector else None,
+                    "conversacion_id": str(conversacion.id),
+                    "respuesta": respuesta_texto,
+                    "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+                }
 
             if confirmacion is None and respuesta_binaria == "si":
                 confirmacion = ConfirmacionDiagnosticoWhatsApp(

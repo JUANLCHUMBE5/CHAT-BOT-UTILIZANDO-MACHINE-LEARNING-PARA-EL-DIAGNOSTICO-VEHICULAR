@@ -119,6 +119,9 @@ PATRON_NO_SABE_REALIZAR = re.compile(
     re.IGNORECASE,
 )
 
+# A diferencia de "no sé cómo hacerlo", esta declaración indica que el usuario
+# no puede realizar ninguna comprobación física del caso. No debe abrir otra
+# cadena de preguntas de Plan B: se conserva el caso y se deriva a revisión.
 PATRON_CONSIGUIO_HERRAMIENTA = re.compile(
     r"\b(ya\s+(?:consegu[ií]|tengo|me\s+prestaron)|ahora\s+s[ií]\s+tengo|consegu[ií]\s+(?:un|una))\b",
     re.IGNORECASE,

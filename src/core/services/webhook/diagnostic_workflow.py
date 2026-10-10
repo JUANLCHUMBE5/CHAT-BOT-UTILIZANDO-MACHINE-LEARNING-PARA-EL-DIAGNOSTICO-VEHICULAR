@@ -390,6 +390,19 @@ class TechnicalDiagnosticWorkflow:
                 modo_diagnostico="diferencial",
                 tipo_consulta="diagnostico",
             )
+        elif decision == "ORIENTACION_PROVISIONAL" or res_turno.get("status") == "orientacion_provisional":
+            return ResultadoDiagnostico(
+                respuesta_texto=res_turno["respuesta_texto"],
+                diagnostico_ml=res_turno.get("diagnostico_ml", "Orientación provisional"),
+                confianza_ml=res_turno.get("confianza_ml", 0.5),
+                contexto_manual="",
+                titulo_manual="",
+                requiere_revision_humana=True,
+                estado_sesion="en_revision",
+                modo_diagnostico="orientacion_provisional",
+                tipo_consulta="orientacion_provisional",
+                es_orientacion_provisional=True,
+            )
         elif decision == "DETALLE" or res_turno.get("status") == "detalle":
             return ResultadoDiagnostico(
                 respuesta_texto=res_turno["respuesta_texto"],
