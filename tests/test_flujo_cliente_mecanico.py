@@ -306,18 +306,23 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
     assert "diagnostico_id" in res_diagnostico
     assert "falla_predicha" in res_diagnostico
     assert res_diagnostico["falla_predicha"] is not None
+    async with AsyncSession(engine, expire_on_commit=False) as session:
+        diagnostico_inicial = await DiagnosticoRepository(session).obtener_por_id(
+            uuid.UUID(res_diagnostico["diagnostico_id"])
+        )
+        conclusion_inicial = diagnostico_inicial.conclusion_mecanico
 
-    # 6. Si responde NO, CarBot solicita la falla real y conserva la predicción original.
+    # 6. Un NO aislado no descarta la predicción ni exige una falla real.
     res_no = await service.procesar_mensaje(
         remitente=tel_mecanico_futuro,
         meta_message_id=f"msg_no_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
         texto_cliente="NO",
     )
-    assert res_no["status"] in ("aclaracion", "esperando_falla_real")
-    assert "falla" in res_no["respuesta"].lower() or "descart" in res_no["respuesta"].lower()
+    assert res_no["status"] == "esperando_aclaracion_confirmacion"
+    assert "confirmación ni un descarte" in res_no["respuesta"].lower()
 
-    # 7. La corrección queda asociada al mismo diagnóstico, sin ejecutar otro ML/RAG/LLM.
+    # 7. Un texto sin confirmación física conserva el caso pendiente y no crea otro diagnóstico.
     falla_real = "Bobina defectuosa"
     res_correccion = await service.procesar_mensaje(
         remitente=tel_mecanico_futuro,
@@ -325,15 +330,15 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         tipo_mensaje="text",
         texto_cliente=falla_real,
     )
-    assert res_correccion["status"] == "validacion_tecnica"
+    assert res_correccion["status"] == "esperando_aclaracion_confirmacion"
     assert res_correccion["diagnostico_id"] == res_diagnostico["diagnostico_id"]
 
     async with AsyncSession(engine, expire_on_commit=False) as session:
         diagnostico = await DiagnosticoRepository(session).obtener_por_id(
             uuid.UUID(res_diagnostico["diagnostico_id"])
         )
-        assert diagnostico.estado == "descartado"
-        assert diagnostico.conclusion_mecanico == falla_real
+        assert diagnostico.estado == "generado"
+        assert diagnostico.conclusion_mecanico == conclusion_inicial
 
 
 @pytest.mark.anyio

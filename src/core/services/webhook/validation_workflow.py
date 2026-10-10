@@ -318,7 +318,10 @@ class ValidationWorkflow:
                 "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
             }
 
-        if tipo_mensaje == "text" and etapa_validacion == "esperando_confirmacion":
+        if tipo_mensaje == "text" and etapa_validacion in {
+            "esperando_confirmacion",
+            "esperando_aclaracion_confirmacion",
+        }:
 
             diagnostico_selector = (
                 await diag_repo.obtener_pendiente_mecanico_por_id(
@@ -472,6 +475,40 @@ class ValidationWorkflow:
                 respuesta_binaria = interpretar_respuesta_validacion_whatsapp(
                     texto_cliente
                 )
+
+            if (
+                confirmacion is None
+                and respuesta_binaria is None
+                and etapa_validacion == "esperando_aclaracion_confirmacion"
+            ):
+                confirmacion = interpretar_confirmacion_whatsapp(texto_cliente)
+                if confirmacion is None:
+                    respuesta_texto = (
+                        "🤔 No registraré una confirmación ni un descarte con ese texto.\n"
+                        "Si quieres continuar, describe una observación o una comprobación "
+                        "que sí puedas realizar de forma segura."
+                    )
+                    contexto_conversacion["validacion_diagnostico"] = flujo_validacion
+                    conversacion.contexto = contexto_conversacion
+                    await cls.guardar_respuesta_validacion_outbox(
+                        msg_repo,
+                        conversacion,
+                        usuario,
+                        meta_message_id,
+                        respuesta_texto,
+                        proveedor,
+                        remitente,
+                    )
+                    await session.commit()
+                    return {
+                        "status": "esperando_aclaracion_confirmacion",
+                        "diagnostico_id": (
+                            str(diagnostico_selector.id) if diagnostico_selector else None
+                        ),
+                        "conversacion_id": str(conversacion.id),
+                        "respuesta": respuesta_texto,
+                        "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+                    }
 
             if confirmacion is None and respuesta_binaria == "si":
                 confirmacion = ConfirmacionDiagnosticoWhatsApp(
