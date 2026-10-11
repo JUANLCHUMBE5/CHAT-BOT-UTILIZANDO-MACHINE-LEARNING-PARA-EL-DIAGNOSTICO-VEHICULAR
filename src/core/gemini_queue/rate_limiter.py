@@ -479,25 +479,42 @@ class GeminiRateLimiter:
                         logger.debug(f"[Gemini Worker DB Poll] {e}")
 
                 if tiene_trabajo:
-                    concedido, motivo = await self.intentar_adquirir_slot_db()
-                    forzar_degradado = not concedido
-                    if not concedido:
-                        if "rpd_excedido" in motivo or "cooldown" in motivo or (trabajo_db and trabajo_db.intentos >= 1):
-                            logger.warning(f"[Gemini Worker] {motivo}. Procesando en modo degradado ML+RAG...")
-                            forzar_degradado = True
-                        else:
-                            if trabajo_db:
-                                await posponer_trabajo_por_cuota_db(str(trabajo_db.id), motivo)
-                            await asyncio.sleep(1.0)
-                            continue
+                    forzar_degradado = False
+                    motivo_degradado = None
+
+                    # 1. Si el trabajo en DB ya alcanzó el límite máximo de intentos reales, forzar modo degradado inmediatamente
+                    max_intentos = getattr(settings, "queue_job_max_attempts", 3)
+                    if trabajo_db and trabajo_db.intentos >= max_intentos:
+                        logger.warning(
+                            f"[Gemini Worker] Solicitud {trabajo_db.id} alcanzó {trabajo_db.intentos} intentos. "
+                            "Forzando modo degradado ML+RAG para asegurar entrega al usuario."
+                        )
+                        forzar_degradado = True
+                        motivo_degradado = "max_intentos_excedido"
+                    else:
+                        concedido, motivo = await self.intentar_adquirir_slot_db()
+                        if not concedido:
+                            if "rpd_excedido" in motivo:
+                                logger.warning(
+                                    f"[Gemini Worker] Límite diario (RPD) excedido ({motivo}). "
+                                    "Procesando en modo degradado ML+RAG..."
+                                )
+                                forzar_degradado = True
+                                motivo_degradado = "rpd_excedido"
+                            elif trabajo_db and (datetime.now(timezone.utc) - trabajo_db.creado_en).total_seconds() > 90:
+                                logger.warning(
+                                    f"[Gemini Worker] Solicitud {trabajo_db.id} en cola > 90s con cuota no disponible ({motivo}). "
+                                    "Forzando modo degradado ML+RAG para evitar demoras en WhatsApp."
+                                )
+                                forzar_degradado = True
+                                motivo_degradado = f"cola_timeout_{motivo}"
+                            else:
+                                if trabajo_db:
+                                    await posponer_trabajo_por_cuota_db(str(trabajo_db.id), motivo)
+                                await asyncio.sleep(1.0)
+                                continue
 
                     if trabajo_db:
-                        if trabajo_db.intentos > 3:
-                            logger.warning(
-                                f"[Gemini Worker] Solicitud {trabajo_db.id} alcanzó {trabajo_db.intentos} intentos. "
-                                "Forzando modo degradado ML+RAG para asegurar entrega al usuario."
-                            )
-                            forzar_degradado = True
                         try:
                             remitente_descifrado = (
                                 descifrar_texto_reversible(trabajo_db.remitente_cifrado)
@@ -523,9 +540,12 @@ class GeminiRateLimiter:
                             titulo_manual=trabajo_db.titulo_manual or "",
                             tipo_consulta=trabajo_db.tipo_consulta or "diagnostico",
                             requiere_revision_humana=trabajo_db.requiere_revision_humana,
+                            motivo_degradado=motivo_degradado,
                         )
                     else:
                         solicitud = self.descolar_siguiente()
+                        if solicitud and motivo_degradado:
+                            solicitud.motivo_degradado = motivo_degradado
 
                     if solicitud:
                         await self._procesar_solicitud_encolada(solicitud, forzar_degradado=forzar_degradado)

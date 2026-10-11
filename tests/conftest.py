@@ -136,6 +136,7 @@ def aislar_postgresql_en_pruebas_unitarias(request, monkeypatch):
         "test_cli_registrar_admin.py",
         "test_gemini_rate_limiting.py",
         "test_gemini_queue_durability.py",
+        "test_gemini_worker_cuota_reintentos.py",
         "test_dashboard_postgresql_integration.py",
         "test_flujo_cliente_mecanico.py",
         "test_consistencia_vehiculo_marca_modelo.py",

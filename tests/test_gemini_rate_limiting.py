@@ -147,13 +147,18 @@ async def test_trabajo_gemini_repository_skip_locked_y_transiciones(async_db_ses
     assert trabajo.remitente_cifrado is not None
     assert "+51987111222" not in trabajo.remitente_cifrado
 
-    # 2. Bloquear y procesar usando FOR UPDATE SKIP LOCKED
+    # 2. Bloquear y reservar usando FOR UPDATE SKIP LOCKED
     bloqueado = await repo.obtener_siguiente_pendiente_bloqueado(bloqueo_segundos=30)
     assert bloqueado is not None
     assert bloqueado.id == trabajo_id
     assert bloqueado.estado == "procesando"
-    assert bloqueado.intentos == 1
+    assert bloqueado.intentos == 0  # La reserva atómica no cobra un intento prematuro
     assert bloqueado.bloqueado_hasta is not None
+
+    # Registrar el intento real de ejecución hacia el proveedor
+    await repo.registrar_intento_ejecucion(trabajo_id)
+    bloqueado_actualizado = await repo.obtener_por_id(trabajo_id)
+    assert bloqueado_actualizado.intentos == 1
     await async_db_session.commit()
 
     # 3. Marcar completado
@@ -262,7 +267,7 @@ async def test_worker_recupera_trabajo_procesando_con_bloqueo_vencido(async_db_s
     assert recuperado is not None
     assert recuperado.id == trabajo.id
     assert recuperado.estado == "procesando"
-    assert recuperado.intentos == 2
+    assert recuperado.intentos == 1  # La recuperación no infla prematuramente el contador
     trabajo_id = trabajo.id
     await async_db_session.rollback()
     await async_db_session.execute(delete(TrabajoGemini).where(TrabajoGemini.id == trabajo_id))

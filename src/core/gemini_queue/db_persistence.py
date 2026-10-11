@@ -111,6 +111,17 @@ async def posponer_trabajo_por_cuota_db(solicitud_id: str, motivo: str) -> None:
             )
 
 
+async def registrar_intento_ejecucion_db(solicitud_id: str) -> None:
+    """Registra el intento real de ejecución hacia el proveedor en PostgreSQL."""
+    try:
+        trabajo_id = uuid.UUID(solicitud_id)
+    except (ValueError, TypeError):
+        return
+    async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+        async with session.begin():
+            await TrabajoGeminiRepository(session).registrar_intento_ejecucion(trabajo_id)
+
+
 async def marcar_trabajo_fallido_db(solicitud_id: str, error: str) -> None:
     """Marca el trabajo como fallido definitivamente tras exceder reintentos."""
     try:
@@ -270,6 +281,7 @@ async def actualizar_diagnostico_y_trabajo_db(
                             "tokens_entrada": int(metadatos.get("tokens_entrada", 0)),
                             "tokens_salida": int(metadatos.get("tokens_salida", 0)),
                             "posicion_cola": 0,
+                            "motivo_degradado": metadatos.get("motivo_degradado"),
                         }
                         etapas = list(trazabilidad.get("etapas") or [])
                         for etapa in etapas:

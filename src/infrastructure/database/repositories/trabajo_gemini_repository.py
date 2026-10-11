@@ -104,11 +104,23 @@ class TrabajoGeminiRepository:
 
         if trabajo:
             trabajo.estado = "procesando"
-            trabajo.intentos += 1
             trabajo.bloqueado_hasta = ahora + timedelta(seconds=bloqueo_segundos)
             await self.session.flush()
 
         return trabajo
+
+    async def registrar_intento_ejecucion(self, trabajo_id: uuid.UUID) -> bool:
+        """Registra un intento real de ejecución hacia el proveedor LLM."""
+        stmt = (
+            update(TrabajoGemini)
+            .where(TrabajoGemini.id == trabajo_id)
+            .values(
+                intentos=TrabajoGemini.intentos + 1,
+                actualizado_en=datetime.now(timezone.utc),
+            )
+        )
+        res = await self.session.execute(stmt)
+        return res.rowcount > 0
 
     async def marcar_completado(self, trabajo_id: uuid.UUID) -> bool:
         """Marca el trabajo como completado con éxito."""
@@ -168,7 +180,6 @@ class TrabajoGeminiRepository:
             .where(TrabajoGemini.id == trabajo_id)
             .values(
                 estado="pendiente_reintento",
-                intentos=TrabajoGemini.intentos - 1,
                 disponible_desde=nueva_fecha,
                 bloqueado_hasta=None,
                 error_ultimo=motivo[:1000] if motivo else None,
