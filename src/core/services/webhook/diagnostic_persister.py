@@ -173,11 +173,20 @@ class DiagnosticPersister:
         # 3. Asociar vehículo si aplica
         vehiculo = None
         if placa and placa not in ("WAPP-01", "REST-API", "SIN-PLACA"):
+            marca_calc = "Generico"
+            modelo_calc = "Generico"
+            if marca_modelo and marca_modelo.lower() not in ("vehiculo generico", "generico", "desconocido"):
+                partes = marca_modelo.strip().split()
+                if partes:
+                    marca_calc = partes[0]
+                    if len(partes) > 1:
+                        modelo_calc = " ".join(partes[1:])
             vehiculo = await vehiculo_repo.obtener_o_crear(
                 taller_id=usuario.taller_id,
                 registrado_por_id=usuario.id,
                 placa_str=placa,
-                marca=marca_modelo.split()[0] if marca_modelo else "Generico",
+                marca=marca_calc,
+                modelo=modelo_calc,
             )
 
         # 4. Determinar fuente y conclusiones
@@ -242,7 +251,8 @@ class DiagnosticPersister:
                 "version": 1,
                 "case_id": case_id_actual,
                 "predicciones_ml": [pred.model_dump() for pred in dto.predicciones_ml],
-                "top3_ml_raw": [pred.model_dump() for pred in dto.predicciones_ml[:3]],
+                "predicciones_ml_raw": [pred.model_dump() for pred in (dto.predicciones_ml_raw or dto.predicciones_ml)],
+                "top3_ml_raw": [pred.model_dump() for pred in (dto.predicciones_ml_raw or dto.predicciones_ml)[:3]],
                 "hipotesis_final_presentada": [{"falla": dto.diagnostico_ml, "probabilidad": dto.confianza_ml}],
                 "etapas": [
                     {
