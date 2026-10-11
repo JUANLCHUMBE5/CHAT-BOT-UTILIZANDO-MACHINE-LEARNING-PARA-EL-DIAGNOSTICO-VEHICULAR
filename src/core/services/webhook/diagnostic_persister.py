@@ -251,7 +251,8 @@ class DiagnosticPersister:
                 "version": 1,
                 "case_id": case_id_actual,
                 "predicciones_ml": [pred.model_dump() for pred in dto.predicciones_ml],
-                "top3_ml_raw": [pred.model_dump() for pred in dto.predicciones_ml[:3]],
+                "predicciones_ml_raw": [pred.model_dump() for pred in (dto.predicciones_ml_raw or dto.predicciones_ml)],
+                "top3_ml_raw": [pred.model_dump() for pred in (dto.predicciones_ml_raw or dto.predicciones_ml)[:3]],
                 "hipotesis_final_presentada": [{"falla": dto.diagnostico_ml, "probabilidad": dto.confianza_ml}],
                 "etapas": [
                     {
