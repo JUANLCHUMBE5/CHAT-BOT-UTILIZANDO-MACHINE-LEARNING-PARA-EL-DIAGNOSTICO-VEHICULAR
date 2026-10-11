@@ -139,6 +139,8 @@ def aislar_postgresql_en_pruebas_unitarias(request, monkeypatch):
         "test_gemini_worker_cuota_reintentos.py",
         "test_dashboard_postgresql_integration.py",
         "test_flujo_cliente_mecanico.py",
+        "test_consistencia_vehiculo_marca_modelo.py",
+        "test_diagnostico_diferencial_top_k.py",
     }
     if request.path.name in modulos_integracion_db and not _es_base_pruebas_segura():
         pytest.skip(

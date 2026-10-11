@@ -488,7 +488,16 @@ class WebhookService:
                         return {"status": "esperando_sintoma", "respuesta": respuesta_perfil}
 
                     perfil_vehiculo = contexto_placa.get("perfil_vehiculo") or {}
-                    if _perfil_completo(perfil_vehiculo):
+                    if tipo_mensaje == "text" and texto_cliente:
+                        datos_correccion = extraer_datos_vehiculo(texto_cliente)
+                        if datos_correccion.get("marca") and datos_correccion["marca"].lower() not in (
+                            "generico", "vehiculo", "desconocido"
+                        ):
+                            perfil_vehiculo.update(datos_correccion)
+                            contexto_placa["perfil_vehiculo"] = perfil_vehiculo
+                            conversacion.contexto = contexto_placa
+
+                    if perfil_vehiculo.get("marca") or _perfil_completo(perfil_vehiculo):
                         marca_modelo = _texto_perfil_vehiculo(perfil_vehiculo)
                     # 6. Flujo de validación técnica conversacional (SÍ / NO / Falla real)
                     resultado_validacion = await ValidationWorkflow.manejar_flujo_validacion(

@@ -85,7 +85,7 @@ class GeneradorPreguntas:
             )
 
         if intent == QuestionIntent.ACLARACION_CONTRADICCION:
-            return estado.obtener_hecho("conflicto_operativo") is None or estado.ya_preguntado(QuestionIntent.ACLARACION_CONTRADICCION)
+            return estado.ya_preguntado(QuestionIntent.ACLARACION_CONTRADICCION)
 
         if intent == QuestionIntent.CODIGO_DTC:
             return (
@@ -590,6 +590,7 @@ class GeneradorPreguntas:
 
         # Candidatas: tupla de (texto, opciones, intent, prioridad_base)
         candidatas: List[Tuple[str, List[str], QuestionIntent, int]] = []
+        dominio = CompatibilidadPreguntas.dominio_actual(estado)
 
         # 0. Aclaración de contradicción operativa (Prioridad 100)
         if estado.obtener_hecho("conflicto_operativo") and cls.puede_preguntar(QuestionIntent.ACLARACION_CONTRADICCION, estado):
@@ -599,6 +600,32 @@ class GeneradorPreguntas:
             )
             opc = ["Ocurrió antes como antecedente", "Es otra consulta / otro vehículo", "Me equivoqué al escribir"]
             candidatas.append((txt, opc, QuestionIntent.ACLARACION_CONTRADICCION, 100))
+
+        # 0b. Aclaración de síntomas multisistema no relacionados
+        tiene_queja_termica = bool(
+            estado.obtener_hecho("sintoma_sobrecalentamiento")
+            or estado.obtener_hecho("sintoma_fuga_de_refrigerante")
+            or dominio == "REFRIGERACION"
+            or any("recalienta" in str(h.valor).lower() or "sobrecalentamiento" in str(h.valor).lower() for h in estado.hechos.values())
+            or any(w in m.lower() for m in estado.historial_mensajes_usuario for w in ("recalienta", "calienta el motor", "hierve", "temperatura sube", "refrigerante"))
+        )
+        sistemas_detectados = []
+        if tiene_queja_termica:
+            sistemas_detectados.append("temperatura / refrigeración")
+        if any(h in estado.hechos for h in ("sintoma_anomalía_en_frenos", "vibracion_pedal")) or any("freno" in m.lower() for m in estado.historial_mensajes_usuario):
+            sistemas_detectados.append("sistema de frenos")
+        if any(h in estado.hechos for h in ("sintoma_motor_no_arranca", "sintoma_demora_arranque")):
+            sistemas_detectados.append("sistema de arranque")
+        if any(h in estado.hechos for h in ("sintoma_golpeteo_al_cambiar", "sintoma_demora_acople_reversa")):
+            sistemas_detectados.append("caja de cambios")
+
+        if len(sistemas_detectados) >= 2 and cls.puede_preguntar(QuestionIntent.ACLARACION_CONTRADICCION, estado):
+            txt_multi = (
+                f"Has mencionado síntomas relacionados con {sistemas_detectados[0]} y {sistemas_detectados[1]}. "
+                "Para enfocar el diagnóstico de forma precisa: ¿cuál de estas dos anomalías se presentó primero como falla principal?"
+            )
+            opc_multi = [f"Primero {sistemas_detectados[0]}", f"Primero {sistemas_detectados[1]}", "Se presentaron al mismo tiempo"]
+            candidatas.append((txt_multi, opc_multi, QuestionIntent.ACLARACION_CONTRADICCION, 98))
 
         # 1. Preguntas operacionales de ARRANQUE
         if estado.estado_operativo == EstadoOperativo.ARRANQUE:
@@ -626,13 +653,20 @@ class GeneradorPreguntas:
                 opc = ["No gira nada (solo el clic)", "Gira pesado / muy lento", "A veces gira y a veces no"]
                 candidatas.append((txt, opc, QuestionIntent.COMPORTAMIENTO_ARRANQUE, 80))
 
-        # 2. Condición de operación general (solo si estado_operativo es DESCONOCIDO y NO hay queja de arranque)
+        # 2. Condición de operación general
         tiene_queja_arranque = bool(
             estado.obtener_hecho("sintoma_demora_arranque")
             or estado.obtener_hecho("sintoma_motor_no_arranca")
             or any("demora en arrancar" in m.lower() or "cuesta prender" in m.lower() or "demora en encender" in m.lower() for m in estado.historial_mensajes_usuario)
         )
-        if estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and cls.puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
+        if tiene_queja_termica and cls.puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
+            txt = (
+                "Para orientar el diagnóstico térmico: ¿el recalentamiento o aumento de temperatura ocurre al estar detenido en ralentí / tráfico pesado, "
+                "o al circular en carretera a velocidad constante?"
+            )
+            opc = ["Detenido en ralentí / tráfico", "En carretera a velocidad", "En cualquier condición"]
+            candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 85))
+        elif estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and cls.puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
             txt = (
                 "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, "
                 "al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?"
@@ -640,7 +674,7 @@ class GeneradorPreguntas:
             opc = ["Detenido en ralentí", "Al acelerar bajo carga", "Al frenar"]
             candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 75))
 
-        if estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and cls.puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
+        if estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and not tiene_queja_termica and cls.puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
             txt_sensorial = (
                 "Para precisar la falla: ¿se percibe algún ruido anómalo (como cascabeleo, chillido o golpeteo), humo o vibración?"
             )
@@ -648,7 +682,6 @@ class GeneradorPreguntas:
             candidatas.append((txt_sensorial, opc_sensorial, QuestionIntent.PRESENCIA_RUIDO, 55))
 
         # 2b. Preguntas propias del dominio detectado.
-        dominio = CompatibilidadPreguntas.dominio_actual(estado)
         if dominio == "TRANSMISION":
             if cls.puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
                 candidatas.append((
@@ -748,6 +781,21 @@ class GeneradorPreguntas:
                     ["Sí, acopla", "No acopla", "No se escucha clic"],
                     QuestionIntent.COMPONENTE_REVISADO,
                     85,
+                ))
+        elif dominio == "REFRIGERACION":
+            if cls.puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
+                candidatas.append((
+                    "Con el motor a temperatura de régimen (y con extrema precaución sin tocar piezas calientes): ¿has verificado si el electroventilador enciende al subir la aguja, o si se observa alguna fuga de refrigerante en mangueras o radiador?",
+                    ["Electroventilador no enciende", "Hay fuga visible de refrigerante", "Electroventilador sí enciende y sin fugas visibles"],
+                    QuestionIntent.COMPONENTE_REVISADO,
+                    88,
+                ))
+            if cls.puede_preguntar(QuestionIntent.PLAN_B_SIN_HERRAMIENTAS, estado):
+                candidatas.append((
+                    "Comprobación térmica segura (ADVERTENCIA: Nunca abras la tapa del radiador caliente): al palpar con cuidado la manguera superior y la inferior del radiador, ¿ambas están calientes o la inferior se mantiene fría mientras la superior hierve?",
+                    ["Manguera inferior fría (posible termostato trabado)", "Ambas mangueras muy calientes", "No es posible verificar con seguridad"],
+                    QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+                    82,
                 ))
 
         # 3. Temperatura térmica diferenciada (Principio de Presuposiciones)

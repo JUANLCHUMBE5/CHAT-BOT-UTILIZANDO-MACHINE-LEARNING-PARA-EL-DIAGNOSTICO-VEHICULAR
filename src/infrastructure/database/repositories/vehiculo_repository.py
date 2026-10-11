@@ -73,6 +73,52 @@ class VehiculoRepository:
         if placa_str and placa_str not in ("WAPP-01", "REST-API", "SIN-PLACA"):
             existente = await self.buscar_por_placa(taller_id, placa_str)
             if existente:
+                actualizado = False
+                marca_candidata = (marca or "").strip()
+                if (
+                    marca_candidata
+                    and marca_candidata.lower() not in ("generico", "vehiculo", "vehiculo generico", "desconocido", "")
+                    and marca_candidata.lower() != (existente.marca or "").lower()
+                ):
+                    existente.marca = marca_candidata
+                    actualizado = True
+
+                modelo_candidato = (modelo or "").strip()
+                if (
+                    modelo_candidato
+                    and modelo_candidato.lower() not in ("generico", "vehiculo", "vehiculo generico", "desconocido", "")
+                    and modelo_candidato.lower() != (existente.modelo or "").lower()
+                ):
+                    existente.modelo = modelo_candidato
+                    actualizado = True
+
+                if anio is not None and anio != existente.anio:
+                    existente.anio = anio
+                    actualizado = True
+
+                if (
+                    motor
+                    and motor.strip().lower() not in ("generico", "desconocido", "")
+                    and motor != existente.motor
+                ):
+                    existente.motor = motor.strip()
+                    actualizado = True
+
+                if (
+                    combustible
+                    and combustible.strip().lower() not in ("generico", "desconocido", "")
+                    and combustible != existente.combustible
+                ):
+                    existente.combustible = combustible.strip()
+                    actualizado = True
+
+                if kilometraje is not None and kilometraje != existente.kilometraje:
+                    existente.kilometraje = kilometraje
+                    actualizado = True
+
+                if actualizado:
+                    await self.session.flush()
+
                 return existente
 
             # Extraer los últimos 4 caracteres alfanuméricos de la placa

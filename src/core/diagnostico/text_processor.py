@@ -714,19 +714,34 @@ def procesar_consulta_texto(
                 )
             )
     elif hasattr(gestor.modelo_ml, "predecir_top_fallas"):
-        limite_candidatos = 12 if areas_consulta else 3
+        limite_candidatos = 12 if areas_consulta else 8
         predicciones_raw = gestor.modelo_ml.predecir_top_fallas(
             texto_ml,
             limite=limite_candidatos,
         )
         predicciones_ml = [PrediccionML(**item) for item in predicciones_raw]
-        diagnostico_predictivo = predicciones_ml[0].falla
-        confianza = predicciones_ml[0].probabilidad
+        diagnostico_predictivo = predicciones_ml[0].falla if predicciones_ml else "DESCONOCIDO"
+        confianza = predicciones_ml[0].probabilidad if predicciones_ml else 0.0
+    elif hasattr(gestor.modelo_ml, "predecir_top_k"):
+        limite_candidatos = 12 if areas_consulta else 8
+        predicciones_raw = gestor.modelo_ml.predecir_top_k(
+            texto_ml,
+            k=limite_candidatos,
+        )
+        predicciones_ml = [
+            PrediccionML(
+                falla=str(item.get("falla", item.get("clase", ""))),
+                probabilidad=float(item.get("probabilidad", item.get("score", 0.0))),
+            )
+            for item in predicciones_raw
+        ]
+        diagnostico_predictivo = predicciones_ml[0].falla if predicciones_ml else "DESCONOCIDO"
+        confianza = predicciones_ml[0].probabilidad if predicciones_ml else 0.0
     else:
         diagnostico_predictivo, confianza = gestor.modelo_ml.predecir_falla_con_confianza(texto_ml)
         predicciones_ml = [PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza)]
 
-    predicciones_originales = [p.model_copy() for p in predicciones_ml[:3]]
+    predicciones_originales = [p.model_copy() for p in predicciones_ml]
     motivo_enrutamiento_area = ""
     if areas_consulta and not diagnostico_forzado:
         compatibles_area = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
@@ -737,8 +752,6 @@ def procesar_consulta_texto(
         ]
         if compatibles_area:
             compatibles_area, _ = priorizar_evidencia(texto_evaluar, compatibles_area)
-            # Busca hasta 12 clases para no perder candidatos del área que
-            # quedaron fuera del Top-3 global. Conserva sus probabilidades SVM.
             predicciones_ml = compatibles_area[:3]
             diagnostico_predictivo = compatibles_area[0].falla
             confianza = compatibles_area[0].probabilidad
@@ -747,6 +760,16 @@ def procesar_consulta_texto(
                 + ", ".join(ETIQUETAS_AREA.get(area, area) for area in areas_consulta)
                 + "; probabilidades SVM originales conservadas."
             )
+    elif sistema_activo and not diagnostico_forzado:
+        compatibles_sis = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
+        if compatibles_sis:
+            predicciones_ml = compatibles_sis[:3]
+            diagnostico_predictivo = predicciones_ml[0].falla
+            confianza = predicciones_ml[0].probabilidad
+        else:
+            predicciones_ml = predicciones_ml[:3]
+    else:
+        predicciones_ml = predicciones_ml[:3]
     # Especialización técnica: motor de arranque / clac seco
     es_sintoma_arrancador = any(
         p in texto_evaluar.lower()
@@ -792,13 +815,17 @@ def procesar_consulta_texto(
     if areas_consulta and not diagnostico_forzado:
         # Aplicar el límite temático antes del auto-interrogador para impedir
         # que un Top-1 ajeno dispare preguntas de otro sistema.
-        predicciones_ml = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
-        predicciones_ml = [
+        compatibles_filtradas = filtrar_causas(sistema_activo, predicciones_originales, texto_evaluar)
+        compatibles_filtradas = [
             prediccion
-            for prediccion in predicciones_ml
+            for prediccion in compatibles_filtradas
             if falla_coincide_con_areas(prediccion.falla, areas_consulta)
         ][:3]
-        if not predicciones_ml:
+        if compatibles_filtradas:
+            predicciones_ml = compatibles_filtradas
+            diagnostico_predictivo = predicciones_ml[0].falla
+            confianza = predicciones_ml[0].probabilidad
+        elif not predicciones_ml:
             etiquetas_area = ", ".join(
                 ETIQUETAS_AREA.get(area, area) for area in areas_consulta
             )
