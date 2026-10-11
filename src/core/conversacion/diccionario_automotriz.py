@@ -25,7 +25,7 @@ EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
     (re.compile(r"\b(se\s+muere|se\s+apaga|se\s+me\s+apaga)\b", re.IGNORECASE), "apagado de motor"),
     (re.compile(r"\b(no\s+jala|esta\s+chancho|está\s+chancho|chanchea|se\s+aguanta|aguantado|se\s+queda|se\s+chupa|amarrado|pesado|(pierde|perd[ií][aáoó]|sin|falta\s+de)\s+fuerza|se\s+ahog(a|aba|ó|o)|no\s+(?:puedo\s+)?pasar\s+de\s+\d+)\b", re.IGNORECASE), "pérdida de potencia"),
     (re.compile(r"\b(ratea|cabecea|corcovea)\b", re.IGNORECASE), "funcionamiento irregular misfire"),
-    (re.compile(r"\b(hierve|levanta\s+temperatura|calienta\s+demasiado|se\s+calienta|hirviendo)\b", re.IGNORECASE), "sobrecalentamiento"),
+    (re.compile(r"\b(recalienta|recalentar|recalentando|recalent[oó]|se\s+recalienta|hierve|levanta\s+temperatura|calienta\s+demasiado|se\s+calienta|hirviendo|aguja\s+al\s+tope|bota\s+vapor)\b", re.IGNORECASE), "sobrecalentamiento"),
     (re.compile(r"\b(clac|clic|tac\s+seco|chasquido\s+seco)\b", re.IGNORECASE), "chasquido clac seco"),
     (re.compile(r"\b(humo\s+blanco\s+espeso|vapor\s+por\s+escape)\b", re.IGNORECASE), "humo blanco refrigerante"),
     (re.compile(r"\b(humo\s+negro|olor\s+a\s+nafta\s+cruda)\b", re.IGNORECASE), "humo negro exceso combustible"),
