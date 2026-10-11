@@ -45,3 +45,4 @@ class SolicitudGeminiEncolada:
     proveedor: str = "meta"  # "meta" | "twilio" | "api"
     mensaje_inicial_id: Optional[str] = None
     mensaje_salida_preliminar_id: Optional[str] = None
+    motivo_degradado: Optional[str] = None

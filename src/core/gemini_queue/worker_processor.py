@@ -129,6 +129,9 @@ async def procesar_solicitud_encolada(
     espera_reintento = 15
 
     if api_key and not forzar_degradado:
+        if settings.database.enabled:
+            from src.core.gemini_queue.db_persistence import registrar_intento_ejecucion_db
+            await registrar_intento_ejecucion_db(solicitud.id)
         try:
             modelo = settings.gemini_model or "gemini-3.5-flash-lite"
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent"
@@ -245,6 +248,7 @@ async def procesar_solicitud_encolada(
                 "usado": False,
                 "modelo": None,
                 "modo": "consulta_tecnica_degradada",
+                "motivo_degradado": solicitud.motivo_degradado or (error_reintentable if not forzar_degradado else "degradado_automatico"),
                 "tokens_entrada": 0,
                 "tokens_salida": 0,
             }
@@ -262,6 +266,7 @@ async def procesar_solicitud_encolada(
                 "usado": False,
                 "modelo": None,
                 "modo": "diagnostico_degradado_ml_rag",
+                "motivo_degradado": solicitud.motivo_degradado or (error_reintentable if not forzar_degradado else "degradado_automatico"),
                 "tokens_entrada": 0,
                 "tokens_salida": 0,
             }
