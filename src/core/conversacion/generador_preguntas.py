@@ -667,20 +667,12 @@ class GeneradorPreguntas:
             opc = ["Detenido en ralentí / tráfico", "En carretera a velocidad", "En cualquier condición"]
             candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 85))
         elif estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and cls.puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
-            if dominio == "DESCONOCIDO" and len(estado.hechos) == 0:
-                txt_orient = (
-                    "Para orientar la consulta técnica: ¿en qué sistema se manifiesta principalmente el problema? "
-                    "(motor/aceleración, encendido/arranque, temperatura o frenos/dirección)"
-                )
-                opc_orient = ["Motor o aceleración", "Arranque o batería", "Temperatura o refrigeración", "Frenos o dirección"]
-                candidatas.append((txt_orient, opc_orient, QuestionIntent.CONDICION_OPERACION, 65))
-            else:
-                txt = (
-                    "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, "
-                    "al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?"
-                )
-                opc = ["Detenido en ralentí", "Al acelerar bajo carga", "Al frenar"]
-                candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 75))
+            txt = (
+                "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, "
+                "al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?"
+            )
+            opc = ["Detenido en ralentí", "Al acelerar bajo carga", "Al frenar"]
+            candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 75))
 
         if estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and not tiene_queja_termica and cls.puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
             txt_sensorial = (
