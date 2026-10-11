@@ -967,6 +967,13 @@ class OrquestadorConversacion:
             motivo_decision = "Sin evidencia diagnóstica tras el límite de aclaraciones"
             es_pregunta = False
 
+        # Verificación prioritaria de seguridad física (Fase 1 / Emergencia mecánica crítica)
+        from src.core.diagnostico.politica_seguridad import PoliticaSeguridad, SeveridadSeguridad
+        sev_seguridad, banner_seguridad = PoliticaSeguridad.evaluar_severidad(texto_limpio, str(estado.falla_principal or ""))
+        if sev_seguridad == SeveridadSeguridad.CRITICAL_STOP:
+            es_suficiente = True
+            motivo_suficiencia = "Condición crítica de seguridad física detectada: priorizando diagnóstico y advertencia de seguridad"
+
         # Caso A: Información insuficiente y aún con margen de repregunta
         if not respuesta_texto and not es_suficiente and not falla_forzada_alternativa and estado.turnos_repregunta < estado.max_repreguntas:
             seleccion_area = GeneradorPreguntas.pregunta_por_area(estado)
@@ -1268,6 +1275,8 @@ class OrquestadorConversacion:
                     f"Entendido, actualicé el síntoma a: {resumen_correccion}. "
                     f"{respuesta_texto}"
                 )
+        if sev_seguridad == SeveridadSeguridad.CRITICAL_STOP and banner_seguridad and banner_seguridad.strip() not in respuesta_texto:
+            respuesta_texto = f"{banner_seguridad}{respuesta_texto}"
         MaquinaEstadosConversacion.transicionar(
             estado=estado,
             es_reinicio=False,

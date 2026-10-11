@@ -40,8 +40,12 @@ PATRON_COMBUSTIBLE_CRITICO = re.compile(
 
 PATRON_TEMPERATURA_CRITICA = re.compile(
     r"\b(temperatura\s+(?:al\s+m[aá]ximo|en\s+zona\s+roja|al\s+tope|pegada\s+al\s+m[aá]ximo)|"
+    r"(?:sale|bota|botando|sale\s+con|expulsa|tirando)\s+(?:mucho\s+)?vapor|"
+    r"(?:agua|refrigerante)\s+hirviendo|hirviendo\s+(?:con\s+vapor|el\s+agua|el\s+refrigerante)|"
     r"sale\s+vapor\s+(?:blanco\s+)?(?:del\s+motor|debajo\s+del\s+cap[oó]|por\s+el\s+cap[oó])|hierve\s+el\s+refrigerante|"
-    r"sobrecalentamiento\s+(?:extremo|severo)|humo\s+de\s+vapor\s+blanco\s+en\s+vano)\b",
+    r"burbujea\s+el\s+(?:dep[oó]sito|reservorio|tanque|radiador)|"
+    r"radiador\s+(?:hirviendo|reventado|rajado|botando\s+agua)|"
+    r"sobrecalentamiento\s+(?:extremo|severo|peligroso)|humo\s+de\s+vapor\s+blanco\s+en\s+vano)\b",
     re.IGNORECASE,
 )
 
