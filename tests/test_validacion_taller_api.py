@@ -28,7 +28,7 @@ TALLER_2_ID = "00000000-0000-0000-0000-000000000002"
 def _worker_escribir_proceso(csv_path_str: str, worker_id: int) -> bool:
     """Función de nivel superior ejecutable por un subproceso independiente del SO."""
     csv_p = Path(csv_path_str)
-    with _bloqueo_archivo_interproceso(csv_p, timeout=8.0):
+    with _bloqueo_archivo_interproceso(csv_p, timeout=20.0):
         df = pd.read_csv(csv_p)
         item_id = int(df["item"].max()) + 1 if not df.empty and "item" in df.columns else 1
         nueva_fila = {
