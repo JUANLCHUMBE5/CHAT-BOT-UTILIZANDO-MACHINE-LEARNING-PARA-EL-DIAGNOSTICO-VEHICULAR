@@ -35,12 +35,18 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     (
         "sobrecalentamiento",
         re.compile(
-            r"\b(sobrecalentamiento|hierve|levanta\s+temperatura|se\s+calienta|"
+            r"\b(sobrecalentamiento|recalienta|recalentar|recalentando|recalent[oó]|se\s+recalienta|"
+            r"el\s+auto\s+recalienta|el\s+carro\s+recalienta|motor\s+recalienta|"
+            r"hierve|hirviendo|levanta\s+temperatura|se\s+calienta|calienta\s+el\s+motor|"
             r"temperatura\s+(?:del\s+motor\s+)?(?:est[aá]\s+)?subiendo|"
-            r"temperatura\s+sube|temperatura\s+(?:m[aá]s\s+de\s+lo\s+normal|elevada|alta))\b",
+            r"temperatura\s+(?:sube|al\s+tope|volando|elevada|alta)|"
+            r"aguja\s+de\s+temperatura|bota\s+vapor|vapor\s+(?:bajo|del)\s+cap[oó])\b",
             re.IGNORECASE,
         ),
-        re.compile(r"\b(no\s+(?:se\s+)?(?:calienta|hierve|levanta\s+temperatura)|temperatura\s+normal)\b", re.IGNORECASE),
+        re.compile(
+            r"\b(no\s+(?:se\s+)?(?:recalienta|calienta|hierve|levanta\s+temperatura)|temperatura\s+normal|sin\s+recalentar)\b",
+            re.IGNORECASE,
+        ),
     ),
     (
         "fuga de refrigerante",

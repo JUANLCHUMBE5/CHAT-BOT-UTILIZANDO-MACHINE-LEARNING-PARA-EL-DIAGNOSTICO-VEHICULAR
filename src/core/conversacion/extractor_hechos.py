@@ -861,6 +861,32 @@ class ExtractorHechos:
             )
             hechos_extraidos.append(h.to_dict())
 
+        es_queja_refrigeracion = bool(
+            re.search(
+                r"\b(recalienta|recalentar|recalentando|recalent[oó]|se\s+recalienta|"
+                r"el\s+auto\s+recalienta|el\s+carro\s+recalienta|motor\s+recalienta|"
+                r"hierve|hirviendo|levanta\s+temperatura|se\s+calienta|calienta\s+el\s+motor|"
+                r"(?:se\s+(?:le\s+)?sube|sube|subi[oó])\s+(?:la\s+)?temperatura|"
+                r"temperatura\s+(?:del\s+motor\s+)?(?:est[aá]\s+)?subiendo|"
+                r"temperatura\s+(?:sube|al\s+tope|volando|elevada|alta)|"
+                r"aguja\s+de\s+temperatura|"
+                r"(?:bota|botando|sale|echando)\s+vapor|vapor\s+(?:bajo|del|por\s+el)\s+cap[oó]|"
+                r"termostato|electroventilador|motoventilador|manguera\s+(?:inferior|superior)?(?:\s+del)?\s+radiador)\b",
+                texto_l,
+            )
+            and not re.search(r"\bno\s+(?:se\s+)?(?:recalienta|calienta|hierve)\b", texto_l)
+        )
+        if es_queja_refrigeracion:
+            estado.dominio_probable = "REFRIGERACION"
+            h_ref = estado.registrar_hecho(
+                "sintoma_sobrecalentamiento",
+                "sobrecalentamiento del motor / sistema de refrigeración",
+                categoria="sintoma",
+                texto_crudo=texto_usuario,
+                tipo=FactType.SINTOMA,
+            )
+            hechos_extraidos.append(h_ref.to_dict())
+
         if re.search(r"\b(luces?\s+prendidas?|luces?\s+altas?|prendo\s+las\s+luces?|con\s+luces?|luces?\s+(?:se\s+ponen\s+)?tenues?|bajan?\s+las\s+luces?|luces?\s+bajas?)\b", texto_l):
             luces_tenues = bool(re.search(r"\b(tenues?|bajan?\s+las\s+luces?|luces?\s+bajas?)\b", texto_l))
             valor_luces = "luces tenues" if luces_tenues else "luces encendidas"
@@ -933,7 +959,13 @@ class ExtractorHechos:
             hechos_extraidos.append(h.to_dict())
 
         # 8. Extracción estructurada de hechos de arranque (Fase 9.6)
-        if PATRON_NO_ARRANCA.search(texto_usuario):
+        es_no_arranca_componente = bool(
+            re.search(
+                r"\b(?:electroventilador|motoventilador|ventilador|electro|compresor)\s+(?:no\s+)",
+                texto_usuario.lower(),
+            )
+        )
+        if PATRON_NO_ARRANCA.search(texto_usuario) and not es_no_arranca_componente:
             h = estado.registrar_hecho("motor_arranca", "NO", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
             hechos_extraidos.append(h.to_dict())
 
@@ -974,7 +1006,7 @@ class ExtractorHechos:
             )
             hechos_extraidos.append(h.to_dict())
 
-        if PATRON_NO_ARRANCA.search(texto_normalizado.lower()) and not estado.obtener_hecho("sintoma_motor_no_arranca"):
+        if PATRON_NO_ARRANCA.search(texto_normalizado.lower()) and not es_no_arranca_componente and not estado.obtener_hecho("sintoma_motor_no_arranca"):
             h = estado.registrar_hecho("sintoma_motor_no_arranca", "motor no arranca", categoria="sintoma", texto_crudo=texto_usuario, tipo=FactType.SINTOMA)
             hechos_extraidos.append(h.to_dict())
 
@@ -1058,8 +1090,14 @@ class ExtractorHechos:
         }
 
         # 1. Señales explícitas del mensaje actual
+        es_no_arranca_comp = bool(
+            re.search(
+                r"\b(?:electroventilador|motoventilador|ventilador|electro|compresor)\s+(?:no\s+)",
+                texto_l,
+            )
+        )
         arranque_actual = bool(
-            PATRON_NO_ARRANCA.search(texto_l)
+            (PATRON_NO_ARRANCA.search(texto_l) and not es_no_arranca_comp)
             or PATRON_GIRO_LLAVE.search(texto_l)
             or PATRON_DEMORA_ARRANQUE.search(texto_l)
         )
