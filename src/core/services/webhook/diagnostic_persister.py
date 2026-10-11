@@ -173,11 +173,20 @@ class DiagnosticPersister:
         # 3. Asociar vehículo si aplica
         vehiculo = None
         if placa and placa not in ("WAPP-01", "REST-API", "SIN-PLACA"):
+            marca_calc = "Generico"
+            modelo_calc = "Generico"
+            if marca_modelo and marca_modelo.lower() not in ("vehiculo generico", "generico", "desconocido"):
+                partes = marca_modelo.strip().split()
+                if partes:
+                    marca_calc = partes[0]
+                    if len(partes) > 1:
+                        modelo_calc = " ".join(partes[1:])
             vehiculo = await vehiculo_repo.obtener_o_crear(
                 taller_id=usuario.taller_id,
                 registrado_por_id=usuario.id,
                 placa_str=placa,
-                marca=marca_modelo.split()[0] if marca_modelo else "Generico",
+                marca=marca_calc,
+                modelo=modelo_calc,
             )
 
         # 4. Determinar fuente y conclusiones
