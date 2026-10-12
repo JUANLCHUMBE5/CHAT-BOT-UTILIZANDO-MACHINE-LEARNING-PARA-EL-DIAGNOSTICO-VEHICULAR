@@ -51,7 +51,7 @@ def test_incidente_a_reproduccion_y_resolucion_politica():
     assert "desbridamiento y descompresión" in banner
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_incidente_a_orquestador_flujo_completo(orquestador, gestor_diagnostico):
     """Verifica que el orquestador no emita ML fallback sino la advertencia de seguridad."""
     session_id = "test_common_rail_incidente_a"
@@ -127,7 +127,7 @@ def test_incidente_b_bloqueo_directo_con_indicios_activos():
     assert "NO constituye una autorización automática" in banner
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_incidente_b_orquestador_flujo_multiturno(orquestador, gestor_diagnostico):
     """Simula los turnos previos de la Ford Ranger y verifica el bloqueo en turno 7."""
     session_id = "test_ford_ranger_caso_07"
@@ -177,7 +177,7 @@ async def test_incidente_b_orquestador_flujo_multiturno(orquestador, gestor_diag
         ),
     ],
 )
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_variantes_dpf_bloqueadas_por_dilucion(
     orquestador, gestor_diagnostico, frase_dilucion, frase_regeneracion
 ):
@@ -203,7 +203,7 @@ async def test_variantes_dpf_bloqueadas_por_dilucion(
 # 3. TRANSICIÓN A PRERREQUISITOS OEM TRAS CORRECCIÓN DE ACEITE
 # ==============================================================================
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_dpf_prerrequisitos_oem_despues_de_corregir_aceite(orquestador, gestor_diagnostico):
     """Una vez corregido el aceite, no se debe bloquear indefinidamente sino entregar prerrequisitos OEM."""
     session_id = "test_dpf_prerrequisitos_oem"

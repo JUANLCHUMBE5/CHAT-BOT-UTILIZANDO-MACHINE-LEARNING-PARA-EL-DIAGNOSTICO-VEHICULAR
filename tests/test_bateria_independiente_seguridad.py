@@ -56,7 +56,7 @@ def test_inedita_common_rail_deteccion_politica(consulta_cr_inedita):
     assert "SERVICIO HOSPITALARIO DE URGENCIAS" in banner
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_inedita_common_rail_flujo_orquestador(orquestador, gestor_diagnostico):
     session_id = "test_inedita_cr_orquestador"
     res = await orquestador.procesar_turno(
@@ -73,7 +73,7 @@ async def test_inedita_common_rail_flujo_orquestador(orquestador, gestor_diagnos
 # ESCENARIOS INÉDITOS: DPF Y DILUCIÓN DE ACEITE
 # ==============================================================================
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_inedita_dpf_dilucion_nissan_frontier(orquestador, gestor_diagnostico):
     session_id = "test_inedita_dpf_frontier"
     # Turno 1: Vehículo y síntoma
@@ -100,7 +100,7 @@ async def test_inedita_dpf_dilucion_nissan_frontier(orquestador, gestor_diagnost
     assert "embalamiento" in res3["respuesta_texto"].lower()
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_inedita_dpf_hilux_desbloqueo_prerrequisitos(orquestador, gestor_diagnostico):
     session_id = "test_inedita_dpf_hilux"
     # Turno 1: Falla inicial y reporte previo
