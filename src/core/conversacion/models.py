@@ -449,6 +449,11 @@ class ConversationState:
         })
         self.updated_at = time.time()
 
+    @property
+    def historial_respuestas(self) -> List[Dict[str, Any]]:
+        """Alias retrocompatible de respuestas_obtenidas para trazabilidad y auditorías."""
+        return self.respuestas_obtenidas
+
     def ultima_pregunta(self) -> Optional[Dict[str, Any]]:
         return self.preguntas_realizadas[-1] if self.preguntas_realizadas else None
 

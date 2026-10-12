@@ -100,8 +100,18 @@ DICCIONARIO_JERGA_PERUANA: tuple[tuple[str, str], ...] = (
     (r"\bcabecea\b", "vibracion e inestabilidad en el motor"),
     (r"\bse chupa\b", "pierde potencia y se aguanta al acelerar"),
     (r"\bse aguanta\b", "perdida de fuerza al acelerar"),
-    (r"\bzapatea\b", "vibracion por desbalanceo o discos de freno alabeados"),
-    (r"\bzapateo\b", "vibracion en freno o aceleracion"),
+    (
+        r"\b(?:zapatea(?:\s+feo)?\s+al\s+arrancar(?:\s+en\s+primera)?|"
+        r"zapateo\s+de\s+embrague|trepidaci[oó]n\s+al\s+salir|"
+        r"al\s+arrancar\s+en\s+primera\s+zapatea)\b",
+        "trepidacion de embrague al arrancar",
+    ),
+    (
+        r"\b(?:zapatea\s+(?:al\s+frenar|frenando)|al\s+frenar\s+zapatea)\b",
+        "vibracion por discos de freno alabeados",
+    ),
+    (r"\bzapatea\b", "vibracion"),
+    (r"\bzapateo\b", "vibracion"),
     (r"\bbota vapor\b", "sobrecalentamiento y expulsion de refrigerante"),
     (r"\b(?:taca\s*taca|traque\s*traque|clac\s*clac|cla\s*cla)\b", "chasquido clac clac en junta homocinetica o palier"),
     (r"\b(?:doblar|doblo|giro|girar|doblando|girando)\s+(?:en\s+u|todo\s+el\s+tim[oó]n|el\s+tim[oó]n\s+a\s+tope)\b", "girar el timon a tope en curva cerrada palier"),

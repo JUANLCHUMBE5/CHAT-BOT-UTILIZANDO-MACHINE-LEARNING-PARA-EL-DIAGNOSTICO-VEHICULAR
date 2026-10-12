@@ -27,7 +27,10 @@ CATEGORIAS = {
     "ARRANQUE_CARGA": ("alternador", "bateria", "bornes", "motor de arranque", "solenoide de arranque"),
     "FRENOS": ("freno", "pastillas", "discos", "abs"),
     "SUSPENSION_DIRECCION": ("rotula", "bieleta", "amortiguador", "desbalanceo", "alineacion"),
-    "TRANSMISION": ("embrague", "caja de cambios", "transmision", "cvt"),
+    "TRANSMISION": (
+        "embrague", "clutch", "caja de cambios", "transmision", "cvt",
+        "zapateo", "zapatea", "trepidacion", "patinado",
+    ),
     "CLIMATIZACION": ("aire acondicionado", "compresor de ac", "evaporador"),
 }
 

@@ -44,7 +44,7 @@ class CompatibilidadPreguntas:
                 return "CLIMATIZACION"
             if any(k in c for k in ("freno", "pastilla", "disco")):
                 return "FRENOS"
-            if any(k in c for k in ("reversa", "transmision", "caja")):
+            if any(k in c for k in ("reversa", "transmision", "caja", "embrague", "clutch", "trepidacion")):
                 return "TRANSMISION"
             if any(k in c for k in ("suspension", "bache", "rotula", "amortiguador")):
                 return "SUSPENSION"

@@ -683,23 +683,43 @@ class GeneradorPreguntas:
 
         # 2b. Preguntas propias del dominio detectado.
         if dominio == "TRANSMISION":
-            if cls.puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
-                candidatas.append((
-                    "¿Has revisado el nivel y estado del aceite ATF de la transmisión, o si existen fugas visibles debajo de la caja?",
-                    ["Nivel/ATF bajo o deteriorado", "Hay una fuga visible", "Todavía no se revisó"],
-                    QuestionIntent.COMPONENTE_REVISADO,
-                    85,
-                ))
-            if (
-                cls.puede_preguntar(QuestionIntent.TEMPERATURA_APARICION, estado)
-                and CompatibilidadPreguntas.diferencial_justifica_temperatura(estado, dominio)
-            ):
-                candidatas.append((
-                    "¿La demora o el golpe al acoplar cambia cuando la transmisión está fría frente a cuando ya alcanzó temperatura de trabajo?",
-                    ["Falla más en frío", "Falla más en caliente", "No cambia"],
-                    QuestionIntent.TEMPERATURA_APARICION,
-                    80,
-                ))
+            es_embrague_manual = any(
+                "embrague" in str(h.valor).lower() or "clutch" in str(h.valor).lower() or "zapate" in str(h.valor).lower()
+                for h in estado.hechos.values()
+            ) or any("embrague" in m.lower() or "clutch" in m.lower() or "zapate" in m.lower() for m in estado.historial_mensajes_usuario)
+            if es_embrague_manual:
+                if cls.puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
+                    candidatas.append((
+                        "¿El síntoma de zapateo o patinamiento se acentúa al arrancar en primera marcha o al acelerar en pendientes pronunciadas?",
+                        ["Al arrancar en primera", "Al acelerar en pendientes", "En todo momento"],
+                        QuestionIntent.CONDICION_OPERACION,
+                        88,
+                    ))
+                if cls.puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
+                    candidatas.append((
+                        "¿Has verificado si el pedal de embrague tiene juego libre adecuado o si hay olor a material de fricción quemado?",
+                        ["Tiene olor a quemado", "Sin juego libre en pedal", "No se ha revisado"],
+                        QuestionIntent.COMPONENTE_REVISADO,
+                        85,
+                    ))
+            else:
+                if cls.puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
+                    candidatas.append((
+                        "¿Has revisado el nivel y estado del aceite ATF de la transmisión, o si existen fugas visibles debajo de la caja?",
+                        ["Nivel/ATF bajo o deteriorado", "Hay una fuga visible", "Todavía no se revisó"],
+                        QuestionIntent.COMPONENTE_REVISADO,
+                        85,
+                    ))
+                if (
+                    cls.puede_preguntar(QuestionIntent.TEMPERATURA_APARICION, estado)
+                    and CompatibilidadPreguntas.diferencial_justifica_temperatura(estado, dominio)
+                ):
+                    candidatas.append((
+                        "¿La demora o el golpe al acoplar cambia cuando la transmisión está fría frente a cuando ya alcanzó temperatura de trabajo?",
+                        ["Falla más en frío", "Falla más en caliente", "No cambia"],
+                        QuestionIntent.TEMPERATURA_APARICION,
+                        80,
+                    ))
         elif dominio == "FRENOS":
             mensajes_txt = " ".join(estado.historial_mensajes_usuario).lower()
             tiene_vibracion = any(

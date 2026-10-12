@@ -110,12 +110,20 @@ class SegmentadorCasos:
             r"palanca(?:\s+de\s+cambios)?|selector(?:\s+de\s+marchas)?|cambio(?:s)?|"
             r"(?:meter|pasar|cambiar|enganchar|seleccionar)\s+marcha|marcha\s+atr[aá]s|primera\s+marcha|segunda\s+marcha|tercera\s+marcha|"
             r"junta(?:s)?\s+homocin[eé]tica(?:s)?|palier(?:es)?|semieje(?:s)?|"
-            r"patina\s+el\s+embrague|patea\s+la\s+caja|"
+            r"patina\s+el\s+embrague|embrague\s+patinando|patina\s+en\s+subida|patea\s+la\s+caja|"
+            r"zapatea(?:\s+feo)?\s+al\s+arrancar|trepidaci[oó]n|zapateo|"
+            r"pedal\s+vibra\s+cuando\s+lo\s+suelto|pedal\s+de\s+embrague|"
             r"no\s+entra\s+(?:segunda|cambio)|reversa|retroceso)\b",
             txt,
         ) or (
             re.search(r"\b(acopla(?:r|miento)?|engancha(?:r)?)\b", txt)
             and not re.search(r"\b(compresor|clima|a/c|aire)\b", txt)
+        ) or bool(
+            re.search(
+                r"\b(?:revoluciones\s+suben|rpm\s+suben)\b.{0,45}\bno\s+avanza\b|"
+                r"\bno\s+avanza\b.{0,45}\b(?:revoluciones\s+suben|rpm\s+suben)\b",
+                txt,
+            )
         ):
             return SubsistemaVehicular.TRANSMISION
         if re.search(r"\b(suspensi[oó]n|amortiguador(?:es)?|r[oó]tulas?|terminal(?:es)?|baches|pistas?\s+irregulares|rompemuelles|golpe\s+en\s+la\s+rueda)\b", txt):
