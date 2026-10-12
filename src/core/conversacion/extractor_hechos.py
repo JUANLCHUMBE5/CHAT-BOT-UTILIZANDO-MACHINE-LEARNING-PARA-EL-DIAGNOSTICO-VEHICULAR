@@ -324,9 +324,12 @@ class ExtractorHechos:
         if not cls.PATRON_CORRECCION_EXPLICITA.search(texto_l):
             return correcciones
 
-        if re.search(r"\b(caliente|en\s+caliente)\b", texto_l):
+        if re.search(r"\b(caliente|en\s+caliente|calent[oó]|calienta|despu[eé]s\s+de\s+calentar|ya\s+caliente)\b", texto_l) or re.search(r"\b(?:reci[eé]n\s+)?a\s+los\s+\d+\s*minutos\b", texto_l):
             correcciones.append(("temperatura", "caliente", "temperatura", FactType.CONDICION))
-        elif re.search(r"\b(fr[ií]o|en\s+fr[ií]o|por\s+la\s+mañana)\b", texto_l):
+        elif re.search(r"\b(fr[ií]o|en\s+fr[ií]o|por\s+la\s+mañana)\b", texto_l) and not re.search(
+            r"\b(?:en\s+fr[ií]o\s+(?:arranca|prende|funciona|anda)\s+(?:perfecto|bien|normal)|en\s+fr[ií]o\s+no\s+(?:falla|pasa)|no\s+(?:es|falla)\s+en\s+fr[ií]o)\b",
+            texto_l,
+        ):
             correcciones.append(("temperatura", "frío", "temperatura", FactType.CONDICION))
 
         if re.search(r"\b(detenido\s+en\s+ralent[ií]|en\s+ralent[ií]|parado\s+en\s+el\s+sem[aá]foro)\b", texto_l):
@@ -548,7 +551,41 @@ class ExtractorHechos:
             h = estado.registrar_hecho(campo, dtc_canonico, categoria="dtc", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
             hechos_extraidos.append(h.to_dict())
 
-        # 4. Extracción de mediciones físicas
+        # 4. Extracción de mediciones físicas cuantitativas
+        from src.core.conversacion.interprete_respuestas_cortas import InterpreteRespuestasCortas
+        mediciones_cuantitativas = InterpreteRespuestasCortas._extraer_todas_mediciones(
+            texto_usuario.lower(),
+            intent_str="MEDICION_TECNICA",
+            texto_preg="",
+            pending_q=estado.pending_question,
+        )
+        for val, unidad, condicion in mediciones_cuantitativas:
+            if unidad in ("V", "mV"):
+                campo_v = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
+                tipo_v = "voltaje_bateria" if condicion in ("reposo", "durante_arranque", "contacto_on") else "voltaje_alternador"
+                valor_str = f"{val} {unidad}" + (f" ({condicion})" if condicion else "")
+                h_m = estado.registrar_hecho(campo_v, valor_str, categoria="medicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+                hechos_extraidos.append(h_m.to_dict())
+                estado.registrar_medicion(tipo=tipo_v, valor=val, unidad=unidad, contexto=condicion or "bateria", prueba=campo_v, estado="observado")
+                estado.registrar_prueba_completada(campo_v, f"{val} {unidad}")
+                if condicion == "durante_arranque":
+                    if val < 9.6:
+                        h_c = estado.registrar_hecho("caida_tension_excesiva", "SI", categoria="medicion", tipo=FactType.CONDICION)
+                    else:
+                        h_c = estado.registrar_hecho("caida_tension_excesiva", "NO", categoria="medicion", tipo=FactType.CONDICION)
+                        h_a = estado.registrar_hecho("voltaje_arranque_normal", "SI", categoria="medicion", tipo=FactType.CONDICION)
+                        hechos_extraidos.append(h_a.to_dict())
+                    hechos_extraidos.append(h_c.to_dict())
+                elif condicion == "reposo" and val >= 12.4:
+                    h_r = estado.registrar_hecho("voltaje_reposo_normal", "SI", categoria="medicion", tipo=FactType.CONDICION)
+                    hechos_extraidos.append(h_r.to_dict())
+            elif unidad in ("PSI", "bar", "kPa"):
+                campo_p = "medicion_presion"
+                h_p = estado.registrar_hecho(campo_p, f"{val} {unidad}", categoria="medicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+                hechos_extraidos.append(h_p.to_dict())
+                estado.registrar_medicion(tipo="presion_combustible", valor=val, unidad=unidad, contexto="riel_inyeccion", prueba=campo_p, estado="observado")
+                estado.registrar_prueba_completada(campo_p, f"{val} {unidad}")
+
         m_med = PATRON_MEDICION.search(texto_usuario)
         if m_med:
             med_val = m_med.group(0).lower()
@@ -896,6 +933,8 @@ class ExtractorHechos:
         # 7. Extracción de condiciones operacionales lingüísticas
         ling = extraer_hechos_linguisticos(texto_usuario)
         for k, v in ling.items():
+            if corrs and any(c[0] == k for c in corrs):
+                continue
             cat = "temperatura" if k == "temperatura" else ("cambio_accion" if k == "evolucion_accion" else "condicion")
             h = estado.registrar_hecho(k, v, categoria=cat, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
             hechos_extraidos.append(h.to_dict())

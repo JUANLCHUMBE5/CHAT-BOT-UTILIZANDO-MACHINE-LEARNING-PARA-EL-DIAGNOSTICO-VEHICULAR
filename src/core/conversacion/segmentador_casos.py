@@ -78,7 +78,7 @@ class SegmentadorCasos:
             r"dificultad\s+(?:de|para|al)\s+arranc(?:ar|e)|arranque\s+(?:largo|en\s+fr[ií]o|pesado)|"
             r"(?:por|en)\s+las\s+mañanas\s+(?:demora|tarda|le\s+cuesta)|"
             r"demora\s+por\s+las\s+mañanas|tarda\s+en\s+la\s+mañana|"
-            r"clic\s+seco|chasquido|solenoide|motor\s+de\s+arranque|dar\s+arranque|llave)\b",
+            r"clic\s+seco|chasquido|solenoide|motor\s+de\s+arranque|dar\s+arranque|dar\s+marcha|al\s+dar\s+marcha|doy\s+marcha|al\s+arrancar|llave)\b",
             txt,
         ):
             return SubsistemaVehicular.ARRANQUE
@@ -107,7 +107,8 @@ class SegmentadorCasos:
             return SubsistemaVehicular.MARCHA_MOTOR
         if re.search(
             r"\b(caja(?:\s+de\s+cambios|\s+autom[aá]tica)?|transmisi[oó]n|embrague|clutch|"
-            r"palanca(?:\s+de\s+cambios)?|selector(?:\s+de\s+marchas)?|cambio(?:s)?|marcha(?:s)?|"
+            r"palanca(?:\s+de\s+cambios)?|selector(?:\s+de\s+marchas)?|cambio(?:s)?|"
+            r"(?:meter|pasar|cambiar|enganchar|seleccionar)\s+marcha|marcha\s+atr[aá]s|primera\s+marcha|segunda\s+marcha|tercera\s+marcha|"
             r"junta(?:s)?\s+homocin[eé]tica(?:s)?|palier(?:es)?|semieje(?:s)?|"
             r"patina\s+el\s+embrague|patea\s+la\s+caja|"
             r"no\s+entra\s+(?:segunda|cambio)|reversa|retroceso)\b",

@@ -68,7 +68,13 @@ def _extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Opti
     falla_l = falla.lower().replace("í", "i").replace("á", "a").replace("é", "e").replace("ó", "o").replace("ú", "u")
 
     # 1. Reglas específicas de taller para máxima concisión en WhatsApp
-    if "bateria" in falla_l or "borne" in falla_l:
+    caida_excesiva = estado.obtener_hecho("caida_tension_excesiva") if estado else None
+    voltaje_arranque_normal = estado.obtener_hecho("voltaje_arranque_normal") if estado else None
+    bateria_normal = bool(
+        (caida_excesiva and caida_excesiva.valor == "NO")
+        or (voltaje_arranque_normal and voltaje_arranque_normal.valor == "SI")
+    )
+    if ("bateria" in falla_l or "borne" in falla_l) and not bateria_normal:
         return "voltaje en reposo (referencial ≥12.6 V), caída en arranque (mínimo 9.6 V) y ajuste de bornes."
     if "alternador" in falla_l or ("carga" in falla_l and "descarga" not in falla_l):
         return "voltaje de carga en ralentí con motor encendido (debe situarse entre 13.8 V y 14.4 V)."
@@ -369,6 +375,24 @@ class FormateadorCompacto:
                     "el electroventilador y medir la presión del circuito con equipo adecuado "
                     "según la especificación del vehículo. No atribuyo un porcentaje ni una "
                     "causa sin respaldo del modelo."
+                )
+            if estado and (
+                (
+                    getattr(estado, "obtener_hecho", lambda k: None)("caida_tension_excesiva")
+                    and estado.obtener_hecho("caida_tension_excesiva").valor == "NO"
+                )
+                or (
+                    getattr(estado, "obtener_hecho", lambda k: None)("voltaje_arranque_normal")
+                    and estado.obtener_hecho("voltaje_arranque_normal").valor == "SI"
+                )
+            ):
+                v_arr = estado.obtener_hecho("medicion_voltaje_durante_arranque")
+                v_arr_str = v_arr.valor if v_arr else "≥9.6 V"
+                return (
+                    f"🔧 *Evidencia técnica registrada:* Con voltaje adecuado y {v_arr_str} al dar marcha, "
+                    f"la caída de tensión es normal (≥9.6 V), lo que descarta batería descargada o fuga parásita. "
+                    f"Para continuar la comprobación, verifique la señal en el terminal 50 del solenoide, "
+                    f"el relé de arranque y el estado mecánico del arrancador."
                 )
             return (
                 "No tengo una hipótesis ML compatible con la evidencia y los descartes de este caso. "
