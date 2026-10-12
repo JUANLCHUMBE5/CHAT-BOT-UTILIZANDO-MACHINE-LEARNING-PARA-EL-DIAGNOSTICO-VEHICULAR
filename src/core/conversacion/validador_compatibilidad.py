@@ -22,6 +22,7 @@ from src.core.conversacion.ruteador_sistema import (
 
 _COMPONENTES_HIPOTESIS = (
     ("bobina", re.compile(r"\b(?:bobinas?|coil(?:s|\s+pack)?)\b")),
+    ("bujia_precalentamiento", re.compile(r"\b(?:precalentamiento|incandescentes?|glow\s*plugs?|calentadores?)\b")),
     ("bujia", re.compile(r"\b(?:buj[ií]as?|spark\s+plugs?)\b")),
     ("inyector", re.compile(r"\b(?:inyectores?|injectores?|inyector[a-z]*)\b")),
     ("bateria", re.compile(r"\b(?:bater[ií]as?|acumulador)\b")),
@@ -61,7 +62,14 @@ def _normalizar_hipotesis(texto: str) -> str:
 
 def _familias_componente(texto: str) -> set[str]:
     normalizado = _normalizar_hipotesis(texto)
-    return {familia for familia, patron in _COMPONENTES_HIPOTESIS if patron.search(normalizado)}
+    es_precalentamiento = bool(re.search(r"\b(?:precalentamiento|incandescentes?|glow\s*plugs?|calentadores?)\b", normalizado))
+    familias = set()
+    for familia, patron in _COMPONENTES_HIPOTESIS:
+        if patron.search(normalizado):
+            if familia == "bujia" and es_precalentamiento:
+                continue
+            familias.add(familia)
+    return familias
 
 
 def _evidencia_nueva_reabre(falla: str, evidencia: Optional[str]) -> bool:
@@ -155,18 +163,23 @@ class ValidadorCompatibilidad:
 
         # A. Reglas de combustible
         hecho_combustible = estado.obtener_hecho("combustible") or estado.obtener_hecho("tipo_combustible")
-        if hecho_combustible and hecho_combustible.estado == FactState.CONFIRMADO:
-            comb = str(hecho_combustible.valor).upper()
+        comb_raw = str(getattr(estado, "combustible", "") or (hecho_combustible.valor if hecho_combustible else "")).strip()
+        if comb_raw:
+            comb = "".join(
+                c for c in unicodedata.normalize("NFD", comb_raw.lower())
+                if unicodedata.category(c) != "Mn"
+            ).upper()
 
-            # Gasolina, GLP, GNV incompatibles con sistemas exclusivos Diésel (AdBlue, DPF, FAP, Urea)
-            if comb in ("GASOLINA", "GNV", "GLP"):
-                if re.search(r"\b(adblue|def|diesel|di[eé]sel|dpf|fap|urea|filtro de particulas)\b", falla_l):
-                    return False, f"INCOMPATIBLE_CON_HECHO_CONFIRMADO: Combustible={comb} incompatible con sistemas Diésel/AdBlue/DPF"
+            # Gasolina, GLP, GNV incompatibles con sistemas exclusivos Diésel (AdBlue, DPF, FAP, Urea, Common Rail Diesel, Precalentamiento)
+            if comb in ("GASOLINA", "GNV", "GLP", "NAFTA"):
+                if re.search(r"\b(adblue|def|diesel|dpf|fap|urea|filtro de particulas|common rail diesel|precalentamiento|incandescentes?|glow\s*plugs?)\b", falla_l):
+                    return False, f"INCOMPATIBLE_CON_HECHO_CONFIRMADO: Combustible={comb} incompatible con sistemas Diésel/AdBlue/DPF/Precalentamiento"
 
-            # Diésel incompatible con bujías/bobinas de encendido por chispa o inyectores GNV/GLP
+            # Diésel incompatible con encendido por chispa, carburadores o sistemas de gasolina/gas (conservando bujías de precalentamiento)
             elif comb == "DIESEL":
-                if re.search(r"\b(bujia|buj[ií]as|bobina de encendido|gnv|glp)\b", falla_l):
-                    return False, f"INCOMPATIBLE_CON_HECHO_CONFIRMADO: Combustible={comb} no utiliza bujías de encendido por chispa ni gas"
+                es_precalentamiento = bool(re.search(r"\b(?:precalentamiento|incandescentes?|glow\s*plugs?|calentadores?)\b", falla_l))
+                if not es_precalentamiento and re.search(r"\b(bujia|buj[ií]as|bobina|gasolina|bomba de gasolina|gnv|glp|carburador|chispa)\b", falla_l):
+                    return False, f"INCOMPATIBLE_CON_HECHO_CONFIRMADO: Combustible={comb} no utiliza componentes de gasolina, chispa ni gas"
 
         # B. Reglas de transmisión
         hecho_transmision = estado.obtener_hecho("transmision") or estado.obtener_hecho("caja")
@@ -278,7 +291,7 @@ class ValidadorCompatibilidad:
                 exclusiones.append({
                     "falla": falla,
                     "probabilidad_raw": prob,
-                    "motivo": "COMPONENTE_DESCARTADO_POR_MECANICO",
+                    "motivo": "RECHAZADA_PREVIAMENTE_SIN_NUEVA_EVIDENCIA",
                     "detalle": "El mecánico ya informó que este componente fue revisado o descartado.",
                 })
                 continue

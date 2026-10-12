@@ -110,10 +110,7 @@ def asegurar_pregunta_util(
         generar_orientacion_provisional,
     )
     ultimo_mensaje = getattr(estado, "historial_mensajes_usuario", [])[-1:]
-    if (
-        (ultimo_mensaje and es_imposibilidad_completa(ultimo_mensaje[0]))
-        or getattr(estado, "obtener_hecho", lambda _: None)("comprobacion_fisica_imposible")
-    ):
+    if ultimo_mensaje and es_imposibilidad_completa(ultimo_mensaje[0]):
         return generar_orientacion_provisional(estado), None
 
     anteriores = {
@@ -159,9 +156,18 @@ def asegurar_pregunta_util(
                 opciones = opciones[1:]
         siguiente = next((p for p in opciones if _clave(p) not in anteriores), None)
         if siguiente is None:
-            from src.core.conversacion.orientacion_provisional import generar_orientacion_provisional
-            return generar_orientacion_provisional(estado), None
-        respuesta = "Conservo la información que ya aportaste. " + siguiente
+            # Conservar el cuerpo técnico útil y remover solo las preguntas repetidas
+            resp_limpia = respuesta
+            for p in actuales:
+                resp_limpia = resp_limpia.replace(p, "").strip()
+            return resp_limpia, None
+        
+        # Conservar el cuerpo de la respuesta útil y reemplazar solo la pregunta repetida
+        resp_act = respuesta
+        for p in actuales:
+            if _clave(p) in anteriores:
+                resp_act = resp_act.replace(p, siguiente)
+        respuesta = resp_act
         actuales = [siguiente]
     final = actuales[-1]
     if not any(

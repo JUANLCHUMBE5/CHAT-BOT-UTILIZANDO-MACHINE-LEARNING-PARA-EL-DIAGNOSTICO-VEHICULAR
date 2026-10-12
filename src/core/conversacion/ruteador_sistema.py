@@ -18,7 +18,11 @@ SISTEMA_INYECCION_MEZCLA = "INYECCION_MEZCLA"
 CATEGORIAS = {
     "ENCENDIDO": ("bobina", "bujia", "chispa", "p030"),
     "PROGRAMACION": ("reprogramacion", "programacion", "inmovilizador", "codificacion", "ecu"),
-    "REFRIGERACION": ("refrigerante", "termostato", "radiador", "bomba de agua", "sobrecalentamiento"),
+    "REFRIGERACION": (
+        "refrigerante", "termostato", "radiador", "bomba de agua", "sobrecalentamiento",
+        "recalienta", "recalentamiento", "temperatura", "electroventilador", "ventilador",
+        "motoventilador", "hirviendo",
+    ),
     "ADMISION_RALENTI": (
         "iac", "tps", "cuerpo de aceleracion", "mariposa", "ralenti",
         "minimo bajo", "ralenti inestable", "bajas revoluciones",
@@ -156,23 +160,56 @@ def hipotesis_de_respaldo(sistema: str | None) -> list[dict[str, Any]]:
 
 
 def tiene_descarte_de_componente(estado: Any, falla: str) -> bool:
-    """Relaciona un descarte escrito por el mecánico con la hipótesis propuesta."""
+    """Relaciona un descarte escrito por el mecánico o registrado en hechos con la hipótesis propuesta."""
+    if not falla:
+        return False
     candidato = _normalizar(falla)
-    mensajes = getattr(estado, "historial_mensajes_usuario", []) or []
+    descartadas = getattr(estado, "hipotesis_descartadas", []) or []
+    if any(_normalizar(d) in candidato or candidato in _normalizar(d) for d in descartadas):
+        return True
+
     componentes = {
         "iac": ("iac", "valvula iac", "minimo"),
         "termostato": ("termostato",),
-        "ventilador": ("ventilador", "electroventilador"),
+        "ventilador": ("ventilador", "electroventilador", "motoventilador"),
         "bujia": ("bujia", "bujias"),
         "bobina": ("bobina", "bobinas"),
+        "bateria": ("bateria", "acumulador", "bornes"),
+        "alternador": ("alternador",),
+        "bomba": ("bomba de gasolina", "bomba de combustible", "bomba de alta", "pila de gasolina"),
+        "inyector": ("inyector", "inyectores"),
+        "oxigeno": ("sensor de oxigeno", "sensor o2", "sonda lambda"),
+        "rotula": ("rotula", "rotulas"),
+        "amortiguador": ("amortiguador", "amortiguadores"),
+        "embrague": ("embrague", "clutch", "disco de embrague"),
+        "fusible": ("fusible", "fusibles", "rele", "reles"),
     }
+
+    # 1. Comprobación contra hechos estructurados de descarte en el estado
+    hechos = getattr(estado, "hechos", {}) or {}
+    for h_clave, h_obj in hechos.items():
+        h_txt = f"{h_clave} {getattr(h_obj, 'valor', '')} {getattr(h_obj, 'texto_crudo', '')}".lower()
+        cat = getattr(h_obj, "categoria", "")
+        if cat in ("componente_descartado", "rechazo_hipotesis_usuario") or any(
+            w in h_txt for w in ("descartad", "probado", "reemplazad", "nuevo", "buen estado", "intact")
+        ):
+            for clave, sinonimos in componentes.items():
+                if any(s in candidato for s in sinonimos) and any(s in h_txt for s in sinonimos):
+                    return True
+
+    # 2. Comprobación contra el historial de mensajes del usuario
+    mensajes = getattr(estado, "historial_mensajes_usuario", []) or []
+    patron_descarte = re.compile(
+        r"\b(descartad[oa]s?|est[aá]n?\s+(?:bien|buen[oa]s?|operativ[oa]s?|intact[oa]s?)|"
+        r"funciona\s+bien|sigue\s+igual|cambi[eé]\s+nuev[oa]s?|son\s+nuev[oa]s?|"
+        r"reci[eé]n\s+(?:puest|cambiad)[oa]s?|no\s+son?\s+(?:l[ao]s|el|la)|"
+        r"nuev[oa]s?\s+originales|prob[eé]\s+con\s+otr[ao]|no\s+es\s+(?:el|la|los|las))\b",
+        re.IGNORECASE,
+    )
     for clave, sinonimos in componentes.items():
-        if clave in candidato:
+        if any(s in candidato for s in sinonimos):
             for mensaje in mensajes:
                 for clausula in re.split(r"[.;]|\bpero\b", _normalizar(mensaje)):
-                    if any(s in clausula for s in sinonimos) and re.search(
-                        r"\b(descartado|descartada|esta\s+bien|funciona\s+bien|sigue\s+igual|cambie\s+nuev)\b",
-                        clausula,
-                    ):
+                    if any(s in clausula for s in sinonimos) and patron_descarte.search(clausula):
                         return True
     return False
