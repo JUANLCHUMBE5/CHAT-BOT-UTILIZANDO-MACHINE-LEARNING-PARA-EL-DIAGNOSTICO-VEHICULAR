@@ -7,6 +7,7 @@ Valida:
 - Extracción desacoplada de múltiples mediciones con condiciones operativas locales (ralentí vs luces).
 """
 
+import asyncio
 import os
 
 import pytest
@@ -77,35 +78,37 @@ def test_multiples_mediciones_con_condiciones_locales():
     assert valores[12.4] == "con_carga_electrica"
 
 
-@pytest.mark.asyncio
-async def test_esc14_medicion_voltaje_bateria_normal_arranque():
+def test_esc14_medicion_voltaje_bateria_normal_arranque():
     """Valida que 12.6V en reposo y 10.2V en arranque descarte batería y oriente al sistema de arranque."""
     repo = InMemoryConversationRepository()
     orquestador = OrquestadorConversacion(repositorio=repo)
     gestor = GestorDiagnostico()
     ses_id = "test_esc14_regresion"
-    
-    t1 = "El motor no da arranque en un Toyota Corolla 2010"
-    await orquestador.procesar_turno(ses_id, t1, gestor)
-    
-    t2 = "12.6 V en reposo y baja a 10.2 V al dar marcha con el multimetro"
-    res2 = await orquestador.procesar_turno(ses_id, t2, gestor)
-    resp_texto = res2.get("respuesta_texto", "")
-    
-    estado = await repo.get_session(ses_id)
-    assert estado is not None
-    assert estado.obtener_hecho("caida_tension_excesiva") is not None
-    assert estado.obtener_hecho("caida_tension_excesiva").valor == "NO"
-    assert estado.obtener_hecho("voltaje_arranque_normal") is not None
-    assert estado.obtener_hecho("voltaje_arranque_normal").valor == "SI"
-    
-    # La respuesta debe validar la normalidad de la caída o indicar el solenoide/arrancador
-    resp_l = resp_texto.lower()
-    assert (
-        "normal" in resp_l
-        or "10.2" in resp_texto
-        or "solenoide" in resp_l
-        or "arrancador" in resp_l
-    )
-    # No debe culpar a fuga parásita como causa confirmada
-    assert "fuga parásita" not in resp_l or "descarta" in resp_l
+
+    async def _run():
+        t1 = "El motor no da arranque en un Toyota Corolla 2010"
+        await orquestador.procesar_turno(ses_id, t1, gestor)
+
+        t2 = "12.6 V en reposo y baja a 10.2 V al dar marcha con el multimetro"
+        res2 = await orquestador.procesar_turno(ses_id, t2, gestor)
+        resp_texto = res2.get("respuesta_texto", "")
+
+        estado = await repo.get_session(ses_id)
+        assert estado is not None
+        assert estado.obtener_hecho("caida_tension_excesiva") is not None
+        assert estado.obtener_hecho("caida_tension_excesiva").valor == "NO"
+        assert estado.obtener_hecho("voltaje_arranque_normal") is not None
+        assert estado.obtener_hecho("voltaje_arranque_normal").valor == "SI"
+
+        # La respuesta debe validar la normalidad de la caída o indicar el solenoide/arrancador
+        resp_l = resp_texto.lower()
+        assert (
+            "normal" in resp_l
+            or "10.2" in resp_texto
+            or "solenoide" in resp_l
+            or "arrancador" in resp_l
+        )
+        # No debe culpar a fuga parásita como causa confirmada
+        assert "fuga parásita" not in resp_l or "descarta" in resp_l
+
+    asyncio.run(_run())
