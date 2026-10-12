@@ -10,8 +10,6 @@ Valida:
 import asyncio
 import os
 
-import pytest
-
 PROYECTO_ROOT = r"c:\Users\leonc\OneDrive\Desktop\CHAT_BOT_MACHINLEARNING"
 ML_DIR = os.path.join(PROYECTO_ROOT, "machine_learning")
 os.environ["DATABASE_ENABLED"] = "false"
