@@ -60,6 +60,18 @@ PATRON_ALTA_TENSION = re.compile(
     re.IGNORECASE,
 )
 
+PATRON_DIESEL_EMBALAMIENTO_CRITICO = re.compile(
+    r"\b("
+    r"(?:embalamiento|runaway|desbielamiento|aceleraci[oó]n\s+descontrolada)\b|"
+    r"(?:c[aá]rter\s+lleno\s+de\s+(?:di[eé]sel|petr[oó]leo)|aceite\s+(?:diluido|mezclado)\s+con\s+(?:di[eé]sel|petr[oó]leo))|"
+    r"(?:peligro\b.{0,35}\b(?:arranc(?:ar|o)|encend(?:er|ido))\b.{0,45}\b(?:c[aá]rter|aceite|di[eé]sel))|"
+    r"(?:medidas?\s+de\s+seguridad\b.{0,45}\bregeneraci[oó]n)|"
+    r"(?:(?:varilla|nivel\s+de\s+aceite)\b.{0,45}\b(?:\d+\s*cm|por\s+encima|sobre|alto)\b.{0,45}\b(?:full|m[aá]ximo)\b.{0,60}\b(?:dpf|regeneraci[oó]n|p2463|di[eé]sel|1gd|holl[ií]n))|"
+    r"(?:(?:dpf|regeneraci[oó]n|p2463|holl[ií]n)\b.{0,60}\b(?:varilla|nivel\s+de\s+aceite)\b.{0,45}\b(?:\d+\s*cm|por\s+encima|sobre|alto)\b.{0,45}\b(?:full|m[aá]ximo))"
+    r")\b",
+    re.IGNORECASE,
+)
+
 
 BANNER_FRENO = (
     "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: NO CONDUCIR EL VEHÍCULO**\n"
@@ -95,6 +107,16 @@ BANNER_HV = (
     "La intervención exige derivación obligatoria a un técnico certificado en alta tensión y protocolos normados.\n\n"
 )
 
+BANNER_DIESEL_EMBALAMIENTO = (
+    "⚠️ **ADVERTENCIA CRÍTICA DE SEGURIDAD: RIESGO DE EMBALAMIENTO DIÉSEL (DIESEL RUNAWAY)**\n"
+    "El nivel de aceite por encima del máximo con combustible acumulado en el cárter (dilución por regeneraciones de DPF fallidas o postinyección) "
+    "representa un peligro severo de embalamiento del motor diésel: el motor puede aspirar los vapores de aceite y combustible "
+    "a través del sistema de ventilación del cárter (PCV) y acelerarse sin control hasta su destrucción catastrófica o incendio, "
+    "sin responder al corte de llave de contacto.\n"
+    "🛑 **MEDIDA OBLIGATORIA:** NO intente arrancar el motor ni forzar regeneraciones estáticas hasta drenar y reemplazar completamente "
+    "el aceite y filtro contaminados, y verificar la causa de la postinyección anómala.\n\n"
+)
+
 
 BANNER_BATERIA_MOTOR_ENCENDIDO = (
     "⚠️ **ADVERTENCIA DE SEGURIDAD: NO DESCONECTE LA BATERÍA CON EL MOTOR ENCENDIDO**\n"
@@ -123,6 +145,8 @@ class PoliticaSeguridad:
         """Evalúa si la condición descrita requiere un banner de seguridad crítico."""
         txt_comb = f"{texto_usuario} {diagnostico_ml}".lower()
 
+        if PATRON_DIESEL_EMBALAMIENTO_CRITICO.search(txt_comb):
+            return SeveridadSeguridad.CRITICAL_STOP, BANNER_DIESEL_EMBALAMIENTO
         if PATRON_FRENO_CRITICO.search(txt_comb):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_FRENO
         if PATRON_ACEITE_CRITICO.search(txt_comb):
@@ -151,10 +175,10 @@ class PoliticaSeguridad:
         if banner is None:
             return cls.interceptar_maniobras_peligrosas(respuesta_texto)
 
-        # Si la respuesta ya incluye el banner exacto, no duplicar
+        # Si la respuesta ya incluye el banner exacto, no duplicar ni pasar el banner oficial por el interceptor
         banner_clean = banner.strip()
         if banner_clean in respuesta_texto:
-            return cls.interceptar_maniobras_peligrosas(respuesta_texto)
+            return respuesta_texto
 
         # Para alta tensión, sanear posibles invitaciones peligrosas a reparar con guantes
         resp_modificada = respuesta_texto
@@ -207,10 +231,24 @@ class PoliticaSeguridad:
             re.IGNORECASE,
         )
 
-        bateria_peligrosa = bool(
-            patron_bateria.search(respuesta)
-            or patron_bateria_inverso.search(respuesta)
-        )
+        prefijos_negacion = ("no ", "nunca ", "evite ", "prohibido ", "sin ", "no intente ", "no abrir", "no retirar", "no quitar", "no se debe ")
+
+        bateria_peligrosa = False
+        for m in patron_bateria.finditer(respuesta):
+            pre = respuesta[max(0, m.start() - 30):m.start()].lower()
+            if not any(w in pre for w in prefijos_negacion):
+                bateria_peligrosa = True
+                break
+        if not bateria_peligrosa:
+            for m in patron_bateria_inverso.finditer(respuesta):
+                sub_txt = m.group(0)
+                m_v = re.search(r"\b(?:desconect(?:a|e|ar)|retir(?:a|e|ar)|quit(?:a|e|ar))\b", sub_txt, re.IGNORECASE)
+                if m_v:
+                    idx = m_v.start()
+                    pre = sub_txt[max(0, idx - 30):idx].lower()
+                    if not any(w in pre for w in prefijos_negacion):
+                        bateria_peligrosa = True
+                        break
 
         # ----------------------------------------------------
         # Refrigeración: nunca recomendar apertura en caliente
@@ -232,10 +270,22 @@ class PoliticaSeguridad:
             re.IGNORECASE,
         )
 
-        radiador_peligroso = bool(
-            patron_radiador.search(respuesta)
-            or patron_radiador_inverso.search(respuesta)
-        )
+        radiador_peligroso = False
+        for m in patron_radiador.finditer(respuesta):
+            pre = respuesta[max(0, m.start() - 30):m.start()].lower()
+            if not any(w in pre for w in prefijos_negacion):
+                radiador_peligroso = True
+                break
+        if not radiador_peligroso:
+            for m in patron_radiador_inverso.finditer(respuesta):
+                sub_txt = m.group(0)
+                m_v = re.search(r"\b(?:abr(?:e|ir)|retir(?:a|e|ar)|quit(?:a|e|ar))\b", sub_txt, re.IGNORECASE)
+                if m_v:
+                    idx = m_v.start()
+                    pre = sub_txt[max(0, idx - 30):idx].lower()
+                    if not any(w in pre for w in prefijos_negacion):
+                        radiador_peligroso = True
+                        break
 
         banners = []
 

@@ -16,6 +16,7 @@ from src.core.conversacion.control_aclaraciones import (
     desconocidos_consecutivos,
     hay_evidencia_diagnostica,
 )
+from src.core.conversacion.extraccion_hechos.patrones_hechos import PATRON_CORRECCION_VEHICULO
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 from src.core.conversacion.interprete_respuestas_cortas import InterpreteRespuestasCortas
@@ -23,6 +24,7 @@ from src.core.conversacion.maquina_estados import MaquinaEstadosConversacion
 from src.core.conversacion.models import (
     ConversationPhase,
     ConversationState,
+    DtcStatus,
     FactState,
     FactType,
     QuestionIntent,
@@ -236,10 +238,17 @@ class OrquestadorConversacion:
             re.IGNORECASE,
         )
         if PATRON_CIERRE.match(texto_limpio.strip()):
-            resp_cierre = (
-                "🤝 *¡De nada maestro! Quedo a tu disposición en el taller para cualquier otra consulta técnica, "
-                "medición o nuevo caso vehicular. ¡Muchos éxitos en la reparación!*"
-            )
+            if any(w in texto_limpio.lower() for w in ("embalamiento", "seguridad", "riesgo", "peligro", "diesel", "diésel", "cárter", "carter")):
+                resp_cierre = (
+                    "🤝 *¡De nada maestro! Recuerda mantener el motor detenido y drenar completamente el cárter contaminado "
+                    "antes de cualquier intento de arranque para evitar el peligro crítico de embalamiento diésel. "
+                    "Quedo a tu disposición en el taller para cualquier otra consulta técnica o nuevo caso vehicular. ¡Muchos éxitos!*"
+                )
+            else:
+                resp_cierre = (
+                    "🤝 *¡De nada maestro! Quedo a tu disposición en el taller para cualquier otra consulta técnica, "
+                    "medición o nuevo caso vehicular. ¡Muchos éxitos en la reparación!*"
+                )
             return {
                 "status": "cierre",
                 "respuesta_texto": resp_cierre,
@@ -666,7 +675,16 @@ class OrquestadorConversacion:
                 "REVISION_AMBIGUA", "DIAGNOSTICO_DESCARTADO",
             ):
                 interpretacion_corta = None
-        if hechos_extraidos and texto_limpio not in estado.active_symptoms:
+        es_no_sintoma = bool(
+            texto_limpio.strip().startswith("¿")
+            or PATRON_CORRECCION_VEHICULO.search(texto_limpio)
+            or (getattr(estado, "turno_ultima_correccion", None) == estado.turno_actual)
+            or re.fullmatch(r"\s*(?:gasolina|di[eé]sel|petr[oó]leo|glp|gnv|nafta)\s*", texto_limpio, re.IGNORECASE)
+            or re.search(r"^\s*(?:no\s+tengo|no\s+dispongo|no\s+cuento|no\s+poseo)\b", texto_limpio, re.IGNORECASE)
+            or ExtractorHechos.es_saludo(texto_limpio)
+            or bool(re.search(r"\b(?:muchas\s+gracias|gracias|perfecto|excelente|qued[oó]\s+clar[ií]simo)\b", texto_limpio, re.IGNORECASE))
+        )
+        if hechos_extraidos and not es_no_sintoma and texto_limpio not in estado.active_symptoms:
             estado.active_symptoms.append(texto_limpio)
 
         # Detección de evidencia duplicada (Fase 11.3 - Caso D / T04)
@@ -705,7 +723,30 @@ class OrquestadorConversacion:
             resp_texto = getattr(dto_tecnico, "respuesta_texto", "")
             if es_solicitud_detalle and (not resp_texto or "No encontré una fuente documental" in resp_texto):
                 norm_q = texto_limpio.casefold()
-                if any(w in norm_q for w in ("inmovilizador", "transponder", "llave", "antena", "candado", "b10da")):
+                if any(w in norm_q for w in ("reaprendizaje", "calibrar", "mariposa", "pedal")) and any(w in norm_q for w in ("manual", "llave", "pedal", "paso a paso", "cuerpo")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de calibración y reaprendizaje de mariposa electrónica (Drive-by-Wire):*\n\n"
+                        "1. **Condiciones previas:** Limpieza efectuada con solvente dieléctrico; motor a temperatura normal (85 °C) y consumidores eléctricos apagados.\n"
+                        "2. **Reaprendizaje manual (sin escáner):** Poner contacto ON 30 segundos sin pisar el pedal; llevar a OFF 10 segundos. Poner ON 5 segundos; pisar y soltar el acelerador a fondo 5 veces en 5 segundos. Esperar 7 segundos con pedal libre; pisar a fondo durante 20 segundos hasta que la luz check engine quede fija. Soltar pedal, arrancar en ralentí y dejar estabilizar 3 minutos sin acelerar.\n"
+                        "3. **Con escáner:** Ingresar a 'Funciones especiales / Adaptaciones' de la ECU y ejecutar 'Reinicio de valores aprendidos de mariposa / Idle Air Volume Learn'."
+                    )
+                elif any(w in norm_q for w in ("retorno", "probetas", "probeta")) and any(w in norm_q for w in ("inyector", "inyectores", "paso a paso")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de prueba de retorno de inyectores Common Rail con probetas:*\n\n"
+                        "1. **Instalación:** Desconectar las mangueras de retorno de los inyectores y taponar la línea de retorno común hacia el tanque. Conectar probetas graduadas individuales a cada inyector con mangueras transparentes.\n"
+                        "2. **Prueba en ralentí:** Arrancar el motor y medir el volumen durante 2 minutos continuos en ralentí.\n"
+                        "3. **Evaluación de tolerancia:** Los inyectores en buen estado entregan volúmenes homogéneos (menor a 20-25 ml en 2 min). Un inyector que exceda notablemente (ej. 60-65 ml) o triplique al promedio tiene fuga en su válvula de control y debe cambiarse o repararse."
+                    )
+                elif any(w in norm_q for w in ("contrapresion", "contrapresión", "manometro", "manómetro")) and any(w in norm_q for w in ("escape", "catalizador", "sonda", "sensor 1")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento para medir contrapresión de escape con manómetro:*\n\n"
+                        "1. **Instalación:** Con motor frío, retirar la sonda lambda primaria (sensor 1 banco 1) y enroscar el adaptador con manómetro de baja presión (0-15 PSI).\n"
+                        "2. **Medición en ralentí:** Arrancar el motor; la presión en ralentí debe ser inferior a 0.5 - 0.8 PSI.\n"
+                        "3. **Medición a 2500 RPM:** Mantener acelerado a 2500 RPM continuas; la contrapresión no debe exceder 1.5 a 2.0 PSI. Valores mayores a 2.5 PSI confirman taponamiento del convertidor catalítico."
+                    )
+                elif any(w in norm_q for w in ("inmovilizador", "transponder", "antena", "candado", "b10da")) or (
+                    "llave" in norm_q and not any(w in norm_q for w in ("pedal", "mariposa", "reaprendizaje", "calibrar", "acelerador"))
+                ):
                     resp_texto = (
                         "🛠️ *Procedimiento de comprobación: Sistema Inmovilizador*\n\n"
                         "1. **Prueba con segunda llave:** Intentar arranque con la llave de repuesto original para descartar desprogramación o daño físico en el transponder de la llave principal.\n"
@@ -1126,10 +1167,34 @@ class OrquestadorConversacion:
                 estado.registrar_prueba_completada("presion_combustible", f"{val} {unidad}")
                 estado.limpiar_pregunta_pendiente()
 
+                escaneo_ya_realizado = bool(
+                    estado.dtc_status == DtcStatus.DTC_AUSENTE
+                    or estado.obtener_hecho("sin_dtc")
+                    or estado.obtener_hecho("escaner_limpio")
+                    or getattr(estado, "dtc_confirmados", None)
+                )
+                chispa_ya_evaluada = bool(
+                    estado.obtener_hecho("bujias_descartadas")
+                    or estado.obtener_hecho("encendido_descartado")
+                    or (estado.completed_tests and estado.completed_tests.get("prueba_chispa"))
+                )
+                es_diesel = bool(getattr(estado, "combustible", "") and str(estado.combustible).lower() in ("diesel", "diésel"))
+
+                if es_diesel:
+                    pregunta_sug = "¿Se observa humo anómalo en el escape, o dispones de probetas para prueba de retorno de inyectores?" if escaneo_ya_realizado else "¿Dispones de escáner para verificar códigos DTC y presión en datos en vivo?"
+                elif chispa_ya_evaluada and escaneo_ya_realizado:
+                    pregunta_sug = "Con la presión de combustible y el encendido en buen estado y sin códigos DTC, la falla apunta al cuerpo de aceleración o compresión. ¿Se observa suciedad o carbón en la mariposa de admisión?"
+                elif chispa_ya_evaluada:
+                    pregunta_sug = "Con el encendido descartado, ¿dispones de escáner para verificar códigos DTC o datos en vivo de sensores?"
+                elif escaneo_ya_realizado:
+                    pregunta_sug = "Con el escaneo sin códigos DTC, ¿se observa salto de chispa constante y potente en las bujías al dar arranque?"
+                else:
+                    pregunta_sug = "Para continuar la comprobación, ¿se observa salto de chispa constante en las bujías o dispones de escáner para verificar códigos DTC?"
+
                 respuesta_texto = (
                     f"Registrado: {val} {unidad} de presión de combustible en el riel. "
                     f"Compara este valor con la especificación de servicio del fabricante para el motor y sistema de inyección específico. "
-                    f"Para continuar la comprobación, ¿se observa salto de chispa constante en las bujías o dispones de escáner para verificar códigos DTC?"
+                    f"{pregunta_sug}"
                 )
                 decision = "CONCLUSION_TECNICA"
                 motivo_decision = f"Medición de presión {val} {unidad} registrada y contextualizada"
@@ -1529,25 +1594,26 @@ class OrquestadorConversacion:
         elif not re.search(r"¿[^?]*\?", respuesta_texto):
             es_pregunta = False
             pregunta_elegida = None
-        if getattr(estado, "last_user_correction", None) in ("marca", "modelo"):
-            veh_actualizado = f"{estado.marca or ''} {estado.modelo or ''} {estado.anio or ''}".strip()
-            if veh_actualizado and veh_actualizado not in respuesta_texto:
-                respuesta_texto = (
-                    f"Entendido maestro, actualicé el vehículo a *{veh_actualizado}*. Conservo las mediciones y síntomas reportados.\n\n"
-                    f"{respuesta_texto}"
-                )
-        elif estado.last_user_correction == texto_limpio:
-            sintomas_corregidos = [
-                str(hecho.get("valor", "")).strip()
-                for hecho in hechos_extraidos
-                if hecho.get("categoria") == "sintoma" and hecho.get("valor")
-            ]
-            if sintomas_corregidos:
-                resumen_correccion = ", ".join(dict.fromkeys(sintomas_corregidos))
-                respuesta_texto = (
-                    f"Entendido, actualicé el síntoma a: {resumen_correccion}. "
-                    f"{respuesta_texto}"
-                )
+        if getattr(estado, "turno_ultima_correccion", None) == estado.turno_actual:
+            if getattr(estado, "last_user_correction", None) in ("marca", "modelo"):
+                veh_actualizado = f"{estado.marca or ''} {estado.modelo or ''} {estado.anio or ''}".strip()
+                if veh_actualizado and veh_actualizado not in respuesta_texto:
+                    respuesta_texto = (
+                        f"Entendido maestro, actualicé el vehículo a *{veh_actualizado}*. Conservo las mediciones y síntomas reportados.\n\n"
+                        f"{respuesta_texto}"
+                    )
+            elif estado.last_user_correction == texto_limpio:
+                sintomas_corregidos = [
+                    str(hecho.get("valor", "")).strip()
+                    for hecho in hechos_extraidos
+                    if hecho.get("categoria") == "sintoma" and hecho.get("valor")
+                ]
+                if sintomas_corregidos:
+                    resumen_correccion = ", ".join(dict.fromkeys(sintomas_corregidos))
+                    respuesta_texto = (
+                        f"Entendido, actualicé el síntoma a: {resumen_correccion}. "
+                        f"{respuesta_texto}"
+                    )
         if sev_seguridad == SeveridadSeguridad.CRITICAL_STOP and banner_seguridad and banner_seguridad.strip() not in respuesta_texto:
             respuesta_texto = f"{banner_seguridad}{respuesta_texto}"
         MaquinaEstadosConversacion.transicionar(
@@ -1601,6 +1667,15 @@ class OrquestadorConversacion:
         elapsed_ms = round((time.perf_counter() - t0) * 1000, 2)
         logger.info(
             f"[ConversacionTurno] Sesión {session_id} Turno {estado.turno_actual} -> Decisión: {decision} ({elapsed_ms}ms)"
+        )
+
+        # Enriquecer respuesta con políticas críticas de seguridad física y mecánica
+        from src.core.diagnostico.politica_seguridad import PoliticaSeguridad
+        contexto_seg = f"{texto_usuario} {estado.combustible or ''} {estado.marca or ''} {estado.modelo or ''}"
+        respuesta_texto = PoliticaSeguridad.enriquecer_respuesta_seguridad(
+            respuesta_texto,
+            contexto_seg,
+            diagnostico_ml=getattr(dto_resultado, "diagnostico_ml", ""),
         )
 
         return {
