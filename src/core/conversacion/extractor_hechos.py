@@ -462,7 +462,11 @@ class ExtractorHechos:
             if not re.search(patron, normalizado) and familia not in componentes_por_contexto:
                 continue
             rechazo_explicito = bool(
-                re.search(r"\b(?:no\s+es|descart[ea]|no\s+corresponde|no\s+falla)\b", normalizado)
+                re.search(
+                    r"\b(?:no\s+es|descart[ea]|no\s+corresponde|no\s+falla|sigue\s+(?:igual|igualita)|"
+                    r"la\s+falla\s+sigue|persiste|cambi[eé]\s+nuev[oa]s?)\b",
+                    normalizado,
+                )
                 or normalidad.search(normalizado)
             )
             if not rechazo_explicito:

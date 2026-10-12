@@ -163,13 +163,16 @@ def tiene_descarte_de_componente(estado: Any, falla: str) -> bool:
         "iac": ("iac", "valvula iac", "minimo"),
         "termostato": ("termostato",),
         "ventilador": ("ventilador", "electroventilador"),
+        "bujia": ("bujia", "bujias"),
+        "bobina": ("bobina", "bobinas"),
     }
     for clave, sinonimos in componentes.items():
         if clave in candidato:
             for mensaje in mensajes:
                 for clausula in re.split(r"[.;]|\bpero\b", _normalizar(mensaje)):
                     if any(s in clausula for s in sinonimos) and re.search(
-                        r"\b(descartado|descartada|esta\s+bien|funciona\s+bien)\b", clausula
+                        r"\b(descartado|descartada|esta\s+bien|funciona\s+bien|sigue\s+igual|cambie\s+nuev)\b",
+                        clausula,
                     ):
                         return True
     return False
