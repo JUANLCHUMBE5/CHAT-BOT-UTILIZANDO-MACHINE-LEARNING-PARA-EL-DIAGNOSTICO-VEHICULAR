@@ -17,6 +17,14 @@ os.environ["LOCAL_AUTH_USERNAME"] = "admin"
 os.environ["LOCAL_AUTH_PASSWORD"] = "carbot2026"
 os.environ.setdefault("META_VERIFY_TOKEN", "isolated-test-webhook-verification")
 
+# Resolver ruta canónica de machine_learning para pruebas
+if "ML_ROOT" not in os.environ:
+    for parent in Path(__file__).resolve().parents:
+        cand_ml = parent / "machine_learning"
+        if (cand_ml / "models" / "modelo_diagnostico.pkl").exists():
+            os.environ["ML_ROOT"] = str(cand_ml)
+            break
+
 import pytest
 
 from src.config import settings
