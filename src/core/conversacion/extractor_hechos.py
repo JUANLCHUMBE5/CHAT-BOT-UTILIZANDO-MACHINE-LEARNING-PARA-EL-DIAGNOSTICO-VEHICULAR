@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.diccionario_automotriz import (
@@ -86,6 +86,16 @@ PATRONES_MARCA = [
     (re.compile(r"\b(suzuki)\b", re.IGNORECASE), "Suzuki"),
     (re.compile(r"\b(mitsubishi)\b", re.IGNORECASE), "Mitsubishi"),
     (re.compile(r"\b(mazda)\b", re.IGNORECASE), "Mazda"),
+    (re.compile(r"\b(renault)\b", re.IGNORECASE), "Renault"),
+    (re.compile(r"\b(peugeot)\b", re.IGNORECASE), "Peugeot"),
+    (re.compile(r"\b(subaru)\b", re.IGNORECASE), "Subaru"),
+    (re.compile(r"\b(isuzu)\b", re.IGNORECASE), "Isuzu"),
+    (re.compile(r"\b(chery)\b", re.IGNORECASE), "Chery"),
+    (re.compile(r"\b(byd)\b", re.IGNORECASE), "BYD"),
+    (re.compile(r"\b(geely)\b", re.IGNORECASE), "Geely"),
+    (re.compile(r"\b(changan)\b", re.IGNORECASE), "Changan"),
+    (re.compile(r"\b(great\s*wall|gwm)\b", re.IGNORECASE), "Great Wall"),
+    (re.compile(r"\b(jac)\b", re.IGNORECASE), "JAC"),
 ]
 
 PATRONES_COMBUSTIBLE = [
@@ -99,18 +109,39 @@ PATRONES_MODELO = [
     (re.compile(r"\b(corolla)\b", re.IGNORECASE), "Corolla"),
     (re.compile(r"\b(yaris)\b", re.IGNORECASE), "Yaris"),
     (re.compile(r"\b(hilux)\b", re.IGNORECASE), "Hilux"),
+    (re.compile(r"\b(rav4|rav-4|rav\s*4)\b", re.IGNORECASE), "RAV4"),
+    (re.compile(r"\b(etios)\b", re.IGNORECASE), "Etios"),
     (re.compile(r"\b(sentra)\b", re.IGNORECASE), "Sentra"),
     (re.compile(r"\b(versa)\b", re.IGNORECASE), "Versa"),
+    (re.compile(r"\b(tiida)\b", re.IGNORECASE), "Tiida"),
+    (re.compile(r"\b(kicks)\b", re.IGNORECASE), "Kicks"),
+    (re.compile(r"\b(frontier)\b", re.IGNORECASE), "Frontier"),
     (re.compile(r"\b(rio)\b", re.IGNORECASE), "Rio"),
-    (re.compile(r"\b(civic)\b", re.IGNORECASE), "Civic"),
-    (re.compile(r"\b(elantra)\b", re.IGNORECASE), "Elantra"),
+    (re.compile(r"\b(cerato)\b", re.IGNORECASE), "Cerato"),
     (re.compile(r"\b(picanto)\b", re.IGNORECASE), "Picanto"),
-    (re.compile(r"\b(sail)\b", re.IGNORECASE), "Sail"),
-    (re.compile(r"\b(gol)\b", re.IGNORECASE), "Gol"),
-    (re.compile(r"\b(tucson)\b", re.IGNORECASE), "Tucson"),
     (re.compile(r"\b(sportage)\b", re.IGNORECASE), "Sportage"),
+    (re.compile(r"\b(sorento)\b", re.IGNORECASE), "Sorento"),
+    (re.compile(r"\b(elantra)\b", re.IGNORECASE), "Elantra"),
+    (re.compile(r"\b(accent)\b", re.IGNORECASE), "Accent"),
+    (re.compile(r"\b(tucson)\b", re.IGNORECASE), "Tucson"),
+    (re.compile(r"\b(santa\s*fe)\b", re.IGNORECASE), "Santa Fe"),
+    (re.compile(r"\b(civic)\b", re.IGNORECASE), "Civic"),
+    (re.compile(r"\b(cr-?v|cr\s*v)\b", re.IGNORECASE), "CR-V"),
+    (re.compile(r"\b(sail)\b", re.IGNORECASE), "Sail"),
+    (re.compile(r"\b(d-?max|dmax)\b", re.IGNORECASE), "D-Max"),
+    (re.compile(r"\b(gol)\b", re.IGNORECASE), "Gol"),
     (re.compile(r"\b(ranger)\b", re.IGNORECASE), "Ranger"),
+    (re.compile(r"\b(swift)\b", re.IGNORECASE), "Swift"),
+    (re.compile(r"\b(vitara|grand\s*vitara)\b", re.IGNORECASE), "Vitara"),
 ]
+
+PATRON_PLACA_EXPLICITA = re.compile(
+    r"\b(?:placa|patente)\s*(?:es\s+|:\s*|\s+)?([A-Za-z0-9]{2,3}[-\s]?[0-9]{3,4})\b",
+    re.IGNORECASE,
+)
+PATRON_PLACA_FORMATO = re.compile(
+    r"\b([A-Za-z][0-9A-Za-z]{2}[-\s][0-9]{3})\b"
+)
 
 PATRON_DTC = re.compile(r"\b([PBUCpbuc][0-3][0-9A-Fa-f]{3})\b")
 PATRON_ANIO = re.compile(r"\b(19[89]\d|20[0-2]\d)\b")
@@ -173,6 +204,24 @@ class ExtractorHechos:
         if not texto:
             return False
         return any(p.search(texto.strip()) for p in PATRONES_SOLICITUD_DETALLE)
+
+    @classmethod
+    def extraer_placa(cls, texto: str) -> Optional[str]:
+        """Extrae la placa vehicular peruana asegurando no confundirla con códigos DTC."""
+        if not texto:
+            return None
+        m_exp = PATRON_PLACA_EXPLICITA.search(texto)
+        if m_exp:
+            candidato = m_exp.group(1).upper().replace(" ", "-")
+            if not re.match(r"^[PBUCpbuc][0-3][0-9A-Fa-f]{3}$", candidato):
+                if "-" not in candidato and len(candidato) == 6:
+                    candidato = f"{candidato[:3]}-{candidato[3:]}"
+                return candidato
+        for m in PATRON_PLACA_FORMATO.finditer(texto):
+            candidato = m.group(1).upper().replace(" ", "-")
+            if not re.match(r"^[PBUCpbuc][0-3][0-9A-Fa-f]{3}$", candidato):
+                return candidato
+        return None
 
     @staticmethod
     def es_reinicio_solicitado(texto: str) -> bool:
@@ -303,6 +352,7 @@ class ExtractorHechos:
         r"\b("
         r"me\s+equivoqu[eé]|me\s+confund[ií]|quise\s+decir|"
         r"en\s+realidad|no\s+es\s+eso|no\s+es\s+(?:as[ií]|por\s+ah[ií]|fr[ií]o|caliente)|"
+        r"no\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)|s[ií]\s+arranca|arranca\s+y\s+se\s+apaga|"
         r"ninguna\s+de\s+(?:esas|las|ellas|opciones|anteriores)|"
         r"ninguno\s+de\s+(?:esos|los|ellos|anteriores)|"
         r"el\s+problema\s+realmente|el\s+problema\s+en\s+realidad|"
@@ -323,6 +373,15 @@ class ExtractorHechos:
         texto_l = texto.lower()
         if not cls.PATRON_CORRECCION_EXPLICITA.search(texto_l):
             return correcciones
+
+        if re.search(
+            r"\b(no\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)|s[ií]\s+arranca\s*[, ]+(?:pero\s+)?se\s+apaga|arranca\s+y\s+se\s+apaga)\b",
+            texto_l,
+        ):
+            correcciones.append(("sintoma_arranca_y_se_apaga", "arranca y se apaga", "sintoma", FactType.SINTOMA))
+            correcciones.append(("sintoma_motor_no_arranca", "ausente", "polaridad", FactType.CONDICION))
+            correcciones.append(("motor_arranca", "SI", "condicion", FactType.CONDICION))
+            correcciones.append(("estado_operativo", "RALENTI", "condicion", FactType.CONDICION))
 
         if re.search(r"\b(caliente|en\s+caliente)\b", texto_l):
             correcciones.append(("temperatura", "caliente", "temperatura", FactType.CONDICION))
@@ -500,44 +559,136 @@ class ExtractorHechos:
                 )
                 hechos_extraidos.append(h.to_dict())
 
-        # 2. Extracción de marca / modelo / año / combustible
-        for patron, marca in PATRONES_MARCA:
-            if patron.search(texto_usuario):
-                if estado.marca and estado.marca != marca:
-                    estado.reiniciar()
-                    estado.historial_mensajes_usuario.append(texto_usuario)
-                    estado.turno_actual = 1
-                estado.marca = marca
-                h = estado.registrar_hecho("marca", marca, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-                hechos_extraidos.append(h.to_dict())
-                break
+        # 1.5 Extracción de placa vehicular
+        placa_encontrada = cls.extraer_placa(texto_usuario)
+        if placa_encontrada:
+            if estado.placa and estado.placa != placa_encontrada:
+                # Cambio explícito de placa vehicular
+                estado.reiniciar()
+                estado.historial_mensajes_usuario.append(texto_usuario)
+                estado.turno_actual = 1
+            estado.placa = placa_encontrada
+            h_placa = estado.registrar_hecho(
+                "placa",
+                placa_encontrada,
+                categoria="vehiculo",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(h_placa.to_dict())
 
-        m_anio = PATRON_ANIO.search(texto_usuario)
-        if m_anio and not estado.anio:
-            estado.anio = m_anio.group(1)
-            h = estado.registrar_hecho("anio", m_anio.group(1), categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+        # 2. Extracción de marca / modelo / año / combustible con soporte de correcciones
+        marcas_encontradas: List[Tuple[int, str]] = []
+        for patron, marca in PATRONES_MARCA:
+            for m in patron.finditer(texto_usuario):
+                marcas_encontradas.append((m.start(), marca))
+
+        if marcas_encontradas:
+            marcas_encontradas.sort(key=lambda x: x[0])
+            nueva_marca = marcas_encontradas[-1][1]
+            if estado.marca and estado.marca != nueva_marca:
+                p_prev = estado.placa or placa_encontrada
+                estado.reiniciar()
+                estado.historial_mensajes_usuario.append(texto_usuario)
+                estado.turno_actual = 1
+                if p_prev:
+                    estado.placa = p_prev
+                    estado.registrar_hecho(
+                        "placa",
+                        p_prev,
+                        categoria="vehiculo",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+            estado.marca = nueva_marca
+            h = estado.registrar_hecho(
+                "marca",
+                nueva_marca,
+                categoria="vehiculo",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
             hechos_extraidos.append(h.to_dict())
 
-        for patron, mod in PATRONES_MODELO:
-            if patron.search(texto_usuario):
-                if estado.modelo and estado.modelo != mod:
-                    m_prev = estado.marca
-                    estado.reiniciar()
-                    estado.historial_mensajes_usuario.append(texto_usuario)
-                    estado.turno_actual = 1
-                    if m_prev:
-                        estado.marca = m_prev
-                        estado.registrar_hecho("marca", m_prev, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-                estado.modelo = mod
-                h = estado.registrar_hecho("modelo", mod, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+        m_anio = PATRON_ANIO.search(texto_usuario)
+        if m_anio:
+            nuevo_anio = m_anio.group(1)
+            if not estado.anio or estado.anio != nuevo_anio:
+                estado.anio = nuevo_anio
+                h = estado.registrar_hecho(
+                    "anio",
+                    nuevo_anio,
+                    categoria="vehiculo",
+                    texto_crudo=texto_usuario,
+                    tipo=FactType.CONDICION,
+                )
                 hechos_extraidos.append(h.to_dict())
-                break
+
+        modelos_encontrados: List[Tuple[int, str]] = []
+        for patron, mod in PATRONES_MODELO:
+            for m in patron.finditer(texto_usuario):
+                modelos_encontrados.append((m.start(), mod))
+
+        if modelos_encontrados:
+            modelos_encontrados.sort(key=lambda x: x[0])
+            nuevo_mod = modelos_encontrados[-1][1]
+            if estado.modelo and estado.modelo != nuevo_mod:
+                m_prev = estado.marca
+                p_prev = estado.placa or placa_encontrada
+                a_prev = estado.anio
+                estado.reiniciar()
+                estado.historial_mensajes_usuario.append(texto_usuario)
+                estado.turno_actual = 1
+                if m_prev:
+                    estado.marca = m_prev
+                    estado.registrar_hecho(
+                        "marca",
+                        m_prev,
+                        categoria="vehiculo",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+                if p_prev:
+                    estado.placa = p_prev
+                    estado.registrar_hecho(
+                        "placa",
+                        p_prev,
+                        categoria="vehiculo",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+                if a_prev:
+                    estado.anio = a_prev
+                    estado.registrar_hecho(
+                        "anio",
+                        a_prev,
+                        categoria="vehiculo",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+            estado.modelo = nuevo_mod
+            h = estado.registrar_hecho(
+                "modelo",
+                nuevo_mod,
+                categoria="vehiculo",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(h.to_dict())
 
         for patron, comb in PATRONES_COMBUSTIBLE:
-            if patron.search(texto_usuario) and not estado.combustible:
-                estado.combustible = comb
-                h = estado.registrar_hecho("combustible", comb, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-                hechos_extraidos.append(h.to_dict())
+            if patron.search(texto_usuario):
+                nuevo_comb = comb
+                if not estado.combustible or estado.combustible != nuevo_comb:
+                    estado.combustible = nuevo_comb
+                    h = estado.registrar_hecho(
+                        "combustible",
+                        nuevo_comb,
+                        categoria="vehiculo",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+                    hechos_extraidos.append(h.to_dict())
                 break
 
         # 3. Extracción de DTC (DTC_OBSERVADO explícito)
@@ -633,10 +784,10 @@ class ExtractorHechos:
                     h = estado.registrar_hecho(f"reemplazado_{canon}", f"{canon} reemplazado(a)", categoria="antecedente", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
                     hechos_extraidos.append(h.to_dict())
 
-        if any(c in texto_l for c in ("ya revise", "ya revisé", "probe", "probé", "intercambie", "intercambié", "descarte", "descarté")):
-            for pieza in ("bujias", "bujías", "bobinas", "bobina", "bomba", "fusible", "presion", "presión", "compresion", "compresión"):
+        if any(c in texto_l for c in ("ya revise", "ya revisé", "probe", "probé", "intercambie", "intercambié", "descarte", "descarté", "esta bien", "está bien", "esta ok", "está ok")):
+            for pieza in ("bujias", "bujías", "bobinas", "bobina", "bomba", "fusible", "presion", "presión", "compresion", "compresión", "bateria", "batería", "alternador", "arrancador"):
                 if pieza in texto_l:
-                    canon = "bujías" if "buj" in pieza else ("bobinas" if "bobin" in pieza else pieza)
+                    canon = "bujías" if "buj" in pieza else ("bobinas" if "bobin" in pieza else ("batería" if "bater" in pieza else pieza))
                     h = estado.registrar_hecho(f"probado_{canon}", f"{canon} probado/descartado", categoria="componente_descartado", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
                     hechos_extraidos.append(h.to_dict())
 
@@ -965,7 +1116,31 @@ class ExtractorHechos:
                 texto_usuario.lower(),
             )
         )
-        if PATRON_NO_ARRANCA.search(texto_usuario) and not es_no_arranca_componente:
+        es_arranca_y_se_apaga = bool(
+            re.search(
+                r"\b(no\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)|s[ií]\s+arranca\s*[, ]+(?:pero\s+)?se\s+apaga|arranca\s+y\s+se\s+apaga)\b",
+                texto_usuario.lower(),
+            )
+        )
+        if es_arranca_y_se_apaga:
+            estado.eliminar_hecho("sintoma_motor_no_arranca")
+            h_arr = estado.registrar_hecho(
+                "sintoma_arranca_y_se_apaga",
+                "arranca y se apaga",
+                categoria="sintoma",
+                texto_crudo=texto_usuario,
+                tipo=FactType.SINTOMA,
+            )
+            hechos_extraidos.append(h_arr.to_dict())
+            h_mot = estado.registrar_hecho(
+                "motor_arranca",
+                "SI",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(h_mot.to_dict())
+        elif PATRON_NO_ARRANCA.search(texto_usuario) and not es_no_arranca_componente:
             h = estado.registrar_hecho("motor_arranca", "NO", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
             hechos_extraidos.append(h.to_dict())
 
@@ -1006,7 +1181,12 @@ class ExtractorHechos:
             )
             hechos_extraidos.append(h.to_dict())
 
-        if PATRON_NO_ARRANCA.search(texto_normalizado.lower()) and not es_no_arranca_componente and not estado.obtener_hecho("sintoma_motor_no_arranca"):
+        if (
+            not es_arranca_y_se_apaga
+            and PATRON_NO_ARRANCA.search(texto_normalizado.lower())
+            and not es_no_arranca_componente
+            and not estado.obtener_hecho("sintoma_motor_no_arranca")
+        ):
             h = estado.registrar_hecho("sintoma_motor_no_arranca", "motor no arranca", categoria="sintoma", texto_crudo=texto_usuario, tipo=FactType.SINTOMA)
             hechos_extraidos.append(h.to_dict())
 
