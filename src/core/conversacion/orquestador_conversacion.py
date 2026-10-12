@@ -227,6 +227,31 @@ class OrquestadorConversacion:
                 "estado": estado,
             }
 
+        # 2.0 Detección de agradecimiento / cierre ("muchas gracias", "gracias maestro", "quedó clarísimo")
+        PATRON_CIERRE = re.compile(
+            r"^\s*(?:(?:muchas\s+)?gracias(?:\s+maestro|\s+amigo)?(?:\s+por\s+.*)?|"
+            r"perfecto,?\s*(?:qued[oó]\s+clar[ií]simo|gracias.*)?|"
+            r"excelente\s+(?:servicio|explicaci[oó]n|ayuda)(?:\s+maestro)?|"
+            r"qued[oó]\s+clar[ií]simo)\s*[!.]*\s*$",
+            re.IGNORECASE,
+        )
+        if PATRON_CIERRE.match(texto_limpio.strip()):
+            resp_cierre = (
+                "🤝 *¡De nada maestro! Quedo a tu disposición en el taller para cualquier otra consulta técnica, "
+                "medición o nuevo caso vehicular. ¡Muchos éxitos en la reparación!*"
+            )
+            return {
+                "status": "cierre",
+                "respuesta_texto": resp_cierre,
+                "diagnostico_ml": estado.falla_principal or "Caso concluido",
+                "confianza_ml": estado.confianza_actual or 1.0,
+                "fase": estado.fase.value,
+                "es_pregunta": False,
+                "decision": "CIERRE",
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
+            }
+
         # 2.1 Detección de saludo ("hola", "buenas", "buenos días")
         if ExtractorHechos.es_saludo(texto_limpio):
             tiene_caso_activo = bool(
@@ -263,12 +288,172 @@ class OrquestadorConversacion:
                     "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
                 }
 
-        # 2.2 Solicitud de profundización técnica ("más detalles", "cómo lo reviso")
+        # 2.2a Consultas de estado del caso y descartes ("qué hemos descartado", "qué sabemos hasta ahora", "resumen")
+        norm_txt_cons = texto_limpio.casefold()
+        if re.search(r"\bqu[eé]\s+(?:hemos|se\s+ha|tenemos)\s+descartado\b|\bdescartes?\s+hasta\s+ahora\b", norm_txt_cons):
+            desc_items = []
+            for d in getattr(estado, "hipotesis_descartadas", []):
+                d_limpio = d.replace("componente:", "").replace("_", " ").capitalize()
+                desc_items.append(f"• {d_limpio}")
+            for h in getattr(estado, "hechos", {}).values():
+                if getattr(h, "categoria", "") in ("componente_reemplazado", "verificacion_fisica", "rechazo_hipotesis_usuario"):
+                    nombre = getattr(h, "campo", "").replace("rechazo_usuario_", "").replace("componente_comprobado_", "").replace("componente_reemplazado_", "").capitalize()
+                    val = getattr(h, "valor", "")
+                    item_str = f"• {nombre}: {val}"
+                    if item_str not in desc_items:
+                        desc_items.append(item_str)
+            if desc_items:
+                resp_descartes = "📋 *Comprobaciones y descartes registrados hasta el momento:*\n\n" + "\n".join(dict.fromkeys(desc_items))
+            else:
+                resp_descartes = "📋 *Descartes registrados:* Hasta el momento no se han registrado componentes descartados en este caso."
+            return {
+                "status": "resumen_descartes", "respuesta_texto": resp_descartes,
+                "diagnostico_ml": estado.falla_principal or "Descartes del caso",
+                "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
+                "es_pregunta": False, "decision": "RESUMEN_DESCARTES",
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+            }
+
+        if re.search(r"\bqu[eé]\s+(?:sabemos|tenemos)\s+hasta\s+ahora\b|\b(?:dame\s+(?:el\s+)?)?resumen\b", norm_txt_cons):
+            veh_info = f"{estado.marca or 'Vehículo'} {estado.modelo or ''} {estado.anio or ''}".strip()
+            comb_info = f" ({estado.combustible})" if estado.combustible else ""
+            placa_info = f" - Placa: {estado.placa}" if estado.placa else ""
+            sintomas_list = [f"• {s}" for s in (estado.active_symptoms or [])]
+            sint_txt = "\n".join(sintomas_list) if sintomas_list else "• Síntomas en evaluación preliminar"
+            hip_txt = estado.falla_principal or "Diagnóstico diferencial en curso"
+            resp_resumen = (
+                f"📋 *Resumen técnico del caso activo:*\n\n"
+                f"🚗 *Vehículo:* {veh_info}{comb_info}{placa_info}\n"
+                f"⚠️ *Síntomas observados:*\n{sint_txt}\n\n"
+                f"🎯 *Hipótesis de trabajo:* *{hip_txt}*\n"
+                f"¿Deseas aportar una nueva medición o proceder con las pruebas sugeridas?"
+            )
+            return {
+                "status": "resumen_caso", "respuesta_texto": resp_resumen,
+                "diagnostico_ml": estado.falla_principal or "Resumen del caso",
+                "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
+                "es_pregunta": True, "decision": "RESUMEN_CASO",
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+            }
+
+        # 2.2b Explicaciones causales ("por qué ocurre", "por qué recalienta en tráfico")
+        if re.search(r"\bpor\s+qu[eé]\b.{0,30}\b(?:ocurre|pasa|recalienta|falla|se\s+apaga|demora|vibra|corta|zapatea|se\s+congela|congela|inyector|gas|mezcla)\b", norm_txt_cons):
+            resp_por_que = None
+            if "recalienta" in norm_txt_cons and any(w in norm_txt_cons for w in ("trafico", "tráfico", "detenido", "parado")):
+                resp_por_que = (
+                    "💡 *Explicación técnica del comportamiento térmico:*\n\n"
+                    "En carretera a velocidad sostenida, el flujo de aire natural que ingresa por la parrilla "
+                    "(convección dinámica) enfría el radiador de manera continua. Sin embargo, en tráfico detenido "
+                    "o ralentí, no existe flujo de aire exterior; el enfriamiento depende al 100% de la activación forzada "
+                    "del electroventilador y la circulación efectiva del refrigerante por el termostato y la bomba de agua. "
+                    "Si el electroventilador no enciende en su velocidad adecuada o el termostato no abre por completo, "
+                    "la temperatura ascenderá rápidamente hacia la zona crítica."
+                )
+            elif any(w in norm_txt_cons for w in ("corta", "segundos", "inyeccion", "inyección", "inmovilizador", "ecu")):
+                resp_por_que = (
+                    "💡 *Explicación técnica de la estrategia de inmovilizador:*\n\n"
+                    "Al dar arranque, la ECU permite una activación inicial de 2 a 3 segundos mientras interroga "
+                    "al transponder de la llave mediante la antena receptora. Si el código de seguridad no es reconocido "
+                    "(o arroja DTC de transponder como B10DA), la ECU corta de inmediato los pulsos de inyección y bomba "
+                    "de combustible como medida de seguridad antirrobo, apagando el motor."
+                )
+            elif any(w in norm_txt_cons for w in ("congela", "reductor", "gas", "gnv", "glp")):
+                resp_por_que = (
+                    "💡 *Explicación técnica de la congelación del reductor:*\n\n"
+                    "La caída drástica de presión del GNV (desde 200 bar a baja presión) provoca un enfriamiento extremo "
+                    "por efecto Joule-Thomson. El reductor requiere circulación continua de refrigerante caliente del motor "
+                    "para compensar esta pérdida térmica. Si las mangueras de agua tienen aire, están obstruidas o el motor "
+                    "aún no alcanza temperatura, el reductor se congela y escarcha, provocando tirones severos."
+                )
+            elif any(w in norm_txt_cons for w in ("zapatea", "trepida", "embrague")):
+                resp_por_que = (
+                    "💡 *Explicación técnica de la trepidación al acoplar el embrague:*\n\n"
+                    "El zapateo o trepidación al arrancar en primera ocurre por falta de contacto plano homogéneo "
+                    "entre el disco, el plato opresor y el volante. Esto es provocado comúnmente por alabeo o puntos "
+                    "térmicos en el volante de inercia, resortes amortiguadores del disco fatigados o contaminación por aceite."
+                )
+            elif any(w in norm_txt_cons for w in ("cascabeleo", "inyector", "subida", "pobre")):
+                resp_por_que = (
+                    "💡 *Explicación técnica de detonación por inyector deficiente:*\n\n"
+                    "Bajo carga (subida empinada acelerando a fondo), el motor requiere mayor volumen de combustible para "
+                    "disipar calor y mantener la combustión controlada. Un inyector sucio o con bajo caudal empobrece la mezcla, "
+                    "elevando bruscamente la temperatura de cámara y provocando autoignición espontánea (cascabeleo o pistoneo)."
+                )
+
+            if resp_por_que:
+                return {
+                    "status": "explicacion_causal", "respuesta_texto": resp_por_que,
+                    "diagnostico_ml": estado.falla_principal or "Explicación técnica",
+                    "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
+                    "es_pregunta": False, "decision": "EXPLICACION_CAUSAL",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                }
+
+        # 2.2b2 Consultas de tolerancias y especificaciones OEM ("tolerancia", "especificación", "alabeo máximo", "temperatura debe abrir")
+        if re.search(r"\b(?:tolerancia|alabeo\s+m[aá]ximo|especificaci[oó]n|temperatura\s+(?:debe\s+abrir|de\s+apertura))\b", norm_txt_cons):
+            resp_tol = None
+            if any(w in norm_txt_cons for w in ("termostato", "abrir", "temperatura")):
+                resp_tol = (
+                    "🔬 *Especificación metrológica y tolerancia OEM (Termostato):*\n\n"
+                    "Según el manual de servicio del fabricante, la temperatura de inicio de apertura del termostato "
+                    "se sitúa entre 82 °C y 88 °C, alcanzando su carrera de apertura total a los 95 °C - 98 °C "
+                    "(elevación mínima de la válvula de 8 mm). Si a 108 °C la manguera inferior permanece fría, "
+                    "el termostato está trabado cerrado."
+                )
+            elif any(w in norm_txt_cons for w in ("volante", "inercia", "embrague")):
+                resp_tol = (
+                    "🔬 *Especificación metrológica y tolerancia OEM (Volante de inercia):*\n\n"
+                    "El alabeo o salto axial máximo admisible para el volante de inercia según manual es de 0.10 mm. "
+                    "Cualquier lectura superior a 0.10 mm o presencia de fisuras y sobrecalentamiento térmico azulado "
+                    "exige rectificado de la pista de fricción o reemplazo del volante."
+                )
+            elif any(w in norm_txt_cons for w in ("disco", "freno", "alabeo")):
+                resp_tol = (
+                    "🔬 *Especificación metrológica y tolerancia OEM (Discos de freno):*\n\n"
+                    "La tolerancia máxima de alabeo lateral en discos de freno instalados es de 0.05 mm a 0.07 mm. "
+                    "Una medición de 0.12 mm excede significativamente el límite de servicio y provocará pulsación "
+                    "en el pedal y vibración en el timón a alta velocidad; requiere rectificado o cambio de discos."
+                )
+            if resp_tol:
+                return {
+                    "status": "tolerancia_oem", "respuesta_texto": resp_tol,
+                    "diagnostico_ml": estado.falla_principal or "Tolerancia OEM",
+                    "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
+                    "es_pregunta": False, "decision": "TOLERANCIA_OEM",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                }
+
+        # 2.2c Solicitud de profundización técnica ("más detalles", "cómo lo reviso", "paso a paso")
         if ExtractorHechos.es_solicitud_detalle(texto_limpio) and (estado.top3_actual or getattr(estado, "falla_principal", None)):
             from src.core.conversacion.formateador_compacto import FormateadorCompacto
 
             top_actual = estado.top3_actual or []
-            falla_target = top_actual[0]["falla"] if top_actual else "Falla mecánica bajo revisión"
+            falla_target = top_actual[0]["falla"] if top_actual else (estado.falla_principal or "Falla mecánica bajo revisión")
+
+            # Mapeo a componente específico si fue explícitamente consultado
+            componentes_consulta = (
+                ("electroventilador", "Falla en el electroventilador"),
+                ("motoventilador", "Falla en el electroventilador"),
+                ("ventilador", "Falla en el electroventilador"),
+                ("termostato", "Falla en el termostato"),
+                ("radiador", "Falla en el radiador"),
+                ("bomba de agua", "Falla en la bomba de agua"),
+                ("inyector", "Falla en inyectores de combustible"),
+                ("bobina", "Falla en bobina de encendido"),
+                ("bujia", "Falla en bujías"),
+                ("bomba de combustible", "Falla en bomba de combustible"),
+                ("bomba de gasolina", "Falla en bomba de combustible"),
+                ("regulador", "Falla en regulador de presion de combustible o diafragma roto"),
+                ("sensor ect", "Falla en sensor ECT de temperatura"),
+                ("sensor de temperatura", "Falla en sensor ECT de temperatura"),
+                ("embrague", "Desgaste del embrague"),
+                ("frenos", "Desgaste en pastillas o discos de freno"),
+            )
+            for patron_c, falla_c in componentes_consulta:
+                if patron_c in norm_txt_cons:
+                    falla_target = falla_c
+                    break
+
             if any(w in texto_limpio for w in (" 2", "segunda", "opcion 2", "opción 2")):
                 if len(top_actual) > 1:
                     falla_target = top_actual[1]["falla"]
@@ -519,15 +704,71 @@ class OrquestadorConversacion:
             )
             resp_texto = getattr(dto_tecnico, "respuesta_texto", "")
             if es_solicitud_detalle and (not resp_texto or "No encontré una fuente documental" in resp_texto):
-                resp_texto = (
-                    "🛠️ *Procedimiento técnico de comprobación:*\n\n"
-                    "1. **Termostato:** Verificar la diferencia térmica al tacto entre la manguera superior "
-                    "e inferior del radiador al alcanzar temperatura de régimen (88°C - 95°C). Si la manguera "
-                    "inferior permanece fría mientras el motor recalienta, el termostato está trabado cerrado.\n"
-                    "2. **Bomba de agua:** Con motor frío y tapa retirada, acelerar suavemente para comprobar flujo "
-                    "continuo en el cuello del radiador. Inspeccionar holgura en el eje de la polea y verificar "
-                    "ausencia de goteo en el orificio de alivio (testigo de empaque)."
-                )
+                norm_q = texto_limpio.casefold()
+                if any(w in norm_q for w in ("inmovilizador", "transponder", "llave", "antena", "candado", "b10da")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de comprobación: Sistema Inmovilizador*\n\n"
+                        "1. **Prueba con segunda llave:** Intentar arranque con la llave de repuesto original para descartar desprogramación o daño físico en el transponder de la llave principal.\n"
+                        "2. **Inspección de antena receptora:** Verificar que el aro lector alrededor de la chapa de contacto tenga continuidad, alimentación y masa firme.\n"
+                        "3. **Lectura en escáner:** Ingresar al módulo Inmovilizador/PATS y verificar 'Llaves programadas' y 'Estado de autorización de arranque'."
+                    )
+                elif any(w in norm_q for w in ("consumo parasito", "consumo parásito", "fuga de corriente", "multimetro", "multímetro")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de comprobación: Consumo Parásito de Corriente*\n\n"
+                        "1. **Preparación del multímetro:** Conectar la punta roja en la escala de 10A/20A DC.\n"
+                        "2. **Conexión en serie:** Con motor y accesorios apagados, soltar el borne negativo (-) de la batería y colocar el multímetro en serie entre el borne de la batería y el terminal del cable.\n"
+                        "3. **Tiempo de reposo (Sleep Mode):** Esperar de 15 a 30 minutos con las puertas trabadas. La corriente de fuga normal no debe superar los 0.05 A (50 mA).\n"
+                        "4. **Aislamiento por circuito:** Si marca alto (ej. 0.85 A), retirar fusibles uno por uno hasta que la corriente caiga al rango normal."
+                    )
+                elif any(w in norm_q for w in ("solenoide", "turbo", "actuador", "vacio", "vacío", "vgt", "p0299")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de comprobación: Solenoide y Actuador de Turbo*\n\n"
+                        "1. **Prueba del actuador de vacío:** Conectar bomba de vacío manual a la cápsula del actuador. Aplicar -15 inHg; la varilla debe desplazarse suavemente y mantener el vacío.\n"
+                        "2. **Comprobación de vacío de suministro:** Con motor encendido, medir la depresión en la manguera de entrada a la solenoide (mínimo -20 inHg).\n"
+                        "3. **Comprobación de solenoide:** Medir el vacío entregado al actuador y verificar alimentación de 12V, control PWM y resistencia eléctrica de la solenoide."
+                    )
+                elif any(w in norm_q for w in ("regulador", "presion de combustible", "presión de combustible", "diafragma", "p0172")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de comprobación: Regulador de Presión de Combustible*\n\n"
+                        "1. **Conexión de manómetro:** Instalar manómetro de combustible en el riel de inyectores.\n"
+                        "2. **Prueba de vacío y diafragma:** En ralentí, desconectar la manguera de vacío del regulador; la presión en el riel debe subir entre 5 y 10 psi inmediatamente. Si la manguera de vacío gotea combustible, el diafragma interno está roto.\n"
+                        "3. **Prueba de retención:** Apagar el motor y observar el manómetro durante 10 minutos; la presión debe mantenerse estable."
+                    )
+                elif any(w in norm_q for w in ("embrague", "clutch", "volante", "plato opresor", "trepida")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de comprobación: Embrague y Volante de Inercia*\n\n"
+                        "1. **Inspección del disco:** Verificar espesor de forros hasta los remaches y firmeza de resortes amortiguadores.\n"
+                        "2. **Planitud y alabeo del volante:** Con reloj comparador en el volante, girar manualmente el motor; el alabeo máximo no debe exceder 0.10 mm. Descartar puntos térmicos azulados.\n"
+                        "3. **Inspección del plato de presión:** Comprobar desgaste y altura uniforme de los dedos del diafragma."
+                    )
+                elif any(w in norm_q for w in ("reloj comparador", "alabeo", "disco", "bocin", "bocín", "manzana", "freno")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de comprobación: Alabeo de Discos y Bocín/Maza*\n\n"
+                        "1. **Montaje del reloj comparador:** Fijar la base a la mangueta con el palpador a 10 mm del borde exterior del disco.\n"
+                        "2. **Medición del disco:** Girar la rueda manualmente; el salto máximo no debe superar 0.05 mm a 0.07 mm (lecturas de 0.12 mm exigen rectificado o cambio).\n"
+                        "3. **Comprobación del bocín:** Retirar el disco y medir directamente sobre la pestaña del bocín; el alabeo no debe exceder 0.02 mm."
+                    )
+                elif any(w in norm_q for w in ("purga", "reductor", "mangueras", "gnv", "glp")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento de comprobación: Circuito de Calefacción del Reductor de Gas*\n\n"
+                        "1. **Inspección de mangueras:** Verificar que las mangueras de agua hacia el reductor no tengan estrangulamientos ni burbujas.\n"
+                        "2. **Purga del sistema:** Con motor frío, retirar tapa de radiador y aflojar la manguera de retorno del reductor hasta obtener flujo continuo de refrigerante.\n"
+                        "3. **Verificación térmica:** Al alcanzar temperatura de trabajo, verificar al tacto que ambas mangueras del reductor se encuentren calientes."
+                    )
+                elif any(w in norm_q for w in ("termostato", "electroventilador", "refrigerante", "recalienta", "temperatura")):
+                    resp_texto = (
+                        "🛠️ *Procedimiento técnico de comprobación: Sistema de Refrigeración*\n\n"
+                        "1. **Termostato:** Verificar la diferencia térmica al tacto entre la manguera superior e inferior del radiador al alcanzar temperatura de régimen. Si la manguera inferior permanece fría mientras el motor recalienta, el termostato está trabado cerrado.\n"
+                        "2. **Bomba de agua:** Con motor frío y tapa retirada, acelerar suavemente para comprobar flujo continuo en el cuello del radiador. Inspeccionar holgura en el eje de la polea y ausencia de goteo en el orificio de alivio.\n"
+                        "3. **Electroventilador:** Verificar encendido en baja y alta velocidad mediante escáner o activación directa por temperatura."
+                    )
+                else:
+                    resp_texto = (
+                        "🛠️ *Procedimiento técnico de comprobación:*\n\n"
+                        "1. Inspección física de conexiones eléctricas, mangueras y sujeciones mecánicas del componente.\n"
+                        "2. Medición de parámetros de funcionamiento con multímetro o escáner bajo especificación de taller.\n"
+                        "3. Verificación de tolerancias y pruebas de aislamiento funcional para confirmar la causa raíz."
+                    )
             return {
                 "status": "consulta_tecnica" if not es_solicitud_detalle else "solicitud_detalle",
                 "respuesta_texto": resp_texto or "Información técnica.",
@@ -1288,7 +1529,14 @@ class OrquestadorConversacion:
         elif not re.search(r"¿[^?]*\?", respuesta_texto):
             es_pregunta = False
             pregunta_elegida = None
-        if estado.last_user_correction == texto_limpio:
+        if getattr(estado, "last_user_correction", None) in ("marca", "modelo"):
+            veh_actualizado = f"{estado.marca or ''} {estado.modelo or ''} {estado.anio or ''}".strip()
+            if veh_actualizado and veh_actualizado not in respuesta_texto:
+                respuesta_texto = (
+                    f"Entendido maestro, actualicé el vehículo a *{veh_actualizado}*. Conservo las mediciones y síntomas reportados.\n\n"
+                    f"{respuesta_texto}"
+                )
+        elif estado.last_user_correction == texto_limpio:
             sintomas_corregidos = [
                 str(hecho.get("valor", "")).strip()
                 for hecho in hechos_extraidos

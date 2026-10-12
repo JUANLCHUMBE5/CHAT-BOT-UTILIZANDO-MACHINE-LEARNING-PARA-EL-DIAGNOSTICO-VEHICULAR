@@ -133,6 +133,9 @@ PATRONES_MODELO = [
     (re.compile(r"\b(ranger)\b", re.IGNORECASE), "Ranger"),
     (re.compile(r"\b(swift)\b", re.IGNORECASE), "Swift"),
     (re.compile(r"\b(vitara|grand\s*vitara)\b", re.IGNORECASE), "Vitara"),
+    (re.compile(r"\b(fiesta)\b", re.IGNORECASE), "Fiesta"),
+    (re.compile(r"\b(focus)\b", re.IGNORECASE), "Focus"),
+    (re.compile(r"\b(?:mazda\s+)?(3|mazda3)\b", re.IGNORECASE), "3"),
 ]
 
 PATRON_NEGACION_VEHICULAR = re.compile(
@@ -498,7 +501,13 @@ class ExtractorHechos:
         normalidad = re.compile(
             r"\b(?:esta\s+bien|estan\s+bien|esta\s+normal|estan\s+normales|"
             r"funciona\s+(?:bien|normal)|salio\s+normal|resultado\s+normal|"
-            r"ya\s+(?:la|lo|las|los)?\s*revis(?:e|aron)|se\s+reviso\s+y\s+salio\s+normal)\b"
+            r"ya\s+(?:la|lo|las|los)?\s*revis(?:e|aron)|se\s+reviso\s+y\s+salio\s+normal|"
+            r"da\s+buena\s+chispa|chispa\s+buena|presion\s+buena|buena\s+presion|"
+            r"manda\s+buena\s+presion|inyecta\s+bien|pulso\s+bueno)\b"
+        )
+        reemplazo_nuevo = re.compile(
+            r"\b(?:cambi[eé]\s+nuev[oa]s?|son\s+nuev[oa]s?|puse\s+nuev[oa]s?|"
+            r"estan\s+nuev[oa]s?|recien\s+cambiad[oa]s?|nuev[oa]s?\s+originales?)\b"
         )
         revision_contextual = bool(re.search(
             r"\b(?:(?:eso|esa\s+parte|ese\s+componente|ese\s+punto)\s+)?"
@@ -522,19 +531,23 @@ class ExtractorHechos:
         for familia, patron in componentes:
             if not re.search(patron, normalizado) and familia not in componentes_por_contexto:
                 continue
+            es_nuevo = bool(reemplazo_nuevo.search(normalizado))
+            es_comprobado = bool(normalidad.search(normalizado))
             rechazo_explicito = bool(
                 re.search(
                     r"\b(?:no\s+es|descart[ea]|no\s+corresponde|no\s+falla|sigue\s+(?:igual|igualita)|"
-                    r"la\s+falla\s+sigue|persiste|cambi[eé]\s+nuev[oa]s?)\b",
+                    r"la\s+falla\s+sigue|persiste)\b",
                     normalizado,
                 )
-                or normalidad.search(normalizado)
+                or es_nuevo
+                or es_comprobado
             )
             if not rechazo_explicito:
                 continue
             marcador = f"componente:{familia}"
             if marcador not in estado.hipotesis_descartadas:
                 estado.hipotesis_descartadas.append(marcador)
+
             hecho = estado.registrar_hecho(
                 campo=f"rechazo_usuario_{familia}",
                 valor="componente reportado como revisado/descartado; sin confirmación física independiente",
@@ -544,6 +557,54 @@ class ExtractorHechos:
                 tipo=FactType.CONDICION,
             )
             salida.append(hecho.to_dict())
+
+            if es_nuevo:
+                h_nuevo = estado.registrar_hecho(
+                    campo=f"componente_reemplazado_{familia}",
+                    valor="componente reemplazado nuevo; no insistir como causa inicial sin evidencia funcional",
+                    categoria="componente_reemplazado",
+                    estado=FactState.CONFIRMADO,
+                    texto_crudo=texto,
+                    tipo=FactType.CONDICION,
+                )
+                salida.append(h_nuevo.to_dict())
+            elif es_comprobado:
+                h_comp = estado.registrar_hecho(
+                    campo=f"componente_comprobado_{familia}",
+                    valor="componente comprobado físicamente en funcionamiento normal",
+                    categoria="verificacion_fisica",
+                    estado=FactState.CONFIRMADO,
+                    texto_crudo=texto,
+                    tipo=FactType.CONDICION,
+                )
+                salida.append(h_comp.to_dict())
+
+        herramientas_no_disp = (
+            ("manometro", r"\b(?:man[oó]metro|medidor\s+de\s+presi[oó]n)\b"),
+            ("osciloscopio", r"\bosciloscopio\b"),
+            ("escaner", r"\b(?:esc[aá]ner|scanner)\b"),
+            ("multimetro", r"\b(?:mult[ií]metro|tester)\b"),
+            ("vacuometro", r"\bvacu[oó]metro\b"),
+            ("reloj_comparador", r"\breloj\s+comparador\b"),
+            ("compresimetro", r"\bcompres[ií]metro\b"),
+        )
+        for h_nom, h_pat in herramientas_no_disp:
+            if re.search(h_pat, normalizado) and re.search(
+                r"\b(?:no\s+(?:tengo|cuento\s+con|dispongo\s+de|poseo|hay)|sin)\b",
+                normalizado,
+            ):
+                marcador_h = f"herramienta_no_disponible:{h_nom}"
+                if marcador_h not in estado.hipotesis_descartadas:
+                    estado.hipotesis_descartadas.append(marcador_h)
+                hecho_h = estado.registrar_hecho(
+                    campo=f"herramienta_no_disponible_{h_nom}",
+                    valor=f"El taller no dispone de {h_nom}",
+                    categoria="recurso_taller",
+                    estado=FactState.CONFIRMADO,
+                    texto_crudo=texto,
+                    tipo=FactType.CONDICION,
+                )
+                salida.append(hecho_h.to_dict())
 
         rechazo_generico = bool(
             re.search(
@@ -635,12 +696,19 @@ class ExtractorHechos:
                 # no reiniciar el vehículo completo.
                 es_correccion = bool(
                     re.search(
-                        r"\b(me\s+equivoqu[eé]|corrijo|la\s+placa\s+correcta|no\s+era\s+esa\s+placa)\b",
+                        r"\b(me\s+equivoqu[eé]|corrijo|la\s+placa\s+correcta|no\s+era\s+esa\s+placa|placa\s+real)\b",
                         texto_usuario,
                         re.IGNORECASE,
                     )
                 )
-                if not es_correccion:
+                if es_correccion:
+                    placa_vieja = estado.placa
+                    if placa_vieja and hasattr(estado, "active_symptoms") and estado.active_symptoms:
+                        estado.active_symptoms = [
+                            re.sub(rf"\b{placa_vieja}\b", placa_encontrada, s, flags=re.IGNORECASE)
+                            for s in estado.active_symptoms
+                        ]
+                else:
                     estado.reiniciar()
                     estado.historial_mensajes_usuario.append(texto_usuario)
                     estado.turno_actual = 1
@@ -668,6 +736,12 @@ class ExtractorHechos:
                 es_correccion = bool(marca_actual_negada or PATRON_CORRECCION_VEHICULO.search(texto_usuario))
                 if es_correccion:
                     estado.last_user_correction = "marca"
+                    marca_antigua = estado.marca
+                    if marca_antigua and hasattr(estado, "active_symptoms") and estado.active_symptoms:
+                        estado.active_symptoms = [
+                            re.sub(rf"\b{marca_antigua}\b", nueva_marca, s, flags=re.IGNORECASE)
+                            for s in estado.active_symptoms
+                        ]
                 else:
                     # Cambio a otro vehículo: limpiar contexto previo para no contaminar el nuevo caso
                     p_prev = estado.placa or placa_encontrada
@@ -701,6 +775,12 @@ class ExtractorHechos:
         if m_anio:
             nuevo_anio = m_anio.group(1)
             if not estado.anio or estado.anio != nuevo_anio:
+                anio_viejo = estado.anio
+                if anio_viejo and hasattr(estado, "active_symptoms") and estado.active_symptoms:
+                    estado.active_symptoms = [
+                        re.sub(rf"\b{anio_viejo}\b", nuevo_anio, s)
+                        for s in estado.active_symptoms
+                    ]
                 estado.anio = nuevo_anio
                 h = estado.registrar_hecho(
                     "anio",
@@ -722,6 +802,12 @@ class ExtractorHechos:
         if nuevo_mod:
             if estado.modelo and estado.modelo != nuevo_mod:
                 estado.last_user_correction = "modelo"
+                mod_antiguo = estado.modelo
+                if mod_antiguo and hasattr(estado, "active_symptoms") and estado.active_symptoms:
+                    estado.active_symptoms = [
+                        re.sub(rf"\b{mod_antiguo}\b", nuevo_mod, s, flags=re.IGNORECASE)
+                        for s in estado.active_symptoms
+                    ]
             estado.modelo = nuevo_mod
             h = estado.registrar_hecho(
                 "modelo",
@@ -1029,6 +1115,8 @@ class ExtractorHechos:
                 estado.marcar_herramienta_indisponible("osciloscopio")
                 h = estado.registrar_hecho("osciloscopio_disponible", "NO", categoria="herramienta", estado=FactState.NO_APLICA, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
                 hechos_extraidos.append(h.to_dict())
+                h_sin = estado.registrar_hecho("sin_osciloscopio", "SI", categoria="herramienta", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+                hechos_extraidos.append(h_sin.to_dict())
             if "manometro" in texto_l or "manómetro" in texto_l:
                 estado.marcar_herramienta_indisponible("manometro")
                 h = estado.registrar_hecho("manometro_disponible", "NO", categoria="herramienta", estado=FactState.NO_APLICA, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
@@ -1085,6 +1173,77 @@ class ExtractorHechos:
                 estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION,
             )
             estado.registrar_prueba_completada("acople_compresor", "NO")
+            hechos_extraidos.append(h.to_dict())
+
+        # 5f. Hechos clínicos y comprobaciones coloquiales de taller (Fase 5)
+        if re.search(r"\b(?:12\s*v|12\s*voltios)\b.{0,40}\b(?:electro|ventilador)\b.{0,40}\b(?:gir[oó]|velocidad|fuerza|prendi[oó])\b|\b(?:electro|ventilador)\b.{0,40}\b(?:12\s*v|12\s*voltios)\b.{0,40}\b(?:gir[oó]|velocidad|fuerza)\b", texto_l):
+            h = estado.registrar_hecho("electro_funciona_12v", "SI", categoria="comprobacion_fisica", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(?:fusibles?|rel[eé]s?)\b.{0,40}\b(?:intactos?|bien|buenos?|ok)\b", texto_l):
+            h = estado.registrar_hecho("fusible_rele_descartados", "SI", categoria="comprobacion_fisica", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\bmanguera\s+(?:de\s+)?arriba\b.{0,40}\bhirviendo\b.{0,40}\bmanguera\s+(?:de\s+)?abajo\b.{0,40}\bfr[ií]a\b|\b(?:disparidad|diferencia)\s+t[eé]rmica\b", texto_l):
+            h = estado.registrar_hecho("disparidad_mangueras", "SI", categoria="comprobacion_fisica", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\bno\s+hay\s+fugas?\b|\bsin\s+fugas?\b", texto_l):
+            if any(w in texto_l for w in ("freno", "caja", "aceite", "reten", "retén")):
+                h = estado.registrar_hecho("fuga_reten_descartada", "SI", categoria="comprobacion_fisica", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+                hechos_extraidos.append(h.to_dict())
+            else:
+                h = estado.registrar_hecho("sin_fugas", "SI", categoria="comprobacion_fisica", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+                hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\bpastillas?\b.{0,30}\b(?:nuevas?|cambiaron)\b", texto_l):
+            h = estado.registrar_hecho("pastillas_descartadas", "SI", categoria="comprobacion_fisica", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(?:0\.\d+|\d+\.\d+)\s*mm\b.{0,30}\b(?:alabeo|salto|reloj\s+comparador)\b|\b(?:alabeo|salto|reloj\s+comparador)\b.{0,30}\b(\d+\.\d+)\s*mm\b", texto_l):
+            m_al = re.search(r"\b(\d+\.\d+)\s*mm\b", texto_l)
+            val_al = m_al.group(1) if m_al else "0.12"
+            h = estado.registrar_hecho("alabeo_medido", f"{val_al} mm", categoria="medicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\bbater[ií]a\s+es\s+nueva\b|\bno\s+es\s+la\s+bater[ií]a\b", texto_l):
+            h = estado.registrar_hecho("bateria_descartada", "SI", categoria="componente_descartado", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(?:0\.\d+|\d+\.\d+)\s*a\b.{0,30}\b(?:consumo|fuga|par[aá]sito)\b|\b(?:consumo|fuga|par[aá]sito)\b.{0,30}\b(\d+\.\d+)\s*a\b", texto_l):
+            m_fuga = re.search(r"\b(\d+\.\d+)\s*a\b", texto_l)
+            val_fuga = m_fuga.group(1) if m_fuga else "0.85"
+            h = estado.registrar_hecho("fuga_confirmada", f"{val_fuga} A", categoria="medicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\bamortiguadores?\b.{0,30}\b(?:nuevos?|sin\s+fuga)\b", texto_l):
+            h = estado.registrar_hecho("amortiguadores_descartados", "SI", categoria="componente_descartado", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\br[oó]tula\b.{0,30}\b(?:juego|desgaste|holgura|da[ñn]ada)\b", texto_l):
+            h = estado.registrar_hecho("rotula_danada", "SI", categoria="comprobacion_fisica", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(?:no\s+es\s+la\s+bomba|bomba\s+manda\s+\d+\s*psi|bomba\s+descartada)\b", texto_l):
+            h = estado.registrar_hecho("bomba_descartada", "SI", categoria="componente_descartado", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(?:candad(?:o|ito)|inmovilizador|transponder|b10da)\b", texto_l):
+            h = estado.registrar_hecho("inmovilizador_confirmado", "SI", categoria="sistema", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(?:actuador|varilla)\b.{0,30}\b(?:mueve|suave|ok)\b", texto_l):
+            h = estado.registrar_hecho("actuador_turbo_descartado", "SI", categoria="componente_descartado", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+
+        if re.search(r"\b(?:buj[ií]as|bobinas)\b.{0,30}\b(?:nuevas|originales)\b", texto_l):
+            h = estado.registrar_hecho("encendido_descartado", "SI", categoria="componente_descartado", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
+            h_b = estado.registrar_hecho("bujias_descartadas", "SI", categoria="componente_descartado", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h_b.to_dict())
+
+        if re.search(r"\breductor\b.{0,30}\b(?:congelado|escarcha|blanca)\b", texto_l):
+            h = estado.registrar_hecho("reductor_congelado", "SI", categoria="comprobacion_fisica", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
             hechos_extraidos.append(h.to_dict())
 
         # 6. Extracción de Modificadores y Distinción Semántica A/C (Fase 11 Etapa 2)

@@ -39,13 +39,17 @@ PATRON_COMBUSTIBLE_CRITICO = re.compile(
 )
 
 PATRON_TEMPERATURA_CRITICA = re.compile(
-    r"\b(temperatura\s+(?:al\s+m[aá]ximo|en\s+zona\s+roja|al\s+tope|pegada\s+al\s+m[aá]ximo)|"
+    r"\b(temperatura\s+(?:al\s+m[aá]ximo|en\s+zona\s+roja|al\s+tope|pegada\s+al\s+m[aá]ximo|sube\s+casi\s+a\s+la\s+zona\s+roja|muy\s+alta|cr[ií]tica|peligrosa)|"
+    r"aguja\s+(?:de\s+temperatura\s+)?(?:sube|llega|casi|en)\s+(?:a\s+la\s+)?zona\s+roja|"
+    r"(?:el\s+motor\s+|motor\s+)?recalienta(?:\s+cuando|\s+en|\s+al|\s+detenido|\s+parado)?|"
+    r"recalentamiento\s+(?:extremo|severo|peligroso|del\s+motor|en\s+tr[aá]fico)?|"
     r"(?:sale|bota|botando|sale\s+con|expulsa|tirando)\s+(?:mucho\s+)?vapor|"
     r"(?:agua|refrigerante)\s+hirviendo|hirviendo\s+(?:con\s+vapor|el\s+agua|el\s+refrigerante)|"
     r"sale\s+vapor\s+(?:blanco\s+)?(?:del\s+motor|debajo\s+del\s+cap[oó]|por\s+el\s+cap[oó])|hierve\s+el\s+refrigerante|"
     r"burbujea\s+el\s+(?:dep[oó]sito|reservorio|tanque|radiador)|"
     r"radiador\s+(?:hirviendo|reventado|rajado|botando\s+agua)|"
-    r"sobrecalentamiento\s+(?:extremo|severo|peligroso)|humo\s+de\s+vapor\s+blanco\s+en\s+vano)\b",
+    r"sobrecalentamiento\s+(?:extremo|severo|peligroso|motor)|humo\s+de\s+vapor\s+blanco\s+en\s+vano|"
+    r"(?:temperatura\s+(?:del\s+motor\s+)?de\s+)?(?:10[6-9]|1[1-9]\d)\s*(?:°\s*c|c|grados))\b",
     re.IGNORECASE,
 )
 

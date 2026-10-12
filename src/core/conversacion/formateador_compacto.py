@@ -489,22 +489,30 @@ class FormateadorCompacto:
         combustible_str = str(combustible_str).lower()
 
         # 2. Bloque de hipótesis con scores de presentación controlados (Fase 9.10)
+        from src.core.conversacion.ruteador_sistema import tiene_descarte_de_componente
+
         scores_pres = cls.calcular_scores_presentacion(top_hipotesis)
         es_conjunta = scores_pres[0].get("es_distribucion_conjunta", True) if scores_pres else True
 
         lineas_hipotesis = []
+        candidatos_compatibles = []
         num_mostrado = 1
         for item in scores_pres:
             falla_nom = _simplificar_nombre_falla(item.get("falla", ""))
             conf_pct = item.get("porcentaje_presentacion", 0)
             origen_probabilidad = item.get("origen_probabilidad", "SVM")
             falla_l = falla_nom.lower()
+
+            # Exclusión de componentes previamente descartados o probados en buen estado
+            if tiene_descarte_de_componente(estado, falla_nom):
+                continue
+
             if origen_probabilidad != "SVM":
                 etiqueta_confianza = "priorizada por evidencia; sin porcentaje SVM"
             else:
                 etiqueta_confianza = f"{conf_pct}% (SVM)"
 
-            es_diesel_exclusivo = any(k in falla_l for k in ("diesel", "dpf", "fap", "adblue", "def "))
+            es_diesel_exclusivo = any(k in falla_l for k in ("diesel", "dpf", "fap", "adblue", "def ", "common rail diesel"))
             if es_diesel_exclusivo:
                 if combustible_str in ("gasolina", "glp", "gnv", "nafta"):
                     continue
@@ -512,21 +520,35 @@ class FormateadorCompacto:
                     lineas_hipotesis.append(
                         f"{num_mostrado}. {falla_nom} — {etiqueta_confianza} *(solo si es Diésel)*"
                     )
+                    candidatos_compatibles.append(item)
                     num_mostrado += 1
                     if num_mostrado > 3:
                         break
                     continue
 
+            es_gasolina_exclusivo = any(k in falla_l for k in ("gasolina", "bujia", "bujias", "bobina", "chispa", "carburador"))
+            if es_gasolina_exclusivo and combustible_str in ("diesel", "diésel"):
+                continue
+
             lineas_hipotesis.append(f"{num_mostrado}. {falla_nom} — {etiqueta_confianza}")
+            candidatos_compatibles.append(item)
             num_mostrado += 1
             if num_mostrado > 3:
                 break
 
+        if not lineas_hipotesis:
+            return (
+                "🔧 *Orientación técnica (sin porcentaje SVM):*\n\n"
+                "Las causas estadísticas iniciales han sido descartadas mediante las comprobaciones reportadas. "
+                "Se requiere inspección instrumental complementaria antes de emitir una nueva hipótesis.\n\n"
+                "¿Deseas registrar alguna medición adicional o consultar el procedimiento de prueba de otro componente?"
+            )
+
         bloque_causas = "\n".join(lineas_hipotesis)
         titulo_causas = "🔧 *Posibles causas*" if es_conjunta else "🔧 *Posibles causas (confianza individual)*"
 
-        # 2. Acción o prueba prioritaria
-        top1_falla = top_hipotesis[0].get("falla", "")
+        # 2. Acción o prueba prioritaria basada en el primer candidato compatible
+        top1_falla = candidatos_compatibles[0].get("falla", "") if candidatos_compatibles else top_hipotesis[0].get("falla", "")
         accion = prueba_personalizada or _extraer_accion_prioritaria(top1_falla, contexto_rag, estado)
         if not accion.endswith("."):
             accion += "."
@@ -537,11 +559,16 @@ class FormateadorCompacto:
         else:
             pregunta, _ = cls.obtener_pregunta_contextual(top1_falla, sintoma_original, estado)
 
+        advertencia_seguridad = ""
+        texto_eval_seg = f"{sintoma_original} {getattr(estado, 'active_symptoms', [])}".lower()
+        if any(w in texto_eval_seg for w in ("recalienta", "sobrecalentamiento", "temperatura", "108 grados", "hirviendo")):
+            advertencia_seguridad = "\n\n⚠️ *Seguridad:* Evite circular con temperatura elevada para proteger el empaque de culata. No abrir la tapa del radiador ni del depósito de expansión mientras el motor permanezca caliente por riesgo de quemaduras por vapor presurizado."
+
         return (
             f"{titulo_causas}\n\n"
             f"{bloque_causas}\n\n"
             f"🛠️ *Primero revisa:* {accion}\n\n"
-            f"{pregunta}"
+            f"{pregunta}{advertencia_seguridad}"
         )
 
     @classmethod

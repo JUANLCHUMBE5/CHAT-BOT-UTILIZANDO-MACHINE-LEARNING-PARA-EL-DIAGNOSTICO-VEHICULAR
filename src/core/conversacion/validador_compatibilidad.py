@@ -155,18 +155,22 @@ class ValidadorCompatibilidad:
 
         # A. Reglas de combustible
         hecho_combustible = estado.obtener_hecho("combustible") or estado.obtener_hecho("tipo_combustible")
-        if hecho_combustible and hecho_combustible.estado == FactState.CONFIRMADO:
-            comb = str(hecho_combustible.valor).upper()
+        comb_raw = str(getattr(estado, "combustible", "") or (hecho_combustible.valor if hecho_combustible else "")).strip()
+        if comb_raw:
+            comb = "".join(
+                c for c in unicodedata.normalize("NFD", comb_raw.lower())
+                if unicodedata.category(c) != "Mn"
+            ).upper()
 
-            # Gasolina, GLP, GNV incompatibles con sistemas exclusivos Diésel (AdBlue, DPF, FAP, Urea)
-            if comb in ("GASOLINA", "GNV", "GLP"):
-                if re.search(r"\b(adblue|def|diesel|di[eé]sel|dpf|fap|urea|filtro de particulas)\b", falla_l):
+            # Gasolina, GLP, GNV incompatibles con sistemas exclusivos Diésel (AdBlue, DPF, FAP, Urea, Common Rail Diesel)
+            if comb in ("GASOLINA", "GNV", "GLP", "NAFTA"):
+                if re.search(r"\b(adblue|def|diesel|dpf|fap|urea|filtro de particulas|common rail diesel)\b", falla_l):
                     return False, f"INCOMPATIBLE_CON_HECHO_CONFIRMADO: Combustible={comb} incompatible con sistemas Diésel/AdBlue/DPF"
 
-            # Diésel incompatible con bujías/bobinas de encendido por chispa o inyectores GNV/GLP
+            # Diésel incompatible con encendido por chispa, carburadores o sistemas de gasolina/gas
             elif comb == "DIESEL":
-                if re.search(r"\b(bujia|buj[ií]as|bobina de encendido|gnv|glp)\b", falla_l):
-                    return False, f"INCOMPATIBLE_CON_HECHO_CONFIRMADO: Combustible={comb} no utiliza bujías de encendido por chispa ni gas"
+                if re.search(r"\b(bujia|buj[ií]as|bobina|gasolina|bomba de gasolina|gnv|glp|carburador|chispa)\b", falla_l):
+                    return False, f"INCOMPATIBLE_CON_HECHO_CONFIRMADO: Combustible={comb} no utiliza componentes de gasolina, chispa ni gas"
 
         # B. Reglas de transmisión
         hecho_transmision = estado.obtener_hecho("transmision") or estado.obtener_hecho("caja")
@@ -278,7 +282,7 @@ class ValidadorCompatibilidad:
                 exclusiones.append({
                     "falla": falla,
                     "probabilidad_raw": prob,
-                    "motivo": "COMPONENTE_DESCARTADO_POR_MECANICO",
+                    "motivo": "RECHAZADA_PREVIAMENTE_SIN_NUEVA_EVIDENCIA",
                     "detalle": "El mecánico ya informó que este componente fue revisado o descartado.",
                 })
                 continue

@@ -266,6 +266,24 @@ class SegmentadorCasos:
                 dominio_detectado_mensaje=sub_det,
             )
 
+        # 0a. Consultas de resumen, presupuesto, cotización, explicación técnica o procedimiento
+        es_meta_consulta = bool(
+            re.search(
+                r"\b(resumen|cotizar|cotizacion|presupuesto|informe|orden\s+de\s+reparacion|cuanto\s+cuesta|"
+                r"procedimiento|paso\s+a\s+paso|como\s+pruebo|como\s+compruebo|como\s+inspecciono|"
+                r"por\s+que|explicacion|tolerancia|especificacion|que\s+significa|que\s+codigo)\b",
+                texto_l,
+            )
+        )
+        if es_meta_consulta:
+            return TransicionCasoResultado(
+                decision=DecisionTransicion.MANTENER_CASO,
+                motivo="CONSULTA_PROCEDIMIENTO_O_RESUMEN_CASO_ACTIVO",
+                estado_previo=estado_previo,
+                estado_detectado_mensaje=estado_detectado_mensaje,
+                dominio_detectado_mensaje=cls.obtener_subsistema_estado(estado),
+            )
+
         # 0. Si la última pregunta fue de aclaración de alcance, interpretar la respuesta directa
         if estado.preguntas_realizadas:
             ult_preg = estado.preguntas_realizadas[-1]
