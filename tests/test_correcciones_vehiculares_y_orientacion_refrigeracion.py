@@ -104,8 +104,16 @@ def test_formateador_orientacion_refrigeracion_electroventilador_12v():
 
     assert "Orientación técnica de refrigeración (sin porcentaje SVM)" in respuesta
     assert "electroventilador con 12 V sin respuesta de giro" in respuesta
-    assert "falla interna en el motor del electroventilador" in respuesta
-    assert "termostato" in respuesta.lower()
+    assert "falla interna en el motor" in respuesta
+    assert "Motor del electroventilador" in respuesta
+    # Distinción estricta de componentes: alimentación, masa, motor y mando
+    assert "Alimentación y Masa" in respuesta
+    assert "Circuito de mando" in respuesta
+    assert "No descartar el circuito de mando" in respuesta
+    # Temperatura OEM sin valores genéricos prefijados
+    assert "manual de servicio del fabricante" in respuesta
+    assert "manual OEM" in respuesta
+    assert "88°C" not in respuesta and "95°C" not in respuesta
     assert "Seguridad" in respuesta
     assert "No tengo una hipótesis ML compatible" not in respuesta
 
@@ -136,3 +144,20 @@ async def test_flujo_completo_kia_sportage_electroventilador():
     assert "motor del electroventilador" in r3["respuesta_texto"].lower()
     assert "sin porcentaje svm" in r3["respuesta_texto"].lower()
     assert "No tengo una hipótesis ML compatible" not in r3["respuesta_texto"]
+
+
+def test_aclaracion_arranque_sin_apagado_nissan():
+    """Valida que una aclaración de que el motor sí arranca pero falla en marcha NO genere síntoma de apagado."""
+    estado = ConversationState(session_id="test_nissan_aclaracion")
+    frase = "No es que no arranque, el motor arranca al toque, falla cuando acelero a fondo"
+
+    ExtractorHechos.extraer_y_actualizar(estado, frase)
+
+    assert estado.obtener_hecho("motor_arranca") is not None
+    assert estado.obtener_hecho("motor_arranca").valor == "SI"
+    assert estado.obtener_hecho("sintoma_arranca_y_se_apaga") is None, (
+        "No debe registrar síntoma de arranca y se apaga si el usuario explícitamente no menciona apagarse"
+    )
+    hecho_no_arr = estado.obtener_hecho("sintoma_motor_no_arranca")
+    assert hecho_no_arr is None or hecho_no_arr.valor == "ausente"
+

@@ -427,13 +427,22 @@ class ExtractorHechos:
             return correcciones
 
         if re.search(
-            r"\b(no\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)|s[ií]\s+arranca\s*[, ]+(?:pero\s+)?se\s+apaga|arranca\s+y\s+se\s+apaga)\b",
+            r"\b(s[ií]\s+arranca\s*[, ]+(?:pero\s+)?se\s+apaga|arranca\s+y\s+se\s+apaga|arranca\s*[, ]+(?:pero\s+)?(?:luego\s+)?se\s+apaga)\b",
             texto_l,
+        ) or (
+            re.search(r"\bno\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)\b", texto_l)
+            and re.search(r"\b(?:se\s+)?apaga\b", texto_l)
         ):
             correcciones.append(("sintoma_arranca_y_se_apaga", "arranca y se apaga", "sintoma", FactType.SINTOMA))
             correcciones.append(("sintoma_motor_no_arranca", "ausente", "polaridad", FactType.CONDICION))
             correcciones.append(("motor_arranca", "SI", "condicion", FactType.CONDICION))
             correcciones.append(("estado_operativo", "RALENTI", "condicion", FactType.CONDICION))
+        elif re.search(
+            r"\b(no\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)|(?:el\s+)?motor\s+arranca\s+(?:bien|al\s+toque|normal|r[aá]pido))\b",
+            texto_l,
+        ):
+            correcciones.append(("sintoma_motor_no_arranca", "ausente", "polaridad", FactType.CONDICION))
+            correcciones.append(("motor_arranca", "SI", "condicion", FactType.CONDICION))
 
         if re.search(r"\b(caliente|en\s+caliente|calent[oó]|calienta|despu[eé]s\s+de\s+calentar|ya\s+caliente)\b", texto_l) or re.search(r"\b(?:reci[eé]n\s+)?a\s+los\s+\d+\s*minutos\b", texto_l):
             correcciones.append(("temperatura", "caliente", "temperatura", FactType.CONDICION))
@@ -1233,7 +1242,17 @@ class ExtractorHechos:
         )
         es_arranca_y_se_apaga = bool(
             re.search(
-                r"\b(no\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)|s[ií]\s+arranca\s*[, ]+(?:pero\s+)?se\s+apaga|arranca\s+y\s+se\s+apaga)\b",
+                r"\b(s[ií]\s+arranca\s*[, ]+(?:pero\s+)?se\s+apaga|arranca\s+y\s+se\s+apaga|arranca\s*[, ]+(?:pero\s+)?(?:luego\s+)?se\s+apaga)\b",
+                texto_usuario.lower(),
+            )
+            or (
+                re.search(r"\bno\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)\b", texto_usuario.lower())
+                and re.search(r"\b(?:se\s+)?apaga\b", texto_usuario.lower())
+            )
+        )
+        es_arranca_confirmado = bool(
+            re.search(
+                r"\b(no\s+es\s+que\s+no\s+(?:arranque|prenda|encienda)|(?:el\s+)?motor\s+arranca\s+(?:bien|al\s+toque|normal|r[aá]pido))\b",
                 texto_usuario.lower(),
             )
         )
@@ -1247,6 +1266,16 @@ class ExtractorHechos:
                 tipo=FactType.SINTOMA,
             )
             hechos_extraidos.append(h_arr.to_dict())
+            h_mot = estado.registrar_hecho(
+                "motor_arranca",
+                "SI",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(h_mot.to_dict())
+        elif es_arranca_confirmado:
+            estado.eliminar_hecho("sintoma_motor_no_arranca")
             h_mot = estado.registrar_hecho(
                 "motor_arranca",
                 "SI",

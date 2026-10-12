@@ -424,12 +424,15 @@ class FormateadorCompacto:
                 )
                 if probado_12v_muerto:
                     tiene_fusible_ok = "probado_fusible" in (getattr(estado, "hechos", {}) or {}) or "fusible" in texto_eval
-                    detalle_fus = " (fusible y relé previamente verificados)" if tiene_fusible_ok else ""
+                    detalle_fus = " (fusible y relé reportados en buen estado)" if tiene_fusible_ok else ""
                     return (
                         "🔧 *Orientación técnica de refrigeración (sin porcentaje SVM):*\n\n"
-                        f"1. **Comprobación física confirmada:** Se registró la prueba directa del electroventilador con 12 V sin respuesta de giro{detalle_fus}.\n"
-                        "2. **Conclusión técnica:** La evidencia física directa indica falla interna en el motor del electroventilador (desgaste de escobillas/carbones, bobinado abierto o trabamiento mecánico del eje), descartando falla de mando o relé.\n"
-                        "3. **Comprobaciones pendientes:** Verificar continuidad en el cable de masa del conector y, una vez operativo el ventilador, comprobar que el termostato abra a temperatura de régimen (88°C - 95°C) mediante la diferencia térmica de mangueras para descartar sobrecalentamiento secundario.\n\n"
+                        f"1. **Comprobación física registrada:** Se registró la prueba directa del electroventilador con 12 V sin respuesta de giro{detalle_fus}.\n"
+                        "2. **Aislamiento de componentes:**\n"
+                        "   - *Alimentación y Masa:* Asegurar que la prueba directa a 12 V conecte positivo y masa firme directamente en los terminales del motor (o verificar continuidad a chasis en el conector) para descartar una línea de masa abierta.\n"
+                        "   - *Motor del electroventilador:* Con +12 V y masa presentes en sus bornes, la falta de giro apunta a falla interna en el motor (desgaste de escobillas/carbones, bobinado abierto o trabamiento del eje).\n"
+                        "   - *Circuito de mando:* No descartar el circuito de mando (relé, cableado y señal de ECU/sensor ECT) sin prueba de señal; al sustituir el motor, debe verificarse que el sistema de mando active el ventilador automáticamente.\n"
+                        "3. **Comprobación del termostato:** Comprobar la apertura del termostato según la especificación del manual de servicio del fabricante para este vehículo (verificando la reducción del diferencial térmico entre mangueras al abrir) para descartar sobrecalentamiento secundario. No asumir temperaturas genéricas sin consultar el manual OEM.\n\n"
                         "⚠️ *Seguridad:* No abrir la tapa del radiador ni del depósito de expansión mientras el motor permanezca caliente por riesgo de quemaduras por vapor presurizado."
                     )
 
@@ -441,8 +444,8 @@ class FormateadorCompacto:
                     return (
                         "🔧 *Orientación técnica de refrigeración (sin porcentaje SVM):*\n\n"
                         "1. **Evidencia registrada:** El electroventilador no enciende al sobrepasar la temperatura de régimen normal.\n"
-                        "2. **Procedimiento de descarte:** Para aislar si la falla es eléctrica o del motor: 1) Probar el electroventilador aplicando 12 V directo desde la batería; si no gira, el motor está defectuoso; si gira, verificar fusible de potencia, relé y señal del sensor ECT en escáner.\n"
-                        "3. **Comprobación complementaria:** Verificar que no existan fugas y evaluar si la manguera inferior calienta al abrir el termostato.\n\n"
+                        "2. **Procedimiento de descarte metrológico:** Para aislar entre motor, alimentación, masa y mando: 1) Probar el motor aplicando 12 V y masa directa a sus terminales; 2) Si no gira, el motor está inoperativo; si gira, verificar fusible de potencia, relé y señal de activación de la ECU/sensor ECT en escáner.\n"
+                        "3. **Comprobación complementaria:** Verificar ausencia de fugas y evaluar si la manguera inferior calienta al abrir el termostato según la especificación del manual OEM.\n\n"
                         "⚠️ *Seguridad:* Evite circular con temperatura elevada para proteger el empaque de culata."
                     )
 
