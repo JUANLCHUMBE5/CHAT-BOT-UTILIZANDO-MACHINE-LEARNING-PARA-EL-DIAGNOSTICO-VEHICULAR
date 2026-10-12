@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from src.core.conversacion.gestor_plan_b import GestorPlanB
 from src.core.conversacion.models import (
@@ -71,12 +71,19 @@ class InterpreteRespuestasCortas:
             return True
         if any(c in limpio for c in CUES_RESPUESTA_CORTA):
             return True
+        # Frases de corrección explícita no son respuestas cortas dependientes de la pregunta previa
+        if re.search(r"\b(?:corrijo|me\s+equivoqu[eé]|me\s+confund[ií]|en\s+realidad|quise\s+decir)\b", limpio):
+            return False
         # Afirmaciones (simples o compuestas con preguntas de seguimiento o herramientas)
         if re.search(r"^(?:s[ií](?:[,\s]+maestro|[,\s]+amigo|[,\s]+bot|[,\s]+carbot)?|[aá]firmativo|correcto|lo\s+tengo|ya\s+lo\s+conect[eé]|s[ií]\s+(?:tengo|cuento|dispongo))\b", limpio):
             return True
-        # Menciones numéricas o con unidades técnicas
-        if re.search(r"\b\d+(?:[.,]\d+)?\s*(?:psi|bar|kpa|mv|v(?:oltios?)?|ma|a(?:mperios?)?|ohm|Ω|°c|°f|rpm|km/h|%|mm|ms)?\b", limpio):
+        # Menciones numéricas con unidades técnicas explícitas (excluyendo duraciones puras de tiempo)
+        tiene_unidad_tecnica = bool(re.search(r"\b\d+(?:[.,]\d+)?\s*(?:psi|bar|kpa|mv|v(?:oltios?|olts?)?|ma|a(?:mperios?)?|ohm(?:ios)?|Ω|°c|°f|rpm|km/h|%|mm|ms)\b", limpio))
+        es_duracion_temporal = bool(re.search(r"\b\d+\s*(?:minutos?|min|horas?|h|segundos?|seg|d[ií]as?)\b", limpio))
+        if tiene_unidad_tecnica or re.search(r"\b(?:baja\s+a|marca|da|sube\s+a|llega\s+a)\s+\d+(?:[.,]\d+)?\b", limpio):
             return True
+        if es_duracion_temporal:
+            return False
         from src.core.conversacion.gestor_plan_b import GestorPlanB
         if (
             GestorPlanB.detectar_indisponibilidad_en_texto(limpio)
@@ -88,8 +95,9 @@ class InterpreteRespuestasCortas:
             return True
         return False
 
-    @staticmethod
+    @classmethod
     def _extraer_medicion(
+        cls,
         texto_l: str,
         intent_str: str,
         texto_preg: str,
@@ -106,6 +114,11 @@ class InterpreteRespuestasCortas:
             return None
 
         unidad_raw = (m.group(2) or "").lower()
+        if not unidad_raw:
+            if any(w in texto_l for w in ("minuto", "minutos", "min", "hora", "horas", "segundo", "segundos")):
+                return None
+            if re.match(r"^(?:19[89]\d|20[0-2]\d)$", m.group(1)):
+                return None
         if "psi" in unidad_raw:
             unidad = "PSI"
         elif "bar" in unidad_raw:
@@ -146,17 +159,120 @@ class InterpreteRespuestasCortas:
             unidad = "unidades"
 
         # Determinación de condición de medición sin inventar si no se especifica
-        condicion = None
-        if any(w in texto_l for w in ("arranque", "doy arranque", "al prender", "al dar contacto", "intentar prender", "baja a", "al dar marcha", "doy marcha")):
-            condicion = "durante_arranque"
-        elif any(w in texto_l for w in ("contacto", "llave en on", "contacto puesto")):
-            condicion = "contacto_on"
-        elif any(w in texto_l for w in ("reposo", "apagado", "motor apagado", "en frio", "en frío")):
-            condicion = "reposo"
-        elif any(w in texto_l for w in ("ralenti", "ralentí", "prendido", "encendido", "andando", "cargando")):
-            condicion = "ralenti_carga"
-
+        condicion = cls._resolver_condicion_fragmento(texto_l)
         return val, unidad, condicion
+
+    @staticmethod
+    def _resolver_condicion_fragmento(frag: str) -> Optional[str]:
+        frag_l = frag.lower()
+        if any(w in frag_l for w in ("con luces", "luces prendidas", "luces altas", "luces bajas", "prendo luces", "con carga")):
+            return "con_carga_electrica"
+        elif any(w in frag_l for w in ("arranque", "doy arranque", "al prender", "al dar contacto", "intentar prender", "intento prender", "al dar marcha", "doy marcha", "al arrancar", "al girar la llave", "dando marcha")):
+            return "durante_arranque"
+        elif any(w in frag_l for w in ("ralenti", "ralentí", "en marcha minima", "marcha lenta")):
+            return "ralenti_carga"
+        elif any(w in frag_l for w in ("reposo", "apagado", "motor apagado", "en frio", "en frío")):
+            return "reposo"
+        elif any(w in frag_l for w in ("contacto", "llave en on", "contacto puesto")):
+            return "contacto_on"
+        elif any(w in frag_l for w in ("acelerando", "al acelerar", "en marcha")):
+            return "en_aceleracion"
+        return None
+
+    @classmethod
+    def _extraer_medicion_fragmento(
+        cls,
+        fragmento: str,
+        intent_str: str,
+        texto_preg: str,
+        pending_q: Optional[Dict[str, Any]] = None,
+    ) -> Optional[Tuple[float, str, Optional[str]]]:
+        """Extrae lectura y unidad dentro de un fragmento de texto asignando su condición local."""
+        m = PATRON_NUMERICO_MEDICION.search(fragmento)
+        if not m:
+            return None
+        val_str = m.group(1).replace(",", ".")
+        try:
+            val = float(val_str)
+        except ValueError:
+            return None
+
+        unidad_raw = (m.group(2) or "").lower()
+        if not unidad_raw:
+            if re.match(r"^(?:19[89]\d|20[0-2]\d)$", m.group(1)):
+                return None
+            if any(w in fragmento.lower() for w in ("minuto", "minutos", "min", "hora", "horas", "segundo")):
+                return None
+
+        if "psi" in unidad_raw:
+            unidad = "PSI"
+        elif "bar" in unidad_raw:
+            unidad = "bar"
+        elif "kpa" in unidad_raw:
+            unidad = "kPa"
+        elif "mv" in unidad_raw:
+            unidad = "mV"
+        elif "v" in unidad_raw or "volt" in unidad_raw:
+            unidad = "V"
+        elif "ma" in unidad_raw:
+            unidad = "mA"
+        elif "a" in unidad_raw or "amp" in unidad_raw:
+            unidad = "A"
+        elif "ohm" in unidad_raw or "Ω" in unidad_raw:
+            unidad = "ohm"
+        elif "°c" in unidad_raw or "c" == unidad_raw:
+            unidad = "°C"
+        elif "°f" in unidad_raw or "f" == unidad_raw:
+            unidad = "°F"
+        elif "rpm" in unidad_raw:
+            unidad = "RPM"
+        elif "km/h" in unidad_raw:
+            unidad = "km/h"
+        elif "%" in unidad_raw:
+            unidad = "%"
+        elif "mm" in unidad_raw:
+            unidad = "mm"
+        elif "ms" in unidad_raw:
+            unidad = "ms"
+        elif pending_q and pending_q.get("expected_units"):
+            unidad = pending_q["expected_units"][0]
+        elif "presion" in texto_preg or "manometro" in texto_preg or "combustible" in texto_preg:
+            unidad = "PSI"
+        elif "volt" in texto_preg or "multimetro" in texto_preg or "bateria" in texto_preg:
+            unidad = "V"
+        else:
+            unidad = "unidades"
+
+        condicion = cls._resolver_condicion_fragmento(fragmento)
+        return val, unidad, condicion
+
+    @classmethod
+    def _extraer_todas_mediciones(
+        cls,
+        texto_l: str,
+        intent_str: str,
+        texto_preg: str,
+        pending_q: Optional[Dict[str, Any]] = None,
+    ) -> List[Tuple[float, str, Optional[str]]]:
+        """Extrae todas las mediciones cuantitativas identificando cláusulas y condiciones operativas."""
+        clausulas = re.split(r'[,;]|\s+(?:y|pero|pero\s+con|mientras)\s+', texto_l, flags=re.IGNORECASE)
+        resultados: List[Tuple[float, str, Optional[str]]] = []
+        for c in clausulas:
+            c_l = c.strip()
+            if not c_l:
+                continue
+            if re.search(r"\b\d+\s*(?:minutos?|min|horas?|h|segundos?|seg)\b", c_l) and not re.search(
+                r"\b\d+(?:[.,]\d+)?\s*(?:psi|bar|kpa|mv|v|volt|rpm)\b", c_l
+            ):
+                continue
+            med = cls._extraer_medicion_fragmento(c_l, intent_str, texto_preg, pending_q)
+            if med:
+                resultados.append(med)
+        if not resultados:
+            med_unica = cls._extraer_medicion(texto_l, intent_str, texto_preg, pending_q)
+            if med_unica:
+                resultados.append(med_unica)
+        return resultados
 
     @classmethod
     def interpretar(
@@ -165,13 +281,39 @@ class InterpreteRespuestasCortas:
         texto_usuario: str,
     ) -> Optional[Dict[str, Any]]:
         """Mapea una respuesta corta a hechos clínicos concretos según la última pregunta."""
+        texto_l = texto_usuario.strip().lower()
         ultima_preg = estado.ultima_pregunta()
         if not ultima_preg:
+            if texto_l in ("si", "sí", "afirmativo", "correcto"):
+                h = estado.registrar_hecho(
+                    f"confirmado_pregunta_{estado.turno_actual}",
+                    "sí",
+                    categoria="confirmacion",
+                    texto_crudo=texto_usuario,
+                )
+                return {
+                    "categoria_respuesta": "AFIRMACION",
+                    "campo": "confirmacion",
+                    "valor": "sí",
+                    "hecho": h.to_dict(),
+                }
+            if texto_l in ("no", "negativo"):
+                h = estado.registrar_hecho(
+                    f"descartado_pregunta_{estado.turno_actual}",
+                    "no",
+                    categoria="descarte",
+                    texto_crudo=texto_usuario,
+                )
+                return {
+                    "categoria_respuesta": "NEGACION",
+                    "campo": "confirmacion",
+                    "valor": "no",
+                    "hecho": h.to_dict(),
+                }
             return None
 
         intent_str = str(ultima_preg.get("intent", QuestionIntent.GENERAL.value))
         texto_preg = str(ultima_preg.get("texto", "")).lower()
-        texto_l = texto_usuario.strip().lower()
         hipotesis = ultima_preg.get("hipotesis") or []
 
         if intent_str == QuestionIntent.MEDICION_TECNICA.value and texto_l in (
@@ -453,80 +595,98 @@ class InterpreteRespuestasCortas:
             or any(k in texto_preg for k in ("voltaje", "multimetro", "presion", "manometro", "psi"))
             or (estado.pending_question and estado.pending_question.get("intent") in (QuestionIntent.MEDICION_PRESION.value, QuestionIntent.MEDICION_VOLTAJE.value))
         ):
-            medicion = cls._extraer_medicion(texto_l, intent_str, texto_preg, estado.pending_question)
-            if medicion:
-                val, unidad, condicion = medicion
-                if unidad in ("PSI", "bar", "kPa"):
-                    campo = "medicion_presion"
-                    tipo_med = "presion_combustible"
-                    contexto_med = "riel_inyeccion"
-                elif unidad in ("V", "mV"):
-                    campo = "medicion_voltaje"
-                    tipo_med = "voltaje_bateria"
-                    contexto_med = "bateria"
-                elif intent_str == QuestionIntent.MEDICION_VOLTAJE.value or "voltaje" in texto_preg or "multimetro" in texto_preg:
-                    campo = "medicion_voltaje"
-                    unidad = "V"
-                    tipo_med = "voltaje_bateria"
-                    contexto_med = "bateria"
-                elif intent_str == QuestionIntent.MEDICION_PRESION.value or "presion" in texto_preg or "manometro" in texto_preg:
-                    campo = "medicion_presion"
-                    unidad = "PSI"
-                    tipo_med = "presion_combustible"
-                    contexto_med = "riel_inyeccion"
-                elif unidad == "RPM":
-                    campo = "medicion_rpm"
-                    tipo_med = "rpm_motor"
-                    contexto_med = "ralenti" if any(
-                        w in texto_l or w in texto_preg for w in ("ralenti", "ralentí", "detenido", "idle")
-                    ) else "motor"
-                else:
-                    campo = f"medicion_{unidad.lower()}"
-                    tipo_med = "medicion_tecnica"
-                    contexto_med = "general"
-
-                valor_medicion = f"{val} {unidad}" + (f" ({condicion})" if condicion else "")
-                if unidad == "RPM" and contexto_med == "ralenti":
-                    valor_medicion = f"{val} {unidad} en ralentí"
-                    estado.estado_operativo = EstadoOperativo.RALENTI
-                h = estado.registrar_hecho(
-                    campo=campo,
-                    valor=valor_medicion,
-                    categoria="medicion",
-                    estado=FactState.CONFIRMADO,
-                    texto_crudo=texto_usuario,
-                    tipo=FactType.CONDICION,
+            mediciones = cls._extraer_todas_mediciones(texto_l, intent_str, texto_preg, estado.pending_question)
+            if mediciones:
+                respuesta_retorno = None
+                # Priorizar en el retorno la medición de mayor relevancia diagnóstica (arranque o con carga)
+                mediciones_ordenadas = sorted(
+                    mediciones,
+                    key=lambda m: (0 if m[2] == "durante_arranque" else (1 if m[2] == "con_carga_electrica" else 2)),
                 )
-                estado.registrar_hecho("valor_medicion", str(val), categoria="medicion", tipo=FactType.CONDICION)
-                estado.registrar_hecho("unidad_medicion", unidad, categoria="medicion", tipo=FactType.CONDICION)
-                if condicion:
-                    estado.registrar_hecho("condicion_medicion", condicion, categoria="medicion", tipo=FactType.CONDICION)
-
-                estado.registrar_medicion(
-                    tipo=tipo_med,
-                    valor=val,
-                    unidad=unidad,
-                    contexto=contexto_med,
-                    prueba=campo,
-                    estado="observado",
-                )
-                estado.registrar_prueba_completada(campo, f"{val} {unidad}")
-                estado.limpiar_pregunta_pendiente()
-
-                if unidad == "V" and condicion == "durante_arranque":
-                    if val < 9.6:
-                        estado.registrar_hecho("caida_tension_excesiva", "SI", categoria="medicion", tipo=FactType.CONDICION)
+                for val, unidad, condicion in mediciones_ordenadas:
+                    if unidad in ("PSI", "bar", "kPa"):
+                        campo = "medicion_presion"
+                        tipo_med = "presion_combustible"
+                        contexto_med = "riel_inyeccion"
+                    elif unidad in ("V", "mV"):
+                        campo = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
+                        tipo_med = "voltaje_bateria" if condicion in ("reposo", "durante_arranque", "contacto_on") else "voltaje_alternador"
+                        contexto_med = condicion or "bateria"
+                    elif intent_str == QuestionIntent.MEDICION_VOLTAJE.value or "voltaje" in texto_preg or "multimetro" in texto_preg:
+                        campo = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
+                        unidad = "V"
+                        tipo_med = "voltaje_bateria"
+                        contexto_med = condicion or "bateria"
+                    elif intent_str == QuestionIntent.MEDICION_PRESION.value or "presion" in texto_preg or "manometro" in texto_preg:
+                        campo = "medicion_presion"
+                        unidad = "PSI"
+                        tipo_med = "presion_combustible"
+                        contexto_med = "riel_inyeccion"
+                    elif unidad == "RPM":
+                        campo = "medicion_rpm"
+                        tipo_med = "rpm_motor"
+                        contexto_med = "ralenti" if any(
+                            w in texto_l or w in texto_preg for w in ("ralenti", "ralentí", "detenido", "idle")
+                        ) else "motor"
                     else:
-                        estado.registrar_hecho("caida_tension_excesiva", "NO", categoria="medicion", tipo=FactType.CONDICION)
+                        campo = f"medicion_{unidad.lower()}"
+                        tipo_med = "medicion_tecnica"
+                        contexto_med = "general"
 
-                return {
-                    "categoria_respuesta": "NUMERICO",
-                    "campo": campo,
-                    "valor": val,
-                    "unidad": unidad,
-                    "condicion_medicion": condicion,
-                    "hecho": h.to_dict(),
-                }
+                    valor_medicion = f"{val} {unidad}" + (f" ({condicion})" if condicion else "")
+                    if unidad == "RPM" and contexto_med == "ralenti":
+                        valor_medicion = f"{val} {unidad} en ralentí"
+                        estado.estado_operativo = EstadoOperativo.RALENTI
+
+                    h = estado.registrar_hecho(
+                        campo=campo,
+                        valor=valor_medicion,
+                        categoria="medicion",
+                        estado=FactState.CONFIRMADO,
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+                    estado.registrar_hecho("valor_medicion", str(val), categoria="medicion", tipo=FactType.CONDICION)
+                    estado.registrar_hecho("unidad_medicion", unidad, categoria="medicion", tipo=FactType.CONDICION)
+                    if condicion:
+                        estado.registrar_hecho("condicion_medicion", condicion, categoria="medicion", tipo=FactType.CONDICION)
+
+                    estado.registrar_medicion(
+                        tipo=tipo_med,
+                        valor=val,
+                        unidad=unidad,
+                        contexto=contexto_med,
+                        prueba=campo,
+                        estado="observado",
+                    )
+                    estado.registrar_prueba_completada(campo, f"{val} {unidad}")
+
+                    if unidad == "V":
+                        if condicion == "durante_arranque":
+                            if val < 9.6:
+                                estado.registrar_hecho("caida_tension_excesiva", "SI", categoria="medicion", tipo=FactType.CONDICION)
+                            else:
+                                estado.registrar_hecho("caida_tension_excesiva", "NO", categoria="medicion", tipo=FactType.CONDICION)
+                                estado.registrar_hecho("voltaje_arranque_normal", "SI", categoria="medicion", tipo=FactType.CONDICION)
+                        elif condicion == "reposo":
+                            if val >= 12.4:
+                                estado.registrar_hecho("voltaje_reposo_normal", "SI", categoria="medicion", tipo=FactType.CONDICION)
+                        elif condicion == "con_carga_electrica" and val < 13.0:
+                            estado.registrar_hecho("caida_voltaje_con_luces", "SI", categoria="medicion", tipo=FactType.CONDICION)
+
+                    if respuesta_retorno is None:
+                        respuesta_retorno = {
+                            "categoria_respuesta": "NUMERICO",
+                            "campo": campo,
+                            "valor": val,
+                            "unidad": unidad,
+                            "condicion_medicion": condicion,
+                            "hecho": h.to_dict(),
+                        }
+
+                estado.limpiar_pregunta_pendiente()
+                if respuesta_retorno:
+                    return respuesta_retorno
 
         # 3. Disponibilidad de herramientas y estado de comprobación (GestorPlanB - Fase 9.11)
         indisponibles = GestorPlanB.detectar_indisponibilidad_en_texto(texto_l, texto_preg)

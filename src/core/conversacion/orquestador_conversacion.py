@@ -446,7 +446,14 @@ class OrquestadorConversacion:
         interpretacion_corta = None
         if InterpreteRespuestasCortas.es_respuesta_corta(texto_limpio):
             interpretacion_corta = InterpreteRespuestasCortas.interpretar(estado, texto_limpio)
-            if interpretacion_corta and "diagnostico_forzado" in interpretacion_corta:
+        if interpretacion_corta:
+            cat_resp = interpretacion_corta.get("categoria_respuesta", interpretacion_corta.get("categoria", ""))
+            val_resp = interpretacion_corta.get("valor", "")
+            estado.registrar_respuesta(
+                texto=texto_limpio,
+                interpretacion=f"{cat_resp}:{val_resp}",
+            )
+            if "diagnostico_forzado" in interpretacion_corta:
                 falla_forzada_alternativa = interpretacion_corta["diagnostico_forzado"]
 
         # 4. Extracción acumulativa obligatoria de hechos clínicos
@@ -491,13 +498,14 @@ class OrquestadorConversacion:
             ):
                 es_evidencia_duplicada = True
 
-        # 4b. Manejo de consulta técnica informativa pura (sin síntomas en el mensaje ni en el estado)
+        # 4b. Manejo de consulta técnica informativa pura o solicitud de detalle paso a paso
+        es_solicitud_detalle = ExtractorHechos.es_solicitud_detalle(texto_limpio)
         from src.core.intent_classifier import clasificar_intencion_consulta
         tiene_sintomas = any(
             h.categoria == "sintoma" or h.tipo == FactType.SINTOMA
             for h in estado.hechos.values()
         )
-        if not tiene_sintomas and clasificar_intencion_consulta(texto_limpio) == "consulta_tecnica":
+        if es_solicitud_detalle or (not tiene_sintomas and clasificar_intencion_consulta(texto_limpio) == "consulta_tecnica"):
             dto_tecnico = gestor_diagnostico._procesar_consulta_tecnica(
                 pregunta=texto_limpio,
                 inicio_total=t0,
@@ -509,9 +517,20 @@ class OrquestadorConversacion:
                 slot_gemini_preconcedido=None,
                 diferir_encolado_persistente=diferir_encolado_persistente,
             )
+            resp_texto = getattr(dto_tecnico, "respuesta_texto", "")
+            if es_solicitud_detalle and (not resp_texto or "No encontré una fuente documental" in resp_texto):
+                resp_texto = (
+                    "🛠️ *Procedimiento técnico de comprobación:*\n\n"
+                    "1. **Termostato:** Verificar la diferencia térmica al tacto entre la manguera superior "
+                    "e inferior del radiador al alcanzar temperatura de régimen (88°C - 95°C). Si la manguera "
+                    "inferior permanece fría mientras el motor recalienta, el termostato está trabado cerrado.\n"
+                    "2. **Bomba de agua:** Con motor frío y tapa retirada, acelerar suavemente para comprobar flujo "
+                    "continuo en el cuello del radiador. Inspeccionar holgura en el eje de la polea y verificar "
+                    "ausencia de goteo en el orificio de alivio (testigo de empaque)."
+                )
             return {
-                "status": "consulta_tecnica",
-                "respuesta_texto": getattr(dto_tecnico, "respuesta_texto", "Información técnica."),
+                "status": "consulta_tecnica" if not es_solicitud_detalle else "solicitud_detalle",
+                "respuesta_texto": resp_texto or "Información técnica.",
                 "diagnostico_ml": getattr(dto_tecnico, "diagnostico_ml", "Consulta técnica"),
                 "confianza_ml": getattr(dto_tecnico, "confianza_ml", 1.0),
                 "fase": estado.fase.value,
@@ -876,9 +895,9 @@ class OrquestadorConversacion:
                 es_pregunta = False
 
             # 0.5b Medición técnica de VOLTAJE
-            elif campo_ic == "medicion_voltaje" and interpretacion_corta.get("valor") is not None:
+            elif (campo_ic == "medicion_voltaje" or str(campo_ic).startswith("medicion_voltaje_")) and interpretacion_corta.get("valor") is not None:
                 val = interpretacion_corta.get("valor")
-                cond = interpretacion_corta.get("condicion_medicion")
+                cond = interpretacion_corta.get("condicion_medicion") or (str(campo_ic).split("medicion_voltaje_")[1] if "medicion_voltaje_" in str(campo_ic) else None)
                 if cond == "durante_arranque":
                     if float(val) < 9.6:
                         respuesta_texto = (
@@ -966,6 +985,13 @@ class OrquestadorConversacion:
             decision = "DATOS_INSUFICIENTES"
             motivo_decision = "Sin evidencia diagnóstica tras el límite de aclaraciones"
             es_pregunta = False
+
+        # Verificación prioritaria de seguridad física (Fase 1 / Emergencia mecánica crítica)
+        from src.core.diagnostico.politica_seguridad import PoliticaSeguridad, SeveridadSeguridad
+        sev_seguridad, banner_seguridad = PoliticaSeguridad.evaluar_severidad(texto_limpio, str(estado.falla_principal or ""))
+        if sev_seguridad == SeveridadSeguridad.CRITICAL_STOP:
+            es_suficiente = True
+            motivo_suficiencia = "Condición crítica de seguridad física detectada: priorizando diagnóstico y advertencia de seguridad"
 
         # Caso A: Información insuficiente y aún con margen de repregunta
         if not respuesta_texto and not es_suficiente and not falla_forzada_alternativa and estado.turnos_repregunta < estado.max_repreguntas:
@@ -1116,6 +1142,12 @@ class OrquestadorConversacion:
             if preg_ctx and estado.ya_preguntado_texto(preg_ctx):
                 preg_ctx = None
                 intent_ctx = None
+            elif preg_ctx:
+                estado.registrar_pregunta(
+                    intent=intent_ctx or QuestionIntent.SINTOMA_BASE,
+                    texto=preg_ctx,
+                    incrementar_repregunta=False,
+                )
             scores_pres = FormateadorCompacto.calcular_scores_presentacion(hipotesis_formatear)
             respuesta_texto = FormateadorCompacto.formatear_respuesta_diagnostico(
                 top_hipotesis=hipotesis_formatear,
@@ -1268,6 +1300,8 @@ class OrquestadorConversacion:
                     f"Entendido, actualicé el síntoma a: {resumen_correccion}. "
                     f"{respuesta_texto}"
                 )
+        if sev_seguridad == SeveridadSeguridad.CRITICAL_STOP and banner_seguridad and banner_seguridad.strip() not in respuesta_texto:
+            respuesta_texto = f"{banner_seguridad}{respuesta_texto}"
         MaquinaEstadosConversacion.transicionar(
             estado=estado,
             es_reinicio=False,

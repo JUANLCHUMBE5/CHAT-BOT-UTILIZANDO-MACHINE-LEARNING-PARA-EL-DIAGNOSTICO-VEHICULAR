@@ -18,7 +18,15 @@ cargar_variables_entorno()
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 PROJECT_ROOT = BACKEND_DIR.parent
-ML_ROOT = Path(os.getenv("ML_ROOT") or PROJECT_ROOT / "machine_learning")
+_ml_env = os.getenv("ML_ROOT")
+if _ml_env:
+    ML_ROOT = Path(_ml_env)
+elif (PROJECT_ROOT / "machine_learning" / "models").exists():
+    ML_ROOT = PROJECT_ROOT / "machine_learning"
+elif (PROJECT_ROOT.parent / "machine_learning" / "models").exists():
+    ML_ROOT = PROJECT_ROOT.parent / "machine_learning"
+else:
+    ML_ROOT = PROJECT_ROOT / "machine_learning"
 
 TRUE_VALUES = {"1", "true", "yes", "on", "si", "sí"}
 PRODUCTION_ENVIRONMENTS = {"production", "prod"}

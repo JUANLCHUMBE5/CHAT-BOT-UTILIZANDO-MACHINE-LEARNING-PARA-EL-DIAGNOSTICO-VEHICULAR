@@ -10,6 +10,20 @@ from src.core.conversacion.models import FactState
 # Catálogo de síntomas con patrones positivos y patrones de negación explícita
 DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     (
+        "trepidación y zapateo de embrague",
+        re.compile(
+            r"\b(zapatea(?:\s+feo)?\s+al\s+arrancar|zapateo(\s+de\s+embrague)?|"
+            r"trepidaci[oó]n(\s+de\s+embrague|\s+al\s+salir)?|"
+            r"pedal\s+vibra\s+cuando\s+lo\s+suelto|vibra\s+al\s+soltar\s+el\s+pedal|"
+            r"pedal\s+vibra\s+al\s+soltar)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b(no\s+(?:se\s+|le\s+|me\s+)?(?:zapatea|trepida|vibra\s+el\s+embrague))\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
         "vibración",
         re.compile(r"\b(vibraci[oó]n|vibracion|tiembla|zapatea|vibra)\b", re.IGNORECASE),
         re.compile(
@@ -231,6 +245,10 @@ class DetectorPolaridad:
             txt_l,
         ):
             resultados.append(("sintoma_fuga_de_refrigerante", "fuga de refrigerante", FactState.CONFIRMADO))
+
+        nombres_detectados = {r[1] for r in resultados}
+        if "trepidación y zapateo de embrague" in nombres_detectados:
+            resultados = [r for r in resultados if r[1] != "vibración"]
 
         return resultados
 

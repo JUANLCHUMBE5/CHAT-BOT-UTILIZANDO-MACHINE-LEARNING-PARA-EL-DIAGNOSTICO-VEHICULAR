@@ -78,7 +78,7 @@ class SegmentadorCasos:
             r"dificultad\s+(?:de|para|al)\s+arranc(?:ar|e)|arranque\s+(?:largo|en\s+fr[ií]o|pesado)|"
             r"(?:por|en)\s+las\s+mañanas\s+(?:demora|tarda|le\s+cuesta)|"
             r"demora\s+por\s+las\s+mañanas|tarda\s+en\s+la\s+mañana|"
-            r"clic\s+seco|chasquido|solenoide|motor\s+de\s+arranque|dar\s+arranque|llave)\b",
+            r"clic\s+seco|chasquido|solenoide|motor\s+de\s+arranque|dar\s+arranque|dar\s+marcha|al\s+dar\s+marcha|doy\s+marcha|al\s+arrancar|llave)\b",
             txt,
         ):
             return SubsistemaVehicular.ARRANQUE
@@ -107,14 +107,23 @@ class SegmentadorCasos:
             return SubsistemaVehicular.MARCHA_MOTOR
         if re.search(
             r"\b(caja(?:\s+de\s+cambios|\s+autom[aá]tica)?|transmisi[oó]n|embrague|clutch|"
-            r"palanca(?:\s+de\s+cambios)?|selector(?:\s+de\s+marchas)?|cambio(?:s)?|marcha(?:s)?|"
+            r"palanca(?:\s+de\s+cambios)?|selector(?:\s+de\s+marchas)?|cambio(?:s)?|"
+            r"(?:meter|pasar|cambiar|enganchar|seleccionar)\s+marcha|marcha\s+atr[aá]s|primera\s+marcha|segunda\s+marcha|tercera\s+marcha|"
             r"junta(?:s)?\s+homocin[eé]tica(?:s)?|palier(?:es)?|semieje(?:s)?|"
-            r"patina\s+el\s+embrague|patea\s+la\s+caja|"
+            r"patina\s+el\s+embrague|embrague\s+patinando|patina\s+en\s+subida|patea\s+la\s+caja|"
+            r"zapatea(?:\s+feo)?\s+al\s+arrancar|trepidaci[oó]n|zapateo|"
+            r"pedal\s+vibra\s+cuando\s+lo\s+suelto|pedal\s+de\s+embrague|"
             r"no\s+entra\s+(?:segunda|cambio)|reversa|retroceso)\b",
             txt,
         ) or (
             re.search(r"\b(acopla(?:r|miento)?|engancha(?:r)?)\b", txt)
             and not re.search(r"\b(compresor|clima|a/c|aire)\b", txt)
+        ) or bool(
+            re.search(
+                r"\b(?:revoluciones\s+suben|rpm\s+suben)\b.{0,45}\bno\s+avanza\b|"
+                r"\bno\s+avanza\b.{0,45}\b(?:revoluciones\s+suben|rpm\s+suben)\b",
+                txt,
+            )
         ):
             return SubsistemaVehicular.TRANSMISION
         if re.search(r"\b(suspensi[oó]n|amortiguador(?:es)?|r[oó]tulas?|terminal(?:es)?|baches|pistas?\s+irregulares|rompemuelles|golpe\s+en\s+la\s+rueda)\b", txt):
@@ -208,6 +217,9 @@ class SegmentadorCasos:
         # Arranque y desempeño del motor pueden ser eslabones de una misma
         # cadena causal (p. ej. arranque difícil, humo y pérdida bajo carga).
         if {sub1, sub2} == {SubsistemaVehicular.ARRANQUE, SubsistemaVehicular.MARCHA_MOTOR}:
+            return True
+        # Par motor marcha / transmisión (embrague patinando al acelerar, tironeo, tren motriz integrado)
+        if {sub1, sub2} == {SubsistemaVehicular.MARCHA_MOTOR, SubsistemaVehicular.TRANSMISION}:
             return True
         # Solo conectores aditivos inequívocos. "Y cuando" / "y al" dentro de
         # una queja nueva describen su propia secuencia y no enlazan casos.
@@ -318,6 +330,25 @@ class SegmentadorCasos:
                 estado_previo=estado_previo,
                 estado_detectado_mensaje=estado_detectado_mensaje,
                 dominio_detectado_mensaje=sub_det,
+            )
+
+        # 1.6 Especificación de configuración o perfil técnico del vehículo activo (transmisión, caja, combustible)
+        es_especificacion_perfil = bool(
+            re.search(
+                r"\b(?:es\s+)?(?:transmisi[oó]n|caja)\s+(?:mec[aá]nica|manual|autom[aá]tica|cvt)\b|"
+                r"\b(?:es\s+)?caja\s+de\s+\d+\s+(?:cambios|velocidades)\b|"
+                r"\b(?:transmisi[oó]n|caja)\s+(?:mec[aá]nica\s+)?manual\s+de\s+\d+\s+velocidades\b",
+                texto_l,
+            )
+            and not re.search(r"\b(otro\s+carro|otro\s+auto|otra\s+falla|nuevo\s+caso)\b", texto_l)
+        )
+        if es_especificacion_perfil:
+            return TransicionCasoResultado(
+                decision=DecisionTransicion.MANTENER_CASO,
+                motivo="ESPECIFICACION_PERFIL_VEHICULAR",
+                estado_previo=estado_previo,
+                estado_detectado_mensaje=estado_detectado_mensaje,
+                dominio_detectado_mensaje=cls.detectar_subsistema_texto(texto_usuario),
             )
 
         tiene_arranque_heredado = bool(
