@@ -283,7 +283,9 @@ class ManejadorIntencionesEspeciales:
                 f"🎯 *Hipótesis de trabajo:*\n{hip_txt}\n\n"
                 f"¿Deseas aportar una nueva medición o proceder con las pruebas sugeridas?"
             )
-            resp_resumen = PoliticaSeguridad.enriquecer_respuesta_seguridad(resp_resumen, norm_txt_cons, estado.falla_principal)
+            resp_resumen = PoliticaSeguridad.enriquecer_respuesta_seguridad(
+                resp_resumen, norm_txt_cons, estado.falla_principal, estado=estado
+            )
             return {
                 "status": "resumen_caso", "respuesta_texto": resp_resumen,
                 "diagnostico_ml": estado.falla_principal or "Resumen del caso",
@@ -304,7 +306,9 @@ class ManejadorIntencionesEspeciales:
         if patron_consulta_causal.search(norm_txt_cons):
             resp_por_que = cls._obtener_explicacion_causal(norm_txt_cons)
             if resp_por_que:
-                resp_por_que = PoliticaSeguridad.enriquecer_respuesta_seguridad(resp_por_que, norm_txt_cons, estado.falla_principal)
+                resp_por_que = PoliticaSeguridad.enriquecer_respuesta_seguridad(
+                    resp_por_que, norm_txt_cons, estado.falla_principal, estado=estado
+                )
                 return {
                     "status": "explicacion_causal", "respuesta_texto": resp_por_que,
                     "diagnostico_ml": estado.falla_principal or "Explicación técnica",

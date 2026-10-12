@@ -261,6 +261,165 @@ class OrquestadorConversacion:
                 "estado": estado,
             }
 
+        # 2.0b Intervención prioritaria de seguridad mecánica (Common Rail, DPF y maniobras de alto riesgo)
+        from src.core.diagnostico.politica_seguridad import (
+            BANNER_BLOQUEO_REGENERACION_DILUCION,
+            BANNER_DIESEL_ALTA_PRESION,
+            BANNER_RADIADOR_CALIENTE,
+            PoliticaSeguridad,
+            SeveridadSeguridad,
+        )
+        sev_seguridad_early, banner_seguridad_early = PoliticaSeguridad.evaluar_severidad(
+            texto_limpio,
+            str(estado.falla_principal or ""),
+            estado=estado,
+        )
+        if (
+            sev_seguridad_early == SeveridadSeguridad.CRITICAL_STOP
+            and banner_seguridad_early in (
+                BANNER_DIESEL_ALTA_PRESION,
+                BANNER_BLOQUEO_REGENERACION_DILUCION,
+                BANNER_RADIADOR_CALIENTE,
+            )
+        ):
+            if texto_limpio not in estado.historial_mensajes_usuario:
+                estado.historial_mensajes_usuario.append(texto_limpio)
+            estado.registrar_hecho(
+                "alerta_seguridad_mecanica_activada",
+                "SI",
+                categoria="seguridad",
+                texto_crudo=texto_limpio,
+                tipo=FactType.CONDICION,
+            )
+            logger.warning(
+                f"[SeguridadMecanica] Intervención prioritaria activada en sesión {session_id} Turno {estado.turno_actual}"
+            )
+            resp_seguridad = banner_seguridad_early.strip()
+            traza = TurnTrace(
+                turno=estado.turno_actual,
+                mensaje_original=texto_limpio,
+                contexto_previo=contexto_previo,
+                hechos_nuevos_extraidos=[],
+                hechos_actualizados=[h.to_dict() for h in estado.hechos.values() if h.estado == FactState.CONFIRMADO],
+                consulta_consolidada=texto_limpio,
+                top3=estado.top3_actual,
+                confianza=estado.confianza_actual,
+                origen_confianza="SEGURIDAD_CRITICA",
+                decision="SEGURIDAD_CRITICA",
+                motivo_decision="Intervención prioritaria por riesgo crítico de seguridad mecánica",
+                respuesta_enviada=resp_seguridad,
+                estado_operativo=estado.estado_operativo.value,
+                question_intent=None,
+                preguntas_candidatas=[],
+                preguntas_descartadas=[],
+                pregunta_final=None,
+                hipotesis_rechazadas_usuario=list(estado.hipotesis_descartadas),
+                version_orquestador=ORCHESTRATOR_VERSION,
+                tipo_mensaje="seguridad_critica",
+            )
+            estado.trazabilidad.append(traza.to_dict())
+            if len(estado.trazabilidad) > 15:
+                estado.trazabilidad = estado.trazabilidad[-15:]
+
+            await self.repositorio.save_session(session_id, estado)
+            if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager is not None:
+                gestor_diagnostico.session_manager.cargar_contexto(
+                    session_id,
+                    {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+                )
+
+            return {
+                "status": "seguridad_critica",
+                "respuesta_texto": resp_seguridad,
+                "diagnostico_ml": estado.falla_principal or "Advertencia de seguridad mecánica",
+                "confianza_ml": estado.confianza_actual or 1.0,
+                "top3_actual": estado.top3_actual,
+                "scores_presentacion": {},
+                "fase": estado.fase.value,
+                "es_pregunta": False,
+                "decision": "SEGURIDAD_CRITICA",
+                "motivo_decision": "Intervención prioritaria por riesgo crítico de seguridad mecánica",
+                "pregunta_final": None,
+                "case_id": estado.case_id,
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
+            }
+
+        # 2.0c Consulta de prerrequisitos de regeneración DPF (aceite verificado / sin dilución activa)
+        norm_txt_cons = texto_limpio.casefold()
+        es_consulta_prerrequisitos_dpf = bool(
+            re.search(
+                r"\b(?:qu[eé]\s+(?:debo|se\s+debe|hay\s+que|tengo\s+que)\s+(?:verificar|revisar|comprobar|chequear)|"
+                r"prerrequisitos?|condiciones\s+previas|requisitos?)\b.{0,50}\b(?:antes\s+de\s+regenerar|regeneraci[oó]n|regenerar)\b|"
+                r"\b(?:antes\s+de\s+regenerar|para\s+regenerar)\b.{0,40}\b(?:qu[eé]\s+(?:verifico|reviso|compruebo|chequeo)|prerrequisitos?)\b",
+                norm_txt_cons,
+            )
+            or (
+                re.search(r"\b(?:ya\s+correg[ií]|ya\s+cambi[eé]|dren[eé]|bot[eé]|aceite\s+nuevo)\b", norm_txt_cons)
+                and re.search(r"\b(?:regenerar|regeneraci[oó]n)\b", norm_txt_cons)
+            )
+        )
+        if es_consulta_prerrequisitos_dpf and not PoliticaSeguridad._hay_dilucion_aceite_activa(texto_limpio, estado):
+            if texto_limpio not in estado.historial_mensajes_usuario:
+                estado.historial_mensajes_usuario.append(texto_limpio)
+            estado.registrar_hecho(
+                "prerrequisitos_dpf_consultados",
+                "SI",
+                categoria="seguridad",
+                texto_crudo=texto_limpio,
+                tipo=FactType.CONDICION,
+            )
+            resp_prerreq = PoliticaSeguridad.PRERREQUISITOS_REGENERACION_DPF_OEM
+            traza = TurnTrace(
+                turno=estado.turno_actual,
+                mensaje_original=texto_limpio,
+                contexto_previo=contexto_previo,
+                hechos_nuevos_extraidos=[],
+                hechos_actualizados=[h.to_dict() for h in estado.hechos.values() if h.estado == FactState.CONFIRMADO],
+                consulta_consolidada=texto_limpio,
+                top3=estado.top3_actual,
+                confianza=estado.confianza_actual,
+                origen_confianza="PRERREQUISITOS_OEM",
+                decision="PRERREQUISITOS_OEM",
+                motivo_decision="Consulta técnica de prerrequisitos OEM para regeneración de DPF",
+                respuesta_enviada=resp_prerreq,
+                estado_operativo=estado.estado_operativo.value,
+                question_intent=None,
+                preguntas_candidatas=[],
+                preguntas_descartadas=[],
+                pregunta_final=None,
+                hipotesis_rechazadas_usuario=list(estado.hipotesis_descartadas),
+                version_orquestador=ORCHESTRATOR_VERSION,
+                tipo_mensaje="prerrequisitos_dpf",
+            )
+            estado.trazabilidad.append(traza.to_dict())
+            if len(estado.trazabilidad) > 15:
+                estado.trazabilidad = estado.trazabilidad[-15:]
+
+            await self.repositorio.save_session(session_id, estado)
+            if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager is not None:
+                gestor_diagnostico.session_manager.cargar_contexto(
+                    session_id,
+                    {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+                )
+
+            return {
+                "status": "prerrequisitos_dpf",
+                "respuesta_texto": resp_prerreq,
+                "diagnostico_ml": estado.falla_principal or "Prerrequisitos OEM DPF",
+                "confianza_ml": estado.confianza_actual or 1.0,
+                "top3_actual": estado.top3_actual,
+                "scores_presentacion": {},
+                "fase": estado.fase.value,
+                "es_pregunta": False,
+                "decision": "PRERREQUISITOS_OEM",
+                "motivo_decision": "Consulta técnica de prerrequisitos OEM para regeneración de DPF",
+                "pregunta_final": None,
+                "case_id": estado.case_id,
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
+            }
+
         # 2.1 Detección de saludo ("hola", "buenas", "buenos días")
         if ExtractorHechos.es_saludo(texto_limpio):
             tiene_caso_activo = bool(
@@ -810,9 +969,15 @@ class OrquestadorConversacion:
                         "2. Medición de parámetros de funcionamiento con multímetro o escáner bajo especificación de taller.\n"
                         "3. Verificación de tolerancias y pruebas de aislamiento funcional para confirmar la causa raíz."
                     )
+            resp_texto = PoliticaSeguridad.enriquecer_respuesta_seguridad(
+                resp_texto or "Información técnica.",
+                texto_limpio,
+                diagnostico_ml=getattr(dto_tecnico, "diagnostico_ml", "Consulta técnica"),
+                estado=estado,
+            )
             return {
                 "status": "consulta_tecnica" if not es_solicitud_detalle else "solicitud_detalle",
-                "respuesta_texto": resp_texto or "Información técnica.",
+                "respuesta_texto": resp_texto,
                 "diagnostico_ml": getattr(dto_tecnico, "diagnostico_ml", "Consulta técnica"),
                 "confianza_ml": getattr(dto_tecnico, "confianza_ml", 1.0),
                 "fase": estado.fase.value,
@@ -1294,7 +1459,9 @@ class OrquestadorConversacion:
 
         # Verificación prioritaria de seguridad física (Fase 1 / Emergencia mecánica crítica)
         from src.core.diagnostico.politica_seguridad import PoliticaSeguridad, SeveridadSeguridad
-        sev_seguridad, banner_seguridad = PoliticaSeguridad.evaluar_severidad(texto_limpio, str(estado.falla_principal or ""))
+        sev_seguridad, banner_seguridad = PoliticaSeguridad.evaluar_severidad(
+            texto_limpio, str(estado.falla_principal or ""), estado=estado
+        )
         if sev_seguridad == SeveridadSeguridad.CRITICAL_STOP:
             es_suficiente = True
             motivo_suficiencia = "Condición crítica de seguridad física detectada: priorizando diagnóstico y advertencia de seguridad"
@@ -1676,6 +1843,7 @@ class OrquestadorConversacion:
             respuesta_texto,
             contexto_seg,
             diagnostico_ml=getattr(dto_resultado, "diagnostico_ml", ""),
+            estado=estado,
         )
 
         return {
