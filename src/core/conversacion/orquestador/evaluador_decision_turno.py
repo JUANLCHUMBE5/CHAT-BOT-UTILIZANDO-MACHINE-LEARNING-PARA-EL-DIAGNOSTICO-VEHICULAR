@@ -165,7 +165,7 @@ class EvaluadorDecisionTurno:
 
         # Verificación prioritaria de seguridad física
         sev_seguridad, banner_seguridad = PoliticaSeguridad.evaluar_severidad(
-            texto_limpio, str(estado.falla_principal or "")
+            texto_limpio, str(estado.falla_principal or ""), estado=estado
         )
         if sev_seguridad == SeveridadSeguridad.CRITICAL_STOP:
             es_suficiente = True
