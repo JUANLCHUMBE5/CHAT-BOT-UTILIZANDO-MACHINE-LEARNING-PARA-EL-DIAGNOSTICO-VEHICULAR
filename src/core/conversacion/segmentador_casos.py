@@ -218,6 +218,9 @@ class SegmentadorCasos:
         # cadena causal (p. ej. arranque difícil, humo y pérdida bajo carga).
         if {sub1, sub2} == {SubsistemaVehicular.ARRANQUE, SubsistemaVehicular.MARCHA_MOTOR}:
             return True
+        # Par motor marcha / transmisión (embrague patinando al acelerar, tironeo, tren motriz integrado)
+        if {sub1, sub2} == {SubsistemaVehicular.MARCHA_MOTOR, SubsistemaVehicular.TRANSMISION}:
+            return True
         # Solo conectores aditivos inequívocos. "Y cuando" / "y al" dentro de
         # una queja nueva describen su propia secuencia y no enlazan casos.
         txt = texto.lower()
@@ -327,6 +330,25 @@ class SegmentadorCasos:
                 estado_previo=estado_previo,
                 estado_detectado_mensaje=estado_detectado_mensaje,
                 dominio_detectado_mensaje=sub_det,
+            )
+
+        # 1.6 Especificación de configuración o perfil técnico del vehículo activo (transmisión, caja, combustible)
+        es_especificacion_perfil = bool(
+            re.search(
+                r"\b(?:es\s+)?(?:transmisi[oó]n|caja)\s+(?:mec[aá]nica|manual|autom[aá]tica|cvt)\b|"
+                r"\b(?:es\s+)?caja\s+de\s+\d+\s+(?:cambios|velocidades)\b|"
+                r"\b(?:transmisi[oó]n|caja)\s+(?:mec[aá]nica\s+)?manual\s+de\s+\d+\s+velocidades\b",
+                texto_l,
+            )
+            and not re.search(r"\b(otro\s+carro|otro\s+auto|otra\s+falla|nuevo\s+caso)\b", texto_l)
+        )
+        if es_especificacion_perfil:
+            return TransicionCasoResultado(
+                decision=DecisionTransicion.MANTENER_CASO,
+                motivo="ESPECIFICACION_PERFIL_VEHICULAR",
+                estado_previo=estado_previo,
+                estado_detectado_mensaje=estado_detectado_mensaje,
+                dominio_detectado_mensaje=cls.detectar_subsistema_texto(texto_usuario),
             )
 
         tiene_arranque_heredado = bool(

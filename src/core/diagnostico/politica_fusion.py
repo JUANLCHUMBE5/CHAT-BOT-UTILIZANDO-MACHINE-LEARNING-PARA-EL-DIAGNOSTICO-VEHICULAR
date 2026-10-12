@@ -197,7 +197,7 @@ class PoliticaFusionDiagnostica:
         # Zumbido de rodaje de maza / rueda con carga lateral
         es_rodaje_rueda = any(
             w in texto_norm for w in ("wub-wub", "avion", "rueda delantera", "rueda trasera")
-        ) and any(w in texto_norm for w in ("al girar", "curva", "cargando peso"))
+        ) and any(w in texto_norm for w in ("al girar", "al doblar", "curva", "cargando peso"))
         if es_rodaje_rueda:
             evidencia_confirmada.append("Zumbido de rodadura variable dependiente de la transferencia de carga lateral")
 

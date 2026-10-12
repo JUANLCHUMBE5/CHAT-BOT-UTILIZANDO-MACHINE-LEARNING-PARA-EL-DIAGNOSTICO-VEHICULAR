@@ -190,6 +190,12 @@ class ValidadorCompatibilidad:
             )):
                 return False, "INCOMPATIBLE_CON_HECHO_CONFIRMADO: Voltaje normal en arranque (>= 9.6V) descarta batería descargada y consumo parásito"
 
+        # D. Reglas de alternador y carga en marcha
+        texto_hist = " ".join(getattr(estado, "historial_mensajes_usuario", []) or []).lower()
+        if any(w in texto_hist for w in ("motor prendido", "motor encendido", "en marcha", "andando", "luces altas")):
+            if any(term in falla_l for term in ("fuga parasita", "fuga parásita", "consumo nocturno")):
+                return False, "INCOMPATIBLE_CON_HECHO_CONFIRMADO: Con motor prendido corresponde evaluar alternador/carga, no fuga en reposo"
+
         return True, None
 
     @staticmethod
@@ -229,6 +235,20 @@ class ValidadorCompatibilidad:
         exclusiones: List[Dict[str, Any]] = []
         claves_presentadas: set[str] = set()
         ruta = detectar_ruta_sistema(estado, nueva_evidencia)
+
+        # Masa de probabilidad de candidatos viables ante descarte físico de hipótesis dominantes incompatibles
+        exclusiones_incompatibles_raw: set[str] = set()
+        for p_cand in predicciones_raw:
+            f_cand = p_cand.get("falla", "")
+            es_comp_cand, _ = cls.validar_compatibilidad_hipotesis(f_cand, estado)
+            if not es_comp_cand or not hipotesis_compatibles_con_ruta(f_cand, ruta.sistema):
+                exclusiones_incompatibles_raw.add(f_cand)
+
+        masa_compatible = sum(
+            float(p.get("probabilidad", 0.0) or 0.0)
+            for p in predicciones_raw
+            if p.get("falla", "") not in exclusiones_incompatibles_raw
+        )
 
         # Evaluar cada predicción de la lista RAW
         for pred in predicciones_raw:
@@ -274,9 +294,15 @@ class ValidadorCompatibilidad:
                 })
                 continue
 
+            # Probabilidad efectiva condicional si se descartaron hipótesis incompatibles dominantes
+            prob_eval = float(prob or 0)
+            if exclusiones_incompatibles_raw and masa_compatible > 0 and prob_eval > 0:
+                prob_condicional = prob_eval / masa_compatible
+                prob_eval = max(prob_eval, prob_condicional)
+
             if (
                 origen_probabilidad == "SVM"
-                and float(prob or 0) < settings.diagnostic.min_presentable_confidence
+                and prob_eval < settings.diagnostic.min_presentable_confidence
             ):
                 exclusiones.append({
                     "falla": falla, "probabilidad_raw": prob,
@@ -334,7 +360,7 @@ class ValidadorCompatibilidad:
 
             candidatas_compatibles.append({
                 "falla": falla,
-                "probabilidad": prob,
+                "probabilidad": round(prob_eval, 4),
                 "origen_probabilidad": origen_probabilidad,
             })
             claves_presentadas.add(clave)

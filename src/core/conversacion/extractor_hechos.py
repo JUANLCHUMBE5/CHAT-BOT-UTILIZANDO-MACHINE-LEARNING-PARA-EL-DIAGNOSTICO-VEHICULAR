@@ -168,7 +168,9 @@ PATRON_HALLAZGO_MAF = re.compile(
     r"\b(?:el\s+)?maf\b.{0,55}\b(?:lecturas?\s+(?:raras?|irregulares?|anormales?)|"
     r"valores?\s+(?:raros?|irregulares?|anormales?)|fuera\s+de\s+rango|no\s+mide\s+bien)\b|"
     r"\b(?:lecturas?\s+(?:raras?|irregulares?|anormales?)|valores?\s+(?:raros?|irregulares?|anormales?))"
-    r".{0,55}\b(?:sensor\s+)?maf\b",
+    r".{0,55}\b(?:sensor\s+)?maf\b|"
+    r"\b(?:desconect[eé]|solt[eé]|saqu[eé])\b.{0,30}\b(?:sensor\s+)?maf\b|"
+    r"\b(?:sensor\s+)?maf\b.{0,30}\b(?:desconectad[oa]|desconect[eé])\b",
     re.IGNORECASE,
 )
 PATRON_SENSOR_OXIGENO = re.compile(r"\b(sensor\s+(?:de\s+)?ox[ií]geno|sonda\s+lambda|sensor\s+o2)\b", re.IGNORECASE)
@@ -570,10 +572,19 @@ class ExtractorHechos:
         placa_encontrada = cls.extraer_placa(texto_usuario)
         if placa_encontrada:
             if estado.placa and estado.placa != placa_encontrada:
-                # Cambio explícito de placa vehicular
-                estado.reiniciar()
-                estado.historial_mensajes_usuario.append(texto_usuario)
-                estado.turno_actual = 1
+                # Si es una corrección explícita de placa ('me equivoqué de placa', etc.),
+                # no reiniciar el vehículo completo.
+                es_correccion = bool(
+                    re.search(
+                        r"\b(me\s+equivoqu[eé]|corrijo|la\s+placa\s+correcta|no\s+era\s+esa\s+placa)\b",
+                        texto_usuario,
+                        re.IGNORECASE,
+                    )
+                )
+                if not es_correccion:
+                    estado.reiniciar()
+                    estado.historial_mensajes_usuario.append(texto_usuario)
+                    estado.turno_actual = 1
             estado.placa = placa_encontrada
             h_placa = estado.registrar_hecho(
                 "placa",
@@ -697,6 +708,34 @@ class ExtractorHechos:
                     )
                     hechos_extraidos.append(h.to_dict())
                 break
+
+        # 2.5 Extracción de transmisión
+        texto_l_trans = texto_usuario.lower()
+        if re.search(r"\b(mec[aá]nic[oa]|manual)\b", texto_l_trans) and any(
+            w in texto_l_trans for w in ("caja", "transmision", "transmisión", "velocidades", "cambios", "embrague")
+        ):
+            h_trans = estado.registrar_hecho(
+                "transmision",
+                "MANUAL",
+                categoria="perfil",
+                estado=FactState.CONFIRMADO,
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(h_trans.to_dict())
+        elif re.search(r"\b(autom[aá]tic[oa]|cvt)\b", texto_l_trans) and any(
+            w in texto_l_trans for w in ("caja", "transmision", "transmisión")
+        ):
+            val_trans = "CVT" if "cvt" in texto_l_trans else "AUTOMATICA"
+            h_trans = estado.registrar_hecho(
+                "transmision",
+                val_trans,
+                categoria="perfil",
+                estado=FactState.CONFIRMADO,
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(h_trans.to_dict())
 
         # 3. Extracción de DTC (DTC_OBSERVADO explícito)
         for dtc in PATRON_DTC.findall(texto_usuario):

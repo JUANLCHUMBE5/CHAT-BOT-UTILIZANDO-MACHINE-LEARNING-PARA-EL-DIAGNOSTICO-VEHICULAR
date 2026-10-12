@@ -62,6 +62,8 @@ EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
     (re.compile(r"\b(humo\s+blanco\s+espeso|vapor\s+por\s+escape)\b", re.IGNORECASE), "humo blanco refrigerante"),
     (re.compile(r"\b(humo\s+negro|olor\s+a\s+nafta\s+cruda)\b", re.IGNORECASE), "humo negro exceso combustible"),
     (re.compile(r"\b(humo\s+azul(ado)?)\b", re.IGNORECASE), "humo azul consumo aceite"),
+    (re.compile(r"\b(chicote|pedal\s+(?:qued[oó]|al)\s+fondo)\b", re.IGNORECASE), "embrague pedal al fondo chicote"),
+    (re.compile(r"\b(acelerado|queda\s+acelerado|ralent[ií]\s+alto|chupa\s+aire|fuga\s+de\s+vac[ií]o)\b", re.IGNORECASE), "ralenti acelerado fuga vacio"),
 ]
 
 # Patrones contextuales de condiciones de operación
@@ -128,7 +130,10 @@ PATRONES_TEMPERATURA: List[Tuple[re.Pattern, str]] = [
     ),
     (
         re.compile(
-            r"\b(en\s+caliente|despu[eé]s\s+de\s+calentar|ya\s+caliente|calent[oó]|calienta|tras\s+andar|motor\s+caliente|cuando\s+(?:el\s+\w+\s+)?calienta|al\s+calentar|(?:solo\s+)?pasa\s+caliente|^caliente$|despu[eé]s\s+de\s+\d+\s*(?:minutos?|min)\b|a\s+los\s+\d+\s*(?:minutos?|min)\b)\b",
+            r"\b(en\s+caliente|despu[eé]s\s+de\s+calentar|ya\s+caliente|calent[oó]|calienta|calentar|"
+            r"tras\s+(?:andar|\d+\s*(?:minutos?|min))|motor\s+caliente|cuando\s+(?:el\s+\w+\s+)?calienta|"
+            r"al\s+calentar|(?:solo\s+)?pasa\s+caliente|^caliente$|despu[eé]s\s+de\s+\d+\s*(?:minutos?|min)\b|"
+            r"a\s+los\s+\d+\s*(?:minutos?|min)\b)\b",
             re.IGNORECASE,
         ),
         "caliente",
@@ -220,5 +225,13 @@ def extraer_hechos_linguisticos(texto: str) -> Dict[str, Any]:
         if patron.search(texto):
             hechos["evolucion_accion"] = valor
             break
+
+    # 4. Síntomas clave reportados
+    for patron, valor in EQUIVALENCIAS_TERMINOLOGICAS:
+        if valor.startswith(r"inyector") or "\\" in valor:
+            continue
+        if patron.search(texto):
+            clave_s = f"sintoma_{valor.replace(' ', '_')}"
+            hechos[clave_s] = valor
 
     return hechos
