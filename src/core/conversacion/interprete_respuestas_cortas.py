@@ -165,13 +165,39 @@ class InterpreteRespuestasCortas:
         texto_usuario: str,
     ) -> Optional[Dict[str, Any]]:
         """Mapea una respuesta corta a hechos clínicos concretos según la última pregunta."""
+        texto_l = texto_usuario.strip().lower()
         ultima_preg = estado.ultima_pregunta()
         if not ultima_preg:
+            if texto_l in ("si", "sí", "afirmativo", "correcto"):
+                h = estado.registrar_hecho(
+                    f"confirmado_pregunta_{estado.turno_actual}",
+                    "sí",
+                    categoria="confirmacion",
+                    texto_crudo=texto_usuario,
+                )
+                return {
+                    "categoria_respuesta": "AFIRMACION",
+                    "campo": "confirmacion",
+                    "valor": "sí",
+                    "hecho": h.to_dict(),
+                }
+            if texto_l in ("no", "negativo"):
+                h = estado.registrar_hecho(
+                    f"descartado_pregunta_{estado.turno_actual}",
+                    "no",
+                    categoria="descarte",
+                    texto_crudo=texto_usuario,
+                )
+                return {
+                    "categoria_respuesta": "NEGACION",
+                    "campo": "confirmacion",
+                    "valor": "no",
+                    "hecho": h.to_dict(),
+                }
             return None
 
         intent_str = str(ultima_preg.get("intent", QuestionIntent.GENERAL.value))
         texto_preg = str(ultima_preg.get("texto", "")).lower()
-        texto_l = texto_usuario.strip().lower()
         hipotesis = ultima_preg.get("hipotesis") or []
 
         if intent_str == QuestionIntent.MEDICION_TECNICA.value and texto_l in (

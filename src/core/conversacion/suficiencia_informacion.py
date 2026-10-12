@@ -100,6 +100,24 @@ class EvaluadorSuficiencia:
         if tiene_vib and tiene_freno and tiene_ubica and len(estado.historial_mensajes_usuario) >= 2:
             return True, "Evidencia fuerte: Vibración al frenar localizada con disparador verificado"
 
+        # 6. Falla mecánica de embrague: patinamiento (revoluciones suben sin avance) o trepidación/zapateo al arrancar
+        tiene_embrague_patina = any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("patina el embrague", "embrague patinando", "suben las revoluciones", "rpm suben", "no avanza", "huele a quemado")
+        ) and any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("embrague", "clutch", "subida", "pendiente", "revoluciones suben", "rpm suben")
+        )
+        tiene_embrague_zapatea = any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("zapatea", "zapateo", "trepidacion", "trepidación")
+        ) and any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("embrague", "clutch", "arrancar", "primera", "soltar el pedal", "pedal vibra")
+        )
+        if tiene_embrague_patina or tiene_embrague_zapatea:
+            return True, "Evidencia fuerte: Falla mecánica de embrague (patinamiento / trepidación)"
+
         return False, ""
 
     @classmethod

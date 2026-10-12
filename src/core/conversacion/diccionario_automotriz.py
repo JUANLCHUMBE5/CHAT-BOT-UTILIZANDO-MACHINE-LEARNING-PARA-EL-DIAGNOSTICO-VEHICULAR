@@ -18,6 +18,38 @@ EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
     (re.compile(r"\b(crapodina(s)?)\b", re.IGNORECASE), "collarín de embrague"),
     (re.compile(r"\b(collarin|collarín)\b", re.IGNORECASE), "collarín de embrague"),
     (re.compile(r"\b(embrague\s+patina|clutch\s+patina|disco\s+patina)\b", re.IGNORECASE), "embrague patinando"),
+    (
+        re.compile(
+            r"\b(zapatea(?:\s+feo)?\s+al\s+arrancar(?:\s+en\s+primera)?|zapateo(\s+de\s+embrague)?|"
+            r"trepidaci[oó]n\s+al\s+salir|al\s+arrancar\s+en\s+primera\s+zapatea)\b",
+            re.IGNORECASE,
+        ),
+        "trepidación zapateo de embrague",
+    ),
+    (
+        re.compile(
+            r"\b(pedal\s+vibra\s+cuando\s+lo\s+suelto|vibra\s+al\s+soltar\s+el\s+pedal|"
+            r"pedal\s+vibra\s+al\s+soltar)\b",
+            re.IGNORECASE,
+        ),
+        "vibración en pedal de embrague",
+    ),
+    (
+        re.compile(
+            r"\b(?:revoluciones\s+suben|rpm\s+suben)\b.{0,40}\bno\s+avanza\b|"
+            r"\bno\s+avanza\b.{0,40}\b(?:revoluciones\s+suben|rpm\s+suben)\b",
+            re.IGNORECASE,
+        ),
+        "embrague patinando suben revoluciones no avanza",
+    ),
+    (
+        re.compile(
+            r"\bhuele\s+a\s+quemado\b.{0,30}\b(?:no\s+avanza|subida|cuesta)\b|"
+            r"\b(?:no\s+avanza|subida|cuesta)\b.{0,30}\bhuele\s+a\s+quemado\b",
+            re.IGNORECASE,
+        ),
+        "embrague patinando olor a quemado",
+    ),
     # Rodamientos
     (re.compile(r"\b(rodaje(s)?|rodamientos?)\b", re.IGNORECASE), "rodamiento"),
     # Síntomas de motor
