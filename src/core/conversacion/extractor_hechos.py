@@ -135,6 +135,56 @@ PATRONES_MODELO = [
     (re.compile(r"\b(vitara|grand\s*vitara)\b", re.IGNORECASE), "Vitara"),
 ]
 
+PATRON_NEGACION_VEHICULAR = re.compile(
+    r"(?:\bno\b|\bno\s+(?:es|era|fue|ser[ií]a)\b|\bnunca\s+fue\b|\btampoco\s+(?:es|era)?\b|\bdescart(?:o|ado)\b|\bmenos\b|\ben\s+vez\s+de\b)\s*(?:un\s+|una\s+)?$",
+    re.IGNORECASE,
+)
+PATRON_ANTECEDENTE_VEHICULAR = re.compile(
+    r"(?:\bantes\s+(?:de\s+este\s+)?(?:revis[eé]|vi|atend[ií]|ten[ií]a|era)\b|\bel\s+anterior\s+(?:era|fue|carro|auto)\b)\s*(?:un\s+|una\s+)?$",
+    re.IGNORECASE,
+)
+PATRON_AFIRMACION_VEHICULAR = re.compile(
+    r"(?:\bes\b|\bera\b|\btengo\b|\ben\b|\bdel?\b|\bpara\b|\bcorrijo\b|\bcorrecci[oó]n\b|\bme\s+equivoqu[eé](?:,\s*era|\s*es)?\b)\s*(?:un\s+|una\s+)?$",
+    re.IGNORECASE,
+)
+PATRON_CORRECCION_VEHICULO = re.compile(
+    r"(?:\b(?:me\s+equivoqu[eé]|no\s+es|no\s+era|corrijo|correcci[oó]n|quise\s+decir|en\s+realidad|en\s+verdad|en\s+vez\s+de)\b|,\s*no\s+)",
+    re.IGNORECASE,
+)
+
+
+def _seleccionar_entidad_vehicular(
+    texto: str,
+    coincidencias: List[Tuple[int, int, str]],
+    entidad_actual: Optional[str] = None,
+) -> Tuple[Optional[str], bool]:
+    """Retorna (nueva_entidad, fue_negada_actual) evaluando polaridad y antecedentes."""
+    candidatos_validos: List[Tuple[int, str, int]] = []
+    fue_negada_actual = False
+
+    for start, end, nombre in coincidencias:
+        prefijo = texto[:start].rstrip(" ,;:")
+        ventana_pre = prefijo[-45:] if len(prefijo) > 45 else prefijo
+
+        if PATRON_NEGACION_VEHICULAR.search(ventana_pre):
+            if entidad_actual and entidad_actual.casefold() == nombre.casefold():
+                fue_negada_actual = True
+            continue
+
+        if PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre):
+            candidatos_validos.append((start, nombre, 1))
+            continue
+
+        prioridad = 3 if PATRON_AFIRMACION_VEHICULAR.search(ventana_pre) else 2
+        candidatos_validos.append((start, nombre, prioridad))
+
+    if not candidatos_validos:
+        return (None, fue_negada_actual)
+
+    candidatos_validos.sort(key=lambda x: (x[2], x[0]), reverse=True)
+    return (candidatos_validos[0][1], fue_negada_actual)
+
+
 PATRON_PLACA_EXPLICITA = re.compile(
     r"\b(?:placa|patente)\s*(?:es\s+|:\s*|\s+)?([A-Za-z0-9]{2,3}[-\s]?[0-9]{3,4})\b",
     re.IGNORECASE,
@@ -595,29 +645,35 @@ class ExtractorHechos:
             )
             hechos_extraidos.append(h_placa.to_dict())
 
-        # 2. Extracción de marca / modelo / año / combustible con soporte de correcciones
-        marcas_encontradas: List[Tuple[int, str]] = []
+        # 2. Extracción de marca / modelo / año / combustible con soporte de correcciones y negaciones
+        marcas_encontradas: List[Tuple[int, int, str]] = []
         for patron, marca in PATRONES_MARCA:
             for m in patron.finditer(texto_usuario):
-                marcas_encontradas.append((m.start(), marca))
+                marcas_encontradas.append((m.start(), m.end(), marca))
 
-        if marcas_encontradas:
-            marcas_encontradas.sort(key=lambda x: x[0])
-            nueva_marca = marcas_encontradas[-1][1]
+        nueva_marca, marca_actual_negada = _seleccionar_entidad_vehicular(
+            texto_usuario, marcas_encontradas, estado.marca
+        )
+        if nueva_marca:
             if estado.marca and estado.marca != nueva_marca:
-                p_prev = estado.placa or placa_encontrada
-                estado.reiniciar()
-                estado.historial_mensajes_usuario.append(texto_usuario)
-                estado.turno_actual = 1
-                if p_prev:
-                    estado.placa = p_prev
-                    estado.registrar_hecho(
-                        "placa",
-                        p_prev,
-                        categoria="vehiculo",
-                        texto_crudo=texto_usuario,
-                        tipo=FactType.CONDICION,
-                    )
+                es_correccion = bool(marca_actual_negada or PATRON_CORRECCION_VEHICULO.search(texto_usuario))
+                if es_correccion:
+                    estado.last_user_correction = "marca"
+                else:
+                    # Cambio a otro vehículo: limpiar contexto previo para no contaminar el nuevo caso
+                    p_prev = estado.placa or placa_encontrada
+                    estado.reiniciar()
+                    estado.historial_mensajes_usuario.append(texto_usuario)
+                    estado.turno_actual = 1
+                    if p_prev and not re.search(r"\b(?:otro|otra)\s+(?:carro|auto|vehiculo)\b", texto_usuario, re.IGNORECASE):
+                        estado.placa = p_prev
+                        estado.registrar_hecho(
+                            "placa",
+                            p_prev,
+                            categoria="vehiculo",
+                            texto_crudo=texto_usuario,
+                            tipo=FactType.CONDICION,
+                        )
             estado.marca = nueva_marca
             h = estado.registrar_hecho(
                 "marca",
@@ -627,6 +683,10 @@ class ExtractorHechos:
                 tipo=FactType.CONDICION,
             )
             hechos_extraidos.append(h.to_dict())
+        elif marca_actual_negada and not nueva_marca:
+            estado.marca = None
+            if "marca" in estado.hechos:
+                del estado.hechos["marca"]
 
         m_anio = PATRON_ANIO.search(texto_usuario)
         if m_anio:
@@ -642,48 +702,17 @@ class ExtractorHechos:
                 )
                 hechos_extraidos.append(h.to_dict())
 
-        modelos_encontrados: List[Tuple[int, str]] = []
+        modelos_encontrados: List[Tuple[int, int, str]] = []
         for patron, mod in PATRONES_MODELO:
             for m in patron.finditer(texto_usuario):
-                modelos_encontrados.append((m.start(), mod))
+                modelos_encontrados.append((m.start(), m.end(), mod))
 
-        if modelos_encontrados:
-            modelos_encontrados.sort(key=lambda x: x[0])
-            nuevo_mod = modelos_encontrados[-1][1]
+        nuevo_mod, mod_actual_negado = _seleccionar_entidad_vehicular(
+            texto_usuario, modelos_encontrados, estado.modelo
+        )
+        if nuevo_mod:
             if estado.modelo and estado.modelo != nuevo_mod:
-                m_prev = estado.marca
-                p_prev = estado.placa or placa_encontrada
-                a_prev = estado.anio
-                estado.reiniciar()
-                estado.historial_mensajes_usuario.append(texto_usuario)
-                estado.turno_actual = 1
-                if m_prev:
-                    estado.marca = m_prev
-                    estado.registrar_hecho(
-                        "marca",
-                        m_prev,
-                        categoria="vehiculo",
-                        texto_crudo=texto_usuario,
-                        tipo=FactType.CONDICION,
-                    )
-                if p_prev:
-                    estado.placa = p_prev
-                    estado.registrar_hecho(
-                        "placa",
-                        p_prev,
-                        categoria="vehiculo",
-                        texto_crudo=texto_usuario,
-                        tipo=FactType.CONDICION,
-                    )
-                if a_prev:
-                    estado.anio = a_prev
-                    estado.registrar_hecho(
-                        "anio",
-                        a_prev,
-                        categoria="vehiculo",
-                        texto_crudo=texto_usuario,
-                        tipo=FactType.CONDICION,
-                    )
+                estado.last_user_correction = "modelo"
             estado.modelo = nuevo_mod
             h = estado.registrar_hecho(
                 "modelo",
@@ -693,6 +722,10 @@ class ExtractorHechos:
                 tipo=FactType.CONDICION,
             )
             hechos_extraidos.append(h.to_dict())
+        elif mod_actual_negado and not nuevo_mod:
+            estado.modelo = None
+            if "modelo" in estado.hechos:
+                del estado.hechos["modelo"]
 
         for patron, comb in PATRONES_COMBUSTIBLE:
             if patron.search(texto_usuario):
