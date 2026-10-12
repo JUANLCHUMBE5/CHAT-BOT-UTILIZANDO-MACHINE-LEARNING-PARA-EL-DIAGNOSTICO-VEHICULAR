@@ -179,6 +179,17 @@ class ValidadorCompatibilidad:
                 if "embrague" in falla_l and any(te in falla_l for te in ("patinando", "plato opresor", "collarin")):
                     return False, f"INCOMPATIBLE_CON_HECHO_CONFIRMADO: Transmisión={trans} incompatible con embrague manual tradicional"
 
+        # C. Reglas de sistema de arranque y batería (Fase 2 - Mediciones Cuantitativas)
+        caida_excesiva = estado.obtener_hecho("caida_tension_excesiva")
+        voltaje_arranque_normal = estado.obtener_hecho("voltaje_arranque_normal")
+        if (caida_excesiva and caida_excesiva.valor == "NO") or (voltaje_arranque_normal and voltaje_arranque_normal.valor == "SI"):
+            if any(term in falla_l for term in (
+                "fuga parasita", "fuga parásita", "consumo nocturno",
+                "bateria descargada", "batería descargada", "bateria en mal estado",
+                "batería en mal estado", "bornes sulfatados", "borne sulfatado",
+            )):
+                return False, "INCOMPATIBLE_CON_HECHO_CONFIRMADO: Voltaje normal en arranque (>= 9.6V) descarta batería descargada y consumo parásito"
+
         return True, None
 
     @staticmethod

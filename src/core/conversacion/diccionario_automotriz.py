@@ -96,7 +96,7 @@ PATRONES_TEMPERATURA: List[Tuple[re.Pattern, str]] = [
     ),
     (
         re.compile(
-            r"\b(en\s+caliente|despu[eé]s\s+de\s+calentar|ya\s+caliente|tras\s+andar|motor\s+caliente|cuando\s+(?:el\s+\w+\s+)?calienta|al\s+calentar|(?:solo\s+)?pasa\s+caliente|^caliente$|despu[eé]s\s+de\s+\d+\s*(?:minutos?|min)\b|a\s+los\s+\d+\s*(?:minutos?|min)\b)\b",
+            r"\b(en\s+caliente|despu[eé]s\s+de\s+calentar|ya\s+caliente|calent[oó]|calienta|tras\s+andar|motor\s+caliente|cuando\s+(?:el\s+\w+\s+)?calienta|al\s+calentar|(?:solo\s+)?pasa\s+caliente|^caliente$|despu[eé]s\s+de\s+\d+\s*(?:minutos?|min)\b|a\s+los\s+\d+\s*(?:minutos?|min)\b)\b",
             re.IGNORECASE,
         ),
         "caliente",
@@ -173,10 +173,15 @@ def extraer_hechos_linguisticos(texto: str) -> Dict[str, Any]:
             break
 
     # 2. Temperatura
-    for patron, valor in PATRONES_TEMPERATURA:
-        if patron.search(texto):
-            hechos["temperatura"] = valor
-            break
+    # Si la mención de frío es de funcionamiento normal ('arranca perfecto en frío') y la falla ocurre al calentar / andar:
+    if re.search(r"\b(?:en\s+fr[ií]o\s+(?:arranca|prende|funciona|anda)\s+(?:perfecto|bien|normal)|en\s+fr[ií]o\s+no\s+(?:falla|pasa))\b", texto, re.IGNORECASE):
+        if re.search(r"\b(calient[eé]|calent[oó]|calienta|despu[eé]s\s+de\s+\d+\s*min|a\s+los\s+\d+\s*min)\b", texto, re.IGNORECASE):
+            hechos["temperatura"] = "caliente"
+    if "temperatura" not in hechos:
+        for patron, valor in PATRONES_TEMPERATURA:
+            if patron.search(texto):
+                hechos["temperatura"] = valor
+                break
 
     # 3. Evolución o respuesta
     for patron, valor in PATRONES_EVOLUCION:
