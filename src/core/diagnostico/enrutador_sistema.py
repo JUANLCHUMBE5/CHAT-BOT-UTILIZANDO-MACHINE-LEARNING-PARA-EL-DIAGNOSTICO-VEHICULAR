@@ -43,7 +43,7 @@ _REGLAS: dict[str, tuple[str, ...]] = {
         r"\brefrigeracion\b",
         r"\brecalienta\w*\b", r"\brecalent\w*\b", r"\bsobrecalienta\w*\b",
         r"\btemperatura\s+(?:del\s+)?motor\b", r"\btemperatura\s+(?:sube|alta|elevada)\b",
-        r"\b(?:calienta|se\s+calienta)\b",
+        r"\b(?:se\s+calienta|calienta\s+demasiado|motor\s+calienta)\b",
         r"\btermostato\b", r"\bradiador\b", r"\bmotoventilador\b", r"\brefrigerante\b",
     ),
     "ENCENDIDO": (
@@ -64,6 +64,7 @@ _REGLAS: dict[str, tuple[str, ...]] = {
     "TRANSMISION": (
         r"\b(?:patina|patinando)\s+(?:el\s+)?embrague\b", r"\bembrague\s+patina\b",
         r"\btransmision\b", r"\bcaja\s+(?:de\s+)?cambios\b", r"\bno\s+entran\s+los\s+cambios\b",
+        r"\b(?:dsg|cvt|caja\s+automatica|pasar\s+(?:los\s+)?cambios|al\s+pasar\s+cambios)\b",
     ),
     "SUSPENSION_DIRECCION": (
         r"\bse\s+inclina\s+en\s+(?:las\s+)?curvas\b", r"\b(?:golpeteo|rebota)\s+en\s+(?:baches|huecos)\b",
@@ -96,7 +97,7 @@ _TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
     ),
     "ENCENDIDO": ("bujia", "bobina", "chispa", "misfire", "p030"),
     "FRENOS": ("freno", "pastilla", "disco", "abs", "frenar"),
-    "TRANSMISION": ("embrague", "transmision", "caja de cambios", "sincronizador"),
+    "TRANSMISION": ("embrague", "transmision", "caja de cambios", "sincronizador", "aceite de caja", "dsg", "automatica", "caja"),
     "SUSPENSION_DIRECCION": (
         "suspension", "direccion", "amortiguador", "rotula", "desbalance", "desaline", "alineacion", "llanta", "bache",
     ),

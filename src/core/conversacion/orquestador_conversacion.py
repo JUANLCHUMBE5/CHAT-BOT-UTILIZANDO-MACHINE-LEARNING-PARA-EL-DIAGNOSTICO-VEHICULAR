@@ -895,9 +895,9 @@ class OrquestadorConversacion:
                 es_pregunta = False
 
             # 0.5b Medición técnica de VOLTAJE
-            elif campo_ic == "medicion_voltaje" and interpretacion_corta.get("valor") is not None:
+            elif (campo_ic == "medicion_voltaje" or str(campo_ic).startswith("medicion_voltaje_")) and interpretacion_corta.get("valor") is not None:
                 val = interpretacion_corta.get("valor")
-                cond = interpretacion_corta.get("condicion_medicion")
+                cond = interpretacion_corta.get("condicion_medicion") or (str(campo_ic).split("medicion_voltaje_")[1] if "medicion_voltaje_" in str(campo_ic) else None)
                 if cond == "durante_arranque":
                     if float(val) < 9.6:
                         respuesta_texto = (

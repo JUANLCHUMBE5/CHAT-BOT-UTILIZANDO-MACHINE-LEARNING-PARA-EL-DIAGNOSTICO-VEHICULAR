@@ -131,9 +131,8 @@ PATRONES_TEMPERATURA: List[Tuple[re.Pattern, str]] = [
     (
         re.compile(
             r"\b(en\s+caliente|despu[eé]s\s+de\s+calentar|ya\s+caliente|calent[oó]|calienta|calentar|"
-            r"tras\s+(?:andar|\d+\s*(?:minutos?|min))|motor\s+caliente|cuando\s+(?:el\s+\w+\s+)?calienta|"
-            r"al\s+calentar|(?:solo\s+)?pasa\s+caliente|^caliente$|despu[eé]s\s+de\s+\d+\s*(?:minutos?|min)\b|"
-            r"a\s+los\s+\d+\s*(?:minutos?|min)\b)\b",
+            r"tras\s+andar|motor\s+caliente|cuando\s+(?:el\s+\w+\s+)?calienta|"
+            r"al\s+calentar|(?:solo\s+)?pasa\s+caliente|^caliente$)\b",
             re.IGNORECASE,
         ),
         "caliente",

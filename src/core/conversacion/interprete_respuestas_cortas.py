@@ -80,7 +80,7 @@ class InterpreteRespuestasCortas:
         # Menciones numéricas con unidades técnicas explícitas (excluyendo duraciones puras de tiempo)
         tiene_unidad_tecnica = bool(re.search(r"\b\d+(?:[.,]\d+)?\s*(?:psi|bar|kpa|mv|v(?:oltios?|olts?)?|ma|a(?:mperios?)?|ohm(?:ios)?|Ω|°c|°f|rpm|km/h|%|mm|ms)\b", limpio))
         es_duracion_temporal = bool(re.search(r"\b\d+\s*(?:minutos?|min|horas?|h|segundos?|seg|d[ií]as?)\b", limpio))
-        if tiene_unidad_tecnica:
+        if tiene_unidad_tecnica or re.search(r"\b(?:baja\s+a|marca|da|sube\s+a|llega\s+a)\s+\d+(?:[.,]\d+)?\b", limpio):
             return True
         if es_duracion_temporal:
             return False
@@ -167,7 +167,7 @@ class InterpreteRespuestasCortas:
         frag_l = frag.lower()
         if any(w in frag_l for w in ("con luces", "luces prendidas", "luces altas", "luces bajas", "prendo luces", "con carga")):
             return "con_carga_electrica"
-        elif any(w in frag_l for w in ("arranque", "doy arranque", "al prender", "al dar contacto", "intentar prender", "al dar marcha", "doy marcha", "al arrancar", "al girar la llave", "dando marcha")):
+        elif any(w in frag_l for w in ("arranque", "doy arranque", "al prender", "al dar contacto", "intentar prender", "intento prender", "al dar marcha", "doy marcha", "al arrancar", "al girar la llave", "dando marcha")):
             return "durante_arranque"
         elif any(w in frag_l for w in ("ralenti", "ralentí", "en marcha minima", "marcha lenta")):
             return "ralenti_carga"
@@ -603,7 +603,7 @@ class InterpreteRespuestasCortas:
                     mediciones,
                     key=lambda m: (0 if m[2] == "durante_arranque" else (1 if m[2] == "con_carga_electrica" else 2)),
                 )
-                for val, unidad, condicion in mediciones:
+                for val, unidad, condicion in mediciones_ordenadas:
                     if unidad in ("PSI", "bar", "kPa"):
                         campo = "medicion_presion"
                         tipo_med = "presion_combustible"
@@ -674,7 +674,7 @@ class InterpreteRespuestasCortas:
                         elif condicion == "con_carga_electrica" and val < 13.0:
                             estado.registrar_hecho("caida_voltaje_con_luces", "SI", categoria="medicion", tipo=FactType.CONDICION)
 
-                    if (val, unidad, condicion) == mediciones_ordenadas[0]:
+                    if respuesta_retorno is None:
                         respuesta_retorno = {
                             "categoria_respuesta": "NUMERICO",
                             "campo": campo,
