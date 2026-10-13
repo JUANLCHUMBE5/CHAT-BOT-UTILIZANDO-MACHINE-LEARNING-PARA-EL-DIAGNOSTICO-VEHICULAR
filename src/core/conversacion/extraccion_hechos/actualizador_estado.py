@@ -11,6 +11,7 @@ from src.core.conversacion.diccionario_automotriz import (
     normalizar_jerga_automotriz,
 )
 from src.core.conversacion.extraccion_hechos.clasificador_mensajes import (
+    es_reinicio_solicitado,
     extraer_placa,
     inferir_estado_operativo,
 )
@@ -89,6 +90,7 @@ def extraer_y_actualizar(
     # 1.5 Extracción de placa vehicular
     placa_encontrada = extraer_placa(texto_usuario)
     if placa_encontrada:
+        actualizar_placa = False
         if estado.placa and estado.placa != placa_encontrada:
             es_correccion = bool(
                 re.search(
@@ -104,19 +106,27 @@ def extraer_y_actualizar(
                         re.sub(rf"\b{placa_vieja}\b", placa_encontrada, s, flags=re.IGNORECASE)
                         for s in estado.active_symptoms
                     ]
-            else:
+                actualizar_placa = True
+            elif es_reinicio_solicitado(texto_usuario) or re.search(
+                r"\b(?:otro\s+(?:carro|auto|veh[ií]culo)|nuevo\s+caso)\b", texto_usuario, re.IGNORECASE
+            ):
                 estado.reiniciar()
                 estado.historial_mensajes_usuario.append(texto_usuario)
                 estado.turno_actual = 1
-        estado.placa = placa_encontrada
-        h_placa = estado.registrar_hecho(
-            "placa",
-            placa_encontrada,
-            categoria="vehiculo",
-            texto_crudo=texto_usuario,
-            tipo=FactType.CONDICION,
-        )
-        hechos_extraidos.append(h_placa.to_dict())
+                actualizar_placa = True
+        else:
+            actualizar_placa = True
+
+        if actualizar_placa:
+            estado.placa = placa_encontrada
+            h_placa = estado.registrar_hecho(
+                "placa",
+                placa_encontrada,
+                categoria="vehiculo",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(h_placa.to_dict())
 
     # 2. Extracción de marca / modelo / año / combustible
     marcas_encontradas: List[Tuple[int, int, str]] = []
@@ -170,13 +180,7 @@ def extraer_y_actualizar(
     m_anio = PATRON_ANIO.search(texto_usuario)
     if m_anio:
         nuevo_anio = m_anio.group(1)
-        tiene_contexto_anio = not estado.anio or bool(
-            re.search(
-                rf"\b(?:a[ñn]o|del|modelo|es\s+(?:un\s+|una\s+)?[a-záéíóú0-9\s]*{nuevo_anio}|corrijo|me\s+equivoqu[eé])\b",
-                texto_usuario,
-                re.IGNORECASE,
-            )
-        )
+        tiene_contexto_anio = not estado.anio or bool(re.search(rf"\b(?:a[ñn]o|del|modelo|es\s+[a-záéíóú0-9\s]*{nuevo_anio}|corrijo)\b", texto_usuario, re.IGNORECASE))
         if tiene_contexto_anio and (not estado.anio or estado.anio != nuevo_anio):
             anio_viejo = estado.anio
             if anio_viejo and hasattr(estado, "active_symptoms") and estado.active_symptoms:
@@ -202,6 +206,17 @@ def extraer_y_actualizar(
     nuevo_mod, mod_actual_negado = seleccionar_entidad_vehicular(
         texto_usuario, modelos_encontrados, estado.modelo
     )
+    if not nuevo_mod and (estado.marca or nueva_marca):
+        m_marca = estado.marca or nueva_marca
+        m_gen = re.search(
+            rf"\b{re.escape(m_marca)}\s+([A-Za-z0-9-]+)\b(?!\s*(?:placa|diesel|gasolina|glp|gnv))",
+            texto_usuario,
+            re.IGNORECASE,
+        )
+        if m_gen and not re.match(r"^(?:19[89]\d|20[0-2]\d|[A-Za-z]{3}-\d{3})$", m_gen.group(1)):
+            cand = m_gen.group(1).title()
+            if len(cand) >= 2 and cand.upper() not in {"MOTOR", "AUTO", "CARRO", "CAMIONETA", "CON", "DEL", "EN"}:
+                nuevo_mod = cand
     if nuevo_mod:
         if estado.modelo and estado.modelo != nuevo_mod:
             estado.last_user_correction = "modelo"

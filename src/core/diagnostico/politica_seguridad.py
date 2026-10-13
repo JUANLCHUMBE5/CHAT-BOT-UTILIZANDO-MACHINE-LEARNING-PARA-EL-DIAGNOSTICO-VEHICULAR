@@ -88,12 +88,12 @@ PATRON_DIESEL_EMBALAMIENTO_CRITICO = re.compile(
 
 PATRON_DIESEL_ALTA_PRESION_TACTIL = re.compile(
     r"\b("
-    r"(?:(?:afloj(?:ar|o|e|es|a|an|ando|arle)?|desconect(?:ar|o|e|ando)|solt(?:ar|o|e|ando))\b.{0,40}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|inyector)\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|un\s+trapo)|a\s+mano|la\s+mano|el\s+dedo|al\s+tacto))|"
-    r"(?:(?:pas(?:ar|o|e|es|a|an|ando|emos|arle|arlo|arla)?|toc(?:ar|o|e|es|a|an|ando|emos|arle|arlo|arla)?|palp(?:ar|o|e|es|a|an|ando|emos|arle|arlo|arla)?|tante(?:ar|o|e|es|a|an|ando|emos|arle|arlo|arla)?|met(?:er|o|e|es|a|an|iendo|amos|erle|erlo|erla)?|acerc(?:ar|o|e|es|a|an|ando|emos|arle|arlo)?|revis(?:ar|o|e|es|a|an|ando|emos|arle)?|busc(?:ar|o|e|es|a|an|ando|emos)?|comprob(?:ar|o|e|es|a|an|ando|emos)?|detect(?:ar|o|e|es|a|an|ando|emos)?|sentir|limpi(?:ar|o|e|ando|emos))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|dedo|mano\s+pelada|a\s+mano|al\s+tacto|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño|papelito))\b.{0,60}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|inyector|alta\s+presi[oó]n|fuga|petr[oó]leo|di[eé]sel|combustible|chorro))|"
-    r"(?:(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|common\s*rail|inyector|alta\s+presi[oó]n|fuga\s+de\s+(?:di[eé]sel|petr[oó]leo)|chorro)\b.{0,60}\b(?:pas(?:ar|o|e|es|a|an|ando)|toc(?:ar|o|e|es|a|an|ando)|palp(?:ar|o|e|es|a|an|ando)|tante(?:ar|o|e|es|a|an|ando)|met(?:er|o|e|es|a|an|iendo)|acerc(?:ar|o|e|es|a|an|ando)|revis(?:ar|o|e|es|a|an|ando)|afloj(?:ar|o|e|es|a|an|ando)|limpi(?:ar|o|e|ando))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|con\s+(?:la\s+mano|el\s+dedo|un\s+trapo|trapito|una\s+franela|tela|paño)|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)|a\s+mano|a\s+mano\s+pelada|al\s+tacto))|"
-    r"(?:(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|trapos|una\s+franela|tela|paño|papelito)|a\s+mano|al\s+tacto|a\s+mano\s+pelada)\b.{0,45}\b(?:revis(?:ar|o|e|es|a|an|ando)|busc(?:ar|o|e|es|a|an|ando)|sentir|tante(?:ar|o|e|es|a|an|ando)|comprob(?:ar|o|e|es|a|an|ando)|detect(?:ar|o|e|es|a|an|ando)|ver|palpar|tocar)\b.{0,45}\b(?:fuga|petr[oó]leo|di[eé]sel|cañer[ií]a|caño|tuber[ií]a|tubo|riel|inyector|chorro|alta\s+presi[oó]n))|"
+    r"(?:(?:afloj(?:ar|o|[eé]|es|a|an|ando)?(?:le|lo|la)?|desconect(?:ar|o|[eé]|ando)|solt(?:ar|o|[eé]|ando))\b.{0,40}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|inyector)\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|un\s+trapo)|a\s+mano|la\s+mano|el\s+dedo|al\s+tacto))|"
+    r"(?:(?:pas(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la|los|las)?|toc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|palp(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|tante(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|met(?:er|o|[ií]|ió|ieron|es|a|an|iendo|amos)?(?:le|lo|la)?|acerc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo)?|revis(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|busc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|comprob(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|detect(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|sentir|limpi(?:ar|o|[eé]|ando|emos))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|dedo|mano\s+pelada|a\s+mano|al\s+tacto|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño|papelito))\b.{0,60}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|inyector|alta\s+presi[oó]n|fuga|petr[oó]leo|di[eé]sel|combustible|chorro))|"
+    r"(?:(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|common\s*rail|inyector|alta\s+presi[oó]n|fuga\s+de\s+(?:di[eé]sel|petr[oó]leo)|chorro)\b.{0,60}\b(?:pas(?:ar|o|[eé]|es|a|an|ando)|toc(?:ar|o|[eé]|es|a|an|ando)|palp(?:ar|o|[eé]|es|a|an|ando)|tante(?:ar|o|[eé]|es|a|an|ando)|met(?:er|o|[ií]|es|a|an|iendo)|acerc(?:ar|o|[eé]|es|a|an|ando)|revis(?:ar|o|[eé]|es|a|an|ando)|afloj(?:ar|o|[eé]|es|a|an|ando)|limpi(?:ar|o|[eé]|ando))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|con\s+(?:la\s+mano|el\s+dedo|un\s+trapo|trapito|una\s+franela|tela|paño)|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)|a\s+mano|a\s+mano\s+pelada|al\s+tacto))|"
+    r"(?:(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|trapos|una\s+franela|tela|paño|papelito)|a\s+mano|al\s+tacto|a\s+mano\s+pelada)\b.{0,45}\b(?:revis(?:ar|o|[eé]|es|a|an|ando)|busc(?:ar|o|[eé]|es|a|an|ando)|sentir|tante(?:ar|o|[eé]|es|a|an|ando)|comprob(?:ar|o|[eé]|es|a|an|ando)|detect(?:ar|o|[eé]|es|a|an|ando)|ver|palpar|tocar)\b.{0,45}\b(?:fuga|petr[oó]leo|di[eé]sel|cañer[ií]a|caño|tuber[ií]a|tubo|riel|inyector|chorro|alta\s+presi[oó]n))|"
     r"(?:(?:puedo|voy\s+a|se\s+puede|meter(?:le)?|quiere|dice\s+si\s+puede|pregunta\s+si\s+puede|va\s+a|dejo\s+que)\s+(?:tocar|pasar(?:le|lo)?\s+(?:la\s+mano|el\s+dedo|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño))|usar\s+(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)|palpar|tantear|meter\s+mano|sentir)\b.{0,60}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|inyector|fuga|petr[oó]leo|riel|rail|chorro|alta\s+presi[oó]n))|"
-    r"(?:(?:buscar|encontrar|detectar|revisar|ubicar|localizar|sentir|ver|tocar)\b.{0,20}\b(?:la\s+)?fuga\b.{0,30}\b(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|una\s+franela|tela|paño|papelito)|a\s+mano|al\s+tacto|con\s+el\s+tacto))|"
+    r"(?:(?:buscar|encontrar|detectar|revisar|ubicar|localizar|sentir|ver|tocar)\b.{0,45}\b(?:la\s+)?fuga\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|una\s+franela|tela|paño|papelito)|a\s+mano|al\s+tacto|con\s+el\s+tacto))|"
     r"(?:(?:qu[eé]\s+riesgo|peligro|es\s+peligroso|qu[eé]\s+pasa\s+si|qu[eé]\s+consecuencia(?:s)?|consecuencia\s+m[eé]dica)\b.{0,50}\b(?:fuga\s+de\s+alta\s+presi[oó]n|chorro\s+de\s+inyecci[oó]n|alta\s+presi[oó]n\s+(?:di[eé]sel|petr[oó]leo|common\s*rail)|fuga\s+en\s+(?:el\s+)?common\s*rail|chorro\s+de\s+(?:di[eé]sel|petr[oó]leo|inyecci[oó]n)))|"
     r"(?:(?:pinche|pinchazo|inyecci[oó]n)\b.{0,30}\b(?:chorro|alta\s+presi[oó]n|di[eé]sel|petr[oó]leo|common\s*rail)\b)"
     r")\b",
@@ -142,11 +142,11 @@ PATRON_CORRECCION_ACEITE_COMPROBADA = re.compile(
 
 PATRON_ACCION_APERTURA_REFRIGERACION = re.compile(
     r"\b("
-    r"(?:abr(?:ir|o|e|es|a|an|iendo)|ábr(?:elo|ala)?|abrir(?:le|lo|la|los|las)?)|"
-    r"(?:destap(?:ar|o|e|es|a|an|ando)|destáp(?:alo|ala)?|destapar(?:le|lo|la)?)|"
-    r"(?:afloj(?:ar|o|e|es|a|an|ando)|aflój(?:alo|ala)?|aflojar(?:le|lo|la)?)|"
-    r"(?:quit(?:ar|o|e|es|a|an|ando)|quít(?:alo|ala)?|quitar(?:le|lo|la)?)|"
-    r"(?:sac(?:ar|o|e|es|a|an|ando)|sáq(?:alo|ala)?|sacar(?:le|lo|la)?)|"
+    r"(?:abr(?:ir|o|e|es|a|an|iendo)|ábr(?:elo|ala|ale)?|abrir(?:le|lo|la|los|las)?)|"
+    r"(?:destap(?:ar|o|e|es|a|an|ando)|destáp(?:alo|ala|ale)?|destapar(?:le|lo|la)?)|"
+    r"(?:afloj(?:ar|o|e|es|a|an|ando)|afl[oó]j(?:alo|ala|ale)?|aflojar(?:le|lo|la)?)|"
+    r"(?:quit(?:ar|o|e|es|a|an|ando)|quít(?:alo|ala|ale)?|quitar(?:le|lo|la)?)|"
+    r"(?:sac(?:ar|o|e|es|a|an|ando)|sáq(?:alo|ala|ale)?|sacar(?:le|lo|la)?)|"
     r"(?:volar(?:le)?|vuel(?:o|e|es|a|an)?)\b.{0,15}\b(?:la\s+)?tapa|"
     r"(?:retir(?:ar|o|e|es|a|an|ando)|retirar(?:le|lo|la)?)|"
     r"(?:desenrosc(?:ar|o|e|es|a|an|ando)|desenroscar(?:le|lo|la)?)|"
@@ -190,8 +190,8 @@ PATRON_ENFRIAMIENTO_CONFIRMADO = re.compile(
 
 PATRON_APERTURA_RADIADOR_CALIENTE = re.compile(
     r"\b("
-    r"(?:(?:abr(?:ir|o|e|es|a|an|ando)|destap(?:ar|o|e|es|a|an|ando)|retir(?:ar|o|e|es|a|an|ando)|quit(?:ar|o|e|es|a|an|ando)|sac(?:ar|o|e|es|a|an|ando)|afloj(?:ar|o|e|es|a|an|ando))\b.{0,60}\b(?:tapa|tap[oó]n|radiador|dep[oó]sito|reservorio|vaso|tacho)\b.{0,80}\b(?:caliente|hirviendo|temperatura\s+alta|10[0-9]|1[1-9]\d|vapor|grados))|"
-    r"(?:(?:caliente|hirviendo|temperatura\s+alta|10[0-9]|1[1-9]\d|vapor|grados)\b.{0,80}\b(?:abr(?:ir|o|e|es|a|an|ando)|destap(?:ar|o|e|es|a|an|ando)|retir(?:ar|o|e|es|a|an|ando)|quit(?:ar|o|e|es|a|an|ando)|sac(?:ar|o|e|es|a|an|ando)|afloj(?:ar|o|e|es|a|an|ando))\b.{0,60}\b(?:tapa|tap[oó]n|radiador|dep[oó]sito|reservorio|vaso|tacho))"
+    r"(?:(?:abr(?:ir|o|e|es|a|an|ando|irle|irles)?|destap(?:ar|o|e|es|a|an|ando|arle)?|retir(?:ar|o|e|es|a|an|ando|arle)?|quit(?:ar|o|e|es|a|an|ando|arle)?|sac(?:ar|o|e|es|a|an|ando|arle)?|afloj(?:ar|o|e|es|a|an|ando|arle)?|afl[oó]j(?:ale|alo|ala)?)\b.{0,60}\b(?:tapa|tap[oó]n|radiador|dep[oó]sito|reservorio|vaso|tacho)\b.{0,80}\b(?:caliente|hirviendo|temperatura\s+alta|10[0-9]|1[1-9]\d|vapor|grados))|"
+    r"(?:(?:caliente|hirviendo|temperatura\s+alta|10[0-9]|1[1-9]\d|vapor|grados)\b.{0,80}\b(?:abr(?:ir|o|e|es|a|an|ando|irle|irles)?|destap(?:ar|o|e|es|a|an|ando|arle)?|retir(?:ar|o|e|es|a|an|ando|arle)?|quit(?:ar|o|e|es|a|an|ando|arle)?|sac(?:ar|o|e|es|a|an|ando|arle)?|afloj(?:ar|o|e|es|a|an|ando|arle)?|afl[oó]j(?:ale|alo|ala)?)\b.{0,60}\b(?:tapa|tap[oó]n|radiador|dep[oó]sito|reservorio|vaso|tacho))"
     r")\b",
     re.IGNORECASE,
 )
@@ -324,10 +324,24 @@ class PoliticaSeguridad:
         if PATRON_DIESEL_ALTA_PRESION_TACTIL.search(texto_usuario):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_DIESEL_ALTA_PRESION
 
-        # 2. Comprobación de bloqueo de regeneración DPF con dilución de aceite / cárter sobrellenado
+        # 2. Comprobación de regeneración DPF con dilución de aceite o prerrequisitos pendientes
         if PATRON_SOLICITUD_REGENERACION_DPF.search(texto_usuario):
             if cls._hay_dilucion_aceite_activa(texto_usuario, estado):
                 return SeveridadSeguridad.CRITICAL_STOP, BANNER_BLOQUEO_REGENERACION_DILUCION
+            txt_l = texto_usuario.lower()
+            if PATRON_CORRECCION_ACEITE_COMPROBADA.search(txt_l) or (
+                estado and any("reemplazado_aceite" in k or "aceite" in k for k in getattr(estado, "hechos", {}))
+            ):
+                causa_reparada = bool(
+                    re.search(
+                        r"\b(?:repar[eé]|cambi[eé]|solucion[eé]|correg[ií]|revis[eé]|arregl[eé])\b.{0,40}\b(?:inyector|inyectores|termostato|sensor|causa|origen|goteo)\b",
+                        txt_l,
+                    )
+                    or (estado and any("reparado" in k or "reemplazado_inyector" in k for k in getattr(estado, "hechos", {})))
+                )
+                if not causa_reparada:
+                    return SeveridadSeguridad.URGENT_INSPECTION, BANNER_BLOQUEO_REGENERACION_DILUCION
+                return SeveridadSeguridad.NORMAL_DIAGNOSTIC, PRERREQUISITOS_REGENERACION_DPF_OEM
 
         # 3. Solicitud de abrir/destapar sistema de refrigeración en caliente
         if cls._hay_apertura_radiador_caliente_peligrosa(texto_usuario, estado):
@@ -465,22 +479,12 @@ class PoliticaSeguridad:
             banners.append(BANNER_BATERIA_MOTOR_ENCENDIDO.strip())
         if radiador_peligroso:
             banners.append(BANNER_RADIADOR_CALIENTE.strip())
-
         if not banners:
             return respuesta
 
-        recomendaciones_seguras = []
+        recomendaciones = []
         if bateria_peligrosa:
-            recomendaciones_seguras.append(
-                "Para comprobar el sistema de carga, mida el voltaje con un multímetro "
-                "o equipo de diagnóstico sin desconectar la batería mientras el motor está en marcha."
-            )
+            recomendaciones.append("Para comprobar el sistema de carga, mida el voltaje con un multímetro sin desconectar la batería.")
         if radiador_peligroso:
-            recomendaciones_seguras.append(
-                "Para revisar el sistema de refrigeración, apague el motor y espere a que "
-                "se enfríe completamente antes de abrir o retirar cualquier tapón presurizado."
-            )
-
-        prefijo = "\n\n".join(banners)
-        recomendacion = " ".join(recomendaciones_seguras)
-        return f"{prefijo}\n\n{recomendacion}".strip()
+            recomendaciones.append("Para revisar refrigeración, apague el motor y espere a que enfríe antes de abrir cualquier tapón.")
+        return f"{'\n\n'.join(banners)}\n\n{' '.join(recomendaciones)}".strip()

@@ -45,8 +45,17 @@ def es_solicitud_detalle(texto: str) -> bool:
     return any(p.search(texto.strip()) for p in PATRONES_SOLICITUD_DETALLE)
 
 
+PALABRAS_NO_PLACA = {
+    "FUE", "ERA", "SON", "DIO", "HAY", "IBA", "VEO", "LOS", "LAS", "CON", "SIN",
+    "POR", "DEL", "UNA", "UNO", "MAS", "MUY", "TAN", "QUE", "CADA", "SOLO",
+    "DESDE", "HASTA", "ENTRE", "SOBRE", "TRAS", "HACIA", "COMO", "PERO", "PARA",
+    "BIEN", "MAL", "SUBE", "BAJA", "SALE", "PONE", "LLEVA", "LLEVO", "VIENE", "VINO",
+    "CIL", "CILINDRO", "CILINDROS", "KILOMETROS", "HORAS", "DIAS", "MINUTOS", "SEGUNDOS",
+}
+
+
 def extraer_placa(texto: str) -> Optional[str]:
-    """Extrae la placa vehicular peruana asegurando no confundirla con códigos DTC."""
+    """Extrae la placa vehicular peruana asegurando no confundirla con códigos DTC ni lecturas físicas."""
     if not texto:
         return None
     m_exp = PATRON_PLACA_EXPLICITA.search(texto)
@@ -58,6 +67,20 @@ def extraer_placa(texto: str) -> Optional[str]:
             return candidato
     for m in PATRON_PLACA_FORMATO.finditer(texto):
         candidato = m.group(1).upper().replace(" ", "-")
+        prefix = candidato.split("-")[0]
+        if prefix in PALABRAS_NO_PLACA:
+            continue
+        end_idx = m.end()
+        resto = texto[end_idx : end_idx + 20].lower()
+        if re.match(
+            r"^\s*(?:kg|g|ma|a|v|mv|psi|bar|kpa|rpm|grados?|°|c|f|ohm|km|km/h|ms|mm|ml|%|volts?|amperios?|minutos?|horas?|segundos?|cuadras?|metros?|litros?)\b",
+            resto,
+        ):
+            continue
+        start_idx = m.start()
+        prev = texto[max(0, start_idx - 15) : start_idx].lower().strip()
+        if re.search(r"\b(?:a\s+los|en|de|por|con|sin|sube\s+a|baja\s+a|marca|mide|dio|fue|era)\s*$", prev):
+            continue
         if not re.match(r"^[PBUCpbuc][0-3][0-9A-Fa-f]{3}$", candidato):
             return candidato
     return None

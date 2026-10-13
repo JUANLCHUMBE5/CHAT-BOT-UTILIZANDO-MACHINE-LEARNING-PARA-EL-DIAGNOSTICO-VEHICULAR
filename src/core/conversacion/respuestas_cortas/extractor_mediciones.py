@@ -51,7 +51,7 @@ def normalizar_unidad_automotriz(unidad_raw: str) -> Optional[str]:
         return "A"
     if "kohm" in u:
         return "kohm"
-    if "ohm" in u or "Ω" in u:
+    if "ohm" in u or "ω" in u or "Ω" in unidad_raw:
         return "ohm"
     if "°c" in u or u == "c":
         return "°C"

@@ -87,6 +87,11 @@ def extraer_comprobaciones_taller(
             hechos_extraidos.append(h_a.to_dict())
             estado.registrar_medicion(tipo=tipo_a, valor=val, unidad=unidad, contexto=ctx_a, prueba=campo_a, estado="observado")
             estado.registrar_prueba_completada(campo_a, f"{val} {unidad}")
+            if es_parasito:
+                if "consumo_inicial" not in estado.hechos:
+                    estado.registrar_hecho("consumo_inicial", f"{val} {unidad}", categoria="medicion", tipo=FactType.CONDICION)
+                if re.search(r"\b(?:cay[oó]|baj[oó]|despu[eé]s|retirar|desconectar|qued[oó]|final)\b", texto_l) or "consumo_inicial" in estado.hechos:
+                    estado.registrar_hecho("consumo_final", f"{val} {unidad}", categoria="medicion", tipo=FactType.CONDICION)
         elif unidad in ("PSI", "bar", "kPa", "mbar"):
             if "compresi" in texto_l or "cilindro" in texto_l:
                 tipo_p = "compresion_motor"
@@ -161,6 +166,18 @@ def extraer_comprobaciones_taller(
             hechos_extraidos.append(h_temp.to_dict())
             estado.registrar_medicion(tipo=tipo_temp, valor=val, unidad=unidad, contexto=ctx_temp, prueba=campo_temp, estado="observado")
             estado.registrar_prueba_completada(campo_temp, f"{val} {unidad}")
+        elif unidad == "%":
+            es_stft = bool(re.search(r"\bstft\b", texto_l))
+            es_ltft = bool(re.search(r"\bltft\b", texto_l))
+            campo_pct = "medicion_stft" if es_stft else ("medicion_ltft" if es_ltft else "medicion_porcentaje")
+            tipo_pct = "trim_combustible" if (es_stft or es_ltft) else "porcentaje"
+            ctx_pct = "inyeccion" if (es_stft or es_ltft) else "general"
+            h_pct = estado.registrar_hecho(campo_pct, f"{val} {unidad}", categoria="medicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h_pct.to_dict())
+            if es_stft:
+                estado.registrar_hecho("stft_positivo", f"+{int(val)}%" if val > 0 else f"{val}%", categoria="medicion", tipo=FactType.CONDICION)
+            estado.registrar_medicion(tipo=tipo_pct, valor=val, unidad=unidad, contexto=ctx_pct, prueba=campo_pct, estado="observado")
+            estado.registrar_prueba_completada(campo_pct, f"{val} {unidad}")
         elif unidad not in ("unidades",):
             tipo_gen = f"medicion_{unidad.lower()}"
             campo_gen = f"medicion_{unidad.lower()}"
@@ -169,11 +186,46 @@ def extraer_comprobaciones_taller(
             estado.registrar_medicion(tipo=tipo_gen, valor=val, unidad=unidad, contexto="general", prueba=campo_gen, estado="observado")
             estado.registrar_prueba_completada(campo_gen, f"{val} {unidad}")
 
-    m_med = PATRON_MEDICION.search(texto_usuario)
-    if m_med:
-        med_val = m_med.group(0).lower()
+    for m_med in PATRON_MEDICION.finditer(texto_usuario):
+        med_val = m_med.group(0).lower().replace(",", ".")
         h = estado.registrar_hecho("medicion", med_val, categoria="medicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
         hechos_extraidos.append(h.to_dict())
+
+    if re.search(r"\b(?:rizado|ripple|corriente\s+alterna|v\s*ac)\b", texto_l):
+        h_riz = estado.registrar_hecho("rizado_ac", "alto / diodo abierto", categoria="medicion", tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_riz.to_dict())
+
+    if re.search(r"\b(?:co2|l[ií]quido\s+azul|probador\s+qu[ií]mico|fug(?:as?)?\s+de\s+combusti[oó]n|vir[oó]|amarillo)\b", texto_l):
+        h_co2 = estado.registrar_hecho("co2_quimico_positivo", "positivo / presencia de CO2", categoria="prueba_quimica", tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_co2.to_dict())
+
+    if re.search(r"\b(?:mud[oó]|migr[oó])\b.{0,30}\b(?:cilindro\s+1|p0301)\b", texto_l) or re.search(r"\bintercambi[eé]\s+la\s+bobina\b", texto_l):
+        h_mig = estado.registrar_hecho("bobina_migro_cilindro_1", "falla migró a cilindro 1", categoria="prueba_cruzada", tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_mig.to_dict())
+
+    if re.search(r"\b(?:empaque\s+de\s+culata|junta\s+de\s+culata)\b", texto_l) and re.search(r"\b(?:quemado|soplado|roto|solucionado|cambio|nuevo)\b", texto_l):
+        h_cul = estado.registrar_hecho("empaque_culata", "empaque de culata confirmado", categoria="componente_averiado", tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_cul.to_dict())
+
+    if re.search(r"\btermostato\b.{0,40}\b(?:olla|term[oó]metro|abre|perfecto|descartado|bien)\b", texto_l):
+        h_term = estado.registrar_hecho("termostato_descartado", "termostato comprobado normal", categoria="verificacion_fisica", tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_term.to_dict())
+
+    if re.search(r"\bresistencia\b.{0,50}\b(?:abiert[ao]|quemad[ao]|ol|infinita|primera\s+velocidad)\b", texto_l):
+        h_res = estado.registrar_hecho("resistencia_baja_quemada", "resistencia quemada", categoria="componente_averiado", tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_res.to_dict())
+
+    if re.search(r"\b(?:en\s+tr[aá]fico|tr[aá]fico\s+pesado|parado\s+en\s+el\s+sem[aá]foro)\b", texto_l):
+        h_traf = estado.registrar_hecho("condicion", "en trafico / ralenti", categoria="condicion", tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_traf.to_dict())
+
+    m_sol = re.search(
+        r"\b(?:qued[oó]\s+resuelto|caso\s+solucionado|falla\s+qued[oó]\s+resuelta|solucionado\s+con|reparaci[oó]n:\s*)\s*(?:cambiando|con|reemplazando|instalando)?\s*([a-záéíóú0-9\s/-]+?)(?:\.|$|,|\s+genera|\s+consolida)",
+        texto_l,
+    )
+    if m_sol:
+        h_sol = estado.registrar_hecho("solucion", m_sol.group(1).strip(), categoria="reparacion_confirmada", tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_sol.to_dict())
 
     if PATRON_MAP_FUERA_RANGO.search(texto_usuario):
         h_map = estado.registrar_hecho(
@@ -409,6 +461,16 @@ def extraer_comprobaciones_taller(
         hechos_extraidos.append(h_aceite.to_dict())
         h_aceite2 = estado.registrar_hecho("dilucion_aceite_combustible", "SI", categoria="seguridad", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
         hechos_extraidos.append(h_aceite2.to_dict())
+        h_aceite3 = estado.registrar_hecho("aceite_diluido", "SI", categoria="seguridad", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+        hechos_extraidos.append(h_aceite3.to_dict())
+
+    # Pedal de freno blando / esponjoso / se hunde
+    if re.search(
+        r"\b(?:pedal(?:\s+de)?\s+freno|freno)\b.{0,45}\b(?:esponjoso|se\s+va\s+(?:lentamente\s+)?al\s+fondo|se\s+desinfla|pierde\s+presi[oó]n|sin\s+presi[oó]n|latea)\b|\b(?:pedal\s+esponjoso|pedal\s+se\s+hunde)\b",
+        texto_l,
+    ):
+        h_pedal = estado.registrar_hecho("pedal_esponjoso", "SI", categoria="sintoma", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.SINTOMA)
+        hechos_extraidos.append(h_pedal.to_dict())
 
     # Corrección / reemplazo de aceite y filtro
     if re.search(

@@ -123,6 +123,15 @@ PATRONES_MODELO = [
     (re.compile(r"\b(fiesta)\b", re.IGNORECASE), "Fiesta"),
     (re.compile(r"\b(focus)\b", re.IGNORECASE), "Focus"),
     (re.compile(r"\b(?:mazda\s*3|mazda3)\b", re.IGNORECASE), "3"),
+    (re.compile(r"\b(cruze)\b", re.IGNORECASE), "Cruze"),
+    (re.compile(r"\b(l200|l-200)\b", re.IGNORECASE), "L200"),
+    (re.compile(r"\b(colorado)\b", re.IGNORECASE), "Colorado"),
+    (re.compile(r"\b(ecosport|eco\s*sport)\b", re.IGNORECASE), "Ecosport"),
+    (re.compile(r"\b(duster)\b", re.IGNORECASE), "Duster"),
+    (re.compile(r"\b(vento)\b", re.IGNORECASE), "Vento"),
+    (re.compile(r"\b(onix)\b", re.IGNORECASE), "Onix"),
+    (re.compile(r"\b(prisma)\b", re.IGNORECASE), "Prisma"),
+    (re.compile(r"\b(tiguan)\b", re.IGNORECASE), "Tiguan"),
 ]
 
 PATRON_NEGACION_VEHICULAR = re.compile(
@@ -197,7 +206,8 @@ PATRON_ANIO = re.compile(
     re.IGNORECASE,
 )
 PATRON_MEDICION = re.compile(
-    r"\b(\d+(\.\d+)?)\s*(psi|bar|v|volts|voltios|ohm|ohmios|kpa|mm)\b", re.IGNORECASE
+    r"\b(-?\d+(?:[.,]\d+)?)\s*(psi|bar|kpa|mbar|inhg|mv|v(?:oltios?|olts?)?|ma|miliamperios?|a(?:mperios?)?|amp|ohm(?:ios)?|kohm|Ω|°c|°f|rpm|km/h|%|mm|ms|ml|cm3|cc|g/s|nm)\b",
+    re.IGNORECASE,
 )
 PATRON_MAP_FUERA_RANGO = re.compile(
     r"\b(carga\s+absoluta|sensor\s+map|map)\b.{0,70}\b(fuera\s+de\s+rango|"
