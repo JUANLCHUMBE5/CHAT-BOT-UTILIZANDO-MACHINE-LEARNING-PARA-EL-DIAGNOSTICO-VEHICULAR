@@ -1,0 +1,825 @@
+{
+  "conteo_categorias": {
+    "A": 25,
+    "B": 5,
+    "C": 0,
+    "D": 0
+  },
+  "total_evaluables_cat_a": 25,
+  "top1_aciertos": 17,
+  "top1_accuracy": 0.68,
+  "top3_aciertos": 22,
+  "top3_accuracy": 0.88,
+  "casos": [
+    {
+      "id": "CASO_01",
+      "categoria": "A",
+      "falla_confirmada": "Falla de bobina de encendido cilindro 2",
+      "clase_esperada": "Falla en bujias o bobinas de encendido (misfire)",
+      "motivo": "Misfire P0302 / bobina con salto a cilindro 1.",
+      "top_1": {
+        "clase": "Falla en bujias o bobinas de encendido (misfire)",
+        "prob": 0.8837
+      },
+      "top_3": [
+        {
+          "clase": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.8837
+        },
+        {
+          "clase": "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)",
+          "prob": 0.0639
+        },
+        {
+          "clase": "Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)",
+          "prob": 0.0249
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_02",
+      "categoria": "A",
+      "falla_confirmada": "Fuga de vacío en o-ring de inyector cilindro 3",
+      "clase_esperada": "Inyectores sucios o filtro de combustible obstruido",
+      "motivo": "Fuga de vacío en o-ring de inyector / mezcla pobre.",
+      "top_1": {
+        "clase": "Bomba de gasolina quemada o con baja presion",
+        "prob": 0.8504
+      },
+      "top_3": [
+        {
+          "clase": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.8504
+        },
+        {
+          "clase": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+          "prob": 0.0523
+        },
+        {
+          "clase": "Inyectores sucios o filtro de combustible obstruido",
+          "prob": 0.0336
+        }
+      ],
+      "es_top1": false,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_03",
+      "categoria": "A",
+      "falla_confirmada": "Resistencia de primera velocidad de electroventilador abierta",
+      "clase_esperada": "Falla en termostato o motoventilador de radiador",
+      "motivo": "Termostato trabado cerrado / recalentamiento.",
+      "top_1": {
+        "clase": "Falla en termostato o motoventilador de radiador",
+        "prob": 0.548
+      },
+      "top_3": [
+        {
+          "clase": "Falla en termostato o motoventilador de radiador",
+          "prob": 0.548
+        },
+        {
+          "clase": "Fuga en mangueras de refrigerante o radiador picado",
+          "prob": 0.2848
+        },
+        {
+          "clase": "Empaque de culata soplado o danado",
+          "prob": 0.0804
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_04",
+      "categoria": "A",
+      "falla_confirmada": "Empaque de culata soplado entre cilindro y chaqueta de refrigeración",
+      "clase_esperada": "Empaque de culata soplado o danado",
+      "motivo": "Culata soplada entre cilindros 2 y 3.",
+      "top_1": {
+        "clase": "Falla en termostato o motoventilador de radiador",
+        "prob": 0.544
+      },
+      "top_3": [
+        {
+          "clase": "Falla en termostato o motoventilador de radiador",
+          "prob": 0.544
+        },
+        {
+          "clase": "Empaque de culata soplado o danado",
+          "prob": 0.3176
+        },
+        {
+          "clase": "Faja o cadena de distribucion destensada o con salto de punto",
+          "prob": 0.0626
+        }
+      ],
+      "es_top1": false,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_05",
+      "categoria": "A",
+      "falla_confirmada": "Consumo parásito por módulo de pantalla multimedia en reposo",
+      "clase_esperada": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+      "motivo": "Consumo parásito de 480 mA en reposo.",
+      "top_1": {
+        "clase": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+        "prob": 0.4995
+      },
+      "top_3": [
+        {
+          "clase": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+          "prob": 0.4995
+        },
+        {
+          "clase": "Alternador defectuoso o placa de diodos quemada",
+          "prob": 0.2697
+        },
+        {
+          "clase": "Bateria descargada o bornes sulfatados",
+          "prob": 0.2239
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_06",
+      "categoria": "A",
+      "falla_confirmada": "Diodo rectificador abierto en alternador Valeo",
+      "clase_esperada": "Alternador defectuoso o placa de diodos quemada",
+      "motivo": "Diodos quemados en alternador con rizado AC.",
+      "top_1": {
+        "clase": "Alternador defectuoso o placa de diodos quemada",
+        "prob": 0.769
+      },
+      "top_3": [
+        {
+          "clase": "Alternador defectuoso o placa de diodos quemada",
+          "prob": 0.769
+        },
+        {
+          "clase": "Bateria descargada o bornes sulfatados",
+          "prob": 0.172
+        },
+        {
+          "clase": "Fuga parasita de corriente en reposo (consumo nocturno de bateria)",
+          "prob": 0.0273
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_07",
+      "categoria": "B",
+      "falla_confirmada": "Transponder de llave desprogramado / dañado por caída",
+      "clase_esperada": null,
+      "motivo": "Transponder de llave desprogramado (inmovilizador puro sin clase en SVM).",
+      "top_1": {
+        "clase": "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)",
+        "prob": 0.2987
+      },
+      "top_3": [
+        {
+          "clase": "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)",
+          "prob": 0.2987
+        },
+        {
+          "clase": "Bateria descargada o bornes sulfatados",
+          "prob": 0.211
+        },
+        {
+          "clase": "Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)",
+          "prob": 0.1842
+        }
+      ],
+      "es_top1": false,
+      "es_top3": false
+    },
+    {
+      "id": "CASO_08",
+      "categoria": "A",
+      "falla_confirmada": "Escobillas de motor de arranque gastadas con falso contacto en conmutador",
+      "clase_esperada": "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)",
+      "motivo": "Escobillas de motor de arranque gastadas.",
+      "top_1": {
+        "clase": "Alternador defectuoso o placa de diodos quemada",
+        "prob": 0.381
+      },
+      "top_3": [
+        {
+          "clase": "Alternador defectuoso o placa de diodos quemada",
+          "prob": 0.381
+        },
+        {
+          "clase": "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)",
+          "prob": 0.3051
+        },
+        {
+          "clase": "Bateria descargada o bornes sulfatados",
+          "prob": 0.243
+        }
+      ],
+      "es_top1": false,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_09",
+      "categoria": "A",
+      "falla_confirmada": "Cadena de distribución estirada con desfasaje entre CMP y CKP",
+      "clase_esperada": "Faja o cadena de distribucion destensada o con salto de punto",
+      "motivo": "Cadena de distribución estirada desfasada.",
+      "top_1": {
+        "clase": "Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)",
+        "prob": 0.795
+      },
+      "top_3": [
+        {
+          "clase": "Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)",
+          "prob": 0.795
+        },
+        {
+          "clase": "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)",
+          "prob": 0.1878
+        },
+        {
+          "clase": "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)",
+          "prob": 0.0052
+        }
+      ],
+      "es_top1": false,
+      "es_top3": false
+    },
+    {
+      "id": "CASO_10",
+      "categoria": "A",
+      "falla_confirmada": "Cuerpo de aceleración electrónico descalibrado con carbón acumulado",
+      "clase_esperada": "Cuerpo de aceleracion o valvula IAC sucia",
+      "motivo": "Cuerpo de aceleración descalibrado / sucio.",
+      "top_1": {
+        "clase": "Cuerpo de aceleracion o valvula IAC sucia",
+        "prob": 0.4902
+      },
+      "top_3": [
+        {
+          "clase": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.4902
+        },
+        {
+          "clase": "Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga)",
+          "prob": 0.2439
+        },
+        {
+          "clase": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+          "prob": 0.0908
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_11",
+      "categoria": "A",
+      "falla_confirmada": "Desgaste severo de disco de embrague y plato presor recalentado",
+      "clase_esperada": "Disco de embrague desgastado o patinando",
+      "motivo": "Disco de embrague desgastado / patinando.",
+      "top_1": {
+        "clase": "Disco de embrague desgastado o patinando",
+        "prob": 0.9073
+      },
+      "top_3": [
+        {
+          "clase": "Disco de embrague desgastado o patinando",
+          "prob": 0.9073
+        },
+        {
+          "clase": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+          "prob": 0.0278
+        },
+        {
+          "clase": "Rodajes de transmision manual o eje primario gastados",
+          "prob": 0.0251
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_12",
+      "categoria": "B",
+      "falla_confirmada": "Volante bimasa desgastado con holgura angular excesiva y grasa fugada",
+      "clase_esperada": null,
+      "motivo": "Volante bimasa desgastado (componente específico no etiquetado independientemente en SVM).",
+      "top_1": {
+        "clase": "Rodajes de transmision manual o eje primario gastados",
+        "prob": 0.5521
+      },
+      "top_3": [
+        {
+          "clase": "Rodajes de transmision manual o eje primario gastados",
+          "prob": 0.5521
+        },
+        {
+          "clase": "Disco de embrague desgastado o patinando",
+          "prob": 0.3035
+        },
+        {
+          "clase": "Faja o cadena de distribucion destensada o con salto de punto",
+          "prob": 0.1156
+        }
+      ],
+      "es_top1": false,
+      "es_top3": false
+    },
+    {
+      "id": "CASO_13",
+      "categoria": "A",
+      "falla_confirmada": "Fuga interna en cilindro esclavo concéntrico CSC de embrague",
+      "clase_esperada": "Falla en bombin o bomba hidraulica de embrague",
+      "motivo": "Cilindro esclavo concéntrico (CSC) de embrague.",
+      "top_1": {
+        "clase": "Falla en bombin o bomba hidraulica de embrague",
+        "prob": 0.8254
+      },
+      "top_3": [
+        {
+          "clase": "Falla en bombin o bomba hidraulica de embrague",
+          "prob": 0.8254
+        },
+        {
+          "clase": "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)",
+          "prob": 0.0694
+        },
+        {
+          "clase": "Disco de embrague desgastado o patinando",
+          "prob": 0.0587
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_14",
+      "categoria": "A",
+      "falla_confirmada": "Inyector 4 con retorno excesivo de combustible provocando caída de presión de riel",
+      "clase_esperada": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+      "motivo": "Retorno excesivo en inyector diésel con caída de presión de riel.",
+      "top_1": {
+        "clase": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+        "prob": 0.7602
+      },
+      "top_3": [
+        {
+          "clase": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+          "prob": 0.7602
+        },
+        {
+          "clase": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.1718
+        },
+        {
+          "clase": "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
+          "prob": 0.047
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_15",
+      "categoria": "A",
+      "falla_confirmada": "Válvula reguladora de succión SCV atascada en bomba de alta Denso HP3",
+      "clase_esperada": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+      "motivo": "Válvula reguladora SCV atascada en bomba de alta Denso Common Rail.",
+      "top_1": {
+        "clase": "Bateria descargada o bornes sulfatados",
+        "prob": 0.3625
+      },
+      "top_3": [
+        {
+          "clase": "Bateria descargada o bornes sulfatados",
+          "prob": 0.3625
+        },
+        {
+          "clase": "Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP)",
+          "prob": 0.2629
+        },
+        {
+          "clase": "Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)",
+          "prob": 0.0946
+        }
+      ],
+      "es_top1": false,
+      "es_top3": false
+    },
+    {
+      "id": "CASO_16",
+      "categoria": "A",
+      "falla_confirmada": "Filtro DPF colmatado por regeneraciones abortadas y dilución severa de aceite",
+      "clase_esperada": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+      "motivo": "Filtro DPF colmatado.",
+      "top_1": {
+        "clase": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+        "prob": 0.7218
+      },
+      "top_3": [
+        {
+          "clase": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+          "prob": 0.7218
+        },
+        {
+          "clase": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+          "prob": 0.2526
+        },
+        {
+          "clase": "Falla en sistema de frenado regenerativo (EV / Hibridos)",
+          "prob": 0.0046
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_17",
+      "categoria": "A",
+      "falla_confirmada": "Manguera de intercooler rajada con fuga de presión de sobrealimentación",
+      "clase_esperada": "Fuga en mangueras de intercooler o turbocompresor danado",
+      "motivo": "Manguera de intercooler rajada con fuga de presión boost.",
+      "top_1": {
+        "clase": "Fuga en mangueras de intercooler o turbocompresor danado",
+        "prob": 0.5382
+      },
+      "top_3": [
+        {
+          "clase": "Fuga en mangueras de intercooler o turbocompresor danado",
+          "prob": 0.5382
+        },
+        {
+          "clase": "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
+          "prob": 0.4052
+        },
+        {
+          "clase": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+          "prob": 0.0248
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_18",
+      "categoria": "A",
+      "falla_confirmada": "Geometría variable de turbo trabada por carbonilla en álabes móviles",
+      "clase_esperada": "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
+      "motivo": "Geometría variable VGT de turbo trabada.",
+      "top_1": {
+        "clase": "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
+        "prob": 0.6404
+      },
+      "top_3": [
+        {
+          "clase": "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
+          "prob": 0.6404
+        },
+        {
+          "clase": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+          "prob": 0.2972
+        },
+        {
+          "clase": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+          "prob": 0.029
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_19",
+      "categoria": "A",
+      "falla_confirmada": "Desgaste de cojinetes axiales de turbo con paso de aceite a admisión",
+      "clase_esperada": "Fuga en mangueras de intercooler o turbocompresor danado",
+      "motivo": "Cojinetes axiales de turbo con paso de aceite.",
+      "top_1": {
+        "clase": "Consumo de aceite por desgaste de anillos o retenes",
+        "prob": 0.6964
+      },
+      "top_3": [
+        {
+          "clase": "Consumo de aceite por desgaste de anillos o retenes",
+          "prob": 0.6964
+        },
+        {
+          "clase": "Empaque de culata soplado o danado",
+          "prob": 0.129
+        },
+        {
+          "clase": "Fuga en mangueras de intercooler o turbocompresor danado",
+          "prob": 0.0785
+        }
+      ],
+      "es_top1": false,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_20",
+      "categoria": "A",
+      "falla_confirmada": "Cristalización de urea en tobera de inyector de AdBlue / DEF",
+      "clase_esperada": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+      "motivo": "Cristalización de urea en inyector AdBlue / SCR.",
+      "top_1": {
+        "clase": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+        "prob": 0.7849
+      },
+      "top_3": [
+        {
+          "clase": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+          "prob": 0.7849
+        },
+        {
+          "clase": "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)",
+          "prob": 0.1025
+        },
+        {
+          "clase": "Falla en sistema de control de emisiones evaporativas EVAP (canister o valvula de purga)",
+          "prob": 0.0397
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_21",
+      "categoria": "B",
+      "falla_confirmada": "Filtro de fase líquida de reductor GLP obstruido por limaduras",
+      "clase_esperada": null,
+      "motivo": "Reductor/filtro GLP de conversión a gas (componente retrofit no entrenado en SVM).",
+      "top_1": {
+        "clase": "Bomba de gasolina quemada o con baja presion",
+        "prob": 0.8492
+      },
+      "top_3": [
+        {
+          "clase": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.8492
+        },
+        {
+          "clase": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+          "prob": 0.0642
+        },
+        {
+          "clase": "Falla en bujias o bobinas de encendido (misfire)",
+          "prob": 0.0317
+        }
+      ],
+      "es_top1": false,
+      "es_top3": false
+    },
+    {
+      "id": "CASO_22",
+      "categoria": "B",
+      "falla_confirmada": "Emulador de corte de inyectores GNV con relé interno pegado en cilindro 2 y 3",
+      "clase_esperada": null,
+      "motivo": "Emulador de corte de inyectores GNV (accesorio electrónico externo no entrenado en SVM).",
+      "top_1": {
+        "clase": "Falla en regulador de presion de combustible o diafragma roto",
+        "prob": 0.2021
+      },
+      "top_3": [
+        {
+          "clase": "Falla en regulador de presion de combustible o diafragma roto",
+          "prob": 0.2021
+        },
+        {
+          "clase": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.173
+        },
+        {
+          "clase": "Empaque de culata soplado o danado",
+          "prob": 0.1017
+        }
+      ],
+      "es_top1": false,
+      "es_top3": false
+    },
+    {
+      "id": "CASO_23",
+      "categoria": "A",
+      "falla_confirmada": "Alabeo excesivo de disco de freno delantero derecho por deformación térmica",
+      "clase_esperada": "Discos de freno alabeados o desgastados",
+      "motivo": "Alabeo excesivo de disco de freno con vibración en pedal.",
+      "top_1": {
+        "clase": "Discos de freno alabeados o desgastados",
+        "prob": 0.479
+      },
+      "top_3": [
+        {
+          "clase": "Discos de freno alabeados o desgastados",
+          "prob": 0.479
+        },
+        {
+          "clase": "Falla en sensor de velocidad de rueda ABS",
+          "prob": 0.4114
+        },
+        {
+          "clase": "Llantas desbalanceadas o desalineadas",
+          "prob": 0.0341
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_24",
+      "categoria": "A",
+      "falla_confirmada": "Fuga interna de presión en cubetas de bomba maestra de freno",
+      "clase_esperada": "Fuga hidraulica o aire en el sistema de frenos",
+      "motivo": "Fuga interna en bomba maestra de freno con pedal esponjoso al fondo.",
+      "top_1": {
+        "clase": "Fuga hidraulica o aire en el sistema de frenos",
+        "prob": 0.886
+      },
+      "top_3": [
+        {
+          "clase": "Fuga hidraulica o aire en el sistema de frenos",
+          "prob": 0.886
+        },
+        {
+          "clase": "Desgaste de pastillas y zapatas de freno",
+          "prob": 0.0561
+        },
+        {
+          "clase": "Falla en bombin o bomba hidraulica de embrague",
+          "prob": 0.0294
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_25",
+      "categoria": "B",
+      "falla_confirmada": "Rótula de suspensión inferior izquierda con holgura severa",
+      "clase_esperada": null,
+      "motivo": "Rótula de suspensión inferior (la clase SVM cubre 'Amortiguadores reventados o bujes' pero no rótula explícita).",
+      "top_1": {
+        "clase": "Llantas desbalanceadas o desalineadas",
+        "prob": 0.295
+      },
+      "top_3": [
+        {
+          "clase": "Llantas desbalanceadas o desalineadas",
+          "prob": 0.295
+        },
+        {
+          "clase": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+          "prob": 0.2688
+        },
+        {
+          "clase": "Juntas homocineticas o palieres danados",
+          "prob": 0.17
+        }
+      ],
+      "es_top1": false,
+      "es_top3": false
+    },
+    {
+      "id": "CASO_26",
+      "categoria": "A",
+      "falla_confirmada": "Caja termostática plástica rajada con pérdida violenta de refrigerante",
+      "clase_esperada": "Fuga en mangueras de refrigerante o radiador picado",
+      "motivo": "Caja termostática plástica rajada con fuga de refrigerante.",
+      "top_1": {
+        "clase": "Falla en termostato o motoventilador de radiador",
+        "prob": 0.6864
+      },
+      "top_3": [
+        {
+          "clase": "Falla en termostato o motoventilador de radiador",
+          "prob": 0.6864
+        },
+        {
+          "clase": "Fuga en mangueras de refrigerante o radiador picado",
+          "prob": 0.1305
+        },
+        {
+          "clase": "Empaque de culata soplado o danado",
+          "prob": 0.1107
+        }
+      ],
+      "es_top1": false,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_27",
+      "categoria": "A",
+      "falla_confirmada": "Doble falla: manguera de purga canister rajada y borne negativo de batería sulfatado con alta resistencia",
+      "clase_esperada": "Bateria descargada o bornes sulfatados",
+      "motivo": "Doble falla con borne sulfatado y manguera de purga EVAP.",
+      "top_1": {
+        "clase": "Bateria descargada o bornes sulfatados",
+        "prob": 0.8756
+      },
+      "top_3": [
+        {
+          "clase": "Bateria descargada o bornes sulfatados",
+          "prob": 0.8756
+        },
+        {
+          "clase": "Faja o cadena de distribucion destensada o con salto de punto",
+          "prob": 0.0436
+        },
+        {
+          "clase": "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)",
+          "prob": 0.0301
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_28",
+      "categoria": "A",
+      "falla_confirmada": "Malla filtrante del pescador de combustible en tanque colmatada con bacterias de diésel",
+      "clase_esperada": "Inyectores sucios o filtro de combustible obstruido",
+      "motivo": "Malla filtrante pescador de tanque colmatada.",
+      "top_1": {
+        "clase": "Bomba de gasolina quemada o con baja presion",
+        "prob": 0.5034
+      },
+      "top_3": [
+        {
+          "clase": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.5034
+        },
+        {
+          "clase": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+          "prob": 0.2382
+        },
+        {
+          "clase": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+          "prob": 0.2304
+        }
+      ],
+      "es_top1": false,
+      "es_top3": false
+    },
+    {
+      "id": "CASO_29",
+      "categoria": "A",
+      "falla_confirmada": "Válvula de control de marcha mínima IAC atascada con carbón en posición abierta",
+      "clase_esperada": "Cuerpo de aceleracion o valvula IAC sucia",
+      "motivo": "Válvula IAC atascada con carbón en posición abierta.",
+      "top_1": {
+        "clase": "Cuerpo de aceleracion o valvula IAC sucia",
+        "prob": 0.26
+      },
+      "top_3": [
+        {
+          "clase": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.26
+        },
+        {
+          "clase": "Falla en bombin o bomba hidraulica de embrague",
+          "prob": 0.1643
+        },
+        {
+          "clase": "Disco de embrague desgastado o patinando",
+          "prob": 0.1191
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    },
+    {
+      "id": "CASO_30",
+      "categoria": "A",
+      "falla_confirmada": "Rodamiento de maza de rueda trasera derecha picado con zumbido progresivo",
+      "clase_esperada": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+      "motivo": "Rodamiento de maza picado con zumbido en curva.",
+      "top_1": {
+        "clase": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+        "prob": 0.5119
+      },
+      "top_3": [
+        {
+          "clase": "Rodamiento de maza o rodaje de rueda picado (zumbido de rodadura)",
+          "prob": 0.5119
+        },
+        {
+          "clase": "Bomba de gasolina quemada o con baja presion",
+          "prob": 0.3239
+        },
+        {
+          "clase": "Cuerpo de aceleracion o valvula IAC sucia",
+          "prob": 0.0547
+        }
+      ],
+      "es_top1": true,
+      "es_top3": true
+    }
+  ]
+}

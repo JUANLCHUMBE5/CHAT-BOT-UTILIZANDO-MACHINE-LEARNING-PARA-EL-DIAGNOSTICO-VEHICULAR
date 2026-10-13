@@ -292,10 +292,13 @@ class ConversationState:
         procedencia: str = "measured",
         estado: str = "observado",
     ) -> Dict[str, Any]:
+        val_float = float(valor)
+        val_str = f"{int(val_float) if val_float.is_integer() else val_float} {unidad}"
         med = {
             "tipo": tipo,
-            "valor": float(valor),
+            "valor": val_float,
             "unidad": unidad,
+            "formato": val_str,
             "contexto": contexto,
             "prueba": prueba or (self.pending_question.get("intent") if self.pending_question else None),
             "estado": estado,
@@ -303,8 +306,16 @@ class ConversationState:
             "procedencia": procedencia,
             "timestamp": time.time(),
         }
+        clave = tipo
+        if tipo in self.measurements and self.measurements[tipo].get("valor") != val_float:
+            if contexto and contexto != tipo:
+                clave = f"{tipo}_{contexto}"
+            else:
+                clave = f"{tipo}_{unidad.lower()}"
+        self.measurements[clave] = med
         self.measurements[tipo] = med
         self.limpiar_pregunta_pendiente()
+        self.updated_at = time.time()
         return med
 
     def marcar_herramienta_disponible(self, her: str) -> None:

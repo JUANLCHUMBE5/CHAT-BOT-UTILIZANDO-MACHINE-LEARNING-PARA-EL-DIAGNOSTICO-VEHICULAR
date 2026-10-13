@@ -6,6 +6,20 @@ import re
 from enum import Enum
 from typing import Any, Optional, Tuple
 
+from src.core.diagnostico.banners_seguridad import (
+    BANNER_ACEITE,
+    BANNER_BATERIA_MOTOR_ENCENDIDO,
+    BANNER_BLOQUEO_REGENERACION_DILUCION,
+    BANNER_COMBUSTIBLE,
+    BANNER_DIESEL_ALTA_PRESION,
+    BANNER_DIESEL_EMBALAMIENTO,
+    BANNER_FRENO,
+    BANNER_HV,
+    BANNER_RADIADOR_CALIENTE,
+    BANNER_TEMPERATURA,
+    PRERREQUISITOS_REGENERACION_DPF_OEM,
+)
+
 
 class SeveridadSeguridad(str, Enum):
     """Niveles de severidad de riesgo para la seguridad física y del vehículo."""
@@ -74,11 +88,12 @@ PATRON_DIESEL_EMBALAMIENTO_CRITICO = re.compile(
 
 PATRON_DIESEL_ALTA_PRESION_TACTIL = re.compile(
     r"\b("
-    r"(?:(?:pas(?:ar|o|e|ando)|toc(?:ar|o|e|ando)|palp(?:ar|o|e|ando)|tante(?:ar|o|e|ando)|met(?:er|o|e|iendo)|acerc(?:ar|o|e|ando))\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño))\b.{0,60}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|inyector|alta\s+presi[oó]n|fuga|petr[oó]leo|di[eé]sel|combustible))|"
-    r"(?:(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|common\s*rail|inyector|alta\s+presi[oó]n|fuga|petr[oó]leo|di[eé]sel|chorro)\b.{0,60}\b(?:pas(?:ar|o|e|ando)|toc(?:ar|o|e|ando)|palp(?:ar|o|e|ando)|tante(?:ar|o|e|ando)|met(?:er|o|e|iendo)|acerc(?:ar|o|e|ando)|revis(?:ar|o|e))\b.{0,35}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|con\s+(?:la\s+mano|el\s+dedo|un\s+trapo|trapito|una\s+franela|tela|paño)|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)))|"
-    r"(?:(?:revis(?:ar|o|e)|busc(?:ar|o|e)|sentir|tante(?:ar|o|e)|comprob(?:ar|o|e)|detect(?:ar|o|e))\b.{0,45}\b(?:fuga|petr[oó]leo|di[eé]sel|inyecci[oó]n|chorro)\b.{0,45}\b(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|trapos|el\s+cuerpo|la\s+piel|una\s+franela|tela|paño)|a\s+mano|al\s+tacto))|"
-    r"(?:(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|trapos|una\s+franela|tela|paño)|al\s+tacto)\b.{0,45}\b(?:revis(?:ar|o|e)|busc(?:ar|o|e)|sentir|tante(?:ar|o|e)|comprob(?:ar|o|e)|detect(?:ar|o|e))\b.{0,45}\b(?:fuga|petr[oó]leo|di[eé]sel|cañer[ií]a|caño|tuber[ií]a|tubo|riel|inyector|chorro))|"
-    r"(?:(?:puedo|voy\s+a|se\s+puede|meter(?:le)?)\s+(?:tocar|pasar(?:le|lo)?\s+(?:la\s+mano|el\s+dedo|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño))|usar\s+(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)|palpar|tantear|meter\s+mano)\b.{0,50}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|inyector|fuga|petr[oó]leo|riel|chorro))|"
+    r"(?:(?:afloj(?:ar|o|[eé]|es|a|an|ando)?(?:le|lo|la)?|desconect(?:ar|o|[eé]|ando)|solt(?:ar|o|[eé]|ando))\b.{0,40}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|inyector)\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|un\s+trapo)|a\s+mano|la\s+mano|el\s+dedo|al\s+tacto))|"
+    r"(?:(?:pas(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la|los|las)?|toc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|palp(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|tante(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|met(?:er|o|[ií]|ió|ieron|es|a|an|iendo|amos)?(?:le|lo|la)?|acerc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo)?|revis(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|busc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|comprob(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|detect(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|sentir|limpi(?:ar|o|[eé]|ando|emos))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|dedo|mano\s+pelada|a\s+mano|al\s+tacto|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño|papelito))\b.{0,60}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|inyector|alta\s+presi[oó]n|fuga|petr[oó]leo|di[eé]sel|combustible|chorro))|"
+    r"(?:(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|common\s*rail|inyector|alta\s+presi[oó]n|fuga\s+de\s+(?:di[eé]sel|petr[oó]leo)|chorro)\b.{0,60}\b(?:pas(?:ar|o|[eé]|es|a|an|ando)|toc(?:ar|o|[eé]|es|a|an|ando)|palp(?:ar|o|[eé]|es|a|an|ando)|tante(?:ar|o|[eé]|es|a|an|ando)|met(?:er|o|[ií]|es|a|an|iendo)|acerc(?:ar|o|[eé]|es|a|an|ando)|revis(?:ar|o|[eé]|es|a|an|ando)|afloj(?:ar|o|[eé]|es|a|an|ando)|limpi(?:ar|o|[eé]|ando))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|con\s+(?:la\s+mano|el\s+dedo|un\s+trapo|trapito|una\s+franela|tela|paño)|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)|a\s+mano|a\s+mano\s+pelada|al\s+tacto))|"
+    r"(?:(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|trapos|una\s+franela|tela|paño|papelito)|a\s+mano|al\s+tacto|a\s+mano\s+pelada)\b.{0,45}\b(?:revis(?:ar|o|[eé]|es|a|an|ando)|busc(?:ar|o|[eé]|es|a|an|ando)|sentir|tante(?:ar|o|[eé]|es|a|an|ando)|comprob(?:ar|o|[eé]|es|a|an|ando)|detect(?:ar|o|[eé]|es|a|an|ando)|ver|palpar|tocar)\b.{0,45}\b(?:fuga|petr[oó]leo|di[eé]sel|cañer[ií]a|caño|tuber[ií]a|tubo|riel|inyector|chorro|alta\s+presi[oó]n))|"
+    r"(?:(?:puedo|voy\s+a|se\s+puede|meter(?:le)?|quiere|dice\s+si\s+puede|pregunta\s+si\s+puede|va\s+a|dejo\s+que)\s+(?:tocar|pasar(?:le|lo)?\s+(?:la\s+mano|el\s+dedo|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño))|usar\s+(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)|palpar|tantear|meter\s+mano|sentir)\b.{0,60}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|inyector|fuga|petr[oó]leo|riel|rail|chorro|alta\s+presi[oó]n))|"
+    r"(?:(?:buscar|encontrar|detectar|revisar|ubicar|localizar|sentir|ver|tocar)\b.{0,45}\b(?:la\s+)?fuga\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|una\s+franela|tela|paño|papelito)|a\s+mano|al\s+tacto|con\s+el\s+tacto))|"
     r"(?:(?:qu[eé]\s+riesgo|peligro|es\s+peligroso|qu[eé]\s+pasa\s+si|qu[eé]\s+consecuencia(?:s)?|consecuencia\s+m[eé]dica)\b.{0,50}\b(?:fuga\s+de\s+alta\s+presi[oó]n|chorro\s+de\s+inyecci[oó]n|alta\s+presi[oó]n\s+(?:di[eé]sel|petr[oó]leo|common\s*rail)|fuga\s+en\s+(?:el\s+)?common\s*rail|chorro\s+de\s+(?:di[eé]sel|petr[oó]leo|inyecci[oó]n)))|"
     r"(?:(?:pinche|pinchazo|inyecci[oó]n)\b.{0,30}\b(?:chorro|alta\s+presi[oó]n|di[eé]sel|petr[oó]leo|common\s*rail)\b)"
     r")\b",
@@ -87,24 +102,31 @@ PATRON_DIESEL_ALTA_PRESION_TACTIL = re.compile(
 
 PATRON_SOLICITUD_REGENERACION_DPF = re.compile(
     r"\b("
-    r"(?:(?:le\s+)?(?:tiro|meto|hago|fuerzo|iniciar|activo)|tirar(?:le)?|meter(?:le)?|hacer(?:le)?|forzar(?:le)?|iniciar|activar|ejecutar|realizar|puedo\s+(?:forzar|hacer|iniciar|activar|ejecutar|realizar|tirar|meter)|voy\s+a\s+(?:forzar|hacer|iniciar|activar|ejecutar|realizar|tirar|meter))\s+(?:(?:una|la|el)\s+)?(?:regeneraci[oó]n|regenerar|regenerada)\b|"
-    r"regeneraci[oó]n\s+(?:forzada|est[aá]tica|estacionaria|con\s+(?:el\s+)?esc[aá]ner)|"
-    r"regenerar\s+(?:el\s+)?(?:dpf|filtro|fap)\s+(?:con\s+(?:el\s+)?esc[aá]ner|en\s+(?:taller|est[aá]tico|parado)|a\s+la\s+fuerza)|"
-    r"(?:puedo|se\s+puede)\s+regenerar\b|"
-    r"destapar\s+(?:el\s+)?(?:filtro|dpf)\s+(?:con\s+(?:el\s+)?esc[aá]ner|forzando)"
+    r"(?:(?:le\s+)?(?:tiro|tire|tira|tiran|meto|meta|mete|meten|hago|haga|hace|hacen|fuerzo|fuerce|fuerza|fuerzan|iniciar|inicie|activa|activo|active)|"
+    r"tirar(?:le)?|meter(?:le)?|hacer(?:le)?|forzar(?:le)?|iniciar|activar|ejecutar|realizar|"
+    r"puedo\s+(?:forzar|hacer|iniciar|activar|ejecutar|realizar|tirar|meter)|"
+    r"voy\s+a\s+(?:forzar|hacer|iniciar|activar|ejecutar|realizar|tirar|meter)|"
+    r"(?:quiere|insiste\s+en|pide|solicita|sugiere|manda)\s+(?:que\s+(?:le\s+)?(?:haga|tire|meta|fuerce)|(?:hacer|tirar|meter|forzar)))\s+"
+    r"(?:(?:una|la|el)\s+)?(?:regeneraci[oó]n|regenerar|regenerada)\b|"
+    r"\bregenerada\s+(?:est[aá]tica|forzada|con\s+esc[aá]ner|con\s+scanner|al\s+dpf)\b|"
+    r"\bregeneraci[oó]n\s+(?:forzada|est[aá]tica|estacionaria|con\s+(?:el\s+)?esc[aá]ner|de\s+servicio|en\s+taller)\b|"
+    r"\bregenerar\s+(?:el\s+)?(?:dpf|filtro|fap)\s+(?:con\s+(?:el\s+)?esc[aá]ner|en\s+(?:taller|est[aá]tico|parado)|a\s+la\s+fuerza)?\b|"
+    r"\b(?:puedo|se\s+puede|quiere|insiste\s+en)\s+regenerar\b|"
+    r"\bdestapar\s+(?:el\s+)?(?:filtro|dpf)\s+(?:con\s+(?:el\s+)?esc[aá]ner|forzando|est[aá]tico)\b"
     r")\b",
     re.IGNORECASE,
 )
 
 PATRON_INDICIOS_DILUCION_ACEITE = re.compile(
     r"\b("
-    r"(?:varilla|nivel\s+de\s+aceite|aceite)\b.{0,50}(?:\d+\s*cm|por\s+encima|encima|sobre|alto|pasado)\b.{0,30}\b(?:full|m[aá]ximo|marca)|"
-    r"aceite\b.{0,40}\b(?:diluido|mezclado|con\s+olor|huele|olor\s+a)\b.{0,30}\b(?:di[eé]sel|petr[oó]leo|combustible)|"
+    r"(?:varilla|nivel\s+de\s+aceite|aceite)\b.{0,50}(?:\d+\s*cm|por\s+encima|encima|sobre|alto|pasad[oa])\b|"
+    r"varilla\b.{0,40}\bpasad[oa]\b|"
+    r"aceite\b.{0,40}\b(?:diluido|mezclado|con\s+olor|huele|olor\s+a|pasad[oa]|contaminado)\b.{0,30}\b(?:di[eé]sel|petr[oó]leo|combustible)|"
     r"(?:olor\s+a\s+(?:di[eé]sel|petr[oó]leo)|huele\s+a\s+(?:di[eé]sel|petr[oó]leo))\b.{0,40}\baceite|"
-    r"c[aá]rter\b.{0,35}\b(?:lleno|sobrellenado|con\s+(?:di[eé]sel|petr[oó]leo)|contaminado)|"
-    r"(?:nivel|aceite)\s+(?:de\s+aceite\s+)?subi[oó]\b|"
+    r"c[aá]rter\b.{0,40}\b(?:lleno|sobrellenado|con\s+(?:di[eé]sel|petr[oó]leo)|contaminado|diluido)|"
     r"subi[oó]\s+(?:el\s+)?nivel(?:\s+de\s+aceite)?|"
-    r"aceite\s+est[aá]\s+pasado\s+del\s+m[aá]ximo"
+    r"nivel\s+de\s+aceite\s+subi[oó]|"
+    r"aceite\s+est[aá]\s+pasado"
     r")\b",
     re.IGNORECASE,
 )
@@ -118,116 +140,60 @@ PATRON_CORRECCION_ACEITE_COMPROBADA = re.compile(
     re.IGNORECASE,
 )
 
-PATRON_APERTURA_RADIADOR_CALIENTE = re.compile(
+PATRON_ACCION_APERTURA_REFRIGERACION = re.compile(
     r"\b("
-    r"(?:(?:abr(?:ir|o|e|ando)|destap(?:ar|o|e|ando)|retir(?:ar|o|e|ando)|quit(?:ar|o|e|ando)|sacar)\b.{0,45}\b(?:tapa|tap[oó]n|radiador|dep[oó]sito|reservorio)\b.{0,60}\b(?:caliente|hirviendo|temperatura\s+alta|10[0-9]|1[1-9]\d))|"
-    r"(?:(?:caliente|hirviendo|temperatura\s+alta|10[0-9]|1[1-9]\d)\b.{0,60}\b(?:abr(?:ir|o|e|ando)|destap(?:ar|o|e|ando)|retir(?:ar|o|e|ando)|quit(?:ar|o|e|ando)|sacar)\b.{0,45}\b(?:tapa|tap[oó]n|radiador|dep[oó]sito|reservorio))"
+    r"(?:abr(?:ir|o|e|es|a|an|iendo)|ábr(?:elo|ala|ale)?|abrir(?:le|lo|la|los|las)?)|"
+    r"(?:destap(?:ar|o|e|es|a|an|ando)|destáp(?:alo|ala|ale)?|destapar(?:le|lo|la)?)|"
+    r"(?:afloj(?:ar|o|e|es|a|an|ando)|afl[oó]j(?:alo|ala|ale)?|aflojar(?:le|lo|la)?)|"
+    r"(?:quit(?:ar|o|e|es|a|an|ando)|quít(?:alo|ala|ale)?|quitar(?:le|lo|la)?)|"
+    r"(?:sac(?:ar|o|e|es|a|an|ando)|sáq(?:alo|ala|ale)?|sacar(?:le|lo|la)?)|"
+    r"(?:volar(?:le)?|vuel(?:o|e|es|a|an)?)\b.{0,15}\b(?:la\s+)?tapa|"
+    r"(?:retir(?:ar|o|e|es|a|an|ando)|retirar(?:le|lo|la)?)|"
+    r"(?:desenrosc(?:ar|o|e|es|a|an|ando)|desenroscar(?:le|lo|la)?)|"
+    r"(?:echar(?:le)?\s+agua\s+(?:fr[ií]a|al\s+toque|ahorita))|"
+    r"(?:meter\s+mano\s+al\s+(?:radiador|dep[oó]sito|reservorio|circuito))"
     r")\b",
     re.IGNORECASE,
 )
 
-
-BANNER_FRENO = (
-    "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: NO CONDUCIR EL VEHÍCULO**\n"
-    "Existe riesgo inminente de pérdida total del sistema de frenos por falla hidráulica severa. "
-    "Por su seguridad, inmovilice el vehículo de inmediato y solicite traslado en grúa para inspección profesional. "
-    "Bajo ninguna circunstancia intente conducir hasta el taller.\n\n"
+PATRON_OBJETO_REFRIGERACION = re.compile(
+    r"\b("
+    r"(?:tapa|tap[oó]n|tapones)\b(?:\s+(?:del?|de\s+la|al)\b.{0,30}\b(?:radiador|dep[oó]sito|reservorio|vaso|refrigerante|agua))?|"
+    r"(?:radiador|radiadores)|"
+    r"(?:dep[oó]sito|deposito|reservorio|vaso\s+de\s+expansi[oó]n|tacho)(?:\s+(?:de\s+)?(?:refrigerante|agua|anticongelante))?|"
+    r"sistema\s+(?:de\s+)?refrigeraci[oó]n|circuito\s+(?:de\s+)?refrigeraci[oó]n"
+    r")\b",
+    re.IGNORECASE,
 )
 
-BANNER_ACEITE = (
-    "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: APAGUE EL MOTOR INMEDIATAMENTE**\n"
-    "La presión de aceite en cero o el testigo de aceite encendido con ruidos mecánicos indica falta total de lubricación. "
-    "Mantener el motor en marcha provocará fundición o destrucción irreversible de metales internos. "
-    "No vuelva a dar arranque hasta verificar el nivel y la presión mecánica.\n\n"
+PATRON_CALOR_REFRIGERACION = re.compile(
+    r"\b("
+    r"caliente|hirviendo|hierve|hervir|vapor|ebullici[oó]n|"
+    r"recalentado|recalienta|recalentando|sobrecalentado|sobrecalentamiento|"
+    r"temperatura\s+(?:alta|elevada|al\s+m[aá]ximo|en\s+rojo|cr[ií]tica|peligrosa)|"
+    r"agua\s+caliente|refrigerante\s+caliente|humo\s+(?:de\s+vapor|blanco)|"
+    r"10[0-9]|1[1-9]\d|\d{3}\s*grados|\d{3}\s*°\s*c"
+    r")\b",
+    re.IGNORECASE,
 )
 
-BANNER_COMBUSTIBLE = (
-    "🔥 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO INMINENTE DE INCENDIO**\n"
-    "Fuga activa de combustible detectada. No intente arrancar el motor ni accionar componentes eléctricos. "
-    "Mantenga alejadas fuentes de ignición o calor y solicite asistencia técnica profesional en un área ventilada.\n\n"
+PATRON_ENFRIAMIENTO_CONFIRMADO = re.compile(
+    r"\b("
+    r"(?:motor|refrigerante|radiador|sistema)\s+(?:ya\s+)?(?:est[aá]\s+)?(?:fr[ií]o|enfriado|a\s+temperatura\s+ambiente)|"
+    r"dej(?:amos|e|aron|ó)\s+(?:enfriar|que\s+se\s+enfr[ií]e)|"
+    r"(?:esper(?:amos|é|aron|ó)|dej(?:amos|e|aron|ó))\s+.{0,30}(?:enfri|45\s+minutos?|hora|tiempo\s+necesario)|"
+    r"(?:marcó|marca|temperatura\s+(?:de\s+)?)(?:[234]\d)\s*(?:°|º)?\s*[cg]|"
+    r"una\s+vez\s+fr[ií]o|ya\s+se\s+enfri[oó]|ya\s+enfri[oó]"
+    r")\b",
+    re.IGNORECASE,
 )
 
-BANNER_TEMPERATURA = (
-    "⚠️ **ADVERTENCIA CRÍTICA DE SEGURIDAD: SOBRECALENTAMIENTO SEVERO**\n"
-    "Detenga el vehículo en un lugar seguro y apague el motor. "
-    "NUNCA intente abrir el tapón del radiador ni del depósito de refrigerante mientras el motor esté caliente: "
-    "el líquido presurizado causará quemaduras graves inmediatas.\n\n"
-)
-
-BANNER_HV = (
-    "⚡ **ADVERTENCIA DE SEGURIDAD: SISTEMA DE ALTA TENSIÓN (EV/HÍBRIDO)**\n"
-    "Los sistemas de propulsión eléctrica e híbrida operan con tensiones letales (> 300V DC). "
-    "Está estrictamente prohibido que el usuario o personal no capacitado toque, desconecte o manipule cables naranjas, el inversor o la batería de tracción. "
-    "La intervención exige derivación obligatoria a un técnico certificado en alta tensión y protocolos normados.\n\n"
-)
-
-BANNER_DIESEL_EMBALAMIENTO = (
-    "⚠️ **ADVERTENCIA CRÍTICA DE SEGURIDAD: RIESGO DE EMBALAMIENTO DIÉSEL (DIESEL RUNAWAY)**\n"
-    "El nivel de aceite por encima del máximo con combustible acumulado en el cárter (dilución por regeneraciones de DPF fallidas o postinyección) "
-    "representa un peligro severo de embalamiento del motor diésel: el motor puede aspirar los vapores de aceite y combustible "
-    "a través del sistema de ventilación del cárter (PCV) y acelerarse sin control hasta su destrucción catastrófica o incendio, "
-    "sin responder al corte de llave de contacto.\n"
-    "🛑 **MEDIDA OBLIGATORIA:** NO intente arrancar el motor ni forzar regeneraciones estáticas hasta drenar y reemplazar completamente "
-    "el aceite y filtro contaminados, y verificar la causa de la postinyección anómala.\n\n"
-)
-
-BANNER_DIESEL_ALTA_PRESION = (
-    "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO DE INYECCIÓN DE COMBUSTIBLE A ALTA PRESIÓN**\n\n"
-    "⚠️ **PROHIBICIÓN ESTRICTA: NUNCA intente buscar, tocar, palpar ni comprobar fugas con las manos, dedos, piel ni trapos mientras el sistema de combustible esté o pueda estar presurizado.**\n\n"
-    "1. **Riesgo Vital y Mecanismo de Lesión:**\n"
-    "Los sistemas Common Rail operan a presiones extremas de 1,000 a más de 2,200 bar (15,000 a 32,000+ psi). Un orificio diminuto o chorro fino microscópico de combustible a esta presión **atraviesa la piel y los guantes de trabajo instantáneamente**, penetrando profundamente en los tejidos musculares y torrente sanguíneo. Aunque la herida de entrada inicial parezca un pinchazo minúsculo, indoloro o insignificante, el combustible provoca toxicidad química inmediata, trombosis vascular, gangrena y necrosis masiva de tejidos, con alto riesgo de **amputación del miembro o muerte por sepsis**.\n\n"
-    "2. **Procedimiento Seguro de Inspección:**\n"
-    "• **Detenga inmediatamente el motor** y corte el contacto.\n"
-    "• **Espere el tiempo de despresurización** especificado por el fabricante OEM (típicamente 5 a 15 minutos) antes de aproximarse al vano motor.\n"
-    "• Para localizar el origen de una fuga, utilice **únicamente una pantalla protectora de cartón grueso o papel**, manteniéndola a distancia segura con pinzas o mango largo para observar si se mancha con el rocío de combustible. Utilice siempre gafas de seguridad y protección facial completa.\n\n"
-    "3. **Protocolo Médico de Emergencia Obligatorio:**\n"
-    "Si sospecha que combustible a alta presión ha entrado en contacto con su piel o ha penetrado en cualquier parte de su cuerpo, **ACUDA DE INMEDIATO A UN SERVICIO HOSPITALARIO DE URGENCIAS**. Advierta de inmediato al personal médico tratante que se trata de un accidente por **inyección de hidrocarburo a alta presión**, el cual requiere evaluación quirúrgica urgente para desbridamiento y descompresión, independientemente de la aparente levedad del orificio externo."
-)
-
-BANNER_BLOQUEO_REGENERACION_DILUCION = (
-    "🛑 **BLOQUEO DE SEGURIDAD MECÁNICA: REGENERACIÓN DE DPF CONTRAINDICADA POR DILUCIÓN DE ACEITE**\n\n"
-    "⚠️ **PROHIBICIÓN ESTRICTA: NO INICIE LA REGENERACIÓN FORZADA (ESTÁTICA O EN TALLER) EN ESTE MOMENTO.**\n\n"
-    "1. **Riesgo Crítico de Embalamiento Térmico (Diesel Runaway) e Incendio:**\n"
-    "Con el nivel de aceite por encima del máximo y diluido con combustible, la regeneración estática somete al motor a temperaturas extremas (550 °C a 650 °C en escape y cárter caliente) durante 20 a 35 minutos. El calor excesivo vaporiza el diésel acumulado en el cárter, y estos vapores inflamables son aspirados a través del sistema de ventilación positiva del cárter (PCV) hacia la admisión. Al ser un motor diésel sin mariposa de corte estricto, el motor comenzará a combustionar su propio aceite/diésel de forma incontrolada (**embalamiento diésel / runaway**), acelerándose por encima de las 5,000 RPM sin responder a la llave de contacto hasta su desbielamiento catastrófico o incendio en el taller.\n\n"
-    "2. **Diferenciación Técnica: Sospecha vs Confirmación Física:**\n"
-    "• Si se sospecha sobrellenado, confirme primero el nivel con el vehículo en superficie plana y motor frío (10 minutos de reposo).\n"
-    "• Compruebe la consistencia y viscosidad: si el aceite está excesivamente fluido y desprende olor a diésel, la dilución está confirmada físicamente.\n\n"
-    "3. **Procedimiento Obligatorio Antes de Considerar la Regeneración:**\n"
-    "El cambio de aceite por sí solo **NO constituye una autorización automática** para forzar la regeneración. Debe seguirse la secuencia técnica OEM:\n"
-    "a) **Drenar y reemplazar totalmente el aceite y filtro contaminados** utilizando lubricante que cumpla estrictamente la norma del fabricante (aceite Low SAPS / bajo contenido de cenizas, ej. ACEA C2/C3).\n"
-    "b) **Investigar y corregir la causa de la dilución previa:** postinyecciones reiteradas por regeneraciones automáticas abortadas en ciudad, inyectores con goteo o retorno excesivo, sensor de contrapresión de escape (DPF) descalibrado o termostato que no permite alcanzar temperatura de régimen.\n"
-    "c) **Verificar los prerrequisitos OEM obligatorios antes de regenerar:**\n"
-    "   • Temperatura de refrigerante de motor estabilizada (> 75 °C - 80 °C).\n"
-    "   • Sin códigos de falla activos en sensores EGT (temperatura de escape), MAF, EGR o bujías de incandescencia.\n"
-    "   • Masa o acumulación de hollín dentro de los límites de regeneración de servicio (típicamente < 100% o < 35-40 gramos; por encima de ese umbral, la regeneración estática está prohibida por riesgo de sobretemperatura y rotura del sustrato cerámico, requiriendo limpieza química desmontado o reemplazo).\n"
-    "   • Nivel de combustible mínimo en el tanque (al menos 1/4 o 15 litros).\n"
-    "   • Vehículo en exterior ventilado, sobre suelo no inflamable (lejos de pasto o cartones) y capó abierto."
-)
-
-PRERREQUISITOS_REGENERACION_DPF_OEM = (
-    "📋 *Prerrequisitos y comprobaciones OEM antes de forzar la regeneración de DPF:*\n\n"
-    "Habiendo verificado y corregido el aceite de motor (nivel correcto y sin dilución), confirme todos los requisitos del manual de servicio antes de iniciar el ciclo con el escáner:\n\n"
-    "1. **Temperatura de motor:** Refrigerante estabilizado a temperatura de régimen de trabajo (> 75 °C - 80 °C).\n"
-    "2. **Sin DTCs inhibitorios:** Compruebe que no existan códigos activos en sensores de temperatura de escape (EGT), sensor MAF, válvula EGR ni bujías de precalentamiento (esenciales para postinyección térmica).\n"
-    "3. **Masa de hollín dentro de límites de servicio:** La acumulación no debe superar el umbral crítico de regeneración estática (típicamente < 100% o < 35-40 gramos; con cargas superiores está prohibida la regeneración por riesgo de incendio del panal cerámico, requiriendo desmontaje para lavado químico o reemplazo).\n"
-    "4. **Sensor de presión diferencial:** Compruebe que las mangueras no estén cuarteadas y que la lectura en ralentí sea coherente (< 20-25 mbar con filtro saturado, < 5-8 mbar limpio).\n"
-    "5. **Nivel de combustible:** Al menos 1/4 de tanque (mínimo 15 litros).\n"
-    "6. **Seguridad del entorno:** Vehículo estacionado en área abierta ventilada, lejos de materiales inflamables (suelo de concreto, capó abierto)."
-)
-
-
-BANNER_BATERIA_MOTOR_ENCENDIDO = (
-    "⚠️ **ADVERTENCIA DE SEGURIDAD: NO DESCONECTE LA BATERÍA CON EL MOTOR ENCENDIDO**\n"
-    "No retire ni desconecte los bornes de la batería mientras el motor esté funcionando. "
-    "Esta maniobra puede generar sobretensiones y dañar módulos electrónicos, alternador u otros componentes eléctricos. "
-    "Para comprobar el sistema de carga utilice mediciones apropiadas con multímetro o equipo de diagnóstico.\n\n"
-)
-
-BANNER_RADIADOR_CALIENTE = (
-    "⚠️ **ADVERTENCIA DE SEGURIDAD: NO ABRA EL SISTEMA DE REFRIGERACIÓN EN CALIENTE**\n"
-    "No retire el tapón del radiador ni abra el depósito presurizado mientras el motor o el refrigerante estén calientes. "
-    "El sistema puede expulsar vapor y refrigerante a presión y causar quemaduras graves. "
-    "Espere a que el motor se enfríe antes de realizar una inspección segura.\n\n"
+PATRON_APERTURA_RADIADOR_CALIENTE = re.compile(
+    r"\b("
+    r"(?:(?:abr(?:ir|o|e|es|a|an|ando|irle|irles)?|destap(?:ar|o|e|es|a|an|ando|arle)?|retir(?:ar|o|e|es|a|an|ando|arle)?|quit(?:ar|o|e|es|a|an|ando|arle)?|sac(?:ar|o|e|es|a|an|ando|arle)?|afloj(?:ar|o|e|es|a|an|ando|arle)?|afl[oó]j(?:ale|alo|ala)?)\b.{0,60}\b(?:tapa|tap[oó]n|radiador|dep[oó]sito|reservorio|vaso|tacho)\b.{0,80}\b(?:caliente|hirviendo|temperatura\s+alta|10[0-9]|1[1-9]\d|vapor|grados))|"
+    r"(?:(?:caliente|hirviendo|temperatura\s+alta|10[0-9]|1[1-9]\d|vapor|grados)\b.{0,80}\b(?:abr(?:ir|o|e|es|a|an|ando|irle|irles)?|destap(?:ar|o|e|es|a|an|ando|arle)?|retir(?:ar|o|e|es|a|an|ando|arle)?|quit(?:ar|o|e|es|a|an|ando|arle)?|sac(?:ar|o|e|es|a|an|ando|arle)?|afloj(?:ar|o|e|es|a|an|ando|arle)?|afl[oó]j(?:ale|alo|ala)?)\b.{0,60}\b(?:tapa|tap[oó]n|radiador|dep[oó]sito|reservorio|vaso|tacho))"
+    r")\b",
+    re.IGNORECASE,
 )
 
 
@@ -293,6 +259,58 @@ class PoliticaSeguridad:
         return False
 
     @classmethod
+    def _hay_recalentamiento_activo(
+        cls,
+        texto_usuario: str,
+        estado: Optional[Any] = None,
+    ) -> bool:
+        """Determina si existe evidencia activa de sobrecalentamiento/alta temperatura."""
+        txt_l = texto_usuario.lower()
+        if PATRON_ENFRIAMIENTO_CONFIRMADO.search(txt_l):
+            return False
+
+        if PATRON_CALOR_REFRIGERACION.search(txt_l) or PATRON_TEMPERATURA_CRITICA.search(txt_l):
+            return True
+
+        if estado is not None:
+            hist = getattr(estado, "historial_mensajes_usuario", [])
+            for msg in reversed(hist):
+                msg_l = msg.lower()
+                if PATRON_ENFRIAMIENTO_CONFIRMADO.search(msg_l):
+                    return False
+                if PATRON_CALOR_REFRIGERACION.search(msg_l) or PATRON_TEMPERATURA_CRITICA.search(msg_l):
+                    return True
+
+            hechos = getattr(estado, "hechos", {})
+            for k, h in hechos.items():
+                if k in ("sintoma_sobrecalentamiento", "temperatura_alta_refrigerante"):
+                    st = getattr(h, "estado", None)
+                    st_val = str(getattr(st, "value", st)).upper()
+                    if st_val not in ("DESCARTADO", "CORREGIDO", "AUSENTE_NEGADO"):
+                        return True
+
+        return False
+
+    @classmethod
+    def _hay_solicitud_apertura_refrigeracion(cls, texto_usuario: str) -> bool:
+        """Detecta intención de abrir, destapar, aflojar o retirar tapón/radiador/depósito."""
+        txt_l = texto_usuario.lower()
+        if PATRON_ACCION_APERTURA_REFRIGERACION.search(txt_l) and PATRON_OBJETO_REFRIGERACION.search(txt_l):
+            return True
+        return bool(PATRON_APERTURA_RADIADOR_CALIENTE.search(txt_l))
+
+    @classmethod
+    def _hay_apertura_radiador_caliente_peligrosa(
+        cls,
+        texto_usuario: str,
+        estado: Optional[Any] = None,
+    ) -> bool:
+        """Determina si se intenta abrir el sistema presurizado mientras está caliente."""
+        if not cls._hay_solicitud_apertura_refrigeracion(texto_usuario):
+            return False
+        return cls._hay_recalentamiento_activo(texto_usuario, estado)
+
+    @classmethod
     def evaluar_severidad(
         cls,
         texto_usuario: str,
@@ -306,13 +324,27 @@ class PoliticaSeguridad:
         if PATRON_DIESEL_ALTA_PRESION_TACTIL.search(texto_usuario):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_DIESEL_ALTA_PRESION
 
-        # 2. Comprobación de bloqueo de regeneración DPF con dilución de aceite / cárter sobrellenado
+        # 2. Comprobación de regeneración DPF con dilución de aceite o prerrequisitos pendientes
         if PATRON_SOLICITUD_REGENERACION_DPF.search(texto_usuario):
             if cls._hay_dilucion_aceite_activa(texto_usuario, estado):
                 return SeveridadSeguridad.CRITICAL_STOP, BANNER_BLOQUEO_REGENERACION_DILUCION
+            txt_l = texto_usuario.lower()
+            if PATRON_CORRECCION_ACEITE_COMPROBADA.search(txt_l) or (
+                estado and any("reemplazado_aceite" in k or "aceite" in k for k in getattr(estado, "hechos", {}))
+            ):
+                causa_reparada = bool(
+                    re.search(
+                        r"\b(?:repar[eé]|cambi[eé]|solucion[eé]|correg[ií]|revis[eé]|arregl[eé])\b.{0,40}\b(?:inyector|inyectores|termostato|sensor|causa|origen|goteo)\b",
+                        txt_l,
+                    )
+                    or (estado and any("reparado" in k or "reemplazado_inyector" in k for k in getattr(estado, "hechos", {})))
+                )
+                if not causa_reparada:
+                    return SeveridadSeguridad.URGENT_INSPECTION, BANNER_BLOQUEO_REGENERACION_DILUCION
+                return SeveridadSeguridad.NORMAL_DIAGNOSTIC, PRERREQUISITOS_REGENERACION_DPF_OEM
 
         # 3. Solicitud de abrir/destapar sistema de refrigeración en caliente
-        if PATRON_APERTURA_RADIADOR_CALIENTE.search(texto_usuario):
+        if cls._hay_apertura_radiador_caliente_peligrosa(texto_usuario, estado):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_RADIADOR_CALIENTE
 
         if PATRON_DIESEL_EMBALAMIENTO_CRITICO.search(txt_comb):
@@ -322,7 +354,8 @@ class PoliticaSeguridad:
         if PATRON_ACEITE_CRITICO.search(txt_comb):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_ACEITE
         if PATRON_COMBUSTIBLE_CRITICO.search(txt_comb):
-            return SeveridadSeguridad.CRITICAL_STOP, BANNER_COMBUSTIBLE
+            if not re.search(r"\b(?:no\s+(?:hay|presenta|detect[oó]|encontr[eé]|se\s+observa)\s+(?:ninguna\s+)?fuga|sin\s+fugas?)\b", texto_usuario, re.IGNORECASE):
+                return SeveridadSeguridad.CRITICAL_STOP, BANNER_COMBUSTIBLE
         if PATRON_TEMPERATURA_CRITICA.search(txt_comb):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_TEMPERATURA
         if PATRON_ALTA_TENSION.search(txt_comb):
@@ -338,10 +371,7 @@ class PoliticaSeguridad:
         diagnostico_ml: str = "",
         estado: Optional[Any] = None,
     ) -> str:
-        """
-        Garantiza que toda respuesta frente a una condición crítica presente
-        la advertencia obligatoria al inicio y no contenga instrucciones peligrosas.
-        """
+        """Garantiza que toda respuesta frente a una condición crítica presente la advertencia obligatoria."""
         sev, banner = cls.evaluar_severidad(texto_usuario, diagnostico_ml, estado=estado)
         if banner is None:
             return cls.interceptar_maniobras_peligrosas(respuesta_texto)
@@ -350,12 +380,10 @@ class PoliticaSeguridad:
         if banner in (BANNER_DIESEL_ALTA_PRESION, BANNER_BLOQUEO_REGENERACION_DILUCION, BANNER_RADIADOR_CALIENTE):
             return banner.strip()
 
-        # Si la respuesta ya incluye el banner exacto, no duplicar ni pasar el banner oficial por el interceptor
         banner_clean = banner.strip()
         if banner_clean in respuesta_texto:
             return respuesta_texto
 
-        # Para alta tensión, sanear posibles invitaciones peligrosas a reparar con guantes
         resp_modificada = respuesta_texto
         if sev == SeveridadSeguridad.CRITICAL_STOP and banner == BANNER_HV:
             resp_modificada = re.sub(
@@ -366,7 +394,6 @@ class PoliticaSeguridad:
             )
 
         resp_modificada = cls.interceptar_maniobras_peligrosas(resp_modificada)
-
         return f"{banner}{resp_modificada}".strip()
 
     @classmethod
@@ -374,15 +401,8 @@ class PoliticaSeguridad:
         cls,
         respuesta_texto: str,
     ) -> str:
-        """
-        Intercepta instrucciones operativas peligrosas que pudieran aparecer
-        en una respuesta generada, aunque el síntoma del usuario no haya
-        activado previamente una condición crítica.
-        """
+        """Intercepta instrucciones operativas peligrosas en respuestas generadas."""
         respuesta = respuesta_texto or ""
-        # ----------------------------------------------------
-        # Batería: nunca recomendar desconexión con motor activo
-        # ----------------------------------------------------
         patron_bateria = re.compile(
             r"\b(?:desconect(?:a|e|ar)|retir(?:a|e|ar)|quit(?:a|e|ar))"
             r".{0,45}\b(?:borne|terminal|bater[ií]a)\b"
@@ -399,7 +419,10 @@ class PoliticaSeguridad:
             re.IGNORECASE,
         )
 
-        prefijos_negacion = ("no ", "nunca ", "evite ", "prohibido ", "sin ", "no intente ", "no abrir", "no retirar", "no quitar", "no se debe ")
+        prefijos_negacion = (
+            "no ", "nunca ", "evite ", "prohibido ", "sin ",
+            "no intente ", "no abrir", "no retirar", "no quitar", "no se debe ",
+        )
 
         bateria_peligrosa = False
         for m in patron_bateria.finditer(respuesta):
@@ -418,9 +441,6 @@ class PoliticaSeguridad:
                         bateria_peligrosa = True
                         break
 
-        # ----------------------------------------------------
-        # Refrigeración: nunca recomendar apertura en caliente
-        # ----------------------------------------------------
         patron_radiador = re.compile(
             r"\b(?:abr(?:e|ir)|retir(?:a|e|ar)|quit(?:a|e|ar))"
             r".{0,50}\b(?:tap[oó]n|tapa)"
@@ -456,34 +476,16 @@ class PoliticaSeguridad:
                         break
 
         banners = []
-
         if bateria_peligrosa:
             banners.append(BANNER_BATERIA_MOTOR_ENCENDIDO.strip())
-
         if radiador_peligroso:
             banners.append(BANNER_RADIADOR_CALIENTE.strip())
-
         if not banners:
             return respuesta
 
-        # Ante una instrucción insegura generada, no conservar
-        # parcialmente la frase original: podría dejar fragmentos
-        # gramaticales o instrucciones ambiguas.
-        recomendaciones_seguras = []
-
+        recomendaciones = []
         if bateria_peligrosa:
-            recomendaciones_seguras.append(
-                "Para comprobar el sistema de carga, mida el voltaje con un multímetro "
-                "o equipo de diagnóstico sin desconectar la batería mientras el motor está en marcha."
-            )
-
+            recomendaciones.append("Para comprobar el sistema de carga, mida el voltaje con un multímetro sin desconectar la batería.")
         if radiador_peligroso:
-            recomendaciones_seguras.append(
-                "Para revisar el sistema de refrigeración, apague el motor y espere a que "
-                "se enfríe completamente antes de abrir o retirar cualquier tapón presurizado."
-            )
-
-        prefijo = "\n\n".join(banners)
-        recomendacion = " ".join(recomendaciones_seguras)
-
-        return f"{prefijo}\n\n{recomendacion}".strip()
+            recomendaciones.append("Para revisar refrigeración, apague el motor y espere a que enfríe antes de abrir cualquier tapón.")
+        return f"{'\n\n'.join(banners)}\n\n{' '.join(recomendaciones)}".strip()

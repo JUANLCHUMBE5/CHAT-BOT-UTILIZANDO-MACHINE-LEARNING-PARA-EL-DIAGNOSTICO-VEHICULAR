@@ -24,7 +24,7 @@ PATRON_AMBIGUO = re.compile(
 )
 
 PATRON_NUMERICO_MEDICION = re.compile(
-    r"(?:baja\s+a\s+|marca\s+|mide\s+|llega\s+a\s+|da\s+|tengo\s+|est[aá]\s+en\s+)?(\d+(?:[.,]\d+)?)\s*(psi|bar|kpa|mv|v(?:oltios?|olts?)?|ma|a(?:mperios?)?|ohm(?:ios)?|Ω|°c|°f|rpm|km/h|%|mm|ms)?\b",
+    r"(?:baja\s+a\s+|marca\s+|mide\s+|llega\s+a\s+|da\s+|tengo\s+|est[aá]\s+en\s+)?(-?\d+(?:[.,]\d+)?)\s*(psi|bar|kpa|mbar|inhg|in\s*hg|\"hg|mv|v(?:oltios?|olts?)?|ma|miliamperios?|a(?:mperios?)?|amp|ohm(?:ios)?|kohm|Ω|°c|°f|rpm|km/h|%|mm|ms|ml|cm3|cc|g/s|nm)?\b",
     re.IGNORECASE,
 )
 

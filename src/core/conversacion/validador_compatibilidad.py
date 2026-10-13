@@ -156,7 +156,7 @@ class ValidadorCompatibilidad:
 
         Retorna (es_compatible, motivo_incompatibilidad).
         """
-        if not estado or not estado.hechos:
+        if not estado or (not estado.hechos and not estado.historial_mensajes_usuario and not estado.combustible):
             return True, None
 
         falla_l = falla.lower()
@@ -208,6 +208,30 @@ class ValidadorCompatibilidad:
         if any(w in texto_hist for w in ("motor prendido", "motor encendido", "en marcha", "andando", "luces altas")):
             if any(term in falla_l for term in ("fuga parasita", "fuga parásita", "consumo nocturno")):
                 return False, "INCOMPATIBLE_CON_HECHO_CONFIRMADO: Con motor prendido corresponde evaluar alternador/carga, no fuga en reposo"
+
+        # E. Reglas de combustible dual (GLP / GNV) y descarte de componentes de gasolina
+        if any(g in texto_hist for g in ("glp", "gnv", "a gas", "conmuta a gas", "dual glp", "dual gnv")):
+            gasolina_buena = any(
+                w in texto_hist for w in (
+                    "gasolina anda perfecto", "a gasolina anda perfecto", "en gasolina anda bien",
+                    "a gasolina anda bien", "a gasolina perfecto", "gasolina sin problema",
+                    "en gasolina no tiene ningún problema", "en gasolina no falla", "a gasolina acelera parejito"
+                )
+            ) or any(
+                w in texto_hist for w in ("conmuta a gas empieza", "falla a gas", "solo a gas", "cuando pasa a gas")
+            )
+            if gasolina_buena and any(bg in falla_l for bg in ("bomba de gasolina", "presion de gasolina", "presión de gasolina", "inyectores sucios")):
+                return False, "INCOMPATIBLE_CON_HECHO_CONFIRMADO: El vehículo opera correctamente en gasolina; la falla ocurre únicamente al conmutar a gas (GLP/GNV)"
+
+        # F. Reglas de ruidos mecánicos en suspensión/ruedas vs motor de arranque
+        if any(w in texto_hist for w in ("rompemuelles", "baches", "pistas rotas", "rueda delantera", "rueda trasera", "al amortiguar", "suspension", "suspensión")):
+            if any(term in falla_l for term in ("motor de arranque", "solenoide", "carbones gastados", "bendix")):
+                return False, "INCOMPATIBLE_CON_HECHO_CONFIRMADO: La queja es un ruido en rodamiento/suspensión en marcha; no corresponde a motor de arranque"
+
+        # G. Regla de motor que gira con fuerza vs batería descargada
+        if any(w in texto_hist for w in ("gira motor con fuerza", "gira con fuerza", "arranque potente", "motor gira bien")):
+            if any(term in falla_l for term in ("bateria descargada", "batería descargada", "bornes sulfatados")):
+                return False, "INCOMPATIBLE_CON_HECHO_CONFIRMADO: El motor de arranque gira con fuerza, lo que físicamente descarta batería descargada"
 
         return True, None
 

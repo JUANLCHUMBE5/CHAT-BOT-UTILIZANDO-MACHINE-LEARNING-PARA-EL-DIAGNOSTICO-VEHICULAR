@@ -8,6 +8,7 @@ from enum import Enum
 class FactState(str, Enum):
     """Estados clínicos de un hecho observado o declarado."""
     CONFIRMADO = "CONFIRMADO"
+    REPORTADO_SIN_VERIFICAR = "REPORTADO_SIN_VERIFICAR"
     AUSENTE_NEGADO = "AUSENTE_NEGADO"
     NO_REVISADO = "NO_REVISADO"
     NO_SABE_REALIZAR = "NO_SABE_REALIZAR"

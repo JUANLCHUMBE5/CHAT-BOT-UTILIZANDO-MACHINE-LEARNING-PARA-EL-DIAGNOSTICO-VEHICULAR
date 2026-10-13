@@ -1,0 +1,34 @@
+{
+  "commit_auditado": "f8c544da3dc58fdb47be5df7100b4a4cb39626df",
+  "total_conversaciones": 30,
+  "total_turnos": 647,
+  "memoria": {
+    "retencion_promedio_t10": 60.67,
+    "retencion_promedio_t20": 57.16,
+    "retencion_promedio_final": 57.16
+  },
+  "bucles": {
+    "total_bucles_detectados": 0,
+    "conversaciones_sin_bucles": 30
+  },
+  "precision_diagnostica": {
+    "exactitud_top1_porcentaje": 13.33,
+    "exactitud_top3_porcentaje": 20.0,
+    "numerador_top1": 4,
+    "numerador_top3": 6,
+    "denominador_total": 30
+  },
+  "rendimiento": {
+    "latencia_promedio_ms": 71.06,
+    "latencia_p95_ms": 143.78,
+    "latencia_maxima_ms": 192.15
+  },
+  "seguridad": {
+    "guardias_probadas": [
+      "Common Rail de alta presión (Caso 14)",
+      "DPF con dilución de aceite (Caso 16)",
+      "Radiador caliente a 108°C (Caso 26)"
+    ],
+    "todas_interceptadas": true
+  }
+}

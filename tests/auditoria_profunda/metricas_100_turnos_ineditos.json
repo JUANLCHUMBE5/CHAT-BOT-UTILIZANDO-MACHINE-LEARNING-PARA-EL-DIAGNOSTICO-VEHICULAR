@@ -1,0 +1,124 @@
+{
+  "total_turnos": 100,
+  "total_casos": 5,
+  "retencion_global": {
+    "numerador": 43,
+    "denominador": 43,
+    "porcentaje": 100.0
+  },
+  "bucles_total": 0,
+  "rendimiento": {
+    "latencia_promedio_ms": 59.26,
+    "latencia_p95_ms": 142.93
+  },
+  "casos": [
+    {
+      "id": "INEDITA_01",
+      "titulo": "Honda CR-V 2017: Eficiencia Catalítica, Sonda Lambda y Corrección de Marcha",
+      "turnos": 20,
+      "memoria": {
+        "hechos_esperados": 9,
+        "hechos_retenidos": 9,
+        "retencion": 1.0,
+        "detalles": {
+          "marca": true,
+          "modelo": true,
+          "anio": true,
+          "placa": true,
+          "combustible": true,
+          "dtc_p0420": true,
+          "fuga_escape_descartada": true,
+          "bujias_descartadas": true,
+          "contrapresion_medida": true
+        }
+      },
+      "bucles": 0
+    },
+    {
+      "id": "INEDITA_02",
+      "titulo": "Volkswagen Amarok 2.0 BiTDI 2016 Diésel: Pérdida de Presión Common Rail y Retorno de Inyectores",
+      "turnos": 20,
+      "memoria": {
+        "hechos_esperados": 9,
+        "hechos_retenidos": 9,
+        "retencion": 1.0,
+        "detalles": {
+          "marca": true,
+          "modelo": true,
+          "anio": true,
+          "placa": true,
+          "combustible": true,
+          "dtc_p0087": true,
+          "filtro_descartado": true,
+          "sin_fugas_alta": true,
+          "retorno_anomalo_inyector3": true
+        }
+      },
+      "bucles": 0
+    },
+    {
+      "id": "INEDITA_03",
+      "titulo": "Hyundai Accent 2018: Corrección en Caliente, Caída a 500 RPM y Calado en Semáforos",
+      "turnos": 20,
+      "memoria": {
+        "hechos_esperados": 9,
+        "hechos_retenidos": 9,
+        "retencion": 1.0,
+        "detalles": {
+          "marca": true,
+          "modelo": true,
+          "anio": true,
+          "placa": true,
+          "combustible": true,
+          "sin_dtc": true,
+          "encendido_descartado": true,
+          "presion_combustible_ok": true,
+          "mariposa_con_carbon": true
+        }
+      },
+      "bucles": 0
+    },
+    {
+      "id": "INEDITA_04",
+      "titulo": "Toyota Hilux 2.8 1GD Euro 6 2020: DPF Saturado, Riesgo de Embalamiento Térmico y Seguridad",
+      "turnos": 20,
+      "memoria": {
+        "hechos_esperados": 8,
+        "hechos_retenidos": 8,
+        "retencion": 1.0,
+        "detalles": {
+          "marca": true,
+          "modelo": true,
+          "anio": true,
+          "placa": true,
+          "combustible": true,
+          "dtc_p2463": true,
+          "aceite_sobrellenado_diluido": true,
+          "presion_diferencial_dpf_alta": true
+        }
+      },
+      "bucles": 0
+    },
+    {
+      "id": "INEDITA_05",
+      "titulo": "Chevrolet Tracker Turbo 1.2 2021: Humo Azulado, Juego en Eje de Turbo y Compresión",
+      "turnos": 20,
+      "memoria": {
+        "hechos_esperados": 8,
+        "hechos_retenidos": 8,
+        "retencion": 1.0,
+        "detalles": {
+          "marca": true,
+          "modelo": true,
+          "anio": true,
+          "placa": true,
+          "combustible": true,
+          "compresion_pareja_ok": true,
+          "fuga_reten_descartada": true,
+          "juego_eje_turbo_confirmado": true
+        }
+      },
+      "bucles": 0
+    }
+  ]
+}
