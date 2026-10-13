@@ -2,14 +2,14 @@
   "total_turnos": 100,
   "total_casos": 5,
   "retencion_global": {
-    "numerador": 42,
+    "numerador": 43,
     "denominador": 43,
-    "porcentaje": 97.67
+    "porcentaje": 100.0
   },
   "bucles_total": 0,
   "rendimiento": {
-    "latencia_promedio_ms": 61.34,
-    "latencia_p95_ms": 143.41
+    "latencia_promedio_ms": 59.26,
+    "latencia_p95_ms": 142.93
   },
   "casos": [
     {
@@ -40,8 +40,8 @@
       "turnos": 20,
       "memoria": {
         "hechos_esperados": 9,
-        "hechos_retenidos": 8,
-        "retencion": 0.8889,
+        "hechos_retenidos": 9,
+        "retencion": 1.0,
         "detalles": {
           "marca": true,
           "modelo": true,
@@ -49,7 +49,7 @@
           "placa": true,
           "combustible": true,
           "dtc_p0087": true,
-          "filtro_descartado": false,
+          "filtro_descartado": true,
           "sin_fugas_alta": true,
           "retorno_anomalo_inyector3": true
         }

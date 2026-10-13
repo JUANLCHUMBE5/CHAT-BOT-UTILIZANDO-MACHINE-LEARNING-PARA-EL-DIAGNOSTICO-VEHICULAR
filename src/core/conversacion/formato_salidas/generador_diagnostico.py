@@ -211,6 +211,32 @@ def formatear_respuesta_diagnostico(
             break
 
     if not lineas_hipotesis:
+        texto_ctx = f"{sintoma_original} {getattr(estado, 'active_symptoms', [])}".lower()
+        if any(w in texto_ctx for w in ("glp", "gnv", "a gas", "conmuta a gas")):
+            return (
+                "🔧 *Orientación técnica para sistema GLP / GNV (conversión):*\n\n"
+                "La falla se manifiesta específicamente al operar en gas, mientras que la inyección de gasolina funciona correctamente. "
+                "Los equipos de conversión a gas (reductor, filtro de fase líquida, filtro de fase gaseosa, conmutadora y emulador) son sistemas complementarios "
+                "fuera del catálogo estándar de inyección OEM.\n\n"
+                "🛠️ *Primero revisa:* presión diferencial del reductor en datos en vivo con software de gas (Tomasetto/AEB/Lovato) y estado del filtro de fase líquida por saturación de limaduras.\n\n"
+                "¿Dispones de software de diagnóstico de gas o manómetro para verificar la presión del reductor?"
+            )
+        if any(w in texto_ctx for w in ("rompemuelles", "baches", "rueda", "clac clac", "suspensi")):
+            return (
+                "🔧 *Orientación técnica para tren delantero y suspensión:*\n\n"
+                "Al tratarse de una avería puramente mecánica en rodamiento o suspensión, no se registran códigos DTC en el escáner. "
+                "Las causas estadísticas de arranque quedan descartadas.\n\n"
+                "🛠️ *Primero revisa:* inspección en elevador con palanca para verificar holgura axial/vertical en rótulas de suspensión, terminales de dirección y bieletas estabilizadoras.\n\n"
+                "¿Has verificado con palanca si la rótula de suspensión presenta juego vertical u oscilación en el elevador?"
+            )
+        if any(w in texto_ctx for w in ("gira motor con fuerza", "gira con fuerza", "candado", "inmovilizador", "transponder")):
+            return (
+                "🔧 *Orientación técnica para sistema de inmovilizador / encendido:*\n\n"
+                "El motor gira con fuerza al dar arranque, descartando batería y motor de arranque. "
+                "La falta de encendido con giro potente apunta a bloqueo de seguridad inmovilizador (antena transponder o llave desprogramada) o falta de sincronismo.\n\n"
+                "🛠️ *Primero revisa:* estado del testigo de inmovilizador/candado en el tablero al poner contacto y prueba de encendido con la segunda llave original.\n\n"
+                "¿El testigo de candado/seguridad destella rápidamente o se apaga al girar la llave?"
+            )
         return (
             "🔧 *Orientación técnica (sin porcentaje SVM):*\n\n"
             "Las causas estadísticas iniciales han sido descartadas mediante las comprobaciones reportadas. "

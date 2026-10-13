@@ -354,7 +354,8 @@ class PoliticaSeguridad:
         if PATRON_ACEITE_CRITICO.search(txt_comb):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_ACEITE
         if PATRON_COMBUSTIBLE_CRITICO.search(txt_comb):
-            return SeveridadSeguridad.CRITICAL_STOP, BANNER_COMBUSTIBLE
+            if not re.search(r"\b(?:no\s+(?:hay|presenta|detect[oó]|encontr[eé]|se\s+observa)\s+(?:ninguna\s+)?fuga|sin\s+fugas?)\b", texto_usuario, re.IGNORECASE):
+                return SeveridadSeguridad.CRITICAL_STOP, BANNER_COMBUSTIBLE
         if PATRON_TEMPERATURA_CRITICA.search(txt_comb):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_TEMPERATURA
         if PATRON_ALTA_TENSION.search(txt_comb):

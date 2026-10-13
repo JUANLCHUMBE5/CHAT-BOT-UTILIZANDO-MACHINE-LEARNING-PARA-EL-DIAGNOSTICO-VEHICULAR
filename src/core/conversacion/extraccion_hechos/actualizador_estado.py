@@ -206,7 +206,7 @@ def extraer_y_actualizar(
     nuevo_mod, mod_actual_negado = seleccionar_entidad_vehicular(
         texto_usuario, modelos_encontrados, estado.modelo
     )
-    if not nuevo_mod and (estado.marca or nueva_marca):
+    if not nuevo_mod and (not estado.modelo or mod_actual_negado) and (estado.marca or nueva_marca):
         m_marca = estado.marca or nueva_marca
         m_gen = re.search(
             rf"\b{re.escape(m_marca)}\s+([A-Za-z0-9-]+)\b(?!\s*(?:placa|diesel|gasolina|glp|gnv))",
@@ -215,7 +215,8 @@ def extraer_y_actualizar(
         )
         if m_gen and not re.match(r"^(?:19[89]\d|20[0-2]\d|[A-Za-z]{3}-\d{3})$", m_gen.group(1)):
             cand = m_gen.group(1).title()
-            if len(cand) >= 2 and cand.upper() not in {"MOTOR", "AUTO", "CARRO", "CAMIONETA", "CON", "DEL", "EN"}:
+            stop_mods = {"MOTOR", "AUTO", "CARRO", "CAMIONETA", "CON", "DEL", "EN", "ESPECIFICA", "INDICA", "DICE", "MANUAL"}
+            if len(cand) >= 2 and cand.upper() not in stop_mods:
                 nuevo_mod = cand
     if nuevo_mod:
         if estado.modelo and estado.modelo != nuevo_mod:
