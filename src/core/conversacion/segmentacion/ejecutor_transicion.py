@@ -99,6 +99,8 @@ def resolver_transicion_turno(
         return None, transicion
 
     if transicion.decision == DecisionTransicion.ACLARACION_REQUERIDA:
+        from src.core.conversacion.extraccion_hechos.extraccion_taller import extraer_comprobaciones_taller
+        extraer_comprobaciones_taller(estado, texto_limpio, texto_limpio.lower())
         pregunta_aclarar = transicion.pregunta_aclaracion or PREGUNTA_ACLARACION_CANONICA
         estado.registrar_pregunta(
             intent=QuestionIntent.ACLARACION_ALCANCE,

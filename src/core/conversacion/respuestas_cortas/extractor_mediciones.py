@@ -26,6 +26,56 @@ def resolver_condicion_fragmento(frag: str) -> Optional[str]:
     return None
 
 
+def normalizar_unidad_automotriz(unidad_raw: str) -> Optional[str]:
+    """Estandariza unidades de medida de taller a su convención técnica formal."""
+    u = unidad_raw.lower().strip()
+    if not u:
+        return None
+    if "psi" in u:
+        return "PSI"
+    if "mbar" in u:
+        return "mbar"
+    if "bar" in u:
+        return "bar"
+    if "kpa" in u:
+        return "kPa"
+    if "inhg" in u or "in hg" in u or '"hg' in u:
+        return "inHg"
+    if "mv" in u:
+        return "mV"
+    if "ma" in u or "miliamperio" in u:
+        return "mA"
+    if "v" in u or "volt" in u:
+        return "V"
+    if "a" in u or "amp" in u:
+        return "A"
+    if "kohm" in u:
+        return "kohm"
+    if "ohm" in u or "Ω" in u:
+        return "ohm"
+    if "°c" in u or u == "c":
+        return "°C"
+    if "°f" in u or u == "f":
+        return "°F"
+    if "rpm" in u:
+        return "RPM"
+    if "km/h" in u:
+        return "km/h"
+    if "%" in u:
+        return "%"
+    if "mm" in u:
+        return "mm"
+    if "ml" in u or "cm3" in u or "cc" in u:
+        return "ml"
+    if "g/s" in u:
+        return "g/s"
+    if "nm" in u:
+        return "Nm"
+    if "ms" in u:
+        return "ms"
+    return None
+
+
 def extraer_medicion(
     texto_l: str,
     intent_str: str,
@@ -48,36 +98,10 @@ def extraer_medicion(
             return None
         if re.match(r"^(?:19[89]\d|20[0-2]\d)$", m.group(1)):
             return None
-    if "psi" in unidad_raw:
-        unidad = "PSI"
-    elif "bar" in unidad_raw:
-        unidad = "bar"
-    elif "kpa" in unidad_raw:
-        unidad = "kPa"
-    elif "mv" in unidad_raw:
-        unidad = "mV"
-    elif "v" in unidad_raw or "volt" in unidad_raw:
-        unidad = "V"
-    elif "ma" in unidad_raw:
-        unidad = "mA"
-    elif "a" in unidad_raw or "amp" in unidad_raw:
-        unidad = "A"
-    elif "ohm" in unidad_raw or "Ω" in unidad_raw:
-        unidad = "ohm"
-    elif "°c" in unidad_raw or "c" == unidad_raw:
-        unidad = "°C"
-    elif "°f" in unidad_raw or "f" == unidad_raw:
-        unidad = "°F"
-    elif "rpm" in unidad_raw:
-        unidad = "RPM"
-    elif "km/h" in unidad_raw:
-        unidad = "km/h"
-    elif "%" in unidad_raw:
-        unidad = "%"
-    elif "mm" in unidad_raw:
-        unidad = "mm"
-    elif "ms" in unidad_raw:
-        unidad = "ms"
+
+    unidad_norm = normalizar_unidad_automotriz(unidad_raw)
+    if unidad_norm:
+        unidad = unidad_norm
     elif pending_q and pending_q.get("expected_units"):
         unidad = pending_q["expected_units"][0]
     elif "presion" in texto_preg or "manometro" in texto_preg or "combustible" in texto_preg:
@@ -98,60 +122,49 @@ def extraer_medicion_fragmento(
     pending_q: Optional[Dict[str, Any]] = None,
 ) -> Optional[Tuple[float, str, Optional[str]]]:
     """Extrae lectura y unidad dentro de un fragmento de texto asignando su condición local."""
-    m = PATRON_NUMERICO_MEDICION.search(fragmento)
-    if not m:
-        return None
-    val_str = m.group(1).replace(",", ".")
-    try:
-        val = float(val_str)
-    except ValueError:
-        return None
+    mejor_match = None
+    for m in PATRON_NUMERICO_MEDICION.finditer(fragmento):
+        u_raw = (m.group(2) or "").lower()
+        u_norm = normalizar_unidad_automotriz(u_raw)
+        if u_norm:
+            mejor_match = (m, u_norm)
+            break
 
-    unidad_raw = (m.group(2) or "").lower()
-    if not unidad_raw:
-        if re.match(r"^(?:19[89]\d|20[0-2]\d)$", m.group(1)):
+    if mejor_match:
+        m, unidad = mejor_match
+        val_str = m.group(1).replace(",", ".")
+        try:
+            val = float(val_str)
+        except ValueError:
             return None
-        if any(w in fragmento.lower() for w in ("minuto", "minutos", "min", "hora", "horas", "segundo")):
-            return None
-
-    if "psi" in unidad_raw:
-        unidad = "PSI"
-    elif "bar" in unidad_raw:
-        unidad = "bar"
-    elif "kpa" in unidad_raw:
-        unidad = "kPa"
-    elif "mv" in unidad_raw:
-        unidad = "mV"
-    elif "v" in unidad_raw or "volt" in unidad_raw:
-        unidad = "V"
-    elif "ma" in unidad_raw:
-        unidad = "mA"
-    elif "a" in unidad_raw or "amp" in unidad_raw:
-        unidad = "A"
-    elif "ohm" in unidad_raw or "Ω" in unidad_raw:
-        unidad = "ohm"
-    elif "°c" in unidad_raw or "c" == unidad_raw:
-        unidad = "°C"
-    elif "°f" in unidad_raw or "f" == unidad_raw:
-        unidad = "°F"
-    elif "rpm" in unidad_raw:
-        unidad = "RPM"
-    elif "km/h" in unidad_raw:
-        unidad = "km/h"
-    elif "%" in unidad_raw:
-        unidad = "%"
-    elif "mm" in unidad_raw:
-        unidad = "mm"
-    elif "ms" in unidad_raw:
-        unidad = "ms"
-    elif pending_q and pending_q.get("expected_units"):
-        unidad = pending_q["expected_units"][0]
-    elif "presion" in texto_preg or "manometro" in texto_preg or "combustible" in texto_preg:
-        unidad = "PSI"
-    elif "volt" in texto_preg or "multimetro" in texto_preg or "bateria" in texto_preg:
-        unidad = "V"
     else:
-        unidad = "unidades"
+        m = PATRON_NUMERICO_MEDICION.search(fragmento)
+        if not m:
+            return None
+        val_str = m.group(1).replace(",", ".")
+        try:
+            val = float(val_str)
+        except ValueError:
+            return None
+
+        unidad_raw = (m.group(2) or "").lower()
+        if not unidad_raw:
+            if re.match(r"^(?:19[89]\d|20[0-2]\d)$", m.group(1)):
+                return None
+            if any(w in fragmento.lower() for w in ("minuto", "minutos", "min", "hora", "horas", "segundo")):
+                return None
+
+        unidad_norm = normalizar_unidad_automotriz(unidad_raw)
+        if unidad_norm:
+            unidad = unidad_norm
+        elif pending_q and pending_q.get("expected_units"):
+            unidad = pending_q["expected_units"][0]
+        elif "presion" in texto_preg or "manometro" in texto_preg or "combustible" in texto_preg:
+            unidad = "PSI"
+        elif "volt" in texto_preg or "multimetro" in texto_preg or "bateria" in texto_preg:
+            unidad = "V"
+        else:
+            unidad = "unidades"
 
     condicion = resolver_condicion_fragmento(fragmento)
     return val, unidad, condicion
@@ -164,19 +177,40 @@ def extraer_todas_mediciones(
     pending_q: Optional[Dict[str, Any]] = None,
 ) -> List[Tuple[float, str, Optional[str]]]:
     """Extrae todas las mediciones cuantitativas identificando cláusulas y condiciones operativas."""
-    clausulas = re.split(r'[,;]|\s+(?:y|pero|pero\s+con|mientras)\s+', texto_l, flags=re.IGNORECASE)
     resultados: List[Tuple[float, str, Optional[str]]] = []
+
+    # 1. Evaluar por cláusulas para respetar la condición operativa local
+    clausulas = re.split(r'[,;]|\s+(?:y|pero|pero\s+con|mientras)\s+', texto_l, flags=re.IGNORECASE)
     for c in clausulas:
         c_l = c.strip()
         if not c_l:
             continue
         if re.search(r"\b\d+\s*(?:minutos?|min|horas?|h|segundos?|seg)\b", c_l) and not re.search(
-            r"\b\d+(?:[.,]\d+)?\s*(?:psi|bar|kpa|mv|v|volt|rpm)\b", c_l
+            r"\b\d+(?:[.,]\d+)?\s*(?:psi|bar|kpa|mbar|inhg|mv|v|volt|ma|a|ohm|rpm|mm|ml|g/s)\b", c_l
         ):
             continue
         med = extraer_medicion_fragmento(c_l, intent_str, texto_preg, pending_q)
-        if med:
+        if med and med[1] != "unidades":
             resultados.append(med)
+
+    if resultados:
+        return resultados
+
+    # 2. Si no hubo por cláusulas, búsqueda exhaustiva directa con unidades explícitas
+    for m in PATRON_NUMERICO_MEDICION.finditer(texto_l):
+        val_str = m.group(1).replace(",", ".")
+        try:
+            val = float(val_str)
+        except ValueError:
+            continue
+        unit_raw = (m.group(2) or "").lower()
+        if not unit_raw:
+            continue
+        unit_norm = normalizar_unidad_automotriz(unit_raw)
+        if unit_norm:
+            cond = resolver_condicion_fragmento(texto_l)
+            resultados.append((val, unit_norm, cond))
+
     if not resultados:
         med_unica = extraer_medicion(texto_l, intent_str, texto_preg, pending_q)
         if med_unica:

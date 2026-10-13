@@ -345,33 +345,89 @@ def interpretar_respuesta_corta(
                 key=lambda m: (0 if m[2] == "durante_arranque" else (1 if m[2] == "con_carga_electrica" else 2)),
             )
             for val, unidad, condicion in mediciones_ordenadas:
-                if unidad in ("PSI", "bar", "kPa"):
+                if unidad in ("PSI", "bar", "kPa", "mbar"):
                     campo = "medicion_presion"
                     tipo_med = "presion_combustible"
                     contexto_med = "riel_inyeccion"
                 elif unidad in ("V", "mV"):
-                    campo = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
-                    tipo_med = "voltaje_bateria" if condicion in ("reposo", "durante_arranque", "contacto_on") else "voltaje_alternador"
-                    contexto_med = condicion or "bateria"
-                elif intent_str == QuestionIntent.MEDICION_VOLTAJE.value or "voltaje" in texto_preg or "multimetro" in texto_preg:
-                    campo = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
-                    unidad = "V"
-                    tipo_med = "voltaje_bateria"
-                    contexto_med = condicion or "bateria"
-                elif intent_str == QuestionIntent.MEDICION_PRESION.value or "presion" in texto_preg or "manometro" in texto_preg:
-                    campo = "medicion_presion"
-                    unidad = "PSI"
-                    tipo_med = "presion_combustible"
-                    contexto_med = "riel_inyeccion"
+                    es_caida = bool(
+                        re.search(r"\b(?:ca[ií]da\s+de\s+tensi[oó]n|masa|chasis|tierra|borne\s+negativo)\b", texto_l)
+                        or (val < 2.0 and not condicion)
+                    )
+                    if es_caida:
+                        campo = "medicion_caida_tension_masa"
+                        tipo_med = "caida_tension"
+                        contexto_med = "masa_chasis"
+                    elif condicion in ("reposo", "durante_arranque", "contacto_on"):
+                        campo = f"medicion_voltaje_{condicion}"
+                        tipo_med = "voltaje_bateria"
+                        contexto_med = condicion
+                    elif 13.0 <= val <= 15.5:
+                        campo = "medicion_voltaje_alternador"
+                        tipo_med = "voltaje_alternador"
+                        contexto_med = "carga_alternador"
+                    else:
+                        campo = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
+                        tipo_med = "voltaje_bateria" if val < 13.0 else "voltaje_alternador"
+                        contexto_med = condicion or "circuito"
+                elif unidad in ("mA", "A"):
+                    es_parasito = bool(re.search(r"\b(?:par[aá]sito|fuga|descarga|reposo|consumo)\b", texto_l))
+                    tipo_med = "consumo_parasito" if es_parasito else "corriente_electrica"
+                    campo = "medicion_consumo_parasito" if es_parasito else "medicion_corriente"
+                    contexto_med = "reposo_bateria" if es_parasito else "circuito"
+                elif unidad == "inHg":
+                    tipo_med = "restriccion_vacio" if any(w in texto_l for w in ("restricci", "diesel", "diésel", "linea", "línea")) else "vacio_motor"
+                    campo = "medicion_restriccion_vacio" if tipo_med == "restriccion_vacio" else "medicion_vacio_admision"
+                    contexto_med = "linea_combustible" if tipo_med == "restriccion_vacio" else "multiple_admision"
+                elif unidad == "mm":
+                    if any(w in texto_l for w in ("disco", "freno", "alabeo", "comparador")):
+                        tipo_med = "alabeo_disco"
+                        campo = "medicion_alabeo_disco"
+                        contexto_med = "disco_freno"
+                    elif any(w in texto_l for w in ("rotula", "rótula", "juego", "axial", "holgura")):
+                        tipo_med = "juego_rotula"
+                        campo = "medicion_juego_rotula"
+                        contexto_med = "rotula_suspension"
+                    else:
+                        tipo_med = "dimension_metrologica"
+                        campo = "medicion_longitud_mm"
+                        contexto_med = "componente"
+                elif unidad == "ml":
+                    tipo_med = "retorno_inyector" if any(w in texto_l for w in ("inyector", "retorno", "probeta")) else "volumen_fluido"
+                    campo = "medicion_retorno_inyectores" if tipo_med == "retorno_inyector" else "medicion_volumen"
+                    contexto_med = "inyectores_diesel" if tipo_med == "retorno_inyector" else "fluido"
+                elif unidad in ("ohm", "kohm"):
+                    tipo_med = "resistencia_electrica"
+                    campo = "medicion_resistencia_iac" if "iac" in texto_l else "medicion_resistencia"
+                    contexto_med = "valvula_iac" if "iac" in texto_l else ("bobina" if "bobina" in texto_l else "componente")
+                elif unidad == "g/s":
+                    tipo_med = "flujo_aire_maf"
+                    campo = "medicion_flujo_maf"
+                    contexto_med = "sensor_maf"
                 elif unidad == "RPM":
                     campo = "medicion_rpm"
                     tipo_med = "rpm_motor"
                     contexto_med = "ralenti" if any(
                         w in texto_l or w in texto_preg for w in ("ralenti", "ralentí", "detenido", "idle")
                     ) else "motor"
+                elif unidad in ("unidades", ""):
+                    if intent_str == QuestionIntent.MEDICION_VOLTAJE.value or "voltaje" in texto_preg:
+                        campo = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
+                        unidad = "V"
+                        tipo_med = "voltaje_bateria"
+                        contexto_med = condicion or "bateria"
+                    elif intent_str == QuestionIntent.MEDICION_PRESION.value or "presion" in texto_preg:
+                        campo = "medicion_presion"
+                        unidad = "PSI"
+                        tipo_med = "presion_combustible"
+                        contexto_med = "riel_inyeccion"
+                    else:
+                        campo = "medicion_tecnica"
+                        tipo_med = "medicion_tecnica"
+                        contexto_med = "general"
                 else:
                     campo = f"medicion_{unidad.lower()}"
-                    tipo_med = "medicion_tecnica"
+                    tipo_med = f"medicion_{unidad.lower()}"
                     contexto_med = "general"
 
                 valor_medicion = f"{val} {unidad}" + (f" ({condicion})" if condicion else "")
