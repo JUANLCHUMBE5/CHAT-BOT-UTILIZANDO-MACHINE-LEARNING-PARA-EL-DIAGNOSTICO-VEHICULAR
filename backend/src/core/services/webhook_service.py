@@ -243,30 +243,6 @@ class WebhookService:
                             "tiempo_ms": round((time.perf_counter() - inicio) * 1000, 2),
                         }
 
-                    # La placa es obligatoria antes de ejecutar un diagnóstico por WhatsApp.
-                    # Se conserva solo en el contexto efímero de la conversación; al persistir
-                    # el vehículo se transforma en hash y últimos cuatro caracteres.
-                    contexto_placa = dict(conversacion.contexto or {})
-                    if placa in ("WAPP-01", "SIN-PLACA", ""):
-                        if contexto_placa.get("posttest_placa_pendiente"):
-                            try:
-                                placa = normalizar_placa(texto_cliente)
-                            except ValueError:
-                                respuesta_placa = "Indique una placa válida para continuar el diagnóstico."
-                            else:
-                                contexto_placa["placa_posttest"] = placa
-                                contexto_placa.pop("posttest_placa_pendiente", None)
-                                conversacion.contexto = contexto_placa
-                                respuesta_placa = "Placa registrada. Ahora describa el síntoma del vehículo."
-                        else:
-                            contexto_placa["posttest_placa_pendiente"] = True
-                            conversacion.contexto = contexto_placa
-                            respuesta_placa = "Antes de iniciar el diagnóstico, indique la placa del vehículo."
-                        await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_placa)
-                        await session.commit()
-                        return {"status": "esperando_placa", "respuesta": respuesta_placa}
-                    placa = contexto_placa.get("placa_posttest", placa)
-
                     # Registrar costo operativo del mensaje entrante
                     await operaciones_repo.registrar_uso_api(
                         taller_id=usuario.taller_id,
@@ -321,7 +297,59 @@ class WebhookService:
                                 self.gestor.session_manager.finalizar_caso(str(conversacion.id))
                             return resultado_validacion
 
-                    # 7. Diagnóstico Técnico ML + RAG + Gemini
+                    # 7. Integración de Intérprete Estructurado y Validación de Placa
+                    from src.core.parser.message_parser import SinglePassMessageParser
+                    from src.core.intent_classifier import clasificar_intencion_consulta
+
+                    parsed_user_turn = SinglePassMessageParser.parse(texto_cliente)
+                    contexto_placa = dict(conversacion.contexto or {})
+
+                    # Identificar si es una consulta técnica pura que no requiere placa vehicular
+                    es_consulta_tecnica_pura = (
+                        not parsed_user_turn.sintomas_afirmados
+                        and not parsed_user_turn.dtc
+                        and clasificar_intencion_consulta(texto_cliente) == "consulta_tecnica"
+                    )
+
+                    if not es_consulta_tecnica_pura:
+                        # Si el mensaje incluye placa detectada por el parser (real o provisional)
+                        if parsed_user_turn.vehiculo and parsed_user_turn.vehiculo.placa:
+                            placa = parsed_user_turn.vehiculo.placa
+                            contexto_placa["placa_posttest"] = placa
+                            if parsed_user_turn.vehiculo.es_provisional:
+                                contexto_placa["es_provisional"] = True
+                            contexto_placa.pop("posttest_placa_pendiente", None)
+                            if parsed_user_turn.vehiculo.marca or parsed_user_turn.vehiculo.modelo:
+                                marca_modelo = f"{parsed_user_turn.vehiculo.marca or ''} {parsed_user_turn.vehiculo.modelo or ''}".strip()
+                        elif contexto_placa.get("placa_posttest"):
+                            placa = contexto_placa["placa_posttest"]
+
+                        # Si había un síntoma pendiente de un turno previo, recuperarlo
+                        if contexto_placa.get("preplate_pending_input") and placa not in ("WAPP-01", "SIN-PLACA", ""):
+                            prev_sintoma = contexto_placa.pop("preplate_pending_input")
+                            contexto_placa.pop("posttest_placa_pendiente", None)
+                            if parsed_user_turn.sintomas_afirmados or parsed_user_turn.dtc:
+                                texto_cliente = f"{prev_sintoma}. {texto_cliente}".strip()
+                            else:
+                                texto_cliente = prev_sintoma
+
+                        # Si aún no tenemos placa y no se indicó continuación provisional
+                        if placa in ("WAPP-01", "SIN-PLACA", ""):
+                            if contexto_placa.get("posttest_placa_pendiente"):
+                                respuesta_placa = "Indique una placa válida para continuar el diagnóstico."
+                            else:
+                                if texto_cliente:
+                                    contexto_placa["preplate_pending_input"] = texto_cliente
+                                contexto_placa["posttest_placa_pendiente"] = True
+                                respuesta_placa = "Antes de iniciar el diagnóstico, indique la placa del vehículo."
+                            conversacion.contexto = contexto_placa
+                            await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_placa)
+                            await session.commit()
+                            return {"status": "esperando_placa", "respuesta": respuesta_placa}
+
+                        conversacion.contexto = contexto_placa
+
+                    # 8. Diagnóstico Técnico ML + RAG + Gemini
                     flujo_diagnostico = await TechnicalDiagnosticWorkflow.preparar(
                         self.gestor, conversacion, usuario, remitente, proveedor, tipo_mensaje,
                         texto_cliente, audio_id, placa, marca_modelo,

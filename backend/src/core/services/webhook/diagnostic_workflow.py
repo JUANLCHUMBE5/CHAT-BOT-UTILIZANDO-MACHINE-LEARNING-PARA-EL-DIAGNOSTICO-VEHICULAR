@@ -127,7 +127,9 @@ class TechnicalDiagnosticWorkflow:
                 diagnostico_forzado=diagnostico_forzado,
             )
 
-        conversacion.contexto = gestor.session_manager.exportar_contexto(id_sesion)
+        ctx = dict(conversacion.contexto or {})
+        ctx.update(gestor.session_manager.exportar_contexto(id_sesion))
+        conversacion.contexto = ctx
         return ResultadoFlujoDiagnostico(
             dto=dto,
             texto_cliente=texto_cliente,
@@ -182,11 +184,16 @@ class TechnicalDiagnosticWorkflow:
 
         estado_actual = res_turno.get("estado")
         if estado_actual:
-            conversacion.contexto = estado_actual.exportar_dict()
+            ctx = dict(conversacion.contexto or {})
+            exportado = estado_actual.exportar_dict()
+            ctx.update(exportado)
+            ctx["conversation_state"] = exportado
+            ctx["case_id"] = estado_actual.case_id
+            conversacion.contexto = ctx
             gestor.session_manager.cargar_contexto(
                 id_sesion,
                 {
-                    "conversation_state": conversacion.contexto,
+                    "conversation_state": exportado,
                     "case_id": estado_actual.case_id,
                 },
             )

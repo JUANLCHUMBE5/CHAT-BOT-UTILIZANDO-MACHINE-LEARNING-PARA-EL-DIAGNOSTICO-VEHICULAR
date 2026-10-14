@@ -265,16 +265,23 @@ class ExtractorHechos:
                 hechos_extraidos.append(h.to_dict())
 
         # 2. Extracción de marca / modelo / año / combustible
-        for patron, marca in PATRONES_MARCA:
-            if patron.search(texto_usuario):
-                if estado.marca and estado.marca != marca:
+        # 2. Extracción de marca / modelo / año / combustible
+        from src.core.parser.message_parser import SinglePassMessageParser
+        parsed_v = SinglePassMessageParser.extraer_vehiculo(texto_usuario)
+        parsed_turn = SinglePassMessageParser.parse(texto_usuario)
+
+        if parsed_v.marca:
+            marca = parsed_v.marca
+            if estado.marca and estado.marca != marca:
+                if parsed_turn.es_cambio_caso:
                     estado.reiniciar()
                     estado.historial_mensajes_usuario.append(texto_usuario)
                     estado.turno_actual = 1
-                estado.marca = marca
-                h = estado.registrar_hecho("marca", marca, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-                hechos_extraidos.append(h.to_dict())
-                break
+                else:
+                    estado.last_user_correction = f"marca:{marca}"
+            estado.marca = marca
+            h = estado.registrar_hecho("marca", marca, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
 
         m_anio = PATRON_ANIO.search(texto_usuario)
         if m_anio and not estado.anio:
@@ -282,9 +289,10 @@ class ExtractorHechos:
             h = estado.registrar_hecho("anio", m_anio.group(1), categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
             hechos_extraidos.append(h.to_dict())
 
-        for patron, mod in PATRONES_MODELO:
-            if patron.search(texto_usuario):
-                if estado.modelo and estado.modelo != mod:
+        if parsed_v.modelo:
+            mod = parsed_v.modelo
+            if estado.modelo and estado.modelo != mod:
+                if parsed_turn.es_cambio_caso:
                     m_prev = estado.marca
                     estado.reiniciar()
                     estado.historial_mensajes_usuario.append(texto_usuario)
@@ -292,10 +300,11 @@ class ExtractorHechos:
                     if m_prev:
                         estado.marca = m_prev
                         estado.registrar_hecho("marca", m_prev, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-                estado.modelo = mod
-                h = estado.registrar_hecho("modelo", mod, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-                hechos_extraidos.append(h.to_dict())
-                break
+                else:
+                    estado.last_user_correction = f"modelo:{mod}"
+            estado.modelo = mod
+            h = estado.registrar_hecho("modelo", mod, categoria="vehiculo", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
 
         for patron, comb in PATRONES_COMBUSTIBLE:
             if patron.search(texto_usuario) and not estado.combustible:

@@ -33,6 +33,15 @@ class OfflineProcessor:
             diag_ml = "Audio no procesado"
             conf = 0.0
         else:
+            from src.core.parser.message_parser import SinglePassMessageParser
+
+            if placa in ("WAPP-01", "SIN-PLACA", ""):
+                parsed_offline = SinglePassMessageParser.parse(texto_cliente)
+                if parsed_offline.vehiculo and parsed_offline.vehiculo.placa:
+                    placa = parsed_offline.vehiculo.placa
+                if parsed_offline.vehiculo and (parsed_offline.vehiculo.marca or parsed_offline.vehiculo.modelo):
+                    marca_modelo = f"{parsed_offline.vehiculo.marca or ''} {parsed_offline.vehiculo.modelo or ''}".strip()
+
             dto = gestor.procesar_consulta_texto(
                 texto_usuario=texto_cliente,
                 placa=placa,

@@ -120,7 +120,11 @@ class DiagnosticPersister:
 
         # 3. Asociar vehículo si aplica
         vehiculo = None
-        if placa and placa not in ("WAPP-01", "REST-API", "SIN-PLACA"):
+        if (
+            placa
+            and placa not in ("WAPP-01", "REST-API", "SIN-PLACA")
+            and not placa.startswith("PROV_")
+        ):
             vehiculo = await vehiculo_repo.obtener_o_crear(
                 taller_id=usuario.taller_id,
                 registrado_por_id=usuario.id,

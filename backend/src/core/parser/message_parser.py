@@ -226,8 +226,15 @@ class SinglePassMessageParser:
     def extraer_vehiculo(cls, texto: str, placa: Optional[str] = None, es_provisional: bool = False) -> VehiculoIdentificado:
         """Extrae atributos del vehículo evitando colisiones con síntomas."""
         texto_l = texto.lower()
+        # Filtrar marcas y modelos precedidos de negación (ej: "no es corolla", "no era toyota")
+        descartados = set()
+        for m_desc in re.finditer(r"\b(?:no\s+es|no\s+era|no\s+fue)\s+(?:un\s+|una\s+)?([a-z0-9_-]+)\b", texto_l):
+            descartados.add(m_desc.group(1).lower())
+
         marca = None
         for m in MARCAS:
+            if m in descartados:
+                continue
             if re.search(rf"\b{re.escape(m)}\b", texto_l):
                 marca = m.title()
                 break
@@ -244,6 +251,8 @@ class SinglePassMessageParser:
         )
         modelo = None
         for mod in modelos_comunes:
+            if mod in descartados:
+                continue
             if re.search(rf"\b{re.escape(mod)}\b", texto_l):
                 modelo = mod.title()
                 break

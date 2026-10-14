@@ -90,6 +90,8 @@ def interpretar_respuesta_validacion_whatsapp(texto: str) -> str | None:
     frases_clinicas = (
         "si tiene", "si hay", "si llega", "si pasa", "si marca", "si bota", "si suena", "si prende", "si arranca",
         "no tiene", "no hay", "no llega", "no pasa", "no marca", "no bota", "no suena", "no prende", "no arranca",
+        "no revise", "no revise ", "no medi", "no probe", "no cambie", "no cuento", "no dispongo", "no da marcha",
+        "no da arranque", "no gira", "no enciende", "no sube", "no baja", "no acelera", "no frena",
     )
     if any(normalizado.startswith(pref) for pref in frases_clinicas):
         return None

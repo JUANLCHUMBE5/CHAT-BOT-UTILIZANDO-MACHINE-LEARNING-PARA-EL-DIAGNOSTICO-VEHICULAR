@@ -113,6 +113,18 @@ class UserTurnInputDTO(BaseModel):
     # Suficiencia de información
     datos_faltantes: List[str] = Field(default_factory=list, description="Entidades obligatorias ausentes para diagnóstico completo.")
 
+    @property
+    def sintomas_afirmados(self) -> List[HechoClinico]:
+        return [h for h in self.hechos_afirmados if h.categoria == "sintoma"]
+
+    @property
+    def sintomas_negados(self) -> List[HechoClinico]:
+        return [h for h in self.hechos_negados if h.categoria == "sintoma"]
+
+    @property
+    def dtc(self) -> List[str]:
+        return self.dtcs
+
 
 class DiagnosticOutputDTO(BaseModel):
     """Contrato de salida para la respuesta diagnóstica hacia WhatsApp / Outbox."""

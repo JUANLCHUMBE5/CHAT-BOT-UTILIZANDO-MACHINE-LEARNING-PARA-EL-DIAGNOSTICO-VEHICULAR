@@ -235,12 +235,12 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
 
     meta_msg_id = f"wamid_dup_{uuid.uuid4().hex}"
 
-    # Primera llamada: procesa normalmente
+    # Primera llamada: procesa normalmente con placa y síntoma
     res1 = await service.procesar_mensaje(
         remitente=data["telefono_autorizado"],
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
-        texto_cliente="El carro vibra al acelerar en subida",
+        texto_cliente="Toyota Yaris ABC-1234 vibra al acelerar en subida",
     )
     assert res1["status"] in ("completado", "aclaracion")
 
@@ -249,7 +249,7 @@ async def test_webhook_idempotencia_meta_duplicados(setup_test_db, monkeypatch):
         remitente=data["telefono_autorizado"],
         meta_message_id=meta_msg_id,
         tipo_mensaje="text",
-        texto_cliente="El carro vibra al acelerar en subida",
+        texto_cliente="Toyota Yaris ABC-1234 vibra al acelerar en subida",
     )
     assert res2["status"] == "duplicado_ignorado"
     assert res2["meta_message_id"] == meta_msg_id

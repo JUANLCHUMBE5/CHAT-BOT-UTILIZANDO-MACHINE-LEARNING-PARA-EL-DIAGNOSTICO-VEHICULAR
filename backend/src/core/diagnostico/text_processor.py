@@ -364,16 +364,20 @@ def procesar_consulta_texto(
                     gestor.session_manager.finalizar_caso(clave_sesion)
                 elif tiene_sintomas_reales:
                     gestor.session_manager.reiniciar_sesion(clave_sesion)
-            sesion = gestor.session_manager.acumular_input_usuario(
-                session_id=clave_sesion,
-                texto_usuario=texto_normalizado,
-                placa=placa,
-                marca_modelo=marca_modelo,
-            )
-
-            texto_evaluar = sesion.obtener_sintoma_completo()
-            marca_evaluar = marca_modelo or sesion.marca_modelo
-            placa_evaluar = placa or sesion.placa
+            if orquestado:
+                texto_evaluar = texto_normalizado
+                marca_evaluar = marca_modelo
+                placa_evaluar = placa
+            else:
+                sesion = gestor.session_manager.acumular_input_usuario(
+                    session_id=clave_sesion,
+                    texto_usuario=texto_normalizado,
+                    placa=placa,
+                    marca_modelo=marca_modelo,
+                )
+                texto_evaluar = sesion.obtener_sintoma_completo()
+                marca_evaluar = marca_modelo or sesion.marca_modelo
+                placa_evaluar = placa or sesion.placa
     else:
         texto_evaluar = texto_normalizado
         marca_evaluar = marca_modelo
@@ -684,6 +688,7 @@ def procesar_consulta_texto(
         clave_sesion
         and auto_preg
         and auto_preg.es_necesaria
+        and not orquestado
         and not diagnostico_forzado
         and not ya_aclarado
         and not es_critico_seguridad
