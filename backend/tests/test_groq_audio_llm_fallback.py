@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from types import SimpleNamespace
 
-from src.config import settings
+from src.config import PathConfig, settings
 from src.core.audio_processor import AudioProcessor
 from src.core.diagnostico.response_generator import generar_respuesta_con_metadatos
-from src.core.llm import transcribir_audio_groq
+from src.core.llm import generar_respuesta_groq, transcribir_audio_groq
 
 
 class _ResponseOK:
@@ -95,3 +96,37 @@ def test_respuesta_usa_groq_si_no_hay_gemini(monkeypatch):
     assert "presión de combustible" in texto
     assert metadata["proveedor"] == "groq"
     assert metadata["usado"] is True
+
+
+def test_groq_gpt_oss_limita_razonamiento_para_no_devolver_texto_vacio(monkeypatch):
+    monkeypatch.setattr(settings, "groq_api_key", "clave-test")
+    monkeypatch.setattr(settings, "groq_chat_enabled", True)
+    monkeypatch.setattr(settings, "groq_model", "openai/gpt-oss-20b")
+    capturado = {}
+
+    class Respuesta:
+        status_code = 200
+
+        @staticmethod
+        def json():
+            return {"choices": [{"message": {"content": "Respuesta técnica."}}]}
+
+    def post_mock(_url, **kwargs):
+        capturado.update(kwargs["json"])
+        return Respuesta()
+
+    monkeypatch.setattr("src.core.llm.groq_client.requests.post", post_mock)
+    texto, metadata = generar_respuesta_groq("Contexto RAG de prueba.")
+
+    assert texto == "Respuesta técnica."
+    assert metadata["proveedor"] == "groq"
+    assert capturado["reasoning_effort"] == "low"
+    assert capturado["include_reasoning"] is False
+
+
+def test_tracker_csv_permite_ruta_persistente_separada_del_ml(monkeypatch):
+    monkeypatch.setenv("TRACKER_CSV_PATH", "/app/backend/data/tracker_diagnosticos.csv")
+
+    paths = PathConfig()
+
+    assert paths.tracker_csv == Path("/app/backend/data/tracker_diagnosticos.csv")

@@ -106,6 +106,12 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
     if any(termino in texto_limpio for termino in ("sensor map", "carga absoluta", "presion absoluta")):
         return False, ""
 
+    # Una lectura explícita de MAP/carga absoluta ya aporta un sistema y una
+    # medición técnica. No debe convertirse en la pregunta genérica de
+    # vibración aunque el normalizador haya traducido "cabecea" a vibración.
+    if any(termino in texto_limpio for termino in ("sensor map", "carga absoluta", "presion absoluta")):
+        return False, ""
+
     if any(v in texto_limpio for v in ("vibracion", "vibración", "vibraciones", "vibra")) and not any(
         detalle in texto_limpio
         for detalle in (

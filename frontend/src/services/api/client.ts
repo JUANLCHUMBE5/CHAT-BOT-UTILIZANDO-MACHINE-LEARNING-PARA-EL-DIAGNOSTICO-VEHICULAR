@@ -7,11 +7,15 @@ export const API_BASE_URL = API_ORIGIN_OR_BASE.endsWith('/api/v1')
 
 function apiUsaNgrok(): boolean {
   try {
-    const host = new URL(API_BASE_URL).hostname.toLowerCase();
+    const host = new URL(API_BASE_URL, window.location.origin).hostname.toLowerCase();
     return host.endsWith('.ngrok-free.dev') || host.endsWith('.ngrok.io') || host.endsWith('.ngrok.app');
   } catch {
     return false;
   }
+}
+
+export function crearUrlApi(ruta: string): URL {
+  return new URL(ruta, window.location.origin);
 }
 
 export function crearHeadersApi(iniciales?: HeadersInit): Headers {

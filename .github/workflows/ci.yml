@@ -38,8 +38,13 @@ jobs:
       JWT_SECRET_KEY: ci_jwt_secret_only_not_for_production_123456789
       LOCAL_AUTH_USERNAME: admin
       LOCAL_AUTH_PASSWORD: carbot2026
+      META_VERIFY_TOKEN: ci_meta_verify_token
       META_APP_SECRET: ci_meta_secret
       GEMINI_API_KEY: ""
+      MODEL_VERSION: CI_TEST
+      MODEL_PKL_PATH: ${{ github.workspace }}/backend/.ci_ml_artifacts/modelo_diagnostico.pkl
+      VECTORIZER_PKL_PATH: ${{ github.workspace }}/backend/.ci_ml_artifacts/vectorizador_tfidf.pkl
+      MODELO_SISTEMA_PKL_PATH: ${{ github.workspace }}/backend/.ci_ml_artifacts/modelo_sistema.pkl
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -48,6 +53,7 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements-dev.txt
       - run: pip install -r requirements-dev.txt
+      - run: python scripts/preparar_modelo_ci.py
       - run: python -m alembic upgrade head
       - run: ruff check src tests main.py scripts ../machine_learning/training
       - run: ruff check src main.py --select S --ignore S104,S105,S110,S603

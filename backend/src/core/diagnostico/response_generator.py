@@ -130,6 +130,20 @@ def generar_respuesta_con_metadatos(
             return None
 
 
+    def _respuesta_groq_si_disponible() -> Tuple[str, dict] | None:
+        if not settings.groq_api_key or not settings.groq_chat_enabled:
+            return None
+        try:
+            texto_groq, metadata_groq = generar_respuesta_groq(
+                prompt_sistema,
+                tipo_consulta=tipo_consulta,
+            )
+            logger.info("[Groq LLM] Respuesta generada como fallback del proveedor principal.")
+            return texto_groq, metadata_groq
+        except Exception as exc:
+            logger.warning(f"[Groq LLM] Fallback no disponible: {type(exc).__name__}: {exc}")
+            return None
+
     if gestor.api_key:
         slot_disponible = (
             gemini_rate_limiter.intentar_adquirir_slot()

@@ -1620,19 +1620,21 @@ Instrucciones paso a paso:
 
 === PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE PRESIÓN ABSOLUTA DEL MÚLTIPLE (MAP) Y CORRELACIÓN BAROMÉTRICA (DTC P0106 / P0107 / P0108) ===
 
+Alcance: guía general de comprobación basada en Bosch Automotive Testing, sección “Manifold Absolute Pressure (MAP) and Barometric Pressure (BARO) Sensors”, pp. 31–32. DENSO describe pérdida de potencia, ralentí inestable y vacilación como síntomas posibles y recomienda revisar vacío, cableado y DTC. Esta guía no sustituye la información de servicio del fabricante del vehículo.
 
-Codigo de Falla Asociado: DTC P0106 (Rango/Rendimiento Sensor MAP) / DTC P0107 (Entrada Baja) / Tironeo Severo al Acelerar
-Modelos Compatibles Frecuentes en Peru: Chevrolet Sail/Aveo, Hyundai Accent, Kia Rio, Fiat Palio/Siena, Renault Duster, Suzuki Swift
-Gravedad: Media | Tiempo Estimado de Taller: 25 minutos
-Sintomas: El motor acelera a tirones, saca humo negro con olor a gasolina cruda, se ahoga al intentar arrancar en caliente y el ralentí sube y baja errático.
-Instrucciones paso a paso:
-1. Verificacion de correlacion barometrica con motor apagado y contacto en ON:
-   - En Lima (a nivel del mar): la presion atmosferica medida por el sensor MAP debe marcar entre 100 kPa y 102 kPa (1.0 Bar / 29.8 inHg / ~4.0V a 4.5V de salida analogica).
-   - En altura (Huancayo, Cusco, Puno a 3200-3800 msnm): la presion barometrica debe marcar entre 65 kPa y 72 kPa (~2.8V a 3.2V).
-   - Si a nivel del mar el sensor marca 50 kPa o 130 kPa con motor apagado, el elemento piezo-resistivo esta descalibrado.
-2. Medicion de vacio en ralenti con motor caliente a 85°C:
-   - Valor normal de vacio del motor en buen estado: 25 kPa a 35 kPa (salida de voltaje de señal: 0.9V a 1.3V).
-   - Si marca mas de 50 kPa en ralenti (~2.0V): existe una fuga masiva de vacio por empaque de multiple fisurado o valvula PCV rota, lo que hace que la ECU inyecte combustible en exceso creyendo que el motor esta bajo carga acelerando.
+Síntomas compatibles, no concluyentes: pérdida de potencia, ralentí irregular, vacilación al acelerar o códigos de la familia P0105–P0109. Estos datos por sí solos no confirman que el sensor esté averiado.
+
+Procedimiento de diagnóstico:
+1. Leer y guardar los DTC y el cuadro congelado. Registrar los datos en vivo MAP/BARO, unidades, condición del motor y altitud aproximada. Con contacto puesto y motor apagado, comparar MAP con la presión barométrica local usando una fuente de referencia; no aplicar un valor fijo de kPa o voltaje para todas las ciudades o vehículos.
+2. Consultar el manual eléctrico y de servicio del vehículo para identificar tipo de sensor, terminales, método de medición y valores especificados. No asumir pinout, alimentación, curva de salida ni escala del multímetro por marca genérica.
+3. Inspeccionar con el contacto apagado el conector, terminales, arnés, puerto del sensor, sello y manguera de vacío si equipa. Buscar corrosión, cables abiertos/cortocircuitados, contaminación u obstrucciones y fugas en la admisión.
+4. Si el fabricante permite prueba eléctrica, medir alimentación, masa y señal según su diagrama. Determinar primero si la señal es voltaje DC o frecuencia: un multímetro de voltaje no valida por sí solo un sensor de frecuencia.
+5. Para una prueba de banco con bomba manual de vacío, seguir el método Bosch solo cuando sea compatible con el sensor y el vehículo. Aplicar vacío lentamente, sin exceder 20 inHg (límite indicado por Bosch para esa prueba); observar que la señal cambie progresivamente en la dirección esperada. En el método descrito por Bosch, el voltaje/frecuencia disminuye al aumentar el vacío. Comparar el punto inicial y la curva únicamente con la especificación del fabricante del vehículo. No puentear pines sin el diagrama de servicio.
+6. Si la señal cambia correctamente en el sensor, pero el escáner muestra una lectura incoherente, revisar arnés, terminales, referencia/masa compartidas, fugas de admisión y circuito de ECU según el diagrama. Si la lectura no cambia, repetir la medición y comprobar alimentación, masa y herramienta antes de condenar el sensor.
+
+Interpretación: confirmar la causa solo cuando DTC, datos en vivo y pruebas eléctricas/mecánicas coincidan con la especificación del vehículo. No reemplazar el MAP únicamente por síntomas o por un código. Registrar el resultado y solicitar revisión del mecánico si faltan manual, diagrama o valores específicos.
+
+Seguridad y fuente: usar protección ocular y mantener manos/herramientas lejos de partes calientes o móviles. Bosch, “Operating Instructions”, p. 31–32, apartado MAP/BARO: https://www.boschdiagnostics.com/sites/default/files/documents/573864_0.pdf. DENSO, “MAP Sensors – Installation and fault finding”: https://www.denso-am.eu/es/products/sistemas-de-gestion-de-motores/sensores-map.
 
 
 === PROCEDIMIENTO: DIAGNÓSTICO DEL AFORADOR Y SENSOR DE NIVEL DE COMBUSTIBLE EN TANQUE (MEDIDOR DE GASOLINA MARCA VACÍO / LOCO) ===
@@ -2268,25 +2270,7 @@ Instrucciones paso a paso:
 
 === PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR MAP (PRESIÓN ABSOLUTA) Y SENSOR DE TEMPERATURA IAT (DTC P0106 / P0107 / P0113) ===
 
-
-Codigo de Falla Asociado: DTC P0106 (Rendimiento / Rango Sensor MAP) / DTC P0107 (Voltaje Bajo) / DTC P0113 (IAT Voltaje Alto)
-Modelos Compatibles Frecuentes en Peru: Todas las marcas (Universal)
-Gravedad: Media-Alta | Tiempo Estimado de Taller: 25 minutos
-Sintomas: Motor arranca con dificultad, humo negro con olor a gasolina no quemada en escape, apagones repentinos en desaceleración.
-Instrucciones paso a paso:
-1. Verificacion estatica con motor apagado y contacto puesto (KOEO):
-   - Voltaje de alimentacion en pin 1: 5.0V (+/- 0.1V). Masa en pin 2: < 50 mV.
-   - Señal de presion barometrica a nivel del mar (101 kPa / Lima): debe indicar aproximadamente 3.8V a 4.2V en gasolina, o exactamente la presion atmosferica local.
-2. Prueba dinamica con pistola de vacio (Mityvac):
-   - Desconectar el sensor del multiple de admision y conectar la bomba de vacio manual:
-     * A 0 inHg de vacio: ~4.0V.
-     * A 10 inHg de vacio: ~2.5V.
-     * A 20 inHg de vacio (vacio tipico de motor en ralentí sano): ~1.0V a 1.4V.
-   - Si el voltaje no varia o se queda estancado en 4.9V, la membrana piezorresistiva de silicio esta fisurada o el ducto esta saturado de aceite.
-3. Comprobacion de sensor IAT (Termistor NTC):
-   - Medir resistencia entre terminales IAT: a 20°C debe marcar entre 2.2 y 3.0 kOhms. Aplicar aire caliente con secador y verificar que la resistencia disminuya progresivamente.
-
-
+RETIRADO. No usar valores no verificados; consultar RAG_PROC_116 y manual OEM.
 === PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE DETONACIÓN KNOCK SENSOR Y TORQUE DE APRIETE (DTC P0325 / P0327) ===
 
 
@@ -2974,17 +2958,7 @@ Instrucciones paso a paso:
 
 === PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE PRESIÓN ABSOLUTA DE ADMISIÓN MAP (DTC P0106) ===
 
-
-Código de Falla Asociado: DTC P0106 / Manifold Absolute Pressure/Barometric Pressure Circuit Range/Performance
-Modelos Compatibles Frecuentes en Perú: Chevrolet Sail/Onix, Hyundai i10, Kia Picanto, Chery Tiggo, Daewoo/GM
-Gravedad: Media | Tiempo Estimado de Taller: 35 minutos
-Síntomas: Jalones violentos al soltar o presionar el acelerador, humo negro ocasional, arranque pesado con exceso de combustible.
-Instrucciones paso a paso:
-1. Con motor apagado y contacto en ON (KOEO), leer presión barométrica en escáner: a nivel del mar (Lima/Carabayllo) debe marcar ~101 kPa (~1.0 bar o ~29.9 inHg / ~4.0V).
-2. Con motor encendido en ralentí a 750 RPM, la presión debe caer a 28-35 kPa (vacío fuerte del motor / ~1.0V a 1.4V).
-3. Si el valor no cambia o se mantiene en 100 kPa con motor encendido, revisar si el orificio del sensor en el múltiple está taponado por carbonilla o aceite.
-4. Conectar bomba de vacío manual (Mityvac) al sensor y aplicar vacío: verificar que el voltaje descienda linealmente de 4.5V a 1.0V.
-5. Comprobar referencia de 5.0V provista por la ECU y línea de señal hacia la computadora.
+RETIRADO. No usar valores no verificados; consultar RAG_PROC_116 y manual OEM.
 
 === PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE TEMPERATURA DE REFRIGERANTE ECT (DTC P0117 / P0118) ===
 

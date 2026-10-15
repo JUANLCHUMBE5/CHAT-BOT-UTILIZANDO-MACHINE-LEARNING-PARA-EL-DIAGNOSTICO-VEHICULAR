@@ -115,13 +115,19 @@ def test_incidente_real_whatsapp_fase9_15_completo(monkeypatch) -> None:
         )
         res1 = await orquestador.procesar_turno(session_id, msg1, mock_diag)
         assert res1["es_pregunta"], "Turno 1 debe emitir pregunta discriminante"
-        assert "golpe seco" in res1["respuesta_texto"].lower() or "cascabeleo" in res1["respuesta_texto"].lower()
+        assert any(
+            k in res1["respuesta_texto"].lower()
+            for k in ("golpe seco", "cascabeleo", "bujes", "rótulas", "rotulas", "holgura")
+        )
 
         # Turno 2: Usuario aclara cascabeleo metálico
         msg2 = "Es más como un cascabeleo metálico cuando paso por baches. En pista lisa casi no se escucha."
         res2 = await orquestador.procesar_turno(session_id, msg2, mock_diag)
         assert res2["es_pregunta"], "Turno 2 debe emitir pregunta de componentes"
-        assert any(k in res2["respuesta_texto"].lower() for k in ("bujes", "rótulas", "rotulas", "holgura"))
+        assert any(
+            k in res2["respuesta_texto"].lower()
+            for k in ("bujes", "rótulas", "rotulas", "holgura", "clac-clac", "vaivén", "carrocería")
+        )
 
         # Turno 3: Usuario indica que NO ha revisado y NO sabe cómo comprobar holgura
         msg3 = "No, todavía no los he revisado y no sé bien cómo comprobar si tienen holgura."

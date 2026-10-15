@@ -11,6 +11,7 @@ import type {
 import {
   API_BASE_URL,
   authFetch,
+  crearUrlApi,
   getAuthHeaders,
   extractErrorMessage,
 } from './client';
@@ -95,7 +96,7 @@ export async function cambiarRolMecanico(id: string, nuevo_rol: MecanicoRol, pas
 }
 
 export async function getClientes(busqueda?: string): Promise<Cliente[]> {
-  const url = new URL(`${API_BASE_URL}/clientes`);
+  const url = crearUrlApi(`${API_BASE_URL}/clientes`);
   if (busqueda) {
     url.searchParams.append('busqueda', busqueda);
   }
@@ -120,7 +121,7 @@ export async function toggleBloquearCliente(id: string): Promise<{ mensaje: stri
 }
 
 export async function getSolicitudesAcceso(estado?: string): Promise<SolicitudAcceso[]> {
-  const url = new URL(`${API_BASE_URL}/clientes/solicitudes/listar`);
+  const url = crearUrlApi(`${API_BASE_URL}/clientes/solicitudes/listar`);
   if (estado) {
     url.searchParams.append('estado', estado);
   }

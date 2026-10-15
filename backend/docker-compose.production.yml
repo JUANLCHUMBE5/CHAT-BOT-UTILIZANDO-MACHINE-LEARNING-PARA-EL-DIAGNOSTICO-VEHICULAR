@@ -27,10 +27,14 @@ services:
 
   api:
     build:
-      context: .
-      dockerfile: Dockerfile
+      # Este archivo vive en backend/, pero el Dockerfile copia backend/ y
+      # machine_learning/ desde la raíz del monorepo.
+      context: ..
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
-    env_file: .env
+    # En AWS se indica CARBOT_PRODUCTION_ENV_FILE con la ruta del .env
+    # existente. Ese archivo nunca se copia al repositorio ni a la release.
+    env_file: ${CARBOT_PRODUCTION_ENV_FILE:-.env}
     environment:
       ENVIRONMENT: production
       DATABASE_ENABLED: "true"
@@ -43,8 +47,10 @@ services:
       REDIS_URL: redis://redis:6379/0
       QUEUE_EMBEDDED_WORKER: "false"
       ML_ROOT: /app/machine_learning
+      TRACKER_CSV_PATH: /app/backend/data/tracker_diagnosticos.csv
     volumes:
       - ${ML_HOST_PATH:?Set ML_HOST_PATH to the machine_learning directory}:/app/machine_learning:ro
+      - carbot_tracker_data:/app/backend/data
     ports:
       - "127.0.0.1:${API_PORT:-8000}:8000"
     depends_on:
@@ -52,18 +58,20 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: ["sh", "-c", "python -m alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+    # Las migraciones se ejecutan explícitamente en una operación controlada,
+    # nunca como efecto secundario de recrear la API.
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
 
   worker:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     # El worker es un proceso de cola, no un servidor HTTP. Evita heredar el
     # HEALTHCHECK del Dockerfile que consulta incorrectamente el puerto 8000.
     healthcheck:
       disable: true
-    env_file: .env
+    env_file: ${CARBOT_PRODUCTION_ENV_FILE:-.env}
     environment:
       ENVIRONMENT: production
       DATABASE_ENABLED: "true"
@@ -76,8 +84,10 @@ services:
       REDIS_URL: redis://redis:6379/0
       QUEUE_EMBEDDED_WORKER: "false"
       ML_ROOT: /app/machine_learning
+      TRACKER_CSV_PATH: /app/backend/data/tracker_diagnosticos.csv
     volumes:
       - ${ML_HOST_PATH:?Set ML_HOST_PATH to the machine_learning directory}:/app/machine_learning:ro
+      - carbot_tracker_data:/app/backend/data
     depends_on:
       api:
         condition: service_started
@@ -90,3 +100,5 @@ services:
 volumes:
   carbot_postgres:
   carbot_redis:
+  # Telemetría CSV persistente, separada del montaje ML de solo lectura.
+  carbot_tracker_data:

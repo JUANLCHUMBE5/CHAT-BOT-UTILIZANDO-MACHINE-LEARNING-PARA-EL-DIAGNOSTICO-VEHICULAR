@@ -2,6 +2,7 @@ import type { Diagnostico, ResumenMetricas, MetricasCola } from '../../types';
 import {
   API_BASE_URL,
   authFetch,
+  crearUrlApi,
   getAuthHeaders,
   extractErrorMessage,
 } from './client';
@@ -11,7 +12,7 @@ export async function getResumenMetricas(
   fechaFin?: string,
   todo = false,
 ): Promise<ResumenMetricas> {
-  const url = new URL(`${API_BASE_URL}/metricas/resumen`);
+  const url = crearUrlApi(`${API_BASE_URL}/metricas/resumen`);
   if (fechaInicio) url.searchParams.append('fecha_inicio', fechaInicio);
   if (fechaFin) url.searchParams.append('fecha_fin', fechaFin);
   if (todo) url.searchParams.set('todo', 'true');
@@ -45,7 +46,7 @@ export async function getDiagnosticos(params?: {
   fecha_desde?: string;
   fecha_hasta?: string;
 }): Promise<{ items: Diagnostico[]; total: number }> {
-  const url = new URL(`${API_BASE_URL}/diagnostico/historial`);
+  const url = crearUrlApi(`${API_BASE_URL}/diagnostico/historial`);
   if (params) {
     if (params.busqueda) url.searchParams.append('busqueda', params.busqueda);
     if (params.estado) url.searchParams.append('estado', params.estado);
