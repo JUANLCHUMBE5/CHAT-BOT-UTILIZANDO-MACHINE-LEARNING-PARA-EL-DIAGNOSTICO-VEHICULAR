@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      IMAGE: ghcr.io/juanlchumbe5/carbot-backend
+      IMAGE: ghcr.io/juanlchumbe5/carbot-backend-monorepo
       REVISION: ${{ inputs.revision }}
     steps:
       - uses: actions/checkout@v4
@@ -78,3 +78,4 @@ jobs:
             image-digest.txt
             image-manifest.txt
             image-smoke.log
+
