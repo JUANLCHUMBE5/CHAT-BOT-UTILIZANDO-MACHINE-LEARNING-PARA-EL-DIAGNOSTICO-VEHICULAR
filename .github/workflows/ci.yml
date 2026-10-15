@@ -15,7 +15,7 @@ jobs:
         working-directory: backend
     services:
       postgres:
-        image: postgres:17
+        image: postgres:16
         env:
           POSTGRES_DB: carbot_test
           POSTGRES_USER: carbot_app
@@ -24,6 +24,12 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U carbot_app -d carbot_test"
           --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 10
     env:
       DATABASE_ENABLED: "true"
       DATABASE_REQUIRED: "true"
@@ -41,10 +47,17 @@ jobs:
       META_VERIFY_TOKEN: ci_meta_verify_token
       META_APP_SECRET: ci_meta_secret
       GEMINI_API_KEY: ""
-      MODEL_VERSION: CI_TEST
-      MODEL_PKL_PATH: ${{ github.workspace }}/backend/.ci_ml_artifacts/modelo_diagnostico.pkl
-      VECTORIZER_PKL_PATH: ${{ github.workspace }}/backend/.ci_ml_artifacts/vectorizador_tfidf.pkl
-      MODELO_SISTEMA_PKL_PATH: ${{ github.workspace }}/backend/.ci_ml_artifacts/modelo_sistema.pkl
+      CARBOT_BLOCK_DOTENV: 'true'
+      COVERAGE_CORE: sysmon
+      REDIS_URL: redis://127.0.0.1:6379/13
+      GROQ_API_KEY: ''
+      GROQ_CHAT_ENABLED: 'false'
+      GROQ_AUDIO_ENABLED: 'false'
+      META_ACCESS_TOKEN: ''
+      MODEL_VERSION: C1_FASE10_FINAL
+      MODEL_PKL_PATH: ${{ github.workspace }}/machine_learning/models/c1_fase10_final/modelo_diagnostico_c1.pkl
+      VECTORIZER_PKL_PATH: ${{ github.workspace }}/machine_learning/models/c1_fase10_final/vectorizador_c1.pkl
+      MODELO_SISTEMA_PKL_PATH: ${{ github.workspace }}/machine_learning/models/c1_fase10_final/modelo_sistema_c1_macrofix.pkl
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -53,7 +66,6 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements-dev.txt
       - run: pip install -r requirements-dev.txt
-      - run: python scripts/preparar_modelo_ci.py
       - run: python -m alembic upgrade head
       - run: ruff check src tests main.py scripts ../machine_learning/training
       - run: ruff check src main.py --select S --ignore S104,S105,S110,S603
