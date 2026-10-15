@@ -1,0 +1,22 @@
+# Reviewed individually: ten historical synthetic fixtures/placeholders.
+# Exact fingerprints only; all other history and new findings remain scanned.
+# Synthetic provisional plate identifier, not an API key.
+7c0267c928ad57d6681adf71f374e652d554e32b:backend/tests/test_remediacion_estructural.py:generic-api-key:88
+# Synthetic password in isolated test user creation.
+d7d7370146175fe979f47812e3a9f4a6d410ce48:backend/tests/test_mecanicos_y_diagnosticos_api.py:generic-api-key:63
+# Synthetic password fixtures for validation and profile update tests.
+d7d7370146175fe979f47812e3a9f4a6d410ce48:backend/tests/test_mecanicos_profile_edit.py:generic-api-key:136
+# Synthetic password fixtures for validation and profile update tests.
+d7d7370146175fe979f47812e3a9f4a6d410ce48:backend/tests/test_mecanicos_profile_edit.py:generic-api-key:145
+# Synthetic password fixtures for validation and profile update tests.
+d7d7370146175fe979f47812e3a9f4a6d410ce48:backend/tests/test_mecanicos_profile_edit.py:generic-api-key:488
+# Synthetic request password and expected assertion in local mock harness.
+d7d7370146175fe979f47812e3a9f4a6d410ce48:frontend/test_profile_edit_harness.js:generic-api-key:100
+# Synthetic request password and expected assertion in local mock harness.
+d7d7370146175fe979f47812e3a9f4a6d410ce48:frontend/test_profile_edit_harness.js:generic-api-key:113
+# Synthetic temporary password for isolated test user.
+264b56955c840ffd4464497dbf982c24ece534bf:backend/tests/test_flujo_cliente_mecanico.py:generic-api-key:421
+# Historical synthetic test user password.
+7ab2ac262834a154766598564f4601451c839453:tests/test_mecanicos_y_diagnosticos_api.py:generic-api-key:47
+# Spanish instruction placeholder to generate a JWT secret; not a credential.
+c58cf9e788310a86d4bb1480b09d353097d74e35:.env.example:generic-api-key:35

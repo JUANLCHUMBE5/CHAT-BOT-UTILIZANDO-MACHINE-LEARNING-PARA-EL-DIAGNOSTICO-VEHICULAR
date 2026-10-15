@@ -4,3 +4,5 @@ coverage==7.13.5
 ruff==0.15.5
 pip-audit==2.10.0
 locust==2.46.3
+# Plotting is imported by training governance tests; not a production dependency.
+matplotlib==3.10.8
