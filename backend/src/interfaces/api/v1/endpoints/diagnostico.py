@@ -8,15 +8,25 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.application.services.borrador_consulta import (
+    case_id_sesion_activa,
+    registrar_borrador_consulta,
+)
 from src.config import settings
 from src.core.authorization import (
     exigir_confirmacion_diagnosticos,
     exigir_creacion_diagnosticos,
     exigir_lectura_diagnosticos,
 )
+from src.core.conversacion.extractor_hechos import ExtractorHechos
+from src.core.conversacion.session_persistence import (
+    persistir_sesion_en_almacenes,
+    sincronizar_sesion_desde_persistencia,
+)
 from src.core.gemini_queue import gemini_rate_limiter
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.gestor_diagnostico import ResultadoDiagnostico as DTOInternal
+from src.core.identidad_conversacional import clave_sesion_rest, identificador_provisional
 from src.core.logger import logger
 from src.core.security import anonimizar_identificador
 from src.infrastructure.database.connection import database_configurada, obtener_engine
@@ -28,44 +38,19 @@ from src.infrastructure.database.repositories.trabajo_sistema_repository import 
 from src.infrastructure.database.repositories.vehiculo_repository import VehiculoRepository, normalizar_placa
 from src.interfaces.api.v1.dtos.diagnosticos import (
     ActualizarEstadoDTO,
-    EtapaProcesamientoDTO,
     ItemDiagnosticoDTO,
     MensajeConversacionDTO,
-    PrediccionMLDTO,
+)
+from src.interfaces.api.v1.dtos.historial_diagnostico import (
+    _es_procedimiento_rag_real as _es_procedimiento_rag_real,
+)
+from src.interfaces.api.v1.dtos.historial_diagnostico import (
+    presentar_historial,
 )
 from src.interfaces.api.v1.schemas import ConsultaDiagnostico, ResultadoDiagnostico
 from src.limiter import limiter
 
 router = APIRouter()
-
-
-def _es_procedimiento_rag_real(valor: Optional[str]) -> bool:
-    if not valor or not valor.strip():
-        return False
-    normalizado = valor.strip().lower()
-    indicadores_ausencia = (
-        "sin procedimiento rag",
-        "inspección directa de componentes",
-        "no se encontró un procedimiento",
-        "no se encontro un procedimiento",
-        "manual técnico no indexado",
-        "manual tecnico no indexado",
-        "error al buscar",
-    )
-    return not any(indicador in normalizado for indicador in indicadores_ausencia)
-
-
-def _fecha_confirmacion_tecnica(diagnostico, trazabilidad: dict) -> Optional[str]:
-    if diagnostico.estado not in {"confirmado", "descartado"}:
-        return None
-    validacion = trazabilidad.get("validacion_tecnica") or {}
-    fecha_iso = validacion.get("validado_en")
-    if fecha_iso:
-        try:
-            return datetime.fromisoformat(str(fecha_iso)).strftime("%Y-%m-%d %H:%M")
-        except ValueError:
-            pass
-    return diagnostico.actualizado_en.strftime("%Y-%m-%d %H:%M") if diagnostico.actualizado_en else None
 
 
 def obtener_gestor_diagnostico(request: Request) -> GestorDiagnostico:
@@ -82,6 +67,10 @@ async def analizar_sintoma_asincrono(
 ):
     if not consulta.placa:
         raise HTTPException(status_code=400, detail="La placa es obligatoria antes de iniciar un diagnostico.")
+    try:
+        placa = normalizar_placa(consulta.placa)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Se requiere una placa real válida.") from exc
     if not database_configurada():
         raise HTTPException(status_code=503, detail="El procesamiento asíncrono requiere PostgreSQL.")
     if not consulta.sintoma.strip():
@@ -89,9 +78,11 @@ async def analizar_sintoma_asincrono(
     taller_id = uuid.UUID(token_payload.get("taller_id", "00000000-0000-0000-0000-000000000001"))
     payload = {
         "sintoma": consulta.sintoma,
-        "placa": consulta.placa,
+        "placa": placa,
         "marca_modelo": f"{consulta.marca or ''} {consulta.modelo or ''}".strip(),
-        "session_id": consulta.session_id,
+        "session_id": clave_sesion_rest(str(taller_id), str(token_payload["usuario_id"]), consulta.session_id, placa),
+        "taller_id": str(taller_id),
+        "usuario_id": str(token_payload["usuario_id"]),
     }
     try:
         async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
@@ -147,24 +138,65 @@ async def analizar_sintoma(
     if not consulta.sintoma.strip():
         raise HTTPException(status_code=400, detail="El síntoma no puede estar vacío.")
 
-    t_inicio = time.time()
-    try:
-        placa_candidata = consulta.placa
-        if not placa_candidata:
+    placa_candidata = consulta.placa
+    if not placa_candidata and not consulta.session_id:
+        try:
             from src.core.parser.message_parser import SinglePassMessageParser
+
             parsed = SinglePassMessageParser.parse(consulta.sintoma)
             if parsed.vehiculo and parsed.vehiculo.placa:
                 placa_candidata = parsed.vehiculo.placa
-            else:
-                placa_candidata = "REST-API"
-        placa_normalizada = normalizar_placa(placa_candidata)
+        except Exception:
+            pass
+
+    if not placa_candidata and not consulta.session_id:
+        raise HTTPException(status_code=400, detail="La placa es obligatoria antes de iniciar un diagnostico.")
+
+    try:
+        placa_normalizada = normalizar_placa(placa_candidata) if placa_candidata else None
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    solo_lectura = ExtractorHechos.es_consulta_memoria(consulta.sintoma)
+    sesion_efectiva = clave_sesion_rest(
+        str(token_payload["taller_id"]), str(token_payload["usuario_id"]),
+        consulta.session_id, placa_normalizada,
+    )
+    taller_id = uuid.UUID(token_payload["taller_id"])
+    mecanico_id = uuid.UUID(token_payload["usuario_id"])
+
+    # Restaurar sesión si no reside en memoria local (ej. reinicio de API)
+    if database_configurada():
+        try:
+            async with AsyncSession(obtener_engine(), expire_on_commit=False) as session_init:
+                conv_repo = ConversacionRepository(session_init)
+                conv_activa = await conv_repo.obtener_conversacion_activa(
+                    taller_id=taller_id, usuario_id=mecanico_id, canal="api"
+                )
+                ctx_db = conv_activa.contexto if conv_activa else None
+                await sincronizar_sesion_desde_persistencia(gestor, sesion_efectiva, ctx_db)
+        except Exception as exc:
+            logger.debug("[REST API] Error al sincronizar sesión de PostgreSQL: %s", exc)
+            await sincronizar_sesion_desde_persistencia(gestor, sesion_efectiva, None)
+    else:
+        await sincronizar_sesion_desde_persistencia(gestor, sesion_efectiva, None)
+
+    # case_id pertenece a SessionManager; no se copia del identificador del cliente.
+    if not solo_lectura:
+        sesion = gestor.session_manager.obtener_o_crear_sesion(sesion_efectiva)
+        if not sesion.case_id:
+            sesion.case_id = sesion.conversation_state.case_id or str(uuid.uuid4())
+            sesion.conversation_state.case_id = sesion.case_id
+
+    t_inicio = time.time()
+    try:
         placa_anonima = anonimizar_identificador(placa_normalizada)
         logger.info(f"Procesando petición HTTP REST autenticada para Placa: {placa_anonima}")
 
         marca_modelo = f"{consulta.marca or ''} {consulta.modelo or ''}".strip()
 
         slot_gemini = None
-        if settings.gemini_api_key and database_configurada():
+        if not solo_lectura and settings.gemini_api_key and database_configurada():
             slot_gemini, _ = await gemini_rate_limiter.intentar_adquirir_slot_db()
 
         taller_id = uuid.UUID(token_payload["taller_id"])
@@ -175,14 +207,19 @@ async def analizar_sintoma(
             consulta.sintoma,
             placa=placa_normalizada,
             marca_modelo=marca_modelo,
-            session_id=consulta.session_id,
+            session_id=sesion_efectiva,
             proveedor="api",
             slot_gemini_preconcedido=slot_gemini,
             diferir_encolado_persistente=True,
             taller_id=str(taller_id),
             usuario_id=str(mecanico_id),
+            case_id=sesion.case_id if not solo_lectura else None,
         )
-        await gemini_rate_limiter.persistir_estado_local_db()
+        case_id_activo = case_id_sesion_activa(gestor, sesion_efectiva) or (
+            sesion.case_id if not solo_lectura else None
+        )
+        if not solo_lectura:
+            await gemini_rate_limiter.persistir_estado_local_db()
 
         t_final = time.time()
         elapsed_ms = (t_final - t_inicio) * 1000
@@ -190,61 +227,104 @@ async def analizar_sintoma(
 
         # REST debe dejar la misma trazabilidad persistida que WhatsApp.
         diagnostico_id = None
-        if database_configurada():
-            async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
-                async with session.begin():
-                    conv_repo = ConversacionRepository(session)
-                    conversacion = await conv_repo.obtener_o_crear_activa(
-                        taller_id=taller_id, usuario_id=mecanico_id, canal="api"
-                    )
-                    vehiculo = await VehiculoRepository(session).obtener_o_crear(
-                        taller_id=taller_id, registrado_por_id=mecanico_id,
-                        placa_str=placa_normalizada, marca=consulta.marca or "Generico",
-                        modelo=consulta.modelo or "Generico", anio=consulta.anio,
-                    )
-                    repo = DiagnosticoRepository(session)
-                    modos_db_validos = {
-                        "completo_ml_rag_llm", "diagnostico_degradado_ml_rag", "en_cola_gemini",
-                        "audio_espectral", "saludo", "baja_confianza", "esperando_clarificacion",
-                    }
-                    modo_db = dto_resultado.modo_diagnostico
-                    if modo_db not in modos_db_validos:
-                        modo_db = (
-                            "completo_ml_rag_llm"
-                            if modo_db in ("completo", "diferencial", "detalle", "gemini_online")
-                            else "diagnostico_degradado_ml_rag"
+        if database_configurada() and not solo_lectura:
+            try:
+                async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+                    async with session.begin():
+                        conv_repo = ConversacionRepository(session)
+                        conversacion = await conv_repo.obtener_o_crear_activa(
+                            taller_id=taller_id, usuario_id=mecanico_id, canal="api"
                         )
-                    diag = await repo.crear_diagnostico(
-                        taller_id=taller_id, mecanico_id=mecanico_id, vehiculo_id=vehiculo.id,
-                        conversacion_id=conversacion.id,
-                        sintoma_original=consulta.sintoma, falla_predicha=dto_resultado.diagnostico_ml,
-                        confianza=dto_resultado.confianza_ml, similitud_rag=dto_resultado.similitud_rag,
-                        fuente="hibrido", modo_diagnostico=modo_db,
-                        duracion_ms=round(elapsed_ms), tiempo_inferencia_ml_ms=dto_resultado.tiempo_ml_ms,
-                        version_modelo_ml=settings.model_version,
-                        trazabilidad={"origen": "REST", "tiempo_total_ms": round(elapsed_ms)},
-                    )
-                    for orden, prediccion in enumerate(dto_resultado.predicciones_ml[:3], start=1):
-                        await repo.agregar_hipotesis(
-                            diag.id, orden, prediccion.falla, prediccion.probabilidad
+                        vehiculo = None
+                        if placa_normalizada:
+                            vehiculo = await VehiculoRepository(session).obtener_o_crear(
+                                taller_id=taller_id, registrado_por_id=mecanico_id,
+                                placa_str=placa_normalizada, marca=consulta.marca or "Generico",
+                                modelo=consulta.modelo or "Generico", anio=consulta.anio,
+                            )
+                        repo = DiagnosticoRepository(session)
+                        diag = await repo.crear_diagnostico(
+                            taller_id=taller_id, mecanico_id=mecanico_id, vehiculo_id=vehiculo.id if vehiculo else None,
+                            conversacion_id=conversacion.id,
+                            sintoma_original=consulta.sintoma, falla_predicha=dto_resultado.diagnostico_ml,
+                            confianza=dto_resultado.confianza_ml, similitud_rag=dto_resultado.similitud_rag,
+                            fuente="hibrido", modo_diagnostico=(
+                                dto_resultado.modo_diagnostico
+                                if dto_resultado.modo_diagnostico in {
+                                    "completo_ml_rag_llm", "diagnostico_degradado_ml_rag",
+                                    "en_cola_gemini", "audio_espectral", "saludo",
+                                    "baja_confianza", "esperando_clarificacion",
+                                }
+                                else "diagnostico_degradado_ml_rag"
+                            ),
+                            duracion_ms=round(elapsed_ms), tiempo_inferencia_ml_ms=dto_resultado.tiempo_ml_ms,
+                            version_modelo_ml=settings.model_version,
+                            predicciones_svm_raw=[
+                                pred.model_dump() for pred in dto_resultado.predicciones_svm_raw
+                            ],
+                            motivo_abstencion=dto_resultado.motivo_abstencion,
+                            tiempos_tprd_ms={
+                                "ml": dto_resultado.tiempo_ml_ms,
+                                "rag": dto_resultado.tiempo_rag_ms,
+                                "llm": dto_resultado.tiempo_llm_ms,
+                                "total": round(elapsed_ms),
+                            },
+                            trazabilidad={
+                                "origen": "REST",
+                                "tiempo_total_ms": round(elapsed_ms),
+                                # session_id identifica sesión, no necesariamente caso.
+                                "session_id": sesion_efectiva,
+                                "case_id": case_id_activo,
+                                "identificador_provisional": (
+                                    identificador_provisional(str(taller_id), str(conversacion.id), case_id_activo)
+                                    if not vehiculo and case_id_activo else None
+                                ),
+                                "predicciones_ml": [
+                                    pred.model_dump() for pred in dto_resultado.predicciones_ml
+                                ],
+                                "desde_cache": dto_resultado.desde_cache,
+                            },
                         )
-                    if dto_resultado.modo_diagnostico == "en_cola_gemini" and dto_resultado.solicitud_id:
-                        await gemini_rate_limiter.persistir_solicitud_en_sesion(
-                            session,
-                            solicitud_id=dto_resultado.solicitud_id,
-                            sintoma=dto_resultado.sintoma_evaluado or consulta.sintoma,
-                            diagnostico_ml=dto_resultado.diagnostico_ml,
-                            confianza_ml=dto_resultado.confianza_ml,
-                            contexto_manual=dto_resultado.contexto_manual,
-                            titulo_manual=dto_resultado.titulo_manual,
-                            requiere_revision_humana=dto_resultado.requiere_revision_humana,
-                            diagnostico_id=str(diag.id),
-                            conversacion_id=str(conversacion.id),
-                            proveedor="api",
-                            taller_id=str(taller_id),
-                            usuario_id=str(mecanico_id),
+                        if case_id_activo:
+                            conversacion.case_id = case_id_activo
+                        await persistir_sesion_en_almacenes(
+                            gestor, sesion_efectiva, conversacion=conversacion, case_id=case_id_activo
                         )
-                    diagnostico_id = str(diag.id)
+                        await registrar_borrador_consulta(
+                            session, diag, vehiculo, case_id=case_id_activo
+                        )
+                        for orden, prediccion in enumerate(dto_resultado.predicciones_ml[:3], start=1):
+                            await repo.agregar_hipotesis(
+                                diag.id, orden, prediccion.falla, prediccion.probabilidad
+                            )
+                        if dto_resultado.modo_diagnostico == "en_cola_gemini" and dto_resultado.solicitud_id:
+                            await gemini_rate_limiter.persistir_solicitud_en_sesion(
+                                session,
+                                solicitud_id=dto_resultado.solicitud_id,
+                                sintoma=dto_resultado.sintoma_evaluado or consulta.sintoma,
+                                diagnostico_ml=dto_resultado.diagnostico_ml,
+                                confianza_ml=dto_resultado.confianza_ml,
+                                contexto_manual=dto_resultado.contexto_manual,
+                                titulo_manual=dto_resultado.titulo_manual,
+                                requiere_revision_humana=dto_resultado.requiere_revision_humana,
+                                diagnostico_id=str(diag.id),
+                                conversacion_id=str(conversacion.id),
+                                proveedor="api",
+                                taller_id=str(taller_id),
+                                usuario_id=str(mecanico_id),
+                            )
+                        diagnostico_id = str(diag.id)
+            except Exception as exc:
+                if dto_resultado.modo_diagnostico == "en_cola_gemini":
+                    raise
+                logger.warning("[REST Diagnostico] No se pudo persistir en PostgreSQL: %s", exc)
+                await persistir_sesion_en_almacenes(
+                    gestor, sesion_efectiva, conversacion=None, case_id=case_id_activo
+                )
+        elif not solo_lectura:
+            await persistir_sesion_en_almacenes(
+                gestor, sesion_efectiva, conversacion=None, case_id=case_id_activo
+            )
 
         modo_final = dto_resultado.modo_diagnostico
         solicitud_id_final = dto_resultado.solicitud_id
@@ -257,6 +337,7 @@ async def analizar_sintoma(
             sintoma=consulta.sintoma,
             falla_predicha=dto_resultado.diagnostico_ml,
             confianza=confianza_pct,
+            origen_confianza=dto_resultado.origen_confianza,
             similitud_rag=round(dto_resultado.similitud_rag * 100, 2),
             requiere_revision_humana=dto_resultado.requiere_revision_humana,
             procedimiento_tecnico=dto_resultado.contexto_manual,
@@ -313,137 +394,7 @@ async def consultar_historial(
                 fecha_hasta=fecha_hasta,
             )
             response.headers["X-Total-Count"] = str(total)
-            res_items = []
-            for d in diag_db_list:
-                placa_str = f"***-{d.vehiculo.placa_ultimos4}" if d.vehiculo and d.vehiculo.placa_ultimos4 else "Sin Placa Registrada"
-                marca_str = f"{d.vehiculo.marca} {d.vehiculo.modelo}" if d.vehiculo and d.vehiculo.marca else "Vehículo No Registrado"
-                confianza_val = round(float(d.confianza) * 100, 1) if d.confianza is not None else 0.0
-                similitud_val = round(float(d.similitud_rag) * 100, 1) if d.similitud_rag is not None else 0.0
-                duracion_val = int(d.duracion_ms) if d.duracion_ms is not None else 0
-
-                hip = d.hipotesis[0] if d.hipotesis else None
-                proc_rag = "Sin procedimiento RAG registrado"
-                fuente_ref = None
-
-                if hip:
-                    if _es_procedimiento_rag_real(hip.prueba_recomendada):
-                        proc_rag = hip.prueba_recomendada
-                    elif hip.evidencia and "RAG:" in hip.evidencia:
-                        proc_rag = hip.evidencia
-
-                    if hip.evidencia and "Fuente:" in hip.evidencia:
-                        fuente_ref = hip.evidencia.split("Fuente:", 1)[1].split(". Corpus:", 1)[0].strip()
-
-                if not fuente_ref and d.version_corpus_rag:
-                    fuente_ref = f"Corpus local: {d.version_corpus_rag} (fuente documental no registrada)"
-
-                traza = d.trazabilidad or {}
-                duracion_val = int(traza.get("tiempo_total_ms", duracion_val))
-                predicciones_traza = traza.get("predicciones_ml") or []
-                if predicciones_traza:
-                    predicciones = [
-                        PrediccionMLDTO(
-                            orden=indice,
-                            falla=str(item.get("falla", "Sin clasificación")),
-                            probabilidad=round(float(item.get("probabilidad", 0)) * 100, 1),
-                        )
-                        for indice, item in enumerate(predicciones_traza[:3], start=1)
-                    ]
-                else:
-                    predicciones = [
-                        PrediccionMLDTO(
-                            orden=hipotesis.orden,
-                            falla=hipotesis.falla_probable,
-                            probabilidad=round(float(hipotesis.confianza or 0) * 100, 1),
-                        )
-                        for hipotesis in d.hipotesis[:3]
-                    ]
-                    if not predicciones:
-                        predicciones = [
-                            PrediccionMLDTO(
-                                orden=1,
-                                falla=d.falla_predicha or "Sin falla predicha",
-                                probabilidad=confianza_val,
-                            )
-                        ]
-
-                etapas_raw = traza.get("etapas") or []
-                etapas = []
-                for etapa_raw in etapas_raw:
-                    etapa = dict(etapa_raw)
-                    if etapa.get("clave") == "ml":
-                        etapa["nombre"] = settings.model_algorithm
-                    etapas.append(EtapaProcesamientoDTO(**etapa))
-                if not etapas:
-                    etapas = [
-                        EtapaProcesamientoDTO(
-                            clave="ml",
-                            nombre="Clasificación ML registrada",
-                            estado="completado",
-                            duracion_ms=duracion_val,
-                            detalle="Diagnóstico histórico: solo se conserva el tiempo total.",
-                        ),
-                        EtapaProcesamientoDTO(
-                            clave="rag",
-                            nombre="Búsqueda RAG en manuales",
-                            estado="completado" if similitud_val > 0 else "sin_resultado",
-                            detalle=fuente_ref,
-                        ),
-                        EtapaProcesamientoDTO(
-                            clave="llm",
-                            nombre="Síntesis técnica Gemini",
-                            estado="completado" if d.sintesis_llm else "sin_registro",
-                        ),
-                    ]
-                gemini = traza.get("gemini") or {}
-
-                cliente_nom = "Cliente WhatsApp"
-                cliente_tel = None
-                if d.conversacion and d.conversacion.usuario:
-                    cliente_nom = d.conversacion.usuario.nombres or "Cliente WhatsApp"
-                    cliente_tel = f"+51 *** *** {d.conversacion.usuario.whatsapp_ultimos4}"
-                elif d.vehiculo and d.vehiculo.registrado_por:
-                    cliente_nom = d.vehiculo.registrado_por.nombres or "Cliente WhatsApp"
-                    cliente_tel = f"+51 *** *** {d.vehiculo.registrado_por.whatsapp_ultimos4}"
-
-                res_items.append(
-                    ItemDiagnosticoDTO(
-                        id=str(d.id),
-                        sintoma_original=d.sintoma_original,
-                        sintoma_normalizado=d.sintoma_normalizado or d.sintoma_original,
-                        falla_predicha=d.falla_predicha or "Sin falla predicha",
-                        confianza=confianza_val,
-                        similitud_rag=similitud_val,
-                        modo_diagnostico=d.modo_diagnostico or "completo_ml_rag_llm",
-                        estado=d.estado or "generado",
-                        fuente=d.fuente,
-                        mecanico_id=str(d.mecanico_id),
-                        mecanico_nombre=d.mecanico.nombres if d.mecanico else "Mecánico No Asignado",
-                        cliente_nombre=cliente_nom,
-                        cliente_telefono=cliente_tel,
-                        placa_vehiculo=placa_str,
-                        marca_modelo=marca_str,
-                        fecha_hora=d.creado_en.strftime("%Y-%m-%d %H:%M") if d.creado_en else "Fecha no registrada",
-                        duracion_ms=duracion_val,
-                        procedimiento_rag=proc_rag,
-                        fuente_manual=fuente_ref,
-                        version_corpus_rag=d.version_corpus_rag,
-                        tiempo_gravedad=d.conclusion_mecanico or "Sin conclusión registrada",
-                        sintesis_llm=d.sintesis_llm,
-                        notas_mecanico=d.conclusion_mecanico,
-                        fecha_confirmacion=_fecha_confirmacion_tecnica(d, traza),
-                        predicciones_ml=predicciones,
-                        etapas_procesamiento=etapas,
-                        version_modelo_ml=d.version_modelo_ml,
-                        llm_usado=bool(gemini.get("usado", bool(d.sintesis_llm))),
-                        llm_modelo=gemini.get("modelo"),
-                        tokens_entrada=int(gemini.get("tokens_entrada", 0)),
-                        tokens_salida=int(gemini.get("tokens_salida", 0)),
-                        conversacion_id=str(d.conversacion_id) if d.conversacion_id else None,
-                        desde_cache=bool(traza.get("desde_cache", False)),
-                    )
-                )
-            return res_items
+            return presentar_historial(diag_db_list)
 
     raise HTTPException(status_code=503, detail="PostgreSQL no configurado.")
 

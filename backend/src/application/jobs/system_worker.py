@@ -8,6 +8,7 @@ import os
 import socket
 import sys
 import time
+import uuid
 from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,8 +16,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.application.services import GestorDiagnostico
 from src.application.services.whatsapp import WebhookService
 from src.config import PROJECT_ROOT, settings
+from src.core.conversacion.session_persistence import (
+    persistir_sesion_en_almacenes,
+    sincronizar_sesion_desde_persistencia,
+)
 from src.core.logger import logger
 from src.infrastructure.database.connection import obtener_engine
+from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.trabajo_sistema_repository import TrabajoSistemaRepository
 
 
@@ -63,7 +69,13 @@ class SystemWorker:
         if eliminados:
             logger.info("[System Worker] Se purgaron %s payloads expirados.", eliminados)
 
-    async def _procesar(self, tipo: str, payload: dict[str, Any]) -> str:
+    async def _procesar(
+        self,
+        tipo: str,
+        payload: dict[str, Any],
+        taller_id: Any = None,
+        session: Any = None,
+    ) -> str:
         if tipo == "webhook_mensaje":
             resultado = await WebhookService(self.gestor).procesar_mensaje(**payload)
             return json.dumps(
@@ -71,13 +83,39 @@ class SystemWorker:
                 ensure_ascii=False,
             )
         if tipo == "diagnostico_api":
+            if not payload.get("session_id"):
+                raise ValueError("El trabajo REST requiere una identidad de conversación aislada.")
+            session_id = payload["session_id"]
+            taller_id_val = payload.get("taller_id") or (str(taller_id) if taller_id else None)
+            usuario_id_val = payload.get("usuario_id")
+            conversacion = None
+            if session and taller_id_val and usuario_id_val:
+                try:
+                    conv_repo = ConversacionRepository(session)
+                    conversacion = await conv_repo.obtener_conversacion_activa(
+                        taller_id=uuid.UUID(str(taller_id_val)),
+                        usuario_id=uuid.UUID(str(usuario_id_val)),
+                        canal="api",
+                    )
+                except Exception as exc:
+                    logger.debug("[SystemWorker] No se pudo obtener conversación: %s", exc)
+
+            await sincronizar_sesion_desde_persistencia(
+                self.gestor, session_id, conversacion.contexto if conversacion else None
+            )
+
             dto = await asyncio.to_thread(
                 self.gestor.procesar_consulta_texto,
                 payload["sintoma"],
                 placa=payload.get("placa") or "REST-API",
                 marca_modelo=payload.get("marca_modelo") or "Vehículo genérico",
-                session_id=payload.get("session_id"),
+                session_id=session_id,
                 proveedor="api",
+            )
+            sesion_activa = self.gestor.session_manager.obtener_sesion(session_id)
+            case_id_activo = sesion_activa.case_id if sesion_activa else None
+            await persistir_sesion_en_almacenes(
+                self.gestor, session_id, conversacion=conversacion, case_id=case_id_activo
             )
             return json.dumps(
                 {
@@ -123,7 +161,9 @@ class SystemWorker:
 
             try:
                 payload = TrabajoSistemaRepository(session).obtener_payload(trabajo)
-                resumen = await self._procesar(trabajo.tipo, payload)
+                resumen = await self._procesar(
+                    trabajo.tipo, payload, taller_id=trabajo.taller_id, session=session
+                )
                 async with session.begin():
                     await TrabajoSistemaRepository(session).marcar_completado(trabajo.id, resumen)
                 logger.info("[System Worker] Trabajo %s completado (%s).", trabajo.id, trabajo.tipo)

@@ -83,6 +83,9 @@ def es_continuacion_contextual(texto: str) -> bool:
         "en semáforo", "en semaforo", "con el aire", "con aire",
         "con el a/c", "con a/c", "con clima", "con las luces", "con luces",
         "con carga", "y cuando", "y al", "solo en", "con el motor",
+        "en el pedal", "en el volante", "en el timon", "en el timón",
+        "en pedal", "en volante", "en timon", "la vibracion", "la vibración",
+        "el cascabeleo", "el humo", "el ruido", "el sonido",
     )
     return any(limpio.startswith(valor) or valor in limpio for valor in conectores)
 

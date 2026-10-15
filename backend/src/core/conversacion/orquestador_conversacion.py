@@ -63,10 +63,22 @@ class OrquestadorConversacion:
         # 1. Recuperar o inicializar estado de sesión
         estado = await self.repositorio.get_session(session_id)
         if estado is None:
-            estado = ConversationState(session_id=session_id)
+            sesion_mgr = getattr(gestor_diagnostico, "session_manager", None)
+            sesion_existente = sesion_mgr.obtener_sesion(session_id) if sesion_mgr else None
+            if sesion_existente and sesion_existente.conversation_state:
+                estado = sesion_existente.conversation_state
+                if sesion_existente.case_id and not estado.case_id:
+                    estado.case_id = sesion_existente.case_id
+            else:
+                estado = ConversationState(session_id=session_id)
         if not estado.case_id:
             import uuid
-            estado.case_id = str(uuid.uuid4())
+            sesion_mgr = getattr(gestor_diagnostico, "session_manager", None)
+            sesion_existente = sesion_mgr.obtener_sesion(session_id) if sesion_mgr else None
+            if sesion_existente and sesion_existente.case_id:
+                estado.case_id = sesion_existente.case_id
+            else:
+                estado.case_id = str(uuid.uuid4())
             if not estado.active_problem_id:
                 estado.active_problem_id = str(uuid.uuid4())
 
