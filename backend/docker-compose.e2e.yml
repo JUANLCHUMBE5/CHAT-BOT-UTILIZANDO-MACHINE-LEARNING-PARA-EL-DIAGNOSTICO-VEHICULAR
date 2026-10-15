@@ -21,8 +21,8 @@ services:
 
   api:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: backend/Dockerfile
     environment: &e2e_environment
       ENVIRONMENT: test
       CARBOT_BLOCK_DOTENV: "true"
@@ -63,8 +63,8 @@ services:
 
   worker:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: backend/Dockerfile
     environment: *e2e_environment
     volumes:
       - ../machine_learning:/app/machine_learning:ro
@@ -82,12 +82,13 @@ services:
   runner:
     profiles: ["runner"]
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: backend/Dockerfile
     environment: *e2e_environment
     volumes:
       - ../machine_learning:/app/machine_learning:ro
       - ./artifacts/e2e:/artifacts
+      - ./tests:/app/backend/tests:ro
     depends_on:
       api:
         condition: service_healthy

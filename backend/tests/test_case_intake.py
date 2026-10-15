@@ -1,6 +1,6 @@
 """Regresiones del inicio explícito de casos técnicos por WhatsApp."""
 
-from src.core.services.webhook_service import (
+from src.core.services.webhook.vehicle_workflow import (
     _comando_caso,
     _mensaje_solicitar_perfil,
     _perfil_completo,

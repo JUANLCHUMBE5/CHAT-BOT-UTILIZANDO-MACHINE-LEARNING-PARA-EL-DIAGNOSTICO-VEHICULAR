@@ -142,7 +142,10 @@ def test_secuencia_real_anonimizada_conserva_rag_de_mezcla_compatible(monkeypatc
     assert resultado.modo_diagnostico == "completo_ml_rag_llm"
     assert "MEZCLA POBRE" in resultado.titulo_manual
     assert "inyector" in resultado.diagnostico_ml.lower()
-    assert "MEZCLA POBRE" in recibido_llm["titulo_manual"]
+    assert "pendiente de validación" in recibido_llm["titulo_manual"]
+    assert recibido_llm["contexto_manual"] == ""
+    assert resultado.contexto_manual_verificado == ""
+    assert resultado.requiere_revision_humana
     assert "termostato" not in recibido_llm["diagnostico_ml"].lower()
 
 
@@ -175,7 +178,9 @@ def test_caso_carga_absoluta_usa_rag_map_y_llm_sin_inyectar_clases_ajenas(monkey
     assert "Bosch Automotive Testing" in resultado.contexto_manual
     assert resultado.confianza_ml == 0.0
     assert resultado.requiere_revision_humana
-    assert recibido_llm["contexto_manual"] == resultado.contexto_manual
+    # La fuente parcial se conserva para trazabilidad, no se presenta al LLM como OEM verificada.
+    assert recibido_llm["contexto_manual"] == resultado.contexto_manual_verificado == ""
+    assert "pendiente de validación" in recibido_llm["titulo_manual"]
     assert recibido_llm["predicciones_ml"] == []
     assert "EVAP" not in resultado.respuesta_texto
     assert "termostato" not in resultado.respuesta_texto.lower()

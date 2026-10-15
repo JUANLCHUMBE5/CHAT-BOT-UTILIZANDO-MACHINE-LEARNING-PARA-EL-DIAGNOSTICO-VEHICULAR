@@ -1,0 +1,40 @@
+=== PROCEDIMIENTO: CALIBRACIÓN Y DIAGNÓSTICO DE SISTEMA GNV / GLP 5TA GENERACIÓN (RAMPA DE INYECTORES, REDUCTOR Y PRESIÓN DE GAS) ===
+Código de Falla Asociado: DTC P0171 (Mezcla Pobre en Gas) / DTC P0172 (Mezcla Rica en Gas) / DTC P0300 (Misfire en Gas)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Avanza GNV, Hyundai Accent GLP, Kia Rio GNV, Nissan Versa GLP, Chevrolet Sail GNV, DFSK
+Gravedad: Alta | Tiempo Estimado de Taller: 75 minutos
+Síntomas: El vehículo tironea o cascabelea al pasar de gasolina a gas, se apaga en desaceleración o enciende luz Check Engine con mezcla pobre; la rampa de inyectores de gas hace ruido excesivo de golpeteo.
+Instrucciones paso a paso:
+1. Conecte la interfaz de diagnóstico (cable USB/Bluetooth) de la centralita de gas (Tomasetto Achille, Lovato, STAG, Landi Renzo, AEB) al puerto de la ECU de GNV/GLP.
+2. Inicie el software de calibración y verifique los parámetros en vivo con motor en temperatura de régimen (85°C a 90°C):
+   - Presión de trabajo del reductor/regulador: 1.8 a 2.0 bar para GNV (3ra/5ta etapa) / 1.0 a 1.25 bar diferencial para GLP.
+   - Presión de vacío (MAP): 0.28 a 0.38 bar en ralentí.
+   - Tiempo de inyección de gasolina base: 2.2 a 2.8 ms (motor 1.5L/1.6L).
+   - Tiempo de inyección de gas: 3.5 a 4.5 ms.
+3. Si el tiempo de gas es superior a 5.0 ms en mínimo, los picos/toberas de la rampa son muy pequeños; si es inferior a 3.2 ms, las toberas son excesivamente grandes.
+4. Mida la resistencia de las bobinas de la rampa de inyectores de gas con multímetro en la escala de 200 Ohmios (valor estándar: 2.0 a 3.0 Ohmios por bobina). Si alguna bobina marca circuito abierto o menos de 1.5 Ohmios, reemplace el riel de inyectores.
+5. Ejecute el procedimiento de autocalibración en el software en ralentí sin cargas eléctricas, y luego ajuste el mapa de compensación en carga rodando el vehículo a 2000, 3000 y 4000 RPM observando los correctores de combustible OBD (Short Term Fuel Trim entre -5% y +5%).
+6. Revise la estanqueidad de las uniones de mangueras de gas con detector de fugas por ultrasonido o solución jabonosa y verifique el filtro de gas en fase gaseosa (reemplazo cada 15,000 km).
+
+=== PROCEDIMIENTO: DIAGNÓSTICO DE BOMBA DE COMBUSTIBLE Y PRESIÓN DE LÍNEA GASOLINA/GLP/GNV (DTC P0087 / P0088) ===
+Código de Falla Asociado: DTC P0087 (Presión Sistema Muy Baja) / DTC P0088 (Presión Muy Alta)
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Avanza, Hyundai Accent GLP, Kia Rio GNV, Changan, DFSK
+Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
+Síntomas: Dificultad para arrancar en frío, el auto pierde fuerza en pendientes o se apaga tras correr varios kilómetros.
+Instrucciones paso a paso:
+1. Conecte un manómetro de presión de combustible en la puerto Schrader o intercalado en la cañería del riel de inyección.
+2. Abra el contacto (Key ON Engine OFF): la presión debe subir instantáneamente a la especificación de fábrica (3.0 a 4.2 bar / 45 a 60 PSI).
+3. Encienda el motor en mínimo y observe la aguja: si cae a menos de 2.5 bar al acelerar bruscamente, el filtro de combustible está obstruido o la pila de combustible está agotada.
+4. Verifique la retención de presión: apague el motor y compruebe que la presión no caiga a cero en 15 minutos.
+5. Para cambiar la pila: acceda bajo el asiento posterior, desenrosque la tapa plástica del tanque, extraiga el módulo completo y cambie el cartucho de bomba y el prefiltro de malla.
+
+=== PROCEDIMIENTO: CARGA DE REFRIGERANTE R134a / R1234yf Y PRUEBA DE FUGAS CON MANÓMETROS (DTC B1000 / A/C TIBIO) ===
+Código de Falla Asociado: DTC B1000 / Falla de Climatización / Refrigerante Bajo
+Modelos Compatibles Frecuentes en Perú: Toyota Yaris/Corolla, Hyundai Accent, Kia Rio, Suzuki, Changan, Chery
+Gravedad: Media | Tiempo Estimado de Taller: 60 minutos
+Síntomas: El aire acondicionado bota aire tibio por las rejillas, el compresor no acopla o se oye silbido en el evaporador.
+Instrucciones paso a paso:
+1. Conecte la manguera azul de baja presión (L) y roja de alta presión (H) del manifold de manómetros en las válvulas de servicio.
+2. Conecte la bomba de vacío a la manguera amarilla central y efectúe vacío durante 25 minutos (-30 inHg).
+3. Mantenga el vacío durante 15 minutos comprobando que la aguja no caiga.
+4. Conecte el balón de gas R134a, purgue la manguera e inyecte refrigerante por baja presión con motor a 1500 RPM y A/C al máximo.
+5. Ajuste presiones de trabajo: Baja entre 25 y 35 PSI; Alta entre 150 y 220 PSI.

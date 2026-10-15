@@ -904,6 +904,8 @@ class OrquestadorConversacion:
         # 4. Extracción acumulativa obligatoria de hechos clínicos
         estado_previo_hechos = dict(estado.hechos)
         hechos_extraidos = ExtractorHechos.extraer_y_actualizar(estado, texto_limpio)
+        from src.core.conversacion.evidencia_taller import registrar_evidencia
+        hechos_extraidos.extend(registrar_evidencia(estado, texto_limpio))
         if interpretacion_corta and "hecho" in interpretacion_corta:
             hechos_extraidos.append(interpretacion_corta["hecho"])
 
@@ -1948,6 +1950,9 @@ class OrquestadorConversacion:
             diagnostico_ml=getattr(dto_resultado, "diagnostico_ml", ""),
             estado=estado,
         )
+
+        from src.core.conversacion.presentacion_dto import alinear_predicciones_presentadas
+        dto_resultado = alinear_predicciones_presentadas(dto_resultado, estado.top3_actual)
 
         return {
             "status": "completado",

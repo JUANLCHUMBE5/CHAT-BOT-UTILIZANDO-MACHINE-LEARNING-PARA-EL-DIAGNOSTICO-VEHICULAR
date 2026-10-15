@@ -5,11 +5,6 @@ Código de Falla Asociado: DTC C0040 / Fuga Hidráulica o Aire en Circuito
 Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Changan Alsvin, Chery Tiggo 2, DFSK
 Gravedad: Crítica | Tiempo Estimado de Taller: 50 minutos
 
-ADVERTENCIA DE SEGURIDAD CRÍTICA (CIRCUITO COMMON RAIL > 1,600 BAR):
-El riel y cañerías de inyección diésel operan a presiones extremas de hasta 1,600 a 2,200 bar.
-Riesgo grave de inyección subcutánea de combustible y corte tisular.
-NUNCA palpar cañerías ni buscar fugas con la mano mientras el motor esté en marcha o durante el arranque.
-Seguir estrictamente el procedimiento OEM del fabricante para la despresurización segura del circuito antes de desmontar cañerías.
 Síntomas: El pedal de freno se siente blando o esponjoso, se va hasta el fondo o pierde eficacia tras frenadas continuas.
 Instrucciones paso a paso:
 1. Drene el líquido degradado del depósito principal con jeringa de succión y rellenar con líquido DOT 3 o DOT 4 fresco.
@@ -44,11 +39,6 @@ Código de Falla Asociado: DTC C0035 (Sensor Rueda Delantera) / DTC C0221 (Circu
 Modelos Compatibles Frecuentes en Perú: Toyota Corolla, Hyundai Elantra, Kia Cerato, Nissan Sentra, BYD, Changan CS35
 Gravedad: Alta | Tiempo Estimado de Taller: 90 minutos
 
-ADVERTENCIA DE SEGURIDAD CRÍTICA (CIRCUITO COMMON RAIL > 1,600 BAR):
-El riel y cañerías de inyección diésel operan a presiones extremas de hasta 1,600 a 2,200 bar.
-Riesgo grave de inyección subcutánea de combustible y corte tisular.
-NUNCA palpar cañerías ni buscar fugas con la mano mientras el motor esté en marcha o durante el arranque.
-Seguir estrictamente el procedimiento OEM del fabricante para la despresurización segura del circuito antes de desmontar cañerías.
 Síntomas: Luz de advertencia de ABS y ESP encendidas en el tablero, comportamiento errático o pulsaciones anormales en el pedal a baja velocidad.
 Instrucciones paso a paso:
 1. Conecte el escáner al puerto OBD-II y consulte el módulo ABS para identificar el sensor de rueda o electroválvula con falla.
@@ -1636,7 +1626,6 @@ Interpretación: confirmar la causa solo cuando DTC, datos en vivo y pruebas el�
 
 Seguridad y fuente: usar protección ocular y mantener manos/herramientas lejos de partes calientes o móviles. Bosch, “Operating Instructions”, p. 31–32, apartado MAP/BARO: https://www.boschdiagnostics.com/sites/default/files/documents/573864_0.pdf. DENSO, “MAP Sensors – Installation and fault finding”: https://www.denso-am.eu/es/products/sistemas-de-gestion-de-motores/sensores-map.
 
-
 === PROCEDIMIENTO: DIAGNÓSTICO DEL AFORADOR Y SENSOR DE NIVEL DE COMBUSTIBLE EN TANQUE (MEDIDOR DE GASOLINA MARCA VACÍO / LOCO) ===
 
 
@@ -2271,6 +2260,7 @@ Instrucciones paso a paso:
 === PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR MAP (PRESIÓN ABSOLUTA) Y SENSOR DE TEMPERATURA IAT (DTC P0106 / P0107 / P0113) ===
 
 RETIRADO. No usar valores no verificados; consultar RAG_PROC_116 y manual OEM.
+
 === PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE DETONACIÓN KNOCK SENSOR Y TORQUE DE APRIETE (DTC P0325 / P0327) ===
 
 

@@ -161,7 +161,12 @@ def test_generador_directo_respeta_timeout_configurable_de_gemini(monkeypatch):
         raise requests.Timeout("simulación aislada")
 
     def groq_local(_prompt_sistema, *, tipo_consulta="diagnostico"):
-        return "Respuesta local simulada.", {
+        return dumps({
+            "hipotesis": "Falla de inyección",
+            "explicacion": "Respuesta local simulada.",
+            "siguiente_prueba": "Comprobar alimentación según manual aplicable.",
+            "pregunta": "¿Qué comprobación realizaste?",
+        }), {
             "usado": True,
             "modelo": "modelo-prueba",
             "proveedor": "groq",
@@ -183,7 +188,7 @@ def test_generador_directo_respeta_timeout_configurable_de_gemini(monkeypatch):
     )
 
     assert capturado["timeout"] == 7
-    assert texto == "Respuesta local simulada."
+    assert "Respuesta local simulada." in texto
     assert meta["proveedor"] == "groq"
 
 

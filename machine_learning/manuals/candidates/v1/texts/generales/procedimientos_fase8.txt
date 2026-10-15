@@ -4,11 +4,6 @@ Código de Falla Asociado: P0335, P0336, P0340
 Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Accent, Kia Rio, Nissan Versa, Chevrolet Sail, Suzuki Swift
 Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
 
-ADVERTENCIA DE SEGURIDAD CRÍTICA (CIRCUITO COMMON RAIL > 1,600 BAR):
-El riel y cañerías de inyección diésel operan a presiones extremas de hasta 1,600 a 2,200 bar.
-Riesgo grave de inyección subcutánea de combustible y corte tisular.
-NUNCA palpar cañerías ni buscar fugas con la mano mientras el motor esté en marcha o durante el arranque.
-Seguir estrictamente el procedimiento OEM del fabricante para la despresurización segura del circuito antes de desmontar cañerías.
 Síntomas: El motor gira con fuerza al dar arranque pero no enciende; se apaga súbitamente tras calentarse durante 15 a 20 minutos de marcha y vuelve a arrancar una vez frío.
 Instrucciones paso a paso:
 1. Conecte el osciloscopio automotriz en el pin de señal del sensor CKP y coloque la pinza de masa en tierra de motor.
@@ -40,11 +35,6 @@ Código de Falla Asociado: P0420, P0430
 Modelos Compatibles Frecuentes en Perú: Toyota Yaris, Hyundai Elantra, Kia Cerato, Nissan Versa/Kicks, Honda CR-V, Changan CS35
 Gravedad: Alta | Tiempo Estimado de Taller: 60 minutos
 
-ADVERTENCIA DE SEGURIDAD CRÍTICA (CIRCUITO COMMON RAIL > 1,600 BAR):
-El riel y cañerías de inyección diésel operan a presiones extremas de hasta 1,600 a 2,200 bar.
-Riesgo grave de inyección subcutánea de combustible y corte tisular.
-NUNCA palpar cañerías ni buscar fugas con la mano mientras el motor esté en marcha o durante el arranque.
-Seguir estrictamente el procedimiento OEM del fabricante para la despresurización segura del circuito antes de desmontar cañerías.
 Síntomas: Pérdida progresiva de potencia en pendientes o altas RPM, testigo Check Engine permanente, olor sulfuroso (huevo podrido) y calentamiento excesivo bajo la cabina.
 Instrucciones paso a paso:
 1. Conecte el escáner y grafique simultáneamente los voltajes de la Sonda Lambda Bancada 1 Sensor 1 (pre-catalizador) y Sensor 2 (post-catalizador) a 2500 RPM a temperatura de operación (85°C - 95°C).

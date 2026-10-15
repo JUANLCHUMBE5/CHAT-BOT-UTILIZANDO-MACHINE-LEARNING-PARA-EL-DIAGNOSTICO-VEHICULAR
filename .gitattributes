@@ -20,3 +20,6 @@
 .dockerignore text eol=lf
 .env.example text eol=lf
 .gitignore text eol=lf
+
+# El paquete RAG verificado debe conservar hashes entre Windows y Linux.
+machine_learning/manuals/candidates/v1/**/*.txt text eol=lf

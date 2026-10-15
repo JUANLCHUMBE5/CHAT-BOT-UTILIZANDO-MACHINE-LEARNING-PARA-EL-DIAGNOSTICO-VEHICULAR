@@ -18,18 +18,24 @@ class RefreshTokenStore:
         self._local: dict[str, int] = {}
         self._lock = asyncio.Lock()
         self._redis: Any = None
+        self._redis_loop: asyncio.AbstractEventLoop | None = None
+        self._redis_url: str | None = None
 
     def _usa_redis(self) -> bool:
         return settings.rate_limit_storage_uri.startswith(("redis://", "rediss://"))
 
     def _cliente_redis(self):
-        if self._redis is None:
+        loop = asyncio.get_running_loop()
+        url = settings.rate_limit_storage_uri
+        if self._redis is None or self._redis_loop is not loop or self._redis_url != url:
             from redis.asyncio import Redis
 
             self._redis = Redis.from_url(
                 settings.rate_limit_storage_uri,
                 decode_responses=True,
             )
+            self._redis_loop = loop
+            self._redis_url = url
         return self._redis
 
     @staticmethod

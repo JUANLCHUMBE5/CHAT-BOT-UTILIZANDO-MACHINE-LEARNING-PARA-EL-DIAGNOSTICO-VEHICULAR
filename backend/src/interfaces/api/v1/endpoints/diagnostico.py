@@ -199,7 +199,7 @@ async def analizar_sintoma(
         marca_modelo = f"{consulta.marca or ''} {consulta.modelo or ''}".strip()
 
         slot_gemini = None
-        if not solo_lectura and settings.gemini_api_key and database_configurada():
+        if not solo_lectura and gestor.api_key and database_configurada():
             slot_gemini, _ = await gemini_rate_limiter.intentar_adquirir_slot_db()
 
         taller_id = uuid.UUID(token_payload["taller_id"])

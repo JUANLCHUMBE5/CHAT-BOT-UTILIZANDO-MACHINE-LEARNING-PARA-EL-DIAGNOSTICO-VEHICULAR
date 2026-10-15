@@ -281,6 +281,10 @@ async def _run_frozen_cases(db: asyncpg.Connection) -> dict[str, Any]:
                 "id": case["id"], "turnos": len(case["turnos"]), "hechos": facts,
                 "mediciones": measurements, "vehiculo": vehicle,
                 "estado_persistido": state.exportar_dict(incluir_trazabilidad=False),
+                "diagnostico_presentado": {
+                    "top3": state.top3_actual,
+                    "ultima_traza": state.trazabilidad[-1] if state.trazabilidad else None,
+                },
             })
 
         duplicate = await _send(client, "E2E-DUPLICADO-1", "51980000001", "E2E_PHONE_A", "Duplicado controlado P0301")
@@ -318,6 +322,7 @@ async def _run_concurrency(db: asyncpg.Connection) -> dict[str, Any]:
         responses = await asyncio.gather(*requests)
         for response in responses:
             await _wait_job(db, response["trabajo_id"])
+        state_before = _state_for_evaluation(await _context_for_sender(db, "51981111111"))
         # Llegada tardía y orden de llegada inverso: ambos turnos se conservan.
         late = await _send(client, "E2E-A-3", "51981111111", "E2E_PHONE_A", "Medición tardía: 14.1 V de carga.")
         early = await _send(client, "E2E-A-2", "51981111111", "E2E_PHONE_A", "Antes medí 180 psi parejo.")
@@ -331,7 +336,18 @@ async def _run_concurrency(db: asyncpg.Connection) -> dict[str, Any]:
     inbound_texts = "\n".join(await _inbound_texts_for_sender(db, "51981111111"))
     if "14.1 V" not in inbound_texts or "180 psi" not in inbound_texts:
         raise AssertionError("Los mensajes fuera de orden no fueron persistidos")
+    state_after = _state_for_evaluation(await _context_for_sender(db, "51981111111"))
+    required_messages = ("Medición tardía: 14.1 V de carga.", "Antes medí 180 psi parejo.")
+    if state_after.case_id != state_before.case_id:
+        raise AssertionError("Los mensajes tardíos cambiaron el case_id")
+    if state_after.turno_actual != 3:
+        raise AssertionError("No se contabilizaron los tres mensajes concurrentes")
+    if any(state_after.historial_mensajes_usuario.count(text) != 1 for text in required_messages):
+        raise AssertionError("Mensaje tardío ausente o duplicado en ConversationState")
     return {
+        "mensajes_fuera_de_orden_en_historial": True,
+        "case_id_conservado": True,
+        "turnos_contabilizados": state_after.turno_actual,
         "talleres": 2,
         "contaminacion_cruzada": False,
         "mensajes_fuera_de_orden_persistidos": True,

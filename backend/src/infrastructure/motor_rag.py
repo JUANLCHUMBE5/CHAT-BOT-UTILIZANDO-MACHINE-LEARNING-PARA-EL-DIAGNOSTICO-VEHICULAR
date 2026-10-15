@@ -18,31 +18,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 from src.config import settings
 from src.core.logger import logger
-
-SPANISH_STOP_WORDS = [
-    "a", "al", "algo", "algunas", "algunos", "ante", "antes", "como", "con", "contra",
-    "cual", "cuando", "de", "del", "desde", "donde", "durante", "e", "el", "ella",
-    "ellas", "ellos", "en", "entre", "era", "erais", "eramos", "eran", "eras", "es",
-    "esa", "esas", "ese", "eso", "esos", "esta", "estas", "este", "estos", "fue",
-    "fuera", "fueran", "fueras", "fueron", "fuese", "fui", "fuimos", "fuiste", "fuisteis",
-    "ha", "habeis", "habia", "habiais", "habiamos", "habian", "habias", "habida",
-    "habidas", "habido", "habidos", "habiendo", "han", "has", "hasta", "hay",
-    "haya", "hayais", "hayamos", "hayan", "hayas", "he", "hemos", "hube", "hubiera",
-    "hubieran", "hubieras", "hubieron", "hubiese", "hubimos", "hubiste", "hubisteis",
-    "hubo", "la", "las", "le", "les", "lo", "los", "mas", "me", "mi", "mia", "mias",
-    "mio", "mios", "mis", "mucho", "muchos", "muy", "nada", "ni", "no", "nos",
-    "nosotras", "nosotros", "nuestra", "nuestras", "nuestro", "nuestros", "o", "os",
-    "otra", "otras", "otro", "otros", "para", "pero", "poco", "por", "porque", "que",
-    "quien", "quienes", "se", "sea", "seais", "seamos", "sean", "seas", "ser", "sera",
-    "seran", "seras", "sere", "seremos", "seria", "seriais", "seriamos", "serian",
-    "serias", "si", "sin", "sobre", "sois", "somos", "son", "soy", "su",
-    "sus", "suya", "suyas", "suyo", "suyos", "tambien", "tanto", "te", "tenemos",
-    "tenga", "tengais", "tengamos", "tengan", "tengas", "tengo", "ti", "tiene", "tienen",
-    "tienes", "todo", "todos", "tu", "tus", "tuve", "tuviera", "tuvieran", "tuvieras",
-    "tuvieron", "tuviese", "tuvimos", "tuviste", "tuvisteis", "tuvo", "tuya", "tuyas",
-    "tuyo", "tuyos", "un", "una", "unas", "uno", "unos", "vosotras", "vosotros",
-    "vuestra", "vuestras", "vuestro", "vuestros", "y", "ya", "yo"
-]
+from src.infrastructure.rag_checks.frozen_integrity import FrozenRAGMismatch
+from src.infrastructure.rag_checks.vectorizer_config import SPANISH_STOP_WORDS
 
 
 def _normalizar_texto_rag(texto: str) -> str:
@@ -118,124 +95,15 @@ class MotorRAG:
             self._indexar_manuales_multimarca()
 
     def _cargar_candidato_v1(self):
-        """Carga artefactos congelados y auditados de RAG_CANDIDATO_V1."""
-        directorio_manuales = self.manual_path.parent if self.manual_path.is_file() else self.manual_path
-        cand_base = directorio_manuales / "candidates" / "v1"
-        ruta_meta_json = cand_base / "metadata" / "metadatos_schema_v2.json"
-        ruta_indice = cand_base / "indexes" / "indice_faiss_v1.index"
-        ruta_textos = cand_base / "texts"
-        ruta_manifest = cand_base / "manifests" / "corpus_manifest.json"
-
-        if not ruta_meta_json.exists() or not ruta_indice.exists():
-            logger.error(
-                f"Artefactos de RAG_CANDIDATO_V1 incompletos en {cand_base}. Fallback a baseline."
-            )
-            self.rag_version = "RAG_BASELINE_F8_3 (Fallback)"
-            self._indexar_manuales_multimarca()
-            return
+        """Carga el paquete original verificado sin reconstruir el índice."""
+        from src.infrastructure.rag_checks.canonical_loader import cargar_candidato_congelado
 
         try:
-            with open(ruta_meta_json, "r", encoding="utf-8") as f:
-                lista_meta = json.load(f)
-
-            mapa_metadatos = {}
-            for item in lista_meta:
-                meta_compat = dict(item)
-                proc_id = item.get("doc_id") or item.get("id_procedimiento")
-                meta_compat["id_procedimiento"] = proc_id
-                if "manual_oem" not in meta_compat:
-                    meta_compat["manual_oem"] = item.get("source_title") or item.get("source_id") or "Manual OEM"
-                if "archivo_fuente" not in meta_compat:
-                    meta_compat["archivo_fuente"] = item.get("archivo_fuente") or f"candidates/v1/texts/{proc_id}.txt"
-                if "estado_validacion" not in meta_compat:
-                    meta_compat["estado_validacion"] = item.get("estado_validacion", "corpus_preliminar_taller")
-                tit_norm = item.get("titulo", "").strip().lower()
-                mapa_metadatos[tit_norm] = meta_compat
-
-            archivos_registrados = {
-                str(item.get("archivo_fuente", "")).replace("\\", "/")
-                for item in mapa_metadatos.values()
-                if item.get("archivo_fuente")
-            }
-
-            archivos_a_leer = []
-            if ruta_textos.is_dir():
-                archivos_a_leer = sorted(
-                    ruta
-                    for ruta in ruta_textos.glob("**/*.txt")
-                    if ruta.relative_to(ruta_textos).as_posix() in archivos_registrados
-                )
-            elif ruta_textos.is_file():
-                archivos_a_leer = [ruta_textos]
-
-            vistos = set()
-            hash_global = hashlib.sha256()
-
-            for ruta_arch in archivos_a_leer:
-                with open(ruta_arch, "r", encoding="utf-8") as f:
-                    contenido = f.read()
-                hash_global.update(contenido.encode("utf-8"))
-                secciones = re.findall(
-                    r"^===\s*(.*?)\s*===\s*$\n(.*?)(?=^===|\Z)",
-                    contenido,
-                    flags=re.MULTILINE | re.DOTALL,
-                )
-
-                for titulo, cuerpo in secciones:
-                    titulo = titulo.strip()
-                    cuerpo = cuerpo.strip()
-                    tit_lower = titulo.lower()
-                    if not cuerpo or tit_lower in vistos:
-                        continue
-                    meta = mapa_metadatos.get(tit_lower)
-                    if meta is None:
-                        continue
-                    vistos.add(tit_lower)
-
-                    self.titulos.append(titulo)
-                    self.documentos.append(cuerpo)
-                    self.metadatos_procedimientos.append(meta)
-
-            if ruta_manifest.exists():
-                with open(ruta_manifest, "rb") as mf:
-                    self.corpus_version = hashlib.sha256(mf.read()).hexdigest()[:16]
-            else:
-                self.corpus_version = hash_global.hexdigest()[:16]
-
-            # Vectorizador con vocabulario idéntico al del índice congelado
-            textos_vectorizables = [f"{t}\n{c}" for t, c in zip(self.titulos, self.documentos)]
-            self.vectorizador = TfidfVectorizer(
-                lowercase=True,
-                strip_accents="unicode",
-                stop_words=SPANISH_STOP_WORDS,
-                ngram_range=(1, 2),
-                sublinear_tf=True,
-            )
-            self.vectorizador.fit(textos_vectorizables)
-
-            # Cargar índice FAISS preconstruido y validado
-            if not FAISS_AVAILABLE:
-                raise RuntimeError("faiss-cpu no está instalado.")
-            self.faiss_index = faiss.read_index(str(ruta_indice))
-
-            # Conectar servicio DTC estructurado
-            try:
-                from src.infrastructure.dtc.dtc_lookup_service import DtcLookupService
-                self.dtc_service = DtcLookupService()
-            except Exception as dtc_e:
-                logger.warning(f"No se pudo enlazar DtcLookupService en MotorRAG: {dtc_e}")
-
-            logger.info(
-                f"RAG_CANDIDATO_V1 cargado exitosamente: {len(self.documentos)} procedimientos indexados "
-                f"(Dimensión FAISS: {self.faiss_index.d}, Versión: {self.corpus_version})."
-            )
-        except Exception as e:
-            logger.error(f"Error al cargar RAG_CANDIDATO_V1: {e}. Activando baseline.")
-            self.rag_version = "RAG_BASELINE_F8_3 (Fallback Error)"
-            self.documentos.clear()
-            self.titulos.clear()
-            self.metadatos_procedimientos.clear()
-            self._indexar_manuales_multimarca()
+            cargar_candidato_congelado(self)
+        except (FrozenRAGMismatch, OSError, ValueError, KeyError) as exc:
+            logger.error("RAG congelado no disponible: %s", exc)
+            self.faiss_index = None
+            self.rag_version = "RAG_CANDIDATO_V1 (INCOMPATIBLE)"
 
     def _indexar_manuales_multimarca(self):
         """Indexa todos los manuales del directorio de manuales y carga metadatos_manuales.json si está disponible."""
@@ -339,169 +207,9 @@ class MotorRAG:
             logger.error(f"Error al indexar manuales multimarca en FAISS: {e}")
 
     def _expandir_consulta(self, consulta: str) -> str:
-        """Expande la consulta del usuario incluyendo términos técnicos estandarizados y códigos DTC."""
-        consulta_limpia = str(consulta or "").strip()[:4000]
-        consulta_lower = consulta_limpia.lower()
-        expansiones = []
-        niega_vibracion_freno = bool(
-            re.search(r"\b(?:al\s+frenar\s+no\s+vibra|al\s+pisar\s+el\s+freno\s+no\s+vibra|fren(?:ar|o|os)?\s+no\s+vibra|no\s+vibra\s+al\s+frenar)\b", consulta_lower)
-        )
-        vibracion_al_frenar = ("vibr" in consulta_lower and "fren" in consulta_lower) and not niega_vibracion_freno
-        if vibracion_al_frenar:
-            expansiones.append("vibracion pedal freno discos deformados durante frenado")
-        elif niega_vibracion_freno:
-            expansiones.append("balanceo dinamico ruedas alineacion direccion vibracion volante velocidad")
+        from src.infrastructure.rag_checks.query_expansion import expandir_consulta
 
-        
-        diccionario_dtc = {
-            "p0300": "bujias cascabeleo misfire encendido",
-            "p0301": "bujias cascabeleo misfire encendido",
-            "c0035": "pastillas de freno chillido disco",
-            "c0040": "purga liquido de frenos pedal esponjoso fuga",
-            "p0505": "valvula iac cuerpo de aceleracion ralenti minimo apaga",
-            "p0562": "bateria voltaje arranque alternador bornes",
-            "p0a80": "bateria alto voltaje hibrido prius celdas",
-            "p2002": "filtro particulas dpf fap adblue escape",
-            "p0087": "presion combustible riel common rail bomba alta",
-            "p2135": "cuerpo de aceleracion mariposa electronica tps",
-            "p0011": "valvula solenoide ocv sincronizacion variable vvt",
-            "mezcla pobre": "P0171 P0174 mezcla pobre fuel trim STFT LTFT sensor oxigeno presion combustible caudal inyectores",
-            "mezcla rica": "P0172 P0175 mezcla rica fuel trim STFT LTFT sensor oxigeno inyectores presion combustible",
-            "inyectores no inyectan": "inyectores caudal flujo de combustible presion riel balance de cilindros circuito electrico inyector",
-            "carga absoluta": (
-                "sensor MAP presión absoluta del múltiple admisión carga absoluta P0105 P0106 "
-                "lectura escáner baro colector admisión P0107 P0108 P0109 vacío señal voltaje frecuencia"
-            ),
-            "map": "sensor de presion absoluta del multiple admision carga absoluta P0105 P0106",
-            "p0700": "transmision automatica cvt caja solenoide sobrecalentamiento",
-            "p0841": "sensor presion fluido transmision cvt",
-            "cvt": "transmision continuamente variable cvt poleas fluido ns3 nissan",
-            "chillido": "pastillas de freno freno",
-            "esponjoso": "liquido de frenos purga fuga bombin",
-            "cascabelea": "bujias motor encendido ocv vvt",
-            "cascabeleo": "bujias motor encendido ocv vvt",
-            "se apaga": "valvula iac cuerpo aceleracion ralenti",
-            "pestillo": "chapa cerradura puerta seguro pestillo mecanico",
-            "elevalunas": "alzacristales vidrio guaya motor ventana",
-            "alzacristales": "elevalunas vidrio guaya ventana",
-            "limpiaparabrisas": "motor plumas varillaje limpiaparabrisas",
-            "common rail": "diesel bomba alta presion inyectores scv",
-            "dpf": "filtro particulas hollin adblue def regeneracion",
-            "adblue": "urea def regeneracion dpf catalizador",
-            "freno de aire": "camion neumatico valvula secador aps compresor",
-            "inversor": "hibrido ev alto voltaje igbt bomba enfriamiento",
-            "hibrido": "bateria alto voltaje inversor motor electrico ready",
-            "valvolina": "caja cambios mecanica rodajes diferencial aceite",
-            "gnv": "gas natural vehicular rampa reductor 5ta generacion gas",
-            "glp": "gas licuado petroleo rampa reductor 5ta generacion gas",
-            "desembraga": "embrague bombin plato prensa disco hidraulico",
-            "puerta": "cierre centralizado actuador puerta seguro electrico chapa",
-            "desbloquea": "cierre centralizado control remoto actuador puerta",
-            "bloqueada": "cierre centralizado actuador puerta chapa cerradura",
-            "chapa": "cerradura chapa pestillo puerta trinquete",
-            "cerradura": "chapa cerradura pestillo puerta trinquete",
-            "humo blanco": "empaquetadura culata refrigerante motor sobrecalentamiento",
-            "humo negro": "mezcla rica inyectores filtro aire maf map sensor oxigeno",
-            "sensor map": "baro presion absoluta colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
-            "presion absoluta": "sensor map baro colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
-            "vibra": "vibracion volante asiento pedal velocidad balanceo alineacion freno soportes",
-            "pierde fuerza": "perdida potencia aceleracion subida combustible aire escape transmision",
-            "pierde potencia": "perdida potencia aceleracion subida combustible aire escape transmision",
-            "culata": "empaquetadura culata refrigerante motor sobrecalentamiento",
-            "refrigerante": "termostato ventilador fuga refrigerante culata",
-            "alternador": "alternador bateria sistema electrico carga bornes",
-            "bateria": "bateria alternador voltaje arranque sistema electrico",
-            "acople": "direccion asistida electrica eps mdps columna chasquido volante timon",
-            "mariposa": "cuerpo de aceleracion electronico drive-by-wire marcha minima ralenti",
-            "can bus": "red de comunicacion multiplexada can bus terminacion 60 ohms dlc osciloscopio",
-            "can-h": "red can bus alta velocidad terminacion dlc obd2",
-            "evap": "sistema evaporacion emisiones canister valvula purga fuga vacio tanque",
-            "canister": "sistema evaporacion emisiones evap purga vacio tanque combustible",
-            "sensor de oxigeno": "sonda lambda sensor aire combustible a/f banda ancha calefactor",
-            "sensor a/f": "sensor relacion aire combustible banda ancha calefactor mezcla",
-            "ibs": "sensor bateria corriente inteligente carga alternador pilotado",
-            "termostato": "refrigeracion termostato purga temperatura sobrecalentamiento radiador",
-            "p0128": "termostato refrigerante motor temperatura baja refrigeracion",
-            "p0440": "sistema evap emisiones purga canister fuga tanque",
-            "p0442": "sistema evap emisiones purga canister microfuga vacio",
-            "p0455": "sistema evap emisiones purga canister fuga grande tapa tanque",
-            "p0620": "circuito control alternador carga inteligente pilotado",
-            "u0100": "red can bus perdida comunicacion ecm modulo motor",
-            "u0101": "red can bus perdida comunicacion tcm transmision caja",
-            "u0121": "red can bus perdida comunicacion abs frenos modulo",
-            "abs": "modulo abs frenos purga electrovalvulas sensor rueda bomba escaner sangrado",
-            "purgar": "purgado purga sangrado liquido frenos modulo abs aire",
-            "gdi": "inyeccion directa gdi tsi bomba alta presion riel combustible hpfp",
-            "tsi": "inyeccion directa gdi tsi bomba alta presion riel combustible hpfp",
-            "turbo": "turboalimentador wastegate actuador sobrealimentacion intercooler soplido",
-            "intercooler": "turbo sobrealimentacion fuga cañeria aire presion underboost",
-            "dsg": "transmision doble embrague mecatronica dsg dct robotizada k1 k2",
-            "dct": "transmision doble embrague mecatronica dsg dct robotizada k1 k2",
-            "epb": "freno estacionamiento electrico epb servomotor caliper trasero modo servicio",
-            "freno de mano electrico": "freno estacionamiento electrico epb servomotor caliper trasero modo servicio",
-            "haldex": "traccion integral awd haldex acoplador multidisco diferencial trasero",
-            "awd": "traccion integral awd haldex acoplador multidisco diferencial trasero",
-            "sas": "sensor angulo direccion sas calibracion punto cero esp antiderrape",
-            "scv": "valvula reguladora succion scv bomba common rail diesel presion riel",
-            "p0299": "turbo sobrealimentacion baja underboost wastegate fuga intercooler",
-            "p0234": "turbo sobrepresion overboost wastegate actuador regulador",
-            "c1555": "freno estacionamiento electrico epb servomotor caliper motor",
-            "c1260": "sensor angulo direccion sas calibracion punto cero esp",
-            "retorno": "inyectores common rail retorno probetas valvula scv diesel riel bomba",
-            "diesel": "diesel common rail bomba alta presion inyectores scv retorno dpf arranque",
-            "arrancador": "motor de arranque solenoide carbones terminal 50 no da marcha clac seco",
-            "clac": "motor de arranque solenoide clac seco carbones no da marcha terminal 50",
-            "mudo": "motor de arranque solenoide no da marcha clac seco se queda mudo",
-            "no da marcha": "motor de arranque solenoide carbones terminal 50 no da marcha clac seco",
-            "no da arranque": "motor de arranque solenoide carbones terminal 50 no da marcha clac seco",
-            "en caliente": "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica bobina p0335 bomba gasolina",
-            "calienta": "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica bobina p0335 bomba gasolina",
-            "enfrie": "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica bobina p0335",
-            "enfria": "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica bobina p0335",
-            "gira con fuerza": "arrancador operativo no enciende falta chispa pulso inyeccion sensor ckp cigueñal p0335",
-            "no enciende": "sensor ckp cigueñal chispa pulso inyeccion bomba gasolina p0335",
-            "cortaran la corriente": "sensor ckp cigueñal rele principal efi encendido p0335",
-            "corta corriente": "sensor ckp cigueñal rele principal efi encendido p0335",
-            "apaga de golpe": "sensor ckp cigueñal rele principal efi corte encendido p0335",
-            "zumbido": "bomba de combustible tanque zumbido alta presion rampa caudal p0087",
-            "asiento trasero": "bomba de combustible aforador tanque zumbido presion p0087",
-            "asientos de atras": "bomba de combustible aforador tanque zumbido presion p0087",
-            "asientos de atrás": "bomba de combustible aforador tanque zumbido presion p0087",
-            "ahoga": "falta de combustible presion bomba caudal inyectores mezcla pobre p0171 p0087",
-            "tironea": "tironeo perdida potencia combustible bujias bobinas presion caudal p0087 p0300",
-            "tirones": "tironeo perdida potencia combustible bujias bobinas presion caudal p0087 p0300",
-            "bomba de gasolina": "presion combustible riel caida caudal bajo carga tanque p0087",
-            "silbido": "servofreno booster vacio pedal duro fuga linea de vacio multiple admision soplido",
-            "servofreno": "booster servofreno linea de vacio pedal duro fuga vacio diafragma valvula check",
-            "booster": "servofreno booster vacio pedal duro fuga diafragma retencion valvula check",
-            "patina": "disco de embrague desgastado patinando prensa calado en 4ta marcha revoluciones suben sin velocidad",
-            "patinando": "disco de embrague desgastado patinando prensa calado en 4ta marcha revoluciones suben sin velocidad",
-            "asbesto": "disco de embrague desgastado patinando olor a quemado prensa calado",
-            "wub-wub": "rodamiento de maza rodaje de rueda zumbido rodadura ruleman",
-            "wub": "rodamiento de maza rodaje de rueda zumbido rodadura ruleman"
-        }
-        
-        # Evitar falsos amigos cuando el motor de arranque sí gira con fuerza
-        arranque_falla = any(x in consulta_lower for x in ["no da arranque", "no da marcha", "no gira el motor", "se queda mudo", "clac seco"])
-        es_zumbido_mecanico = any(x in consulta_lower for x in ["rueda", "maza", "caja", "transmision", "rodamiento", "rodaje", "curva", "embrague"])
-        
-        for clave, valor in diccionario_dtc.items():
-            if clave == "vibra" and vibracion_al_frenar:
-                continue
-            if clave in ["arrancador", "clac", "mudo", "no da marcha", "no da arranque"] and not arranque_falla and "gira con fuerza" in consulta_lower:
-                continue
-            if clave == "zumbido" and es_zumbido_mecanico:
-                if any(x in consulta_lower for x in ["rueda", "maza", "curva"]):
-                    expansiones.append("rodamiento de maza rodaje de rueda zumbido rodadura alabeo")
-                elif any(x in consulta_lower for x in ["caja", "transmision", "embrague", "neutro"]):
-                    expansiones.append("rodajes transmision manual eje primario crapodina collarin zumbido caja")
-                continue
-            if clave in consulta_lower:
-                expansiones.append(valor)
-                
-        if expansiones:
-            return f"{consulta_limpia} {' '.join(expansiones)}"
-        return consulta_limpia
+        return expandir_consulta(consulta)
 
     def recuperar_procedimiento_hibrido(
         self,
@@ -560,6 +268,8 @@ class MotorRAG:
                 doc_idx = int(indices[0][k_idx])
                 sim = float(similitudes[0][k_idx])
                 if 0 <= doc_idx < len(self.documentos):
+                    if self.metadatos_procedimientos[doc_idx].get("knowledge_type") == "STUB":
+                        continue
                     candidatos.append({
                         "indice": doc_idx,
                         "titulo": self.titulos[doc_idx],

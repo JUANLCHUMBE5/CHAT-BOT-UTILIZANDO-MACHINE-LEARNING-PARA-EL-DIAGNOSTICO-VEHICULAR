@@ -7,6 +7,7 @@ from src.config_bootstrap import cargar_variables_entorno
 def test_env_local_reemplaza_credencial_antigua_de_windows(tmp_path: Path, monkeypatch):
     archivo = tmp_path / ".env"
     archivo.write_text('META_ACCESS_TOKEN="token_nuevo_local"\n', encoding="utf-8")
+    monkeypatch.delenv("CARBOT_BLOCK_DOTENV", raising=False)
     monkeypatch.setenv("ENVIRONMENT", "development")
     monkeypatch.setenv("META_ACCESS_TOKEN", "token_antiguo_windows")
 

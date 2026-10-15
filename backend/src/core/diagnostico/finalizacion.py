@@ -65,6 +65,8 @@ def finalizar_diagnostico(
     #
     # Los procedimientos transversales/procedurales pueden tener falla=None;
     # en ese caso NO deben descartarse únicamente por carecer de una clase ML.
+    from src.core.diagnostico.rag_hypothesis_compatibility import procedimiento_apoya_hipotesis
+
     falla_rag = (meta_rag_dict or {}).get("falla")
     falla_desconocida_o_abstencion = (
         not diagnostico_predictivo
@@ -74,7 +76,9 @@ def finalizar_diagnostico(
     contradiccion_falla_rag = bool(
         falla_rag
         and not falla_desconocida_o_abstencion
-        and diagnostico_predictivo != falla_rag
+        and not procedimiento_apoya_hipotesis(
+            diagnostico_predictivo, titulo_manual, meta_rag_dict or {},
+        )
     )
 
     if (

@@ -17,9 +17,16 @@ def registrar_evidencia(estado, mensaje):
         )
         extraidos.append(hecho.to_dict())
 
-    if re.search(r"\b(escaner|scanner|scaner)\b.*\b(arroja|indica|conect|codigo|mezcla)", texto):
+    herramienta_negada = re.search(
+        r"\b(?:no\s+(?:tengo|dispongo|conecte|use)|sin)\b[^.;!?]*\b(?:escaner|scanner|scaner)\b", texto
+    )
+    if not herramienta_negada and re.search(
+        r"\b(?:escaner|scanner|scaner)\s+(?:arroja|indica|muestra|registra)\b", texto
+    ):
         guardar("escaner_disponible", "SI", "herramienta")
-    if "caliente" in texto and "no esta caliente" not in texto:
+    if re.search(r"\besta\s+caliente\b", texto) and not re.search(
+        r"\b(?:no|nunca)\s+esta\s+caliente\b", texto
+    ):
         guardar("temperatura", "caliente", "temperatura")
     if any(p in texto for p in ("mezcla pobre", "inyector", "injector", "sensor de oxigeno", "sensor o2")):
         guardar(f"evidencia_taller_{estado.turno_actual}", mensaje)

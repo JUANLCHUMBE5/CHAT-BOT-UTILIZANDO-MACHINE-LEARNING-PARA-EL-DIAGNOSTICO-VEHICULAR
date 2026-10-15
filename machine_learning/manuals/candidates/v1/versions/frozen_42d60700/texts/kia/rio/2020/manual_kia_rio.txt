@@ -1,0 +1,25 @@
+=== PROCEDIMIENTO: DIAGNÓSTICO Y CAMBIO DE VÁLVULA SOLENOIDE DE SINCRONIZACIÓN VARIABLE VVT / OCV KIA RIO (DTC P0011 / P0016 / CASCABELEO EN MOTOR KAPPA) ===
+Código de Falla Asociado: DTC P0011 (Posición Árbol de Levas Admisión Sobreavanzada) / DTC P0016 (Correlación CKP-CMP Banco 1)
+Modelos Compatibles Frecuentes en Perú: Kia Rio 1.4L / 1.6L MPI Gamma/Kappa (2018-2023)
+Gravedad: Alta | Tiempo Estimado de Taller: 45 minutos
+Síntomas: Pérdida notable de potencia a bajas revoluciones, cascabeleo al exigir el acelerador, ralentí áspero con vibraciones y DTC P0011 persistente.
+Instrucciones paso a paso:
+1. Desconecte el conector eléctrico de la válvula solenoide de control de aceite VVT (OCV) ubicada en la culata lateral de admisión.
+2. Mida la resistencia de la bobina solenoide con multímetro en bornes 1 y 2 (valor de fábrica: 6.8 a 8.0 Ohmios a 20°C).
+3. Aplique 12V directos de batería momentáneamente: el émbolo interno debe desplazarse con un clic nítido y retornar rápidamente por resorte.
+4. Retire el perno de 10mm y extraiga la válvula OCV. Inspeccione la micro-malla filtrante: si tiene sedimentos o barniz de aceite quemado, límpiela con solvente dieléctrico.
+5. Verifique el estado del aceite del motor (especificación requerida: 5W-20 / 5W-30 sintético API SP / ILSAC GF-6). La viscosidad incorrecta o degradación causa retardo hidráulico del engranaje variador VVT.
+6. Reinstale la válvula con junta O-ring nueva lubricada, aplique torque de 10 Nm al perno de fijación y borre los códigos DTC con escáner.
+
+=== PROCEDIMIENTO: REEMPLAZO DE BOBINAS DE ENCENDIDO INDIVIDUALES COP Y BUJÍAS DE IRIDIO KIA RIO (DTC P0300 / P0301 / MISFIRE) ===
+Código de Falla Asociado: DTC P0300 (Fallo de Encendido Múltiple) / DTC P0301-P0304 (Misfire Cilindro Específico)
+Modelos Compatibles Frecuentes en Perú: Kia Rio 1.4L/1.6L, Kia Soluto, Hyundai Grand i10
+Gravedad: Media-Alta | Tiempo Estimado de Taller: 40 minutos
+Síntomas: El motor tiembla en ralentí, tironea al acelerar en 2da o 3ra marcha y la luz Check Engine parpadea indicando daño potencial al catalizador.
+Instrucciones paso a paso:
+1. Conecte el escáner y acceda al menú de diagnóstico para confirmar el cilindro con contador de fallas de encendido elevado (Misfire Counter).
+2. Intercambie la bobina del cilindro afectado a otro cilindro (ejemplo: intercambiar bobina 1 con bobina 2) para verificar si la falla se traslada.
+3. Extraiga la bobina sospechosa: inspeccione el capuchón de goma en busca de perforaciones por chispa perdida (trazas blancas/carbonizadas).
+4. Retire la bujía usando dado de 16mm (5/8") imantado.
+5. Calibre la holgura de electrodo de la bujía nueva de iridio (gap estándar: 1.0 a 1.1 mm) con calibrador de láminas sin dañar la punta fina de iridio.
+6. Instale la bujía roscando a mano y apriete a un torque de 22 a 25 Nm. Monte la bobina aplicando grasa dieléctrica en la punta del capuchón y ajuste el perno a 9 Nm.
