@@ -7,10 +7,29 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.infrastructure.database.models.validation import ValidacionTaller
+
+
+def _filtros_oficiales_verificados() -> list[Any]:
+    """Exige clasificación oficial y trazabilidad humana antes de usar una fila en fichas/métricas."""
+    return [
+        ValidacionTaller.estado_registro == "verificado",
+        or_(
+            and_(ValidacionTaller.tipo_registro == "THESIS_PRETEST", ValidacionTaller.fase == "Pre-test"),
+            and_(ValidacionTaller.tipo_registro == "THESIS_POSTTEST", ValidacionTaller.fase == "Post-test"),
+        ),
+        ValidacionTaller.falla_real.is_not(None),
+        func.length(func.trim(ValidacionTaller.falla_real)) > 0,
+        ValidacionTaller.metodo_confirmacion.is_not(None),
+        func.length(func.trim(ValidacionTaller.metodo_confirmacion)) > 0,
+        ValidacionTaller.evidencia_ref.is_not(None),
+        func.length(func.trim(ValidacionTaller.evidencia_ref)) > 0,
+        ValidacionTaller.validado_por_id.is_not(None),
+        ValidacionTaller.fecha_validacion.is_not(None),
+    ]
 
 
 class ValidacionTallerRepository:
@@ -59,8 +78,9 @@ class ValidacionTallerRepository:
                 )
             )
         total = int(
-            (await self.session.execute(select(func.count()).select_from(ValidacionTaller).where(*filtros)))
-            .scalar_one()
+            (
+                await self.session.execute(select(func.count()).select_from(ValidacionTaller).where(*filtros))
+            ).scalar_one()
         )
         stmt = (
             select(ValidacionTaller)
@@ -76,20 +96,40 @@ class ValidacionTallerRepository:
     ) -> list[dict[str, Any]]:
         filtros = [
             ValidacionTaller.taller_id == taller_id,
-            ValidacionTaller.estado_registro == "verificado",
-            ValidacionTaller.tipo_registro.in_(("THESIS_PRETEST", "THESIS_POSTTEST")),
+            *_filtros_oficiales_verificados(),
         ]
         if fecha_desde:
             filtros.append(ValidacionTaller.fecha >= fecha_desde)
         if fecha_hasta:
             filtros.append(ValidacionTaller.fecha <= fecha_hasta)
-        stmt = select(
-            ValidacionTaller.fase,
-            func.count().label("total"),
-            func.sum(ValidacionTaller.prediccion_correcta).label("aciertos"),
-            func.sum(ValidacionTaller.campos_completos).label("completos"),
-            func.sum(ValidacionTaller.tiempo_diagnostico_minutos).label("minutos"),
-        ).where(*filtros).group_by(ValidacionTaller.fase)
+        tiempo_medido = case(
+            (ValidacionTaller.tiempo_diagnostico_minutos > 0, ValidacionTaller.tiempo_diagnostico_minutos),
+            else_=None,
+        )
+        prediccion_evaluada = case(
+            (
+                and_(
+                    ValidacionTaller.prediccion_correcta.is_not(None),
+                    func.length(func.trim(ValidacionTaller.chatbot_prediccion)) > 0,
+                ),
+                ValidacionTaller.prediccion_correcta,
+            ),
+            else_=None,
+        )
+        stmt = (
+            select(
+                ValidacionTaller.fase,
+                func.count().label("total"),
+                func.sum(prediccion_evaluada).label("aciertos"),
+                func.count(prediccion_evaluada).label("predicciones_evaluadas"),
+                func.sum(ValidacionTaller.campos_completos).label("completos"),
+                func.count(ValidacionTaller.campos_completos).label("campos_evaluados"),
+                func.sum(tiempo_medido).label("minutos"),
+                func.count(tiempo_medido).label("tiempos_evaluados"),
+            )
+            .where(*filtros)
+            .group_by(ValidacionTaller.fase)
+        )
         return [dict(row) for row in (await self.session.execute(stmt)).mappings().all()]
 
     async def metricas_variable_independiente(
@@ -98,8 +138,8 @@ class ValidacionTallerRepository:
         """Cálculo riguroso de los 3 indicadores de la Variable Independiente sobre registros verificados."""
         filtros = [
             ValidacionTaller.taller_id == taller_id,
-            ValidacionTaller.estado_registro == "verificado",
-            ValidacionTaller.tipo_registro.in_(("THESIS_PRETEST", "THESIS_POSTTEST")),
+            *_filtros_oficiales_verificados(),
+            ValidacionTaller.fase == "Post-test",
         ]
         if fecha_desde:
             filtros.append(ValidacionTaller.fecha >= fecha_desde)
@@ -112,8 +152,30 @@ class ValidacionTallerRepository:
             func.sum(ValidacionTaller.sintoma_registrado_correctamente).label("sintomas_correctos"),
             func.count(ValidacionTaller.procesamiento_validado).label("proc_evaluados"),
             func.sum(ValidacionTaller.procesamiento_validado).label("proc_correctos"),
-            func.count(ValidacionTaller.prediccion_correcta).label("predicciones_evaluadas"),
-            func.sum(ValidacionTaller.prediccion_correcta).label("predicciones_correctas"),
+            func.count(
+                case(
+                    (
+                        and_(
+                            ValidacionTaller.prediccion_correcta.is_not(None),
+                            func.length(func.trim(ValidacionTaller.chatbot_prediccion)) > 0,
+                        ),
+                        ValidacionTaller.prediccion_correcta,
+                    ),
+                    else_=None,
+                )
+            ).label("predicciones_evaluadas"),
+            func.sum(
+                case(
+                    (
+                        and_(
+                            ValidacionTaller.prediccion_correcta.is_not(None),
+                            func.length(func.trim(ValidacionTaller.chatbot_prediccion)) > 0,
+                        ),
+                        ValidacionTaller.prediccion_correcta,
+                    ),
+                    else_=None,
+                )
+            ).label("predicciones_correctas"),
         ).where(*filtros)
 
         row = (await self.session.execute(stmt)).mappings().one_or_none()
@@ -121,8 +183,11 @@ class ValidacionTallerRepository:
             return {
                 "casos_verificados": 0,
                 "porcentaje_sintomas_correctos": None,
+                "casos_sintomas_evaluados": 0,
                 "porcentaje_datos_procesados_correctos": None,
+                "casos_procesamiento_evaluados": 0,
                 "exactitud_modelo_validada": None,
+                "casos_modelo_evaluados": 0,
             }
 
         s_eval = int(row["sintomas_evaluados"] or 0)
@@ -140,8 +205,11 @@ class ValidacionTallerRepository:
         return {
             "casos_verificados": int(row["total_verificados"]),
             "porcentaje_sintomas_correctos": pct_sintomas,
+            "casos_sintomas_evaluados": s_eval,
             "porcentaje_datos_procesados_correctos": pct_proc,
+            "casos_procesamiento_evaluados": p_eval,
             "exactitud_modelo_validada": exactitud,
+            "casos_modelo_evaluados": pred_eval,
         }
 
     async def listar_todos(
@@ -165,9 +233,7 @@ class ValidacionTallerRepository:
             stmt = stmt.where(ValidacionTaller.tipo_registro == tipo_registro)
         if solo_verificados:
             stmt = stmt.where(
-                ValidacionTaller.estado_registro == "verificado",
-                ValidacionTaller.tipo_registro.in_(("THESIS_PRETEST", "THESIS_POSTTEST")),
-                ValidacionTaller.fase != "Piloto",
+                *_filtros_oficiales_verificados(),
             )
         return list((await self.session.execute(stmt)).scalars().all())
 
@@ -176,8 +242,7 @@ class ValidacionTallerRepository:
     ) -> dict[str, list[dict[str, Any]]]:
         filtros = [
             ValidacionTaller.taller_id == taller_id,
-            ValidacionTaller.estado_registro == "verificado",
-            ValidacionTaller.tipo_registro.in_(("THESIS_PRETEST", "THESIS_POSTTEST")),
+            *_filtros_oficiales_verificados(),
         ]
         if fecha_desde:
             filtros.append(ValidacionTaller.fecha >= fecha_desde)
@@ -195,15 +260,20 @@ class ValidacionTallerRepository:
         return resultado
 
     async def contar_piloto(self, taller_id: uuid.UUID) -> int:
-        stmt = select(func.count()).select_from(ValidacionTaller).where(
-            ValidacionTaller.taller_id == taller_id,
-            ValidacionTaller.tipo_registro == "PILOT",
+        stmt = (
+            select(func.count())
+            .select_from(ValidacionTaller)
+            .where(
+                ValidacionTaller.taller_id == taller_id,
+                ValidacionTaller.tipo_registro == "PILOT",
+            )
         )
         return int((await self.session.execute(stmt)).scalar_one() or 0)
 
     async def crear(
         self,
         *,
+        origen_clave: str | None = None,
         taller_id: uuid.UUID,
         mecanico_id: uuid.UUID | None,
         fase: str,
@@ -244,6 +314,7 @@ class ValidacionTallerRepository:
         duracion_sistema_segundos: Decimal | float | None = None,
     ) -> ValidacionTaller:
         caso = ValidacionTaller(
+            origen_clave=origen_clave,
             taller_id=taller_id,
             mecanico_id=mecanico_id,
             fase=fase,

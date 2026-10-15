@@ -65,7 +65,9 @@ async def test_2_pilot_no_cuenta_como_oficial():
     # Mock del repositorio
     servicio.repo.resumen_por_fase = AsyncMock(return_value=[])
     servicio.repo.metricas_variable_independiente = AsyncMock(return_value={"casos_verificados": 0})
-    servicio.repo.distribuciones = AsyncMock(return_value={"distribucion_marcas": [], "top_fallas_reales": []})
+    servicio.repo.distribuciones = AsyncMock(
+        return_value={"distribucion_marcas": [], "top_fallas_reales": []}
+    )
     servicio.repo.contar_piloto = AsyncMock(return_value=20)
 
     metricas = await servicio.metricas(DEFAULT_SEED_TALLER)
@@ -83,7 +85,7 @@ def test_3_regression_no_cuenta_como_oficial():
     """Los casos de regresión no forman parte de la muestra de tesis."""
     resumen = resumir_fases([])
     assert resumen["total_casos"] == 0
-    assert resumen["tasa_acierto_global_porcentaje"] == 0.0
+    assert resumen["tasa_acierto_global_porcentaje"] is None
 
 
 # ==============================================================================
@@ -113,7 +115,18 @@ async def test_4_thesis_pretest_cuenta_unicamente_en_pre():
         await servicio.crear(DEFAULT_SEED_TALLER, None, dto_invalido, "ABC-***", "d" * 64)
 
     # 2. Computo métrico exclusivo en pretest
-    grupos_pre = [{"fase": "Pre-test", "total": 1, "aciertos": 1, "completos": 1, "minutos": 25}]
+    grupos_pre = [
+        {
+            "fase": "Pre-test",
+            "total": 1,
+            "aciertos": 1,
+            "predicciones_evaluadas": 1,
+            "completos": 1,
+            "campos_evaluados": 1,
+            "minutos": 25,
+            "tiempos_evaluados": 1,
+        }
+    ]
     resumen = resumir_fases(grupos_pre)
     assert resumen["casos_pretest"] == 1
     assert resumen["casos_posttest"] == 0
@@ -147,7 +160,18 @@ async def test_5_thesis_posttest_cuenta_unicamente_en_post():
         await servicio.crear(DEFAULT_SEED_TALLER, None, dto_invalido, "XYZ-***", "e" * 64)
 
     # 2. Computo métrico exclusivo en posttest
-    grupos_post = [{"fase": "Post-test", "total": 1, "aciertos": 1, "completos": 1, "minutos": 12}]
+    grupos_post = [
+        {
+            "fase": "Post-test",
+            "total": 1,
+            "aciertos": 1,
+            "predicciones_evaluadas": 1,
+            "completos": 1,
+            "campos_evaluados": 1,
+            "minutos": 12,
+            "tiempos_evaluados": 1,
+        }
+    ]
     resumen = resumir_fases(grupos_post)
     assert resumen["casos_pretest"] == 0
     assert resumen["casos_posttest"] == 1

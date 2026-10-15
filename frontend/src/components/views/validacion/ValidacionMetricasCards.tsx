@@ -20,6 +20,8 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
       despues: 93.3,
       unidad: '%',
       esMenorMejor: false,
+      denominadorAntes: 30,
+      denominadorDespues: 30,
     },
     {
       titulo: 'Ficha 2 · Registros completos (PRDC)',
@@ -27,6 +29,8 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
       despues: 96.7,
       unidad: '%',
       esMenorMejor: false,
+      denominadorAntes: 30,
+      denominadorDespues: 30,
     },
     {
       titulo: 'Ficha 3 · Tiempo diagnóstico (TPRD)',
@@ -34,30 +38,38 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
       despues: 11.2,
       unidad: 'min',
       esMenorMejor: true,
+      denominadorAntes: 30,
+      denominadorDespues: 30,
     },
   ];
 
   const filasReales = [
     {
       titulo: 'Ficha 1 · Predicciones correctas (PPCF)',
-      antes: metricas?.tasa_acierto_pretest_porcentaje ?? 0,
-      despues: metricas?.tasa_acierto_posttest_porcentaje ?? 0,
+      antes: metricas?.tasa_acierto_pretest_porcentaje ?? null,
+      despues: metricas?.tasa_acierto_posttest_porcentaje ?? null,
       unidad: '%',
       esMenorMejor: false,
+      denominadorAntes: metricas?.predicciones_evaluadas_pretest ?? 0,
+      denominadorDespues: metricas?.predicciones_evaluadas_posttest ?? 0,
     },
     {
       titulo: 'Ficha 2 · Registros completos (PRDC)',
-      antes: metricas?.registros_completos_pretest_porcentaje ?? 0,
-      despues: metricas?.registros_completos_posttest_porcentaje ?? 0,
+      antes: metricas?.registros_completos_pretest_porcentaje ?? null,
+      despues: metricas?.registros_completos_posttest_porcentaje ?? null,
       unidad: '%',
       esMenorMejor: false,
+      denominadorAntes: metricas?.casos_pretest ?? 0,
+      denominadorDespues: metricas?.casos_posttest ?? 0,
     },
     {
       titulo: 'Ficha 3 · Tiempo diagnóstico (TPRD)',
-      antes: metricas?.tiempo_promedio_pretest_min ?? 0,
-      despues: metricas?.tiempo_promedio_posttest_min ?? 0,
+      antes: metricas?.tiempo_promedio_pretest_min ?? null,
+      despues: metricas?.tiempo_promedio_posttest_min ?? null,
       unidad: 'min',
       esMenorMejor: true,
+      denominadorAntes: metricas?.tiempos_evaluados_pretest ?? 0,
+      denominadorDespues: metricas?.tiempos_evaluados_posttest ?? 0,
     },
   ];
 
@@ -237,12 +249,12 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
             </tr>
           </thead>
           <tbody>
-            {filas.map(({ titulo, antes, despues, unidad, esMenorMejor }) => {
-              const tieneDatosPre = pre > 0;
-              const tieneDatosPost = post > 0;
-              const delta = despues - antes;
-              const mejora = esMenorMejor ? delta < 0 : delta > 0;
-              const deltaTexto = delta > 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1);
+            {filas.map(({ titulo, antes, despues, unidad, esMenorMejor, denominadorAntes, denominadorDespues }) => {
+              const tieneDatosPre = typeof antes === 'number' && Number.isFinite(antes);
+              const tieneDatosPost = typeof despues === 'number' && Number.isFinite(despues);
+              const delta = tieneDatosPre && tieneDatosPost ? despues - antes : null;
+              const mejora = delta !== null && (esMenorMejor ? delta < 0 : delta > 0);
+              const deltaTexto = delta === null ? '—' : delta > 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1);
               const unidadTexto = unidad === '%' ? 'puntos porcentuales' : 'min';
 
               return (
@@ -251,13 +263,13 @@ export function ValidacionMetricasCards({ metricas }: { metricas: MetricasValida
                     {titulo}
                   </th>
                   <td data-label="Pre-test (Manual)" style={{ padding: '12px 14px' }}>
-                    {tieneDatosPre ? `${antes.toFixed(1)} ${unidad}` : 'Pendiente de datos'}
+                    {tieneDatosPre ? `${antes.toFixed(1)} ${unidad} (n=${denominadorAntes})` : 'Pendiente de medición'}
                   </td>
                   <td
                     data-label="Post-test (CarBot)"
                     style={{ padding: '12px 14px', fontWeight: 700, color: 'var(--primary)' }}
                   >
-                    {tieneDatosPost ? `${despues.toFixed(1)} ${unidad}` : 'Pendiente de datos'}
+                    {tieneDatosPost ? `${despues.toFixed(1)} ${unidad} (n=${denominadorDespues})` : 'Pendiente de medición'}
                   </td>
                   <td data-label="Cambio post − pre" style={{ padding: '12px 14px' }}>
                     {tieneDatosPre && tieneDatosPost ? (

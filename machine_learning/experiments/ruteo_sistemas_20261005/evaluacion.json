@@ -1,0 +1,210 @@
+{
+  "candidate_only": true,
+  "main_fault_classifier_modified": false,
+  "source_files": [
+    "C:\\Users\\leonc\\Downloads\\CarBot_clasificacion_3000.csv",
+    "C:\\Users\\leonc\\Downloads\\CarBot_train_ruteo_focus.csv"
+  ],
+  "symptom_rows_selected_before_deduplication": {
+    "CarBot_clasificacion_3000.csv": 1960,
+    "CarBot_train_ruteo_focus.csv": 153
+  },
+  "source_rows_used": {
+    "CarBot_clasificacion_3000.csv": 1940,
+    "CarBot_train_ruteo_focus.csv": 84
+  },
+  "unique_symptoms": 2024,
+  "conflicting_phrase_groups_excluded": 10,
+  "labels": {
+    "electrico_ecu": 230,
+    "encendido": 295,
+    "refrigeracion": 610,
+    "combustible_admision": 489,
+    "frenos": 164,
+    "suspension_direccion": 149,
+    "transmision": 87
+  },
+  "group_holdout_train": 1518,
+  "group_holdout_test": 506,
+  "group_overlap": 0,
+  "holdout_accuracy": 0.9920948616600791,
+  "holdout_margin_p10": 1.5327796026122706,
+  "holdout_margin_median": 2.0159833404240906,
+  "holdout_report": {
+    "combustible_admision": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 122.0
+    },
+    "electrico_ecu": {
+      "precision": 0.9655172413793104,
+      "recall": 0.9655172413793104,
+      "f1-score": 0.9655172413793104,
+      "support": 58.0
+    },
+    "encendido": {
+      "precision": 0.972972972972973,
+      "recall": 0.972972972972973,
+      "f1-score": 0.972972972972973,
+      "support": 74.0
+    },
+    "frenos": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 41.0
+    },
+    "refrigeracion": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 153.0
+    },
+    "suspension_direccion": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 37.0
+    },
+    "transmision": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 21.0
+    },
+    "accuracy": 0.9920948616600791,
+    "macro avg": {
+      "precision": 0.9912128877646119,
+      "recall": 0.9912128877646119,
+      "f1-score": 0.9912128877646119,
+      "support": 506.0
+    },
+    "weighted avg": {
+      "precision": 0.9920948616600791,
+      "recall": 0.9920948616600791,
+      "f1-score": 0.9920948616600791,
+      "support": 506.0
+    }
+  },
+  "holdout_confusion_matrix": [
+    [
+      122,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      56,
+      2,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      72,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      41,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      153,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      37,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      21
+    ]
+  ],
+  "label_order": [
+    "combustible_admision",
+    "electrico_ecu",
+    "encendido",
+    "frenos",
+    "refrigeracion",
+    "suspension_direccion",
+    "transmision"
+  ],
+  "six_fixture_svm_only": [
+    {
+      "frase": "está recalentando",
+      "esperado": "refrigeracion",
+      "modelo_svm": "refrigeracion",
+      "ruta_runtime": "refrigeracion",
+      "pass": true
+    },
+    {
+      "frase": "es refrigeración no de mezcla",
+      "esperado": "refrigeracion",
+      "modelo_svm": "refrigeracion",
+      "ruta_runtime": "refrigeracion",
+      "pass": true
+    },
+    {
+      "frase": "tiembla y 500 rpm",
+      "esperado": "encendido",
+      "modelo_svm": "encendido",
+      "ruta_runtime": "encendido",
+      "pass": true
+    },
+    {
+      "frase": "500 rpm",
+      "esperado": "ambiguo",
+      "modelo_svm": "encendido",
+      "ruta_runtime": "ambiguo",
+      "pass": true
+    },
+    {
+      "frase": "patina embrague",
+      "esperado": "transmision",
+      "modelo_svm": "transmision",
+      "ruta_runtime": "transmision",
+      "pass": true
+    },
+    {
+      "frase": "ruido al frenar",
+      "esperado": "frenos",
+      "modelo_svm": "frenos",
+      "ruta_runtime": "frenos",
+      "pass": true
+    }
+  ],
+  "six_fixture_runtime_pass_count": 6,
+  "model_path": "C:\\Users\\leonc\\OneDrive\\Desktop\\CHAT_BOT_MACHINLEARNING\\machine_learning\\experiments\\ruteo_sistemas_20261005\\modelo_ruteo_candidato.joblib"
+}

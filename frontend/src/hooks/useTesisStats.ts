@@ -14,22 +14,34 @@ export const useTesisStats = () => {
   const casosVisibles = faseActiva === 'pre' ? preCasos : postCasos;
 
   // Ficha 1: PPCF
-  const prePPCFCount = preCasos.filter((c) => c.prediccion_correcta === 1).length;
-  const postPPCFCount = postCasos.filter((c) => c.prediccion_correcta === 1).length;
-  const prePPCFPct = (prePPCFCount / preCasos.length) * 100;
-  const postPPCFPct = (postPPCFCount / postCasos.length) * 100;
+  const evaluarPrediccion = (c: (typeof preCasos)[number]) => Boolean(
+    c.chatbot_prediccion?.trim() && c.falla_real?.trim() && (c.prediccion_correcta === 0 || c.prediccion_correcta === 1),
+  );
+  const prePredicciones = preCasos.filter(evaluarPrediccion);
+  const postPredicciones = postCasos.filter(evaluarPrediccion);
+  const prePPCFCount = prePredicciones.filter((c) => c.prediccion_correcta === 1).length;
+  const postPPCFCount = postPredicciones.filter((c) => c.prediccion_correcta === 1).length;
+  const prePPCFPct = prePredicciones.length ? (prePPCFCount / prePredicciones.length) * 100 : null;
+  const postPPCFPct = postPredicciones.length ? (postPPCFCount / postPredicciones.length) * 100 : null;
 
   // Ficha 2: PRDC (8 campos completos)
   const prePRDCCount = preCasos.filter((c) => c.campos_completos === 1).length;
   const postPRDCCount = postCasos.filter((c) => c.campos_completos === 1).length;
-  const prePRDCPct = (prePRDCCount / preCasos.length) * 100;
-  const postPRDCPct = (postPRDCCount / postCasos.length) * 100;
+  const preRegistrosEvaluados = preCasos.filter((c) => c.campos_completos === 0 || c.campos_completos === 1).length;
+  const postRegistrosEvaluados = postCasos.filter((c) => c.campos_completos === 0 || c.campos_completos === 1).length;
+  const prePRDCPct = preRegistrosEvaluados ? (prePRDCCount / preRegistrosEvaluados) * 100 : null;
+  const postPRDCPct = postRegistrosEvaluados ? (postPRDCCount / postRegistrosEvaluados) * 100 : null;
 
   // Ficha 3: TPRD (Tiempos en minutos)
-  const preTPRDSuma = preCasos.reduce((acc, c) => acc + c.tiempo_diagnostico_minutos, 0);
-  const postTPRDSuma = postCasos.reduce((acc, c) => acc + c.tiempo_diagnostico_minutos, 0);
-  const preTPRDProm = preTPRDSuma / preCasos.length;
-  const postTPRDProm = postTPRDSuma / postCasos.length;
+  const preTiempos = preCasos.map((c) => c.tiempo_diagnostico_minutos)
+    .filter((tiempo): tiempo is number => tiempo !== null && Number.isFinite(tiempo) && tiempo > 0);
+  const postTiempos = postCasos.map((c) => c.tiempo_diagnostico_minutos)
+    .filter((tiempo): tiempo is number => tiempo !== null && Number.isFinite(tiempo) && tiempo > 0);
+  const preTPRDSuma = preTiempos.reduce((acc, tiempo) => acc + tiempo, 0);
+  const postTPRDSuma = postTiempos.reduce((acc, tiempo) => acc + tiempo, 0);
+  const preTPRDProm = preTiempos.length ? preTPRDSuma / preTiempos.length : null;
+  const postTPRDProm = postTiempos.length ? postTPRDSuma / postTiempos.length : null;
+  const porcentaje = (valor: number | null) => valor === null ? 'Pendiente' : `${valor.toFixed(2)}%`;
 
   const infoFicha = {
     ficha1: {
@@ -39,11 +51,11 @@ export const useTesisStats = () => {
       indicador: 'Porcentaje de predicción correcta de fallas vehiculares (PPCF)',
       medida: 'Porcentaje (%)',
       formula: 'PPCF = (N.° de predicciones correctas / Total de predicciones realizadas) × 100',
-      preValor: `${prePPCFPct.toFixed(2)}%`,
-      postValor: `${postPPCFPct.toFixed(2)}%`,
-      preDetalle: `${prePPCFCount} de ${preCasos.length} predicciones correctas`,
-      postDetalle: `${postPPCFCount} de ${postCasos.length} predicciones correctas`,
-      mejora: `+${(postPPCFPct - prePPCFPct).toFixed(2)}% de incremento de exactitud`,
+      preValor: porcentaje(prePPCFPct),
+      postValor: porcentaje(postPPCFPct),
+      preDetalle: `${prePPCFCount} de ${prePredicciones.length} predicciones evaluables correctas`,
+      postDetalle: `${postPPCFCount} de ${postPredicciones.length} predicciones evaluables correctas`,
+      mejora: prePPCFPct === null || postPPCFPct === null ? 'Pendiente' : `${(postPPCFPct - prePPCFPct).toFixed(2)} pp`,
       hipotesis: 'HE1: El chatbot con ML mejora significativamente la predicción de fallas vehiculares (prueba inferencial pendiente)',
       unidad: '%',
     },
@@ -54,11 +66,11 @@ export const useTesisStats = () => {
       indicador: 'Porcentaje de registros diagnósticos completos (PRDC)',
       medida: 'Porcentaje (%)',
       formula: 'PRDC = (RC: Registros con los 8 campos completos / TRE: Total de registros evaluados) × 100',
-      preValor: `${prePRDCPct.toFixed(2)}%`,
-      postValor: `${postPRDCPct.toFixed(2)}%`,
-      preDetalle: `${prePRDCCount} de ${preCasos.length} con 8 campos completos`,
-      postDetalle: `${postPRDCCount} de ${postCasos.length} con 8 campos completos`,
-      mejora: `+${(postPRDCPct - prePRDCPct).toFixed(2)}% de incremento en calidad de datos`,
+      preValor: porcentaje(prePRDCPct),
+      postValor: porcentaje(postPRDCPct),
+      preDetalle: `${prePRDCCount} de ${preRegistrosEvaluados} evaluados con 8 campos completos`,
+      postDetalle: `${postPRDCCount} de ${postRegistrosEvaluados} evaluados con 8 campos completos`,
+      mejora: prePRDCPct === null || postPRDCPct === null ? 'Pendiente' : `${(postPRDCPct - prePRDCPct).toFixed(2)} pp`,
       hipotesis: 'HE2: El chatbot con ML mejora significativamente el control de información diagnóstica (prueba inferencial pendiente)',
       unidad: '%',
     },
@@ -69,20 +81,20 @@ export const useTesisStats = () => {
       indicador: 'Tiempo promedio de respuesta diagnóstica (TPRD)',
       medida: 'Minutos',
       formula: 'TPRD = Suma total de tiempos de respuesta diagnóstica / Total de diagnósticos evaluados',
-      preValor: `${preTPRDProm.toFixed(2)} min`,
-      postValor: `${postTPRDProm.toFixed(2)} min`,
-      preDetalle: `Suma: ${preTPRDSuma.toFixed(1)} min en 30 atenciones`,
-      postDetalle: `Suma: ${postTPRDSuma.toFixed(1)} min en 30 atenciones`,
-      mejora: `-${(preTPRDProm - postTPRDProm).toFixed(2)} min/auto (${(((preTPRDProm - postTPRDProm) / preTPRDProm) * 100).toFixed(1)}% ahorro de tiempo)`,
+      preValor: preTPRDProm === null ? 'Pendiente' : `${preTPRDProm.toFixed(2)} min`,
+      postValor: postTPRDProm === null ? 'Pendiente' : `${postTPRDProm.toFixed(2)} min`,
+      preDetalle: `Suma: ${preTiempos.length ? `${preTPRDSuma.toFixed(1)} min en ${preTiempos.length} mediciones` : 'Pendiente'}`,
+      postDetalle: `Suma: ${postTiempos.length ? `${postTPRDSuma.toFixed(1)} min en ${postTiempos.length} mediciones` : 'Pendiente'}`,
+      mejora: preTPRDProm === null || postTPRDProm === null ? 'Pendiente' : `${(preTPRDProm - postTPRDProm).toFixed(2)} min`,
       hipotesis: 'HE3: El chatbot con ML reduce significativamente el tiempo de atención del diagnóstico vehicular (prueba inferencial pendiente)',
       unidad: ' min',
     },
   }[fichaActiva];
 
   const dataComparativaFichas = [
-    { indicador: 'PPCF (% Acierto)', 'Pre-test (Manual)': Number(prePPCFPct.toFixed(1)), 'Post-test (CarBot AI)': Number(postPPCFPct.toFixed(1)) },
-    { indicador: 'PRDC (% Campos 8/8)', 'Pre-test (Manual)': Number(prePRDCPct.toFixed(1)), 'Post-test (CarBot AI)': Number(postPRDCPct.toFixed(1)) },
-    { indicador: 'TPRD (Minutos)', 'Pre-test (Manual)': Number(preTPRDProm.toFixed(1)), 'Post-test (CarBot AI)': Number(postTPRDProm.toFixed(1)) },
+    { indicador: 'PPCF (% Acierto)', 'Pre-test (Manual)': prePPCFPct === null ? null : Number(prePPCFPct.toFixed(1)), 'Post-test (CarBot AI)': postPPCFPct === null ? null : Number(postPPCFPct.toFixed(1)) },
+    { indicador: 'PRDC (% Campos 8/8)', 'Pre-test (Manual)': prePRDCPct === null ? null : Number(prePRDCPct.toFixed(1)), 'Post-test (CarBot AI)': postPRDCPct === null ? null : Number(postPRDCPct.toFixed(1)) },
+    { indicador: 'TPRD (Minutos)', 'Pre-test (Manual)': preTPRDProm === null ? null : Number(preTPRDProm.toFixed(1)), 'Post-test (CarBot AI)': postTPRDProm === null ? null : Number(postTPRDProm.toFixed(1)) },
   ];
 
   const exportarCSV = () => {
@@ -97,7 +109,7 @@ export const useTesisStats = () => {
       `"${r.falla_real}"`,
       `"${r.chatbot_prediccion}"`,
       r.campos_completos,
-      r.tiempo_diagnostico_minutos,
+      r.tiempo_diagnostico_minutos ?? 'Pendiente',
       r.prediccion_correcta,
     ]);
 
@@ -105,7 +117,7 @@ export const useTesisStats = () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `Fichas_Tesis_UCV_CarBot_${fichaActiva}_N60.csv`);
+    link.setAttribute('download', `DEMO_SINTETICO_Fichas_Tesis_UCV_CarBot_${fichaActiva}_N60.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -124,5 +136,7 @@ export const useTesisStats = () => {
     infoFicha,
     dataComparativaFichas,
     exportarCSV,
+    esModoDemostracion: true,
+    avisoMetodologico: 'Trabajo de campo pendiente. Esta vista contiene datos sintéticos de demostración, excluidos de resultados y exportaciones oficiales.',
   };
 };

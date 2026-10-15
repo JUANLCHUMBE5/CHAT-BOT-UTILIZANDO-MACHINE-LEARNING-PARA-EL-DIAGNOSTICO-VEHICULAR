@@ -1,0 +1,37 @@
+pilot_id,clase_objetivo,macro_sistema,nivel_informacion,tipo_lenguaje,tipo_refuerzo,objetivo_semantico,texto_usuario,estado,usar_test10_como_fuente,usar_dev_como_fuente_textual,synthetic_or_original
+RFP-01-01,Falla en bujias o bobinas de encendido (misfire),MOTOR,L1,WHATSAPP,BREVE,sintoma_principal,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-01-02,Falla en bujias o bobinas de encendido (misfire),MOTOR,L1,WHATSAPP,BREVE,sintoma_principal_variacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-01-03,Falla en bujias o bobinas de encendido (misfire),MOTOR,L1,WHATSAPP,BREVE,descripcion_coloquial,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-01-04,Falla en bujias o bobinas de encendido (misfire),MOTOR,L1,WHATSAPP,DISCRIMINANTE,sintoma_mas_pista,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-01-05,Falla en bujias o bobinas de encendido (misfire),MOTOR,L1,WHATSAPP,DISCRIMINANTE,condicion_operacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-01-06,Falla en bujias o bobinas de encendido (misfire),MOTOR,L2,WHATSAPP,CONTRASTIVO,sintoma_mas_negacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-02-01,Falla en sensor de oxigeno o mezcla rica,MOTOR,L1,WHATSAPP,BREVE,sintoma_principal,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-02-02,Falla en sensor de oxigeno o mezcla rica,MOTOR,L1,WHATSAPP,BREVE,sintoma_principal_variacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-02-03,Falla en sensor de oxigeno o mezcla rica,MOTOR,L1,WHATSAPP,BREVE,descripcion_coloquial,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-02-04,Falla en sensor de oxigeno o mezcla rica,MOTOR,L1,WHATSAPP,DISCRIMINANTE,sintoma_mas_pista,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-02-05,Falla en sensor de oxigeno o mezcla rica,MOTOR,L1,WHATSAPP,DISCRIMINANTE,condicion_operacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-02-06,Falla en sensor de oxigeno o mezcla rica,MOTOR,L2,WHATSAPP,CONTRASTIVO,sintoma_mas_negacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-03-01,Cuerpo de aceleracion o valvula IAC sucia,MOTOR,L1,WHATSAPP,BREVE,sintoma_principal,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-03-02,Cuerpo de aceleracion o valvula IAC sucia,MOTOR,L1,WHATSAPP,BREVE,sintoma_principal_variacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-03-03,Cuerpo de aceleracion o valvula IAC sucia,MOTOR,L1,WHATSAPP,BREVE,descripcion_coloquial,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-03-04,Cuerpo de aceleracion o valvula IAC sucia,MOTOR,L1,WHATSAPP,DISCRIMINANTE,sintoma_mas_pista,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-03-05,Cuerpo de aceleracion o valvula IAC sucia,MOTOR,L1,WHATSAPP,DISCRIMINANTE,condicion_operacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-03-06,Cuerpo de aceleracion o valvula IAC sucia,MOTOR,L2,WHATSAPP,CONTRASTIVO,sintoma_mas_negacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-04-01,Bomba de gasolina quemada o con baja presion,MOTOR,L1,WHATSAPP,BREVE,sintoma_principal,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-04-02,Bomba de gasolina quemada o con baja presion,MOTOR,L1,WHATSAPP,BREVE,sintoma_principal_variacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-04-03,Bomba de gasolina quemada o con baja presion,MOTOR,L1,WHATSAPP,BREVE,descripcion_coloquial,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-04-04,Bomba de gasolina quemada o con baja presion,MOTOR,L1,WHATSAPP,DISCRIMINANTE,sintoma_mas_pista,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-04-05,Bomba de gasolina quemada o con baja presion,MOTOR,L1,WHATSAPP,DISCRIMINANTE,condicion_operacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-04-06,Bomba de gasolina quemada o con baja presion,MOTOR,L2,WHATSAPP,CONTRASTIVO,sintoma_mas_negacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-05-01,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L1,WHATSAPP,BREVE,sintoma_principal,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-05-02,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L1,WHATSAPP,BREVE,sintoma_principal_variacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-05-03,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L1,WHATSAPP,BREVE,descripcion_coloquial,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-05-04,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L1,WHATSAPP,DISCRIMINANTE,sintoma_mas_pista,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-05-05,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L1,WHATSAPP,DISCRIMINANTE,condicion_operacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-05-06,Falla en sensor de posicion de cigueñal (CKP) o arbol de levas (CMP),MOTOR,L2,WHATSAPP,CONTRASTIVO,sintoma_mas_negacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-06-01,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L1,WHATSAPP,BREVE,sintoma_principal,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-06-02,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L1,WHATSAPP,BREVE,sintoma_principal_variacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-06-03,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L1,WHATSAPP,BREVE,descripcion_coloquial,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-06-04,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L1,WHATSAPP,DISCRIMINANTE,sintoma_mas_pista,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-06-05,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L1,WHATSAPP,DISCRIMINANTE,condicion_operacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1
+RFP-06-06,Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados,MOTOR,L2,WHATSAPP,CONTRASTIVO,sintoma_mas_negacion,,PENDIENTE_GENERACION,False,False,SINTETICO_REINFORCEMENT_V1

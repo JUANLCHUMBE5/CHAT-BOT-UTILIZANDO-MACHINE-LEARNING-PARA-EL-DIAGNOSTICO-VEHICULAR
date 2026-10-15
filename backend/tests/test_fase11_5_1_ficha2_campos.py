@@ -47,8 +47,26 @@ def test_ficha2_cero_de_ocho_es_registro_incompleto():
 
 def test_rdc_pre_y_post_se_calculan_por_fase_sin_development_ni_regression():
     grupos_oficiales = [
-        {"fase": "Pre-test", "total": 2, "aciertos": 1, "completos": 1, "minutos": 40},
-        {"fase": "Post-test", "total": 2, "aciertos": 2, "completos": 2, "minutos": 20},
+        {
+            "fase": "Pre-test",
+            "total": 2,
+            "aciertos": 1,
+            "predicciones_evaluadas": 2,
+            "completos": 1,
+            "campos_evaluados": 2,
+            "minutos": 40,
+            "tiempos_evaluados": 2,
+        },
+        {
+            "fase": "Post-test",
+            "total": 2,
+            "aciertos": 2,
+            "predicciones_evaluadas": 2,
+            "completos": 2,
+            "campos_evaluados": 2,
+            "minutos": 20,
+            "tiempos_evaluados": 2,
+        },
     ]
 
     resumen = resumir_fases(grupos_oficiales)

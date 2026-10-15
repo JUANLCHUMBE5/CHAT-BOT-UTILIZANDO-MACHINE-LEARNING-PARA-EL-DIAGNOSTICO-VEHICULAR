@@ -7,6 +7,7 @@ import csv
 import io
 import uuid
 
+from fastapi import HTTPException
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,6 +21,7 @@ from src.config import settings
 from src.infrastructure.database.connection import obtener_engine
 from src.infrastructure.database.models.catalogs import Taller
 from src.interfaces.api.v1.dtos.validacion import CrearCasoValidacionDTO
+from src.interfaces.api.v1.endpoints.posttest import ConfirmacionHumanaPostTestDTO, _claims
 from src.interfaces.api.v1.endpoints.validacion_taller import _sanitizar_campo_csv
 
 
@@ -63,13 +65,13 @@ def test_ficha2_trazabilidad_8_7_1_0_campos():
         assert completo == completo_esperado
         assert set(detalles) == {f"campo_{i}" for i in range(1, 9)}
         if campo_a_revisar:
-            assert detalles[campo_a_revisar]["completo"] is (cantidad_esperada == 1 and campo_a_revisar == "campo_1")
+            assert detalles[campo_a_revisar]["completo"] is (
+                cantidad_esperada == 1 and campo_a_revisar == "campo_1"
+            )
 
 
 def test_ficha2_no_duplica_sintoma_como_descripcion():
-    completo, cantidad, detalles = calcular_detalles_campos_ficha2(
-        **_campos_base(descripcion_sintoma="")
-    )
+    completo, cantidad, detalles = calcular_detalles_campos_ficha2(**_campos_base(descripcion_sintoma=""))
     assert cantidad == 7
     assert completo == 0
     assert detalles["campo_4"]["completo"] is True
@@ -86,11 +88,81 @@ def test_datos_generales_vehiculo_exige_subcampos_del_anexo2():
     assert "anio=" in detalles["campo_3"]["valor_resumen"]
 
 
+def test_cero_kilometros_es_un_dato_presente_y_fecha_invalida_no_completa_ficha():
+    completo, cantidad, detalles = calcular_detalles_campos_ficha2(
+        **_campos_base(datos_generales_vehiculo=_datos_vehiculo(kilometraje=0))
+    )
+    assert completo == 1
+    assert cantidad == 8
+    assert detalles["campo_3"]["completo"] is True
+
+    completo, cantidad, detalles = calcular_detalles_campos_ficha2(
+        **_campos_base(fecha_atencion="2026-99-99")
+    )
+    assert completo == 0
+    assert cantidad == 7
+    assert detalles["campo_2"]["completo"] is False
+
+
+def test_confirmacion_posttest_requiere_referencia_no_vacia():
+    from pydantic import ValidationError
+
+    base = {
+        "falla_real": "Falla confirmada físicamente",
+        "tiempo_diagnostico_minutos": 15,
+        "prediccion_correcta": 1,
+        "metodo_confirmacion": "Prueba física",
+        "evidencia_ref": "OT-001",
+    }
+    dto = ConfirmacionHumanaPostTestDTO(**base)
+    assert dto.evidencia_ref == "OT-001"
+    try:
+        ConfirmacionHumanaPostTestDTO(**{**base, "evidencia_ref": "   "})
+    except ValidationError:
+        pass
+    else:
+        raise AssertionError("Una referencia vacía o compuesta de espacios debe rechazarse")
+
+
+def test_confirmacion_posttest_exige_identidad_de_validador():
+    taller_id = uuid.uuid4()
+    try:
+        _claims({"taller_id": str(taller_id)}, require_user=True)
+    except HTTPException as exc:
+        assert exc.status_code == 401
+    else:
+        raise AssertionError("No debe confirmarse un registro sin una identidad de validador")
+
+    _, usuario_id = _claims(
+        {"taller_id": str(taller_id), "usuario_id": str(uuid.uuid4())},
+        require_user=True,
+    )
+    assert usuario_id is not None
+
+
 def test_ppcf_rdc_tprd_pre_post_y_zero_division():
     resumen = resumir_fases(
         [
-            {"fase": "Pre-test", "total": 4, "aciertos": 2, "completos": 2, "minutos": 140},
-            {"fase": "Post-test", "total": 4, "aciertos": 3, "completos": 3, "minutos": 60},
+            {
+                "fase": "Pre-test",
+                "total": 4,
+                "aciertos": 2,
+                "predicciones_evaluadas": 4,
+                "completos": 2,
+                "campos_evaluados": 4,
+                "minutos": 140,
+                "tiempos_evaluados": 4,
+            },
+            {
+                "fase": "Post-test",
+                "total": 4,
+                "aciertos": 3,
+                "predicciones_evaluadas": 4,
+                "completos": 3,
+                "campos_evaluados": 4,
+                "minutos": 60,
+                "tiempos_evaluados": 4,
+            },
         ]
     )
     assert resumen["tasa_acierto_pretest_porcentaje"] == 50.0
@@ -101,8 +173,51 @@ def test_ppcf_rdc_tprd_pre_post_y_zero_division():
     assert resumen["tiempo_promedio_posttest_min"] == 15.0
 
     vacio = resumir_fases([])
-    assert vacio["tasa_acierto_global_porcentaje"] == 0.0
-    assert vacio["tiempo_promedio_pretest_min"] == 0.0
+    assert vacio["tasa_acierto_global_porcentaje"] is None
+    assert vacio["tiempo_promedio_pretest_min"] is None
+
+
+def test_resumen_no_convierte_faltantes_en_cero_ni_suma_piloto():
+    resumen = resumir_fases(
+        [
+            {
+                "fase": "Pre-test",
+                "total": 2,
+                "aciertos": 1,
+                "predicciones_evaluadas": 2,
+                "completos": 1,
+                "campos_evaluados": 2,
+                "minutos": 25,
+                "tiempos_evaluados": 1,
+            },
+            {
+                "fase": "Post-test",
+                "total": 1,
+                "aciertos": 0,
+                "predicciones_evaluadas": 0,
+                "completos": 0,
+                "campos_evaluados": 1,
+                "minutos": None,
+                "tiempos_evaluados": 0,
+            },
+            {
+                "fase": "Piloto",
+                "total": 4,
+                "aciertos": 4,
+                "predicciones_evaluadas": 4,
+                "completos": 4,
+                "minutos": 20,
+                "tiempos_evaluados": 4,
+            },
+        ]
+    )
+    assert resumen["total_casos"] == 3
+    assert resumen["predicciones_evaluadas_pretest"] == 2
+    assert resumen["tasa_acierto_pretest_porcentaje"] == 50.0
+    assert resumen["tasa_acierto_posttest_porcentaje"] is None
+    assert resumen["tiempo_promedio_pretest_min"] == 25.0
+    assert resumen["tiempo_promedio_posttest_min"] is None
+    assert resumen["reduccion_tiempo_porcentaje"] is None
 
 
 def test_persistencia_e2e_development_y_exclusion_oficial():
@@ -117,9 +232,10 @@ async def _persistencia_e2e_development_y_exclusion_oficial():
         trans = await session.begin()
         try:
             schema_probe = (
-                await session.execute(
-                    text(
-                        """
+                (
+                    await session.execute(
+                        text(
+                            """
                         select current_database() as db, inet_server_port() as port,
                                to_regclass('validaciones_taller')::text as tabla,
                                exists (
@@ -129,9 +245,12 @@ async def _persistencia_e2e_development_y_exclusion_oficial():
                                      and column_name = 'descripcion_sintoma'
                                ) as tiene_descripcion
                         """
+                        )
                     )
                 )
-            ).mappings().one()
+                .mappings()
+                .one()
+            )
             assert schema_probe["tiene_descripcion"], dict(schema_probe)
             session.add(Taller(id=taller_id, nombre="Taller Fase 11.5.2"))
             await session.flush()
@@ -162,9 +281,10 @@ async def _persistencia_e2e_development_y_exclusion_oficial():
             await session.flush()
 
             row = (
-                await session.execute(
-                    text(
-                        """
+                (
+                    await session.execute(
+                        text(
+                            """
                         select descripcion_sintoma, vehiculo_anio, vehiculo_kilometraje,
                                vehiculo_combustible, vehiculo_transmision,
                                sistema_afectado_probable, cantidad_campos_completos,
@@ -172,10 +292,13 @@ async def _persistencia_e2e_development_y_exclusion_oficial():
                         from validaciones_taller
                         where id = :id
                         """
-                    ),
-                    {"id": caso.id},
+                        ),
+                        {"id": caso.id},
+                    )
                 )
-            ).mappings().one()
+                .mappings()
+                .one()
+            )
             assert row["descripcion_sintoma"] == dto.descripcion_sintoma
             assert row["vehiculo_anio"] == 2020
             assert row["vehiculo_kilometraje"] == 85000
@@ -194,7 +317,7 @@ async def _persistencia_e2e_development_y_exclusion_oficial():
             metricas = await servicio.metricas(taller_id)
             assert metricas["total_casos"] == 0
             assert metricas["casos_pretest"] == 0
-            assert metricas["registros_completos_pretest_porcentaje"] == 0.0
+            assert metricas["registros_completos_pretest_porcentaje"] is None
         finally:
             await trans.rollback()
             await engine.dispose()
@@ -202,10 +325,30 @@ async def _persistencia_e2e_development_y_exclusion_oficial():
 
 def test_csv_reconstruye_indicadores_y_sanitiza_formulas():
     registros = [
-        {"fase": "Pre-test", "prediccion_correcta": 1, "campos_completos": 1, "tiempo_diagnostico_minutos": 20},
-        {"fase": "Pre-test", "prediccion_correcta": 0, "campos_completos": 0, "tiempo_diagnostico_minutos": 30},
-        {"fase": "Post-test", "prediccion_correcta": 1, "campos_completos": 1, "tiempo_diagnostico_minutos": 10},
-        {"fase": "Post-test", "prediccion_correcta": 1, "campos_completos": 1, "tiempo_diagnostico_minutos": 20},
+        {
+            "fase": "Pre-test",
+            "prediccion_correcta": 1,
+            "campos_completos": 1,
+            "tiempo_diagnostico_minutos": 20,
+        },
+        {
+            "fase": "Pre-test",
+            "prediccion_correcta": 0,
+            "campos_completos": 0,
+            "tiempo_diagnostico_minutos": 30,
+        },
+        {
+            "fase": "Post-test",
+            "prediccion_correcta": 1,
+            "campos_completos": 1,
+            "tiempo_diagnostico_minutos": 10,
+        },
+        {
+            "fase": "Post-test",
+            "prediccion_correcta": 1,
+            "campos_completos": 1,
+            "tiempo_diagnostico_minutos": 20,
+        },
     ]
     output = io.StringIO()
     writer = csv.DictWriter(output, fieldnames=list(registros[0].keys()))
@@ -221,8 +364,11 @@ def test_csv_reconstruye_indicadores_y_sanitiza_formulas():
                 "fase": fase,
                 "total": len(subset),
                 "aciertos": sum(int(r["prediccion_correcta"]) for r in subset),
+                "predicciones_evaluadas": len(subset),
                 "completos": sum(int(r["campos_completos"]) for r in subset),
+                "campos_evaluados": len(subset),
                 "minutos": sum(int(r["tiempo_diagnostico_minutos"]) for r in subset),
+                "tiempos_evaluados": len(subset),
             }
         )
     resumen = resumir_fases(grupos)

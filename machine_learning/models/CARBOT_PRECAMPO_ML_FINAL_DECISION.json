@@ -1,0 +1,59 @@
+{
+  "project": "CarBot",
+  "stage": "PRECAMPO_ML_FINAL",
+  "decision": "KEEP_C1_OFFICIAL",
+  "official_model": "C1_FASE10_FINAL",
+  "candidate": "C1_1_L1WA_CANDIDATE",
+  "candidate_status": "EVALUATED_NOT_PROMOTED",
+  "reason": {
+    "test10_rows": 366,
+    "C1_official": {
+      "top1": 81.69,
+      "top3": 93.17,
+      "macro_f1": 80.95,
+      "avg_confidence": 69.57
+    },
+    "C1_1_candidate": {
+      "top1": 80.6,
+      "top3": 93.44,
+      "macro_f1": 79.91,
+      "avg_confidence": 70.06
+    },
+    "delta_candidate_minus_C1_pp": {
+      "top1": -1.093,
+      "top3": 0.273,
+      "macro_f1": -1.041
+    },
+    "prediction_changes": {
+      "fixed": 6,
+      "broken": 10,
+      "net": -4
+    }
+  },
+  "development_state": {
+    "post_test10_tuning_allowed": false,
+    "reinforcement_frozen": true,
+    "dev_tuning_closed": true,
+    "official_fieldwork_started": false,
+    "official_pre_records": 0,
+    "official_post_records": 0
+  },
+  "integrity": {
+    "official_C1_modified": false,
+    "official_TFIDF_modified": false,
+    "official_macro_modified": false,
+    "RAG_modified_by_final_ml_validation": false,
+    "DB_modified": false,
+    "PREPOST_modified": false
+  },
+  "official_hashes": {
+    "diagnostic_model": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+    "vectorizer": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+    "macro_model": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c"
+  },
+  "rejected_candidate_hashes": {
+    "diagnostic_model": "acf74da750a805f76b748205c4cc5b7773fcf9965d3c6bdd1af08c06fc5c2004",
+    "vectorizer": "89201083ecfeaa5dfcad0a491bdc416e620b535ced76bc8522d96ba0eb323d31"
+  },
+  "timestamp_utc": "2026-09-30T04:28:51.139618+00:00"
+}

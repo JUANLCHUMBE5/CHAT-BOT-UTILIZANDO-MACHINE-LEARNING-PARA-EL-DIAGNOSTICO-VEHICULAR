@@ -25,7 +25,9 @@ class CasoValidacionDTO(BaseModel):
     vehiculo_combustible: Optional[str] = None
     vehiculo_transmision: Optional[str] = None
     falla_real: Optional[str] = None
-    chatbot_prediccion: str
+    chatbot_prediccion: Optional[str] = None
+    diagnostico_preliminar_sin_chatbot: Optional[str] = None
+    falla_sugerida_chatbot: Optional[str] = None
     sistema_afectado_probable: Optional[str] = None
     campos_completos: int
     cantidad_campos_completos: int = 0
@@ -34,7 +36,7 @@ class CasoValidacionDTO(BaseModel):
     prediccion_correcta: Optional[int] = None
     taller_id: Optional[str] = None
     mecanico_id: Optional[str] = None
-    metodo_confirmacion: Optional[str] = "Inspección Visual en Elevador"
+    metodo_confirmacion: Optional[str] = None
     evidencia_ref: Optional[str] = None
     estado_registro: str = "borrador"
     tipo_registro: Optional[str] = "DEVELOPMENT"
@@ -67,14 +69,15 @@ class CrearCasoValidacionDTO(BaseModel):
     falla_real: str = Field(min_length=3, max_length=1000)
     # Mantiene compatibilidad con registros existentes; en pre-test representa la hipótesis manual.
     chatbot_prediccion: str = Field(
-        min_length=3, max_length=1000,
+        min_length=3,
+        max_length=1000,
         validation_alias=AliasChoices("prediccion_inicial", "chatbot_prediccion"),
     )
     sistema_afectado_probable: Optional[str] = Field(default=None, max_length=80)
     campos_completos: int = Field(ge=0, le=1)
     tiempo_diagnostico_minutos: int = Field(ge=1, le=600)
     prediccion_correcta: int = Field(ge=0, le=1)
-    metodo_confirmacion: Optional[str] = Field(default="Inspección Visual + Escáner OBD", max_length=500)
+    metodo_confirmacion: Optional[str] = Field(default=None, max_length=500)
     evidencia_ref: Optional[str] = Field(default=None, max_length=500)
     estado_registro: EstadoRegistro = Field(default="borrador")
     tipo_registro: Optional[TipoRegistro] = None
@@ -96,23 +99,34 @@ class MetricasVariableIndependienteDTO(BaseModel):
     indicador2_procesamiento_correcto_pct: Optional[float] = None
     indicador3_exactitud_ml_pct: Optional[float] = None
     casos_verificados_evaluados: int = 0
-    nota_metodologica: str = "Cálculo exclusivo sobre casos con estado verificado con confirmación física en taller."
+    casos_sintomas_evaluados: int = 0
+    casos_procesamiento_evaluados: int = 0
+    casos_modelo_evaluados: int = 0
+    nota_metodologica: str = (
+        "Cálculo exclusivo sobre casos con estado verificado con confirmación física en taller."
+    )
 
 
 class MetricasValidacionResponseDTO(BaseModel):
-    registros_completos_pretest_porcentaje: float = 0.0
-    registros_completos_posttest_porcentaje: float = 0.0
+    registros_completos_pretest_porcentaje: Optional[float] = None
+    registros_completos_posttest_porcentaje: Optional[float] = None
+    registros_prdc_evaluados_pretest: int = 0
+    registros_prdc_evaluados_posttest: int = 0
     total_casos: int
     total_aciertos: int
     total_desaciertos: int
-    tasa_acierto_global_porcentaje: float
+    tasa_acierto_global_porcentaje: Optional[float] = None
     casos_pretest: int
-    tasa_acierto_pretest_porcentaje: float
-    tiempo_promedio_pretest_min: float
+    predicciones_evaluadas_pretest: int = 0
+    tasa_acierto_pretest_porcentaje: Optional[float] = None
+    tiempos_evaluados_pretest: int = 0
+    tiempo_promedio_pretest_min: Optional[float] = None
     casos_posttest: int
-    tasa_acierto_posttest_porcentaje: float
-    tiempo_promedio_posttest_min: float
-    reduccion_tiempo_porcentaje: float
+    predicciones_evaluadas_posttest: int = 0
+    tasa_acierto_posttest_porcentaje: Optional[float] = None
+    tiempos_evaluados_posttest: int = 0
+    tiempo_promedio_posttest_min: Optional[float] = None
+    reduccion_tiempo_porcentaje: Optional[float] = None
     casos_piloto: int = 0
     casos_verificados: int = 0
     total_casos_verificados: int = 0

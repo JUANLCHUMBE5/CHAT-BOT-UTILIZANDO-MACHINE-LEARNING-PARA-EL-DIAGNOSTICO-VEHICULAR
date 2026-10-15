@@ -167,9 +167,11 @@ class DiagnosticPersister:
         elif dto.llm_usado or modo_diag == "completo_ml_rag_llm":
             fuente_diag = "gemini"
             conclusion_diag = f"[COMPLETO_ML_RAG_LLM] Síntesis Gemini ({dto.llm_modelo or settings.gemini_model})"
+            modo_diag = "completo_ml_rag_llm"
         else:
             fuente_diag = "hibrido"
             conclusion_diag = "[DIAGNOSTICO_DEGRADADO_ML_RAG] Fallback por indisponibilidad o límite de tasa"
+            modo_diag = "diagnostico_degradado_ml_rag"
 
         # 5. Persistir diagnóstico con trazabilidad completa
         diag = await diag_repo.crear_diagnostico(

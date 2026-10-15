@@ -143,15 +143,21 @@ async def analizar_sintoma(
     token_payload: dict = Depends(exigir_creacion_diagnosticos),
     gestor: GestorDiagnostico = Depends(obtener_gestor_diagnostico),
 ):
-    if not consulta.placa:
-        raise HTTPException(status_code=400, detail="La placa es obligatoria antes de iniciar un diagnostico.")
     """Endpoint seguro con Autenticación JWT para analizar síntomas vehiculares."""
     if not consulta.sintoma.strip():
         raise HTTPException(status_code=400, detail="El síntoma no puede estar vacío.")
 
     t_inicio = time.time()
     try:
-        placa_normalizada = normalizar_placa(consulta.placa)
+        placa_candidata = consulta.placa
+        if not placa_candidata:
+            from src.core.parser.message_parser import SinglePassMessageParser
+            parsed = SinglePassMessageParser.parse(consulta.sintoma)
+            if parsed.vehiculo and parsed.vehiculo.placa:
+                placa_candidata = parsed.vehiculo.placa
+            else:
+                placa_candidata = "REST-API"
+        placa_normalizada = normalizar_placa(placa_candidata)
         placa_anonima = anonimizar_identificador(placa_normalizada)
         logger.info(f"Procesando petición HTTP REST autenticada para Placa: {placa_anonima}")
 
@@ -197,12 +203,23 @@ async def analizar_sintoma(
                         modelo=consulta.modelo or "Generico", anio=consulta.anio,
                     )
                     repo = DiagnosticoRepository(session)
+                    modos_db_validos = {
+                        "completo_ml_rag_llm", "diagnostico_degradado_ml_rag", "en_cola_gemini",
+                        "audio_espectral", "saludo", "baja_confianza", "esperando_clarificacion",
+                    }
+                    modo_db = dto_resultado.modo_diagnostico
+                    if modo_db not in modos_db_validos:
+                        modo_db = (
+                            "completo_ml_rag_llm"
+                            if modo_db in ("completo", "diferencial", "detalle", "gemini_online")
+                            else "diagnostico_degradado_ml_rag"
+                        )
                     diag = await repo.crear_diagnostico(
                         taller_id=taller_id, mecanico_id=mecanico_id, vehiculo_id=vehiculo.id,
                         conversacion_id=conversacion.id,
                         sintoma_original=consulta.sintoma, falla_predicha=dto_resultado.diagnostico_ml,
                         confianza=dto_resultado.confianza_ml, similitud_rag=dto_resultado.similitud_rag,
-                        fuente="hibrido", modo_diagnostico=dto_resultado.modo_diagnostico,
+                        fuente="hibrido", modo_diagnostico=modo_db,
                         duracion_ms=round(elapsed_ms), tiempo_inferencia_ml_ms=dto_resultado.tiempo_ml_ms,
                         version_modelo_ml=settings.model_version,
                         trazabilidad={"origen": "REST", "tiempo_total_ms": round(elapsed_ms)},

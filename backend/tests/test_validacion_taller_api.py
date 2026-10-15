@@ -57,6 +57,7 @@ def _worker_escribir_proceso(csv_path_str: str, worker_id: int) -> bool:
 @pytest.fixture(autouse=True)
 def mock_tracker_csv(tmp_path, monkeypatch):
     """Fixture que aisla completamente las pruebas en un archivo CSV temporal."""
+    monkeypatch.setattr(validacion_taller, "database_configurada", lambda: False)
     test_csv = tmp_path / "tracker_diagnosticos_test.csv"
     filas_iniciales = [
         {

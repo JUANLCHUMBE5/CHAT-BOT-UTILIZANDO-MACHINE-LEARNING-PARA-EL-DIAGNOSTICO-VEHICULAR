@@ -215,10 +215,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
     },
-    "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "sistema": "SUSPENSION_CHASIS",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_009",
@@ -438,10 +439,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
     },
-    "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "sistema": "ELECTRICO",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "TRANSVERSAL"
   },
   {
     "id_procedimiento": "RAG_PROC_017",
@@ -811,10 +813,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
     },
-    "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "sistema": "SUSPENSION_CHASIS",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_030",
@@ -840,10 +843,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
     },
-    "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "sistema": "SUSPENSION_CHASIS",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_031",
@@ -1002,7 +1006,7 @@
       "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
     },
     "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "falla": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },
@@ -1532,7 +1536,7 @@
       "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
     },
     "sistema": "FRENOS",
-    "falla": "Falla en sensor de velocidad de rueda ABS",
+    "falla": "Desgaste de pastillas y zapatas de freno",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },
@@ -1812,9 +1816,10 @@
       "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
     },
     "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_066",
@@ -1959,10 +1964,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico referencial para evaluación experimental en taller de tesis."
     },
-    "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "sistema": "SUSPENSION_CHASIS",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_071",
@@ -3347,10 +3353,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
-    "sistema": "FRENOS",
-    "falla": "Falla en sensor de velocidad de rueda ABS",
+    "sistema": "MOTOR",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_117",
@@ -3733,7 +3740,7 @@
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
     "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "falla": "Falla en servofreno (booster) o linea de vacio",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },
@@ -3790,10 +3797,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
-    "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "sistema": "TRANSMISION",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_132",
@@ -3937,10 +3945,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
-    "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "sistema": "TRANSMISION",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_137",
@@ -4211,10 +4220,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
-    "sistema": "MOTOR",
-    "falla": "Falla en bujias o bobinas de encendido (misfire)",
+    "sistema": "SUSPENSION_CHASIS",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_146",
@@ -4302,9 +4312,10 @@
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
     "sistema": "MOTOR",
-    "falla": "Bomba de gasolina quemada o con baja presion",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_149",
@@ -4425,10 +4436,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
-    "sistema": "FRENOS",
-    "falla": "Falla en sensor de velocidad de rueda ABS",
+    "sistema": "MOTOR",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_153",
@@ -4673,10 +4685,11 @@
       "auditoria_mecanica_formal_firmada": false,
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
-    "sistema": "ELECTRICO",
-    "falla": "Bateria descargada o bornes sulfatados",
+    "sistema": "MOTOR",
+    "falla": null,
     "tipo_documento": "procedimiento_diagnostico_reparacion",
-    "motor": "Universal"
+    "motor": "Universal",
+    "knowledge_type": "PROCEDURAL"
   },
   {
     "id_procedimiento": "RAG_PROC_161",
@@ -5221,7 +5234,7 @@
       "observacion": "Procedimiento técnico de taller con tolerancias metrológicas precisas."
     },
     "sistema": "ELECTRICO",
-    "falla": "Alternador defectuoso o placa de diodos quemada",
+    "falla": "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },
@@ -5309,7 +5322,7 @@
       "observacion": "Ficha técnica oficial de taller para código OBD-II P0300."
     },
     "sistema": "ELECTRICO",
-    "falla": "Alternador defectuoso o placa de diodos quemada",
+    "falla": "Falla en bujias o bobinas de encendido (misfire)",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },
@@ -5337,7 +5350,7 @@
       "observacion": "Ficha técnica oficial de taller para código OBD-II P0301."
     },
     "sistema": "ELECTRICO",
-    "falla": "Alternador defectuoso o placa de diodos quemada",
+    "falla": "Falla en bujias o bobinas de encendido (misfire)",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },
@@ -5365,7 +5378,7 @@
       "observacion": "Ficha técnica oficial de taller para código OBD-II P0302."
     },
     "sistema": "ELECTRICO",
-    "falla": "Alternador defectuoso o placa de diodos quemada",
+    "falla": "Falla en bujias o bobinas de encendido (misfire)",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },
@@ -5393,7 +5406,7 @@
       "observacion": "Ficha técnica oficial de taller para código OBD-II P0303."
     },
     "sistema": "ELECTRICO",
-    "falla": "Alternador defectuoso o placa de diodos quemada",
+    "falla": "Falla en bujias o bobinas de encendido (misfire)",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },
@@ -5421,7 +5434,7 @@
       "observacion": "Ficha técnica oficial de taller para código OBD-II P0304."
     },
     "sistema": "ELECTRICO",
-    "falla": "Alternador defectuoso o placa de diodos quemada",
+    "falla": "Falla en bujias o bobinas de encendido (misfire)",
     "tipo_documento": "procedimiento_diagnostico_reparacion",
     "motor": "Universal"
   },

@@ -1,6 +1,7 @@
 import type {
   CasoValidacionDTO,
   CrearCasoValidacionDTO,
+  ConfirmacionPostTestInput,
   MetricasValidacionDTO,
 } from '../../types';
 import {
@@ -81,10 +82,10 @@ export async function crearBorradorPosttest(diagnosticoId: string): Promise<Caso
   return (await res.json()) as CasoValidacionDTO;
 }
 
-export async function confirmarPosttest(casoId: string, datos: {
-  falla_real: string; tiempo_diagnostico_minutos: number; prediccion_correcta: 0 | 1;
-  metodo_confirmacion: string; evidencia_ref?: string;
-}): Promise<CasoValidacionDTO> {
+export async function confirmarPosttest(
+  casoId: string,
+  datos: ConfirmacionPostTestInput,
+): Promise<CasoValidacionDTO> {
   const res = await authFetch(`${API_BASE_URL}/posttest/${casoId}/confirmacion-humana`, {
     method: 'PATCH', headers: { ...getAuthHeaders(), 'Content-Type': 'application/json' }, body: JSON.stringify(datos),
   });

@@ -3,6 +3,7 @@ import type {
   CasoValidacionDTO,
   Cliente,
   CrearCasoValidacionDTO,
+  ConfirmacionPostTestInput,
   Diagnostico,
   LoginRequestDTO,
   Mecanico,
@@ -194,7 +195,7 @@ class ApiService {
     return crearBorradorPosttest(diagnosticoId);
   }
 
-  confirmarPosttest(casoId: string, datos: { falla_real: string; tiempo_diagnostico_minutos: number; prediccion_correcta: 0 | 1; metodo_confirmacion: string; evidencia_ref?: string }): Promise<CasoValidacionDTO> {
+  confirmarPosttest(casoId: string, datos: ConfirmacionPostTestInput): Promise<CasoValidacionDTO> {
     return confirmarPosttest(casoId, datos);
   }
 

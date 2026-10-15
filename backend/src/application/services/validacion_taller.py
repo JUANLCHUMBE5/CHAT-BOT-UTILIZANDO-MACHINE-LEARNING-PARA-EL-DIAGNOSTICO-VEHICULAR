@@ -33,7 +33,7 @@ def _valor_presente(valor: Any) -> bool:
         limpio = valor.strip().lower()
         return bool(limpio) and limpio not in {"-", "n/a", "na", "sin registrar", "pendiente"}
     if isinstance(valor, (int, float)):
-        return valor > 0
+        return valor >= 0
     return bool(valor)
 
 
@@ -94,7 +94,21 @@ def calcular_detalles_campos_ficha2(
     detalles: dict[str, dict[str, Any]] = {}
     cantidad = 0
     for clave, nombre in CAMPS_FICHA2:
-        completo = _datos_generales_completos(valores[clave]) if clave == "campo_3" else _valor_presente(valores[clave])
+        if clave == "campo_3":
+            completo = _datos_generales_completos(valores[clave])
+        elif clave == "campo_8":
+            try:
+                completo = float(valores[clave]) > 0
+            except (TypeError, ValueError):
+                completo = False
+        elif clave == "campo_2":
+            try:
+                date.fromisoformat(str(valores[clave]))
+                completo = True
+            except (TypeError, ValueError):
+                completo = isinstance(valores[clave], date)
+        else:
+            completo = _valor_presente(valores[clave])
         cantidad += int(completo)
         detalles[clave] = {
             "nombre": nombre,
@@ -106,38 +120,70 @@ def calcular_detalles_campos_ficha2(
 
 def resumir_fases(grupos: list[dict[str, Any]]) -> dict[str, Any]:
     """Resumen descriptivo sobre casos verificados; no presume mejora ni significancia estadística."""
-    fases = {str(g["fase"]).strip().lower(): g for g in grupos}
+    grupos_oficiales = [
+        g
+        for g in grupos
+        if str(g.get("fase", "")).strip().casefold() in {"pre-test", "pretest", "post-test", "posttest"}
+    ]
+    fases = {str(g["fase"]).strip().casefold(): g for g in grupos_oficiales}
     pre = fases.get("pre-test") or fases.get("pretest") or {}
     post = fases.get("post-test") or fases.get("posttest") or {}
 
     def valor(grupo: dict, campo: str) -> float:
         return float(grupo.get(campo) or 0)
 
-    def promedio(grupo: dict, campo: str, factor: int = 1) -> float:
-        total = valor(grupo, "total")
-        return round(valor(grupo, campo) / total * factor, 2) if total else 0.0
+    def promedio(grupo: dict, campo: str, denominador: str, factor: int = 1) -> float | None:
+        cantidad = valor(grupo, denominador)
+        return round(valor(grupo, campo) / cantidad * factor, 2) if cantidad > 0 else None
 
-    total = sum(int(valor(g, "total")) for g in grupos)
-    aciertos = sum(int(valor(g, "aciertos")) for g in grupos)
-    tiempo_pre, tiempo_post = promedio(pre, "minutos"), promedio(post, "minutos")
+    total = sum(int(valor(g, "total")) for g in grupos_oficiales)
+    aciertos = sum(int(valor(g, "aciertos")) for g in grupos_oficiales)
+    predicciones_evaluadas = sum(int(valor(g, "predicciones_evaluadas")) for g in grupos_oficiales)
+    pred_pre = int(valor(pre, "predicciones_evaluadas"))
+    pred_post = int(valor(post, "predicciones_evaluadas"))
+    campos_pre = int(valor(pre, "campos_evaluados"))
+    campos_post = int(valor(post, "campos_evaluados"))
+    tiempos_pre = int(valor(pre, "tiempos_evaluados"))
+    tiempos_post = int(valor(post, "tiempos_evaluados"))
+    tiempo_pre = promedio(pre, "minutos", "tiempos_evaluados")
+    tiempo_post = promedio(post, "minutos", "tiempos_evaluados")
+    tasa_global = round(aciertos / predicciones_evaluadas * 100, 2) if predicciones_evaluadas else None
+    tasa_pre = promedio(pre, "aciertos", "predicciones_evaluadas", 100)
+    tasa_post = promedio(post, "aciertos", "predicciones_evaluadas", 100)
+    completos_pre = promedio(pre, "completos", "campos_evaluados", 100)
+    completos_post = promedio(post, "completos", "campos_evaluados", 100)
+    reduccion_tiempo = (
+        round((tiempo_pre - tiempo_post) / tiempo_pre * 100, 2)
+        if tiempo_pre is not None and tiempo_post is not None and tiempo_pre > 0
+        else None
+    )
     return {
-        "total_casos": total, "total_aciertos": aciertos, "total_desaciertos": total - aciertos,
-        "tasa_acierto_global_porcentaje": round(aciertos / total * 100, 2) if total else 0.0,
-        "casos_pretest": int(valor(pre, "total")), "casos_posttest": int(valor(post, "total")),
-        "tasa_acierto_pretest_porcentaje": promedio(pre, "aciertos", 100),
-        "tasa_acierto_posttest_porcentaje": promedio(post, "aciertos", 100),
-        "registros_completos_pretest_porcentaje": promedio(pre, "completos", 100),
-        "registros_completos_posttest_porcentaje": promedio(post, "completos", 100),
-        "tiempo_promedio_pretest_min": tiempo_pre, "tiempo_promedio_posttest_min": tiempo_post,
-        "reduccion_tiempo_porcentaje": (
-            round((tiempo_pre - tiempo_post) / tiempo_pre * 100, 2)
-            if tiempo_pre and valor(post, "total") else 0.0
-        ),
-        "distribucion_marcas": [], "top_fallas_reales": [],
+        "total_casos": total,
+        "total_aciertos": aciertos,
+        "total_desaciertos": predicciones_evaluadas - aciertos,
+        "tasa_acierto_global_porcentaje": tasa_global,
+        "casos_pretest": int(valor(pre, "total")),
+        "casos_posttest": int(valor(post, "total")),
+        "predicciones_evaluadas_pretest": pred_pre,
+        "predicciones_evaluadas_posttest": pred_post,
+        "registros_prdc_evaluados_pretest": campos_pre,
+        "registros_prdc_evaluados_posttest": campos_post,
+        "tasa_acierto_pretest_porcentaje": tasa_pre,
+        "tasa_acierto_posttest_porcentaje": tasa_post,
+        "registros_completos_pretest_porcentaje": completos_pre,
+        "registros_completos_posttest_porcentaje": completos_post,
+        "tiempos_evaluados_pretest": tiempos_pre,
+        "tiempos_evaluados_posttest": tiempos_post,
+        "tiempo_promedio_pretest_min": tiempo_pre,
+        "tiempo_promedio_posttest_min": tiempo_post,
+        "reduccion_tiempo_porcentaje": reduccion_tiempo,
+        "distribucion_marcas": [],
+        "top_fallas_reales": [],
     }
 
 
 def serializar_caso(caso: ValidacionTaller) -> dict[str, Any]:
+    es_pretest = str(caso.fase).strip().lower() == "pre-test"
     return {
         "item": caso.item,
         "fase": caso.fase,
@@ -153,6 +199,8 @@ def serializar_caso(caso: ValidacionTaller) -> dict[str, Any]:
         "vehiculo_transmision": caso.vehiculo_transmision,
         "falla_real": caso.falla_real,
         "chatbot_prediccion": caso.chatbot_prediccion,
+        "diagnostico_preliminar_sin_chatbot": caso.chatbot_prediccion if es_pretest else None,
+        "falla_sugerida_chatbot": None if es_pretest else caso.chatbot_prediccion,
         "sistema_afectado_probable": caso.sistema_afectado_probable,
         "campos_completos": caso.campos_completos,
         "cantidad_campos_completos": caso.cantidad_campos_completos,
@@ -175,9 +223,13 @@ def serializar_caso(caso: ValidacionTaller) -> dict[str, Any]:
         "clasificacion_procesada": caso.clasificacion_procesada,
         "procesamiento_validado": caso.procesamiento_validado,
         "tiempo_inferencia_ml_ms": caso.tiempo_inferencia_ml_ms,
-        "inicio_sistema_at": caso.inicio_sistema_at.isoformat() if getattr(caso, "inicio_sistema_at", None) else None,
+        "inicio_sistema_at": caso.inicio_sistema_at.isoformat()
+        if getattr(caso, "inicio_sistema_at", None)
+        else None,
         "fin_sistema_at": caso.fin_sistema_at.isoformat() if getattr(caso, "fin_sistema_at", None) else None,
-        "duracion_sistema_segundos": float(caso.duracion_sistema_segundos) if getattr(caso, "duracion_sistema_segundos", None) is not None else None,
+        "duracion_sistema_segundos": float(caso.duracion_sistema_segundos)
+        if getattr(caso, "duracion_sistema_segundos", None) is not None
+        else None,
     }
 
 
@@ -204,11 +256,22 @@ class ServicioValidacionTaller:
         placa_hash: str,
     ) -> ValidacionTaller:
         fecha_caso = date.fromisoformat(dto.fecha) if dto.fecha else date.today()
-        
+
         # Validación de reglas de negocio para estado verificado
         estado = dto.estado_registro
         if estado == "verificado":
-            if not dto.metodo_confirmacion or not dto.evidencia_ref:
+            tiene_revision_humana = bool(
+                usuario_id
+                and dto.falla_real
+                and dto.falla_real.strip()
+                and dto.prediccion_correcta in (0, 1)
+                and dto.tiempo_diagnostico_minutos
+                and dto.metodo_confirmacion
+                and dto.metodo_confirmacion.strip()
+                and dto.evidencia_ref
+                and dto.evidencia_ref.strip()
+            )
+            if not tiene_revision_humana:
                 estado = "borrador"
 
         # Procesamiento validado requiere cumplimiento de las 3 fases si están registradas
@@ -218,11 +281,15 @@ class ServicioValidacionTaller:
             and dto.extraccion_correcta is not None
             and dto.clasificacion_procesada is not None
         ):
-            proc_val = 1 if (
-                dto.normalizacion_correcta == 1
-                and dto.extraccion_correcta == 1
-                and dto.clasificacion_procesada == 1
-            ) else 0
+            proc_val = (
+                1
+                if (
+                    dto.normalizacion_correcta == 1
+                    and dto.extraccion_correcta == 1
+                    and dto.clasificacion_procesada == 1
+                )
+                else 0
+            )
 
         # Blindaje contra contaminación de muestra:
         # Requiere intención explícita; NUNCA inferir THESIS_* automáticamente.
@@ -235,6 +302,12 @@ class ServicioValidacionTaller:
             raise ValueError("Un registro de tesis THESIS_PRETEST debe pertenecer a la fase Pre-test.")
         if tipo_reg == "THESIS_POSTTEST" and dto.fase != "Post-test":
             raise ValueError("Un registro de tesis THESIS_POSTTEST debe pertenecer a la fase Post-test.")
+        if tipo_reg == "THESIS_POSTTEST" and not dto.diagnostico_id:
+            raise ValueError("Un POST-TEST oficial debe vincularse al diagnóstico original de CarBot.")
+        if tipo_reg == "THESIS_PRETEST" and dto.diagnostico_id:
+            raise ValueError(
+                "Un PRE-TEST sin CarBot no puede vincularse a un diagnóstico generado por el sistema."
+            )
 
         conv_id = None
         if dto.conversacion_id:
@@ -262,6 +335,11 @@ class ServicioValidacionTaller:
             diag_real = (await self.session.execute(stmt_diag)).scalar_one_or_none()
             if not diag_real:
                 raise ValueError("El diagnóstico vinculado no existe o no pertenece al taller.")
+
+            if tipo_reg == "THESIS_POSTTEST" and not diag_real.falla_predicha:
+                raise ValueError(
+                    "El POST-TEST requiere la predicción original de CarBot para poder evaluarla."
+                )
 
             # INMUTABILIDAD ABSOLUTA: La predicción del modelo no puede alterarse
             if diag_real.falla_predicha:
@@ -294,7 +372,7 @@ class ServicioValidacionTaller:
 
         fecha_val = datetime.now(timezone.utc) if estado == "verificado" else None
         validado_por = usuario_id if estado == "verificado" else None
-        sistema_probable = (dto.sistema_afectado_probable or chatbot_prediccion_final).strip()
+        sistema_probable = (dto.sistema_afectado_probable or "").strip() or None
         descripcion_sintoma = (dto.descripcion_sintoma or "").strip()
         datos_generales_vehiculo = construir_datos_generales_vehiculo(
             marca_modelo=dto.marca_modelo,
@@ -336,7 +414,7 @@ class ServicioValidacionTaller:
             detalles_campos=detalles_campos,
             tiempo_diagnostico_minutos=dto.tiempo_diagnostico_minutos,
             prediccion_correcta=dto.prediccion_correcta,
-            metodo_confirmacion=dto.metodo_confirmacion or "Inspección Visual",
+            metodo_confirmacion=(dto.metodo_confirmacion or "").strip() or None,
             evidencia_ref=dto.evidencia_ref,
             estado_registro=estado,
             tipo_registro=tipo_reg,
@@ -367,7 +445,12 @@ class ServicioValidacionTaller:
             entidad="validacion_taller",
             taller_id=taller_id,
             usuario_id=usuario_id,
-            detalles={"item": caso.item, "fase": caso.fase, "estado_registro": caso.estado_registro, "tipo_registro": caso.tipo_registro},
+            detalles={
+                "item": caso.item,
+                "fase": caso.fase,
+                "estado_registro": caso.estado_registro,
+                "tipo_registro": caso.tipo_registro,
+            },
         )
         return caso
 
@@ -379,10 +462,26 @@ class ServicioValidacionTaller:
         distribuciones = await self.repo.distribuciones(taller_id, fecha_desde, fecha_hasta)
         casos_piloto = await self.repo.contar_piloto(taller_id)
         total_v = int(metricas_vi.get("casos_verificados") or 0)
+        resumen = resumir_fases(grupos)
+        variable_independiente = {
+            "indicador1_sintomas_correctos_pct": metricas_vi.get("porcentaje_sintomas_correctos"),
+            "indicador2_procesamiento_correcto_pct": metricas_vi.get("porcentaje_datos_procesados_correctos"),
+            "indicador3_exactitud_ml_pct": metricas_vi.get("exactitud_modelo_validada"),
+            "casos_verificados_evaluados": total_v,
+            "casos_sintomas_evaluados": metricas_vi.get("casos_sintomas_evaluados", 0),
+            "casos_procesamiento_evaluados": metricas_vi.get("casos_procesamiento_evaluados", 0),
+            "casos_modelo_evaluados": metricas_vi.get("casos_modelo_evaluados", 0),
+            "nota_metodologica": (
+                "Indicadores de CarBot calculados solo sobre casos POST-TEST oficiales "
+                "con revisión humana trazable; no incluyen el diagnóstico manual PRE-TEST."
+            ),
+        }
         return {
-            **resumir_fases(grupos),
+            **resumen,
             **metricas_vi,
+            "variable_independiente": variable_independiente,
+            "casos_verificados": total_v,
             "casos_piloto": casos_piloto,
-            "total_casos_verificados": total_v,
+            "total_casos_verificados": resumen["total_casos"],
             **distribuciones,
         }

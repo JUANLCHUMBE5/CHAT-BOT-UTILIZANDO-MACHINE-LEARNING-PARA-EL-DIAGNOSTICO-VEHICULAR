@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Card } from '../../../common/Card';
 import { ErrorBoundary } from '../../../common/ErrorBoundary';
 import type { RegistroTesis } from '../../../../data/fichasTesisData';
+import { calcularIndicadoresTesisFase } from '../../../../utils/tesisIndicadores';
 import { TesisTablasFichas } from './TesisTablasFichas';
 
 export type FichaId = 'ficha1' | 'ficha2' | 'ficha3';
@@ -22,23 +23,30 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
   const postCasos = casosReales.filter((c) => (c.fase || '').toLowerCase().includes('post'));
   const casosActivos: RegistroTesis[] = fase === 'pre' ? preCasos : postCasos;
 
-  // Cálculos Ficha 1 (PPCF)
-  const preAciertos = preCasos.filter((c) => c.prediccion_correcta === 1).length;
-  const postAciertos = postCasos.filter((c) => c.prediccion_correcta === 1).length;
-  const prePPCF = preCasos.length > 0 ? (preAciertos / preCasos.length) * 100 : 0;
-  const postPPCF = postCasos.length > 0 ? (postAciertos / postCasos.length) * 100 : 0;
-
-  // Cálculos Ficha 2 (PRDC)
-  const preCompletos = preCasos.filter((c) => c.campos_completos === 1).length;
-  const postCompletos = postCasos.filter((c) => c.campos_completos === 1).length;
-  const prePRDC = preCasos.length > 0 ? (preCompletos / preCasos.length) * 100 : 0;
-  const postPRDC = postCasos.length > 0 ? (postCompletos / postCasos.length) * 100 : 0;
-
-  // Cálculos Ficha 3 (TPRD)
-  const preTiempoSuma = preCasos.reduce((acc, c) => acc + (Number(c.tiempo_diagnostico_minutos) || 0), 0);
-  const postTiempoSuma = postCasos.reduce((acc, c) => acc + (Number(c.tiempo_diagnostico_minutos) || 0), 0);
-  const preTPRD = preCasos.length > 0 ? preTiempoSuma / preCasos.length : 0;
-  const postTPRD = postCasos.length > 0 ? postTiempoSuma / postCasos.length : 0;
+  const pre = calcularIndicadoresTesisFase(preCasos);
+  const post = calcularIndicadoresTesisFase(postCasos);
+  const {
+    prediccionesEvaluadas: prePrediccionesEvaluadas,
+    aciertos: preAciertos,
+    ppcf: prePPCF,
+    registrosEvaluados: preRegistrosEvaluados,
+    registrosCompletos: preCompletos,
+    prdc: prePRDC,
+    tiemposEvaluados: preTiemposEvaluados,
+    tiempoSuma: preTiempoSuma,
+    tprd: preTPRD,
+  } = pre;
+  const {
+    prediccionesEvaluadas: postPrediccionesEvaluadas,
+    aciertos: postAciertos,
+    ppcf: postPPCF,
+    registrosEvaluados: postRegistrosEvaluados,
+    registrosCompletos: postCompletos,
+    prdc: postPRDC,
+    tiemposEvaluados: postTiemposEvaluados,
+    tiempoSuma: postTiempoSuma,
+    tprd: postTPRD,
+  } = post;
 
   const infoFicha = {
     ficha1: {
@@ -73,7 +81,7 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
       const aciertos = fase === 'pre' ? preAciertos : postAciertos;
       return (
         <span style={{ fontWeight: 700, color: 'var(--primary)' }}>
-          PPCF: {casosActivos.length > 0 ? `${valor.toFixed(1)}%` : '—'} ({aciertos}/{casosActivos.length} aciertos)
+          PPCF: {valor !== null ? `${valor.toFixed(1)}%` : 'Pendiente'} ({aciertos}/{fase === 'pre' ? prePrediccionesEvaluadas : postPrediccionesEvaluadas} evaluadas)
         </span>
       );
     }
@@ -82,7 +90,7 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
       const completos = fase === 'pre' ? preCompletos : postCompletos;
       return (
         <span style={{ fontWeight: 700, color: 'var(--primary)' }}>
-          PRDC: {casosActivos.length > 0 ? `${valor.toFixed(1)}%` : '—'} ({completos}/{casosActivos.length} con 8 campos)
+          PRDC: {valor !== null ? `${valor.toFixed(1)}%` : 'Pendiente'} ({completos}/{fase === 'pre' ? preRegistrosEvaluados : postRegistrosEvaluados} evaluados con 8 campos)
         </span>
       );
     }
@@ -90,7 +98,7 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
     const suma = fase === 'pre' ? preTiempoSuma : postTiempoSuma;
     return (
       <span style={{ fontWeight: 700, color: 'var(--primary)' }}>
-        TPRD: {casosActivos.length > 0 ? `${valor.toFixed(1)} min` : '—'} (total {suma} min)
+        TPRD: {valor !== null ? `${valor.toFixed(1)} min` : 'Pendiente'} (suma {suma} min; {fase === 'pre' ? preTiemposEvaluados : postTiemposEvaluados} tiempos medidos)
       </span>
     );
   };
@@ -240,14 +248,20 @@ export const TesisFichaOficialView: React.FC<TesisFichaOficialViewProps> = ({
               postAciertos={postAciertos}
               prePPCF={prePPCF}
               postPPCF={postPPCF}
+              prePrediccionesEvaluadas={prePrediccionesEvaluadas}
+              postPrediccionesEvaluadas={postPrediccionesEvaluadas}
               preCompletos={preCompletos}
               postCompletos={postCompletos}
               prePRDC={prePRDC}
               postPRDC={postPRDC}
+              preRegistrosEvaluados={preRegistrosEvaluados}
+              postRegistrosEvaluados={postRegistrosEvaluados}
               preTiempoSuma={preTiempoSuma}
               postTiempoSuma={postTiempoSuma}
               preTPRD={preTPRD}
               postTPRD={postTPRD}
+              preTiemposEvaluados={preTiemposEvaluados}
+              postTiemposEvaluados={postTiemposEvaluados}
             />
           </div>
         </Card>

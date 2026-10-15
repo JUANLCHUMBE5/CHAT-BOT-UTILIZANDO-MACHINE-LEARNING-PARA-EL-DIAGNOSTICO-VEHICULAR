@@ -9,11 +9,18 @@ export interface RegistroTesis {
   placa: string;
   marca_modelo: string;
   sintoma: string;
-  falla_real: string;
-  chatbot_prediccion: string;
-  campos_completos: number; // 1: Completo (8/8), 0: Incompleto
-  tiempo_diagnostico_minutos: number;
-  prediccion_correcta: number; // 1: Acierto, 0: Falla
+  falla_real: string | null;
+  chatbot_prediccion: string | null;
+  campos_completos: number | null; // 1: Completo (8/8), 0: Incompleto; null: no evaluado
+  cantidad_campos_completos?: number | null;
+  tiempo_diagnostico_minutos: number | null;
+  prediccion_correcta: number | null; // 1: Acierto, 0: Falla; null: no evaluado
+  tipo_registro?: string | null;
+  estado_registro?: string | null;
+  metodo_confirmacion?: string | null;
+  evidencia_ref?: string | null;
+  validado_por_id?: string | null;
+  fecha_validacion?: string | null;
 }
 
 export const METADATA_TESIS = {

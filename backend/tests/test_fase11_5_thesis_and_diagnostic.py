@@ -19,25 +19,53 @@ from src.infrastructure.container import ServiceContainer
 # 1. PRUEBAS DE INTEGRIDAD DE ARTEFACTOS ML Y RAG (CONGELADOS)
 # =====================================================================
 
+
 def test_artefactos_ml_y_rag_hashes_estrictos():
     base_dir = Path(__file__).resolve().parent.parent.parent
     ml_artifacts = {
-        base_dir / "machine_learning" / "models" / "c1_fase10_final" / "vectorizador_c1.pkl": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
-        base_dir / "machine_learning" / "models" / "c1_fase10_final" / "modelo_diagnostico_c1.pkl": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
-        base_dir / "machine_learning" / "models" / "c1_fase10_final" / "modelo_sistema_c1_macrofix.pkl": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
-        base_dir / "machine_learning" / "manuals" / "candidates" / "v1" / "indexes" / "indice_faiss_v1.index": "a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",
-        base_dir / "machine_learning" / "manuals" / "candidates" / "v1" / "metadata" / "metadatos_manuales_v1.json": "8b4244713cfdc2f59af66b4e43bea8532196366ee5b53a98721e96ca6c781dbb",
+        base_dir
+        / "machine_learning"
+        / "models"
+        / "c1_fase10_final"
+        / "vectorizador_c1.pkl": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+        base_dir
+        / "machine_learning"
+        / "models"
+        / "c1_fase10_final"
+        / "modelo_diagnostico_c1.pkl": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+        base_dir
+        / "machine_learning"
+        / "models"
+        / "c1_fase10_final"
+        / "modelo_sistema_c1_macrofix.pkl": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
+        base_dir
+        / "machine_learning"
+        / "manuals"
+        / "candidates"
+        / "v1"
+        / "indexes"
+        / "indice_faiss_v1.index": "729ca17ed63c7902a4d5eab8fd791409666ad7509e208572abeee36a2edc308f",
+        base_dir
+        / "machine_learning"
+        / "manuals"
+        / "candidates"
+        / "v1"
+        / "metadata"
+        / "metadatos_manuales_v1.json": "1c8c8b523b5728ab92f0a74d05deafe82961754e3b25ec75da0a8112072a3d40",
     }
     for file_path, expected_hash in ml_artifacts.items():
         assert file_path.exists(), f"El archivo {file_path} debe existir"
         content = file_path.read_bytes()
         computed_hash = hashlib.sha256(content).hexdigest()
-        assert computed_hash == expected_hash, f"Hash mismatch en {file_path.name}: {computed_hash} != {expected_hash}"
+        assert computed_hash == expected_hash, (
+            f"Hash mismatch en {file_path.name}: {computed_hash} != {expected_hash}"
+        )
 
 
 # =====================================================================
 # 2. PRUEBAS DE AISLAMIENTO METODOLÓGICO DE TESIS (PPCF, RDC, TPRD)
 # =====================================================================
+
 
 def test_calculo_indicadores_tesis_aislamiento():
     """Verifica que DEVELOPMENT y REGRESSION nunca contaminen PPCF, RDC y TPRD."""
@@ -45,9 +73,27 @@ def test_calculo_indicadores_tesis_aislamiento():
     # Para el cálculo descriptivo de la tesis, solo entran los grupos pre-test y post-test oficiales.
     grupos_muestra = [
         # Pre-test: 2 casos, 1 acierto (PPCF=50%), 2 completos (RDC=100%), suma=50min (TPRD=25min)
-        {"fase": "Pre-test", "total": 2, "aciertos": 1, "completos": 2, "minutos": 50},
+        {
+            "fase": "Pre-test",
+            "total": 2,
+            "aciertos": 1,
+            "predicciones_evaluadas": 2,
+            "completos": 2,
+            "campos_evaluados": 2,
+            "minutos": 50,
+            "tiempos_evaluados": 2,
+        },
         # Post-test: 2 casos, 2 aciertos (PPCF=100%), 2 completos (RDC=100%), suma=20min (TPRD=10min)
-        {"fase": "Post-test", "total": 2, "aciertos": 2, "completos": 2, "minutos": 20},
+        {
+            "fase": "Post-test",
+            "total": 2,
+            "aciertos": 2,
+            "predicciones_evaluadas": 2,
+            "completos": 2,
+            "campos_evaluados": 2,
+            "minutos": 20,
+            "tiempos_evaluados": 2,
+        },
     ]
 
     resumen = resumir_fases(grupos_muestra)
@@ -75,16 +121,61 @@ def test_control_division_por_cero_en_metricas_vacias():
     """Verifica que si no hay datos no crashea ni genera division por cero."""
     resumen = resumir_fases([])
     assert resumen["total_casos"] == 0
-    assert resumen["tasa_acierto_pretest_porcentaje"] == 0.0
-    assert resumen["tasa_acierto_posttest_porcentaje"] == 0.0
-    assert resumen["tiempo_promedio_pretest_min"] == 0.0
-    assert resumen["tiempo_promedio_posttest_min"] == 0.0
-    assert resumen["reduccion_tiempo_porcentaje"] == 0.0
+    assert resumen["tasa_acierto_global_porcentaje"] is None
+    assert resumen["tasa_acierto_pretest_porcentaje"] is None
+    assert resumen["tasa_acierto_posttest_porcentaje"] is None
+    assert resumen["tiempo_promedio_pretest_min"] is None
+    assert resumen["tiempo_promedio_posttest_min"] is None
+    assert resumen["reduccion_tiempo_porcentaje"] is None
+
+
+def test_resumen_no_imputa_tiempos_ausentes_y_excluye_piloto():
+    resumen = resumir_fases(
+        [
+            {
+                "fase": "Pre-test",
+                "total": 2,
+                "aciertos": 1,
+                "predicciones_evaluadas": 2,
+                "completos": 1,
+                "campos_evaluados": 2,
+                "minutos": 15,
+                "tiempos_evaluados": 1,
+            },
+            {
+                "fase": "Post-test",
+                "total": 1,
+                "aciertos": 1,
+                "predicciones_evaluadas": 1,
+                "completos": 1,
+                "campos_evaluados": 1,
+                "minutos": 12,
+                "tiempos_evaluados": 1,
+            },
+            {
+                "fase": "Piloto",
+                "total": 99,
+                "aciertos": 99,
+                "predicciones_evaluadas": 99,
+                "completos": 99,
+                "minutos": 99,
+                "tiempos_evaluados": 99,
+            },
+        ]
+    )
+
+    assert resumen["casos_pretest"] == 2
+    assert resumen["casos_posttest"] == 1
+    assert resumen["total_casos"] == 3
+    assert resumen["tiempos_evaluados_pretest"] == 1
+    assert resumen["tiempo_promedio_pretest_min"] == 15.0
+    assert resumen["tiempo_promedio_posttest_min"] == 12.0
 
 
 # =====================================================================
 # 3. CASO MANUAL REAL B — VIBRACIÓN AL FRENAR (AUDITORÍA COMPLETA)
 # =====================================================================
+
 
 def test_caso_b_detector_polaridad():
     """'cuando frena vibra... sin frenar no vibra' no debe negar el frenado."""
@@ -100,7 +191,9 @@ def test_caso_b_purificador_semantico_no_elimina_frenos():
     texto = "el volante vibra cuando frena. cuando manejo sin frenar no vibra."
     purificado = purificar_sintoma_para_vectorizador_ml(texto)
     assert "fren" in purificado, "El texto purificado debe conservar la raíz de frenado"
-    assert "desbalancead" not in purificado, "No debe inyectar llantas desbalanceadas si la vibración es al frenar"
+    assert "desbalancead" not in purificado, (
+        "No debe inyectar llantas desbalanceadas si la vibración es al frenar"
+    )
 
 
 def test_caso_b_pipeline_completo_3_turnos():
@@ -161,15 +254,21 @@ def test_caso_b_pipeline_completo_3_turnos():
     assert float(p3["probabilidad"]) >= 0.90
 
     # Verificación de directriz diagnóstica (prueba metrológica primero, no reparación a ciegas)
-    directriz = next((d for d in DIRECTRICES_MECANICAS if "FRENO" in d.codigo and "alabe" in d.falla.lower()), None)
+    directriz = next(
+        (d for d in DIRECTRICES_MECANICAS if "FRENO" in d.codigo and "alabe" in d.falla.lower()), None
+    )
     assert directriz is not None
     assert directriz.prueba_sugerida is not None
-    assert "reloj comparador" in directriz.prueba_sugerida.lower() or "disco" in directriz.prueba_sugerida.lower()
+    assert (
+        "reloj comparador" in directriz.prueba_sugerida.lower()
+        or "disco" in directriz.prueba_sugerida.lower()
+    )
 
 
 # =====================================================================
 # 4. CASO MANUAL REAL A — ARRANQUE (AUDITORÍA COMPLETA)
 # =====================================================================
+
 
 def test_caso_a_sintesis_y_ranking_arranque():
     """Verifica que el caso de demora en arrancar en frío conserve los hechos y oriente a diagnóstico de arranque/eléctrico."""
@@ -206,7 +305,19 @@ def test_caso_a_sintesis_y_ranking_arranque():
     # En el Top 3 deben aparecer hipótesis coherentes de encendido/arranque/combustible
     assert any(m in ("MOTOR", "ELECTRICO", "COMBUSTIBLE") for m in macros_top3)
     assert any(
-        any(k in f.lower() for k in ("arranque", "arrancador", "combustible", "batería", "bateria", "inyecc", "aceleración", "iac"))
+        any(
+            k in f.lower()
+            for k in (
+                "arranque",
+                "arrancador",
+                "combustible",
+                "batería",
+                "bateria",
+                "inyecc",
+                "aceleración",
+                "iac",
+            )
+        )
         for f in fallas_top3
     )
 
@@ -215,4 +326,3 @@ def test_caso_a_sintesis_y_ranking_arranque():
     dir_iac = next((d for d in DIRECTRICES_MECANICAS if d.codigo == "COMBUSTIBLE_003"), None)
     assert dir_iac is not None
     assert "inspección" in dir_iac.prueba_sugerida.lower() or "porcentaje" in dir_iac.prueba_sugerida.lower()
-

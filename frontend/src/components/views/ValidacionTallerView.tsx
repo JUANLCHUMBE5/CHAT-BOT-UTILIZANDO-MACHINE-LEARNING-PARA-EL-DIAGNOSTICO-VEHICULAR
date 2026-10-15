@@ -48,8 +48,7 @@ export const ValidacionTallerView: React.FC = () => {
   } = useValidacionTaller();
 
   // Mapeo de casos reales desde la API a la interfaz de registros de tesis
-  const fuenteCasosTesis = casosVerificados && casosVerificados.length > 0 ? casosVerificados : casos;
-  const casosRealesTesis: RegistroTesis[] = fuenteCasosTesis.map((c) => ({
+  const casosRealesTesis: RegistroTesis[] = casosVerificados.map((c) => ({
     item: c.item,
     fase: c.fase === 'Pre-test' ? 'Pre-test' : 'Post-test',
     fecha: c.fecha,
@@ -59,13 +58,20 @@ export const ValidacionTallerView: React.FC = () => {
     falla_real: c.falla_real,
     chatbot_prediccion: c.chatbot_prediccion,
     campos_completos: c.campos_completos,
+    cantidad_campos_completos: c.cantidad_campos_completos,
     tiempo_diagnostico_minutos: c.tiempo_diagnostico_minutos,
     prediccion_correcta: c.prediccion_correcta,
+    tipo_registro: c.tipo_registro,
+    estado_registro: c.estado_registro,
+    metodo_confirmacion: c.metodo_confirmacion,
+    evidencia_ref: c.evidencia_ref,
+    validado_por_id: c.validado_por_id,
+    fecha_validacion: c.fecha_validacion,
   }));
 
   const casosPretest = metricas?.casos_pretest ?? 0;
   const casosPosttest = metricas?.casos_posttest ?? 0;
-  const totalVerificados = metricas?.total_casos_verificados || metricas?.casos_verificados || metricas?.total_casos || casosRealesTesis.length || 0;
+  const totalVerificados = metricas?.total_casos_verificados ?? casosRealesTesis.length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingBottom: '32px' }}>

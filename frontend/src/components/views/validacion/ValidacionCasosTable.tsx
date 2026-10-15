@@ -238,7 +238,7 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
                     </span>
                   </td>
                   <td style={{ padding: '12px 16px' }}>
-                    <span style={{ color: '#047857', fontWeight: 600 }}>{caso.falla_real}</span>
+                    <span style={{ color: '#047857', fontWeight: 600 }}>{caso.falla_real || 'Pendiente'}</span>
                     <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{caso.metodo_confirmacion}</div>
                   </td>
                   <td style={{ padding: '12px 16px', textAlign: 'center' }}>
@@ -246,15 +246,17 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#16a34a', fontWeight: 700, fontSize: '12px' }}>
                         <CheckCircle size={14} /> Correcto
                       </span>
-                    ) : (
+                    ) : caso.prediccion_correcta === 0 ? (
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#dc2626', fontWeight: 700, fontSize: '12px' }}>
                         <AlertTriangle size={14} /> Desacierto
                       </span>
+                    ) : (
+                      <span style={{ color: 'var(--text-muted)' }}>Pendiente</span>
                     )}
                   </td>
                   <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: 'var(--text-secondary)', fontWeight: 600 }}>
-                      <Clock size={12} /> {caso.tiempo_diagnostico_minutos} min
+                      <Clock size={12} /> {caso.tiempo_diagnostico_minutos ?? 'Pendiente'}{caso.tiempo_diagnostico_minutos !== null ? ' min' : ''}
                     </span>
                   </td>
                 </tr>
@@ -271,7 +273,7 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
               <strong>#{caso.item} · {caso.fase}</strong><span>{caso.fecha}</span>
             </div>
             <p>{caso.sintoma}</p>
-            <p>{caso.prediccion_correcta ? 'Correcto' : 'Incorrecto'} · {caso.tiempo_diagnostico_minutos} min · {caso.campos_completos ? 'Completo' : 'Incompleto'}</p>
+            <p>{caso.prediccion_correcta === 1 ? 'Correcto' : caso.prediccion_correcta === 0 ? 'Incorrecto' : 'Pendiente'} · {caso.tiempo_diagnostico_minutos ?? 'Pendiente'}{caso.tiempo_diagnostico_minutos !== null ? ' min' : ''} · {caso.campos_completos === 1 ? 'Completo' : caso.campos_completos === 0 ? 'Incompleto' : 'Pendiente'}</p>
             <button type="button" onClick={() => setSeleccionado(caso)}>Ver detalle #{caso.item}</button>
           </article>)}
       </div>
@@ -419,11 +421,11 @@ export const ValidacionCasosTable: React.FC<ValidacionCasosTableProps> = ({
             ['Síntoma', seleccionado.sintoma],
             ['Descripción del síntoma', seleccionado.descripcion_sintoma || 'Sin registrar'],
             [seleccionado.fase === 'Pre-test' ? 'Hipótesis del mecánico' : 'Predicción del chatbot', seleccionado.chatbot_prediccion],
-            ['Falla comprobada', seleccionado.falla_real],
-            ['Resultado', seleccionado.prediccion_correcta ? 'Correcto' : 'Incorrecto'],
+            ['Falla comprobada', seleccionado.falla_real || 'Pendiente'],
+            ['Resultado', seleccionado.prediccion_correcta === 1 ? 'Correcto' : seleccionado.prediccion_correcta === 0 ? 'Incorrecto' : 'Pendiente'],
             ['Campos Ficha 2', `${contarCampos(seleccionado)}/8`],
-            ['Registro', seleccionado.campos_completos ? 'Completo (declarado por evaluador)' : 'Incompleto'],
-            ['Tiempo diagnóstico (metodológico)', `${seleccionado.tiempo_diagnostico_minutos} min`],
+            ['Registro', seleccionado.campos_completos === 1 ? 'Completo (8/8)' : seleccionado.campos_completos === 0 ? 'Incompleto' : 'Pendiente de evaluación'],
+            ['Tiempo diagnóstico (metodológico)', seleccionado.tiempo_diagnostico_minutos === null ? 'Pendiente' : `${seleccionado.tiempo_diagnostico_minutos} min`],
             ['Método de confirmación', seleccionado.metodo_confirmacion || 'Sin registrar'],
             ['Evidencia', seleccionado.evidencia_ref || 'Sin registrar'],
             ...(seleccionado.conversacion_id ? [['ID Conversación WhatsApp', seleccionado.conversacion_id]] : []),

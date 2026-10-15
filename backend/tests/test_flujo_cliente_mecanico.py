@@ -275,7 +275,7 @@ async def test_admin_aprueba_solicitud_promueve_y_habilita_diagnostico(monkeypat
         remitente=tel_mecanico_futuro,
         meta_message_id=f"msg_diag_{uuid.uuid4().hex[:6]}",
         tipo_mensaje="text",
-        texto_cliente="El motor cascabelea fuertemente y pierde potencia al subir pendientes",
+        texto_cliente="Toyota Yaris placa ABC-123, el motor cascabelea fuertemente y pierde potencia al subir pendientes",
     )
 
     assert res_diagnostico["status"] == "completado"

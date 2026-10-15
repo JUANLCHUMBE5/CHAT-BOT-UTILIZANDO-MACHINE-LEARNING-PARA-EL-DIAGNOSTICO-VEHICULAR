@@ -20,6 +20,7 @@ import {
   authFetch,
   extractErrorMessage,
 } from './api/client';
+import type { ConfirmacionPostTestInput } from '../types/api';
 
 import { login, cambiarPassword, logout } from './api/authApi';
 import { getDiagnosticos, getResumenMetricas, getMetricasColas, getConversacionDiagnostico } from './api/diagnosticosApi';
@@ -216,7 +217,7 @@ export class ApiService {
     return crearBorradorPosttest(diagnosticoId);
   }
 
-  confirmarPosttest(casoId: string, datos: { falla_real: string; tiempo_diagnostico_minutos: number; prediccion_correcta: 0 | 1; metodo_confirmacion: string; evidencia_ref?: string }): Promise<CasoValidacionDTO> {
+  confirmarPosttest(casoId: string, datos: ConfirmacionPostTestInput): Promise<CasoValidacionDTO> {
     return confirmarPosttest(casoId, datos);
   }
 

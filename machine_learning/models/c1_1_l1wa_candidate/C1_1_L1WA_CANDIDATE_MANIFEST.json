@@ -1,0 +1,52 @@
+{
+  "version": "C1_1_L1WA_CANDIDATE",
+  "status": "CANDIDATE_NOT_PROMOTED",
+  "created_utc": "2026-09-30T04:19:02.476195+00:00",
+  "python_note": "Formal pre-field candidate; TEST10 not used during training.",
+  "sklearn_version": "1.6.1",
+  "training": {
+    "official_train_rows": 6904,
+    "reinforcement_rows": 17,
+    "total_rows": 6921,
+    "classes": 61,
+    "group_column": "id_grupo"
+  },
+  "recipe": {
+    "vectorizer": "TfidfVectorizer",
+    "max_features": 25000,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "strip_accents": "unicode",
+    "sublinear_tf": true,
+    "classifier": "LinearSVC",
+    "C": 1.2,
+    "class_weight": "balanced",
+    "loss": "squared_hinge",
+    "max_iter": 3500,
+    "random_state": 42,
+    "calibration": "CalibratedClassifierCV",
+    "calibration_method": "isotonic",
+    "cv": "StratifiedGroupKFold(n_splits=5, shuffle=True, random_state=42)"
+  },
+  "sources": {
+    "reinforcement_sha256": "042074c8858560576d4fee591a8e6f7e149781314c4635b16a1bba9822f6cc82",
+    "official_model_sha256": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+    "official_vectorizer_sha256": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+    "official_macro_sha256": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c"
+  },
+  "candidate_artifacts": {
+    "model_sha256": "acf74da750a805f76b748205c4cc5b7773fcf9965d3c6bdd1af08c06fc5c2004",
+    "vectorizer_sha256": "89201083ecfeaa5dfcad0a491bdc416e620b535ced76bc8522d96ba0eb323d31",
+    "macro_sha256": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c"
+  },
+  "constraints": {
+    "test10_used": false,
+    "official_c1_overwritten": false,
+    "macro_retrained": false,
+    "rag_modified": false,
+    "database_modified": false,
+    "prepost_modified": false
+  }
+}

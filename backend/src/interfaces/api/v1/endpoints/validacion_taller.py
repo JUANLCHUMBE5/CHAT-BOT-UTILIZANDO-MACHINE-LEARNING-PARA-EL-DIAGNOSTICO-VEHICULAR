@@ -57,6 +57,7 @@ def _uuid_claim(payload: dict, nombre: str, *, obligatorio: bool = True) -> uuid
     except (ValueError, TypeError, AttributeError) as exc:
         raise HTTPException(status_code=401, detail=f"El token contiene un {nombre} inválido.") from exc
 
+
 def _pseudonimizar_placa(placa_raw: str, secret_key: Optional[str] = None) -> tuple[str, str]:
     """Genera hash HMAC-SHA-256 completo de 64 caracteres con clave secreta y máscara visual."""
     clave_str = secret_key or settings.privacy_secret_key or settings.jwt_secret_key
@@ -157,7 +158,9 @@ def _bloqueo_archivo_interproceso(lock_path: Path, timeout: float = 6.0, max_sta
             break
 
     if not adquirido:
-        raise TimeoutError(f"No se pudo adquirir el bloqueo de archivo exclusivo en {lock_file} tras {timeout}s")
+        raise TimeoutError(
+            f"No se pudo adquirir el bloqueo de archivo exclusivo en {lock_file} tras {timeout}s"
+        )
 
     try:
         yield
@@ -185,13 +188,30 @@ def _cargar_df_tracker() -> pd.DataFrame:
     if not TRACKER_CSV_PATH.exists():
         return pd.DataFrame(
             columns=[
-                "item", "fase", "fecha", "placa", "placa_hash", "marca_modelo", "sintoma",
-                "descripcion_sintoma", "vehiculo_anio", "vehiculo_kilometraje",
-                "vehiculo_combustible", "vehiculo_transmision",
-                "falla_real", "chatbot_prediccion", "sistema_afectado_probable",
-                "campos_completos", "cantidad_campos_completos", "detalles_campos",
-                "tiempo_diagnostico_minutos", "prediccion_correcta",
-                "taller_id", "mecanico_id", "metodo_confirmacion", "evidencia_ref"
+                "item",
+                "fase",
+                "fecha",
+                "placa",
+                "placa_hash",
+                "marca_modelo",
+                "sintoma",
+                "descripcion_sintoma",
+                "vehiculo_anio",
+                "vehiculo_kilometraje",
+                "vehiculo_combustible",
+                "vehiculo_transmision",
+                "falla_real",
+                "chatbot_prediccion",
+                "sistema_afectado_probable",
+                "campos_completos",
+                "cantidad_campos_completos",
+                "detalles_campos",
+                "tiempo_diagnostico_minutos",
+                "prediccion_correcta",
+                "taller_id",
+                "mecanico_id",
+                "metodo_confirmacion",
+                "evidencia_ref",
             ]
         )
     return pd.read_csv(TRACKER_CSV_PATH, encoding="utf-8")
@@ -228,10 +248,81 @@ def _filtrar_periodo(df: pd.DataFrame, periodo: tuple[date | None, date | None])
     return df
 
 
+def _filtrar_df_oficial_verificado(df: pd.DataFrame) -> pd.DataFrame:
+    """Falla cerrada: solo muestra filas oficiales con estado y auditoría humana explícitos."""
+    if df.empty:
+        return df.iloc[0:0].copy()
+
+    df = df.copy()
+    if "validado_por_id" not in df.columns and "mecanico_id" in df.columns:
+        df["validado_por_id"] = df["mecanico_id"]
+    if "fecha_validacion" not in df.columns and "fecha" in df.columns:
+        df["fecha_validacion"] = df["fecha"]
+    if "tipo_registro" not in df.columns and "fase" in df.columns:
+        df["tipo_registro"] = df["fase"].apply(
+            lambda f: "THESIS_PRETEST" if str(f).strip().lower().startswith("pre")
+            else ("THESIS_POSTTEST" if str(f).strip().lower().startswith("post") else "DEVELOPMENT")
+        )
+    if "estado_registro" not in df.columns:
+        df["estado_registro"] = "verificado"
+
+    requeridas = {
+        "tipo_registro",
+        "estado_registro",
+        "fase",
+        "falla_real",
+        "metodo_confirmacion",
+        "evidencia_ref",
+        "validado_por_id",
+        "fecha_validacion",
+    }
+    if not requeridas.issubset(df.columns):
+        return df.iloc[0:0].copy()
+
+    tipo = df["tipo_registro"].fillna("").astype(str).str.strip()
+    fase = df["fase"].fillna("").astype(str).str.strip().str.casefold()
+    estado = df["estado_registro"].fillna("").astype(str).str.strip().str.casefold()
+    tipo_fase_valido = (
+        (tipo == "THESIS_PRETEST") & (fase.isin({"pre-test", "pretest"}) | fase.str.startswith("pre"))
+    ) | (
+        (tipo == "THESIS_POSTTEST") & (fase.isin({"post-test", "posttest", "postest"}) | fase.str.startswith("post"))
+    )
+    mask = (
+        tipo_fase_valido
+        & estado.eq("verificado")
+        & df["falla_real"].fillna("").astype(str).str.strip().ne("")
+        & df["metodo_confirmacion"].fillna("").astype(str).str.strip().ne("")
+        & df["evidencia_ref"].fillna("").astype(str).str.strip().ne("")
+        & df["validado_por_id"].fillna("").astype(str).str.strip().ne("")
+        & pd.to_datetime(df["fecha_validacion"], errors="coerce").notna()
+    )
+    return df.loc[mask].copy()
+
+
+def _serie_binaria(df: pd.DataFrame, columna: str) -> pd.Series:
+    if columna not in df.columns:
+        return pd.Series(index=df.index, dtype="float64")
+    valores = pd.to_numeric(df[columna], errors="coerce")
+    return valores.where(valores.isin((0, 1)))
+
+
+def _serie_predicciones_evaluables(df: pd.DataFrame) -> pd.Series:
+    """Solo cuenta resultado cuando existen predicción y falla real en una fila verificada."""
+    valores = _serie_binaria(df, "prediccion_correcta")
+    if "chatbot_prediccion" not in df.columns:
+        return valores.where(False)
+    tiene_prediccion = df["chatbot_prediccion"].fillna("").astype(str).str.strip().ne("")
+    tiene_falla_real = df.get("falla_real", pd.Series(index=df.index, dtype="string"))
+    tiene_falla_real = tiene_falla_real.fillna("").astype(str).str.strip().ne("")
+    return valores.where(tiene_prediccion & tiene_falla_real)
+
+
 @router.get("", summary="Listar registros del tracker experimental en taller (Aislamiento Multitenant)")
 async def listar_casos_validacion(
     fase: Optional[str] = Query(None, description="Filtrar por fase: Pre-test o Post-test"),
-    tipo_registro: Optional[str] = Query(None, description="Filtrar por tipo: DEVELOPMENT, REGRESSION, THESIS_PRETEST, THESIS_POSTTEST"),
+    tipo_registro: Optional[str] = Query(
+        None, description="Filtrar por tipo: DEVELOPMENT, REGRESSION, THESIS_PRETEST, THESIS_POSTTEST"
+    ),
     estado_registro: Optional[str] = Query(None, description="Filtrar por estado: verificado o borrador"),
     marca: Optional[str] = Query(None, description="Filtrar por marca/modelo"),
     acierto: Optional[int] = Query(None, ge=0, le=1, description="1 acertados, 0 desacertados"),
@@ -266,10 +357,10 @@ async def listar_casos_validacion(
     # Aplicar filtros
     if fase:
         df = df[df["fase"].astype(str).str.lower() == fase.strip().lower()]
-    if tipo_registro and "tipo_registro" in df.columns:
-        df = df[df["tipo_registro"] == tipo_registro]
-    if estado_registro and "estado_registro" in df.columns:
-        df = df[df["estado_registro"] == estado_registro]
+    if tipo_registro:
+        df = df[df["tipo_registro"] == tipo_registro] if "tipo_registro" in df.columns else df.iloc[0:0]
+    if estado_registro:
+        df = df[df["estado_registro"] == estado_registro] if "estado_registro" in df.columns else df.iloc[0:0]
     if marca:
         df = df[df["marca_modelo"].astype(str).str.contains(marca.strip(), case=False, na=False)]
     if acierto is not None:
@@ -291,43 +382,93 @@ async def listar_casos_validacion(
     casos_lista = []
     for r in df_pagina.to_dict(orient="records"):
         placa_raw = str(r.get("placa", ""))
-        
+
         # Recuperar placa_hash persistido si ya existe en el registro
         p_hash_existente = str(r.get("placa_hash", "")).strip() if pd.notna(r.get("placa_hash")) else ""
         if p_hash_existente:
             p_hash = p_hash_existente
-            enmascarada = placa_raw if ("-" in placa_raw and "***" in placa_raw) else _pseudonimizar_placa(placa_raw)[0]
+            enmascarada = (
+                placa_raw if ("-" in placa_raw and "***" in placa_raw) else _pseudonimizar_placa(placa_raw)[0]
+            )
         else:
             enmascarada, p_hash = _pseudonimizar_placa(placa_raw)
 
+        fase_registro = str(r.get("fase", ""))
+        diagnostico_registrado = (
+            str(r.get("chatbot_prediccion")) if pd.notna(r.get("chatbot_prediccion")) else ""
+        )
+        es_pretest = fase_registro.strip().casefold() in {"pre-test", "pretest"}
         casos_lista.append(
             CasoValidacionDTO(
                 item=int(r.get("item", 0)),
-                fase=str(r.get("fase", "")),
+                fase=fase_registro,
                 fecha=str(r.get("fecha", "")),
                 placa_enmascarada=enmascarada,
                 placa_hash=p_hash,
                 marca_modelo=str(r.get("marca_modelo", "")),
                 sintoma=str(r.get("sintoma", "")),
-                descripcion_sintoma=str(r.get("descripcion_sintoma", "")) if pd.notna(r.get("descripcion_sintoma")) else None,
+                descripcion_sintoma=str(r.get("descripcion_sintoma", ""))
+                if pd.notna(r.get("descripcion_sintoma"))
+                else None,
                 vehiculo_anio=int(r.get("vehiculo_anio")) if pd.notna(r.get("vehiculo_anio")) else None,
-                vehiculo_kilometraje=int(r.get("vehiculo_kilometraje")) if pd.notna(r.get("vehiculo_kilometraje")) else None,
-                vehiculo_combustible=str(r.get("vehiculo_combustible", "")) if pd.notna(r.get("vehiculo_combustible")) else None,
-                vehiculo_transmision=str(r.get("vehiculo_transmision", "")) if pd.notna(r.get("vehiculo_transmision")) else None,
-                falla_real=str(r.get("falla_real", "")),
-                chatbot_prediccion=str(r.get("chatbot_prediccion", "")),
-                campos_completos=int(r.get("campos_completos")) if pd.notna(r.get("campos_completos")) else 1,
-                cantidad_campos_completos=int(r.get("cantidad_campos_completos")) if pd.notna(r.get("cantidad_campos_completos")) else (8 if (int(r.get("campos_completos")) if pd.notna(r.get("campos_completos")) else 1) else 0),
-                detalles_campos=r.get("detalles_campos") if isinstance(r.get("detalles_campos"), dict) else None,
-                tiempo_diagnostico_minutos=int(r.get("tiempo_diagnostico_minutos", 0)),
-                prediccion_correcta=int(r.get("prediccion_correcta", 0)),
+                vehiculo_kilometraje=int(r.get("vehiculo_kilometraje"))
+                if pd.notna(r.get("vehiculo_kilometraje"))
+                else None,
+                vehiculo_combustible=str(r.get("vehiculo_combustible", ""))
+                if pd.notna(r.get("vehiculo_combustible"))
+                else None,
+                vehiculo_transmision=str(r.get("vehiculo_transmision", ""))
+                if pd.notna(r.get("vehiculo_transmision"))
+                else None,
+                falla_real=str(r.get("falla_real")) if pd.notna(r.get("falla_real")) else None,
+                chatbot_prediccion=diagnostico_registrado,
+                diagnostico_preliminar_sin_chatbot=diagnostico_registrado if es_pretest else None,
+                falla_sugerida_chatbot=None if es_pretest else diagnostico_registrado,
+                campos_completos=(
+                    int(r.get("campos_completos"))
+                    if pd.notna(r.get("campos_completos")) and int(r.get("campos_completos")) in (0, 1)
+                    else 0
+                ),
+                cantidad_campos_completos=(
+                    int(r.get("cantidad_campos_completos"))
+                    if pd.notna(r.get("cantidad_campos_completos"))
+                    else 0
+                ),
+                detalles_campos=r.get("detalles_campos")
+                if isinstance(r.get("detalles_campos"), dict)
+                else None,
+                tiempo_diagnostico_minutos=(
+                    int(r.get("tiempo_diagnostico_minutos"))
+                    if pd.notna(r.get("tiempo_diagnostico_minutos"))
+                    else None
+                ),
+                prediccion_correcta=(
+                    int(r.get("prediccion_correcta"))
+                    if pd.notna(r.get("prediccion_correcta")) and int(r.get("prediccion_correcta")) in (0, 1)
+                    else None
+                ),
                 taller_id=str(r.get("taller_id", taller_id_auth)),
-                mecanico_id=str(r.get("mecanico_id", payload.get("usuario_id", ""))),
-                metodo_confirmacion=str(r.get("metodo_confirmacion", "Inspección Visual")),
+                mecanico_id=str(r.get("mecanico_id")) if pd.notna(r.get("mecanico_id")) else None,
+                metodo_confirmacion=str(r.get("metodo_confirmacion"))
+                if pd.notna(r.get("metodo_confirmacion"))
+                else None,
                 evidencia_ref=str(r.get("evidencia_ref", "")) if pd.notna(r.get("evidencia_ref")) else None,
-                tipo_registro=str(r.get("tipo_registro", "THESIS_POSTTEST")),
-                conversacion_id=str(r.get("conversacion_id", "")) if pd.notna(r.get("conversacion_id")) else None,
-                diagnostico_id=str(r.get("diagnostico_id", "")) if pd.notna(r.get("diagnostico_id")) else None,
+                estado_registro=str(r.get("estado_registro"))
+                if pd.notna(r.get("estado_registro"))
+                else "borrador",
+                tipo_registro=str(r.get("tipo_registro"))
+                if pd.notna(r.get("tipo_registro"))
+                else "DEVELOPMENT",
+                conversacion_id=str(r.get("conversacion_id", ""))
+                if pd.notna(r.get("conversacion_id"))
+                else None,
+                diagnostico_id=str(r.get("diagnostico_id", ""))
+                if pd.notna(r.get("diagnostico_id"))
+                else None,
+                validado_por_id=str(r.get("validado_por_id")) if pd.notna(r.get("validado_por_id")) else None,
+                fecha_validacion=str(r.get("fecha_validacion"))
+                if pd.notna(r.get("fecha_validacion"))
+                else None,
             )
         )
 
@@ -339,7 +480,11 @@ async def listar_casos_validacion(
     }
 
 
-@router.get("/metricas", response_model=MetricasValidacionResponseDTO, summary="Obtener KPIs del seguimiento experimental por taller")
+@router.get(
+    "/metricas",
+    response_model=MetricasValidacionResponseDTO,
+    summary="Obtener KPIs del seguimiento experimental por taller",
+)
 async def obtener_metricas_validacion(
     periodo: tuple = Depends(periodo_validacion),
     payload: dict = Depends(exigir_lectura_validacion),
@@ -352,132 +497,156 @@ async def obtener_metricas_validacion(
             )
         return MetricasValidacionResponseDTO(**metricas)
     df_global = _cargar_df_tracker()
-    df = _filtrar_periodo(_filtrar_df_por_taller(df_global, taller_id_auth), periodo)
+    df_taller = _filtrar_periodo(_filtrar_df_por_taller(df_global, taller_id_auth), periodo)
+    df = _filtrar_df_oficial_verificado(df_taller)
+    fases = (
+        df["fase"].astype(str).str.casefold()
+        if "fase" in df.columns
+        else pd.Series(index=df.index, dtype="string")
+    )
+    df_pre = df[fases.isin({"pre-test", "pretest"})]
+    df_post = df[fases.isin({"post-test", "posttest"})]
 
-    if df.empty:
-        return MetricasValidacionResponseDTO(
-            total_casos=0,
-            total_aciertos=0,
-            total_desaciertos=0,
-            tasa_acierto_global_porcentaje=0.0,
-            casos_pretest=0,
-            tasa_acierto_pretest_porcentaje=0.0,
-            tiempo_promedio_pretest_min=0.0,
-            casos_posttest=0,
-            tasa_acierto_posttest_porcentaje=0.0,
-            tiempo_promedio_posttest_min=0.0,
-            reduccion_tiempo_porcentaje=0.0,
-            distribucion_marcas=[],
-            top_fallas_reales=[],
-            total_casos_verificados=0,
-            total_casos_borrador=0,
-            variable_independiente=MetricasVariableIndependienteDTO(
-                indicador1_sintomas_correctos_pct=None,
-                indicador2_procesamiento_correcto_pct=None,
-                indicador3_exactitud_ml_pct=None,
-                casos_verificados_evaluados=0,
-                nota_metodologica="Pendiente de registro y verificación física de casos en taller.",
-            ),
-        )
+    def binaria(filas: pd.DataFrame, columna: str) -> pd.Series:
+        return _serie_binaria(filas, columna)
 
-    total_casos = len(df)
-    total_aciertos = int(df["prediccion_correcta"].sum())
-    total_desaciertos = total_casos - total_aciertos
-    tasa_global = round((total_aciertos / total_casos) * 100, 2) if total_casos > 0 else 0.0
+    def porcentaje(valores: pd.Series) -> float | None:
+        observados = valores.dropna()
+        return round(float(observados.mean()) * 100, 2) if not observados.empty else None
 
-    # Pre-test
-    df_pre = df[df["fase"].astype(str).str.lower().str.contains("pre")]
-    casos_pre = len(df_pre)
-    tasa_pre = round((df_pre["prediccion_correcta"].sum() / casos_pre) * 100, 2) if casos_pre > 0 else 0.0
-    t_pre = round(float(df_pre["tiempo_diagnostico_minutos"].mean()), 1) if casos_pre > 0 else 0.0
+    def tiempo_medido(filas: pd.DataFrame) -> tuple[float | None, int]:
+        if "tiempo_diagnostico_minutos" not in filas.columns:
+            return None, 0
+        valores = pd.to_numeric(filas["tiempo_diagnostico_minutos"], errors="coerce")
+        validos = valores[valores > 0]
+        return (round(float(validos.mean()), 1), int(validos.count())) if not validos.empty else (None, 0)
 
-    # Post-test
-    df_post = df[df["fase"].astype(str).str.lower().str.contains("post")]
-    casos_post = len(df_post)
-    tasa_post = round((df_post["prediccion_correcta"].sum() / casos_post) * 100, 2) if casos_post > 0 else 0.0
-    t_post = round(float(df_post["tiempo_diagnostico_minutos"].mean()), 1) if casos_post > 0 else 0.0
+    aciertos_pre = _serie_predicciones_evaluables(df_pre)
+    aciertos_post = _serie_predicciones_evaluables(df_post)
+    todos_aciertos = pd.concat([aciertos_pre, aciertos_post])
+    evaluados_pre = int(aciertos_pre.count())
+    evaluados_post = int(aciertos_post.count())
+    aciertos = int(todos_aciertos.fillna(0).sum())
+    predicciones_evaluadas = evaluados_pre + evaluados_post
+    tiempo_pre, tiempos_pre = tiempo_medido(df_pre)
+    tiempo_post, tiempos_post = tiempo_medido(df_post)
+    reduccion_tiempo = (
+        round((tiempo_pre - tiempo_post) / tiempo_pre * 100, 2)
+        if tiempo_pre is not None and tiempo_post is not None and tiempo_pre > 0
+        else None
+    )
 
-    # Reducción de tiempo
-    reduccion_tiempo = round(((t_pre - t_post) / t_pre) * 100, 2) if t_pre > 0 and t_post > 0 else 0.0
+    def porcentaje_completitud(filas: pd.DataFrame) -> float | None:
+        if filas.empty:
+            return None
+        return porcentaje(binaria(filas, "campos_completos"))
 
-    # Distribución por marca
-    dist_marcas = [
-        {"marca": str(k), "conteo": int(v)}
-        for k, v in df["marca_modelo"].value_counts().head(8).items()
-    ]
+    campos_pre_evaluados = int(binaria(df_pre, "campos_completos").count())
+    campos_post_evaluados = int(binaria(df_post, "campos_completos").count())
 
-    # Top fallas reales
-    top_fallas = [
-        {"falla": str(k), "conteo": int(v)}
-        for k, v in df["falla_real"].value_counts().head(8).items()
-    ]
-
-    # Indicadores VI en fallback CSV sobre casos verificados
-    if "estado_registro" in df.columns:
-        df_verificados = df[df["estado_registro"] == "verificado"]
-    elif "metodo_confirmacion" in df.columns:
-        df_verificados = df[df["metodo_confirmacion"].fillna("").astype(str).str.strip() != ""]
+    # Los indicadores de CarBot se reportan solo en POST-TEST; el PRE-TEST es línea base manual.
+    sintomas = binaria(df_post, "sintoma_registrado_correctamente")
+    if "procesamiento_validado" in df_post.columns:
+        procesamiento = binaria(df_post, "procesamiento_validado")
+    elif {"normalizacion_correcta", "extraccion_correcta", "clasificacion_procesada"}.issubset(
+        df_post.columns
+    ):
+        normalizacion = binaria(df_post, "normalizacion_correcta")
+        extraccion = binaria(df_post, "extraccion_correcta")
+        clasificacion = binaria(df_post, "clasificacion_procesada")
+        validos = normalizacion.notna() & extraccion.notna() & clasificacion.notna()
+        procesamiento = pd.Series(index=df_post.index, dtype="float64")
+        procesamiento.loc[validos] = (
+            (normalizacion.loc[validos] == 1)
+            & (extraccion.loc[validos] == 1)
+            & (clasificacion.loc[validos] == 1)
+        ).astype(int)
     else:
-        df_verificados = df
-    total_verificados = len(df_verificados)
+        procesamiento = pd.Series(index=df_post.index, dtype="float64")
+    predicciones_post = aciertos_post
+    vi_metricas = MetricasVariableIndependienteDTO(
+        indicador1_sintomas_correctos_pct=porcentaje(sintomas),
+        indicador2_procesamiento_correcto_pct=porcentaje(procesamiento),
+        indicador3_exactitud_ml_pct=porcentaje(predicciones_post),
+        casos_verificados_evaluados=len(df_post),
+        casos_sintomas_evaluados=int(sintomas.count()),
+        casos_procesamiento_evaluados=int(procesamiento.count()),
+        casos_modelo_evaluados=evaluados_post,
+        nota_metodologica=(
+            "Indicadores de CarBot calculados solo sobre casos POST-TEST oficiales con "
+            "revisión humana trazable; no incluyen el diagnóstico manual PRE-TEST."
+            if not df_post.empty
+            else "Pendiente de registros POST-TEST oficiales con revisión humana trazable."
+        ),
+    )
 
-    if total_verificados > 0:
-        ind1_pct = (
-            float(df_verificados["sintoma_registrado_correctamente"].sum()) / total_verificados * 100
-            if "sintoma_registrado_correctamente" in df_verificados.columns
-            else 100.0
-        )
-        if "procesamiento_validado" in df_verificados.columns:
-            ind2_pct = float(df_verificados["procesamiento_validado"].sum()) / total_verificados * 100
-        else:
-            col_norm = df_verificados["normalizacion_correcta"] if "normalizacion_correcta" in df_verificados.columns else pd.Series([1] * total_verificados, index=df_verificados.index)
-            col_ext = df_verificados["extraccion_correcta"] if "extraccion_correcta" in df_verificados.columns else pd.Series([1] * total_verificados, index=df_verificados.index)
-            col_clas = df_verificados["clasificacion_procesada"] if "clasificacion_procesada" in df_verificados.columns else pd.Series([1] * total_verificados, index=df_verificados.index)
-            ind2_pct = float(((col_norm == 1) & (col_ext == 1) & (col_clas == 1)).sum()) / total_verificados * 100
-        ind3_pct = float(df_verificados["prediccion_correcta"].sum()) / total_verificados * 100
-        vi_metricas = MetricasVariableIndependienteDTO(
-            indicador1_sintomas_correctos_pct=round(ind1_pct, 1),
-            indicador2_procesamiento_correcto_pct=round(ind2_pct, 1),
-            indicador3_exactitud_ml_pct=round(ind3_pct, 1),
-            casos_verificados_evaluados=total_verificados,
-            nota_metodologica="Cálculo exclusivo sobre casos con estado verificado con confirmación física en taller.",
+    candidatos_oficiales = df_taller
+    if "tipo_registro" in candidatos_oficiales.columns and "estado_registro" in candidatos_oficiales.columns:
+        candidatos_oficiales = candidatos_oficiales[
+            candidatos_oficiales["tipo_registro"].isin(("THESIS_PRETEST", "THESIS_POSTTEST"))
+        ]
+        borradores = int(
+            candidatos_oficiales["estado_registro"].fillna("").astype(str).str.casefold().eq("borrador").sum()
         )
     else:
-        vi_metricas = MetricasVariableIndependienteDTO(
-            indicador1_sintomas_correctos_pct=None,
-            indicador2_procesamiento_correcto_pct=None,
-            indicador3_exactitud_ml_pct=None,
-            casos_verificados_evaluados=0,
-            nota_metodologica="Pendiente de registro y verificación física de casos en taller.",
-        )
-
+        borradores = 0
+    casos_piloto = (
+        int(df_taller["tipo_registro"].eq("PILOT").sum()) if "tipo_registro" in df_taller.columns else 0
+    )
+    dist_marcas = (
+        [{"marca": str(k), "conteo": int(v)} for k, v in df["marca_modelo"].value_counts().head(8).items()]
+        if "marca_modelo" in df.columns
+        else []
+    )
+    top_fallas = (
+        [{"falla": str(k), "conteo": int(v)} for k, v in df["falla_real"].value_counts().head(8).items()]
+        if "falla_real" in df.columns
+        else []
+    )
     return MetricasValidacionResponseDTO(
-        total_casos=total_casos,
-        registros_completos_pretest_porcentaje=(
-            round(float(df_pre["campos_completos"].sum()) / casos_pre * 100, 2) if casos_pre else 0.0
-        ),
-        registros_completos_posttest_porcentaje=(
-            round(float(df_post["campos_completos"].sum()) / casos_post * 100, 2) if casos_post else 0.0
-        ),
-        total_aciertos=total_aciertos,
-        total_desaciertos=total_desaciertos,
-        tasa_acierto_global_porcentaje=tasa_global,
-        casos_pretest=casos_pre,
-        tasa_acierto_pretest_porcentaje=tasa_pre,
-        tiempo_promedio_pretest_min=t_pre,
-        casos_posttest=casos_post,
-        tasa_acierto_posttest_porcentaje=tasa_post,
-        tiempo_promedio_posttest_min=t_post,
+        total_casos=len(df),
+        total_aciertos=aciertos,
+        total_desaciertos=predicciones_evaluadas - aciertos,
+        tasa_acierto_global_porcentaje=porcentaje(todos_aciertos),
+        casos_pretest=len(df_pre),
+        predicciones_evaluadas_pretest=evaluados_pre,
+        tasa_acierto_pretest_porcentaje=porcentaje(aciertos_pre),
+        tiempos_evaluados_pretest=tiempos_pre,
+        tiempo_promedio_pretest_min=tiempo_pre,
+        registros_completos_pretest_porcentaje=porcentaje_completitud(df_pre),
+        registros_prdc_evaluados_pretest=campos_pre_evaluados,
+        casos_posttest=len(df_post),
+        predicciones_evaluadas_posttest=evaluados_post,
+        tasa_acierto_posttest_porcentaje=porcentaje(aciertos_post),
+        tiempos_evaluados_posttest=tiempos_post,
+        tiempo_promedio_posttest_min=tiempo_post,
+        registros_completos_posttest_porcentaje=porcentaje_completitud(df_post),
+        registros_prdc_evaluados_posttest=campos_post_evaluados,
         reduccion_tiempo_porcentaje=reduccion_tiempo,
+        casos_piloto=casos_piloto,
+        casos_verificados=len(df_post),
+        total_casos_verificados=len(df),
+        total_casos_borrador=borradores,
+        porcentaje_sintomas_correctos=vi_metricas.indicador1_sintomas_correctos_pct,
+        porcentaje_datos_procesados_correctos=vi_metricas.indicador2_procesamiento_correcto_pct,
+        exactitud_modelo_validada=vi_metricas.indicador3_exactitud_ml_pct,
+        variable_independiente=vi_metricas,
         distribucion_marcas=dist_marcas,
         top_fallas_reales=top_fallas,
-        total_casos_verificados=total_verificados,
-        total_casos_borrador=total_casos - total_verificados,
-        variable_independiente=vi_metricas,
+        nota_metodologica=(
+            "Se incluyen solo registros THESIS_PRETEST/THESIS_POSTTEST verificados con autor, fecha, "
+            "método y referencia de evidencia explícitos. La referencia no acredita por sí sola una "
+            "prueba física; la revisión corresponde a la persona autorizada."
+        ),
     )
 
 
-@router.post("", response_model=CasoValidacionDTO, status_code=201, summary="Registrar nuevo caso en el tracker con escritura atómica")
+@router.post(
+    "",
+    response_model=CasoValidacionDTO,
+    status_code=201,
+    summary="Registrar nuevo caso en el tracker con escritura atómica",
+)
 async def registrar_caso_validacion(
     dto: CrearCasoValidacionDTO,
     payload: dict = Depends(exigir_gestion_validacion),
@@ -498,6 +667,12 @@ async def registrar_caso_validacion(
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
+    if dto.tipo_registro in {"THESIS_PRETEST", "THESIS_POSTTEST", "PILOT"}:
+        raise HTTPException(
+            status_code=503,
+            detail="Los registros PILOT y oficiales requieren PostgreSQL y su trazabilidad transaccional.",
+        )
+
     async with _ASYNC_CSV_LOCK:
         try:
             with _bloqueo_archivo_interproceso(TRACKER_CSV_PATH):
@@ -508,7 +683,7 @@ async def registrar_caso_validacion(
                 mecanico_id = payload.get("usuario_id", payload.get("sub", ""))
 
                 enmascarada, p_hash = _pseudonimizar_placa(dto.placa)
-                sistema_probable = (dto.sistema_afectado_probable or dto.chatbot_prediccion).strip()
+                sistema_probable = (dto.sistema_afectado_probable or "").strip() or None
                 descripcion_sintoma = (dto.descripcion_sintoma or "").strip()
                 datos_generales_vehiculo = construir_datos_generales_vehiculo(
                     marca_modelo=dto.marca_modelo,
@@ -528,6 +703,22 @@ async def registrar_caso_validacion(
                     tiempo_atencion_minutos=dto.tiempo_diagnostico_minutos,
                 )
 
+                estado_solicitado = dto.estado_registro
+                tiene_revision_humana = bool(
+                    mecanico_id
+                    and dto.falla_real.strip()
+                    and dto.prediccion_correcta in (0, 1)
+                    and dto.tiempo_diagnostico_minutos > 0
+                    and dto.metodo_confirmacion
+                    and dto.metodo_confirmacion.strip()
+                    and dto.evidencia_ref
+                    and dto.evidencia_ref.strip()
+                )
+                estado_final = (
+                    "verificado"
+                    if estado_solicitado == "verificado" and tiene_revision_humana
+                    else "borrador"
+                )
                 nuevo_registro = {
                     "item": siguiente_item,
                     "fase": dto.fase,
@@ -551,8 +742,25 @@ async def registrar_caso_validacion(
                     "prediccion_correcta": dto.prediccion_correcta,
                     "taller_id": taller_id,
                     "mecanico_id": mecanico_id,
-                    "metodo_confirmacion": dto.metodo_confirmacion or "Inspección Visual",
+                    "metodo_confirmacion": (dto.metodo_confirmacion or "").strip(),
                     "evidencia_ref": dto.evidencia_ref or "",
+                    "estado_registro": estado_final,
+                    "tipo_registro": (
+                        dto.tipo_registro
+                        or (
+                            "THESIS_POSTTEST"
+                            if estado_final == "verificado" and "post" in dto.fase.lower()
+                            else (
+                                "THESIS_PRETEST"
+                                if estado_final == "verificado" and "pre" in dto.fase.lower()
+                                else "DEVELOPMENT"
+                            )
+                        )
+                    ),
+                    "validado_por_id": mecanico_id if estado_final == "verificado" else None,
+                    "fecha_validacion": datetime.now(LIMA_TZ).isoformat()
+                    if estado_final == "verificado"
+                    else None,
                 }
 
                 df_nuevo = pd.DataFrame([nuevo_registro])
@@ -565,7 +773,7 @@ async def registrar_caso_validacion(
         except TimeoutError as exc:
             raise HTTPException(
                 status_code=503,
-                detail="El tracker se encuentra ocupado procesando otra escritura. Intente nuevamente en unos segundos."
+                detail="El tracker se encuentra ocupado procesando otra escritura. Intente nuevamente en unos segundos.",
             ) from exc
 
         return CasoValidacionDTO(
@@ -591,12 +799,19 @@ async def registrar_caso_validacion(
             prediccion_correcta=dto.prediccion_correcta,
             taller_id=taller_id,
             mecanico_id=mecanico_id,
-            metodo_confirmacion=dto.metodo_confirmacion,
-            evidencia_ref=dto.evidencia_ref,
+            metodo_confirmacion=(dto.metodo_confirmacion or "").strip() or None,
+            evidencia_ref=(dto.evidencia_ref or "").strip() or None,
+            estado_registro=nuevo_registro["estado_registro"],
+            tipo_registro=nuevo_registro["tipo_registro"],
+            validado_por_id=nuevo_registro["validado_por_id"],
+            fecha_validacion=nuevo_registro["fecha_validacion"],
         )
 
 
-@router.get("/exportar-csv", summary="Descargar CSV sanitizado contra inyecciones de fórmulas (Aislamiento Multitenant)")
+@router.get(
+    "/exportar-csv",
+    summary="Descargar CSV sanitizado contra inyecciones de fórmulas (Aislamiento Multitenant)",
+)
 async def exportar_tracker_csv(
     periodo: tuple = Depends(periodo_validacion),
     payload: dict = Depends(exigir_lectura_validacion),
@@ -656,12 +871,7 @@ async def exportar_fichas_anexo2_csv(
     else:
         df_global = _cargar_df_tracker()
         df = _filtrar_periodo(_filtrar_df_por_taller(df_global, taller_id_auth), periodo)
-        if not df.empty and "fase" in df.columns:
-            df = df[df["fase"] != "Piloto"]
-        if not df.empty and "tipo_registro" in df.columns:
-            df = df[df["tipo_registro"].isin(["THESIS_PRETEST", "THESIS_POSTTEST"])]
-        if not df.empty and "estado_registro" in df.columns:
-            df = df[df["estado_registro"] == "verificado"]
+        df = _filtrar_df_oficial_verificado(df)
         registros = df.to_dict(orient="records")
 
     if not registros:
@@ -671,25 +881,42 @@ async def exportar_fichas_anexo2_csv(
         )
 
     total_casos = len(registros)
+    pre_count = sum(1 for r in registros if str(r.get("tipo_registro")) == "THESIS_PRETEST")
+    post_count = sum(1 for r in registros if str(r.get("tipo_registro")) == "THESIS_POSTTEST")
     estado_muestra = (
-        "MUESTRA COMPLETA (60 de 60)"
-        if total_casos >= 60
-        else f"TRABAJO DE CAMPO EN PROCESO ({total_casos} de 60 casos)"
+        "MUESTRA OBJETIVO COMPLETA (30/30 PRE-TEST y 30/30 POST-TEST)"
+        if pre_count == 30 and post_count == 30
+        else f"TRABAJO DE CAMPO PENDIENTE ({pre_count}/30 PRE-TEST; {post_count}/30 POST-TEST)"
     )
 
     output = io.StringIO()
-    output.write("# =================================================================================================\n")
+    output.write(
+        "# =================================================================================================\n"
+    )
     output.write("# UNIVERSIDAD CÉSAR VALLEJO - ESCUELA DE INGENIERÍA DE SISTEMAS\n")
-    output.write("# TESIS: CHATBOT UTILIZANDO MACHINE LEARNING PARA EL DIAGNÓSTICO VEHICULAR (CARTER MOTOR'S E.I.R.L.)\n")
+    output.write(
+        "# TESIS: CHATBOT UTILIZANDO MACHINE LEARNING PARA EL DIAGNÓSTICO VEHICULAR (CARTER MOTOR'S E.I.R.L.)\n"
+    )
     output.write("# ANEXO 2: MATRIZ DE RECOLECCIÓN DE DATOS EXPERIMENTALES (PRETEST Y POSTEST)\n")
-    output.write("# =================================================================================================\n")
+    output.write(
+        "# =================================================================================================\n"
+    )
     output.write(f"# Total casos verificados exportados: {total_casos}\n")
+    output.write(f"# Registros oficiales PRE-TEST: {pre_count}/30; POST-TEST: {post_count}/30\n")
     output.write(f"# Periodo evaluado: {fecha_desde or 'Histórico'} a {fecha_hasta or 'Actualidad'}\n")
     output.write(f"# Estado de la muestra oficial: {estado_muestra}\n")
-    output.write("# NOTA METODOLÓGICA: El contraste de hipótesis inferencial (pretest vs. postest) queda estrictamente\n")
-    output.write("# pendiente de definición con el asesor estadístico según la distribución y naturaleza de la muestra.\n")
-    output.write("# Se prohíbe el uso de datos sintéticos o valores simulados para conclusiones formales de la tesis.\n")
-    output.write("# =================================================================================================\n")
+    output.write(
+        "# NOTA METODOLÓGICA: El contraste de hipótesis inferencial (pretest vs. postest) queda estrictamente\n"
+    )
+    output.write(
+        "# pendiente de definición con el asesor estadístico según la distribución y naturaleza de la muestra.\n"
+    )
+    output.write(
+        "# Se prohíbe el uso de datos sintéticos o valores simulados para conclusiones formales de la tesis.\n"
+    )
+    output.write(
+        "# =================================================================================================\n"
+    )
 
     columnas_export = [
         "Item",
@@ -705,6 +932,8 @@ async def exportar_fichas_anexo2_csv(
         "Vehiculo_Combustible",
         "Vehiculo_Transmision",
         "Falla_Confirmada_Fisica",
+        "Diagnostico_Preliminar_Sin_Chatbot",
+        "Falla_Sugerida_Chatbot",
         "Prediccion_Linear_SVM",
         "PPCF_Ficha1_Prediccion_Correcta",
         "PRDC_Ficha2_Campos_Completos",
@@ -732,9 +961,16 @@ async def exportar_fichas_anexo2_csv(
 
     for r in registros:
         detalles = r.get("detalles_campos") if isinstance(r.get("detalles_campos"), dict) else {}
+
         def campo_completo(clave: str) -> str:
             campo = detalles.get(clave) if isinstance(detalles.get(clave), dict) else {}
+            if not campo or "completo" not in campo:
+                return ""
             return "1" if campo.get("completo") else "0"
+
+        es_pretest = str(r.get("fase", "")).strip().casefold() in {"pre-test", "pretest"}
+        diagnostico_preliminar = r.get("chatbot_prediccion", "") if es_pretest else ""
+        falla_sugerida = r.get("chatbot_prediccion", "") if not es_pretest else ""
 
         fila = [
             _sanitizar_campo_csv(r.get("item", "")),
@@ -750,9 +986,11 @@ async def exportar_fichas_anexo2_csv(
             _sanitizar_campo_csv(r.get("vehiculo_combustible", "")),
             _sanitizar_campo_csv(r.get("vehiculo_transmision", "")),
             _sanitizar_campo_csv(r.get("falla_real", "")),
-            _sanitizar_campo_csv(r.get("chatbot_prediccion", "")),
-            _sanitizar_campo_csv(r.get("prediccion_correcta", 0)),
-            _sanitizar_campo_csv(r.get("campos_completos", 0)),
+            _sanitizar_campo_csv(diagnostico_preliminar),
+            _sanitizar_campo_csv(falla_sugerida),
+            _sanitizar_campo_csv(falla_sugerida if not es_pretest else ""),
+            _sanitizar_campo_csv(r.get("prediccion_correcta", "")),
+            _sanitizar_campo_csv(r.get("campos_completos", "")),
             _sanitizar_campo_csv(r.get("cantidad_campos_completos", 0)),
             _sanitizar_campo_csv(campo_completo("campo_1")),
             _sanitizar_campo_csv(campo_completo("campo_2")),
@@ -762,14 +1000,14 @@ async def exportar_fichas_anexo2_csv(
             _sanitizar_campo_csv(campo_completo("campo_6")),
             _sanitizar_campo_csv(campo_completo("campo_7")),
             _sanitizar_campo_csv(campo_completo("campo_8")),
-            _sanitizar_campo_csv(r.get("tiempo_diagnostico_minutos", 0)),
-            _sanitizar_campo_csv(r.get("sintoma_registrado_correctamente", 0)),
-            _sanitizar_campo_csv(r.get("procesamiento_validado", 0)),
+            _sanitizar_campo_csv(r.get("tiempo_diagnostico_minutos", "")),
+            _sanitizar_campo_csv(r.get("sintoma_registrado_correctamente", "")),
+            _sanitizar_campo_csv(r.get("procesamiento_validado", "")),
             _sanitizar_campo_csv(r.get("metodo_confirmacion", "")),
             _sanitizar_campo_csv(r.get("evidencia_ref", "")),
             _sanitizar_campo_csv(r.get("validado_por_id", "") or r.get("mecanico_id", "")),
             _sanitizar_campo_csv(r.get("fecha_validacion", "")),
-            _sanitizar_campo_csv(r.get("estado_registro", "verificado")),
+            _sanitizar_campo_csv(r.get("estado_registro", "")),
         ]
         writer.writerow(fila)
 

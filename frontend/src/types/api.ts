@@ -69,18 +69,20 @@ export interface CasoValidacionDTO {
   vehiculo_kilometraje?: number | null;
   vehiculo_combustible?: string | null;
   vehiculo_transmision?: string | null;
-  falla_real: string;
-  chatbot_prediccion: string;
+  falla_real: string | null;
+  chatbot_prediccion: string | null;
+  diagnostico_preliminar_sin_chatbot?: string | null;
+  falla_sugerida_chatbot?: string | null;
   sistema_afectado_probable?: string | null;
   campos_completos: number;
   cantidad_campos_completos?: number;
   detalles_campos?: Record<string, { nombre: string; completo: boolean; valor_resumen?: string }> | null;
-  tiempo_diagnostico_minutos: number;
-  prediccion_correcta: number;
+  tiempo_diagnostico_minutos: number | null;
+  prediccion_correcta: number | null;
   taller_id?: string;
   mecanico_id?: string;
-  metodo_confirmacion?: string;
-  evidencia_ref?: string;
+  metodo_confirmacion?: string | null;
+  evidencia_ref?: string | null;
   estado_registro?: EstadoRegistro;
   tipo_registro?: TipoRegistro;
   conversacion_id?: string | null;
@@ -131,28 +133,48 @@ export interface CrearCasoValidacionDTO {
   duracion_sistema_segundos?: number | null;
 }
 
+export interface ConfirmacionPostTestInput {
+  falla_real: string;
+  tiempo_diagnostico_minutos: number;
+  prediccion_correcta: 0 | 1;
+  metodo_confirmacion: string;
+  evidencia_ref: string;
+  sistema_afectado_probable?: string;
+  vehiculo_anio?: number;
+  vehiculo_kilometraje?: number;
+  vehiculo_combustible?: string;
+  vehiculo_transmision?: string;
+}
+
 export interface MetricasVariableIndependienteDTO {
   indicador1_sintomas_correctos_pct: number | null;
   indicador2_procesamiento_correcto_pct: number | null;
   indicador3_exactitud_ml_pct: number | null;
   casos_verificados_evaluados: number;
+  casos_sintomas_evaluados: number;
+  casos_procesamiento_evaluados: number;
+  casos_modelo_evaluados: number;
   nota_metodologica: string;
 }
 
 export interface MetricasValidacionDTO {
-  registros_completos_pretest_porcentaje: number;
-  registros_completos_posttest_porcentaje: number;
+  registros_completos_pretest_porcentaje: number | null;
+  registros_completos_posttest_porcentaje: number | null;
   total_casos: number;
   total_aciertos: number;
   total_desaciertos: number;
-  tasa_acierto_global_porcentaje: number;
+  tasa_acierto_global_porcentaje: number | null;
   casos_pretest: number;
-  tasa_acierto_pretest_porcentaje: number;
-  tiempo_promedio_pretest_min: number;
+  predicciones_evaluadas_pretest: number;
+  tasa_acierto_pretest_porcentaje: number | null;
+  tiempos_evaluados_pretest: number;
+  tiempo_promedio_pretest_min: number | null;
   casos_posttest: number;
-  tasa_acierto_posttest_porcentaje: number;
-  tiempo_promedio_posttest_min: number;
-  reduccion_tiempo_porcentaje: number;
+  predicciones_evaluadas_posttest: number;
+  tasa_acierto_posttest_porcentaje: number | null;
+  tiempos_evaluados_posttest: number;
+  tiempo_promedio_posttest_min: number | null;
+  reduccion_tiempo_porcentaje: number | null;
   distribucion_marcas: { marca: string; conteo: number }[];
   top_fallas_reales: { falla: string; conteo: number }[];
   nota_metodologica?: string;

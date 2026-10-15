@@ -185,13 +185,18 @@ export const ConsultasTesisView: React.FC = () => {
     }
   };
 
-  const handleConfirmarBorrador = async (datos: { falla_real: string; tiempo_diagnostico_minutos: number; prediccion_correcta: 0 | 1; metodo_confirmacion: string }) => {
+  const handleConfirmarBorrador = async (datos: Parameters<typeof apiService.confirmarPosttest>[1]) => {
     if (!borradorPosttest?.id) return;
     const confirmado = await apiService.confirmarPosttest(borradorPosttest.id, datos);
     setBorradorPosttest(null);
     setUltimoPosttest(confirmado);
     setMetricasValidacion(await apiService.getMetricasValidacion(periodo));
-    alert('POST-TEST CONFIRMADO. Se validaron los ocho campos.');
+    const campos = confirmado.cantidad_campos_completos ?? 0;
+    alert(
+      confirmado.campos_completos === 1
+        ? `Revisión humana guardada. Ficha 2 completa: ${campos}/8 campos.`
+        : `Revisión humana guardada; Ficha 2 pendiente: ${campos}/8 campos completos.`,
+    );
   };
 
   return (

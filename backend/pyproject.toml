@@ -60,6 +60,7 @@ where = ["."]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+norecursedirs = ["experiments", "versions", ".venv", ".git"]
 pythonpath = [".", "../machine_learning"]
 markers = [
     "real_gemini: prueba de integración externa que consume cuota real de Google Gemini",

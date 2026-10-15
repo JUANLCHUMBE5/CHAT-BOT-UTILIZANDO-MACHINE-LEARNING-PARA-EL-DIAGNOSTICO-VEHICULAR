@@ -9,16 +9,22 @@ interface TesisTablasFichasProps {
   casosActivos: RegistroTesis[];
   preAciertos: number;
   postAciertos: number;
-  prePPCF: number;
-  postPPCF: number;
+  prePPCF: number | null;
+  postPPCF: number | null;
+  prePrediccionesEvaluadas: number;
+  postPrediccionesEvaluadas: number;
   preCompletos: number;
   postCompletos: number;
-  prePRDC: number;
-  postPRDC: number;
+  prePRDC: number | null;
+  postPRDC: number | null;
+  preRegistrosEvaluados: number;
+  postRegistrosEvaluados: number;
   preTiempoSuma: number;
   postTiempoSuma: number;
-  preTPRD: number;
-  postTPRD: number;
+  preTPRD: number | null;
+  postTPRD: number | null;
+  preTiemposEvaluados: number;
+  postTiemposEvaluados: number;
 }
 
 export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
@@ -29,15 +35,31 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
   postAciertos,
   prePPCF,
   postPPCF,
+  prePrediccionesEvaluadas,
+  postPrediccionesEvaluadas,
   preCompletos,
   postCompletos,
   prePRDC,
   postPRDC,
+  preRegistrosEvaluados,
+  postRegistrosEvaluados,
   preTiempoSuma,
   postTiempoSuma,
   preTPRD,
   postTPRD,
+  preTiemposEvaluados,
+  postTiemposEvaluados,
 }) => {
+  const prediccionesEvaluadas = fase === 'pre' ? prePrediccionesEvaluadas : postPrediccionesEvaluadas;
+  const registrosEvaluados = fase === 'pre' ? preRegistrosEvaluados : postRegistrosEvaluados;
+  const tiemposEvaluados = fase === 'pre' ? preTiemposEvaluados : postTiemposEvaluados;
+  const cantidadCampos = (caso: RegistroTesis) =>
+    caso.cantidad_campos_completos ?? (caso.campos_completos === 1 ? 8 : null);
+  const resultadoPrediccion = (caso: RegistroTesis) =>
+    caso.chatbot_prediccion?.trim() && caso.falla_real?.trim() &&
+    (caso.prediccion_correcta === 0 || caso.prediccion_correcta === 1)
+      ? caso.prediccion_correcta
+      : null;
   if (fichaId === 'ficha1') {
     return (
       <table className="notranslate" translate="no" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '12px' }}>
@@ -83,16 +105,18 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                   {caso.fecha}
                 </td>
                 <td style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 600 }}>1</td>
-                <td style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 600 }}>1</td>
+                <td style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 600 }}>{resultadoPrediccion(caso) !== null ? 1 : 0}</td>
                 <td style={{ padding: '10px 14px', textAlign: 'center' }}>
-                  {caso.prediccion_correcta === 1 ? (
+                  {resultadoPrediccion(caso) === 1 ? (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#059669', fontWeight: 700 }}>
                       <CheckCircle2 size={13} /> 1
                     </span>
-                  ) : (
+                  ) : resultadoPrediccion(caso) === 0 ? (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#dc2626', fontWeight: 700 }}>
                       <XCircle size={13} /> 0
                     </span>
+                  ) : (
+                    <span style={{ color: 'var(--text-muted)' }}>Pendiente</span>
                   )}
                 </td>
                 <td style={{ padding: '10px 14px', textAlign: 'center' }}>
@@ -102,11 +126,11 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                       borderRadius: '4px',
                       fontWeight: 700,
                       fontSize: '11px',
-                      backgroundColor: caso.prediccion_correcta === 1 ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.1)',
-                      color: caso.prediccion_correcta === 1 ? '#059669' : '#dc2626',
+                      backgroundColor: resultadoPrediccion(caso) === 1 ? 'rgba(16, 185, 129, 0.12)' : resultadoPrediccion(caso) === 0 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(148, 163, 184, 0.12)',
+                      color: resultadoPrediccion(caso) === 1 ? '#059669' : resultadoPrediccion(caso) === 0 ? '#dc2626' : 'var(--text-muted)',
                     }}
                   >
-                    {caso.prediccion_correcta === 1 ? '100%' : '0%'}
+                    {resultadoPrediccion(caso) === 1 ? '100%' : resultadoPrediccion(caso) === 0 ? '0%' : 'Pendiente'}
                   </span>
                 </td>
                 <td style={{ padding: '10px 14px' }}>
@@ -114,7 +138,7 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                     {caso.placa} · {caso.marca_modelo}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                    Falla: <strong style={{ color: '#047857' }}>{caso.falla_real}</strong> · Predicción: <em>{caso.chatbot_prediccion}</em>
+                    Falla: <strong style={{ color: '#047857' }}>{caso.falla_real || 'Pendiente'}</strong> · Predicción: <em>{caso.chatbot_prediccion || 'Pendiente'}</em>
                   </div>
                 </td>
               </tr>
@@ -134,7 +158,7 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
               TOTAL {fase.toUpperCase()}:
             </td>
             <td style={{ padding: '12px 14px', textAlign: 'center' }}>{casosActivos.length}</td>
-            <td style={{ padding: '12px 14px', textAlign: 'center' }}>{casosActivos.length}</td>
+            <td style={{ padding: '12px 14px', textAlign: 'center' }}>{prediccionesEvaluadas}</td>
             <td style={{ padding: '12px 14px', textAlign: 'center', color: 'var(--primary)', fontWeight: 800 }}>
               {fase === 'pre' ? preAciertos : postAciertos}
             </td>
@@ -149,12 +173,12 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                   fontSize: '12px',
                 }}
               >
-                PPCF = {casosActivos.length > 0 ? (fase === 'pre' ? prePPCF.toFixed(1) : postPPCF.toFixed(1)) : '0.0'}%
+                PPCF = {(fase === 'pre' ? prePPCF : postPPCF) !== null ? (fase === 'pre' ? prePPCF : postPPCF)?.toFixed(1) : 'Pendiente'}%
               </span>
             </td>
             <td style={{ padding: '12px 14px', color: 'var(--text-secondary)', fontSize: '11.5px' }}>
-              {casosActivos.length > 0
-                ? `PPCF = ( ${fase === 'pre' ? preAciertos : postAciertos} / ${casosActivos.length} ) × 100`
+              {prediccionesEvaluadas > 0
+                ? `PPCF = ( ${fase === 'pre' ? preAciertos : postAciertos} / ${prediccionesEvaluadas} ) × 100`
                 : 'Pendiente de casos en campo'}
             </td>
           </tr>
@@ -212,10 +236,12 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#059669', fontWeight: 700 }}>
                       <CheckCircle2 size={13} /> 1
                     </span>
-                  ) : (
+                  ) : caso.campos_completos === 0 ? (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', color: '#d97706', fontWeight: 700 }}>
                       <XCircle size={13} /> 0
                     </span>
+                  ) : (
+                    <span style={{ color: 'var(--text-muted)' }}>Pendiente</span>
                   )}
                 </td>
                 <td style={{ padding: '10px 14px', textAlign: 'center' }}>
@@ -225,11 +251,11 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                       borderRadius: '4px',
                       fontWeight: 700,
                       fontSize: '11px',
-                      backgroundColor: caso.campos_completos === 1 ? 'rgba(16, 185, 129, 0.12)' : 'rgba(217, 119, 6, 0.1)',
-                      color: caso.campos_completos === 1 ? '#059669' : '#d97706',
+                      backgroundColor: caso.campos_completos === 1 ? 'rgba(16, 185, 129, 0.12)' : caso.campos_completos === 0 ? 'rgba(217, 119, 6, 0.1)' : 'rgba(148, 163, 184, 0.12)',
+                      color: caso.campos_completos === 1 ? '#059669' : caso.campos_completos === 0 ? '#d97706' : 'var(--text-muted)',
                     }}
                   >
-                    {caso.campos_completos === 1 ? '100%' : '0%'}
+                    {caso.campos_completos === 1 ? '100%' : caso.campos_completos === 0 ? '0%' : 'Pendiente'}
                   </span>
                 </td>
                 <td style={{ padding: '10px 14px' }}>
@@ -237,7 +263,7 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                     {caso.placa} · {caso.marca_modelo}
                   </div>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-                    {caso.campos_completos === 1 ? '8/8 campos requeridos completos' : 'Faltan campos de trazabilidad en ficha manual'}
+                    {caso.campos_completos === 1 ? '8/8 campos requeridos completos' : caso.campos_completos === 0 ? `${cantidadCampos(caso) ?? 'Incompleto; cantidad no disponible'}/8 campos completos` : 'Pendiente de evaluación de completitud'}
                   </div>
                 </td>
               </tr>
@@ -256,7 +282,7 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
             <td colSpan={2} style={{ padding: '12px 14px' }}>
               TOTAL {fase.toUpperCase()}:
             </td>
-            <td style={{ padding: '12px 14px', textAlign: 'center' }}>{casosActivos.length}</td>
+            <td style={{ padding: '12px 14px', textAlign: 'center' }}>{registrosEvaluados}</td>
             <td style={{ padding: '12px 14px', textAlign: 'center', color: 'var(--primary)', fontWeight: 800 }}>
               {fase === 'pre' ? preCompletos : postCompletos}
             </td>
@@ -271,12 +297,12 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                   fontSize: '12px',
                 }}
               >
-                PRDC = {casosActivos.length > 0 ? (fase === 'pre' ? prePRDC.toFixed(1) : postPRDC.toFixed(1)) : '0.0'}%
+                PRDC = {(fase === 'pre' ? prePRDC : postPRDC) !== null ? (fase === 'pre' ? prePRDC : postPRDC)?.toFixed(1) : 'Pendiente'}%
               </span>
             </td>
             <td style={{ padding: '12px 14px', color: 'var(--text-secondary)', fontSize: '11.5px' }}>
-              {casosActivos.length > 0
-                ? `RDC = ( ${fase === 'pre' ? preCompletos : postCompletos} / ${casosActivos.length} ) × 100`
+              {registrosEvaluados > 0
+                ? `PRDC = ( ${fase === 'pre' ? preCompletos : postCompletos} / ${registrosEvaluados} ) × 100`
                 : 'Pendiente de casos en campo'}
             </td>
           </tr>
@@ -328,9 +354,9 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
               <td style={{ padding: '10px 14px', whiteSpace: 'nowrap', color: 'var(--text-secondary)' }}>
                 {caso.fecha}
               </td>
-              <td style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 600 }}>1</td>
+              <td style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 600 }}>{caso.tiempo_diagnostico_minutos !== null && caso.tiempo_diagnostico_minutos > 0 ? 1 : 0}</td>
               <td style={{ padding: '10px 14px', textAlign: 'center', fontWeight: 700, color: 'var(--text-main)' }}>
-                {caso.tiempo_diagnostico_minutos} min
+                {caso.tiempo_diagnostico_minutos !== null && caso.tiempo_diagnostico_minutos > 0 ? `${caso.tiempo_diagnostico_minutos} min` : 'Pendiente'}
               </td>
               <td style={{ padding: '10px 14px', textAlign: 'center' }}>
                 <span
@@ -339,11 +365,11 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                     borderRadius: '4px',
                     fontWeight: 700,
                     fontSize: '11px',
-                    backgroundColor: caso.tiempo_diagnostico_minutos <= 15 ? 'rgba(16, 185, 129, 0.12)' : 'rgba(234, 88, 12, 0.1)',
-                    color: caso.tiempo_diagnostico_minutos <= 15 ? '#059669' : 'var(--primary)',
+                  backgroundColor: caso.tiempo_diagnostico_minutos !== null && caso.tiempo_diagnostico_minutos > 0 ? (caso.tiempo_diagnostico_minutos <= 15 ? 'rgba(16, 185, 129, 0.12)' : 'rgba(234, 88, 12, 0.1)') : 'rgba(148, 163, 184, 0.12)',
+                  color: caso.tiempo_diagnostico_minutos !== null && caso.tiempo_diagnostico_minutos > 0 ? (caso.tiempo_diagnostico_minutos <= 15 ? '#059669' : 'var(--primary)') : 'var(--text-muted)',
                   }}
                 >
-                  {caso.tiempo_diagnostico_minutos} min
+                  {caso.tiempo_diagnostico_minutos !== null && caso.tiempo_diagnostico_minutos > 0 ? `${caso.tiempo_diagnostico_minutos} min` : 'Pendiente'}
                 </span>
               </td>
               <td style={{ padding: '10px 14px' }}>
@@ -370,7 +396,7 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
           <td colSpan={2} style={{ padding: '12px 14px' }}>
             TOTAL {fase.toUpperCase()}:
           </td>
-          <td style={{ padding: '12px 14px', textAlign: 'center' }}>{casosActivos.length}</td>
+            <td style={{ padding: '12px 14px', textAlign: 'center' }}>{tiemposEvaluados}</td>
           <td style={{ padding: '12px 14px', textAlign: 'center', color: 'var(--primary)', fontWeight: 800 }}>
             {fase === 'pre' ? preTiempoSuma : postTiempoSuma} min
           </td>
@@ -385,12 +411,12 @@ export const TesisTablasFichas: React.FC<TesisTablasFichasProps> = ({
                 fontSize: '12px',
               }}
             >
-              TPRD = {casosActivos.length > 0 ? (fase === 'pre' ? preTPRD.toFixed(1) : postTPRD.toFixed(1)) : '0.0'} min
+              TPRD = {(fase === 'pre' ? preTPRD : postTPRD) !== null ? (fase === 'pre' ? preTPRD : postTPRD)?.toFixed(1) : 'Pendiente'} min
             </span>
           </td>
           <td style={{ padding: '12px 14px', color: 'var(--text-secondary)', fontSize: '11.5px' }}>
-            {casosActivos.length > 0
-              ? `TPRD = ( ${fase === 'pre' ? preTiempoSuma : postTiempoSuma} min / ${casosActivos.length} ) = ${fase === 'pre' ? preTPRD.toFixed(1) : postTPRD.toFixed(1)} min`
+            {tiemposEvaluados > 0
+              ? `TPRD = ( ${fase === 'pre' ? preTiempoSuma : postTiempoSuma} min / ${tiemposEvaluados} tiempos medidos ) = ${(fase === 'pre' ? preTPRD : postTPRD)?.toFixed(1)} min`
               : 'Pendiente de casos en campo'}
           </td>
         </tr>
