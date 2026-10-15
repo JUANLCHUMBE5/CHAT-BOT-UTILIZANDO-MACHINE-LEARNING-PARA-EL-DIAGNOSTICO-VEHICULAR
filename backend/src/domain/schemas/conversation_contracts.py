@@ -118,7 +118,7 @@ class UserTurnInputDTO(BaseModel):
 
     @property
     def sintomas_negados(self) -> List[HechoClinico]:
-        return [h for h in self.hechos_negados if h.categoria == "sintoma"]
+        return [h for h in self.hechos_negados if h.categoria in {"sintoma", "sintoma_negado"}]
 
     @property
     def dtc(self) -> List[str]:

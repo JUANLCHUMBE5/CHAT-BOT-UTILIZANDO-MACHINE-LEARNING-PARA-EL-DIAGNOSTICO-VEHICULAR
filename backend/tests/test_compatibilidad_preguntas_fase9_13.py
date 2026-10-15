@@ -56,22 +56,12 @@ def test_incidente_real_cambia_de_caso_y_no_hereda_interrogatorio() -> None:
         seniales_mensaje={"senial_marcha": True},
         seniales_heredadas={"senial_marcha": True},
     )
-    assert resultado.decision == DecisionTransicion.CAMBIO_DE_CASO
-    SegmentadorCasos.archivar_y_limpiar_caso(estado, resultado.nuevo_case_id)
-
-    assert estado.case_id != "case-motor"
-    assert estado.preguntas_realizadas == []
-    assert estado.respuestas_obtenidas == []
-    assert estado.herramientas_no_disponibles == []
-    assert estado.pruebas_no_disponibles == []
-    assert estado.historial_mensajes_usuario == []
-    assert estado.top3_actual == []
-    assert estado.falla_principal is None
-    assert estado.hechos == {}
-    assert estado.hechos_historicos[-1]["preguntas_realizadas"]
-    assert estado.hechos_historicos[-1]["historial_mensajes_usuario"] == [
-        "tironea y pierde potencia"
-    ]
+    assert resultado.decision in (DecisionTransicion.MANTENER_CASO, DecisionTransicion.ACLARACION_REQUERIDA)
+    assert resultado.nuevo_case_id is None
+    assert estado.case_id == "case-motor"
+    assert estado.preguntas_realizadas
+    assert estado.historial_mensajes_usuario == ["tironea y pierde potencia"]
+    assert estado.herramientas_no_disponibles
 
 
 def test_transmision_descarta_pregunta_termica_de_motor_antes_del_score() -> None:

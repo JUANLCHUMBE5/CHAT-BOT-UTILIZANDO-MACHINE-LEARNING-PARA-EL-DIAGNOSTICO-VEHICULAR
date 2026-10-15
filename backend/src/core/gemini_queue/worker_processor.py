@@ -12,6 +12,7 @@ import requests
 from src.config import settings
 from src.core.diagnostico.politica_seguridad import PoliticaSeguridad
 from src.core.diagnostico.respuesta_llm_estructurada import INSTRUCCION_JSON, validar_y_formatear
+from src.core.diagnostico.seguridad_informativa import proteger_respuesta_informativa
 from src.core.gemini_queue.db_persistence import (
     actualizar_diagnostico_y_trabajo_db,
     marcar_trabajo_reintento_db,
@@ -294,6 +295,11 @@ async def procesar_solicitud_encolada(
             respuesta_texto=texto_respuesta,
             texto_usuario=solicitud.sintoma,
             diagnostico_ml=solicitud.diagnostico_ml,
+        )
+
+    if solicitud.tipo_consulta == "consulta_tecnica":
+        texto_respuesta, metadatos = proteger_respuesta_informativa(
+            solicitud.sintoma, texto_respuesta, metadatos
         )
 
     metadatos["tiempo_llm_ms"] = max(0, int((time.perf_counter() - inicio_procesamiento) * 1000))

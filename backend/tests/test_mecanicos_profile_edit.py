@@ -22,7 +22,6 @@ from src.core.security import (
     crear_jwt_token,
     descifrar_texto_reversible,
     hash_identificador_persistencia,
-    verificar_password,
 )
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.models import Auditoria, IdentidadWhatsApp
@@ -83,6 +82,15 @@ def token_mecanico(mecanico_user_id, test_taller_id):
         taller_id=test_taller_id,
         usuario_id=mecanico_user_id,
     )
+
+
+@pytest.fixture
+async def taller_fixture_persistido(async_db_session, test_taller_id):
+    from src.infrastructure.database.repositories.taller_repository import TallerRepository
+    repo = TallerRepository(async_db_session)
+    if await repo.obtener_por_id(uuid.UUID(test_taller_id)) is None:
+        await repo.crear_taller(nombre="Taller sintético perfil", taller_id=uuid.UUID(test_taller_id))
+        await async_db_session.commit()
 
 
 # ==============================================================================
@@ -189,6 +197,7 @@ def test_actualizar_perfil_validacion_username_invalido(client, token_admin, mec
 # ==============================================================================
 
 @pytest.mark.anyio
+@pytest.mark.usefixtures("taller_fixture_persistido")
 async def test_actualizar_perfil_e2e_exitoso_db_y_fernet_y_auditoria():
     """
     Tier 1 & Tier 3:
@@ -204,8 +213,8 @@ async def test_actualizar_perfil_e2e_exitoso_db_y_fernet_y_auditoria():
 
     engine = obtener_engine()
     taller_uuid = uuid.UUID("00000000-0000-0000-0000-000000000001")
-    tel_original = f"+51999111{uuid.uuid4().hex[:3]}"
-    tel_nuevo = f"+51999888{uuid.uuid4().hex[:3]}"
+    tel_original = f"+51999111{uuid.uuid4().int % 1000:03d}"
+    tel_nuevo = f"+51999888{uuid.uuid4().int % 1000:03d}"
 
     async with AsyncSession(engine, expire_on_commit=False) as session:
         user_repo = UsuarioRepository(session)
@@ -213,7 +222,7 @@ async def test_actualizar_perfil_e2e_exitoso_db_y_fernet_y_auditoria():
         roles = await user_repo.asegurar_roles_estandar()
 
         # Crear Admin autorizador
-        w_hash_admin = hash_identificador_persistencia(f"+51999777{uuid.uuid4().hex[:3]}", "telefono")
+        w_hash_admin = hash_identificador_persistencia(f"+51999777{uuid.uuid4().int % 1000:03d}", "telefono")
         admin_obj = await user_repo.crear_usuario(
             taller_id=taller_uuid,
             rol_id=roles["administrador"].id,
@@ -252,11 +261,9 @@ async def test_actualizar_perfil_e2e_exitoso_db_y_fernet_y_auditoria():
     headers = {"Authorization": f"Bearer {token_admin}"}
 
     client = TestClient(app)
-    nueva_clave = "ClaveSegura_2026_E2E"
     payload = {
         "nombres": "Carlos Mecanico Actualizado",
         "telefono_whatsapp": tel_nuevo,
-        "password": nueva_clave,
     }
 
     # Ejecutar PUT
@@ -276,8 +283,8 @@ async def test_actualizar_perfil_e2e_exitoso_db_y_fernet_y_auditoria():
         assert usuario_db.nombres == "Carlos Mecanico Actualizado"
         assert usuario_db.whatsapp_ultimos4 == tel_nuevo[-4:]
         assert usuario_db.whatsapp_hash == hash_identificador_persistencia(tel_nuevo, "telefono")
-        assert verificar_password(nueva_clave, usuario_db.password_hash) is True
-        assert usuario_db.debe_cambiar_password is False
+        assert usuario_db.password_hash is None
+        assert usuario_db.password_hash is None
 
         # Verificar re-cifrado Fernet en identidades_whatsapp
         ident_stmt = select(IdentidadWhatsApp).where(IdentidadWhatsApp.usuario_id == usuario_db.id)
@@ -299,11 +306,12 @@ async def test_actualizar_perfil_e2e_exitoso_db_y_fernet_y_auditoria():
         assert str(audit_log.usuario_id) == admin_id
         assert audit_log.detalles["nombres_modificados"] is True
         assert audit_log.detalles["telefono_modificado"] is True
-        assert audit_log.detalles["password_modificado"] is True
+        assert audit_log.detalles["password_modificado"] is False
 
 
 
 @pytest.mark.anyio
+@pytest.mark.usefixtures("taller_fixture_persistido")
 async def test_actualizar_perfil_colision_telefono_duplicado_409():
     """
     Tier 2:
@@ -315,8 +323,8 @@ async def test_actualizar_perfil_colision_telefono_duplicado_409():
 
     engine = obtener_engine()
     taller_uuid = uuid.UUID("00000000-0000-0000-0000-000000000001")
-    tel_user_a = f"+51999222{uuid.uuid4().hex[:3]}"
-    tel_user_b = f"+51999333{uuid.uuid4().hex[:3]}"
+    tel_user_a = f"+51999222{uuid.uuid4().int % 1000:03d}"
+    tel_user_b = f"+51999333{uuid.uuid4().int % 1000:03d}"
 
     async with AsyncSession(engine, expire_on_commit=False) as session:
         user_repo = UsuarioRepository(session)
@@ -327,7 +335,7 @@ async def test_actualizar_perfil_colision_telefono_duplicado_409():
             taller_id=taller_uuid,
             rol_id=roles["administrador"].id,
             nombres="Admin Collision Test",
-            whatsapp_hash=hash_identificador_persistencia(f"+51999000{uuid.uuid4().hex[:3]}", "telefono"),
+            whatsapp_hash=hash_identificador_persistencia(f"+51999000{uuid.uuid4().int % 1000:03d}", "telefono"),
             whatsapp_ultimos4="0000",
         )
 
@@ -373,6 +381,7 @@ async def test_actualizar_perfil_colision_telefono_duplicado_409():
 
 
 @pytest.mark.anyio
+@pytest.mark.usefixtures("taller_fixture_persistido")
 async def test_actualizar_perfil_jerarquia_jefe_no_puede_editar_admin():
     """
     Tier 2:
@@ -393,7 +402,7 @@ async def test_actualizar_perfil_jerarquia_jefe_no_puede_editar_admin():
             taller_id=taller_uuid,
             rol_id=roles["administrador"].id,
             nombres="Admin Target",
-            whatsapp_hash=hash_identificador_persistencia(f"+51999555{uuid.uuid4().hex[:3]}", "telefono"),
+            whatsapp_hash=hash_identificador_persistencia(f"+51999555{uuid.uuid4().int % 1000:03d}", "telefono"),
             whatsapp_ultimos4="5555",
         )
 
@@ -402,7 +411,7 @@ async def test_actualizar_perfil_jerarquia_jefe_no_puede_editar_admin():
             taller_id=taller_uuid,
             rol_id=roles["jefe_taller"].id,
             nombres="Jefe Editor",
-            whatsapp_hash=hash_identificador_persistencia(f"+51999444{uuid.uuid4().hex[:3]}", "telefono"),
+            whatsapp_hash=hash_identificador_persistencia(f"+51999444{uuid.uuid4().int % 1000:03d}", "telefono"),
             whatsapp_ultimos4="4444",
         )
 
@@ -423,10 +432,11 @@ async def test_actualizar_perfil_jerarquia_jefe_no_puede_editar_admin():
 
     res = client.put(f"/api/v1/mecanicos/{admin_target_id}", json=payload, headers=headers)
     assert res.status_code == 403
-    assert "No tiene permisos para editar a un administrador" in res.json()["detail"]
+    assert "Acceso denegado" in res.json()["detail"]
 
 
 @pytest.mark.anyio
+@pytest.mark.usefixtures("taller_fixture_persistido")
 async def test_actualizar_perfil_actualizacion_parcial_campos():
     """
     Tier 4:
@@ -437,8 +447,8 @@ async def test_actualizar_perfil_actualizacion_parcial_campos():
 
     engine = obtener_engine()
     taller_uuid = uuid.UUID("00000000-0000-0000-0000-000000000001")
-    tel_original = f"+51999666{uuid.uuid4().hex[:3]}"
-    tel_solo_nuevo = f"+51999777{uuid.uuid4().hex[:3]}"
+    tel_original = f"+51999666{uuid.uuid4().int % 1000:03d}"
+    tel_solo_nuevo = f"+51999777{uuid.uuid4().int % 1000:03d}"
 
     async with AsyncSession(engine, expire_on_commit=False) as session:
         user_repo = UsuarioRepository(session)
@@ -448,7 +458,7 @@ async def test_actualizar_perfil_actualizacion_parcial_campos():
             taller_id=taller_uuid,
             rol_id=roles["administrador"].id,
             nombres="Admin Partial Test",
-            whatsapp_hash=hash_identificador_persistencia(f"+51999001{uuid.uuid4().hex[:3]}", "telefono"),
+            whatsapp_hash=hash_identificador_persistencia(f"+51999001{uuid.uuid4().int % 1000:03d}", "telefono"),
             whatsapp_ultimos4="0001",
         )
 
@@ -490,10 +500,14 @@ async def test_actualizar_perfil_actualizacion_parcial_campos():
     assert res_tel.status_code == 200
     assert res_tel.json()["telefono"].endswith(tel_solo_nuevo[-4:])
 
-    # 3. Actualizar SOLO contraseña
+    # 3. Un mecánico sin acceso web no puede recibir contraseña desde edición.
     res_pass = client.put(
         f"/api/v1/mecanicos/{mecanico_id}",
         json={"password": "ClaveParcialUnica_2026"},
         headers=headers,
     )
-    assert res_pass.status_code == 200
+    assert res_pass.status_code == 400
+    assert res_pass.json()["detail"] == "Los mecánicos no poseen contraseña ni acceso al panel web."
+    async with AsyncSession(engine) as session:
+        actualizado = await UsuarioRepository(session).obtener_por_id(uuid.UUID(mecanico_id))
+        assert actualizado.password_hash is None

@@ -53,7 +53,8 @@ async def test_regla_2_nota_metodologica_en_matriz_experimental():
     """
     registro_ejemplo = {
         "item": 1,
-        "fase": "Postest",
+        "fase": "Post-test",
+        "tipo_registro": "THESIS_POSTTEST",
         "fecha": "2026-03-01",
         "placa_enmascarada": "ABC-***",
         "marca_modelo": "Toyota Yaris",
@@ -68,6 +69,7 @@ async def test_regla_2_nota_metodologica_en_matriz_experimental():
         "metodo_confirmacion": "Inspección física",
         "evidencia_ref": "OT-101",
         "mecanico_id": "MEC-01",
+        "validado_por_id": "00000000-0000-4000-8000-000000000099",
         "fecha_validacion": "2026-03-01 10:00:00",
         "estado_registro": "verificado",
         "taller_id": "test_taller",

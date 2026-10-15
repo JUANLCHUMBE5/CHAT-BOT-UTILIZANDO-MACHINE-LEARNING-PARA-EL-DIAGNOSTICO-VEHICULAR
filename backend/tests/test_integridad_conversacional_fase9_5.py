@@ -50,7 +50,11 @@ async def test_regresion_incidente_caso_a_cerrado_caso_b_limpio():
     assert "pérdida de potencia" in consulta_b or "pierde fuerza" in consulta_b
     assert res_b["estado"].case_id != case_id_a, "El case_id debe ser nuevo"
     assert res_b["top3_actual"] is not None, "El modelo ML debe calcular un Top 3 nuevo"
-    assert len(res_b["top3_actual"]) == 3, "Debe retornar 3 hipótesis"
+    # El Top-3 raw permanece íntegro; la presentación no rellena candidatos excluidos.
+    assert len(res_b["top3_ml_raw"]) == 3
+    assert 1 <= len(res_b["top3_actual"]) <= 3
+    assert res_b["hipotesis_final_presentada"] == res_b["top3_actual"]
+    assert all(0 <= h["probabilidad"] <= 1 for h in res_b["top3_ml_raw"])
 
 
 @pytest.mark.anyio
@@ -113,10 +117,10 @@ async def test_flujo_no_pregunta_discriminante_sin_pop_ciego():
         )
 
         assert res is not None
-        assert res["status"] == "esperando_falla_real"
+        assert res["status"] == "esperando_aclaracion_confirmacion"
         # Verificar que no ofrece simplemente opción 2 o 3 ni hace pop a Top2
-        assert "Pregunta técnica discriminante" in res["respuesta"]
-        assert "Bateria descargada" in res["respuesta"]
+        assert "no registrará" in res["respuesta"]
+        assert "por sí solo" in res["respuesta"]
 
         # Ahora el mecánico aporta nueva evidencia respondiendo a la pregunta
         res_evidencia = await ValidationWorkflow.manejar_flujo_validacion(
@@ -131,11 +135,11 @@ async def test_flujo_no_pregunta_discriminante_sin_pop_ciego():
             t_inicio=0.0,
         )
 
-        assert res_evidencia is not None
-        assert res_evidencia["status"] == "evaluar_alternativa"
-        assert res_evidencia["diagnostico_forzado"] is None, "NO debe forzar Top 2"
-        assert "Descarte previo: no es Bateria descargada" in res_evidencia["texto_evaluar"]
-        assert "en caliente el motor jalonea a fondo" in res_evidencia["texto_evaluar"]
+        # La evidencia retorna al orquestador; un NO previo no acredita un descarte.
+        assert res_evidencia is None
+        assert "validacion_diagnostico" not in conversacion.contexto
+        assert mock_d.falla_predicha == "Bateria descargada"
+        assert len(mock_d.trazabilidad["predicciones_ml"]) == 2
 
 
 @pytest.mark.anyio
@@ -176,11 +180,9 @@ async def test_flujo_no_con_evidencia_inmediata():
             t_inicio=0.0,
         )
 
-        assert res is not None
-        assert res["status"] == "evaluar_alternativa"
-        assert res["diagnostico_forzado"] is None
-        assert "Alternador defectuoso" in res["texto_evaluar"]
-        assert "cascabelea fuerte" in res["texto_evaluar"]
+        # Los datos nuevos regresan al orquestador, sin consumirse como confirmación.
+        assert res is None
+        assert "validacion_diagnostico" not in conversacion.contexto
 
 
 @pytest.mark.anyio
@@ -199,6 +201,10 @@ async def test_cambio_de_vehiculo_limpia_contexto():
     assert res_a["estado"].marca == "Toyota"
     assert res_a["estado"].modelo == "Corolla"
 
+    # El cambio de vehículo se autoriza explícitamente antes de extraer el perfil nuevo.
+    await orq.procesar_turno(
+        session_id=sid, texto_usuario="nuevo caso", gestor_diagnostico=gestor,
+    )
     # Vehículo B: Nissan Sentra
     res_b = await orq.procesar_turno(
         session_id=sid,

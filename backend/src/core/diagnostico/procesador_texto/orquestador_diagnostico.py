@@ -17,6 +17,10 @@ from src.core.diagnostico.models import ResultadoDiagnostico
 from src.core.diagnostico.procesador_texto.clasificacion_ml import (
     ejecutar_clasificacion_ml,
 )
+from src.core.diagnostico.procesador_texto.componentes_contexto import (
+    registrar_recepcion,
+    tiene_componente_tecnico,
+)
 from src.core.diagnostico.procesador_texto.interaccion_sesion import (
     manejar_interaccion_previa,
 )
@@ -26,7 +30,6 @@ from src.core.diagnostico.procesador_texto.recuperacion_rag import (
 from src.core.intent_classifier import clasificar_intencion_consulta
 from src.core.logger import logger
 from src.core.sanitizer import sanitizar_prompt_usuario
-from src.core.security import anonimizar_identificador
 from src.core.traductor_jerga import normalizar_jerga_peruana
 from src.core.vehicle_profile import (
     extraer_datos_vehiculo,
@@ -56,12 +59,7 @@ def procesar_consulta_texto(
     texto_sanitizado = sanitizar_prompt_usuario(texto_usuario)
     texto_normalizado = normalizar_jerga_peruana(texto_sanitizado)
 
-    placa_anonima = anonimizar_identificador(placa or "")
-    session_id_anon = anonimizar_identificador(session_id or "")
-    logger.info(
-        f"Procesando consulta texto (Longitud: {len(texto_normalizado)} caracteres) | "
-        f"Placa Anonimizada: {placa_anonima} | Session ID Anonimizado: {session_id_anon} | Proveedor: {proveedor}"
-    )
+    registrar_recepcion(texto_normalizado, placa, session_id, proveedor)
 
     clave_sesion = session_id or (placa if placa not in (None, "REST-API", "WAPP-01") else None)
     sesion_pendiente = gestor.session_manager.obtener_sesion(clave_sesion) if clave_sesion else None
@@ -97,17 +95,7 @@ def procesar_consulta_texto(
         sesion_anterior = gestor.session_manager.obtener_sesion(clave_sesion)
         from src.core.conversacion.segmentador_casos import SegmentadorCasos
 
-        es_cambio_explicito = any(
-            f in texto_normalizado.lower()
-            for f in (
-                "otro problema", "otra falla", "nuevo problema", "tengo un susto", "tengo un problema",
-                "mire maestro", "otra cosa", "cambio de tema", "el cliente dejó", "el cliente dejo",
-                "el cliente trajo", "el cliente dice", "el cliente indica", "otro vehículo", "otro vehiculo",
-                "otro carro", "este es otro", "nuevo caso", "tengo otro", "ahora presenta",
-                "ahora el problema", "ahora revisemos", "ya revisaré", "ya revisare", "olvida lo anterior",
-                "eso ya lo revisé", "eso ya lo revise"
-            )
-        ) or SegmentadorCasos.es_nueva_queja_principal(texto_normalizado)
+        es_cambio_explicito = SegmentadorCasos.es_nueva_queja_principal(texto_normalizado)
 
         if diagnostico_forzado:
             sesion = sesion_anterior or gestor.session_manager.obtener_o_crear_sesion(clave_sesion)
@@ -115,12 +103,7 @@ def procesar_consulta_texto(
             marca_evaluar = marca_modelo or sesion.marca_modelo
             placa_evaluar = placa or sesion.placa
         else:
-            es_caso_completado = bool(
-                sesion_anterior and getattr(sesion_anterior, "estado", "") in ("completo", "completado")
-            )
-            es_nuevo = es_cambio_explicito or (
-                es_caso_completado and not gestor._es_continuacion_contextual(texto_normalizado)
-            )
+            es_nuevo = es_cambio_explicito
             if sesion_anterior and es_nuevo:
                 gestor.session_manager.finalizar_caso(clave_sesion)
             sesion = gestor.session_manager.acumular_input_usuario(
@@ -156,16 +139,7 @@ def procesar_consulta_texto(
 
     combustible_detectado, modo_falla_combustible = gestor._extraer_contexto_combustible(texto_evaluar)
     tiene_dtc = bool(re.search(r"\b[pbcu]\d{4}\b", texto_evaluar, re.IGNORECASE))
-    tiene_componente_especifico = any(
-        c in texto_evaluar.lower()
-        for c in (
-            "bobina", "bujia", "bujía", "inyector", "sensor", "valvula", "válvula",
-            "compresion", "compresión", "bomba de gasolina", "bomba de combustible",
-            "cables de bujia", "distribuidor", "catalizador", "egr", "maf", "map", "cilindro",
-            "presion de combustible", "presión de combustible", "la bomba", "manometro", "manómetro",
-            "cae fuerte", "aforador", "tanque casi vacio", "tanque casi vacío",
-        )
-    )
+    tiene_componente_especifico = tiene_componente_tecnico(texto_evaluar)
     if (
         clave_sesion
         and not orquestado
@@ -328,52 +302,12 @@ def procesar_consulta_texto(
             predicciones_ml_raw=[],
         )
 
-    # Telemetría independiente: probabilidad original antes de cualquier fusión.
-    inicio_telemetria_svm = time.perf_counter()
-    # Nunca se usa para cambiar el ranking o confianza operativos.
-    predicciones_svm_raw = []
-    modelo = getattr(gestor, "modelo_ml", None)
-    if modelo is not None and hasattr(modelo, "predecir_top_fallas_svm_raw"):
-        try:
-            texto_svm = gestor._purificar_sintoma_para_vectorizador_ml(texto_evaluar)
-            predicciones_svm_raw = [
-                {"falla": item["falla"], "probabilidad": item["probabilidad"]}
-                for item in modelo.predecir_top_fallas_svm_raw(texto_svm, limite=3)
-            ]
-        except (ValueError, TypeError, AttributeError) as exc:
-            logger.warning("No se pudo obtener telemetría SVM raw: %s", exc)
-
-    tiempo_telemetria_svm_ms = max(0, int((time.perf_counter() - inicio_telemetria_svm) * 1000))
-
-    # Abstención conservadora únicamente cuando no existe vocabulario TF-IDF
-    # utilizable. No se asignan umbrales de confianza sin evaluación OOD.
-    motivo_abstencion = None
-    if modelo is not None and getattr(modelo, "vectorizador", None) is not None:
-        try:
-            texto_c1 = gestor._purificar_sintoma_para_vectorizador_ml(texto_evaluar)
-            entrada_c1 = modelo.vectorizador.transform([texto_c1])
-            if getattr(entrada_c1, "nnz", 0) == 0:
-                motivo_abstencion = "SIN_VOCABULARIO_TFIDF"
-        except (ValueError, TypeError, AttributeError) as exc:
-            logger.warning("No se pudo evaluar cobertura TF-IDF: %s", exc)
-    if motivo_abstencion and not diagnostico_forzado:
-        return ResultadoDiagnostico(
-            respuesta_texto=(
-                "No tengo evidencia textual reconocible para proponer una avería. "
-                "Describe un síntoma concreto y la condición en que aparece."
-            ),
-            diagnostico_ml="Baja Confianza / Indeterminado",
-            confianza_ml=0.0,
-            contexto_manual="",
-            titulo_manual="",
-            requiere_revision_humana=True,
-            modo_diagnostico="abstencion_c1",
-            motivo_abstencion=motivo_abstencion,
-            predicciones_ml=[],
-            predicciones_svm_raw=[],
-            tiempo_ml_ms=tiempo_telemetria_svm_ms,
-            tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
-        )
+    from .cobertura_svm import evaluar_cobertura_svm
+    predicciones_svm_raw, tiempo_telemetria_svm_ms, abstencion = evaluar_cobertura_svm(
+        gestor, texto_evaluar, diagnostico_forzado, inicio_total
+    )
+    if abstencion is not None:
+        return abstencion
 
     # 5. Inferencia ML y filtrado por área
     (
@@ -394,6 +328,32 @@ def procesar_consulta_texto(
         tiene_dtc=tiene_dtc,
         tiene_componente_especifico=tiene_componente_especifico,
     )
+
+    # La compatibilidad se aplica antes de cualquier auto-pregunta o recuperación.
+    # La telemetría SVM raw permanece intacta, incluida la masa excluida.
+    from .compatibilidad import filtrar_predicciones_compatibles
+
+    sesion_compatibilidad = gestor.session_manager.obtener_sesion(clave_sesion) if clave_sesion else None
+    predicciones_ml, exclusiones = filtrar_predicciones_compatibles(
+        texto_evaluar, predicciones_ml, sesion_compatibilidad
+    )
+    predicciones_originales, _ = filtrar_predicciones_compatibles(
+        texto_evaluar, predicciones_originales, sesion_compatibilidad
+    )
+    if exclusiones and sesion_compatibilidad:
+        sesion_compatibilidad.conversation_state.trazabilidad.append({"exclusiones_compatibilidad": exclusiones})
+    if exclusiones and predicciones_ml:
+        diagnostico_predictivo = predicciones_ml[0].falla
+        confianza = predicciones_ml[0].probabilidad
+    elif exclusiones:
+        return ResultadoDiagnostico(
+            respuesta_texto="Las hipótesis disponibles no son compatibles con el vehículo registrado. "
+                            "Se requiere evidencia técnica adicional, sin confirmar una falla.",
+            diagnostico_ml="Sin hipótesis compatible", confianza_ml=0.0, contexto_manual="", titulo_manual="",
+            requiere_revision_humana=True, modo_diagnostico="baja_confianza",
+            motivo_abstencion="INCOMPATIBILIDAD_VEHICULO", predicciones_ml=[],
+            predicciones_svm_raw=predicciones_svm_raw,
+        )
 
     # Tiempo de ML incluye la pasada SVM raw adicional; no es tiempo total TPRD.
     tiempo_ml_ms += tiempo_telemetria_svm_ms

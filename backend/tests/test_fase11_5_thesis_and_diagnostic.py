@@ -168,7 +168,7 @@ def test_resumen_no_imputa_tiempos_ausentes_y_excluye_piloto():
     assert resumen["casos_posttest"] == 1
     assert resumen["total_casos"] == 3
     assert resumen["tiempos_evaluados_pretest"] == 1
-    assert resumen["tiempo_promedio_pretest_min"] == 15.0
+    assert resumen["tiempo_promedio_pretest_min"] is None
     assert resumen["tiempo_promedio_posttest_min"] == 12.0
 
 

@@ -187,6 +187,37 @@ def evaluar_transicion(
         or re.search(r"\b(cuando\s+freno|al\s+frenar|frenando|en\s+carretera|a\s+\d+\s*km/h|manejando|circulando)\b", texto_l)
     )
 
+    coexistencia_declarada = any(
+        re.search(
+            r"\b(?:dos|2)\s+(?:problemas|fallas|aver[ií]as)\b.{0,45}"
+            r"\b(?:simult[aá]ne|mismo\s+tiempo|mismo\s+veh[ií]culo|no\s+mezcl)",
+            mensaje,
+            re.IGNORECASE,
+        )
+        for mensaje in estado.historial_mensajes_usuario
+    )
+
+    # Una condición de marcha no borra un problema de arranque ni viceversa.
+    # Si el relato introduce otro sistema, aclarar el alcance antes de diagnosticar.
+    subsistema_previo = obtener_subsistema_estado(estado)
+    subsistema_actual = detectar_subsistema_texto(texto_usuario)
+    if (
+        subsistema_previo != SubsistemaVehicular.DESCONOCIDO
+        and subsistema_actual != SubsistemaVehicular.DESCONOCIDO
+        and subsistema_previo != subsistema_actual
+        and not coexistencia_declarada
+        and not es_sintoma_coexistente(subsistema_previo, subsistema_actual, texto_usuario)
+    ):
+        return TransicionCasoResultado(
+            decision=DecisionTransicion.ACLARACION_REQUERIDA,
+            motivo="ALCANCE_NUEVO_SISTEMA_PENDIENTE",
+            estado_previo=estado_previo,
+            estado_detectado_mensaje=estado_detectado_mensaje,
+            dominio_previo=subsistema_previo,
+            dominio_detectado_mensaje=subsistema_actual,
+            pregunta_aclaracion=PREGUNTA_ACLARACION_CANONICA,
+        )
+
     # Regla A: Incompatibilidad inequívoca ARRANQUE vs MOVIMIENTO
     if tiene_arranque_heredado and tiene_movimiento_actual and es_nueva_queja_principal(texto_usuario):
         sub_det = detectar_subsistema_texto(texto_usuario)
@@ -224,15 +255,7 @@ def evaluar_transicion(
     # Regla C: Regresiones Cross-System tras caso previamente diagnosticado o maduro
     subsistema_previo = obtener_subsistema_estado(estado)
     subsistema_actual = detectar_subsistema_texto(texto_usuario)
-    coexistencia_declarada = any(
-        re.search(
-            r"\b(?:dos|2)\s+(?:problemas|fallas|aver[ií]as)\b.{0,45}"
-            r"\b(?:simult[aá]ne|mismo\s+tiempo|mismo\s+veh[ií]culo|no\s+mezcl)",
-            mensaje,
-            re.IGNORECASE,
-        )
-        for mensaje in estado.historial_mensajes_usuario
-    )
+
 
     caso_ya_diagnosticado = bool(estado.fase == ConversationPhase.RESULTADO or estado.top3_actual)
     if caso_ya_diagnosticado and subsistema_actual != SubsistemaVehicular.DESCONOCIDO and subsistema_previo != SubsistemaVehicular.DESCONOCIDO:

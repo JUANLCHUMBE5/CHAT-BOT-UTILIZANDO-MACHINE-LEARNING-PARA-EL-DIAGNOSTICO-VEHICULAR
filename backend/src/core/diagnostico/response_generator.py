@@ -15,6 +15,7 @@ from src.core.diagnostico.respuesta_llm_estructurada import (
     INSTRUCCION_JSON,
     validar_y_formatear,
 )
+from src.core.diagnostico.seguridad_informativa import proteger_ruta_informativa
 from src.core.gemini_queue import SolicitudGeminiEncolada, gemini_rate_limiter
 from src.core.llm import generar_respuesta_groq
 from src.core.logger import logger
@@ -43,6 +44,7 @@ def _validar_respuesta_llm_diagnostico(
     return validar_y_formatear(texto, hipotesis_permitidas=permitidas or None)
 
 
+@proteger_ruta_informativa
 def generar_respuesta_con_metadatos(
     gestor: Any,
     pregunta: str,

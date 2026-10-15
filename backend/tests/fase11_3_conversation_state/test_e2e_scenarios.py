@@ -178,6 +178,9 @@ async def test_e2e_04_cambio_de_caso(
     assert "aire acondicionado" in r1["respuesta_texto"].lower() or "climatización" in r1["respuesta_texto"].lower() or "a/c" in r1["respuesta_texto"].lower()
 
     # Caso B: Fuga de refrigerante y temperatura
+    await orquestador_inmem.procesar_mensaje(
+        session_id=session_id, texto_usuario="nuevo caso", gestor_diagnostico=gestor_real,
+    )
     r2 = await orquestador_inmem.procesar_mensaje(
         session_id=session_id,
         texto_usuario="El cliente dejó su vehículo porque tiene fuga de líquido en la parte delantera y está subiendo la temperatura del motor.",

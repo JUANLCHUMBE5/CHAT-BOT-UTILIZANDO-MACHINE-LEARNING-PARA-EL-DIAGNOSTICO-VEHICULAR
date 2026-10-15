@@ -73,6 +73,9 @@ def documento_compatible(texto, titulo, contexto):
     automatico = bool(re.search(r"\b(automatic[oa]|cvt|dsg)\b", consulta))
     manual = bool(re.search(r"\b(?:caja|transmision) manual\b", consulta))
     doc_manual = bool(re.search(r"\b(?:caja de cambios|caja|transmision) (?:manual|mecanica)\b", documento))
+    # Un collarín de desembrague es específico del embrague manual aunque el
+    # documento no contenga literalmente "transmisión manual".
+    doc_manual = doc_manual or bool(re.search(r"\b(?:collarin|crapodina|pedal de embrague)\b", documento))
     doc_auto = bool(re.search(r"\b(automatic[oa]|cvt|dsg)\b", documento))
     transmision_compatible = not (
         (automatico and doc_manual and not doc_auto)

@@ -88,33 +88,11 @@ async def test_reproduccion_exacta_incidente_fase_9_9(
     estado_t2 = res_t2["estado"]
     case_id_t2 = estado_t2.case_id
 
-    # Verificaciones obligatorias Fase 9.10
-    assert case_id_t2 != case_id_t1, "Debe generar un nuevo case_id para el nuevo problema"
-    assert res_t2["decision_transicion"] == DecisionTransicion.CAMBIO_DE_CASO.value
-    assert "ARRANQUE" in res_t2["motivo_transicion"] and "FRENADO" in res_t2["motivo_transicion"]
-
-    # Consulta consolidada limpia sin contaminación de arranque
-    consulta_nueva = res_t2["consulta_consolidada"]
-    assert "no arranca" not in consulta_nueva.lower()
-    assert "clic" not in consulta_nueva.lower()
-    assert "batería" not in consulta_nueva.lower()
-    assert "frenar" in consulta_nueva.lower() or "vibración" in consulta_nueva.lower()
-
-    # Estado operativo actual debe ser FRENADO
-    assert res_t2["estado_operativo"] == EstadoOperativo.FRENADO.value
-
-    # Inferencia ML pura sobre la consulta limpia resultante de la segmentación
-    dto_ml = gestor_real.procesar_consulta_texto(
-        texto_usuario=consulta_nueva,
-        session_id=session_id,
-    )
-    assert "freno" in dto_ml.diagnostico_ml.lower() or "disco" in dto_ml.diagnostico_ml.lower()
-    assert "batería" not in dto_ml.diagnostico_ml.lower()
-
-    # Trazabilidad de hechos históricos vs activos
-    assert len(estado_t2.hechos_historicos) >= 1
-    assert estado_t2.hechos_historicos[0]["case_id"] == case_id_t1
-    assert "motor_arranca" not in estado_t2.hechos
+    # Contrato aprobado: una nueva queja no borra el caso sin consentimiento.
+    assert case_id_t2 == case_id_t1
+    assert res_t2["decision_transicion"] != DecisionTransicion.CAMBIO_DE_CASO.value
+    assert estado_t2.obtener_hecho("motor_arranca") is not None
+    assert msg_frenado in estado_t2.historial_mensajes_usuario
 
 
 # =============================================================================
@@ -135,8 +113,9 @@ def test_transicion_cross_system_frenado_a_marcha() -> None:
         seniales_mensaje={"senial_marcha": True},
         seniales_heredadas={"senial_frenado": True},
     )
-    assert res.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "FRENOS_A_MARCHA_MOTOR" in res.motivo
+    assert res.decision in (DecisionTransicion.MANTENER_CASO, DecisionTransicion.ACLARACION_REQUERIDA)
+    assert res.nuevo_case_id is None
+    assert estado.hechos  # La evaluación no descarta evidencia anterior.
 
 
 def test_transicion_cross_system_marcha_a_arranque() -> None:
@@ -154,8 +133,9 @@ def test_transicion_cross_system_marcha_a_arranque() -> None:
         seniales_mensaje={"senial_arranque": True},
         seniales_heredadas={"senial_marcha": True},
     )
-    assert res.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "MARCHA_VS_ARRANQUE" in res.motivo
+    assert res.decision in (DecisionTransicion.MANTENER_CASO, DecisionTransicion.ACLARACION_REQUERIDA)
+    assert res.nuevo_case_id is None
+    assert estado.hechos  # La evaluación no descarta evidencia anterior.
 
 
 def test_transicion_cross_system_electrico_a_transmision() -> None:
@@ -173,8 +153,9 @@ def test_transicion_cross_system_electrico_a_transmision() -> None:
         seniales_mensaje={},
         seniales_heredadas={},
     )
-    assert res.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "ELECTRICO_A_TRANSMISION" in res.motivo
+    assert res.decision in (DecisionTransicion.MANTENER_CASO, DecisionTransicion.ACLARACION_REQUERIDA)
+    assert res.nuevo_case_id is None
+    assert estado.hechos  # La evaluación no descarta evidencia anterior.
 
 
 def test_transicion_cross_system_motor_a_suspension() -> None:
@@ -192,8 +173,9 @@ def test_transicion_cross_system_motor_a_suspension() -> None:
         seniales_mensaje={"senial_marcha": True},
         seniales_heredadas={},
     )
-    assert res.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "MARCHA_MOTOR_A_SUSPENSION" in res.motivo
+    assert res.decision in (DecisionTransicion.MANTENER_CASO, DecisionTransicion.ACLARACION_REQUERIDA)
+    assert res.nuevo_case_id is None
+    assert estado.hechos  # La evaluación no descarta evidencia anterior.
 
 
 # =============================================================================
@@ -275,7 +257,7 @@ def test_respuesta_usuario_a_pregunta_aclaracion() -> None:
         seniales_heredadas={},
     )
     assert res_otra.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert "USUARIO_CONFIRMA_FALLA_DIFERENTE" in res_otra.motivo
+    assert res_otra.motivo == "SOLICITUD_EXPLICITA_NUEVA_CONSULTA"
 
     # Usuario confirma que es el mismo vehículo
     res_mismo = SegmentadorCasos.evaluar_transicion(

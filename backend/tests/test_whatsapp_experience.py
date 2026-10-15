@@ -59,6 +59,8 @@ def test_contexto_multiturno_une_dato_gnv_sin_arrastrar_consulta_nueva(monkeypat
     assert "solo usando GNV" in capturados[-1]
     assert tercero.sintoma_evaluado == capturados[-1]
 
+    # Una queja diferente no borra el contexto sin una orden explícita.
+    gestor.procesar_consulta_texto("nuevo caso", session_id="sesion-gnv")
     gestor.procesar_consulta_texto("la puerta no abre con el control", session_id="sesion-gnv")
     assert "pierde fuerza" not in capturados[-1]
 

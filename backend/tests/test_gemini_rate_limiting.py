@@ -29,17 +29,18 @@ from src.infrastructure.database.models.diagnostics import Diagnostico, Vehiculo
 from src.infrastructure.database.models.jobs import CuotaGeminiGlobal, TrabajoGemini
 from src.infrastructure.database.models.messaging import Conversacion
 from src.infrastructure.database.models.operations import UsoApi
+from src.infrastructure.database.models.validation import ValidacionTaller
 from src.infrastructure.database.repositories.cuota_gemini_repository import CuotaGeminiRepository
 from src.infrastructure.database.repositories.taller_repository import TallerRepository
 from src.infrastructure.database.repositories.trabajo_gemini_repository import TrabajoGeminiRepository
 from src.infrastructure.database.repositories.usuario_repository import UsuarioRepository
 
 
-def test_alembic_head_es_20260926_01():
+def test_alembic_head_es_20261014_01():
     """Verifica que la migración más reciente sea el head activo de Alembic."""
     config = Config("alembic.ini")
     scripts = ScriptDirectory.from_config(config)
-    assert scripts.get_current_head() == "20260926_01"
+    assert scripts.get_current_head() == "20261014_01"
 
 
 def test_gemini_rate_limiter_concede_12_y_encola_excedentes():
@@ -147,13 +148,18 @@ async def test_trabajo_gemini_repository_skip_locked_y_transiciones(async_db_ses
     assert trabajo.remitente_cifrado is not None
     assert "+51987111222" not in trabajo.remitente_cifrado
 
-    # 2. Bloquear y procesar usando FOR UPDATE SKIP LOCKED
+    # 2. Bloquear y reservar usando FOR UPDATE SKIP LOCKED
     bloqueado = await repo.obtener_siguiente_pendiente_bloqueado(bloqueo_segundos=30)
     assert bloqueado is not None
     assert bloqueado.id == trabajo_id
     assert bloqueado.estado == "procesando"
-    assert bloqueado.intentos == 1
+    assert bloqueado.intentos == 0  # La reserva atómica no cobra un intento prematuro
     assert bloqueado.bloqueado_hasta is not None
+
+    # Registrar el intento real de ejecución hacia el proveedor
+    await repo.registrar_intento_ejecucion(trabajo_id)
+    bloqueado_actualizado = await repo.obtener_por_id(trabajo_id)
+    assert bloqueado_actualizado.intentos == 1
     await async_db_session.commit()
 
     # 3. Marcar completado
@@ -172,11 +178,19 @@ async def test_trabajo_gemini_repository_skip_locked_y_transiciones(async_db_ses
 
 
 @pytest.mark.anyio
-async def test_cuota_gemini_repository_sincronizacion_rpm_y_rpd(async_db_session: AsyncSession):
+async def test_cuota_gemini_repository_sincronizacion_rpm_y_rpd(async_db_session: AsyncSession, monkeypatch):
     """
     Verifica que CuotaGeminiRepository limite atómicamente RPM (12) y RPD (18)
     en PostgreSQL para compartir cuota entre múltiples instancias/servidores.
     """
+    import time
+    from types import SimpleNamespace
+
+    from src.infrastructure.database.repositories import cuota_gemini_repository as modulo_cuota
+
+    # Congelar solo el reloj del repositorio, no el reloj global del worker.
+    reloj = {"epoch": int(time.time())}
+    monkeypatch.setattr(modulo_cuota, "time", SimpleNamespace(time=lambda: reloj["epoch"]))
     cuota_repo = CuotaGeminiRepository(async_db_session)
 
     # 1. Resetear cuota para prueba limpia
@@ -198,6 +212,13 @@ async def test_cuota_gemini_repository_sincronizacion_rpm_y_rpd(async_db_session
     concedido, motivo, hoy, min_cnt = await cuota_repo.adquirir_slot_compartido(max_rpm=12, max_rpd=18)
     assert concedido is False
     assert "rpm_excedido" in motivo
+
+    # El cambio de minuto sí debe reiniciar RPM sin perder el acumulado diario.
+    reloj["epoch"] += 60
+    concedido, motivo, hoy, min_cnt = await cuota_repo.adquirir_slot_compartido(max_rpm=12, max_rpd=18)
+    assert concedido is True
+    assert hoy == 13
+    assert min_cnt == 1
 
     # 4. Simular que se alcanzó el límite diario RPD (18)
     stmt_set_rpd = select(CuotaGeminiGlobal).where(CuotaGeminiGlobal.id == 1).with_for_update()
@@ -247,7 +268,7 @@ async def test_worker_recupera_trabajo_procesando_con_bloqueo_vencido(async_db_s
     assert recuperado is not None
     assert recuperado.id == trabajo.id
     assert recuperado.estado == "procesando"
-    assert recuperado.intentos == 2
+    assert recuperado.intentos == 1  # La recuperación no infla prematuramente el contador
     trabajo_id = trabajo.id
     await async_db_session.rollback()
     await async_db_session.execute(delete(TrabajoGemini).where(TrabajoGemini.id == trabajo_id))
@@ -355,7 +376,15 @@ async def test_webhook_persiste_free_tier_costo_cero_en_uso_api(async_db_session
     if uso_gemini:
         assert uso_gemini.costo_estimado == Decimal("0.000000")
 
-    # Limpiar
+    # El webhook genera borradores de desarrollo que referencian el taller.
+    # Eliminar solo los del fixture; nunca tocar registros oficiales o verificados.
+    await async_db_session.execute(
+        delete(ValidacionTaller).where(
+            ValidacionTaller.taller_id == taller.id,
+            ValidacionTaller.tipo_registro == "DEVELOPMENT",
+            ValidacionTaller.estado_registro == "borrador",
+        )
+    )
     await async_db_session.execute(delete(TrabajoGemini).where(TrabajoGemini.taller_id == taller.id))
     await async_db_session.execute(delete(UsoApi).where(UsoApi.taller_id == taller.id))
     await async_db_session.execute(delete(Diagnostico).where(Diagnostico.taller_id == taller.id))

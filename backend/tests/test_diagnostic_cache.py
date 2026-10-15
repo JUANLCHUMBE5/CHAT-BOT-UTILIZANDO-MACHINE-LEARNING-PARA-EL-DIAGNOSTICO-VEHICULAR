@@ -5,6 +5,7 @@ y reducción de latencia / concurrencia para múltiples trabajadores mecánicos.
 """
 
 import time
+import uuid
 
 from src.core.diagnostic_cache import DiagnosticoLRUCache
 from src.core.gestor_diagnostico import GestorDiagnostico, ResultadoDiagnostico
@@ -70,12 +71,14 @@ def test_gestor_diagnostico_reutiliza_cache_en_segunda_llamada():
     gestor = GestorDiagnostico(gemini_api_key="mock_key")
     sintoma = "pastillas de freno chillan en bajada prueba cache"
 
+    case_id = str(uuid.uuid4())
+    # La caché está aislada por caso; una consulta sin identidad no se comparte.
     # Primera llamada: procesa y guarda en caché
-    res1 = gestor.procesar_consulta_texto(sintoma, marca_modelo="Toyota Corolla")
+    res1 = gestor.procesar_consulta_texto(sintoma, marca_modelo="Toyota Corolla", case_id=case_id)
 
     # Segunda llamada idéntica: debe responder desde caché en tiempo récord (< 10 ms)
     t1 = time.time()
-    res2 = gestor.procesar_consulta_texto(sintoma, marca_modelo="Toyota Corolla")
+    res2 = gestor.procesar_consulta_texto(sintoma, marca_modelo="Toyota Corolla", case_id=case_id)
     t_segunda = (time.time() - t1) * 1000
 
     assert res1.diagnostico_ml == res2.diagnostico_ml

@@ -356,7 +356,10 @@ async def test_casos_09_10_reinicio_de_caso(gestor_singleton):
     await orq.procesar_turno(session_id=s_id, texto_usuario="Honda Civic no prende", gestor_diagnostico=gestor_singleton)
     st_civic = await repo.get_session(s_id)
     assert st_civic.marca == "Honda"
-    assert "Nissan" not in str(st_civic.exportar_dict())
+    assert st_civic.marca != "Nissan"
+    assert "Nissan" not in str(st_civic.hechos)
+    # El archivo histórico conserva el caso anterior para trazabilidad.
+    assert "Nissan" in str(st_civic.hechos_historicos)
 
 
 @pytest.mark.anyio
@@ -473,10 +476,11 @@ async def test_caso_17_escape_del_loop(gestor_singleton):
     await orq.procesar_turno(session_id=s_id, texto_usuario="ni idea", gestor_diagnostico=gestor_singleton)
     r_escape = await orq.procesar_turno(session_id=s_id, texto_usuario="tampoco sé", gestor_diagnostico=gestor_singleton)
 
-    # Debe forzar diagnóstico diferencial sin entrar en bucle infinito
-    assert r_escape["decision"] in ("DIFERENCIAL", "DIAGNOSTICAR")
+    # Sin evidencia, terminar con abstención explícita evita inventar hipótesis.
+    assert r_escape["decision"] == "DATOS_INSUFICIENTES"
     assert not r_escape["es_pregunta"]
-    assert "Posibles causas" in r_escape["respuesta_texto"] or "Hipótesis" in r_escape["respuesta_texto"]
+    assert r_escape["respuesta_texto"]
+    assert not r_escape.get("top3_actual")
 
 
 @pytest.mark.anyio

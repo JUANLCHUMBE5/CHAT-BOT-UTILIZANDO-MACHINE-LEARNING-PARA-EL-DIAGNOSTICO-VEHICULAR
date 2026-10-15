@@ -78,7 +78,7 @@ def detectar_subsistema_texto(texto: str) -> SubsistemaVehicular:
         return SubsistemaVehicular.CLIMATIZACION
     if re.search(
         r"\b(recalienta|recalentar|recalntar|refrigeraci[oó]n|refrigerante|"
-        r"temperatura\s+(?:del\s+motor\s+)?(?:sube|subiendo)|sube\s+la\s+temperatura)\b", txt,
+        r"temperatura\s+(?:del\s+motor\s+)?(?:est[aá]\s+)?(?:sube|subiendo)|sube\s+la\s+temperatura)\b", txt,
     ) and not re.search(r"\b(caja|transmisi[oó]n|embrague|clutch)\b", txt):
         return SubsistemaVehicular.MARCHA_MOTOR
     if es_transmision:
@@ -109,7 +109,7 @@ def obtener_subsistema_estado(estado: ConversationState) -> SubsistemaVehicular:
             continue
         c_low = campo.lower().replace("í", "i").replace("á", "a").replace("é", "e").replace("ó", "o").replace("ú", "u")
         v_low = str(hecho.valor).lower().replace("í", "i").replace("á", "a").replace("é", "e").replace("ó", "o").replace("ú", "u")
-        if any(k in c_low or k in v_low for k in ("freno", "pastilla", "disco")):
+        if any(k in c_low or k in v_low for k in ("freno", "pastilla", "disco")) and "embrague" not in v_low:
             return SubsistemaVehicular.FRENOS
         if any(k in c_low or k in v_low for k in ("motor_arranca", "ruido_arranque", "evento", "arranque", "demora_arranque", "solenoide")):
             return SubsistemaVehicular.ARRANQUE
@@ -127,7 +127,7 @@ def obtener_subsistema_estado(estado: ConversationState) -> SubsistemaVehicular:
     # 2. Por hipótesis principal previa si existe
     falla_p = (getattr(estado, "falla_principal", None) or (estado.top3_actual[0]["falla"] if estado.top3_actual else "")).lower()
     falla_p = falla_p.replace("í", "i").replace("á", "a").replace("é", "e").replace("ó", "o").replace("ú", "u")
-    if "freno" in falla_p or "disco" in falla_p:
+    if ("freno" in falla_p or "disco" in falla_p) and "embrague" not in falla_p:
         return SubsistemaVehicular.FRENOS
     if "arranque" in falla_p or "solenoide" in falla_p:
         return SubsistemaVehicular.ARRANQUE

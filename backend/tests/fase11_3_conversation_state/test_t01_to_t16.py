@@ -331,7 +331,8 @@ async def test_t09_new_workshop_case(
     txt_r2 = r2["respuesta_texto"].lower()
     assert re.search(r"(?<!turbo)compresor", txt_r2) is None
     assert "r134a" not in txt_r2
-    assert any(term in txt_r2 for term in ("refrigerante", "radiador", "temperatura", "fuga", "manguera"))
+    assert r2["decision"] == "ACLARACION_CASO"
+    assert "mismo vehículo/caso" in txt_r2
 
 
 # =============================================================================

@@ -197,7 +197,7 @@ PATRON_PLACA_EXPLICITA = re.compile(
     re.IGNORECASE,
 )
 PATRON_PLACA_FORMATO = re.compile(
-    r"\b([A-Za-z][0-9A-Za-z]{2}[-\s][0-9]{3})\b"
+    r"\b([A-Za-z][0-9A-Za-z]{2}[-\s][0-9]{3,4})\b"
 )
 
 PATRON_DTC = re.compile(r"\b([PBUCpbuc][0-3][0-9A-Fa-f]{3})\b")

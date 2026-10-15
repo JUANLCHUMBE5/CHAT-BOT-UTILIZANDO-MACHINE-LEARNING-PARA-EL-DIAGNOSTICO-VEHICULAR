@@ -25,7 +25,7 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     ),
     (
         "vibración",
-        re.compile(r"\b(vibraci[oó]n|vibracion|tiembla|zapatea|vibra)\b", re.IGNORECASE),
+        re.compile(r"\b(vibraci[oó]n|vibracion|tiemblan?|zapatean?|vibran?)\b", re.IGNORECASE),
         re.compile(
             r"\b(no\s+(?:se\s+|le\s+|me\s+)?(?:siente\s+)?(?:vibra|tiembla|zapatea|vibraci[oó]n)|"
             r"al\s+frenar\s+no\s+vibra|sin\s+vibraci[oó]n|cero\s+vibraci[oó]n)\b",
@@ -104,7 +104,7 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     (
         "ruido anómalo",
         re.compile(
-            r"\b(suena\s+feo|ruido\s+extr[aá]ño|traqueteo|traquetea|sonajero|golpeteo|chillido|chirrido|zumbido|"
+            r"\b(suena\s+feo|ruido\s+extr[aá]ño|traqueteo|traquetea|sonajero|golpeteo|golpetea|chillido|chirrido|zumbido|"
             r"zumba|(?<!\bde\s)golpe(?:\s+en|\s+seco|\s+delantero)?|golpea|crujido|a[uú]lla|sonido)\b",
             re.IGNORECASE,
         ),

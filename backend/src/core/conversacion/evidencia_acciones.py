@@ -35,18 +35,27 @@ def registrar_acciones_taller(estado: ConversationState, texto_usuario: str) -> 
     hechos_extraidos: list[dict[str, Any]] = []
     # Registrar acciones, sin deducir que una pieza nueva o inspeccionada funciona bien.
     piezas = ("bujias", "bobinas?", "bomba", "filtro", "termostato", "pastillas", "aceite",
-              "fusible", "presion", "compresion", "bateria", "alternador", "arrancador")
+              "intercooler", "fusible", "presion", "compresion", "bateria", "alternador", "arrancador")
     for pieza in piezas:
         patron = rf"\b{pieza}\b"
         canon = "bujías" if "buj" in pieza else ("bobinas" if "bobin" in pieza else pieza)
         acciones = (
-            ("reemplazado", r"\b(?:cambie|cambiamos|cambiado|cambiada|nuevo|nueva)\b", "antecedente"),
+            ("reemplazado", r"\b(?:cambie|cambiamos|cambiados?|cambiadas?|nuevos?|nuevas?)\b", "antecedente"),
             ("probado", r"\b(?:revise|probe|intercambie|inspeccione|medi)\b", "prueba_realizada"),
         )
         for clausula in re.split(r"[.;!?]|\bpero\b", normalizar(texto_usuario)):
+            observacion = r"\b(?:tenia|tiene|presenta|observe|vi)\b"
+            if (re.search(r"\b(?:aceite|humedad|residuos?|corrosion|oxido)\b", clausula)
+                    and not re.search(r"\b(?:quizas|podria|supongo|creo)\b", clausula)
+                    and accion_afirmada(clausula, observacion, patron)):
+                hecho = estado.registrar_hecho(
+                    f"observacion_{canon}", clausula.strip(),
+                    categoria="observacion", texto_crudo=texto_usuario, tipo=FactType.CONDICION,
+                )
+                hechos_extraidos.append(hecho.to_dict())
             if re.search(patron, clausula) and re.search(
                 r"\b(?:no|nunca|sin)\b(?:\s+\w+){0,4}\s+"
-                r"(?:probe|revise|medi|comprobe|revisar|medir|comprobar)\b", clausula,
+                r"(?:probe|revise|medi|comprobe|inspeccione|revisar|medir|comprobar|inspeccionar)\b", clausula,
             ):
                 hecho = estado.registrar_hecho(
                     f"no_comprobado_{canon}", f"{canon}: comprobación pendiente",

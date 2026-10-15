@@ -121,7 +121,8 @@ async def persistir_sesion_en_almacenes(
         ctx["case_id"] = case_id
 
     # 1. Persistir en Redis
-    await guardar_contexto_sesion_redis(sesion_efectiva, ctx)
+    if conversacion is None:
+        await guardar_contexto_sesion_redis(sesion_efectiva, ctx)
 
     # 2. Persistir en PostgreSQL a través de conversacion.contexto
     if conversacion is not None:

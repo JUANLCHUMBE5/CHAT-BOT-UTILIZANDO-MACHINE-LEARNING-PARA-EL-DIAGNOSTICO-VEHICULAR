@@ -16,7 +16,7 @@ SISTEMA_INYECCION_MEZCLA = "INYECCION_MEZCLA"
 
 # Términos específicos: evitar palabras transversales como "bomba" o "aire".
 CATEGORIAS = {
-    "ENCENDIDO": ("bobina", "bujia", "chispa", "p030"),
+    "ENCENDIDO": ("bobina", "bujia", "chispa", "p030", "ratea", "misfire", "tironea"),
     "PROGRAMACION": ("reprogramacion", "programacion", "inmovilizador", "codificacion", "ecu"),
     "REFRIGERACION": (
         "refrigerante", "termostato", "radiador", "bomba de agua", "sobrecalentamiento",

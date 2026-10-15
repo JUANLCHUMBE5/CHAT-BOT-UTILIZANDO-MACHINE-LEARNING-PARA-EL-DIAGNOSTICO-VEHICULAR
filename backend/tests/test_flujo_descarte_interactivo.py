@@ -152,11 +152,11 @@ async def test_manejar_flujo_no_presenta_alternativas_ml():
         )
 
     assert resultado is not None
-    assert resultado["status"] == "esperando_falla_real"
+    assert resultado["status"] == "esperando_aclaracion_confirmacion"
     respuesta = resultado["respuesta"]
-    assert "Se descarta *Falla en bujias o bobinas de encendido (misfire)*" in respuesta or "se descarta *Falla en bujias" in respuesta
-    assert "Pregunta técnica discriminante" in respuesta
-    assert conversacion.contexto["validacion_diagnostico"]["etapa"] == "esperando_falla_real"
+    assert "no registrará una confirmación ni un descarte" in respuesta
+    assert "por sí solo" in respuesta
+    assert conversacion.contexto["validacion_diagnostico"]["etapa"] == "esperando_aclaracion_confirmacion"
 
 
 @pytest.mark.anyio
@@ -310,6 +310,6 @@ async def test_manejar_flujo_no_sin_alternativas_previas():
         )
 
     assert resultado is not None
-    assert resultado["status"] == "esperando_falla_real"
-    assert "Pregunta técnica discriminante" in resultado["respuesta"]
-    assert "Falla de alternador" in resultado["respuesta"]
+    assert resultado["status"] == "esperando_aclaracion_confirmacion"
+    assert "por sí solo" in resultado["respuesta"]
+    assert "no registrará" in resultado["respuesta"]

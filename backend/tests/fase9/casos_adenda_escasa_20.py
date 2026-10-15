@@ -69,14 +69,14 @@ ESCENARIOS_20_ADENDA_ESCASOS: List[Dict[str, Any]] = [
         "evidence_level_esperado": "BAJA",
         "sintoma_esperado": "anomalía en frenos",
     },
-    # 9. Respuesta 'no sé' a pregunta de temperatura -> NO debe repetir la pregunta
+    # 9. 'No sé' sin pregunta previa: no atribuir desconocimiento a una temperatura no consultada.
     {
         "id": "adenda_09_no_se_temperatura",
         "turnos": [
             "el motor ratea en ralentí y pierde fuerza",
             "no sé",
         ],
-        "debe_registrar_desconocido": "temperatura",
+        "debe_registrar_desconocido": "desconocido",
         "no_debe_repetir_intent": "TEMPERATURA_APARICION",
     },
     # 10. Respuesta 'ni idea' a pregunta de condición de operación

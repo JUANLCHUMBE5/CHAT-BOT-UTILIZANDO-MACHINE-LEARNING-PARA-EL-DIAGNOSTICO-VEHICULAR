@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from json import dumps
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -48,7 +49,7 @@ async def test_tokens_de_salida_ajustados_para_latencia():
         mock_resp = MagicMock()
         mock_resp.status_code = 200
         mock_resp.json.return_value = {
-            "candidates": [{"content": {"parts": [{"text": "🛠️ **1. Posible Falla**\n\n📖 **2. Procedimiento**\n\n⏱️ **3. Tiempo**"}]}}],
+            "candidates": [{"content": {"parts": [{"text": dumps({"hipotesis": solicitud_diag.diagnostico_ml, "explicacion": "Falta evidencia física.", "siguiente_prueba": "Consultar el procedimiento OEM aplicable.", "pregunta": "¿Qué comprobaciones realizaste?"})}]}}],
             "usageMetadata": {"promptTokenCount": 50, "candidatesTokenCount": 80},
         }
         return mock_resp
@@ -91,7 +92,9 @@ async def test_consulta_tecnica_tokens_reducidos_a_140():
         texto, meta = await procesar_solicitud_encolada(solicitud_info, limiter)
 
     assert payload_capturado.get("generationConfig", {}).get("maxOutputTokens") == 140
-    assert meta.get("modo") == "consulta_tecnica"
+    assert meta.get("modo") == "consulta_tecnica_degradada"
+    assert "29-43" not in texto
+    assert "3000" not in texto
 
 
 @pytest.mark.anyio

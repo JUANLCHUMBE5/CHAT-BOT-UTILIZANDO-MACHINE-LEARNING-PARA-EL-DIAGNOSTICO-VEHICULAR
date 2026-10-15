@@ -19,6 +19,7 @@ from src.infrastructure.database.models.catalogs import Taller, Usuario
 from src.infrastructure.database.models.diagnostics import Diagnostico
 from src.infrastructure.database.models.jobs import TrabajoGemini
 from src.infrastructure.database.models.messaging import Conversacion
+from src.infrastructure.database.models.validation import ValidacionTaller
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.taller_repository import TallerRepository
 from src.infrastructure.database.repositories.trabajo_gemini_repository import TrabajoGeminiRepository
@@ -211,7 +212,7 @@ async def test_rest_flujo_completo_a_b_c_d(
     dummy_request = Request(scope)
     consulta = ConsultaDiagnostico(
         sintoma="El motor tiembla en ralenti, bota humo negro por el escape y el escaner arroja codigo P0301",
-        placa="DEV-DUR01",
+        placa="DUR001",
         marca="Toyota",
         modelo="Yaris",
     )
@@ -284,6 +285,12 @@ async def test_rest_flujo_completo_a_b_c_d(
     assert diag_final.sintesis_llm == "Diagnóstico sintetizado final por el worker."
     assert diag_final.modo_diagnostico == "completo_ml_rag_llm"
 
+    # Limpiar solo borradores sintéticos de este taller antes de la FK.
+    await async_db_session.execute(delete(ValidacionTaller).where(
+        ValidacionTaller.taller_id == taller_id_val,
+        ValidacionTaller.tipo_registro == "DEVELOPMENT",
+        ValidacionTaller.estado_registro == "borrador",
+    ))
     # Limpieza
     from src.infrastructure.database.models.operations import UsoApi
     await async_db_session.execute(delete(TrabajoGemini).where(TrabajoGemini.taller_id == taller_id_val))
@@ -342,7 +349,7 @@ async def test_e_fallo_insert_commit_en_rest_nunca_devuelve_en_cola_gemini(
     dummy_request = Request({"type": "http", "method": "POST", "path": "/api/v1/diagnostico/analizar", "headers": [], "client": ("127.0.0.1", 12345)})
     consulta = ConsultaDiagnostico(
         sintoma="El motor tiembla en ralenti, bota humo negro por el escape y el escaner arroja codigo P0301",
-        placa="DEV-ERR01",
+        placa="ERR001",
         marca="Nissan",
         modelo="Sentra",
     )
@@ -359,8 +366,8 @@ async def test_e_fallo_insert_commit_en_rest_nunca_devuelve_en_cola_gemini(
             gestor=gestor,
         )
 
-    assert exc_info.value.status_code == 500
-    assert "Error interno" in exc_info.value.detail
+    assert exc_info.value.status_code == 503
+    assert "No se pudo conservar" in exc_info.value.detail
 
     # Limpieza
     await async_db_session.execute(delete(TrabajoGemini).where(TrabajoGemini.taller_id == taller_id_val))

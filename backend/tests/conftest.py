@@ -124,6 +124,13 @@ def reset_rate_limiter():
 def aislar_postgresql_en_pruebas_unitarias(request, monkeypatch):
     """Evita que webhooks unitarios escriban en la base local del desarrollador."""
     modulos_integracion_db = {
+        "test_remediacion_rest_postgres.py",
+        "test_consistencia_vehiculo_marca_modelo.py",
+        "test_diagnostico_diferencial_top_k.py",
+        "test_gemini_worker_cuota_reintentos.py",
+        "test_mecanicos_profile_edit.py",
+        "test_remediacion_integracion.py",
+
         "test_database_connection.py",
         "test_database_models.py",
         "test_database_repositories.py",
@@ -239,7 +246,13 @@ def mock_gemini_en_todas_las_pruebas(request, monkeypatch):
             return MockTwilioResponse()
         raise AssertionError(f"Llamada HTTP externa no simulada durante pruebas: {url}")
 
+    def mocked_session_request(self, method, url, *args, **kwargs):
+        if method.upper() == "POST":
+            return mocked_requests_post(url, *args, **kwargs)
+        raise AssertionError(f"Llamada HTTP externa no simulada durante pruebas: {method} {url}")
+
     monkeypatch.setattr(requests, "post", mocked_requests_post)
+    monkeypatch.setattr(requests.Session, "request", mocked_session_request)
     yield
 
 

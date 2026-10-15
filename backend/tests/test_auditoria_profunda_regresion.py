@@ -116,12 +116,9 @@ def test_memoria_metrologica_completa():
     assert estado.measurements["retorno_inyector"]["valor"] == 92.0
 
 
-def test_sincronizacion_componentes_descartados():
-    """Verifica que los componentes descartados por el mecánico se guarden con FactState.DESCARTADO."""
+def test_sustitucion_bujias_no_equivale_a_descarte():
     estado = ConversationState(session_id="test_regresion_descartes")
     extraer_comprobaciones_taller(estado, "ya le cambié bujías nuevas originales y sigue igual", "")
-
-    hecho_bujias = estado.obtener_hecho("bujias_descartadas")
-    assert hecho_bujias is not None
-    assert hecho_bujias.estado == FactState.DESCARTADO
-    assert "bujias" in [h.lower() for h in estado.hipotesis_descartadas]
+    assert estado.obtener_hecho("reemplazado_bujías") is not None
+    assert estado.obtener_hecho("bujias_descartadas") is None
+    assert not estado.hipotesis_descartadas

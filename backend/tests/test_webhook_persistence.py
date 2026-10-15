@@ -16,6 +16,7 @@ from src.infrastructure.database.models.diagnostics import Diagnostico, Hipotesi
 from src.infrastructure.database.models.jobs import TrabajoGemini
 from src.infrastructure.database.models.messaging import Conversacion, Mensaje
 from src.infrastructure.database.models.operations import Auditoria, UsoApi
+from src.infrastructure.database.models.validation import ValidacionTaller
 from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
@@ -25,7 +26,7 @@ from src.infrastructure.database.repositories.usuario_repository import UsuarioR
 
 
 @pytest.fixture
-async def setup_test_db():
+async def setup_test_db(monkeypatch):
     """Configura el taller y mecánico de pruebas en PostgreSQL y realiza limpieza al finalizar."""
     if not database_configurada():
         pytest.skip("PostgreSQL no está configurado para pruebas.")
@@ -33,6 +34,7 @@ async def setup_test_db():
     engine = obtener_engine()
     taller_id = uuid.uuid4()
     mecanico_id = uuid.uuid4()
+    telefono_id_meta = f"META_TEST_{taller_id.hex}"
 
     tel_autorizado = f"+51 987 {uuid.uuid4().int % 1000000:06d}"
     tel_no_autorizado = f"+51 911 {uuid.uuid4().int % 1000000:06d}"
@@ -47,6 +49,7 @@ async def setup_test_db():
             nombre="Taller Autorizado Carabayllo Test",
             ruc=f"20{uuid.uuid4().int % 1000000000:09d}",
             taller_id=taller_id,
+            telefono_id_meta=telefono_id_meta,
         )
         roles = await user_repo.asegurar_roles_estandar()
         await user_repo.crear_usuario(
@@ -60,6 +63,11 @@ async def setup_test_db():
         )
         await session.commit()
 
+    original = WebhookService.procesar_mensaje
+    async def con_metadata(self, *args, **kwargs):
+        kwargs.setdefault("telefono_id_meta", telefono_id_meta)
+        return await original(self, *args, **kwargs)
+    monkeypatch.setattr(WebhookService, "procesar_mensaje", con_metadata)
     yield {
         "engine": engine,
         "telefono_autorizado": tel_autorizado,
@@ -70,6 +78,11 @@ async def setup_test_db():
 
     # Limpieza de registros creados en PostgreSQL
     async with AsyncSession(engine, expire_on_commit=False) as session:
+        await session.execute(delete(ValidacionTaller).where(
+            ValidacionTaller.taller_id == taller_id,
+            ValidacionTaller.tipo_registro == "DEVELOPMENT",
+            ValidacionTaller.estado_registro == "borrador",
+        ))
         subq = select(Diagnostico.id).where(Diagnostico.taller_id == taller_id)
         await session.execute(delete(HipotesisDiagnostico).where(HipotesisDiagnostico.diagnostico_id.in_(subq)))
         await session.execute(delete(UsoApi).where(UsoApi.taller_id == taller_id))

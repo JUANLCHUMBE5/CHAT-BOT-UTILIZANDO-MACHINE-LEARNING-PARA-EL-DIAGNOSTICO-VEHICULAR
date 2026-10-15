@@ -61,6 +61,15 @@ def test_seccion_15_mensaje_real_tras_suspension(gestor_diag, orquestador):
         )
         res2 = await orquestador.procesar_mensaje(session_id=session_id, texto_usuario=msg2, gestor_diagnostico=gestor_diag)
         
+        assert res2["estado"].case_id == res1["estado"].case_id
+        assert res2["decision"] == "ACLARACION_CASO"
+        # El nuevo relato no autoriza descartar el caso anterior: confirmar explícitamente.
+        await orquestador.procesar_mensaje(
+            session_id=session_id, texto_usuario="nuevo caso", gestor_diagnostico=gestor_diag
+        )
+        res2 = await orquestador.procesar_mensaje(
+            session_id=session_id, texto_usuario=msg2, gestor_diagnostico=gestor_diag
+        )
         estado2 = res2["estado"]
         assert estado2.estado_operativo == EstadoOperativo.ARRANQUE
         assert estado2.dominio_probable == "ARRANQUE"

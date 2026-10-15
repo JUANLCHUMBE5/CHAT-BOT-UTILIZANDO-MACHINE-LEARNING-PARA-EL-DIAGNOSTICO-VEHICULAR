@@ -55,7 +55,12 @@ def test_tier4_multiturn_diagnostic_conversation_lifecycle():
     assert data3["confianza"] > 0.0
     assert "falla_predicha" in data3
     
-    # Turn 4: New Independent Session Post-Reset
+    # Una predicción no cierra el caso: pedir explícitamente otro antes de cambiarlo.
+    nuevo = client.post("/api/v1/diagnostico/analizar", json={
+        "sintoma": "nuevo caso", "session_id": session_id
+    }, headers=headers)
+    assert nuevo.status_code == 200
+    # Turn 4: Nuevo caso solicitado explícitamente
     res4 = client.post("/api/v1/diagnostico/analizar", json={
         "sintoma": "el timon esta duro al doblar",
         "session_id": session_id

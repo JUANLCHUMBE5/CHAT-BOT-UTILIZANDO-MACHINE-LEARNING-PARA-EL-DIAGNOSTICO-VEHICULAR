@@ -215,7 +215,7 @@ def test_resumen_no_convierte_faltantes_en_cero_ni_suma_piloto():
     assert resumen["predicciones_evaluadas_pretest"] == 2
     assert resumen["tasa_acierto_pretest_porcentaje"] == 50.0
     assert resumen["tasa_acierto_posttest_porcentaje"] is None
-    assert resumen["tiempo_promedio_pretest_min"] == 25.0
+    assert resumen["tiempo_promedio_pretest_min"] is None
     assert resumen["tiempo_promedio_posttest_min"] is None
     assert resumen["reduccion_tiempo_porcentaje"] is None
 

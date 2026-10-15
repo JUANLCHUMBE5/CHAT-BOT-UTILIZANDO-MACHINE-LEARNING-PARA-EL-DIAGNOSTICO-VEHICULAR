@@ -97,8 +97,13 @@ def test_cambia_caso_entre_dominios_aunque_estado_operativo_sea_similar(
         seniales_heredadas={"senial_marcha": True},
     )
 
-    assert resultado.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert resultado.nuevo_case_id != case_id_anterior
+    if ExtractorHechos.clasificar_solicitud_caso(mensaje):
+        assert resultado.decision == DecisionTransicion.CAMBIO_DE_CASO
+        assert resultado.nuevo_case_id != case_id_anterior
+    else:
+        assert resultado.decision in (DecisionTransicion.MANTENER_CASO, DecisionTransicion.ACLARACION_REQUERIDA)
+        assert resultado.nuevo_case_id is None
+        assert estado.case_id == case_id_anterior
 
 
 def test_incidente_no_confunde_y_cuando_interno_con_coexistencia() -> None:
@@ -121,8 +126,9 @@ def test_incidente_no_confunde_y_cuando_interno_con_coexistencia() -> None:
         seniales_heredadas={"senial_marcha": True},
     )
 
-    assert resultado.decision == DecisionTransicion.CAMBIO_DE_CASO
-    assert resultado.motivo == "NUEVA_QUEJA_PRINCIPAL: MARCHA_MOTOR_A_TRANSMISION"
+    assert resultado.decision in (DecisionTransicion.MANTENER_CASO, DecisionTransicion.ACLARACION_REQUERIDA)
+    assert resultado.nuevo_case_id is None
+    assert estado.case_id == "case-incidente-real"
 
 
 def test_incidente_genera_consulta_ml_limpia_y_especifica_de_transmision() -> None:

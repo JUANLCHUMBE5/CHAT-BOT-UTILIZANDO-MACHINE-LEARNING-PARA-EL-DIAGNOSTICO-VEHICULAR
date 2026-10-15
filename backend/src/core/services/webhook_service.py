@@ -14,7 +14,6 @@ Coordina:
 from __future__ import annotations
 
 import asyncio
-import re
 import threading
 import time
 import uuid
@@ -27,7 +26,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.application.services.confirmacion_diagnostico import ConfirmacionDiagnosticoWhatsApp
 from src.config import settings
-from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.logger import logger
 from src.core.security import anonimizar_identificador
@@ -39,57 +37,21 @@ from src.core.services.webhook import (
     TechnicalDiagnosticWorkflow,
     ValidationWorkflow,
 )
+from src.core.services.webhook.consulta_informativa import responder_consulta_informativa
+from src.core.services.webhook.meta_sender import enviar_mensaje_meta
+from src.core.services.webhook.vehicle_workflow import preparar_flujo_vehiculo
 from src.core.services.whatsapp_provider import whatsapp_provider_service
-from src.core.vehicle_profile import extraer_datos_vehiculo
 from src.infrastructure.database.connection import database_configurada, obtener_engine
 from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
 from src.infrastructure.database.repositories.operaciones_repository import OperacionesRepository
-from src.infrastructure.database.repositories.vehiculo_repository import normalizar_placa
 
 # Costos operativos estándar
 COSTO_META_MENSAJE_SERVICIO_USD = Decimal(str(settings.meta_message_price_usd))
 
 _LOCKS_CONVERSACION: dict[str, asyncio.Lock] = {}
 _GLOBAL_LOCKS_LOCK = threading.Lock()
-
-_COMANDO_NUEVO_CASO = re.compile(
-    r"^\s*(?:nuevo\s+(?:caso|problema|diagnostico|diagnóstico|vehiculo|vehículo)|"
-    r"nueva\s+consulta|otro\s+(?:caso|vehiculo|vehículo|carro)|reiniciar)\s*[.!]*\s*$",
-    re.IGNORECASE,
-)
-_COMANDO_CANCELAR_CASO = re.compile(
-    r"^\s*(?:cancelar\s+(?:consulta|caso|diagnostico|diagnóstico)|cancelar)\s*[.!]*\s*$",
-    re.IGNORECASE,
-)
-
-
-def _comando_caso(texto: str) -> str | None:
-    """Reconoce comandos explícitos para evitar mezclar vehículos o síntomas."""
-
-    if _COMANDO_CANCELAR_CASO.match(texto or ""):
-        return "cancelar"
-    if _COMANDO_NUEVO_CASO.match(texto or ""):
-        return "nuevo"
-    return None
-
-
-def _perfil_completo(datos: dict[str, Any]) -> bool:
-    return all(datos.get(campo) for campo in ("marca", "modelo", "anio"))
-
-
-def _texto_perfil_vehiculo(datos: dict[str, Any]) -> str:
-    partes = [str(datos[campo]) for campo in ("marca", "modelo", "anio") if datos.get(campo)]
-    return " ".join(partes)
-
-
-def _mensaje_solicitar_perfil() -> str:
-    return (
-        "🚗 Indica *marca, modelo y año* del vehículo.\n"
-        "Ejemplo: *Toyota Yaris 2018*."
-    )
-
 
 def _obtener_lock_conversacion(remitente: str) -> asyncio.Lock:
     """Devuelve un lock asíncrono serializado por remitente/conversación para evitar condiciones de carrera."""
@@ -122,37 +84,7 @@ class WebhookService:
                 return mensaje is not None
 
     def enviar_mensaje_whatsapp(self, numero_destino: str, texto: str) -> bool:
-        """Envía el mensaje de respuesta mediante la API Graph de Meta WhatsApp."""
-        token_activo = settings.meta_access_token
-        telefono_id_activo = settings.meta_phone_number_id
-
-        if not token_activo or not telefono_id_activo:
-            logger.info("Envío WhatsApp omitido (falta META_ACCESS_TOKEN o META_PHONE_NUMBER_ID).")
-            return False
-
-        if not numero_destino or numero_destino.startswith("test"):
-            return False
-
-        version = settings.meta_graph_api_version.strip("/")
-        url = f"https://graph.facebook.com/{version}/{telefono_id_activo}/messages"
-        headers = {
-            "Authorization": f"Bearer {token_activo}",
-            "Content-Type": "application/json",
-        }
-        data = {
-            "messaging_product": "whatsapp",
-            "to": numero_destino,
-            "type": "text",
-            "text": {"body": texto},
-        }
-        try:
-            res = requests.post(url, headers=headers, json=data, timeout=8)
-            rem_anon = anonimizar_identificador(numero_destino)
-            logger.info(f"Respuesta enviada a {rem_anon}. Status HTTP: {res.status_code}")
-            return res.status_code in (200, 201)
-        except Exception as exc:
-            logger.error(f"Error al enviar mensaje vía Meta Graph API: {exc}")
-            return False
+        return enviar_mensaje_meta(numero_destino, texto, requests)
 
     @staticmethod
     async def _procesar_confirmacion_tecnica(
@@ -325,201 +257,20 @@ class WebhookService:
                         resultado_cliente["tiempo_total_ms"] = round(total_ms, 2)
                         return resultado_cliente
 
-                    # La placa es obligatoria únicamente para el flujo técnico/diagnóstico.
-                    # Los clientes ya fueron enrutados por ClientWorkflow y no deben quedar
-                    # bloqueados por este requisito.
-                    # Se conserva solo en el contexto efímero de la conversación; al persistir
-                    # el vehículo se transforma en hash y últimos cuatro caracteres.
-                    contexto_placa = dict(conversacion.contexto or {})
-
-                    comando_caso = _comando_caso(texto_cliente) if tipo_mensaje == "text" else None
-                    if comando_caso == "cancelar":
-                        self.gestor.session_manager.finalizar_caso(str(conversacion.id))
-                        for clave in (
-                            "validacion_diagnostico", "conversation_state", "estado_conversacion",
-                            "posttest_placa_pendiente", "preplate_pending_input",
-                            "nueva_consulta_placa_pendiente", "perfil_vehiculo_pendiente",
-                            "perfil_vehiculo", "placa", "placa_posttest",
-                        ):
-                            contexto_placa.pop(clave, None)
-                        contexto_placa["posttest_placa_pendiente"] = True
-                        conversacion.contexto = contexto_placa
-                        respuesta_cancelar = (
-                            "🛑 Consulta cancelada. El historial anterior se conserva.\n\n"
-                            "Para iniciar otro diagnóstico escribe *NUEVO CASO*."
+                    if tipo_mensaje == "text":
+                        informativa = await responder_consulta_informativa(
+                            self.gestor, session, usuario, conversacion, texto_cliente,
+                            meta_message_id, remitente, proveedor,
                         )
-                        await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_cancelar)
-                        await session.commit()
-                        return {"status": "consulta_cancelada", "respuesta": respuesta_cancelar}
+                        if informativa is not None:
+                            return informativa
 
-                    if comando_caso == "nuevo":
-                        self.gestor.session_manager.finalizar_caso(str(conversacion.id))
-                        for clave in ("validacion_diagnostico", "conversation_state", "estado_conversacion"):
-                            contexto_placa.pop(clave, None)
-                        placa_anterior = contexto_placa.get("placa_posttest") or contexto_placa.get("placa")
-                        if placa_anterior:
-                            contexto_placa["nueva_consulta_placa_pendiente"] = True
-                            respuesta_nuevo = (
-                                "🔄 Nueva consulta iniciada. ¿Deseas usar la misma placa registrada?\n"
-                                "Responde *SÍ* para usarla o envía la placa del otro vehículo."
-                            )
-                        else:
-                            contexto_placa["posttest_placa_pendiente"] = True
-                            respuesta_nuevo = "🔄 Nueva consulta iniciada. Ingresa la placa del vehículo."
-                        conversacion.contexto = contexto_placa
-                        await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_nuevo)
-                        await session.commit()
-                        return {"status": "esperando_placa", "respuesta": respuesta_nuevo}
-
-                    if contexto_placa.get("nueva_consulta_placa_pendiente"):
-                        respuesta_corta = texto_cliente.strip().lower().strip(" .,!¡¿?")
-                        if respuesta_corta in {"si", "sí", "s", "correcto", "correcta"}:
-                            contexto_placa.pop("nueva_consulta_placa_pendiente", None)
-                            contexto_placa["perfil_vehiculo_pendiente"] = True
-                            conversacion.contexto = contexto_placa
-                            respuesta_perfil = _mensaje_solicitar_perfil()
-                            await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
-                            await session.commit()
-                            return {"status": "esperando_perfil_vehiculo", "respuesta": respuesta_perfil}
-                        try:
-                            placa_nueva = normalizar_placa(texto_cliente)
-                        except ValueError:
-                            respuesta_placa = "Responde *SÍ* para usar la misma placa o ingresa una placa válida."
-                            await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_placa)
-                            await session.commit()
-                            return {"status": "esperando_placa", "respuesta": respuesta_placa}
-                        contexto_placa["placa"] = placa_nueva
-                        contexto_placa["placa_posttest"] = placa_nueva
-                        contexto_placa.pop("nueva_consulta_placa_pendiente", None)
-                        contexto_placa["perfil_vehiculo_pendiente"] = True
-                        conversacion.contexto = contexto_placa
-                        respuesta_perfil = _mensaje_solicitar_perfil()
-                        await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
-                        await session.commit()
-                        return {"status": "esperando_perfil_vehiculo", "respuesta": respuesta_perfil}
-                    # 1. Recuperar contexto persistido de la conversación activa antes de verificar si falta placa
-                    placa_persistida = (
-                        contexto_placa.get("placa_posttest")
-                        or contexto_placa.get("placa")
+                    resultado_perfil, placa, marca_modelo, texto_cliente = await preparar_flujo_vehiculo(
+                        self, session, conversacion, texto_cliente, tipo_mensaje,
+                        proveedor, remitente, placa, marca_modelo,
                     )
-
-                    if placa_persistida and placa in ("WAPP-01", "SIN-PLACA", ""):
-                        placa = placa_persistida
-
-                    # Evaluar si realmente falta placa
-                    if placa in ("WAPP-01", "SIN-PLACA", ""):
-                        continuar_diagnostico_preplate = False
-
-                        # Un mensaje puede traer placa, perfil y síntoma juntos. Extraer la
-                        # placa explícita evita guardar el turno para después y perder los
-                        # demás datos al atravesar los gates secuenciales.
-                        placa_en_texto = (
-                            ExtractorHechos.extraer_placa(texto_cliente)
-                            if tipo_mensaje == "text"
-                            else None
-                        )
-                        if placa_en_texto:
-                            placa = normalizar_placa(placa_en_texto)
-                            contexto_placa["placa"] = placa
-                            contexto_placa["placa_posttest"] = placa
-                            contexto_placa.pop("posttest_placa_pendiente", None)
-                            conversacion.contexto = contexto_placa
-                            continuar_diagnostico_preplate = True
-
-                        if not continuar_diagnostico_preplate and contexto_placa.get("posttest_placa_pendiente"):
-                            try:
-                                placa = normalizar_placa(texto_cliente)
-                            except ValueError:
-                                respuesta_placa = "Indique una placa válida para continuar el diagnóstico."
-                            else:
-                                contexto_placa["placa_posttest"] = placa
-                                contexto_placa["placa"] = placa
-                                contexto_placa.pop("posttest_placa_pendiente", None)
-
-                                # Si el usuario ya describió el vehículo/síntoma antes
-                                # de proporcionar la placa, recuperar ese turno y
-                                # procesarlo una sola vez por el flujo diagnóstico normal.
-                                texto_preplate = contexto_placa.pop(
-                                    "preplate_pending_input", None
-                                )
-
-                                conversacion.contexto = contexto_placa
-
-                                if texto_preplate:
-                                    texto_cliente = texto_preplate
-                                    continuar_diagnostico_preplate = True
-                                else:
-                                    respuesta_placa = (
-                                        "Placa registrada. " + _mensaje_solicitar_perfil()
-                                    )
-                                    contexto_placa["perfil_vehiculo_pendiente"] = True
-                        elif not continuar_diagnostico_preplate:
-                            contexto_placa["posttest_placa_pendiente"] = True
-
-                            # El gate de placa ocurre antes del flujo diagnóstico.
-                            # Conservar información diagnóstica válida para procesarla
-                            # cuando se registre la placa.
-                            if tipo_mensaje == "image":
-                                respuesta_placa = (
-                                    "📷 Para asociar la foto al vehículo, primero indica su placa y luego "
-                                    "vuelve a enviar la imagen. No guardamos el archivo de la foto."
-                                )
-                            elif ExtractorHechos.contiene_informacion_diagnostica(texto_cliente):
-                                contexto_placa["preplate_pending_input"] = texto_cliente
-                            if tipo_mensaje != "image":
-                                respuesta_placa = (
-                                    "Hola, ¿qué tal? Soy CarBot y estoy aquí para apoyarte con el "
-                                    "diagnóstico del vehículo. Para comenzar, ingresa la placa del vehículo."
-                                )
-                            conversacion.contexto = contexto_placa
-
-                        if not continuar_diagnostico_preplate:
-                            await whatsapp_provider_service.enviar(
-                                proveedor, remitente, respuesta_placa
-                            )
-                            await session.commit()
-                            return {
-                                "status": "esperando_placa",
-                                "respuesta": respuesta_placa,
-                            }
-
-                    placa = contexto_placa.get("placa_posttest") or contexto_placa.get("placa") or placa
-
-                    if contexto_placa.get("perfil_vehiculo_pendiente") and tipo_mensaje == "text":
-                        datos_perfil = extraer_datos_vehiculo(texto_cliente)
-                        if not _perfil_completo(datos_perfil):
-                            respuesta_perfil = _mensaje_solicitar_perfil()
-                            await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
-                            await session.commit()
-                            return {"status": "esperando_perfil_vehiculo", "respuesta": respuesta_perfil}
-                        contexto_placa["perfil_vehiculo"] = datos_perfil
-                        contexto_placa.pop("perfil_vehiculo_pendiente", None)
-                        conversacion.contexto = contexto_placa
-                        if ExtractorHechos.contiene_informacion_diagnostica(texto_cliente):
-                            # El perfil y el síntoma llegaron en el mismo turno: validar el
-                            # perfil, pero dejar que el orquestador procese todo el contenido.
-                            pass
-                        else:
-                            respuesta_perfil = (
-                                f"✅ Vehículo registrado: *{_texto_perfil_vehiculo(datos_perfil)}*.\n\n"
-                                "Ahora describe el síntoma del vehículo."
-                            )
-                            await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
-                            await session.commit()
-                            return {"status": "esperando_sintoma", "respuesta": respuesta_perfil}
-
-                    perfil_vehiculo = contexto_placa.get("perfil_vehiculo") or {}
-                    if tipo_mensaje == "text" and texto_cliente:
-                        datos_correccion = extraer_datos_vehiculo(texto_cliente)
-                        if datos_correccion.get("marca") and datos_correccion["marca"].lower() not in (
-                            "generico", "vehiculo", "desconocido"
-                        ):
-                            perfil_vehiculo.update(datos_correccion)
-                            contexto_placa["perfil_vehiculo"] = perfil_vehiculo
-                            conversacion.contexto = contexto_placa
-
-                    if perfil_vehiculo.get("marca") or _perfil_completo(perfil_vehiculo):
-                        marca_modelo = _texto_perfil_vehiculo(perfil_vehiculo)
+                    if resultado_perfil is not None:
+                        return resultado_perfil
                     # 6. Flujo de validación técnica conversacional (SÍ / NO / Falla real)
                     resultado_validacion = await ValidationWorkflow.manejar_flujo_validacion(
                         session=session,

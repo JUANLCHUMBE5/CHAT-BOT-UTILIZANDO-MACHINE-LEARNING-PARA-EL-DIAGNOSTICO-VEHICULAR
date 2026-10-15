@@ -107,5 +107,5 @@ async def test_reset_puro_sigue_siendo_transicion_controlada(
     )
 
     assert respuesta["decision"] == "REINICIO"
-    assert "caso finalizado" in respuesta["respuesta_texto"].lower()
+    assert "caso anterior cerrado" in respuesta["respuesta_texto"].lower()
 

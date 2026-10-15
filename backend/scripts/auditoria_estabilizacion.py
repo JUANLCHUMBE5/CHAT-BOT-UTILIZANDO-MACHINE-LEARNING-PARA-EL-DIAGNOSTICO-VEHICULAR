@@ -6,7 +6,6 @@ backend_dir = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(backend_dir))
 
 import pandas as pd
-import numpy as np
 
 from src.infrastructure.modelo_ml import ModeloML
 from src.infrastructure.motor_rag import MotorRAG

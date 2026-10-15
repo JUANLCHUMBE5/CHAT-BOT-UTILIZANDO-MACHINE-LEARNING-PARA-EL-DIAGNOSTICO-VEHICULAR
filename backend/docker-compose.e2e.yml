@@ -1,0 +1,102 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: carbot_e2e
+      POSTGRES_USER: carbot_e2e
+      POSTGRES_PASSWORD: e2e_password_only_not_production
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carbot_e2e -d carbot_e2e"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment: &e2e_environment
+      ENVIRONMENT: test
+      CARBOT_BLOCK_DOTENV: "true"
+      TRUSTED_HOSTS: api
+      DATABASE_ENABLED: "true"
+      DATABASE_REQUIRED: "true"
+      DATABASE_URL: postgresql+asyncpg://carbot_e2e:e2e_password_only_not_production@postgres:5432/carbot_e2e
+      DATABASE_POOL_SIZE: "0"
+      RATE_LIMIT_STORAGE_URI: redis://redis:6379/0
+      REDIS_URL: redis://redis:6379/0
+      QUEUE_EMBEDDED_WORKER: "false"
+      QUEUE_POLL_INTERVAL_MS: "100"
+      GEMINI_API_KEY: ""
+      GROQ_API_KEY: ""
+      GROQ_CHAT_ENABLED: "false"
+      GROQ_AUDIO_ENABLED: "false"
+      META_ACCESS_TOKEN: ""
+      META_PHONE_NUMBER_ID: ""
+      META_APP_SECRET: e2e_meta_secret_only_not_production
+      META_VERIFY_TOKEN: e2e_verify_token_only_not_production
+      JWT_SECRET_KEY: e2e_jwt_secret_only_not_production_123456789
+      PRIVACY_SECRET_KEY: e2e_privacy_secret_only_not_production_123456
+      ML_ROOT: /app/machine_learning
+      PYTHONPATH: /app/backend:/app/machine_learning
+    volumes:
+      - ../machine_learning:/app/machine_learning:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["sh", "-c", "python -m alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment: *e2e_environment
+    volumes:
+      - ../machine_learning:/app/machine_learning:ro
+    depends_on:
+      api:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["python", "-m", "src.application.jobs.worker"]
+    healthcheck:
+      disable: true
+
+  runner:
+    profiles: ["runner"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment: *e2e_environment
+    volumes:
+      - ../machine_learning:/app/machine_learning:ro
+      - ./artifacts/e2e:/artifacts
+    depends_on:
+      api:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    entrypoint: ["python", "scripts/e2e/run_stack_validation.py"]
+
+networks:
+  default:
+    internal: true

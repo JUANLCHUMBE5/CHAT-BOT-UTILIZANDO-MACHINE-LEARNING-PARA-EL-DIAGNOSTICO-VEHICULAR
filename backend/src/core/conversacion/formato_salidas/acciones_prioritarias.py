@@ -84,12 +84,13 @@ def extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optio
         return "salto de chispa en las bobinas y estado/calibración del electrodo de las bujías."
     if "desbalanceo" in falla_l or "llanta" in falla_l:
         return "balanceo dinámico de las ruedas en banco e inspección de deformación en neumáticos."
+    if "embrague" in falla_l or "clutch" in falla_l:
+        return "recorrido libre del pedal, retorno del mando y fugas hidráulicas visibles con motor apagado; comparar con especificación OEM."
     if "alabeo" in falla_l or "disco" in falla_l:
         return "alabeo de los discos con reloj comparador y comparación con la especificación del fabricante para ese vehículo."
     if "pastilla" in falla_l or "freno" in falla_l:
         return "espesor de las pastillas y estado de discos, comparados con el límite de servicio del fabricante para ese vehículo."
-    if "embrague" in falla_l or "clutch" in falla_l:
-        return "prueba de patinamiento en 3ra marcha con freno de mano accionado e inspección de recorrido del pedal."
+
     if "termostato" in falla_l or "ventilador" in falla_l or "recalienta" in falla_l:
         return "temperatura en ambas mangueras del radiador y activación oportuna del electroventilador."
 
@@ -175,6 +176,9 @@ def generar_pregunta_contextual(
                 QuestionIntent.MEDICION_PRESION,
             )
         return "¿Cuentas con manómetro para medir la presión de combustible?", QuestionIntent.DISPONIBILIDAD_HERRAMIENTA
+
+    if "embrague" in falla_l or "clutch" in falla_l:
+        return "¿El patinamiento ocurre con el pedal completamente liberado y bajo carga?", QuestionIntent.CONDICION_OPERACION
 
     if "freno" in falla_l or "disco" in falla_l or "pastilla" in falla_l:
         return "¿Sientes que el pedal esponjoso se va al fondo o vibra el volante al frenar?", QuestionIntent.CONDICION_OPERACION

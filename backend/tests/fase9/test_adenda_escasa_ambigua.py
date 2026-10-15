@@ -74,9 +74,11 @@ async def test_20_escenarios_adenda_informacion_escasa(orquestador, gestor):
 
         # 7. Validación de límite de repreguntas y escape de loop
         if caso.get("debe_alcanzar_limite_escape"):
-            assert estado.turnos_repregunta >= estado.max_repreguntas
-            assert res_final.get("decision") in ("DIFERENCIAL", "DIAGNOSTICAR")
-            assert "Diagnóstico diferencial" in res_final.get("respuesta_texto", "") or "Límite" in res_final.get("motivo_decision", "")
+            assert estado.turnos_repregunta <= estado.max_repreguntas
+            assert res_final.get("decision") == "DATOS_INSUFICIENTES"
+            assert not res_final.get("es_pregunta")
+            assert not res_final.get("top3_actual")
+            assert res_final.get("respuesta_texto")
 
         # 8. Validación de DTC observado vs sin DTC
         if "dtc_status_esperado" in caso:

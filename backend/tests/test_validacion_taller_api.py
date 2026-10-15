@@ -115,6 +115,11 @@ def mock_tracker_csv(tmp_path, monkeypatch):
             "evidencia_ref": "EVID_03.JPG",
         },
     ]
+    # Datos sintéticos exclusivamente del CSV temporal; auditoría explícita del lector.
+    for fila in filas_iniciales:
+        fila.update(tipo_registro="THESIS_PRETEST" if fila["fase"] == "Pre-test" else "THESIS_POSTTEST",
+                    estado_registro="verificado", validado_por_id="00000000-0000-4000-8000-000000000099",
+                    fecha_validacion="2026-08-03T10:00:00Z")
     pd.DataFrame(filas_iniciales).to_csv(test_csv, index=False, encoding="utf-8")
     monkeypatch.setattr(validacion_taller, "TRACKER_CSV_PATH", test_csv)
     return test_csv
@@ -229,7 +234,7 @@ def test_estabilidad_placa_hash_post_hacia_get(auth_headers_admin_taller1):
     resp_get = client.get("/api/v1/validacion-taller?limit=10", headers=auth_headers_admin_taller1)
     assert resp_get.status_code == 200
     data_get = resp_get.json()
-    
+
     caso_encontrado = None
     for c in data_get["casos"]:
         if c["item"] == post_item:
@@ -264,7 +269,7 @@ def test_sanitizacion_ataques_csv_formula_injection(auth_headers_admin_taller1):
     # Descargar CSV y verificar que cada celda peligrosa empiece con '
     csv_resp = client.get("/api/v1/validacion-taller/exportar-csv", headers=auth_headers_admin_taller1)
     filas = list(csv.reader(io.StringIO(csv_resp.content.decode("utf-8-sig"))))
-    
+
     # Buscar la fila insertada
     fila_encontrada = None
     for f in filas:
@@ -421,8 +426,17 @@ def test_exportar_fichas_anexo2_csv_exito(mock_tracker_csv, auth_headers_admin_t
     }
     post_resp = client.post("/api/v1/validacion-taller", json=caso_payload, headers=auth_headers_admin_taller1)
     assert post_resp.status_code == 201
+    assert post_resp.json()["tipo_registro"] == "DEVELOPMENT"
+    # Fixture independiente explícito para probar lectura oficial; no promover el POST automático.
+    df = pd.read_csv(mock_tracker_csv)
+    historico = {**caso_payload, "item": 100, "placa": "HIS-***", "placa_hash": "a"*64,
+                 "taller_id": TALLER_1_ID, "tipo_registro": "THESIS_POSTTEST",
+                 "validado_por_id": "00000000-0000-4000-8000-000000000099",
+                 "fecha_validacion": "2026-09-12T10:00:00Z"}
+    pd.concat([df, pd.DataFrame([historico])], ignore_index=True).to_csv(mock_tracker_csv, index=False)
 
     resp = client.get(
+
         "/api/v1/validacion-taller/exportar-fichas-anexo2-csv",
         headers=auth_headers_admin_taller1,
     )
@@ -454,4 +468,3 @@ def test_metricas_incluyen_variable_independiente(mock_tracker_csv, auth_headers
     assert "indicador3_exactitud_ml_pct" in vi
     assert "casos_verificados_evaluados" in vi
     assert "nota_metodologica" in vi
-

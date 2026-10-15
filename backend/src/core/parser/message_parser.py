@@ -17,6 +17,10 @@ from typing import List, Optional, Tuple
 
 from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.diccionario_automotriz import normalizar_jerga_automotriz
+from src.core.conversacion.extraccion_hechos.clasificador_mensajes import (
+    _es_mencion_no_destructiva,
+    es_consulta_memoria,
+)
 from src.core.vehicle_profile import COMBUSTIBLES, MARCAS
 from src.domain.schemas.conversation_contracts import (
     HechoClinico,
@@ -342,7 +346,7 @@ class SinglePassMessageParser:
         # 3. Síntomas afirmados frecuentes
         afirmaciones_patrones = [
             (r"\b(no\s+(?:quiere\s+|quiso\s+)?(?:arranca|arrancar|prende|prender|enciende|encender)|no\s+da\s+marcha)\b", "sintoma_no_arranca", "no arranca"),
-            (r"\b(demora\s+en\s+arrancar|tarda\s+en\s+prender|le\s+cuesta\s+arrancar|arranque\s+pesado)\b", "sintoma_demora_arranque", "demora en arrancar"),
+            (r"\b((?:demora|tarda)\s+(?:(?:unos?\s+)?(?:\d+(?:[.,]\d+)?|uno|dos|tres|cuatro|cinco|seis|diez)\s+segundos?\s+)?en\s+(?:arrancar|prender)|le\s+cuesta\s+arrancar|arranque\s+pesado)\b", "sintoma_demora_arranque", "demora en arrancar"),
             (r"\b(clic\s+seco|un\s+solo\s+clic|chasquido\s+al\s+dar\s+llave)\b", "sintoma_clic_seco", "clic seco al dar arranque"),
             (r"\b(cascabelea|cascabeleo|pistoneo|pistonea)\b", "sintoma_cascabeleo", "cascabeleo"),
             (r"\b(tiembla|vibra|vibraci[oó]n|zapatea)\b", "sintoma_vibracion", "vibración / temblor"),
@@ -353,11 +357,29 @@ class SinglePassMessageParser:
             (r"\b(fuga\s+de\s+refrigerante|pierde\s+agua|gotea\s+refrigerante)\b", "sintoma_fuga_refrigerante", "pérdida de refrigerante"),
             (r"\b(temperatura\s+(?:alta|sube|al\s+m[aá]ximo)|se\s+recalienta|hierve)\b", "sintoma_sobrecalentamiento", "sobrecalentamiento"),
             (r"\b(pedal\s+(?:al\s+piso|se\s+hunde|esponjoso|largo))\b", "sintoma_frenos_pedal", "pedal de freno esponjoso/al piso"),
-            (r"\b(vibra\s+al\s+frenar|tiembla\s+al\s+frenar)\b", "sintoma_vibracion_frenado", "vibra al frenar"),
+            (r"\b(vibra\s+al\s+frenar|tiembla\s+al\s+frenar)\b", "sintoma_vibracion_frenos", "vibra al frenar"),
         ]
         for pat, campo, val in afirmaciones_patrones:
             # Solo agregar afirmado si no fue explícitamente negado en este mismo turno
-            if re.search(pat, texto_l) and not any(n.campo == campo for n in negados):
+            coincidencias = list(re.finditer(pat, texto_l))
+            positivas = []
+            for coincidencia in coincidencias:
+                prefijo = texto_l[:coincidencia.start()]
+                negada = bool(re.search(
+                    r"\b(?:no|tampoco|sin)(?:\s+(?:presenta|hay|tiene))?\s*$", prefijo
+                ))
+                if negada:
+                    if not any(n.campo == campo for n in negados):
+                        negados.append(HechoClinico(
+                            campo=campo, valor=val, polaridad=False,
+                            categoria="sintoma_negado", texto_origen=coincidencia.group(),
+                        ))
+                else:
+                    positivas.append(coincidencia)
+            if positivas:
+                # La negación en otra cláusula no anula el síntoma contextual
+                # afirmado: vibración al acelerar puede coexistir con ausencia al frenar.
+                negados = [n for n in negados if n.campo != campo]
                 afirmados.append(HechoClinico(
                     campo=campo,
                     valor=val,
@@ -380,6 +402,9 @@ class SinglePassMessageParser:
     ) -> Tuple[IntentType, str]:
         """Clasifica la intención del usuario de forma jerárquica y determinista."""
         texto_l = texto.lower().strip()
+
+        if es_consulta_memoria(texto) or _es_mencion_no_destructiva(texto):
+            return IntentType.CONSULTA_TECNICA, "Consulta sin transición destructiva"
 
         if cls.PATRON_REINICIO.match(texto):
             return IntentType.REINICIO, "Orden de reinicio explícito de sesión"
@@ -430,7 +455,9 @@ class SinglePassMessageParser:
         afirmados, negados = cls.extraer_hechos_clinicos(texto_crudo)
 
         # 6. Control de ciclo de vida
-        es_cambio = bool(cls.PATRONES_CAMBIO_CASO.search(texto_crudo))
+        es_cambio = bool(cls.PATRONES_CAMBIO_CASO.search(texto_crudo)) and not (
+            es_consulta_memoria(texto_crudo) or _es_mencion_no_destructiva(texto_crudo)
+        )
         es_corr = bool(cls.PATRONES_CORRECCION.search(texto_crudo)) and not es_cambio
 
         # 7. Respuestas cortas

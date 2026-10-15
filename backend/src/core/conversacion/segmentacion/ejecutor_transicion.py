@@ -70,10 +70,16 @@ def resolver_transicion_turno(
         )
         and detectar_subsistema_texto(texto_limpio) != obtener_subsistema_estado(estado)
     )
+    cambio_sistema_declarado = (
+        detectar_subsistema_texto(texto_limpio) != SubsistemaVehicular.DESCONOCIDO
+        and detectar_subsistema_texto(texto_limpio) != obtener_subsistema_estado(estado)
+        and ExtractorHechos.contiene_informacion_diagnostica(texto_limpio)
+    )
     if (
         tipo_mensaje not in ("sintoma_nuevo", "correccion_sistema")
         and not es_nuevo_caso_explicito
         and not es_presentacion_completa
+        and not cambio_sistema_declarado
         and (estado.hechos or estado.active_symptoms)
     ):
         transicion = TransicionCasoResultado(
@@ -112,6 +118,10 @@ def resolver_transicion_turno(
         return None, transicion
 
     if transicion.decision == DecisionTransicion.ACLARACION_REQUERIDA:
+        # Registrar el turno aun cuando sus hechos esperen aclaración de alcance.
+        if not estado.historial_mensajes_usuario or estado.historial_mensajes_usuario[-1] != texto_limpio:
+            estado.historial_mensajes_usuario.append(texto_limpio)
+            estado.turno_actual += 1
         from src.core.conversacion.extraccion_hechos.extraccion_taller import extraer_comprobaciones_taller
         if transicion.dominio_detectado_mensaje != SubsistemaVehicular.DESCONOCIDO:
             # La orientación activa debe corresponder al mensaje actual aunque

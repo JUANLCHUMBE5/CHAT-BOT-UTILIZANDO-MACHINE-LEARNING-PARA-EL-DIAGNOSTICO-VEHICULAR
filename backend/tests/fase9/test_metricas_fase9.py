@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
+
 import pytest
 
 from src.core.conversacion.diccionario_automotriz import normalizar_jerga_automotriz
@@ -31,9 +33,11 @@ async def test_auditoria_completa_8_metricas_fase9(orquestador, gestor):
     assert total_escenarios >= 70, f"Debe haber mínimo 70 escenarios (hay {total_escenarios})"
 
     # Contadores para métricas
+    perdidas = []
     total_hechos_anotados = 0
     hechos_retenidos_correctos = 0
     hechos_extraidos_correctos = 0
+    total_hechos_esperados = 0
 
     total_respuestas_seguimiento = 0
     respuestas_seguimiento_correctas = 0
@@ -94,16 +98,33 @@ async def test_auditoria_completa_8_metricas_fase9(orquestador, gestor):
                     if v.estado == FactState.CONFIRMADO:
                         total_hechos_anotados += 1
                         hecho_retenido = estado_actual.obtener_hecho(k)
-                        if hecho_retenido and hecho_retenido.estado in (FactState.CONFIRMADO, FactState.CORREGIDO):
+                        archivado = next((
+                            caso_archivado for caso_archivado in estado_actual.hechos_historicos
+                            if caso_archivado.get("case_id") == estado_previo.case_id
+                        ), {})
+                        hecho_archivado = archivado.get("hechos", {}).get(k, {})
+                        # Un reinicio explícito conserva los hechos en el archivo de su caso.
+                        retenido_en_archivo = (
+                            estado_previo.case_id != estado_actual.case_id
+                            and hecho_archivado.get("valor") == v.valor
+                            and hecho_archivado.get("estado") in (FactState.CONFIRMADO.value, FactState.CORREGIDO.value)
+                        )
+                        if (hecho_retenido and hecho_retenido.estado in (FactState.CONFIRMADO, FactState.CORREGIDO)
+                                or retenido_en_archivo):
                             hechos_retenidos_correctos += 1
+                        else:
+                            perdidas.append({"caso": caso["id"], "turno": idx_t + 1, "campo": k,
+                                             "valor_anterior": v.valor, "valor_actual": hecho_retenido.to_dict() if hecho_retenido else None,
+                                             "case_anterior": estado_previo.case_id, "case_actual": estado_actual.case_id})
 
-            estado_previo = estado_actual
+            estado_previo = deepcopy(estado_actual)
 
         estado_final = await orquestador.repositorio.get_session(sid)
         conteo_repreguntas.append(estado_final.turnos_repregunta)
 
         # Evaluar extracción de hechos esperados
         for k, v_esp in (caso.get("hechos_esperados") or {}).items():
+            total_hechos_esperados += 1
             hecho = estado_final.obtener_hecho(k)
             if hecho and hecho.valor == v_esp:
                 hechos_extraidos_correctos += 1
@@ -166,8 +187,11 @@ async def test_auditoria_completa_8_metricas_fase9(orquestador, gestor):
         if diag_a == diag_b or diag_a in top3_b or res_a.get("es_pregunta") == res_b.get("es_pregunta"):
             coincidencias_consistencia += 1
 
+    print("AUDITORIA_PERDIDAS", perdidas)
+
     # 4. Cálculo de porcentajes finales
     context_retention_acc = (hechos_retenidos_correctos / max(total_hechos_anotados, 1)) * 100
+    fact_extraction_acc = (hechos_extraidos_correctos / max(total_hechos_esperados, 1)) * 100
     follow_up_acc = (respuestas_seguimiento_correctas / max(total_respuestas_seguimiento, 1)) * 100
     synonym_acc = (terminos_jerga_normalizados / max(total_terminos_jerga, 1)) * 100
     repeated_q_rate = (preguntas_repetidas_semanticas / max(total_preguntas_formuladas, 1)) * 100
@@ -182,7 +206,8 @@ async def test_auditoria_completa_8_metricas_fase9(orquestador, gestor):
     print("REPORTE CUANTITATIVO DE LAS 8 MÉTRICAS — FASE 9.1 (70 ESCENARIOS)")
     print("=" * 60)
     print(f"1. Context Retention Accuracy:        {context_retention_acc:.1f}% (Umbral: >= 95%)")
-    print("2. Fact Extraction Accuracy:           98.5% (Umbral: >= 95%)")
+    print(f"2. Fact Extraction Accuracy: {fact_extraction_acc:.1f}% "
+          f"({hechos_extraidos_correctos}/{total_hechos_esperados}; referencia: >= 95%)")
     print(f"3. Correct Follow-up Interpretation:   {follow_up_acc:.1f}% (Umbral: >= 95%)")
     print(f"4. Synonym/Jargon Normalization:       {synonym_acc:.1f}% (Umbral: >= 90%)")
     print(f"5. Repeated Question Rate:             {repeated_q_rate:.1f}% (Umbral: <= 2%)")
@@ -195,6 +220,7 @@ async def test_auditoria_completa_8_metricas_fase9(orquestador, gestor):
 
     # Aserciones de cumplimiento estricto
     assert context_retention_acc >= 95.0, f"Context Retention bajo: {context_retention_acc:.1f}%"
+    assert fact_extraction_acc >= 95.0, f"Extracción bajo: {hechos_extraidos_correctos}/{total_hechos_esperados}"
     assert follow_up_acc >= 95.0, f"Follow-up Interpretation bajo: {follow_up_acc:.1f}%"
     assert synonym_acc >= 90.0, f"Synonym Normalization bajo: {synonym_acc:.1f}%"
     assert repeated_q_rate <= 2.0, f"Repeated Question Rate alto: {repeated_q_rate:.1f}%"

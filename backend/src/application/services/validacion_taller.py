@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import uuid
 from datetime import date, datetime, timezone
 from typing import Any
@@ -33,7 +34,7 @@ def _valor_presente(valor: Any) -> bool:
         limpio = valor.strip().lower()
         return bool(limpio) and limpio not in {"-", "n/a", "na", "sin registrar", "pendiente"}
     if isinstance(valor, (int, float)):
-        return valor >= 0
+        return math.isfinite(valor) and valor >= 0
     return bool(valor)
 
 
@@ -64,7 +65,7 @@ def _datos_generales_completos(valor: Any) -> bool:
 
 def _resumir_valor_ficha2(valor: Any) -> str:
     if isinstance(valor, dict):
-        partes = [f"{clave}={valor.get(clave) or ''}" for clave in valor]
+        partes = [f"{clave}={valor[clave] if valor[clave] is not None else ''}" for clave in valor]
         return "; ".join(partes)[:160]
     return str(valor)[:160] if valor is not None else ""
 
@@ -98,7 +99,8 @@ def calcular_detalles_campos_ficha2(
             completo = _datos_generales_completos(valores[clave])
         elif clave == "campo_8":
             try:
-                completo = float(valores[clave]) > 0
+                tiempo = float(valores[clave])
+                completo = math.isfinite(tiempo) and tiempo > 0
             except (TypeError, ValueError):
                 completo = False
         elif clave == "campo_2":
@@ -145,13 +147,17 @@ def resumir_fases(grupos: list[dict[str, Any]]) -> dict[str, Any]:
     campos_post = int(valor(post, "campos_evaluados"))
     tiempos_pre = int(valor(pre, "tiempos_evaluados"))
     tiempos_post = int(valor(post, "tiempos_evaluados"))
-    tiempo_pre = promedio(pre, "minutos", "tiempos_evaluados")
-    tiempo_post = promedio(post, "minutos", "tiempos_evaluados")
+    # El instrumento divide por diagnósticos evaluados: no reducir ese denominador
+    # silenciosamente cuando falta una medición. La fase permanece pendiente.
+    tiempo_pre = promedio(pre, "minutos", "total") if tiempos_pre == valor(pre, "total") else None
+    tiempo_post = promedio(post, "minutos", "total") if tiempos_post == valor(post, "total") else None
     tasa_global = round(aciertos / predicciones_evaluadas * 100, 2) if predicciones_evaluadas else None
     tasa_pre = promedio(pre, "aciertos", "predicciones_evaluadas", 100)
     tasa_post = promedio(post, "aciertos", "predicciones_evaluadas", 100)
-    completos_pre = promedio(pre, "completos", "campos_evaluados", 100)
-    completos_post = promedio(post, "completos", "campos_evaluados", 100)
+    completos_pre = promedio(pre, "completos", "total", 100) if campos_pre == valor(pre, "total") else None
+    completos_post = (
+        promedio(post, "completos", "total", 100) if campos_post == valor(post, "total") else None
+    )
     reduccion_tiempo = (
         round((tiempo_pre - tiempo_post) / tiempo_pre * 100, 2)
         if tiempo_pre is not None and tiempo_post is not None and tiempo_pre > 0
