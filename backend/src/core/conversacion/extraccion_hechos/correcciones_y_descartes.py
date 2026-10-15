@@ -151,19 +151,23 @@ def registrar_rechazos_explicitos(estado: ConversationState, texto: str) -> List
     for familia, patron in componentes:
         if not re.search(patron, normalizado) and familia not in componentes_por_contexto:
             continue
-        es_nuevo = bool(reemplazo_nuevo.search(normalizado))
-        es_comprobado = bool(normalidad.search(normalizado))
+        clausulas = re.split(r"[.;,!?]|\bpero\b", normalizado)
+        texto_componente = " ".join(c for c in clausulas if re.search(patron, c))
+        if not texto_componente and familia in componentes_por_contexto:
+            texto_componente = normalizado
+        es_nuevo = bool(reemplazo_nuevo.search(texto_componente))
+        es_comprobado = bool(normalidad.search(texto_componente))
         rechazo_explicito = bool(
             re.search(
                 r"\b(?:no\s+(?:es|son)|descart[ea]|no\s+corresponde|no\s+falla|sigue\s+(?:igual|igualita)|"
                 r"la\s+falla\s+sigue|persiste)\b",
-                normalizado,
+                texto_componente,
             )
             or es_comprobado
         )
         if not rechazo_explicito:
             continue
-        if re.search(r"\bno\s+(?:lo\s+|la\s+)?(?:revise|probe|medi|comprobe|descarte)\b", normalizado):
+        if re.search(r"\bno\s+(?:lo\s+|la\s+)?(?:revise|probe|medi|comprobe|descarte)\b", texto_componente):
             continue
         marcador = f"componente:{familia}"
         if marcador not in estado.hipotesis_descartadas:

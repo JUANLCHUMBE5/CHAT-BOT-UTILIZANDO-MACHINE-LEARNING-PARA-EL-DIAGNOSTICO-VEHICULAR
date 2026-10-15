@@ -151,10 +151,13 @@ def test_correccion_de_sistema_archiva_hipotesis_anterior_y_conserva_vehiculo():
         tipo_mensaje="correccion_sistema",
     )
     assert respuesta is None
-    assert cambio.decision == DecisionTransicion.CAMBIO_DE_CASO
+    assert cambio.decision == DecisionTransicion.MANTENER_CASO
     assert cambio.dominio_detectado_mensaje == SubsistemaVehicular.SUSPENSION
 
-    assert estado.case_id == cambio.nuevo_case_id
+    assert estado.case_id == "caso-motor"
+    assert cambio.nuevo_case_id is None
+    assert any(h.get("campo") == "sintoma_funcionamiento_irregular___misfire"
+               for h in estado.hechos_historicos)
     assert estado.placa == "FICT-001"
     assert estado.top3_actual == []
     assert estado.falla_principal is None

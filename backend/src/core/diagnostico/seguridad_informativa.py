@@ -32,9 +32,39 @@ def dominios(texto):
             if re.search(r"\b(?:" + patron + r")\b", normalizado)}
 
 
+def temas_consulta(texto):
+    """Separa menciones de contexto de temas realmente solicitados."""
+    resultado = {k: set() for k in ("solicitados", "negados", "citados", "historicos")}
+    texto = normalizar(texto)
+
+    def cita(match):
+        prefijo = texto[max(0, match.start() - 80):match.start()]
+        explicita = re.search(r"\b(?:explica|describe|como|procedimiento|informacion|sobre)\b", prefijo)
+        contexto = re.search(r"\b(?:dijo|dice|respondio|antes|anterior|no|sin)\b", prefijo)
+        if explicita and not contexto:
+            return match.group(0)[1:-1]
+        resultado["citados"].update(dominios(match.group(0)))
+        return " "
+
+    sin_citas = re.sub(r'"[^"\n]*"|«[^»]*»|“[^”]*”|\'[^\'\n]*\'', cita, texto)
+    for clausula in re.split(r"[.;!?\n]|\b(?:pero|ahora|sino|en cambio|mejor)\b", sin_citas):
+        for nombre, patron in DOMINIOS.items():
+            for match in re.finditer(r"\b(?:" + patron + r")\b", clausula):
+                antes = clausula[:match.start()]
+                negado = re.search(
+                    r"\b(?:no\s+(?:(?:me|nos|le|se)\s+)?(?:busco|busques|quiero|necesito|solicito|pido|trates|incluyas|muestres|"
+                    r"hables|generes|des|expliques|es|son|sobre)|sin|excepto|excluye|excluir|evita)\b[^.;!?]*$", antes,
+                )
+                historico = re.search(r"\b(?:antes|anterior|previamente|hablamos|tratamos|historico)\b", antes)
+                categoria = "negados" if negado else ("historicos" if historico else "solicitados")
+                resultado[categoria].add(nombre)
+    resultado["solicitados"] -= resultado["negados"]
+    return resultado
+
+
 def validar_respuesta_informativa(pregunta, respuesta):
     """No certifica pertinencia clínica: rechaza contradicciones explícitas y falla cerrada."""
-    consulta = dominios(pregunta)
+    consulta = temas_consulta(pregunta)["solicitados"]
     salida = dominios(respuesta)
     texto = normalizar(respuesta)
     if not respuesta.strip() or not consulta or not salida or salida - consulta:
@@ -54,7 +84,7 @@ def proteger_respuesta_informativa(pregunta, respuesta, metadatos):
         validar_respuesta_informativa(pregunta, respuesta)
         return respuesta, metadatos
     except ValueError as exc:
-        tema = ", ".join(sorted(dominios(pregunta))) or "la consulta técnica"
+        tema = ", ".join(sorted(temas_consulta(pregunta)["solicitados"])) or "la consulta técnica"
         texto = (f"Sobre {tema}: no dispongo de información suficientemente verificada "
                  "para indicar ese procedimiento. Verifica el manual OEM aplicable a "
                  "marca, modelo, año y motor antes de intervenir. No se confirma ninguna falla.")

@@ -97,7 +97,12 @@ def resolver_transicion_turno(
             seniales_heredadas=meta_op.get("seniales_heredadas", {}),
         )
     transicion.dominio_previo = obtener_subsistema_estado(estado)
-    transicion.dominio_detectado_mensaje = detectar_subsistema_texto(texto_limpio)
+    if not transicion.motivo.startswith("RECTIFICACION_SISTEMA_"):
+        transicion.dominio_detectado_mensaje = detectar_subsistema_texto(texto_limpio)
+    else:
+        from src.core.conversacion.segmentacion.rectificacion import rectificar_sistema
+
+        rectificar_sistema(estado, texto_limpio, transicion.dominio_detectado_mensaje, estado_op_det)
 
     if transicion.decision == DecisionTransicion.CAMBIO_DE_CASO:
         archivar_y_limpiar_caso(

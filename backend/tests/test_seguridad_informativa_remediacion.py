@@ -27,7 +27,9 @@ def test_conserva_orientacion_pertinente_sin_valores_inventados():
 
 
 @pytest.mark.parametrize("proveedor", ["gemini", "groq", "local"])
-def test_generador_rechaza_respuesta_cruzada_en_todos_los_proveedores(monkeypatch, proveedor):
+@pytest.mark.parametrize("contexto", ["", "No busco información de frenos.",
+                                      'Antes dijo "purgar frenos".', "Antes hablamos de frenos."])
+def test_generador_rechaza_respuesta_cruzada_en_todos_los_proveedores(monkeypatch, proveedor, contexto):
     from types import SimpleNamespace
     from unittest.mock import MagicMock
 
@@ -45,7 +47,7 @@ def test_generador_rechaza_respuesta_cruzada_en_todos_los_proveedores(monkeypatc
     monkeypatch.setattr(settings, "groq_chat_enabled", proveedor == "groq")
     monkeypatch.setattr(modulo, "generar_respuesta_groq", lambda *a, **k: (incompatible, {"usado": True}))
     texto, meta = modulo.generar_respuesta_con_metadatos(
-        gestor, "Reaprendizaje de cuerpo de aceleración", "Consulta técnica informativa",
+        gestor, "Reaprendizaje de cuerpo de aceleración. " + contexto, "Consulta técnica informativa",
         incompatible, tipo_consulta="consulta_tecnica", slot_gemini_preconcedido=True,
     )
     assert "pastillas" not in texto
@@ -55,7 +57,9 @@ def test_generador_rechaza_respuesta_cruzada_en_todos_los_proveedores(monkeypatc
 
 
 @pytest.mark.anyio
-async def test_worker_degradado_no_entrega_documento_incompatible(monkeypatch):
+@pytest.mark.parametrize("contexto", ["", "No busco información de frenos.",
+                                      'Antes dijo "purgar frenos".', "Antes hablamos de frenos."])
+async def test_worker_degradado_no_entrega_documento_incompatible(monkeypatch, contexto):
     from src.config import settings
     from src.core.gemini_queue.models import SolicitudGeminiEncolada
     from src.core.gemini_queue.rate_limiter import GeminiRateLimiter
@@ -63,7 +67,7 @@ async def test_worker_degradado_no_entrega_documento_incompatible(monkeypatch):
 
     monkeypatch.setattr(settings.database, "enabled", False)
     solicitud = SolicitudGeminiEncolada(
-        sintoma="Reaprendizaje de cuerpo de aceleración",
+        sintoma="Reaprendizaje de cuerpo de aceleración. " + contexto,
         diagnostico_ml="Consulta técnica informativa", confianza_ml=0,
         contexto_manual="Purgar frenos y revisar pastillas.", titulo_manual="Frenos",
         tipo_consulta="consulta_tecnica",

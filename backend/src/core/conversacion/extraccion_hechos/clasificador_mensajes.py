@@ -117,6 +117,12 @@ def _es_mencion_no_destructiva(texto: str) -> bool:
         return True
     if re.search(r'["«“].{0,60}\b(?:nuevo\s+caso|nuevo\s+diagnostico|reiniciar|cerrar)\b', normalizado):
         return True
+    if re.search(
+        r"\bno\s+(?:(?:es|son|hay|tengo|existe|se trata de)\s+)?"
+        r"(?:otro|otra|nuevo|nueva)\s+(?:caso|diagnostico|problema|consulta|carro|vehiculo|auto)\b",
+        normalizado,
+    ):
+        return True
     return bool(re.search(
         r"\b(?:no\s+(?:generes|inicies|cierres|reinicies|cambies|abras|borres|quiero|deseo|vayas\s+a|debes?)|sin\s+(?:generar|cerrar|reiniciar)|"
         r"(?:menciona|dije|dice|palabra|termino)\s+(?:nuevo\s+diagnostico|cerrar|reiniciar))\b",

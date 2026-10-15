@@ -91,7 +91,11 @@ def evaluar_transicion(
     if estado.preguntas_realizadas:
         ult_preg = estado.preguntas_realizadas[-1]
         if ult_preg.get("intent") in (QuestionIntent.ACLARACION_ALCANCE.value, QuestionIntent.ACLARACION_CONTRADICCION.value):
-            if re.search(r"\b(diferente|otra\s+falla|otro\s+problema|otro\s+carro|distinto|nuevo\s+caso)\b", texto_l):
+            if re.match(
+                r"^(?:si[,\s]+)?(?:(?:es|se trata de|corresponde a)\s+)?"
+                r"(?:diferente|otra\s+falla|otro\s+problema|otro\s+carro|otro\s+vehiculo|distinto)\b",
+                texto_l,
+            ) and not re.search(r"\b(?:no|negativo)\b", texto_l):
                 return TransicionCasoResultado(
                     decision=DecisionTransicion.CAMBIO_DE_CASO,
                     motivo="USUARIO_CONFIRMA_FALLA_DIFERENTE",
@@ -126,14 +130,20 @@ def evaluar_transicion(
         )
         and re.search(r"\b(?:no\s+es|me\s+equivoque|corrijo|quise\s+decir)\b", texto_l)
     )
+    correccion_sistema = correccion_sistema or bool(
+        re.search(r"\b(?:corrige|corrijo|me equivoque|quise decir|en realidad|no es)\b", texto_l)
+        and "?" not in texto_l
+    )
     if correccion_sistema:
         anterior = obtener_subsistema_estado(estado)
-        actual = detectar_subsistema_texto(texto_usuario)
+        # El sistema negado no determina el destino de la rectificación.
+        afirmado = " ".join(c for c in re.split(r"[.;,]", texto_usuario)
+                            if not re.search(r"\bno\s+es\b", c, re.IGNORECASE))
+        actual = detectar_subsistema_texto(afirmado or texto_usuario)
         if actual != SubsistemaVehicular.DESCONOCIDO and actual != anterior:
             return TransicionCasoResultado(
-                decision=DecisionTransicion.CAMBIO_DE_CASO,
-                motivo=f"CORRECCION_SISTEMA_{anterior.value}_A_{actual.value}",
-                nuevo_case_id=str(uuid.uuid4()),
+                decision=DecisionTransicion.MANTENER_CASO,
+                motivo=f"RECTIFICACION_SISTEMA_{anterior.value}_A_{actual.value}",
                 estado_previo=estado_previo,
                 estado_detectado_mensaje=estado_detectado_mensaje,
                 dominio_detectado_mensaje=actual,
