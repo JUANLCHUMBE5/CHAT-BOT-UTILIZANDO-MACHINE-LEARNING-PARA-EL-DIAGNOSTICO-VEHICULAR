@@ -7,33 +7,49 @@ from src.core.conversacion.models import ConversationState, QuestionIntent
 from src.core.diagnostico.hallazgo_refrigerante import ORIENTACION_FUGA, estado_fuga
 
 
-def _priorizar_fuga(estado, respuesta, anteriores):
-    if estado.active_system != "refrigeracion":
-        return respuesta
-    hallazgo = None
-    for mensaje in estado.historial_mensajes_usuario:
-        actual = estado_fuga(mensaje, refrigeracion=True)
-        if actual is not None:
-            hallazgo = actual
-    if hallazgo is not True:
-        return respuesta
-    opciones = [
-        "¿En qué punto del radiador, mangueras o conexiones se localizó la fuga?",
-        "¿Qué resultado dio la prueba de presión del sistema realizada en frío?",
-    ]
-    siguiente = next((p for p in opciones if _clave(p) not in anteriores), None)
-    # No atribuir este texto determinista al LLM ni afirmar que se consultó un manual OEM.
-    return (
-        ORIENTACION_FUGA
-        + "Esta orientación general no acredita un procedimiento OEM/taller validado. "
-        + (siguiente or "Queda pendiente la comprobación física; aporta su resultado "
-           "o solicita revisión presencial. No repetiré las preguntas anteriores.")
-    )
-
-
 def _clave(texto: str) -> str:
     texto = unicodedata.normalize("NFD", texto.casefold())
     texto = " ".join("".join(c for c in texto if not unicodedata.combining(c)).split())
+    if re.search(r"\b(?:frio|caliente|temperatura)\b", texto) and re.search(
+        r"\b(?:ocurre|aparece|falla|manifiesta|motor)\b", texto,
+    ):
+        return "pregunta:condicion_temperatura"
+    if re.search(r"\b(?:dtc|codigo(?:s)?(?:\s+de\s+falla)?|obd)\b", texto) and re.search(
+        r"\b(?:mezcla|stft|ltft|trim|combustible)\b", texto,
+    ):
+        return "pregunta:dtc_mezcla"
+    if re.search(r"\b(?:stft|ltft|fuel\s+trim|ajuste\s+de\s+combustible)\b", texto):
+        return "pregunta:dtc_mezcla"
+    if re.search(r"\bmaf\b", texto) and re.search(
+        r"\b(?:g/s|rpm|valor|cuanto|numerico|dato exacto)\b", texto,
+    ):
+        return "pregunta:lectura_maf_valor"
+    if re.search(r"\bmaf\b", texto) and re.search(
+        r"\b(?:cambia|variable|fija|irregular|estable|acelerar)\b", texto,
+    ):
+        return "pregunta:comportamiento_maf"
+    if re.search(r"\b(?:maf|flujo\s+de\s+aire)\b", texto) and re.search(
+        r"\b(?:lectura|valor|flujo|g/s|senal|mide)\b", texto,
+    ):
+        return "pregunta:lectura_maf"
+    if re.search(r"\b(?:map|carga\s+absoluta|presion\s+del\s+multiple)\b", texto) and re.search(
+        r"\b(?:lectura|valor|presion|kpa|marca|mide)\b", texto,
+    ):
+        return "pregunta:lectura_map"
+    if re.search(r"\b(?:inyector|inyectores)\b", texto) and re.search(
+        r"\b(?:balance|caudal|pulverizacion|entrega)\b", texto,
+    ):
+        return "pregunta:balance_inyectores"
+    if re.search(r"\b(?:presion|psi|riel)\b", texto) and re.search(
+        r"\b(?:combustible|gasolina|bomba)\b", texto,
+    ):
+        return "pregunta:presion_combustible"
+    if re.search(r"\b(?:bobina|bobinas|bujia|bujias|chispa)\b", texto):
+        return "pregunta:prueba_chispa"
+    if re.search(r"\b(?:fuga|pierde|gotea)\b", texto) and re.search(
+        r"\b(?:refrigerante|radiador|manguera|presion)\b", texto,
+    ):
+        return "pregunta:prueba_fuga_refrigerante"
     if re.search(r"\b(?:electroventilador|motoventilador|ventilador)\b", texto) and re.search(
         r"\b(?:activa|funciona|enciende|entra)\b", texto,
     ):
@@ -45,10 +61,58 @@ def preguntas(texto: str) -> list[str]:
     return re.findall(r"¿[^?]*\?", texto or "", flags=re.DOTALL)
 
 
+def _priorizar_fuga(
+    estado: ConversationState,
+    respuesta: str,
+    anteriores: set[str],
+) -> str:
+    if estado.active_system != "refrigeracion":
+        return respuesta
+
+    hallazgo = None
+    for mensaje in getattr(estado, "historial_mensajes_usuario", []):
+        hallazgo_actual = estado_fuga(mensaje, refrigeracion=True)
+        if hallazgo_actual is not None:
+            hallazgo = hallazgo_actual
+    if hallazgo is not True:
+        return respuesta
+
+    opciones = [
+        "¿En qué punto del radiador, mangueras o conexiones se localizó la fuga?",
+        "¿Qué resultado dio la prueba de presión del sistema realizada en frío?",
+    ]
+    siguiente = next((pregunta for pregunta in opciones if _clave(pregunta) not in anteriores), None)
+    cierre = (
+        siguiente
+        or "Queda pendiente la comprobación física; aporta su resultado o solicita revisión presencial. "
+        "No repetiré las preguntas anteriores."
+    )
+    return (
+        ORIENTACION_FUGA
+        + "Esta orientación general no acredita un procedimiento OEM/taller validado. "
+        + cierre
+    )
+
+
 def asegurar_pregunta_util(
     estado: ConversationState, respuesta: str, previas: list[dict],
+    permitir_preguntas: bool = True,
 ) -> tuple[str, str | None]:
     """Comprueba la salida final (incluido formateador/LLM) contra el historial real."""
+    if not permitir_preguntas:
+        respuesta = re.sub(r"¿[^?]*\?", "", respuesta, flags=re.DOTALL).strip()
+        return (
+            respuesta + "\nEl caso permanece sin confirmar. Se requiere revisión presencial antes de concluir la falla.",
+            None,
+        )
+    from src.core.conversacion.orientacion_provisional import (
+        es_imposibilidad_completa,
+        generar_orientacion_provisional,
+    )
+    ultimo_mensaje = getattr(estado, "historial_mensajes_usuario", [])[-1:]
+    if ultimo_mensaje and es_imposibilidad_completa(ultimo_mensaje[0]):
+        return generar_orientacion_provisional(estado), None
+
     anteriores = {
         _clave(p)
         for registro in previas
@@ -62,7 +126,7 @@ def asegurar_pregunta_util(
     if repetida:
         opciones = {
             "refrigeracion": [
-                "¿El electroventilador se activa cuando aumenta la temperatura?",
+                "¿El electroventilador del radiador se activa cuando aumenta la temperatura del refrigerante?",
                 "¿Hay una fuga visible de refrigerante y en qué punto?",
                 "¿Qué temperatura muestra el escáner cuando ocurre la falla?",
             ],
@@ -83,22 +147,27 @@ def asegurar_pregunta_util(
                 "¿Qué resultado concreto dio la última comprobación del componente en evaluación?",
             ],
         }.get(estado.active_system, [])
+        if estado.active_system == "combustible_admision" and estado.obtener_hecho("caudal_inyectores_reportado"):
+            opciones = [
+                "¿Con el manómetro conectado al riel, qué presión mediste, en qué unidad y bajo qué condición?",
+                "¿Qué diferencia de caudal o caída de presión mostró la prueba de balance entre los inyectores?",
+            ]
+            if any("presion" in str(nombre).lower() for nombre in estado.measurements):
+                opciones = opciones[1:]
         siguiente = next((p for p in opciones if _clave(p) not in anteriores), None)
         if siguiente is None:
-            area = {
-                "refrigeracion": "refrigeración: termostato, ventilador y circuito de refrigerante",
-                "encendido": "encendido: chispa, bujías y bobinas",
-                "frenos": "frenos: circuito hidráulico y comprobación física",
-                "combustible_admision": "admisión/combustible: comprobación del hallazgo reportado",
-                "electrico_ecu": "ECU/codificación: compatibilidad y mensaje exacto",
-            }.get(estado.active_system, "el sistema en evaluación")
-            return (
-                f"Mantengo los datos y descartes de este caso en {area}. No repetiré las preguntas anteriores. "
-                "El diagnóstico sigue sin confirmar; continúa con la comprobación pendiente "
-                "y aporta su resultado, o solicita revisión presencial si no puedes realizarla.",
-                None,
-            )
-        respuesta = "Conservo la información que ya aportaste. " + siguiente
+            # Conservar el cuerpo técnico útil y remover solo las preguntas repetidas
+            resp_limpia = respuesta
+            for p in actuales:
+                resp_limpia = resp_limpia.replace(p, "").strip()
+            return resp_limpia, None
+        
+        # Conservar el cuerpo de la respuesta útil y reemplazar solo la pregunta repetida
+        resp_act = respuesta
+        for p in actuales:
+            if _clave(p) in anteriores:
+                resp_act = resp_act.replace(p, siguiente)
+        respuesta = resp_act
         actuales = [siguiente]
     final = actuales[-1]
     if not any(

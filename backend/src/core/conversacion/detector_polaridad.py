@@ -10,6 +10,20 @@ from src.core.conversacion.models import FactState
 # Catálogo de síntomas con patrones positivos y patrones de negación explícita
 DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     (
+        "trepidación y zapateo de embrague",
+        re.compile(
+            r"\b(zapatea(?:\s+feo)?\s+al\s+arrancar|zapateo(\s+de\s+embrague)?|"
+            r"trepidaci[oó]n(\s+de\s+embrague|\s+al\s+salir)?|"
+            r"pedal\s+vibra\s+cuando\s+lo\s+suelto|vibra\s+al\s+soltar\s+el\s+pedal|"
+            r"pedal\s+vibra\s+al\s+soltar)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b(no\s+(?:se\s+|le\s+|me\s+)?(?:zapatea|trepida|vibra\s+el\s+embrague))\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
         "vibración",
         re.compile(r"\b(vibraci[oó]n|vibracion|tiembla|zapatea|vibra)\b", re.IGNORECASE),
         re.compile(
@@ -30,17 +44,28 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
             r"perdi[aáoó]\s+fuerza|sin\s+fuerza|se\s+ahoga|chanchea|se\s+aguanta|est[aá]\s+chancho)\b",
             re.IGNORECASE,
         ),
-        re.compile(r"\b(no\s+(?:pierde\s+fuerza|pierde\s+potencia|se\s+ahoga|se\s+chupa|se\s+aguanta)|fuerza\s+normal)\b", re.IGNORECASE),
+        re.compile(
+            r"\b(?:no\s+(?:presenta|tiene|muestra)\s+(?:p[eé]rdida\s+de\s+potencia|p[eé]rdida\s+de\s+fuerza)|"
+            r"no\s+(?:pierde\s+fuerza|pierde\s+potencia|se\s+ahoga|se\s+chupa|se\s+aguanta)|"
+            r"sin\s+(?:p[eé]rdida\s+de\s+potencia|p[eé]rdida\s+de\s+fuerza)|fuerza\s+normal)\b",
+            re.IGNORECASE,
+        ),
     ),
     (
         "sobrecalentamiento",
         re.compile(
-            r"\b(sobrecalentamiento|hierve|levanta\s+temperatura|se\s+calienta|"
+            r"\b(sobrecalentamiento|recalienta|recalentar|recalentando|recalent[oó]|se\s+recalienta|"
+            r"el\s+auto\s+recalienta|el\s+carro\s+recalienta|motor\s+recalienta|"
+            r"hierve|hirviendo|levanta\s+temperatura|se\s+calienta|calienta\s+el\s+motor|"
             r"temperatura\s+(?:del\s+motor\s+)?(?:est[aá]\s+)?subiendo|"
-            r"temperatura\s+sube|temperatura\s+(?:m[aá]s\s+de\s+lo\s+normal|elevada|alta))\b",
+            r"temperatura\s+(?:sube|al\s+tope|volando|elevada|alta)|"
+            r"aguja\s+de\s+temperatura|bota\s+vapor|vapor\s+(?:bajo|del)\s+cap[oó])\b",
             re.IGNORECASE,
         ),
-        re.compile(r"\b(no\s+(?:se\s+)?(?:calienta|hierve|levanta\s+temperatura)|temperatura\s+normal)\b", re.IGNORECASE),
+        re.compile(
+            r"\b(no\s+(?:se\s+)?(?:recalienta|calienta|hierve|levanta\s+temperatura)|temperatura\s+normal|sin\s+recalentar)\b",
+            re.IGNORECASE,
+        ),
     ),
     (
         "fuga de refrigerante",
@@ -112,10 +137,27 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     ),
     (
         "testigo check engine",
-        re.compile(r"\b(testigo\s+prendido|check\s+engine\s+encendido|luz\s+en\s+el\s+tablero)\b", re.IGNORECASE),
         re.compile(
-            r"\b(no\s+(?:aparece|hay|se\s+enciende|se\s+prende|prende)\s+(?:ninguna?\s+)?(?:luz|testigo|check|aviso)(?:\s+en\s+el\s+tablero)?|"
-            r"sin\s+luces?\s+de\s+advertencia|ninguna\s+luz\s+de\s+advertencia)\b",
+            r"\b("
+            r"(?:el\s+)?testigo(?:\s+check\s+engine)?\s+(?:est[aá]\s+)?(?:prendido|encendido|activo)"
+            r"|check\s+engine(?:\s+est[aá])?\s+(?:prendido|encendido|activo)"
+            r"|luz\s+(?:en\s+el\s+tablero|del\s+motor|del\s+check)(?:\s+est[aá])?\s+(?:prendida|encendida)?"
+            r"|testigo\s+prendido"
+            r"|check\s+engine\s+encendido"
+            r"|luz\s+en\s+el\s+tablero"
+            r")\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b("
+            r"no\s+(?:aparece|hay|se\s+enciende|se\s+prende|prende|est[aá]\s+(?:prendido|encendido))\s+(?:ninguna?\s+)?(?:el\s+|la\s+)?(?:luz|testigo|check|aviso)(?:\s+en\s+el\s+tablero)?|"
+            r"no\s+(?:tiene|muestra)\s+(?:ning[uú]n\s+)?(?:testigo|check|luz)|"
+            r"sin\s+luces?\s+de\s+advertencia|"
+            r"sin\s+testigos?|"
+            r"ninguna\s+luz\s+de\s+advertencia|"
+            r"check\s+(?:engine\s+)?apagado|"
+            r"testigo\s+apagado"
+            r")\b",
             re.IGNORECASE,
         ),
     ),
@@ -208,6 +250,10 @@ class DetectorPolaridad:
             txt_l,
         ):
             resultados.append(("sintoma_fuga_de_refrigerante", "fuga de refrigerante", FactState.CONFIRMADO))
+
+        nombres_detectados = {r[1] for r in resultados}
+        if "trepidación y zapateo de embrague" in nombres_detectados:
+            resultados = [r for r in resultados if r[1] != "vibración"]
 
         return resultados
 

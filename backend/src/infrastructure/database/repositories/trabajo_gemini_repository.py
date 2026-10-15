@@ -36,6 +36,7 @@ class TrabajoGeminiRepository:
         conversacion_id: Optional[uuid.UUID] = None,
         diagnostico_id: Optional[uuid.UUID] = None,
         trabajo_id: Optional[uuid.UUID] = None,
+        case_id: Optional[str] = None,
     ) -> TrabajoGemini:
         """Crea un nuevo trabajo persistente cifrando el remitente para proteger la privacidad."""
         conf_decimal = Decimal(str(round(float(confianza_ml), 4))) if confianza_ml is not None else None
@@ -47,6 +48,7 @@ class TrabajoGeminiRepository:
             taller_id=taller_id,
             usuario_id=usuario_id,
             conversacion_id=conversacion_id,
+            case_id=case_id,
             proveedor=proveedor or "meta",
             tipo_consulta=tipo_consulta,
             remitente_cifrado=remitente_cifrado,
@@ -102,11 +104,23 @@ class TrabajoGeminiRepository:
 
         if trabajo:
             trabajo.estado = "procesando"
-            trabajo.intentos += 1
             trabajo.bloqueado_hasta = ahora + timedelta(seconds=bloqueo_segundos)
             await self.session.flush()
 
         return trabajo
+
+    async def registrar_intento_ejecucion(self, trabajo_id: uuid.UUID) -> bool:
+        """Registra un intento real de ejecución hacia el proveedor LLM."""
+        stmt = (
+            update(TrabajoGemini)
+            .where(TrabajoGemini.id == trabajo_id)
+            .values(
+                intentos=TrabajoGemini.intentos + 1,
+                actualizado_en=datetime.now(timezone.utc),
+            )
+        )
+        res = await self.session.execute(stmt)
+        return res.rowcount > 0
 
     async def marcar_completado(self, trabajo_id: uuid.UUID) -> bool:
         """Marca el trabajo como completado con éxito."""
@@ -166,7 +180,6 @@ class TrabajoGeminiRepository:
             .where(TrabajoGemini.id == trabajo_id)
             .values(
                 estado="pendiente_reintento",
-                intentos=TrabajoGemini.intentos - 1,
                 disponible_desde=nueva_fecha,
                 bloqueado_hasta=None,
                 error_ultimo=motivo[:1000] if motivo else None,

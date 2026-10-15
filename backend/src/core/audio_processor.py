@@ -88,17 +88,32 @@ class AudioProcessor:
         mime_type: str = "audio/ogg",
         api_key: Optional[str] = None,
     ) -> str:
-        """
-        Transcribe una nota de voz a texto para ingresarla al clasificador ML y RAG.
-        Transcribe bytes reales mediante la entrada multimodal de Gemini.
+        """Transcribe una nota de voz a texto para ingresarla al clasificador ML y RAG.
+
+        Prioriza Groq Whisper por latencia/especialización en voz. Si Groq no está
+        configurado o falla, usa Gemini como respaldo para no bloquear al mecánico.
         """
         if not audio_id or not audio_bytes:
             raise ValueError("La nota de voz no contiene bytes de audio reales.")
-        clave = api_key or settings.gemini_api_key
-        if not clave:
-            raise RuntimeError("GEMINI_API_KEY es obligatoria para transcribir audio.")
         if len(audio_bytes) > settings.audio_max_bytes:
             raise ValueError("El audio supera el tamaño máximo permitido.")
+
+        if settings.groq_api_key and settings.groq_audio_enabled:
+            try:
+                from src.core.llm import transcribir_audio_groq
+
+                return transcribir_audio_groq(
+                    audio_bytes,
+                    mime_type=mime_type,
+                    nombre_archivo=f"{audio_id}.ogg",
+                )
+            except Exception:
+                # No exponemos detalle de proveedor ni clave; Gemini queda como respaldo.
+                pass
+
+        clave = api_key or settings.gemini_api_key
+        if not clave:
+            raise RuntimeError("No hay proveedor configurado para transcribir audio.")
 
         modelo = settings.gemini_model
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent"

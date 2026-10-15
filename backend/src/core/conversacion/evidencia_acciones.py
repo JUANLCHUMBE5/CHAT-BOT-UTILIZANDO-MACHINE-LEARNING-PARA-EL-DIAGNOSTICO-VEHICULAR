@@ -1,0 +1,72 @@
+"""Alcance de acciones de taller: ejecutar una prueba no equivale a descartar la pieza."""
+from __future__ import annotations
+
+import re
+import unicodedata
+from typing import Any
+
+from src.core.conversacion.models import ConversationState, FactState, FactType
+
+
+def normalizar(texto: str) -> str:
+    return "".join(c for c in unicodedata.normalize("NFD", texto.casefold())
+                   if unicodedata.category(c) != "Mn")
+
+
+def accion_afirmada(texto: str, accion: str, componente: str) -> bool:
+    """Busca la acción y la pieza en la misma cláusula, respetando su negación."""
+    for clausula in re.split(r"[.;!?]|\bpero\b", normalizar(texto)):
+        pieza = re.search(componente, clausula)
+        if not pieza:
+            continue
+        for match in re.finditer(accion, clausula):
+            anterior = clausula[max(0, match.start() - 48):match.start()]
+            if not re.search(r"\b(?:no|nunca|sin|pendiente|falta)\b(?:\s+\w+){0,6}\s*$", anterior):
+                return True
+    return False
+
+
+def descarte_afirmado(texto: str, componente: str) -> bool:
+    return accion_afirmada(texto, r"\b(?:descarte|descartado|descartada)\b", componente)
+
+
+def registrar_acciones_taller(estado: ConversationState, texto_usuario: str) -> list[dict[str, Any]]:
+    """Persistencia de la acción declarada, separada de su resultado diagnóstico."""
+    hechos_extraidos: list[dict[str, Any]] = []
+    # Registrar acciones, sin deducir que una pieza nueva o inspeccionada funciona bien.
+    piezas = ("bujias", "bobinas?", "bomba", "filtro", "termostato", "pastillas", "aceite",
+              "fusible", "presion", "compresion", "bateria", "alternador", "arrancador")
+    for pieza in piezas:
+        patron = rf"\b{pieza}\b"
+        canon = "bujías" if "buj" in pieza else ("bobinas" if "bobin" in pieza else pieza)
+        acciones = (
+            ("reemplazado", r"\b(?:cambie|cambiamos|cambiado|cambiada|nuevo|nueva)\b", "antecedente"),
+            ("probado", r"\b(?:revise|probe|intercambie|inspeccione|medi)\b", "prueba_realizada"),
+        )
+        for clausula in re.split(r"[.;!?]|\bpero\b", normalizar(texto_usuario)):
+            if re.search(patron, clausula) and re.search(
+                r"\b(?:no|nunca|sin)\b(?:\s+\w+){0,4}\s+"
+                r"(?:probe|revise|medi|comprobe|revisar|medir|comprobar)\b", clausula,
+            ):
+                hecho = estado.registrar_hecho(
+                    f"no_comprobado_{canon}", f"{canon}: comprobación pendiente",
+                    categoria="inspeccion_pendiente", estado=FactState.NO_REVISADO,
+                    texto_crudo=texto_usuario, tipo=FactType.CONDICION,
+                )
+                hechos_extraidos.append(hecho.to_dict())
+        for nombre, accion, categoria in acciones:
+            if accion_afirmada(texto_usuario, accion, patron):
+                hecho = estado.registrar_hecho(
+                    f"{nombre}_{canon}", f"{canon} {nombre}(a)",
+                    categoria=categoria, texto_crudo=texto_usuario, tipo=FactType.CONDICION,
+                )
+                hechos_extraidos.append(hecho.to_dict())
+        if descarte_afirmado(texto_usuario, patron):
+            hecho = estado.registrar_hecho(
+                f"descartado_{canon}", f"{canon} descartado explícitamente por el mecánico",
+                categoria="componente_descartado", estado=FactState.DESCARTADO,
+                texto_crudo=texto_usuario, tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(hecho.to_dict())
+
+    return hechos_extraidos

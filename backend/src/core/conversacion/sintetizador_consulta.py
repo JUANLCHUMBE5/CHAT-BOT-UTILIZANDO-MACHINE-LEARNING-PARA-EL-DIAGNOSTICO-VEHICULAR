@@ -8,6 +8,15 @@ from typing import List
 from src.core.conversacion.models import ConversationState, FactState
 
 
+def _retirar_condicion_obsoleta(texto: str, temperatura_confirmada: str | None) -> str:
+    """Evita que una frase histórica contradiga la corrección estructurada del mecánico."""
+    if temperatura_confirmada == "caliente":
+        texto = re.sub(r"\b(?:cuando\s+est[aá]\s+)?fr[ií]o\b", "", texto, flags=re.IGNORECASE)
+    elif temperatura_confirmada == "frío":
+        texto = re.sub(r"\b(?:cuando\s+est[aá]\s+)?caliente\b", "", texto, flags=re.IGNORECASE)
+    return re.sub(r"\s+", " ", texto).strip()
+
+
 class SintetizadorConsulta:
     """Reconstruye una consulta diagnóstica limpia a partir de hechos estructurados confirmados."""
 
@@ -24,8 +33,12 @@ class SintetizadorConsulta:
             vehiculo_tokens.append(estado.modelo)
         if estado.anio:
             vehiculo_tokens.append(f"año {estado.anio}")
+        if estado.motor:
+            vehiculo_tokens.append(f"motor {estado.motor}")
         if estado.combustible:
             vehiculo_tokens.append(f"a {estado.combustible}")
+        if estado.transmision:
+            vehiculo_tokens.append(f"transmisión {estado.transmision}")
 
         if vehiculo_tokens:
             partes.append(" ".join(vehiculo_tokens))
@@ -49,12 +62,7 @@ class SintetizadorConsulta:
             sintomas_str = ", ".join(sintomas_confirmados)
             partes.append(f"presenta {sintomas_str}")
         elif estado.historial_mensajes_usuario:
-            msg_base = estado.historial_mensajes_usuario[0]
-            if temp == "caliente":
-                msg_base = re.sub(r"\b(?:cuando\s+est[aá]\s+)?fr[ií]o\b", "", msg_base, flags=re.IGNORECASE)
-            elif temp == "frío":
-                msg_base = re.sub(r"\b(?:cuando\s+est[aá]\s+)?caliente\b", "", msg_base, flags=re.IGNORECASE)
-            msg_base = re.sub(r"\s+", " ", msg_base).strip()
+            msg_base = _retirar_condicion_obsoleta(estado.historial_mensajes_usuario[0], temp)
             if msg_base:
                 partes.append(msg_base)
 
@@ -117,11 +125,15 @@ class SintetizadorConsulta:
 
         # 8. Mediciones técnicas confirmadas
         meds = [
-            h.valor for h in estado.hechos.values()
-            if h.categoria == "medicion" and h.estado == FactState.CONFIRMADO
+            h.valor for campo, h in estado.hechos.items()
+            if (
+                h.categoria == "medicion"
+                and h.estado == FactState.CONFIRMADO
+                and campo not in {"valor_medicion", "unidad_medicion", "condicion_medicion"}
+            )
         ]
         if meds:
-            partes.append(f"medición {', '.join(meds)}")
+            partes.append(f"medición/evidencia técnica {', '.join(meds)}")
 
         # 8.1 Modificadores ambientales o eléctricos
         mods = [
@@ -138,7 +150,15 @@ class SintetizadorConsulta:
         # 9. Antecedentes y componentes descartados
         descartes = [
             h.valor for h in estado.hechos.values()
-            if h.categoria in ("componente_descartado", "antecedente") and h.estado == FactState.CONFIRMADO
+            if h.categoria in (
+                "componente_descartado",
+                "componente_comprobado",
+                "componente_reemplazado",
+                "antecedente",
+                "verificacion_fisica",
+                "comprobacion_fisica",
+            )
+            and h.estado in (FactState.CONFIRMADO, FactState.DESCARTADO)
         ]
         if descartes:
             partes.append(f"antecedente: {', '.join(descartes)}")
@@ -150,6 +170,48 @@ class SintetizadorConsulta:
         ]
         if no_rev:
             partes.append(f"pendiente revisar: {', '.join(no_rev)}")
+
+        # 11. Pruebas, mediciones y correcciones aportadas durante la sesión.
+        # Se incluyen explícitamente para que ML/LLM no pierdan una pista que el
+        # extractor aún no haya normalizado a un campo conocido.
+        if estado.completed_tests:
+            resultados = ", ".join(
+                f"{nombre}: {resultado}"
+                for nombre, resultado in estado.completed_tests.items()
+            )
+            partes.append(f"pruebas ya realizadas (resultado reportado): {resultados}")
+
+        if estado.measurements:
+            mediciones = []
+            for medicion in estado.measurements.values():
+                if not isinstance(medicion, dict):
+                    continue
+                tipo = medicion.get("tipo", "medición")
+                valor = medicion.get("valor", "")
+                unidad = medicion.get("unidad", "")
+                contexto = medicion.get("contexto")
+                dato = f"{tipo}: {valor} {unidad}".strip()
+                if contexto:
+                    dato += f" ({contexto})"
+                mediciones.append(dato)
+            if mediciones:
+                partes.append(f"mediciones reportadas: {', '.join(mediciones)}")
+
+        if estado.hipotesis_descartadas:
+            partes.append(
+                "hipótesis descartadas explícitamente por el mecánico: "
+                + ", ".join(estado.hipotesis_descartadas)
+            )
+
+        aportes_recientes = list(dict.fromkeys(
+            _retirar_condicion_obsoleta(texto, temp)
+            for texto in estado.historial_mensajes_usuario[-4:] if texto.strip()
+        ))
+        if aportes_recientes:
+            partes.append(
+                "últimos aportes textuales del mecánico (declaraciones, conservar su sentido): "
+                + " | ".join(aportes_recientes)
+            )
 
         # Si no hubo hechos estructurados, usar el último mensaje limpio como salvaguarda
         if not partes:

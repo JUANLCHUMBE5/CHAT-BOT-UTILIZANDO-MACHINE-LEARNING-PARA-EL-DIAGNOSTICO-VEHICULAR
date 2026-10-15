@@ -315,7 +315,7 @@ def evaluar_auto_pregunta_descarte(
         return None
 
     # Caso 1g: Rodamiento de rueda con discriminador de carga lateral o giro
-    if any(w in texto_l for w in ("al girar", "curva", "cargando peso", "peso en la rueda")) and any(w in texto_l for w in ("zumba", "zumbido", "ronco", "rodadura")):
+    if any(w in texto_l for w in ("al girar", "al doblar", "curva", "cargando peso", "peso en la rueda")) and any(w in texto_l for w in ("zumba", "zumbido", "ronco", "rodadura")):
         return None
 
     # Caso 1h: Collarín / crapodina de embrague al pisar pedal

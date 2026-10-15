@@ -32,7 +32,11 @@ class ModeloML:
         self.vectorizador_path = vectorizador_path
         self.temperatura = float(temperatura)
         if modelo_sistema_path is None:
-            self.modelo_sistema_path = str(Path(self.modelo_path).parent / "modelo_sistema.pkl")
+            modelo_configurado = Path(settings.paths.model_pkl)
+            if Path(self.modelo_path).resolve() == modelo_configurado.resolve():
+                self.modelo_sistema_path = str(settings.paths.modelo_sistema_pkl)
+            else:
+                self.modelo_sistema_path = str(Path(self.modelo_path).parent / "modelo_sistema.pkl")
         else:
             self.modelo_sistema_path = modelo_sistema_path
 
@@ -83,6 +87,27 @@ class ModeloML:
             return "Error de prediccion", 0.0
         principal = predicciones[0]
         return str(principal["falla"]), float(principal["probabilidad"])
+
+    def predecir_top_fallas_svm_raw(self, texto: str, limite: int = 3) -> list[dict[str, float | str]]:
+        """Top-k de predict_proba sin fusión jerárquica, DTC ni temperatura.
+
+        Solo telemetría: no sustituye el diagnóstico operativo ni confirma averías.
+        """
+        if self.modelo is None or self.vectorizador is None:
+            return []
+        texto_limpio = str(texto or "").strip()[:4000]
+        if not texto_limpio or not hasattr(self.modelo, "predict_proba"):
+            return []
+        entrada = self.vectorizador.transform([texto_limpio])
+        if getattr(entrada, "nnz", 0) == 0:
+            return []
+        probabilidades = self.modelo.predict_proba(entrada)[0]
+        clases = self.modelo.classes_
+        indices = np.argsort(probabilidades)[::-1][:max(1, min(int(limite), len(clases)))]
+        return [
+            {"falla": str(clases[int(i)]), "probabilidad": float(probabilidades[int(i)])}
+            for i in indices
+        ]
 
     def predecir_top_fallas(
         self, texto: str, limite: int = 3, dtc_codigo: Optional[str] = None

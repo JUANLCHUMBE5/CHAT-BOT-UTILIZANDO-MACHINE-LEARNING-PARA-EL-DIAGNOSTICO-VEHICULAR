@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, Tuple
 import requests
 
 from src.config import settings
+from src.core.diagnostico.politica_seguridad import PoliticaSeguridad
+from src.core.diagnostico.respuesta_llm_estructurada import INSTRUCCION_JSON, validar_y_formatear
 from src.core.gemini_queue.db_persistence import (
     actualizar_diagnostico_y_trabajo_db,
     marcar_trabajo_reintento_db,
@@ -17,6 +19,7 @@ from src.core.gemini_queue.db_persistence import (
 )
 from src.core.gemini_queue.models import SolicitudGeminiEncolada
 from src.core.gemini_queue.summary_formatter import crear_resumen_whatsapp
+from src.core.llm import generar_respuesta_groq
 from src.core.logger import logger
 from src.core.sanitizer import redactar_datos_sensibles_para_llm, sanitizar_prompt_usuario
 
@@ -25,6 +28,16 @@ if TYPE_CHECKING:
 
 
 _gemini_session_pool: requests.Session | None = None
+
+
+def _validar_diagnostico_llm(texto: str, solicitud: SolicitudGeminiEncolada) -> str:
+    permitidas = [solicitud.diagnostico_ml]
+    permitidas.extend(
+        prediccion.get("falla", "")
+        for prediccion in solicitud.predicciones_ml
+        if isinstance(prediccion, dict)
+    )
+    return validar_y_formatear(texto, permitidas)
 
 
 def _obtener_http_session_gemini() -> requests.Session:
@@ -119,6 +132,8 @@ async def procesar_solicitud_encolada(
 
         ⏱️ **3. Tiempo Estimado y Gravedad**
         Indica urgencia, riesgos y necesidad de validación del mecánico.
+
+        FORMATO OBLIGATORIO FINAL: {INSTRUCCION_JSON}
         """
 
     api_key = settings.gemini_api_key
@@ -128,6 +143,9 @@ async def procesar_solicitud_encolada(
     espera_reintento = 15
 
     if api_key and not forzar_degradado:
+        if settings.database.enabled:
+            from src.core.gemini_queue.db_persistence import registrar_intento_ejecucion_db
+            await registrar_intento_ejecucion_db(solicitud.id)
         try:
             modelo = settings.gemini_model or "gemini-3.5-flash-lite"
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent"
@@ -145,7 +163,7 @@ async def procesar_solicitud_encolada(
 
             http_sess = _obtener_http_session_gemini()
             response = await asyncio.to_thread(
-                http_sess.post, url, json=payload, headers=headers, timeout=10
+                http_sess.post, url, json=payload, headers=headers, timeout=settings.gemini_timeout_seconds
             )
             if response.status_code == 200:
                 rate_limiter.registrar_estado_gemini(exitoso=True, codigo_http=200)
@@ -156,6 +174,8 @@ async def procesar_solicitud_encolada(
                 texto_gemini = texto_gemini[: settings.gemini_output_max_chars]
                 if not texto_gemini:
                     raise ValueError("Gemini devolvió una respuesta vacía.")
+                if solicitud.tipo_consulta == "diagnostico":
+                    texto_gemini = _validar_diagnostico_llm(texto_gemini, solicitud)
                 tokens_in = int(usage.get("promptTokenCount", max(1, len(prompt_sistema) // 4)))
                 tokens_out = int(usage.get("candidatesTokenCount", max(1, len(texto_gemini) // 4)))
 
@@ -163,6 +183,7 @@ async def procesar_solicitud_encolada(
                 metadatos = {
                     "usado": True,
                     "modelo": modelo,
+                    "proveedor": "gemini",
                     "modo": "consulta_tecnica" if solicitud.tipo_consulta == "consulta_tecnica" else "completo_ml_rag_llm",
                     "tokens_entrada": tokens_in,
                     "tokens_salida": tokens_out,
@@ -193,6 +214,20 @@ async def procesar_solicitud_encolada(
             await rate_limiter.persistir_estado_local_db()
             logger.error(f"[Gemini Worker Error] Falló llamada HTTP a Gemini: {e}")
             error_reintentable = f"Error temporal Gemini: {type(e).__name__}"
+
+    if not texto_respuesta and not forzar_degradado and settings.groq_api_key and settings.groq_chat_enabled:
+        try:
+            texto_respuesta, metadatos = await asyncio.to_thread(
+                generar_respuesta_groq,
+                prompt_sistema,
+                tipo_consulta=solicitud.tipo_consulta,
+            )
+            if solicitud.tipo_consulta == "diagnostico":
+                texto_respuesta = _validar_diagnostico_llm(texto_respuesta, solicitud)
+            error_reintentable = None
+            logger.info("[Groq Worker] Respuesta generada como fallback de Gemini.")
+        except Exception as exc:
+            logger.warning(f"[Groq Worker] Fallback no disponible: {type(exc).__name__}")
 
     if error_reintentable and settings.database.enabled:
         await marcar_trabajo_reintento_db(
@@ -231,6 +266,7 @@ async def procesar_solicitud_encolada(
                 "usado": False,
                 "modelo": None,
                 "modo": "consulta_tecnica_degradada",
+                "motivo_degradado": solicitud.motivo_degradado or (error_reintentable if not forzar_degradado else "degradado_automatico"),
                 "tokens_entrada": 0,
                 "tokens_salida": 0,
             }
@@ -248,9 +284,17 @@ async def procesar_solicitud_encolada(
                 "usado": False,
                 "modelo": None,
                 "modo": "diagnostico_degradado_ml_rag",
+                "motivo_degradado": solicitud.motivo_degradado or (error_reintentable if not forzar_degradado else "degradado_automatico"),
                 "tokens_entrada": 0,
                 "tokens_salida": 0,
             }
+
+    if solicitud.tipo_consulta == "diagnostico":
+        texto_respuesta = PoliticaSeguridad.enriquecer_respuesta_seguridad(
+            respuesta_texto=texto_respuesta,
+            texto_usuario=solicitud.sintoma,
+            diagnostico_ml=solicitud.diagnostico_ml,
+        )
 
     metadatos["tiempo_llm_ms"] = max(0, int((time.perf_counter() - inicio_procesamiento) * 1000))
 
@@ -259,12 +303,15 @@ async def procesar_solicitud_encolada(
 
     if solicitud.conversacion_id and settings.database.enabled:
         resumen_whatsapp = crear_resumen_whatsapp(solicitud, texto_respuesta)
-        await persistir_mensaje_saliente_db(solicitud, resumen_whatsapp, "pendiente")
-        try:
-            from src.core.gemini_queue.db_persistence import procesar_siguiente_entrega_whatsapp
-            await procesar_siguiente_entrega_whatsapp()
-        except Exception as e:
-            logger.debug(f"[Gemini Worker Outbox Inmediato] {e}")
+        respuesta_vinculada_al_caso = await persistir_mensaje_saliente_db(
+            solicitud, resumen_whatsapp, "pendiente"
+        )
+        if respuesta_vinculada_al_caso:
+            try:
+                from src.core.gemini_queue.db_persistence import procesar_siguiente_entrega_whatsapp
+                await procesar_siguiente_entrega_whatsapp()
+            except Exception as e:
+                logger.debug(f"[Gemini Worker Outbox Inmediato] {e}")
 
     if solicitud.callback_completado:
         try:

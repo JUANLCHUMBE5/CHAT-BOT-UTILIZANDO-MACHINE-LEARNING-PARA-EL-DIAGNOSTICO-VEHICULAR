@@ -8,15 +8,31 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.core.identidad_conversacional import es_identificador_provisional
 from src.core.security import hash_identificador_persistencia
 from src.infrastructure.database.models.diagnostics import Vehiculo
 
 
 def normalizar_placa(placa: str) -> str:
-    """Normaliza una placa antes de calcular su identificador pseudónimo."""
-    normalizada = "".join(caracter for caracter in placa.upper() if caracter.isalnum())
-    if len(normalizada) < 3:
-        raise ValueError("La placa debe contener al menos 3 caracteres alfanuméricos.")
+    """Normaliza y valida una placa antes de calcular su identificador pseudónimo."""
+    if es_identificador_provisional(placa):
+        raise ValueError("Un identificador provisional no es una placa real.")
+    normalizada = "".join(
+        caracter for caracter in (placa or "").upper()
+        if caracter.isalnum()
+    )
+
+    # Evitar que texto conversacional como "hola" sea interpretado como placa.
+    # Se admite placa con o sin guion, pero debe contener letras y números.
+    if not (5 <= len(normalizada) <= 7):
+        raise ValueError("La placa debe contener entre 5 y 7 caracteres alfanuméricos.")
+
+    if not any(c.isalpha() for c in normalizada):
+        raise ValueError("La placa debe contener al menos una letra.")
+
+    if not any(c.isdigit() for c in normalizada):
+        raise ValueError("La placa debe contener al menos un número.")
+
     return normalizada
 
 
@@ -57,9 +73,57 @@ class VehiculoRepository:
         kilometraje: Optional[int] = None,
     ) -> Optional[Vehiculo]:
         """Obtiene un vehículo existente por placa o registra uno nuevo."""
+        if es_identificador_provisional(placa_str):
+            return None
         if placa_str and placa_str not in ("WAPP-01", "REST-API", "SIN-PLACA"):
             existente = await self.buscar_por_placa(taller_id, placa_str)
             if existente:
+                actualizado = False
+                marca_candidata = (marca or "").strip()
+                if (
+                    marca_candidata
+                    and marca_candidata.lower() not in ("generico", "vehiculo", "vehiculo generico", "desconocido", "")
+                    and marca_candidata.lower() != (existente.marca or "").lower()
+                ):
+                    existente.marca = marca_candidata
+                    actualizado = True
+
+                modelo_candidato = (modelo or "").strip()
+                if (
+                    modelo_candidato
+                    and modelo_candidato.lower() not in ("generico", "vehiculo", "vehiculo generico", "desconocido", "")
+                    and modelo_candidato.lower() != (existente.modelo or "").lower()
+                ):
+                    existente.modelo = modelo_candidato
+                    actualizado = True
+
+                if anio is not None and anio != existente.anio:
+                    existente.anio = anio
+                    actualizado = True
+
+                if (
+                    motor
+                    and motor.strip().lower() not in ("generico", "desconocido", "")
+                    and motor != existente.motor
+                ):
+                    existente.motor = motor.strip()
+                    actualizado = True
+
+                if (
+                    combustible
+                    and combustible.strip().lower() not in ("generico", "desconocido", "")
+                    and combustible != existente.combustible
+                ):
+                    existente.combustible = combustible.strip()
+                    actualizado = True
+
+                if kilometraje is not None and kilometraje != existente.kilometraje:
+                    existente.kilometraje = kilometraje
+                    actualizado = True
+
+                if actualizado:
+                    await self.session.flush()
+
                 return existente
 
             # Extraer los últimos 4 caracteres alfanuméricos de la placa

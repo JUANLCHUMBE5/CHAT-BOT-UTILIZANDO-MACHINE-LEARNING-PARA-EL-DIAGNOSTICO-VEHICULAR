@@ -10,10 +10,12 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.application.services.borrador_consulta import registrar_borrador_consulta
 from src.application.services.confirmacion_diagnostico import instrucciones_confirmacion_whatsapp
 from src.config import settings
 from src.core.gemini_queue import gemini_rate_limiter
 from src.core.gestor_diagnostico import ResultadoDiagnostico
+from src.core.identidad_conversacional import es_identificador_provisional
 from src.core.sanitizer import sanitizar_prompt_usuario
 from src.core.security import cifrar_texto_reversible
 from src.core.traductor_jerga import normalizar_jerga_peruana
@@ -24,9 +26,57 @@ from src.infrastructure.database.repositories.vehiculo_repository import Vehicul
 
 COSTO_META_MENSAJE_SERVICIO_USD = Decimal(str(settings.meta_message_price_usd))
 
+MODOS_DIAGNOSTICO_PERSISTIBLES = frozenset({
+    "completo_ml_rag_llm",
+    "diagnostico_degradado_ml_rag",
+    "en_cola_gemini",
+    "audio_espectral",
+    "saludo",
+    "baja_confianza",
+    "esperando_clarificacion",
+})
+
 
 class DiagnosticPersister:
     """Persiste los resultados del motor diagnóstico y genera mensajes de salida."""
+
+    @staticmethod
+    def debe_solicitar_feedback(dto: ResultadoDiagnostico) -> bool:
+        """El feedback se pide solo para un diagnóstico final, nunca para una orientación pendiente."""
+        respuesta = dto.respuesta_texto.lower()
+        tiene_pregunta_activa = bool(
+            getattr(dto, "es_pregunta", False)
+            or getattr(dto, "modo_diagnostico", "") in ("esperando_clarificacion", "aclaracion")
+            or getattr(dto, "tipo_consulta", "") == "aclaracion"
+        )
+        es_orientacion_o_sin_confirmar = bool(
+            getattr(dto, "es_orientacion_provisional", False)
+            or getattr(dto, "modo_diagnostico", "") in ("orientacion_provisional", "sin_confirmar")
+            or getattr(dto, "tipo_consulta", "") in ("orientacion_provisional", "sin_confirmar")
+            or "sigue sin confirmar" in respuesta
+            or "sin confirmar" in respuesta
+            or "revisión presencial" in respuesta
+            or "revision presencial" in respuesta
+            or "orientación provisional" in respuesta
+            or "orientacion provisional" in respuesta
+            or "orientación preliminar" in respuesta
+            or "orientacion preliminar" in respuesta
+        )
+        return (
+            dto.modo_diagnostico != "en_cola_gemini"
+            and not tiene_pregunta_activa
+            and not getattr(dto, "motivo_abstencion", None)
+            and not es_orientacion_o_sin_confirmar
+        )
+
+    @staticmethod
+    def _modo_diagnostico_persistible(dto: ResultadoDiagnostico) -> str:
+        """Convierte estados conversacionales a los valores aceptados por PostgreSQL."""
+        if dto.llm_usado:
+            return "completo_ml_rag_llm"
+        if dto.modo_diagnostico in MODOS_DIAGNOSTICO_PERSISTIBLES:
+            return dto.modo_diagnostico
+        return "diagnostico_degradado_ml_rag"
 
     @staticmethod
     async def persistir_y_responder(
@@ -51,6 +101,14 @@ class DiagnosticPersister:
         vehiculo_repo = VehiculoRepository(session)
         msg_repo = MensajeRepository(session)
         operaciones_repo = OperacionesRepository(session)
+        contexto_actual = dict(conversacion.contexto or {})
+        estado_actual = contexto_actual.get("conversation_state")
+        case_id_actual = (
+            estado_actual.get("case_id")
+            if isinstance(estado_actual, dict)
+            else contexto_actual.get("case_id")
+        )
+        case_id_actual = str(case_id_actual) if case_id_actual else None
 
         # 1. Manejo de consultas informativas
         if dto.tipo_consulta != "diagnostico":
@@ -70,6 +128,7 @@ class DiagnosticPersister:
                     taller_id=str(usuario.taller_id),
                     usuario_id=str(usuario.id),
                     conversacion_id=str(conversacion.id),
+                    case_id=case_id_actual,
                     tipo_consulta="consulta_tecnica",
                 )
 
@@ -107,12 +166,8 @@ class DiagnosticPersister:
 
         # 2. Agregar instrucciones de confirmación solo si no quedó en cola y no hay pregunta diagnóstica pendiente
         respuesta_texto = dto.respuesta_texto
-        tiene_pregunta_activa = bool(
-            getattr(dto, "es_pregunta", False)
-            or getattr(dto, "modo_diagnostico", "") in ("esperando_clarificacion", "aclaracion")
-            or getattr(dto, "tipo_consulta", "") == "aclaracion"
-        )
-        if dto.modo_diagnostico != "en_cola_gemini" and not tiene_pregunta_activa:
+        solicitar_feedback = DiagnosticPersister.debe_solicitar_feedback(dto)
+        if solicitar_feedback:
             respuesta_texto = (
                 respuesta_texto.rstrip()
                 + instrucciones_confirmacion_whatsapp()
@@ -120,16 +175,21 @@ class DiagnosticPersister:
 
         # 3. Asociar vehículo si aplica
         vehiculo = None
-        if (
-            placa
-            and placa not in ("WAPP-01", "REST-API", "SIN-PLACA")
-            and not placa.startswith("PROV_")
-        ):
+        if not es_identificador_provisional(placa):
+            marca_calc = "Generico"
+            modelo_calc = "Generico"
+            if marca_modelo and marca_modelo.lower() not in ("vehiculo generico", "generico", "desconocido"):
+                partes = marca_modelo.strip().split()
+                if partes:
+                    marca_calc = partes[0]
+                    if len(partes) > 1:
+                        modelo_calc = " ".join(partes[1:])
             vehiculo = await vehiculo_repo.obtener_o_crear(
                 taller_id=usuario.taller_id,
                 registrado_por_id=usuario.id,
                 placa_str=placa,
-                marca=marca_modelo.split()[0] if marca_modelo else "Generico",
+                marca=marca_calc,
+                modelo=modelo_calc,
             )
 
         # 4. Determinar fuente y conclusiones
@@ -151,7 +211,7 @@ class DiagnosticPersister:
             flags=re.IGNORECASE,
         )
 
-        modo_diag = dto.modo_diagnostico
+        modo_diag = DiagnosticPersister._modo_diagnostico_persistible(dto)
         if modo_diag == "saludo":
             fuente_diag = "regla"
             conclusion_diag = "[SALUDO] Contacto inicial o saludo conversacional"
@@ -167,11 +227,9 @@ class DiagnosticPersister:
         elif dto.llm_usado or modo_diag == "completo_ml_rag_llm":
             fuente_diag = "gemini"
             conclusion_diag = f"[COMPLETO_ML_RAG_LLM] Síntesis Gemini ({dto.llm_modelo or settings.gemini_model})"
-            modo_diag = "completo_ml_rag_llm"
         else:
             fuente_diag = "hibrido"
             conclusion_diag = "[DIAGNOSTICO_DEGRADADO_ML_RAG] Fallback por indisponibilidad o límite de tasa"
-            modo_diag = "diagnostico_degradado_ml_rag"
 
         # 5. Persistir diagnóstico con trazabilidad completa
         diag = await diag_repo.crear_diagnostico(
@@ -192,10 +250,23 @@ class DiagnosticPersister:
             conclusion_mecanico=conclusion_diag,
             version_modelo_ml=settings.model_version,
             version_corpus_rag=corpus_version,
+            predicciones_svm_raw=[pred.model_dump() for pred in dto.predicciones_svm_raw],
+            motivo_abstencion=dto.motivo_abstencion,
+            tiempos_tprd_ms={
+                "ml": dto.tiempo_ml_ms,
+                "rag": dto.tiempo_rag_ms,
+                "llm": dto.tiempo_llm_ms,
+                "total": dto.tiempo_total_ms if dto.tiempo_total_ms > 0 else duracion_ms,
+            },
             trazabilidad={
                 "version": 1,
+                "case_id": case_id_actual,
                 "predicciones_ml": [pred.model_dump() for pred in dto.predicciones_ml],
-                "top3_ml_raw": [pred.model_dump() for pred in dto.predicciones_ml[:3]],
+                "predicciones_ml_raw": [pred.model_dump() for pred in (dto.predicciones_ml_raw or dto.predicciones_ml)],
+                # Compatibilidad histórica: estas probabilidades ya pueden incluir
+                # jerarquía/temperatura; NO son predict_proba original.
+                "top3_ml_raw": [pred.model_dump() for pred in (dto.predicciones_ml_raw or dto.predicciones_ml)[:3]],
+                "top3_ml_raw_semantica": "POST_FUSION_LEGACY",
                 "hipotesis_final_presentada": [{"falla": dto.diagnostico_ml, "probabilidad": dto.confianza_ml}],
                 "etapas": [
                     {
@@ -239,15 +310,17 @@ class DiagnosticPersister:
             },
         )
 
+        await registrar_borrador_consulta(session, diag, vehiculo, case_id=case_id_actual)
+
         # 6. Actualizar validación diagnóstica en conversación si no está en cola y no hay pregunta activa
-        if dto.modo_diagnostico != "en_cola_gemini" and not tiene_pregunta_activa:
+        if solicitar_feedback:
             contexto_conversacion = dict(conversacion.contexto or {})
             contexto_conversacion["validacion_diagnostico"] = {
                 "diagnostico_id": str(diag.id),
                 "etapa": "esperando_confirmacion",
             }
             conversacion.contexto = contexto_conversacion
-        elif tiene_pregunta_activa and conversacion and getattr(conversacion, "contexto", None):
+        elif conversacion and getattr(conversacion, "contexto", None):
             contexto_conversacion = dict(conversacion.contexto or {})
             contexto_conversacion.pop("validacion_diagnostico", None)
             conversacion.contexto = contexto_conversacion
@@ -269,6 +342,7 @@ class DiagnosticPersister:
                 taller_id=str(usuario.taller_id),
                 usuario_id=str(usuario.id),
                 conversacion_id=str(conversacion.id),
+                case_id=case_id_actual,
             )
 
         # 8. Guardar hipótesis diagnóstica priorizada
@@ -351,6 +425,7 @@ class DiagnosticPersister:
             proveedor=proveedor,
             destinatario_cifrado=cifrar_texto_reversible(remitente),
             disponible_entrega_en=datetime.now(timezone.utc),
+            case_id=case_id_actual,
         )
 
         await session.commit()

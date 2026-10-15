@@ -20,6 +20,7 @@ from sqlalchemy import (
     SmallInteger,
     String,
     Text,
+    Uuid,
     text,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -80,6 +81,7 @@ class TrabajoGemini(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     conversacion_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("conversaciones.id", ondelete="SET NULL"), nullable=True, index=True
     )
+    case_id: Mapped[str | None] = mapped_column(Uuid(as_uuid=False), nullable=True, index=True)
 
     proveedor: Mapped[str] = mapped_column(
         String(20), nullable=False, default="meta", server_default=text("'meta'")

@@ -14,6 +14,7 @@ from typing import Any
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.application.services import GestorDiagnostico
+from src.application.services.registro_turno_conversacion import asegurar_turno_webhook_registrado
 from src.application.services.whatsapp import WebhookService
 from src.config import PROJECT_ROOT, settings
 from src.core.conversacion.session_persistence import (
@@ -107,7 +108,7 @@ class SystemWorker:
             dto = await asyncio.to_thread(
                 self.gestor.procesar_consulta_texto,
                 payload["sintoma"],
-                placa=payload.get("placa") or "REST-API",
+                placa=payload.get("placa"),
                 marca_modelo=payload.get("marca_modelo") or "Vehículo genérico",
                 session_id=session_id,
                 proveedor="api",
@@ -164,6 +165,12 @@ class SystemWorker:
                 resumen = await self._procesar(
                     trabajo.tipo, payload, taller_id=trabajo.taller_id, session=session
                 )
+                if trabajo.tipo == "webhook_mensaje":
+                    meta_message_id = str(payload.get("meta_message_id") or "")
+                    async with session.begin():
+                        registrado = await asegurar_turno_webhook_registrado(session, meta_message_id)
+                    if not registrado:
+                        raise RuntimeError("El webhook no dejó un mensaje entrante durable para su transición.")
                 async with session.begin():
                     await TrabajoSistemaRepository(session).marcar_completado(trabajo.id, resumen)
                 logger.info("[System Worker] Trabajo %s completado (%s).", trabajo.id, trabajo.tipo)

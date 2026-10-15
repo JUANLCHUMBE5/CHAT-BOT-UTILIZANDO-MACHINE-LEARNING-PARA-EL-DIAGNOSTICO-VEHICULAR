@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import re
 
-from src.core.conversacion.models import ConversationState
+from src.core.conversacion.models import ConversationState, FactState
 
 
 def dato_desconocido(texto: str) -> bool:
     """Reconoce que el mecánico no dispone del dato solicitado."""
     return bool(re.search(
-        r"\b(?:no\s+(?:s[eé]|lo\s+(?:s[eé]|tengo)|tengo|dispongo)|"
+        r"\b(?:no\s+(?:s[eé]\b(?!\s+[a-záéíóúñ])|lo\s+s[eé]\b|"
+        r"tengo|dispongo)|"
+        r"ni\s+idea|tampoco\s+s[eé]|no\s+me\s+fij[eé]|"
         r"sin\s+(?:dato|lectura|esc[aá]ner|medici[oó]n)|"
         r"todav[ií]a\s+no\s+(?:lo\s+)?(?:med[ií]|tengo))\b",
         texto.casefold(),
@@ -26,9 +28,32 @@ def aclaraciones_emitidas(estado: ConversationState) -> int:
     })
 
 
+def hay_evidencia_diagnostica(estado: ConversationState) -> bool:
+    """Un dato desconocido o una queja genérica no sustentan hipótesis ML."""
+    return any(
+        hecho.categoria in {"sintoma", "dtc", "medicion"}
+        and hecho.estado in {FactState.CONFIRMADO, FactState.CORREGIDO}
+        and (hecho.categoria == "dtc" or not re.fullmatch(
+            r"(?:mi\s+)?(?:auto|carro|veh[ií]culo)?\s*(?:falla|est[aá]\s+fallando)",
+            str(hecho.valor).strip().casefold(),
+        ))
+        for hecho in estado.hechos.values()
+    )
+
+
+def desconocidos_consecutivos(estado: ConversationState) -> int:
+    """Cuenta respuestas sin dato, no mensajes ni preguntas generadas internamente."""
+    total = 0
+    for respuesta in reversed(estado.respuestas_obtenidas):
+        if not dato_desconocido(str(respuesta.get("texto", ""))):
+            break
+        total += 1
+    return total
+
+
 def debe_avanzar(estado: ConversationState, texto: str) -> bool:
     """No sigue solicitando la misma medición ausente ni supera el tope configurado."""
-    if not estado.active_symptoms and not estado.hechos:
+    if not estado.active_symptoms and not estado.hechos and not estado.preguntas_realizadas:
         return False
     return aclaraciones_emitidas(estado) >= estado.max_repreguntas or (
         bool(estado.preguntas_realizadas) and dato_desconocido(texto)

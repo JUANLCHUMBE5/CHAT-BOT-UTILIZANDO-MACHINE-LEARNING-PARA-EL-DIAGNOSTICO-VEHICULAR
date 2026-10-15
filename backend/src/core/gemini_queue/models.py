@@ -33,6 +33,7 @@ class SolicitudGeminiEncolada:
 
     # Contexto para persistencia en DB y notificación WhatsApp
     diagnostico_id: Optional[str] = None
+    case_id: Optional[str] = None
     remitente: Optional[str] = None
     taller_id: Optional[str] = None
     usuario_id: Optional[str] = None
@@ -44,3 +45,4 @@ class SolicitudGeminiEncolada:
     proveedor: str = "meta"  # "meta" | "twilio" | "api"
     mensaje_inicial_id: Optional[str] = None
     mensaje_salida_preliminar_id: Optional[str] = None
+    motivo_degradado: Optional[str] = None

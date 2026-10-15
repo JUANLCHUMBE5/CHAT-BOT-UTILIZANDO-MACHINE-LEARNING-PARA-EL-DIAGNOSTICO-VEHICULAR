@@ -14,6 +14,12 @@ def generar_respuesta_degradada(
     alerta_revision: str,
 ) -> Tuple[str, dict]:
     """Genera una respuesta técnica determinista basada exclusivamente en ML y RAG."""
+    if contexto_manual and "Modelos Compatibles Frecuentes en Peru:" in contexto_manual:
+        contexto_manual = "\n".join(
+            linea for linea in contexto_manual.split("\n")
+            if "Modelos Compatibles Frecuentes en Peru:" not in linea
+        )
+
     no_manual = "No se encontró" in (contexto_manual or "") or "Coincidencia baja" in (titulo_manual or "")
 
     if tipo_consulta == "consulta_tecnica":

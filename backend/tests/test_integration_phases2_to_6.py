@@ -14,26 +14,18 @@ Valida:
 
 from __future__ import annotations
 
-import time
 import uuid
-from decimal import Decimal
-from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-from src.config import settings
 from src.core.conversacion.extractor_hechos import ExtractorHechos
-from src.core.conversacion.models import ConversationState, FactState, FactType
-from src.core.conversacion.repositorio import InMemoryConversationRepository
-from src.core.gestor_diagnostico import GestorDiagnostico
+from src.core.conversacion.models import ConversationState
 from src.core.parser.message_parser import SinglePassMessageParser
-from src.core.services import webhook_service as ws_mod
-from src.core.services.webhook_service import WebhookService
 from src.infrastructure.database.base import Base
-from src.infrastructure.database.models import Conversacion, Mensaje, Taller, Usuario, Vehiculo
+from src.infrastructure.database.models import Taller, Usuario
 
 
 @pytest.fixture
@@ -131,7 +123,6 @@ async def test_cambio_de_caso_limpia_y_aisla():
 @pytest.mark.anyio
 async def test_provisional_plate_no_crea_vehiculo_bd(monkeypatch):
     """Verifica que las placas provisionales (PROV_*) no generan filas ficticias en la BD (Fase 2)."""
-    from src.core.services.webhook.diagnostic_persister import DiagnosticPersister
 
     vehiculo_repo_mock = MagicMock()
     vehiculo_repo_mock.obtener_o_crear = AsyncMock()

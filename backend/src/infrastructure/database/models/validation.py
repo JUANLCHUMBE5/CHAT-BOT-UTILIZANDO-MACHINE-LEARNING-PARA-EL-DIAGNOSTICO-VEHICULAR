@@ -14,6 +14,7 @@ from sqlalchemy import (
     ForeignKey,
     Identity,
     Integer,
+    SmallInteger,
     String,
     Text,
     func,
@@ -53,7 +54,7 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
     vehiculo_transmision: Mapped[str | None] = mapped_column(String(30))
     falla_real: Mapped[str | None] = mapped_column(Text, nullable=True)
     chatbot_prediccion: Mapped[str] = mapped_column(Text, nullable=False)
-    sistema_afectado_probable: Mapped[str | None] = mapped_column(String(80))
+    sistema_afectado_probable: Mapped[str | None] = mapped_column(Text)
     campos_completos: Mapped[int] = mapped_column(Integer, nullable=False)
     cantidad_campos_completos: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default=text("0"))
     detalles_campos: Mapped[dict | None] = mapped_column(JSON)
@@ -64,15 +65,15 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
     estado_registro: Mapped[str] = mapped_column(
         String(20), nullable=False, default="borrador", server_default=text("'borrador'")
     )
-    sintoma_registrado_correctamente: Mapped[int | None] = mapped_column(Integer)
+    sintoma_registrado_correctamente: Mapped[int | None] = mapped_column(SmallInteger)
     validado_por_id: Mapped[uuid.UUID | None] = mapped_column(
-        ForeignKey("usuarios.id", ondelete="SET NULL"), index=True
+        ForeignKey("usuarios.id", ondelete="SET NULL")
     )
     fecha_validacion: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    normalizacion_correcta: Mapped[int | None] = mapped_column(Integer)
-    extraccion_correcta: Mapped[int | None] = mapped_column(Integer)
-    clasificacion_procesada: Mapped[int | None] = mapped_column(Integer)
-    procesamiento_validado: Mapped[int | None] = mapped_column(Integer)
+    normalizacion_correcta: Mapped[int | None] = mapped_column(SmallInteger)
+    extraccion_correcta: Mapped[int | None] = mapped_column(SmallInteger)
+    clasificacion_procesada: Mapped[int | None] = mapped_column(SmallInteger)
+    procesamiento_validado: Mapped[int | None] = mapped_column(SmallInteger)
     tiempo_inferencia_ml_ms: Mapped[int | None] = mapped_column(Integer)
     tipo_registro: Mapped[str] = mapped_column(
         String(30), nullable=False, default="DEVELOPMENT", server_default=text("'DEVELOPMENT'"), index=True
@@ -105,3 +106,4 @@ class ValidacionTaller(UUIDPrimaryKeyMixin, Base):
         ),
         CheckConstraint("length(placa_hash) = 64", name="placa_hash_longitud"),
     )
+

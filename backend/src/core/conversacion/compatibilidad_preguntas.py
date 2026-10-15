@@ -44,10 +44,12 @@ class CompatibilidadPreguntas:
                 return "CLIMATIZACION"
             if any(k in c for k in ("freno", "pastilla", "disco")):
                 return "FRENOS"
-            if any(k in c for k in ("reversa", "transmision", "caja")):
+            if any(k in c for k in ("reversa", "transmision", "caja", "embrague", "clutch", "trepidacion")):
                 return "TRANSMISION"
             if any(k in c for k in ("suspension", "bache", "rotula", "amortiguador")):
                 return "SUSPENSION"
+            if any(k in c for k in ("sobrecalentamiento", "refrigerante", "temperatura_motor", "recalienta")):
+                return "REFRIGERACION"
 
         # 3. Dominio probable asignado al caso
         dominio = str(getattr(estado, "dominio_probable", "DESCONOCIDO") or "DESCONOCIDO")
@@ -91,7 +93,7 @@ class CompatibilidadPreguntas:
                 return True
             if dominio_sub == "ELECTRICO" and any(k in c or k in v for k in ("bateria", "alternador", "voltaje", "multimetro", "fusible")):
                 return True
-            if dominio_sub == "MARCHA_MOTOR" and any(k in c or k in v for k in ("motor", "refrigerante", "temperatura", "sobrecalentamiento", "misfire", "potencia", "humo")):
+            if dominio_sub in ("MARCHA_MOTOR", "REFRIGERACION") and any(k in c or k in v for k in ("motor", "refrigerante", "temperatura", "sobrecalentamiento", "misfire", "potencia", "humo", "recalienta")):
                 return True
 
         # C. Evidencia por hipótesis activas C1 Top-3 (si ya existen)
@@ -109,7 +111,7 @@ class CompatibilidadPreguntas:
                 return True
             if dominio_sub == "ELECTRICO" and any(k in top_texto for k in ("bateria", "alternador", "carga")):
                 return True
-            if dominio_sub == "MARCHA_MOTOR" and any(k in top_texto for k in ("inyeccion", "bujia", "bobina", "refrigerante", "valvula")):
+            if dominio_sub in ("MARCHA_MOTOR", "REFRIGERACION") and any(k in top_texto for k in ("inyeccion", "bujia", "bobina", "refrigerante", "valvula", "termostato", "radiador")):
                 return True
 
         return False
@@ -117,7 +119,7 @@ class CompatibilidadPreguntas:
     @staticmethod
     def dominio_pregunta(intent: QuestionIntent, texto: str) -> str:
         txt = _normalizar(texto)
-        if intent == QuestionIntent.CODIGO_DTC:
+        if intent in (QuestionIntent.CODIGO_DTC, QuestionIntent.ACLARACION_CONTRADICCION):
             return "GENERAL"
         if intent == QuestionIntent.CONDICION_OPERACION and "ralenti" in txt and "freno" in txt:
             return "GENERAL"
@@ -127,6 +129,8 @@ class CompatibilidadPreguntas:
             return "TRANSMISION"
         if any(k in txt for k in ("freno", "frenar", "pedal esponjoso", "pastilla", "disco")):
             return "FRENOS"
+        if any(k in txt for k in ("refrigerante", "termostato", "electroventilador", "radiador", "recalienta", "sobrecalentamiento", "temperatura del motor")):
+            return "REFRIGERACION"
         if any(k in txt for k in ("aire acondicionado", "compresor", "clima", "enfria", "r134a")) or bool(
             re.search(r"\ba/?c\b", txt)
         ):
@@ -152,7 +156,7 @@ class CompatibilidadPreguntas:
     @staticmethod
     def diferencial_justifica_temperatura(estado: ConversationState, dominio: str) -> bool:
         """Permite temperatura fuera de motor solo con hipótesis térmica vigente."""
-        if dominio in ("MARCHA_MOTOR", "ARRANQUE"):
+        if dominio in ("MARCHA_MOTOR", "ARRANQUE", "REFRIGERACION"):
             return True
         etiquetas = " ".join(str(h.get("falla", "")) for h in estado.top3_actual)
         etiquetas = _normalizar(etiquetas)
@@ -170,7 +174,7 @@ class CompatibilidadPreguntas:
         for k, h in estado.hechos.items():
             if h.estado != FactState.AUSENTE_NEGADO:
                 continue
-            v = _normalizar(h.valor)
+            v = _normalizar(f"{k} {h.valor}")
             # 1. Vibración negada (ej. al frenar no vibra el volante)
             if ("vibracion" in v or "vibra" in v) and ("vibracion" in txt or "vibra" in txt):
                 return True
@@ -265,16 +269,41 @@ class CompatibilidadPreguntas:
             if not pertinente_obd:
                 return False, motivo_obd
 
+        # 0.3 Regla de exclusión cruzada por incompatibilidad mecánica física
+        tiene_queja_termica = (
+            dominio == "REFRIGERACION"
+            or estado.obtener_hecho("sintoma_sobrecalentamiento") is not None
+            or estado.obtener_hecho("sintoma_fuga_de_refrigerante") is not None
+            or any("recalienta" in str(h.valor).lower() or "sobrecalentamiento" in str(h.valor).lower() for h in estado.hechos.values())
+            or any(w in m.lower() for m in estado.historial_mensajes_usuario for w in ("recalienta", "calienta el motor", "hierve", "temperatura sube", "refrigerante"))
+        )
+        tiene_queja_frenos = (
+            dominio == "FRENOS"
+            or estado.obtener_hecho("sintoma_anomalía_en_frenos") is not None
+            or estado.obtener_hecho("vibracion_pedal") is not None
+            or any("freno" in m.lower() for m in estado.historial_mensajes_usuario)
+        )
+        txt_norm = _normalizar(texto)
+        if tiene_queja_termica and not tiene_queja_frenos:
+            if any(w in txt_norm for w in ("pedal de freno", "al frenar", "pastilla", "disco de freno")):
+                return False, "INCOMPATIBLE_TERMICO_CON_FRENOS"
+
+        if tiene_queja_frenos and not tiene_queja_termica:
+            if any(w in txt_norm for w in ("refrigerante", "termostato", "radiador", "hierve", "sobrecalentamiento")):
+                return False, "INCOMPATIBLE_FRENOS_CON_TERMICO"
+
         compatibles = {
             "ARRANQUE": {"ELECTRICO"},
             "ELECTRICO": {"ARRANQUE"},
+            "REFRIGERACION": {"MARCHA_MOTOR"},
+            "MARCHA_MOTOR": {"REFRIGERACION"},
         }
 
         # Descarte inmediato si el subsistema de la pregunta no pertenece ni es compatible con el dominio activo
         if dominio != "DESCONOCIDO" and dominio_pregunta not in ("GENERAL", "DESCONOCIDO"):
             if dominio_pregunta != dominio and dominio_pregunta not in compatibles.get(dominio, set()):
                 if intent == QuestionIntent.TEMPERATURA_APARICION:
-                    if not (dominio == "ARRANQUE" and dominio_pregunta == "MARCHA_MOTOR"):
+                    if not (dominio == "ARRANQUE" and dominio_pregunta in ("MARCHA_MOTOR", "REFRIGERACION")):
                         if cls.diferencial_justifica_temperatura(estado, dominio):
                             return False, "INCOMPATIBLE_REDACCION_DOMINIO"
                         return False, "INCOMPATIBLE_DOMINIO"

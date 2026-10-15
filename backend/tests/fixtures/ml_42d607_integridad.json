@@ -1,0 +1,17 @@
+{
+  "artifacts": {
+    "machine_learning/manuals/candidates/v1/metadata/metadatos_manuales_v1.json": "1c8c8b523b5728ab92f0a74d05deafe82961754e3b25ec75da0a8112072a3d40",
+    "machine_learning/manuals/candidates/v1/manifests/corpus_manifest.json": "dc6612781e594662634fff7ffadd85bdbd2108ce78301fc86beec83dd539c26b",
+    "machine_learning/experiments/ruteo_sistemas_20261005/modelo_ruteo_candidato.joblib": "17af910a0a4a81c3ada26b6edd48170fed04a7a715e9c5f3bf26c79b2a322095",
+    "machine_learning/models/c1_fase10_final/modelo_diagnostico_c1.pkl": "24747fb7d3d465227efbd1376084886b92e5333dd12f0e1b380c0c612585608c",
+    "machine_learning/models/c1_fase10_final/modelo_sistema_c1_macrofix.pkl": "dec3ba707ff000b34c9368935ebe14c30439475910ea82f846cc8e3b9c85930c",
+    "machine_learning/models/c1_fase10_final/vectorizador_c1.pkl": "060d0728733499d263f76408b2e99ddb5a56e5dd0f3a006bfa51548397aa96c7",
+    "machine_learning/manuals/candidates/v1/indexes/indice_faiss_v1.index": "729ca17ed63c7902a4d5eab8fd791409666ad7509e208572abeee36a2edc308f",
+    "machine_learning/manuals/candidates/v1/manifests/RAG_CANDIDATO_V1_BUILD_MANIFEST.json": "bf4cd180846a4a783f125108d3e4d525c1bdbe047d612c3bc87076fda3c1873f"
+  },
+  "canonical_text_lf": [
+    "machine_learning/manuals/candidates/v1/metadata/metadatos_manuales_v1.json",
+    "machine_learning/manuals/candidates/v1/manifests/corpus_manifest.json",
+    "machine_learning/manuals/candidates/v1/manifests/RAG_CANDIDATO_V1_BUILD_MANIFEST.json"
+  ]
+}

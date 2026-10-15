@@ -19,6 +19,7 @@ from src.application.services.validacion_taller import (
 )
 from src.core.authorization import exigir_gestion_validacion
 from src.infrastructure.database.connection import database_configurada, obtener_engine
+from src.infrastructure.database.models.diagnostics import Diagnostico
 from src.infrastructure.database.models.validation import ValidacionTaller
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.validacion_taller_repository import ValidacionTallerRepository
@@ -45,10 +46,25 @@ class ConfirmacionHumanaPostTestDTO(BaseModel):
     vehiculo_combustible: str | None = Field(default=None, max_length=30)
     vehiculo_transmision: str | None = Field(default=None, max_length=30)
 
-    @field_validator("evidencia_ref", mode="before")
+    @field_validator("falla_real", "metodo_confirmacion", "evidencia_ref", mode="before")
     @classmethod
-    def limpiar_referencia_evidencia(cls, valor: Any) -> Any:
-        return valor.strip() if isinstance(valor, str) else valor
+    def exigir_texto_no_vacio(cls, valor: Any) -> Any:
+        if not isinstance(valor, str):
+            return valor
+        limpio = valor.strip()
+        if not limpio:
+            raise ValueError("El campo debe contener texto verificable.")
+        return limpio
+
+
+def _validar_caso_confirmable(caso: ValidacionTaller | None, taller_id: uuid.UUID) -> None:
+    if not caso or caso.taller_id != taller_id or caso.tipo_registro != "THESIS_POSTTEST":
+        raise HTTPException(status_code=404, detail="Borrador POST-TEST no encontrado.")
+    if caso.estado_registro != "borrador":
+        raise HTTPException(
+            status_code=409,
+            detail="La confirmación humana ya fue registrada; no se sobrescribirá.",
+        )
 
 
 def _claims(payload: dict, *, require_user: bool = False) -> tuple[uuid.UUID, uuid.UUID | None]:
@@ -72,6 +88,21 @@ async def crear_borrador_posttest(
     taller_id, usuario_id = _claims(payload, require_user=True)
     async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
         async with session.begin():
+            # Serializa solicitudes repetidas por diagnóstico dentro de la transacción.
+            # Así la segunda solicitud ve el borrador creado por la primera antes de insertar.
+            bloqueo = await session.execute(
+                select(Diagnostico.id)
+                .where(
+                    Diagnostico.id == diagnostico_id,
+                    Diagnostico.taller_id == taller_id,
+                )
+                .with_for_update()
+            )
+            if bloqueo.scalar_one_or_none() is None:
+                raise HTTPException(
+                    status_code=404, detail="Diagnóstico con vehículo identificado no encontrado."
+                )
+
             diagnostico = await DiagnosticoRepository(session).obtener_por_id(diagnostico_id)
             if not diagnostico or diagnostico.taller_id != taller_id or not diagnostico.vehiculo:
                 raise HTTPException(
@@ -80,8 +111,20 @@ async def crear_borrador_posttest(
             existente = await session.execute(
                 select(ValidacionTaller).where(ValidacionTaller.diagnostico_id == diagnostico_id)
             )
-            if existente.scalar_one_or_none():
-                raise HTTPException(status_code=409, detail="El diagnóstico ya tiene un borrador POST-TEST.")
+            caso_existente = existente.scalar_one_or_none()
+            if caso_existente:
+                # Solo este endpoint autorizado promueve un borrador de desarrollo
+                # a muestra oficial; nunca lo hace el flujo automático.
+                if (
+                    caso_existente.tipo_registro == "DEVELOPMENT"
+                    and caso_existente.estado_registro == "borrador"
+                ):
+                    caso_existente.tipo_registro = "THESIS_POSTTEST"
+                    diagnostico.tipo_registro = "THESIS_POSTTEST"
+                    await session.flush()
+                elif caso_existente.tipo_registro != "THESIS_POSTTEST":
+                    raise HTTPException(status_code=409, detail="Caso reservado para otra cohorte.")
+                return {"id": str(caso_existente.id), **serializar_caso(caso_existente)}
             v = diagnostico.vehiculo
             datos = construir_datos_generales_vehiculo(
                 marca_modelo=f"{v.marca} {v.modelo}",
@@ -154,6 +197,7 @@ async def crear_borrador_posttest(
             caso.cantidad_campos_completos = cantidad
             caso.campos_completos = int(cantidad == 8)
             caso.detalles_campos = detalles
+            diagnostico.tipo_registro = "THESIS_POSTTEST"
         return {"id": str(caso.id), **serializar_caso(caso)}
 
 
@@ -173,12 +217,7 @@ async def confirmar_posttest(
     async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
         async with session.begin():
             caso = await session.get(ValidacionTaller, caso_id, with_for_update=True)
-            if not caso or caso.taller_id != taller_id or caso.tipo_registro != "THESIS_POSTTEST":
-                raise HTTPException(status_code=404, detail="Borrador POST-TEST no encontrado.")
-            if caso.estado_registro == "verificado":
-                raise HTTPException(
-                    status_code=409, detail="El registro ya fue verificado y no admite reconfirmación."
-                )
+            _validar_caso_confirmable(caso, taller_id)
             tiene_prediccion = bool((caso.chatbot_prediccion or "").strip())
             if tiene_prediccion != (dto.prediccion_correcta is not None):
                 raise HTTPException(

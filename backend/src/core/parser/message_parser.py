@@ -12,9 +12,8 @@ Extrae de forma desacoplada y determinista:
 from __future__ import annotations
 
 import re
-import unicodedata
 import uuid
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.diccionario_automotriz import normalizar_jerga_automotriz

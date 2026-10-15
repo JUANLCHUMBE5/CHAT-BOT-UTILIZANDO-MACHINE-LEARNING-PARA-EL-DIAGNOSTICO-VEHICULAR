@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import List, Tuple
 
 from src.core.conversacion.models import ConversationState, EvidenceLevel, FactState
@@ -43,7 +44,11 @@ class EvaluadorSuficiencia:
             return True, f"Evidencia fuerte: DTC OBD-II confirmado ({', '.join(codigos)})"
 
         # 2. Medición técnica cuantitativa (compresión, presión de combustible, voltaje)
-        tiene_medicion = any(h.categoria == "medicion" for h in hechos_confirmados)
+        tiene_medicion = any(
+            h.categoria == "medicion"
+            and re.search(r"\d+(?:[.,]\d+)?", str(h.valor))
+            for h in hechos_confirmados
+        )
         if tiene_medicion:
             meds = [h.valor for h in hechos_confirmados if h.categoria == "medicion"]
             return True, f"Evidencia fuerte: Medición técnica confirmada ({', '.join(meds)})"
@@ -95,6 +100,24 @@ class EvaluadorSuficiencia:
         if tiene_vib and tiene_freno and tiene_ubica and len(estado.historial_mensajes_usuario) >= 2:
             return True, "Evidencia fuerte: Vibración al frenar localizada con disparador verificado"
 
+        # 6. Falla mecánica de embrague: patinamiento (revoluciones suben sin avance) o trepidación/zapateo al arrancar
+        tiene_embrague_patina = any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("patina el embrague", "embrague patinando", "suben las revoluciones", "rpm suben", "no avanza", "huele a quemado")
+        ) and any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("embrague", "clutch", "subida", "pendiente", "revoluciones suben", "rpm suben")
+        )
+        tiene_embrague_zapatea = any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("zapatea", "zapateo", "trepidacion", "trepidación")
+        ) and any(
+            w in valores_sintomas or w in mensajes_completos
+            for w in ("embrague", "clutch", "arrancar", "primera", "soltar el pedal", "pedal vibra")
+        )
+        if tiene_embrague_patina or tiene_embrague_zapatea:
+            return True, "Evidencia fuerte: Falla mecánica de embrague (patinamiento / trepidación)"
+
         return False, ""
 
     @classmethod
@@ -120,6 +143,16 @@ class EvaluadorSuficiencia:
 
         lista_cat = sorted(list(categorias_vistas))
         score = len(lista_cat)
+
+        # Un único "se calienta" puede generar síntoma + temperatura + sistema
+        # a partir de la misma frase; no son tres observaciones independientes.
+        if (
+            len(estado.historial_mensajes_usuario) == 1
+            and re.fullmatch(r"\s*(?:se\s+)?calienta\s*", estado.historial_mensajes_usuario[0], re.IGNORECASE)
+            and not (estado.marca or estado.modelo or estado.anio)
+        ):
+            estado.conversation_evidence_level = EvidenceLevel.BAJA
+            return score, lista_cat, False, "Síntoma único de calentamiento sin condición discriminante"
 
         if score >= 3:
             estado.conversation_evidence_level = EvidenceLevel.MEDIA

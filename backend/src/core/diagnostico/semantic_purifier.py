@@ -11,8 +11,14 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
     por el conductor (ej: 'la batería tiene fuerza pero no da marcha y suena clac')
     induzcan sesgo espurio en el vectorizador TF-IDF del SVM o en la búsqueda RAG.
     """
-    limpio = texto.lower()
-    texto_filtrado = texto
+    # La síntesis clínica ya contiene hechos vigentes y pruebas realizadas.
+    # El anexo textual es trazabilidad para el LLM/auditoría, no nueva evidencia
+    # independiente: repetirlo en TF-IDF amplifica síntomas antiguos/corregidos.
+    texto_filtrado = re.split(
+        r"últimos aportes textuales del mecánico\s*\(", texto, maxsplit=1,
+        flags=re.IGNORECASE,
+    )[0].strip()
+    limpio = texto_filtrado.lower()
 
     # 1. Descarte de batería con síntomas de motor de arranque / solenoide / carbones
     descarte_bateria = any(
@@ -59,6 +65,13 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         r"\b(?:sin\s+pisar\s+(?:el\s+)?freno\s+vibra|vibra\s+sin\s+frenar|tiembla\s+sin\s+frenar|frenos\s+descartados|frenos\s+no\s+son)\b",
         limpio
     ))
+    niega_freno = niega_freno or bool(
+        re.search(
+            r"\bsin\s+(?:tocar|pisar|apretar)\s+(?:(?:el|los)\s+)?(?:pedal\s+de\s+)?freno\b",
+            limpio,
+        )
+        and re.search(r"\b(?:vibra|tiembla|vibraci[oó]n)\b", limpio)
+    )
 
     afirma_freno = not niega_freno and any(
         p in limpio for p in (
@@ -107,5 +120,29 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         texto_filtrado = re.sub(r"\bcalienta\b", " ", texto_filtrado, flags=re.IGNORECASE)
     if any(p in limpio for p in ("no pierde refrigerante", "no pierde agua", "no consume agua")):
         texto_filtrado = re.sub(r"\brefrigerante\b", " ", texto_filtrado, flags=re.IGNORECASE)
+
+    # 5. Embrague: zapateo / trepidación al arrancar en primera o soltar el pedal, o patinado bajo carga
+    limpio_full = texto.lower()
+    sintoma_trepidacion_embrague = bool(re.search(
+        r"\b(?:zapatea|zapateo|trepidaci[oó]n)\b.{0,40}\b(?:al\s+arrancar|en\s+primera|al\s+salir|al\s+soltar)\b|"
+        r"\b(?:al\s+arrancar|en\s+primera|al\s+salir)\b.{0,40}\b(?:zapatea|zapateo|trepidaci[oó]n)\b|"
+        r"\b(?:pedal\s+vibra|vibra\s+(?:el\s+)?pedal)\b.{0,30}\b(?:al\s+soltar|cuando\s+lo\s+suelto)\b",
+        limpio_full,
+    ))
+    sintoma_patinado_embrague = bool(re.search(
+        r"\b(?:revoluciones\s+suben|rpm\s+suben)\b.{0,45}\b(?:no\s+avanza|no\s+camina|huele\s+a\s+quemado)\b|"
+        r"\b(?:embrague|clutch|disco)\s+patina\b",
+        limpio_full,
+    ))
+    if sintoma_trepidacion_embrague:
+        texto_filtrado += (
+            " disco de embrague trepidacion zapateo prensa plato opresor"
+            " volante bimasa pedal de embrague transmision manual"
+        )
+    elif sintoma_patinado_embrague:
+        texto_filtrado += (
+            " disco de embrague desgastado patinando olor a quemado"
+            " suben revoluciones no avanza transmision manual"
+        )
 
     return texto_filtrado

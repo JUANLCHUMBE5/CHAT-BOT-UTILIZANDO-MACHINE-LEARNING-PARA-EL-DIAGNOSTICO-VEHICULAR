@@ -7,9 +7,11 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any, Optional
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.config import settings
+from src.core.gemini_queue.case_guard import solicitud_corresponde_a_caso
 from src.core.gemini_queue.models import (
     COSTO_META_MENSAJE_SERVICIO_USD,
     SolicitudGeminiEncolada,
@@ -18,7 +20,7 @@ from src.core.logger import logger
 from src.core.security import cifrar_texto_reversible, descifrar_texto_reversible
 from src.core.services.whatsapp_provider import whatsapp_provider_service
 from src.infrastructure.database.connection import database_configurada, obtener_engine
-from src.infrastructure.database.repositories.conversacion_repository import ConversacionRepository
+from src.infrastructure.database.models.messaging import Conversacion
 from src.infrastructure.database.repositories.cuota_gemini_repository import CuotaGeminiRepository
 from src.infrastructure.database.repositories.diagnostico_repository import DiagnosticoRepository
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
@@ -109,6 +111,17 @@ async def posponer_trabajo_por_cuota_db(solicitud_id: str, motivo: str) -> None:
             )
 
 
+async def registrar_intento_ejecucion_db(solicitud_id: str) -> None:
+    """Registra el intento real de ejecución hacia el proveedor en PostgreSQL."""
+    try:
+        trabajo_id = uuid.UUID(solicitud_id)
+    except (ValueError, TypeError):
+        return
+    async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+        async with session.begin():
+            await TrabajoGeminiRepository(session).registrar_intento_ejecucion(trabajo_id)
+
+
 async def marcar_trabajo_fallido_db(solicitud_id: str, error: str) -> None:
     """Marca el trabajo como fallido definitivamente tras exceder reintentos."""
     try:
@@ -136,6 +149,7 @@ async def persistir_solicitud_en_sesion_db(
     usuario_id: Optional[str] = None,
     conversacion_id: Optional[str] = None,
     diagnostico_id: Optional[str] = None,
+    case_id: Optional[str] = None,
     tipo_consulta: str = "diagnostico",
 ) -> None:
     """Persiste el trabajo de Gemini en la misma transacción del webhook."""
@@ -159,6 +173,7 @@ async def persistir_solicitud_en_sesion_db(
         usuario_id=uuid.UUID(usuario_id) if usuario_id else None,
         conversacion_id=uuid.UUID(conversacion_id) if conversacion_id else None,
         diagnostico_id=uuid.UUID(diagnostico_id) if diagnostico_id else None,
+        case_id=case_id,
     )
 
 
@@ -170,6 +185,28 @@ async def procesar_siguiente_entrega_whatsapp() -> bool:
             mensaje = await MensajeRepository(session).obtener_siguiente_salida_bloqueada()
     if not mensaje:
         return False
+
+    # Los mensajes de una respuesta diagnóstica encolada también quedan ligados
+    # al caso; suprimirlos si el mecánico ya cambió a otro caso.
+    es_sintesis_gemini = str(mensaje.meta_message_id or "").startswith("out_gemini_")
+    if (mensaje.case_id or es_sintesis_gemini) and mensaje.conversacion_id:
+        async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
+            async with session.begin():
+                result = await session.execute(
+                    select(Conversacion)
+                    .where(Conversacion.id == mensaje.conversacion_id)
+                    .with_for_update()
+                )
+                conversacion = result.scalar_one_or_none()
+                if not mensaje.case_id or not conversacion or not solicitud_corresponde_a_caso(
+                    mensaje.case_id, conversacion.contexto
+                ):
+                    await MensajeRepository(session).registrar_resultado_entrega(
+                        mensaje.id,
+                        estado="fallido",
+                        error="Respuesta suprimida: el caso activo cambió antes de la entrega.",
+                    )
+                    return True
 
     try:
         destino = descifrar_texto_reversible(mensaje.destinatario_cifrado)
@@ -244,6 +281,7 @@ async def actualizar_diagnostico_y_trabajo_db(
                             "tokens_entrada": int(metadatos.get("tokens_entrada", 0)),
                             "tokens_salida": int(metadatos.get("tokens_salida", 0)),
                             "posicion_cola": 0,
+                            "motivo_degradado": metadatos.get("motivo_degradado"),
                         }
                         etapas = list(trazabilidad.get("etapas") or [])
                         for etapa in etapas:
@@ -319,7 +357,7 @@ async def actualizar_diagnostico_y_trabajo_db(
 
 async def persistir_mensaje_saliente_db(
     solicitud: SolicitudGeminiEncolada, texto_respuesta: str, estado_entrega: str
-) -> None:
+) -> bool:
     """Persiste el segundo mensaje de salida (síntesis de Gemini) en la tabla `mensajes` de PostgreSQL."""
     try:
         db_engine = obtener_engine()
@@ -333,6 +371,25 @@ async def persistir_mensaje_saliente_db(
 
         async with AsyncSession(db_engine, expire_on_commit=False) as session:
             async with session.begin():
+                conversacion = None
+                if solicitud.conversacion_id:
+                    result = await session.execute(
+                        select(Conversacion)
+                        .where(Conversacion.id == uuid.UUID(solicitud.conversacion_id))
+                        .with_for_update()
+                    )
+                    conversacion = result.scalar_one_or_none()
+                if not conversacion or not solicitud_corresponde_a_caso(
+                    solicitud.case_id,
+                    conversacion.contexto if conversacion else None,
+                    diagnostico_id=solicitud.diagnostico_id,
+                    tipo_consulta=solicitud.tipo_consulta,
+                ):
+                    logger.warning(
+                        "[Gemini Worker DB] Se suprimió una respuesta cuyo case_id ya no está activo."
+                    )
+                    return False
+
                 msg_repo = MensajeRepository(session)
                 await msg_repo.crear_mensaje(
                     conversacion_id=uuid.UUID(solicitud.conversacion_id),
@@ -352,21 +409,19 @@ async def persistir_mensaje_saliente_db(
                         if solicitud.remitente else None
                     ),
                     disponible_entrega_en=datetime.now(timezone.utc),
+                    case_id=solicitud.case_id,
                 )
                 if solicitud.diagnostico_id:
-                    conversacion = await ConversacionRepository(session).obtener_por_id(
-                        uuid.UUID(solicitud.conversacion_id)
-                    )
-                    if conversacion:
-                        contexto = dict(conversacion.contexto or {})
-                        contexto["validacion_diagnostico"] = {
-                            "diagnostico_id": solicitud.diagnostico_id,
-                            "etapa": "esperando_confirmacion",
-                        }
-                        conversacion.contexto = contexto
+                    contexto = dict(conversacion.contexto or {})
+                    contexto["validacion_diagnostico"] = {
+                        "diagnostico_id": solicitud.diagnostico_id,
+                        "etapa": "esperando_confirmacion",
+                    }
+                    conversacion.contexto = contexto
             logger.info(
                 f"[Gemini Worker DB] Segundo mensaje de síntesis guardado en DB para conv {solicitud.conversacion_id[:8]}."
             )
+        return True
     except Exception as e:
         logger.error(f"[Gemini Worker DB Message Save Error] {e}")
         raise

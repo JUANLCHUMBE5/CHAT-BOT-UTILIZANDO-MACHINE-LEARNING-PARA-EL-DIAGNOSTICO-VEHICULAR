@@ -4,9 +4,9 @@
   "document_count": 239,
   "chunk_count": 239,
   "FAISS_ntotal": 239,
-  "index_hash": "a2a081ffded23d4d727b57780aec26da9167e90f044101e77adbb33cbaa79b40",
-  "metadata_hash": "af5c5edebdebbdbe7f97c488dad274c306e4782fb4c273cfab2e42e531c2e2b3",
-  "manifest_hash": "a0fce3dc39bb6344388a18cc6f2a10d8298d5d47ae1f365e4ae226eab1b16bba",
+  "index_hash": "729ca17ed63c7902a4d5eab8fd791409666ad7509e208572abeee36a2edc308f",
+  "metadata_hash": "1c8c8b523b5728ab92f0a74d05deafe82961754e3b25ec75da0a8112072a3d40",
+  "manifest_hash": "dc6612781e594662634fff7ffadd85bdbd2108ce78301fc86beec83dd539c26b",
   "vectorizer_config": {
     "lowercase": true,
     "strip_accents": "unicode",
@@ -17,5 +17,6 @@
     ],
     "sublinear_tf": true
   },
-  "tests_status": "VALIDATED"
+  "tests_status": "BUILD_CHECKS_PASSED",
+  "validation_scope": "FAISS dimension, finite vectors, non-empty index and positional metadata alignment; no OEM documentary validation or field validation"
 }

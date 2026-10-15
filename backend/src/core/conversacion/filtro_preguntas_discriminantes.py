@@ -135,7 +135,6 @@ class FiltroPreguntasDiscriminantes:
                 "o solo se observó que inyectan poco?",
                 QuestionIntent.COMPONENTE_REVISADO,
             )
-
         # Flujo de Arranque
         if es_arranque:
             sabe_giro, sabe_luces = cls.es_arranque_conocido(estado)

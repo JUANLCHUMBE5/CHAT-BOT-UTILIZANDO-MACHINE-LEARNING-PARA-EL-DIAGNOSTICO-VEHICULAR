@@ -21,6 +21,13 @@ def _normalizar(texto: str) -> str:
 
 
 _REGLAS: dict[str, tuple[str, ...]] = {
+    "SOPORTES_MOTOR": (
+        r"\bsoportes?\s+(?:de\s+)?motor\b", r"\btacos?\s+(?:de\s+)?motor\b",
+    ),
+    "CLIMATIZACION": (
+        r"\baire acondicionado\b", r"\bclimatizacion\b", r"\ba/c\b",
+        r"\bcompresor\b", r"\bcondensador\b", r"\br134a\b",
+    ),
     "INYECCION_MEZCLA": (
         r"\binyector(?:es)?\b", r"\binyeccion\b", r"\bmezcla\s+pobre\b",
         r"\bmezcla\s+rica\b", r"\bsensor\s+(?:de\s+)?oxigeno\b",
@@ -39,9 +46,9 @@ _REGLAS: dict[str, tuple[str, ...]] = {
         r"\brefrigeracion\b",
         r"\brecalienta\w*\b", r"\brecalent\w*\b", r"\bsobrecalienta\w*\b",
         r"\btemperatura\s+(?:del\s+)?motor\b", r"\btemperatura\s+(?:sube|alta|elevada)\b",
-        r"\b(?:calienta|se\s+calienta)\b",
-        r"\btermostato\b", r"\bradiador\b", r"\bmotoventilador\b", r"\bventilador\b",
-        r"\brefrigerante\b",
+        r"\b(?:se\s+calienta|calienta\s+demasiado|motor\s+calienta)\b",
+        r"\btermostato\b", r"\bcaja\s+termostatica\b", r"\bradiador\b",
+        r"\bmotoventilador\b", r"\brefrigerante\b",
     ),
     "ENCENDIDO": (
         r"\bbujias?\b", r"\bbobinas?\b", r"\bsin\s+chispa\b", r"\bmisfire\b",
@@ -52,6 +59,8 @@ _REGLAS: dict[str, tuple[str, ...]] = {
         r"\b(?:p030[0-9])\b",
     ),
     "FRENOS": (
+        r"\b(?:vibra|tiembla)\b.{0,80}\bal\s+frenar\b",
+        r"\bdisco(?:s)?\s+alabeado(?:s)?\b",
         r"\bruido\s+(?:al|cuando)\s+frenar\b", r"\b(?:frena|frenado)\b",
         r"\bpedal\s+de\s+freno\b", r"\bdisco(?:s)?\s+de\s+freno\b",
         r"\bpastillas?\s+(?:de\s+)?freno\b", r"\babs\b",
@@ -59,6 +68,7 @@ _REGLAS: dict[str, tuple[str, ...]] = {
     "TRANSMISION": (
         r"\b(?:patina|patinando)\s+(?:el\s+)?embrague\b", r"\bembrague\s+patina\b",
         r"\btransmision\b", r"\bcaja\s+(?:de\s+)?cambios\b", r"\bno\s+entran\s+los\s+cambios\b",
+        r"\b(?:dsg|cvt|caja\s+automatica|pasar\s+(?:los\s+)?cambios|al\s+pasar\s+cambios)\b",
     ),
     "SUSPENSION_DIRECCION": (
         r"\bse\s+inclina\s+en\s+(?:las\s+)?curvas\b", r"\b(?:golpeteo|rebota)\s+en\s+(?:baches|huecos)\b",
@@ -66,6 +76,7 @@ _REGLAS: dict[str, tuple[str, ...]] = {
         r"\b(?:timon|volante)\s+vibra\b.{0,35}\b(?:\d{2,3}\s*km/?h|velocidad)\b",
     ),
     "ELECTRICO_ECU": (
+        r"\balternador\b", r"\bbateria\s+(?:se\s+)?descarga\w*\b",
         r"\b(?:ecu|computadora)\s+(?:incompatible|de\s+otra\s+version|no\s+comunica)\b",
         r"\b(?:cambie|cambio|cambiar|cambiaron|reemplazaron|reemplazo)\s+(?:la\s+)?(?:ecu|computadora)\b",
         r"\b(?:error|falla)\s+(?:de\s+)?codificacion\b",
@@ -74,6 +85,8 @@ _REGLAS: dict[str, tuple[str, ...]] = {
 }
 
 _TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
+    "SOPORTES_MOTOR": ("soporte de motor", "soportes de motor", "taco de motor"),
+    "CLIMATIZACION": ("aire acondicionado", "climatizacion", "compresor", "condensador", "r134a"),
     "INYECCION_MEZCLA": (
         "inyector", "inyeccion", "mezcla pobre", "mezcla rica", "oxigeno", "lambda",
         "fuel trim", "stft", "ltft", "p0171", "p0172", "presion de combustible",
@@ -85,16 +98,22 @@ _TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
     "RALENTI": ("ralenti", "marcha minima", "minimo", "valvula iac", "cuerpo de aceleracion", "mariposa"),
     "REFRIGERACION": (
         "refrigeracion", "recalent", "refrigerante", "radiador", "termostato", "motoventilador",
+        "culata", "junta",
     ),
     "ENCENDIDO": ("bujia", "bobina", "chispa", "misfire", "p030"),
     "FRENOS": ("freno", "pastilla", "disco", "abs", "frenar"),
-    "TRANSMISION": ("embrague", "transmision", "caja de cambios", "sincronizador"),
-    "SUSPENSION_DIRECCION": (
-        "suspension", "direccion", "amortiguador", "rotula", "desbalanceo", "alineacion", "bache",
+    "TRANSMISION": (
+        "embrague", "transmision", "caja de cambios", "sincronizador",
+        "aceite de caja", "dsg", "automatica",
     ),
-    "ELECTRICO_ECU": ("ecu", "computadora", "red can", "corto electrico", "comunicacion electrica"),
+    "SUSPENSION_DIRECCION": (
+        "suspension", "direccion", "amortiguador", "rotula", "desbalance", "desaline", "alineacion", "llanta", "bache",
+    ),
+    "ELECTRICO_ECU": ("ecu", "computadora", "red can", "corto electrico", "comunicacion electrica", "alternador", "bateria"),
 }
 ETIQUETAS_AREA = {
+    "SOPORTES_MOTOR": "soportes de motor",
+    "CLIMATIZACION": "climatización",
     "INYECCION_MEZCLA": "inyección / mezcla",
     "ADMISION_MAP": "admisión / sensor MAP-MAF",
     "RALENTI": "ralentí",
@@ -107,6 +126,7 @@ ETIQUETAS_AREA = {
 }
 
 _ETIQUETA_A_SISTEMA = {
+    "CLIMATIZACION": "climatizacion",
     "INYECCION_MEZCLA": "combustible_admision",
     "ADMISION_MAP": "combustible_admision",
     "RALENTI": "combustible_admision",
@@ -119,6 +139,7 @@ _ETIQUETA_A_SISTEMA = {
 }
 
 _ALIAS_SISTEMA_A_AREA = {
+    "climatizacion": "CLIMATIZACION",
     "refrigeracion": "REFRIGERACION",
     "combustible_admision": "INYECCION_MEZCLA",
     "encendido": "ENCENDIDO",
@@ -129,6 +150,7 @@ _ALIAS_SISTEMA_A_AREA = {
 }
 
 _MARCADORES_CAUSA = {
+    "climatizacion": ("compresor", "aire acondicionado", "condensador", "r134a", "climatizacion"),
     "refrigeracion": ("refriger", "radiador", "termostato", "ventilador", "bomba de agua", "refrigerante", "ect"),
     "combustible_admision": (
         "inyector", "inyeccion", "mezcla", "maf", "map", "oxigeno", "lambda", "o2",
@@ -138,10 +160,11 @@ _MARCADORES_CAUSA = {
     "frenos": ("freno", "pastilla", "disco", "abs", "liquido de freno"),
     "transmision": ("embrague", "transmision", "transmisión", "caja", "sincronizador", "collarin"),
     "suspension_direccion": ("suspension", "suspensión", "direccion", "dirección", "llanta", "alineacion", "rotula", "amortiguador"),
-    "electrico_ecu": ("ecu", "computadora", "corto", "can", "cableado", "masa electrica", "eléctrica"),
+    "electrico_ecu": ("ecu", "computadora", "corto", "can", "cableado", "masa electrica", "eléctrica", "alternador", "bateria", "bornes"),
 }
 
 _CAUSAS_PROHIBIDAS = {
+    "climatizacion": ("bujia", "embrague", "pastilla", "inyector", "bateria de traccion", "inversor"),
     "refrigeracion": ("oxigeno", "o2", "lambda", "mezcla", "llanta", "embrague", "bujia", "bobina", "inyector", "maf", "freno"),
     "combustible_admision": ("radiador", "termostato", "ventilador", "llanta", "embrague", "pastilla", "amortiguador"),
     "encendido": ("radiador", "termostato", "llanta", "embrague", "pastilla", "amortiguador"),
@@ -212,6 +235,8 @@ def detectar_sistema_ruteo(texto: str, usar_modelo: bool = True) -> str | None:
         normalizado,
     ):
         normalizado = re.sub(r"\bfrenar\b", "", normalizado)
+        if re.search(r"\b(?:volante|timon)\s+(?:vibra|tiembla)\b", normalizado):
+            return "suspension_direccion"
     # Regla determinista previa al SVM: temblor/misfire junto con ralentí bajo
     # es una ruta de encendido aunque ambas señales estén separadas en la frase.
     texto_sin_negaciones_de_irregularidad = re.sub(
@@ -265,7 +290,7 @@ def detectar_sistema_ruteo(texto: str, usar_modelo: bool = True) -> str | None:
     if not filtradas:
         return "ambiguo"
     # En frases con más de un indicio, la señal causal explícita gana sobre síntomas secundarios.
-    for area in ("REFRIGERACION", "INYECCION_MEZCLA", "ADMISION_MAP", "ENCENDIDO", "FRENOS", "TRANSMISION", "SUSPENSION_DIRECCION", "ELECTRICO_ECU", "RALENTI"):
+    for area in ("CLIMATIZACION", "REFRIGERACION", "INYECCION_MEZCLA", "ADMISION_MAP", "ENCENDIDO", "FRENOS", "TRANSMISION", "SUSPENSION_DIRECCION", "ELECTRICO_ECU", "RALENTI"):
         if area in filtradas:
             return _ETIQUETA_A_SISTEMA[area]
     return "ambiguo"
@@ -333,6 +358,10 @@ def filtrar_causas(sistema_activo: str | None, causas_propuestas: list[Any], evi
     bloqueos = list(_CAUSAS_PROHIBIDAS.get(sistema, ()))
     if sistema == "refrigeracion":
         bloqueos.extend(_CAUSAS_EV)
+        # Humo blanco junto con consumo de refrigerante respalda investigar
+        # estanqueidad de culata; no habilitar esa rama por temperatura sola.
+        if re.search(r"\b(?:humo|vapor) blanco\b", evidencia_normalizada) and "refrigerante" in evidencia_normalizada:
+            marcadores = (*marcadores, "culata", "junta")
     if sistema == "combustible_admision" and re.search(r"\binyectores?\s+no\s+inyectan?\b", evidencia_normalizada):
         bloqueos.extend(("iac", "cuerpo de aceleracion"))
     resultado = []
@@ -367,11 +396,19 @@ def respuesta_menciona_causa_fuera_de_sistema(
 def detectar_areas_tecnicas(texto: str) -> list[str]:
     """Retorna solo áreas explícitamente respaldadas por términos de alta señal."""
     normalizado = _normalizar(texto)
+    texto_areas = re.sub(
+        r"\b(?:no\s+(?:vibra|tiembla|hace\s+ruido)\s+al\s+frenar|"
+        r"al\s+frenar\s+no\s+(?:vibra|tiembla|hace\s+ruido))\b",
+        " ",
+        normalizado,
+    )
     areas = [
         area
         for area, patrones in _REGLAS.items()
-        if any(re.search(patron, normalizado) for patron in patrones)
+        if any(re.search(patron, texto_areas) for patron in patrones)
     ]
+    if "SOPORTES_MOTOR" in areas:
+        return ["SOPORTES_MOTOR"]
     # Un sensor o sistema nombrado explícitamente es más específico que el
     # síntoma secundario de ralentí; no permitir que IAC desvíe esa consulta.
     areas_especificas = [area for area in areas if area != "RALENTI"]

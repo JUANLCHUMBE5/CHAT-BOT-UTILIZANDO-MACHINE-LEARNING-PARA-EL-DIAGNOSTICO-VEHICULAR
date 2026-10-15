@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 class PrediccionML(BaseModel):
     falla: str
     probabilidad: float
+    origen_probabilidad: str = "SVM"
 
 
 class ResultadoDiagnostico(BaseModel):
@@ -17,8 +18,10 @@ class ResultadoDiagnostico(BaseModel):
     respuesta_texto: str
     diagnostico_ml: str
     confianza_ml: float
+    origen_confianza: str = "SVM"
     contexto_manual: str
     titulo_manual: str
+    contexto_manual_verificado: str = ""
     similitud_rag: float = 0.0
     requiere_revision_humana: bool = False
     estado_sesion: str = "completado"
@@ -33,6 +36,8 @@ class ResultadoDiagnostico(BaseModel):
     sintoma_evaluado: str = ""
     predicciones_ml: List[PrediccionML] = Field(default_factory=list)
     predicciones_ml_raw: List[PrediccionML] = Field(default_factory=list)
+    predicciones_svm_raw: List[PrediccionML] = Field(default_factory=list)
+    motivo_abstencion: Optional[str] = None
     motivo_prioridad: str = ""
     respuesta_limitada: bool = False
     tiempo_ml_ms: int = 0
@@ -41,3 +46,4 @@ class ResultadoDiagnostico(BaseModel):
     tiempo_total_ms: int = 0
     desde_cache: bool = False
     tipo_consulta: str = "diagnostico"
+    es_orientacion_provisional: bool = False

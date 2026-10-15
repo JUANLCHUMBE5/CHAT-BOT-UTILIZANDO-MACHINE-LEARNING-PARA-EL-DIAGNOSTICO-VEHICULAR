@@ -11,6 +11,11 @@ from __future__ import annotations
 import unicodedata
 from typing import Any, Dict, List, Optional
 
+_TERMINOS_GENERICOS = {
+    "cual", "como", "procedimiento", "prueba", "revisar", "vehiculo", "motor",
+    "sistema", "falla", "problema", "manual", "tecnico", "consulta", "hacer",
+}
+
 
 def _normalizar(texto: str) -> str:
     if not texto:
@@ -19,6 +24,17 @@ def _normalizar(texto: str) -> str:
         c for c in unicodedata.normalize("NFD", texto.lower())
         if unicodedata.category(c) != "Mn"
     )
+
+
+def tiene_anclaje_lexico(consulta: str, candidato: Dict[str, Any], minimo: int = 2) -> bool:
+    """Exige términos técnicos compartidos cuando la consulta no tiene área enrutable."""
+    consulta_tokens = {
+        token for token in _normalizar(consulta).split()
+        if len(token) >= 5 and token not in _TERMINOS_GENERICOS
+    }
+    documento = _normalizar(f"{candidato.get('titulo', '')} {candidato.get('documento', '')}")
+    coincidencias = {token for token in consulta_tokens if token in documento}
+    return len(coincidencias) >= minimo
 
 
 def reordenar_candidatos_rag(

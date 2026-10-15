@@ -3,13 +3,30 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 
 from src.core.conversacion.models import ConversationState
 
 
 def clasificar_mensaje(texto: str, estado: ConversationState) -> str:
     """Clasificación conservadora: nunca interpreta un descarte como caso nuevo."""
-    mensaje = " ".join(texto.casefold().split())
+    texto_nfd = unicodedata.normalize("NFD", texto.casefold())
+    mensaje = " ".join(
+        "".join(c for c in texto_nfd if unicodedata.category(c) != "Mn").split()
+    )
+    correccion_de_sistema = (
+        re.search(r"\bno\s+es\s+(?:un\s+)?(?:problema\s+de\s+)?(?:motor|mecanico|combustion)\b", mensaje)
+        and re.search(r"\b(?:ruido|falla|problema)\b.{0,45}\b(?:suspension|frenos?|transmision|embrague|electric[oa])\b", mensaje)
+    ) or (
+        re.search(r"\b(?:ruido|falla)\s+(?:viene|proviene)\s+de\s+(?:la\s+|el\s+)?(?:suspension|frenos?|transmision)\b", mensaje)
+        and re.search(r"\b(?:no\s+es|me\s+equivoque|corrijo|quise\s+decir)\b", mensaje)
+    )
+    if correccion_de_sistema:
+        return "correccion_sistema"
+    from src.core.conversacion.orientacion_provisional import es_imposibilidad_completa
+
+    if es_imposibilidad_completa(mensaje):
+        return "imposibilidad_comprobacion"
     if re.fullmatch(r"(?:s[ií]|correcto|confirmo|exacto)", mensaje):
         return "confirmacion"
     if re.fullmatch(r"(?:no|incorrecto|descarto|no es esa)", mensaje):

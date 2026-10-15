@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import re
+import unicodedata
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -42,6 +43,46 @@ SPANISH_STOP_WORDS = [
     "tuyo", "tuyos", "un", "una", "unas", "uno", "unos", "vosotras", "vosotros",
     "vuestra", "vuestras", "vuestro", "vuestros", "y", "ya", "yo"
 ]
+
+
+def _normalizar_texto_rag(texto: str) -> str:
+    texto = unicodedata.normalize("NFD", str(texto or "").lower())
+    return "".join(caracter for caracter in texto if unicodedata.category(caracter) != "Mn")
+
+
+def _consulta_indica_fuga_refrigerante(consulta: str) -> bool:
+    texto = _normalizar_texto_rag(consulta)
+    fluido = r"(?:refrigerante|anticongelante|agua|coolant)"
+    fuga_negada = re.search(
+        rf"\b(?:no\s+(?:hay|presenta|tiene|se observa|se detecta)|sin)\b"
+        rf".{{0,30}}\b(?:fuga|perdida|goteo)\b.{{0,45}}\b{fluido}\b|"
+        rf"\bno\s+(?:pierde|esta perdiendo|consume|gotea)\b.{{0,35}}\b{fluido}\b",
+        texto,
+    )
+    if fuga_negada:
+        return False
+
+    tiene_fluido = re.search(rf"\b{fluido}\b", texto)
+    tiene_fuga = re.search(r"\b(?:fuga|fugas|pierde|perdiendo|perdida|gotea|goteando)\b", texto)
+    if tiene_fluido and tiene_fuga:
+        return True
+
+    contexto_refrigeracion = re.search(
+        r"\b(?:recalienta|sobrecalentamiento|temperatura|radiador|refrigeracion)\b", texto
+    )
+    evidencia_goteo = re.search(r"\b(?:mancha|charco|goteo|gotea)\b.{0,35}\b(?:piso|suelo)\b", texto)
+    return bool(contexto_refrigeracion and evidencia_goteo)
+
+
+def _candidato_trata_fuga_refrigerante(candidato: Dict[str, Any]) -> bool:
+    meta = candidato.get("metadatos") or {}
+    texto = _normalizar_texto_rag(
+        f"{meta.get('falla', '')} {candidato.get('titulo', '')}"
+    )
+    return bool(
+        re.search(r"\bfuga\b.{0,60}\b(?:refrigerante|radiador|enfriamiento)\b", texto)
+        or re.search(r"\b(?:refrigerante|radiador|enfriamiento)\b.{0,60}\bfuga\b", texto)
+    )
 
 
 class MotorRAG:
@@ -324,6 +365,14 @@ class MotorRAG:
             "p0087": "presion combustible riel common rail bomba alta",
             "p2135": "cuerpo de aceleracion mariposa electronica tps",
             "p0011": "valvula solenoide ocv sincronizacion variable vvt",
+            "mezcla pobre": "P0171 P0174 mezcla pobre fuel trim STFT LTFT sensor oxigeno presion combustible caudal inyectores",
+            "mezcla rica": "P0172 P0175 mezcla rica fuel trim STFT LTFT sensor oxigeno inyectores presion combustible",
+            "inyectores no inyectan": "inyectores caudal flujo de combustible presion riel balance de cilindros circuito electrico inyector",
+            "carga absoluta": (
+                "sensor MAP presión absoluta del múltiple admisión carga absoluta P0105 P0106 "
+                "lectura escáner baro colector admisión P0107 P0108 P0109 vacío señal voltaje frecuencia"
+            ),
+            "map": "sensor de presion absoluta del multiple admision carga absoluta P0105 P0106",
             "p0700": "transmision automatica cvt caja solenoide sobrecalentamiento",
             "p0841": "sensor presion fluido transmision cvt",
             "cvt": "transmision continuamente variable cvt poleas fluido ns3 nissan",
@@ -353,6 +402,8 @@ class MotorRAG:
             "cerradura": "chapa cerradura pestillo puerta trinquete",
             "humo blanco": "empaquetadura culata refrigerante motor sobrecalentamiento",
             "humo negro": "mezcla rica inyectores filtro aire maf map sensor oxigeno",
+            "sensor map": "baro presion absoluta colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
+            "presion absoluta": "sensor map baro colector admision p0105 p0106 p0107 p0108 p0109 vacio señal voltaje frecuencia",
             "vibra": "vibracion volante asiento pedal velocidad balanceo alineacion freno soportes",
             "pierde fuerza": "perdida potencia aceleracion subida combustible aire escape transmision",
             "pierde potencia": "perdida potencia aceleracion subida combustible aire escape transmision",
@@ -469,8 +520,17 @@ class MotorRAG:
 
         umbral_efectivo = settings.diagnostic.rag_min_similarity if umbral is None else umbral
         try:
+            from src.core.diagnostico.enrutador_sistema import (
+                detectar_areas_tecnicas,
+                filtrar_candidatos_por_area,
+            )
             from src.infrastructure.rag.query_builder import construir_consulta_hibrida
-            from src.infrastructure.rag.relevance_filter import reordenar_candidatos_rag
+            from src.infrastructure.rag.relevance_filter import (
+                reordenar_candidatos_rag,
+                tiene_anclaje_lexico,
+            )
+
+            areas_consulta = detectar_areas_tecnicas(consulta)
 
             consulta_hibrida = construir_consulta_hibrida(
                 consulta_usuario=consulta,
@@ -479,12 +539,20 @@ class MotorRAG:
                 codigos_dtc=codigos_dtc,
                 marca=marca,
                 modelo=modelo,
+                areas_consulta=areas_consulta,
             )
             consulta_expandida = self._expandir_consulta(consulta_hibrida)
             consulta_vec = self.vectorizador.transform([consulta_expandida]).toarray().astype(np.float32)
             faiss.normalize_L2(consulta_vec)
 
-            k_busqueda = min(k_candidatos, len(self.documentos))
+            consulta_map_explicita = any(
+                termino in consulta.lower()
+                for termino in ("sensor map", "carga absoluta", "presion absoluta", "presión absoluta")
+            )
+            # Para MAP, explorar el corpus completo antes de restringirlo a la
+            # ficha con fuente verificable: los documentos históricos retirados
+            # aún pueden puntuar alto por compartir DTC/título.
+            k_busqueda = len(self.documentos) if consulta_map_explicita else min(k_candidatos, len(self.documentos))
             similitudes, indices = self.faiss_index.search(consulta_vec, k=k_busqueda)
 
             candidatos = []
@@ -504,6 +572,35 @@ class MotorRAG:
                         ),
                     })
 
+            if consulta_map_explicita:
+                candidatos = [
+                    candidato for candidato in candidatos
+                    if (candidato.get("metadatos") or {}).get("id_procedimiento") == "RAG_PROC_116"
+                ]
+            # Una mención explícita de subsistema prevalece sobre una clase ML
+            # genérica: el documento recuperado debe tratar el área consultada.
+            candidatos = filtrar_candidatos_por_area(candidatos, areas_consulta)
+            if not areas_consulta and not (macro_sistema or top_fallas or codigos_dtc):
+                candidatos = [
+                    candidato
+                    for candidato in candidatos
+                    if tiene_anclaje_lexico(consulta, candidato)
+                ]
+            if not candidatos:
+                if not areas_consulta:
+                    return (
+                        "No se encontro un procedimiento especifico en los manuales para esta consulta.",
+                        "Coincidencia baja",
+                        0.0,
+                        {},
+                    )
+                return (
+                    "No se encontró un procedimiento compatible con el sistema mencionado.",
+                    "Sin procedimiento compatible verificado",
+                    0.0,
+                    {},
+                )
+
             # Reordenar ponderando por Macro-Sistema ML, códigos DTC y Top-2 de fallas
             conf_ml_val = None
             if top_fallas and len(top_fallas) > 0:
@@ -517,6 +614,38 @@ class MotorRAG:
                 codigos_dtc=codigos_dtc,
                 confianza_ml=conf_ml_val,
             )
+
+            from src.core.diagnostico.coherencia_evidencia import documento_compatible
+
+            candidatos_reordenados = [
+                candidato
+                for candidato in candidatos_reordenados
+                if documento_compatible(
+                    consulta,
+                    candidato.get("titulo", ""),
+                    candidato.get("documento", ""),
+                )
+            ]
+
+            # Una fuga de refrigerante es un hallazgo explícito y más específico
+            # que el síntoma general de recalentamiento. Si existe un procedimiento
+            # compatible de fuga en el conjunto recuperado, debe preceder al de
+            # termostato/ventilador para que text_processor no lo descarte después
+            # por discrepancia con la falla ML ya afinada por evidencia.
+            if _consulta_indica_fuga_refrigerante(consulta):
+                candidatos_fuga = [
+                    candidato
+                    for candidato in candidatos_reordenados
+                    if _candidato_trata_fuga_refrigerante(candidato)
+                ]
+                if candidatos_fuga:
+                    ids_fuga = {candidato["indice"] for candidato in candidatos_fuga}
+                    restantes = [
+                        candidato
+                        for candidato in candidatos_reordenados
+                        if candidato["indice"] not in ids_fuga
+                    ]
+                    candidatos_reordenados = candidatos_fuga + restantes
 
             if not candidatos_reordenados or candidatos_reordenados[0]["similitud"] < umbral_efectivo:
                 return (
@@ -541,40 +670,14 @@ class MotorRAG:
         codigos_dtc: Optional[List[str]] = None,
     ) -> tuple[str, str, float]:
         """Recupera contexto y similitud coseno con soporte de señales híbridas opcionales."""
-        if macro_sistema or top_fallas or codigos_dtc:
-            doc, tit, sim, _ = self.recuperar_procedimiento_hibrido(
-                consulta=consulta,
-                macro_sistema=macro_sistema,
-                top_fallas=top_fallas,
-                codigos_dtc=codigos_dtc,
-                umbral=umbral,
-            )
-            return doc, tit, sim
-
-        if self.faiss_index is None or len(self.documentos) == 0:
-            return "Manual tecnico no indexado o ausente.", "Desconocido", 0.0
-
-        umbral_efectivo = (
-            settings.diagnostic.rag_min_similarity if umbral is None else umbral
+        doc, tit, sim, _ = self.recuperar_procedimiento_hibrido(
+            consulta=consulta,
+            macro_sistema=macro_sistema,
+            top_fallas=top_fallas,
+            codigos_dtc=codigos_dtc,
+            umbral=umbral,
         )
-        try:
-            consulta_expandida = self._expandir_consulta(consulta)
-            consulta_vec = self.vectorizador.transform([consulta_expandida]).toarray().astype(np.float32)
-            faiss.normalize_L2(consulta_vec)
-            similitudes, indices = self.faiss_index.search(consulta_vec, k=1)
-            mejor_similitud = max(0.0, min(1.0, float(similitudes[0][0])))
-            indice_mejor = int(indices[0][0])
-
-            if mejor_similitud < umbral_efectivo or indice_mejor < 0:
-                return (
-                    "No se encontro un procedimiento especifico en los manuales para esta consulta.",
-                    "Coincidencia baja",
-                    mejor_similitud,
-                )
-            return self.documentos[indice_mejor], self.titulos[indice_mejor], mejor_similitud
-        except Exception as e:
-            logger.error(f"Error durante la busqueda semantica en FAISS: {e}")
-            return "Error al buscar en el manual.", "Error", 0.0
+        return doc, tit, sim
 
     def recuperar_procedimiento_con_metadatos(
         self,
@@ -587,50 +690,17 @@ class MotorRAG:
         modelo: Optional[str] = None,
     ) -> Tuple[str, str, float, Dict[str, Any]]:
         """Recupera el procedimiento más afín junto con sus metadatos (marca, modelo, edición, página OEM)."""
-        if macro_sistema or top_fallas or codigos_dtc:
-            return self.recuperar_procedimiento_hibrido(
-                consulta=consulta,
-                macro_sistema=macro_sistema,
-                top_fallas=top_fallas,
-                codigos_dtc=codigos_dtc,
-                marca=marca,
-                modelo=modelo,
-                umbral=umbral,
-            )
-
-        if self.faiss_index is None or len(self.documentos) == 0:
-            return "Manual técnico no indexado o ausente.", "Desconocido", 0.0, {}
-
-        umbral_efectivo = (
-            settings.diagnostic.rag_min_similarity if umbral is None else umbral
+        return self.recuperar_procedimiento_hibrido(
+            consulta=consulta,
+            macro_sistema=macro_sistema,
+            top_fallas=top_fallas,
+            codigos_dtc=codigos_dtc,
+            marca=marca,
+            modelo=modelo,
+            umbral=umbral,
         )
-        try:
-            consulta_expandida = self._expandir_consulta(consulta)
-            consulta_vec = self.vectorizador.transform([consulta_expandida]).toarray().astype(np.float32)
-            faiss.normalize_L2(consulta_vec)
-            similitudes, indices = self.faiss_index.search(consulta_vec, k=1)
-            mejor_similitud = max(0.0, min(1.0, float(similitudes[0][0])))
-            indice_mejor = int(indices[0][0])
-
-            if mejor_similitud < umbral_efectivo or indice_mejor < 0:
-                return (
-                    "No se encontró un procedimiento específico en los manuales para esta consulta.",
-                    "Coincidencia baja",
-                    mejor_similitud,
-                    {}
-                )
-            meta = (
-                self.metadatos_procedimientos[indice_mejor]
-                if indice_mejor < len(self.metadatos_procedimientos)
-                else {}
-            )
-            return self.documentos[indice_mejor], self.titulos[indice_mejor], mejor_similitud, meta
-        except Exception as e:
-            logger.error(f"Error durante la búsqueda semántica con metadatos en FAISS: {e}")
-            return "Error al buscar en el manual.", "Error", 0.0, {}
 
     def recuperar_contexto(self, consulta: str, umbral: float = 0.12) -> Tuple[str, str]:
         """Busca el procedimiento técnico más relevante (compatibilidad retroactiva)."""
         cuerpo, titulo, _, _ = self.recuperar_procedimiento_con_metadatos(consulta, umbral)
         return cuerpo, titulo
-

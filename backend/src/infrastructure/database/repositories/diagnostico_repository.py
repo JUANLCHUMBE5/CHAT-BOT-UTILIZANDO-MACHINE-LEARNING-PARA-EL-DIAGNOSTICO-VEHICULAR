@@ -43,6 +43,9 @@ class DiagnosticoRepository:
         version_modelo_ml: Optional[str] = None,
         version_corpus_rag: Optional[str] = None,
         trazabilidad: Optional[dict[str, Any]] = None,
+        predicciones_svm_raw: Optional[list[dict[str, Any]]] = None,
+        motivo_abstencion: Optional[str] = None,
+        tiempos_tprd_ms: Optional[dict[str, int]] = None,
         tipo_registro: str = "DEVELOPMENT",
     ) -> Diagnostico:
         """Persiste un nuevo diagnóstico vehicular con sus métricas y fuentes."""
@@ -52,6 +55,14 @@ class DiagnosticoRepository:
             if similitud_rag is not None
             else None
         )
+        # Evidencia PPCF separada del ranking transformado y de la validación humana.
+        traza = dict(trazabilidad or {})
+        if predicciones_svm_raw is not None:
+            traza["svm_raw_top3"] = [dict(item) for item in predicciones_svm_raw[:3]]
+        if motivo_abstencion is not None:
+            traza["motivo_abstencion"] = motivo_abstencion
+        if tiempos_tprd_ms is not None:
+            traza["tprd_componentes_ms"] = dict(tiempos_tprd_ms)
         diag = Diagnostico(
             id=diagnostico_id or uuid.uuid4(),
             taller_id=taller_id,
@@ -72,7 +83,7 @@ class DiagnosticoRepository:
             sintesis_llm=sintesis_llm,
             version_modelo_ml=version_modelo_ml,
             version_corpus_rag=version_corpus_rag,
-            trazabilidad=trazabilidad,
+            trazabilidad=traza or None,
             tipo_registro=tipo_registro,
         )
         self.session.add(diag)

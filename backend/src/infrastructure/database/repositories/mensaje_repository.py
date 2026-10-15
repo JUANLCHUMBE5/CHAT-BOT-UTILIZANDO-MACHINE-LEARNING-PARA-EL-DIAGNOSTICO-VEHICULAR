@@ -51,6 +51,7 @@ class MensajeRepository:
         proveedor: Optional[str] = None,
         destinatario_cifrado: Optional[str] = None,
         disponible_entrega_en: Optional[datetime] = None,
+        case_id: Optional[str] = None,
     ) -> Mensaje:
         """Crea y persiste un mensaje recibido o enviado."""
         ahora = ocurrido_en or datetime.now(timezone.utc)
@@ -59,6 +60,7 @@ class MensajeRepository:
             conversacion_id=conversacion_id,
             taller_id=taller_id,
             usuario_id=usuario_id,
+            case_id=case_id,
             meta_message_id=meta_message_id,
             direccion=direccion,
             tipo=tipo,

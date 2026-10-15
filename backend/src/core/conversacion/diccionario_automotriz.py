@@ -7,6 +7,8 @@ from typing import Any, Dict, List, Tuple
 
 # Mapeo de términos directos y piezas mecánicas a su forma canónica
 EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
+    # Error ortográfico frecuente en mensajes de WhatsApp de taller.
+    (re.compile(r"\binjector(es)?\b", re.IGNORECASE), r"inyector\1"),
     # Frenos
     (re.compile(r"\b(mordaza(s)?)\b", re.IGNORECASE), "cáliper"),
     (re.compile(r"\b(caliper(s)?)\b", re.IGNORECASE), "cáliper"),
@@ -16,6 +18,38 @@ EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
     (re.compile(r"\b(crapodina(s)?)\b", re.IGNORECASE), "collarín de embrague"),
     (re.compile(r"\b(collarin|collarín)\b", re.IGNORECASE), "collarín de embrague"),
     (re.compile(r"\b(embrague\s+patina|clutch\s+patina|disco\s+patina)\b", re.IGNORECASE), "embrague patinando"),
+    (
+        re.compile(
+            r"\b(zapatea(?:\s+feo)?\s+al\s+arrancar(?:\s+en\s+primera)?|zapateo(\s+de\s+embrague)?|"
+            r"trepidaci[oó]n\s+al\s+salir|al\s+arrancar\s+en\s+primera\s+zapatea)\b",
+            re.IGNORECASE,
+        ),
+        "trepidación zapateo de embrague",
+    ),
+    (
+        re.compile(
+            r"\b(pedal\s+vibra\s+cuando\s+lo\s+suelto|vibra\s+al\s+soltar\s+el\s+pedal|"
+            r"pedal\s+vibra\s+al\s+soltar)\b",
+            re.IGNORECASE,
+        ),
+        "vibración en pedal de embrague",
+    ),
+    (
+        re.compile(
+            r"\b(?:revoluciones\s+suben|rpm\s+suben)\b.{0,40}\bno\s+avanza\b|"
+            r"\bno\s+avanza\b.{0,40}\b(?:revoluciones\s+suben|rpm\s+suben)\b",
+            re.IGNORECASE,
+        ),
+        "embrague patinando suben revoluciones no avanza",
+    ),
+    (
+        re.compile(
+            r"\bhuele\s+a\s+quemado\b.{0,30}\b(?:no\s+avanza|subida|cuesta)\b|"
+            r"\b(?:no\s+avanza|subida|cuesta)\b.{0,30}\bhuele\s+a\s+quemado\b",
+            re.IGNORECASE,
+        ),
+        "embrague patinando olor a quemado",
+    ),
     # Rodamientos
     (re.compile(r"\b(rodaje(s)?|rodamientos?)\b", re.IGNORECASE), "rodamiento"),
     # Síntomas de motor
@@ -23,11 +57,13 @@ EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
     (re.compile(r"\b(se\s+muere|se\s+apaga|se\s+me\s+apaga)\b", re.IGNORECASE), "apagado de motor"),
     (re.compile(r"\b(no\s+jala|esta\s+chancho|está\s+chancho|chanchea|se\s+aguanta|aguantado|se\s+queda|se\s+chupa|amarrado|pesado|(pierde|perd[ií][aáoó]|sin|falta\s+de)\s+fuerza|se\s+ahog(a|aba|ó|o)|no\s+(?:puedo\s+)?pasar\s+de\s+\d+)\b", re.IGNORECASE), "pérdida de potencia"),
     (re.compile(r"\b(ratea|cabecea|corcovea)\b", re.IGNORECASE), "funcionamiento irregular misfire"),
-    (re.compile(r"\b(hierve|levanta\s+temperatura|calienta\s+demasiado|se\s+calienta|hirviendo)\b", re.IGNORECASE), "sobrecalentamiento"),
+    (re.compile(r"\b(recalienta|recalentar|recalentando|recalent[oó]|se\s+recalienta|hierve|levanta\s+temperatura|calienta\s+demasiado|se\s+calienta|hirviendo|aguja\s+al\s+tope|bota\s+vapor)\b", re.IGNORECASE), "sobrecalentamiento"),
     (re.compile(r"\b(clac|clic|tac\s+seco|chasquido\s+seco)\b", re.IGNORECASE), "chasquido clac seco"),
     (re.compile(r"\b(humo\s+blanco\s+espeso|vapor\s+por\s+escape)\b", re.IGNORECASE), "humo blanco refrigerante"),
     (re.compile(r"\b(humo\s+negro|olor\s+a\s+nafta\s+cruda)\b", re.IGNORECASE), "humo negro exceso combustible"),
     (re.compile(r"\b(humo\s+azul(ado)?)\b", re.IGNORECASE), "humo azul consumo aceite"),
+    (re.compile(r"\b(chicote|pedal\s+(?:qued[oó]|al)\s+fondo)\b", re.IGNORECASE), "embrague pedal al fondo chicote"),
+    (re.compile(r"\b(acelerado|queda\s+acelerado|ralent[ií]\s+alto|chupa\s+aire|fuga\s+de\s+vac[ií]o)\b", re.IGNORECASE), "ralenti acelerado fuga vacio"),
 ]
 
 # Patrones contextuales de condiciones de operación
@@ -35,7 +71,7 @@ PATRONES_CONDICION: List[Tuple[re.Pattern, str, str]] = [
     # (patrón, categoría, valor canónico)
     (
         re.compile(
-            r"\b((al\s+girar|girando|cuando\s+giro|al\s+doblar|doblando|cuando\s+doblo)(\s+la\s+direcci[oó]n)?|en\s+curva|toda\s+la\s+direcci[oó]n)\b",
+            r"\b((al\s+girar(?!\s+la\s+llave|\s+el\s+motor|\s+el\s+arranque)|girando|cuando\s+giro|al\s+doblar|doblando|cuando\s+doblo)(\s+la\s+direcci[oó]n)?|en\s+curva|toda\s+la\s+direcci[oó]n)\b",
             re.IGNORECASE,
         ),
         "condicion_operacion",
@@ -94,7 +130,9 @@ PATRONES_TEMPERATURA: List[Tuple[re.Pattern, str]] = [
     ),
     (
         re.compile(
-            r"\b(en\s+caliente|despu[eé]s\s+de\s+calentar|ya\s+caliente|tras\s+andar|motor\s+caliente|cuando\s+(?:el\s+\w+\s+)?calienta|al\s+calentar|(?:solo\s+)?pasa\s+caliente|^caliente$|despu[eé]s\s+de\s+\d+\s*(?:minutos?|min)\b|a\s+los\s+\d+\s*(?:minutos?|min)\b)\b",
+            r"\b(en\s+caliente|despu[eé]s\s+de\s+calentar|ya\s+caliente|calent[oó]|calienta|calentar|"
+            r"tras\s+andar|motor\s+caliente|cuando\s+(?:el\s+\w+\s+)?calienta|"
+            r"al\s+calentar|(?:solo\s+)?pasa\s+caliente|^caliente$)\b",
             re.IGNORECASE,
         ),
         "caliente",
@@ -171,15 +209,46 @@ def extraer_hechos_linguisticos(texto: str) -> Dict[str, Any]:
             break
 
     # 2. Temperatura
-    for patron, valor in PATRONES_TEMPERATURA:
-        if patron.search(texto):
-            hechos["temperatura"] = valor
-            break
+    # Si la mención de frío es de funcionamiento normal ('arranca perfecto en frío') y la falla ocurre al calentar / andar:
+    if re.search(r"\b(?:en\s+fr[ií]o\s+(?:arranca|prende|funciona|anda)\s+(?:perfecto|bien|normal)|en\s+fr[ií]o\s+no\s+(?:falla|pasa))\b", texto, re.IGNORECASE):
+        if re.search(r"\b(calient[eé]|calent[oó]|calienta|despu[eé]s\s+de\s+\d+\s*min|a\s+los\s+\d+\s*min)\b", texto, re.IGNORECASE):
+            hechos["temperatura"] = "caliente"
+    if "temperatura" not in hechos:
+        for patron, valor in PATRONES_TEMPERATURA:
+            coincidencia = patron.search(texto)
+            if not coincidencia:
+                continue
+            # Una condición de inspección (nivel revisado con motor frío,
+            # medición con motor apagado) no redefine cuándo ocurre la falla.
+            contexto_inspeccion = bool(re.search(
+                r"\b(?:nivel|refrigerante|aceite|med[ií]|medici[oó]n|revis[eé]|comprob[eé]|"
+                r"contacto\s+puesto|motor\s+apagado)\b",
+                texto,
+                re.IGNORECASE,
+            ))
+            contexto_falla = bool(re.search(
+                r"\b(?:falla|ocurre|pasa|ratea|demora|arranca|se\s+apaga|pierde\s+potencia|ruido)\b",
+                texto,
+                re.IGNORECASE,
+            ))
+            if contexto_inspeccion and not contexto_falla:
+                continue
+            if coincidencia:
+                hechos["temperatura"] = valor
+                break
 
     # 3. Evolución o respuesta
     for patron, valor in PATRONES_EVOLUCION:
         if patron.search(texto):
             hechos["evolucion_accion"] = valor
             break
+
+    # 4. Síntomas clave reportados
+    for patron, valor in EQUIVALENCIAS_TERMINOLOGICAS:
+        if valor.startswith(r"inyector") or "\\" in valor:
+            continue
+        if patron.search(texto):
+            clave_s = f"sintoma_{valor.replace(' ', '_')}"
+            hechos[clave_s] = valor
 
     return hechos

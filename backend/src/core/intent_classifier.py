@@ -17,6 +17,8 @@ def _normalizar(texto: str) -> str:
 
 
 PATRONES_SINTOMA = (
+    r"\bse\s+calienta\b.{0,50}\b(?:trafico|subida|carretera|ralenti|motor)\b|"
+    r"\b(?:trafico|subida|carretera)\b.{0,50}\bse\s+calienta\b",
     r"\bno (?:arranca|arrancaba|arranco|enciende|encendia|encendio|prende|prendia|prendio|da marcha|frena|frenaba|freno|acelera|aceleraba|acelero|enfria|enfriaba|funciona|funcionaba|abre|cierra|sube|subia|baja|bajaba|responde|respondia|carga|cargaba)\b",
     r"\b(?:pierde|perdio|perdia|perdiendo|perder|perdida) (?:de\s+)?(?:fuerza|potencia|aceite|refrigerante|pique|velocidad|desarrollo)\b",
     r"\b(?:se\s+)?(?:ahoga|ahogaba|ahogo|ahogando|ahogar|chupa|chupaba|chupo|chupando|chanchea|chancheaba|chancheando|aguanta|aguantaba|aguantando|amarrado|amarrada)\b",
@@ -42,6 +44,13 @@ PATRONES_SINTOMA = (
     r"\b(?:al acelerar|en subida|en pendiente|a fondo|en neutro|en ralenti|subiendo una cuesta)\b",
     r"\b(?:se siente|siento)\s+(?:raro|inestable|pesado|duro|suelto)\b",
     r"\b(?:temperatura\s+(?:alta|al\s+maximo|al\s+m[aá]ximo|en\s+rojo|sube|elevada|pegada)|vapor\s+(?:blanco\s+)?(?:por\s+el|del|bajo\s+el)\s+cap[oó]|sale\s+vapor|humo\s+blanco\s+por\s+el\s+cap[oó])\b",
+    r"\b(?:arroja|marca|indica|reporta|muestra|presenta|sale)\b.{0,80}\b(?:mezcla\s+(?:pobre|rica)|p0171|p0172)\b",
+    r"\b(?:mezcla\s+(?:pobre|rica)|p0171|p0172)\b.{0,60}\b(?:en\s+(?:el\s+)?(?:scanner|escaner)|check(?:\s+engine|\s+del\s+motor)?)\b",
+    r"\binyectores?\b.{0,60}\b(?:no\s+inyectan|inyectan\s+(?:poco|insuficiente|lo\s+suficiente)|caudal\s+(?:bajo|insuficiente))\b",
+    r"\b(?:carga\s+absoluta|sensor\s+map|map)\b.{0,70}\b(?:fuera\s+de\s+rango|fueron\s+de\s+rango|alto|bajo|irregular|anomalo|anormal)\b",
+    r"\b(?:fuera\s+de\s+rango|fueron\s+de\s+rango|alto|bajo|irregular|anomalo|anormal)\b.{0,70}\b(?:carga\s+absoluta|sensor\s+map|map)\b",
+    r"\b(?:sensor\s+(?:de\s+)?oxigeno|sonda\s+lambda|sensor\s+o2)\b.{0,50}\b(?:se\s+queda|marca|mide|lee)\s+(?:en\s+)?\d+(?:[.,]\d+)?\b",
+    r"\b(?:se\s+(?:me\s+)?prende|enciende)\b.{0,35}\b(?:check|testigo|luz)\b",
     r"\b(?:p|b|c|u)\d{4}\b",
 )
 
@@ -80,6 +89,11 @@ TERMINOS_AUTOMOTRICES = {
     "mordazas", "bombeo", "bombazo", "bombazos", "purga", "purgado", "sangrado",
     "crapodina", "collarin", "maza", "bobina", "bobinas", "resorte", "maxi-brake",
     "acumulador", "parasito", "bcm", "corriente", "fuga", "multimetro",
+    # Evidencia de inyección/mezcla: aunque sea un mensaje corto, nunca es
+    # texto ajeno al taller (p. ej. “sonda en 0.1”, “MAF incoherente”).
+    "sensor", "oxigeno", "sonda", "lambda", "maf", "map", "stft", "ltft",
+    "mezcla", "riel", "inyeccion", "inyección", "presion de combustible",
+    "presión de combustible", "fuel trim",
     "arrancar", "encender", "prender", "luces", "potencia", "perdida", "climatizacion",
     "climatización", "manejar", "manejando", "conducir", "conduciendo",
     "temperatura", "vapor", "capo", "capó", "aguja",

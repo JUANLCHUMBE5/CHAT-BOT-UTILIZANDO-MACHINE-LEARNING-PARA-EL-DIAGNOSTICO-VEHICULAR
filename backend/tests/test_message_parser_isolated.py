@@ -6,11 +6,9 @@ la prevención de falsos positivos de placa (DTCs, años, palabras) y las propie
 
 import random
 import string
-import pytest
 
 from src.core.parser.message_parser import SinglePassMessageParser
 from src.domain.schemas.conversation_contracts import IntentType
-
 
 # ==============================================================================
 # PRUEBAS DE LOS 17 ESCENARIOS GENERALES (FASE 3)

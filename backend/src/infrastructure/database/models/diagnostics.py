@@ -97,7 +97,7 @@ class Diagnostico(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     version_corpus_rag: Mapped[str | None] = mapped_column(String(80))
     trazabilidad: Mapped[dict[str, Any] | None] = mapped_column(JSONType)
     tipo_registro: Mapped[str] = mapped_column(
-        String(30), nullable=False, default="DEVELOPMENT", server_default=text("'DEVELOPMENT'")
+        String(30), nullable=False, default="DEVELOPMENT", server_default=text("'DEVELOPMENT'"), index=True
     )
 
     taller: Mapped["Taller"] = relationship(back_populates="diagnosticos")

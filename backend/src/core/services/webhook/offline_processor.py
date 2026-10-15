@@ -23,6 +23,7 @@ class OfflineProcessor:
         marca_modelo: str,
         session_id: Optional[str],
         proveedor: str = "meta",
+        image_id: str = "",
     ) -> dict[str, Any]:
         t0 = time.perf_counter()
         if tipo_mensaje == "audio":
@@ -32,16 +33,14 @@ class OfflineProcessor:
             )
             diag_ml = "Audio no procesado"
             conf = 0.0
+        elif tipo_mensaje == "image":
+            respuesta = (
+                "📷 Recibí la imagen, pero no puedo analizarla sin persistencia y control de cuota activos. "
+                "Describe por texto el componente y lo que observas para continuar."
+            )
+            diag_ml = "Imagen no procesada"
+            conf = 0.0
         else:
-            from src.core.parser.message_parser import SinglePassMessageParser
-
-            if placa in ("WAPP-01", "SIN-PLACA", ""):
-                parsed_offline = SinglePassMessageParser.parse(texto_cliente)
-                if parsed_offline.vehiculo and parsed_offline.vehiculo.placa:
-                    placa = parsed_offline.vehiculo.placa
-                if parsed_offline.vehiculo and (parsed_offline.vehiculo.marca or parsed_offline.vehiculo.modelo):
-                    marca_modelo = f"{parsed_offline.vehiculo.marca or ''} {parsed_offline.vehiculo.modelo or ''}".strip()
-
             dto = gestor.procesar_consulta_texto(
                 texto_usuario=texto_cliente,
                 placa=placa,

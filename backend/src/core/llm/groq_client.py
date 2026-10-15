@@ -74,27 +74,32 @@ def generar_respuesta_groq(
         raise GroqClientError("Chat Groq deshabilitado por configuración.")
     clave = _validar_clave()
     max_tokens = 140 if tipo_consulta == "consulta_tecnica" else 420
+    payload = {
+        "model": settings.groq_model,
+        "messages": [
+            {
+                "role": "system",
+                "content": (
+                    "Eres CarBot, asistente técnico automotriz. Responde en español, "
+                    "con precisión de taller y sin inventar datos fuera del contexto."
+                ),
+            },
+            {"role": "user", "content": prompt_sistema},
+        ],
+        "temperature": 0.2,
+        "max_tokens": max_tokens,
+    }
+    # GPT-OSS reserva parte de la salida para razonamiento. Reducirlo evita que
+    # una síntesis breve termine sin texto visible para el mecánico.
+    if settings.groq_model.startswith("openai/gpt-oss"):
+        payload.update({"reasoning_effort": "low", "include_reasoning": False})
     response = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={
             "Authorization": f"Bearer {clave}",
             "Content-Type": "application/json",
         },
-        json={
-            "model": settings.groq_model,
-            "messages": [
-                {
-                    "role": "system",
-                    "content": (
-                        "Eres CarBot, asistente técnico automotriz. Responde en español, "
-                        "con precisión de taller y sin inventar datos fuera del contexto."
-                    ),
-                },
-                {"role": "user", "content": prompt_sistema},
-            ],
-            "temperature": 0.2,
-            "max_tokens": max_tokens,
-        },
+        json=payload,
         timeout=settings.groq_timeout_seconds,
     )
     if response.status_code >= 400:

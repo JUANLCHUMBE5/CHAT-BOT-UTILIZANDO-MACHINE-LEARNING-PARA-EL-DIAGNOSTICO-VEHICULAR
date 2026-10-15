@@ -18,6 +18,12 @@ def cargar_variables_entorno(dotenv_path: Path | None = None) -> bool:
     conservan prioridad sobre cualquier archivo local.
     """
 
+    # Los runners E2E aislados declaran esta barrera antes de importar la
+    # configuración. Así ni un `.env` copiado accidentalmente en una imagen de
+    # prueba puede reintroducir claves de proveedores externos.
+    if os.getenv("CARBOT_BLOCK_DOTENV", "").strip().lower() in {"1", "true", "yes"}:
+        return False
+
     entorno_inicial = os.getenv("ENVIRONMENT", "development").strip().lower()
     es_produccion = entorno_inicial in {"production", "prod"}
     ruta = dotenv_path or PROJECT_ROOT / ".env"

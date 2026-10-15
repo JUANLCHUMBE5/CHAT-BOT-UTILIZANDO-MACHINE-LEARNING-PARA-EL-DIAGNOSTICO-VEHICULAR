@@ -7,6 +7,7 @@ import time
 from dataclasses import dataclass
 from typing import Any, Optional
 
+from src.config import settings
 from src.core.gemini_queue import gemini_rate_limiter
 from src.core.gestor_diagnostico import ResultadoDiagnostico
 from src.core.logger import logger
@@ -37,6 +38,7 @@ class TechnicalDiagnosticWorkflow:
         audio_id: str,
         placa: str,
         marca_modelo: str,
+        image_id: str = "",
         diagnostico_forzado: Optional[str] = None,
     ) -> ResultadoFlujoDiagnostico:
         inicio = time.perf_counter()
@@ -45,13 +47,11 @@ class TechnicalDiagnosticWorkflow:
 
         # Si el caso previo fue completado o finalizado, reiniciar memoria para el nuevo caso
         if contexto_actual.get("caso_finalizado"):
-            gestor.session_manager.finalizar_caso(id_sesion)
-            contexto_actual.pop("caso_finalizado", None)
-            contexto_actual.pop("conversation_state", None)
-            contexto_actual.pop("estado_conversacion", None)
-            contexto_actual.pop("validacion_diagnostico", None)
-            conversacion.contexto = contexto_actual
             gestor.session_manager.cargar_contexto(id_sesion, contexto_actual)
+            gestor.session_manager.finalizar_caso(id_sesion)
+            contexto_actual = dict(gestor.session_manager.exportar_contexto(id_sesion))
+            contexto_actual.pop("caso_finalizado", None)
+            conversacion.contexto = contexto_actual
         else:
             gestor.session_manager.cargar_contexto(id_sesion, contexto_actual)
 
@@ -62,12 +62,30 @@ class TechnicalDiagnosticWorkflow:
             and not ExtractorHechos.contiene_informacion_diagnostica(texto_cliente)
         ):
             gestor.session_manager.reiniciar_sesion(id_sesion)
-            conversacion.contexto = gestor.session_manager.exportar_contexto(id_sesion)
+            contexto_limpio = gestor.session_manager.exportar_contexto(id_sesion)
+            for clave in (
+                "placa",
+                "placa_posttest",
+                "preplate_pending_input",
+                "validacion_diagnostico",
+            ):
+                contexto_limpio.pop(clave, None)
+            # La siguiente entrada debe aceptarse como placa del nuevo vehículo,
+            # no volver a mostrar el mismo gate como si aún no hubiera sido solicitado.
+            contexto_limpio["posttest_placa_pendiente"] = True
+            conversacion.contexto = contexto_limpio
+            if ExtractorHechos.es_cancelacion_solicitada(texto_cliente):
+                respuesta_reinicio = (
+                    "🚗 *Caso cancelado.* He limpiado la memoria y no continuaré con este diagnóstico. "
+                    "Cuando quieras iniciar otro, envía la placa del vehículo."
+                )
+            else:
+                respuesta_reinicio = (
+                    "🚗 *Caso anterior cerrado.* La memoria está limpia para otro problema.\n\n"
+                    "Envía primero la placa y luego el síntoma del nuevo vehículo."
+                )
             dto = ResultadoDiagnostico(
-                respuesta_texto=(
-                    "🚗 *Caso finalizado.* He limpiado la memoria para registrar un nuevo vehículo.\n\n"
-                    "¿Cuál es la marca, modelo y la falla o síntoma que presenta el nuevo auto?"
-                ),
+                respuesta_texto=respuesta_reinicio,
                 diagnostico_ml="Reinicio de sesión",
                 confianza_ml=1.0,
                 contexto_manual="",
@@ -121,15 +139,105 @@ class TechnicalDiagnosticWorkflow:
                     gestor, texto_cliente, placa, marca_modelo, id_sesion, remitente, proveedor, usuario, conversacion,
                     diagnostico_forzado=diagnostico_forzado,
                 )
+        elif tipo_mensaje == "image":
+            try:
+                if not image_id:
+                    raise ValueError("Meta/Twilio no incluyó la referencia de la imagen.")
+                image_bytes, mime_type = await whatsapp_provider_service.descargar_imagen(
+                    proveedor, image_id
+                )
+                permitir_gemini = False
+                if settings.gemini_api_key:
+                    permitir_gemini, _ = await gemini_rate_limiter.intentar_adquirir_slot_db()
+                if not permitir_gemini and not (
+                    settings.groq_vision_enabled and settings.groq_api_key
+                ):
+                    raise RuntimeError("No hay proveedor visual disponible o se alcanzó su cuota.")
+                from src.core.image_processor import ImageProcessor
+
+                observaciones, proveedor_vision = await asyncio.to_thread(
+                    ImageProcessor().interpretar_imagen,
+                    image_bytes,
+                    mime_type,
+                    permitir_gemini=permitir_gemini,
+                )
+                try:
+                    await gemini_rate_limiter.persistir_estado_local_db()
+                except Exception as persist_exc:
+                    logger.warning(
+                        "[Imagen WhatsApp] No se pudo replicar el estado de cuota Gemini: "
+                        f"{type(persist_exc).__name__}"
+                    )
+                logger.info(f"[Imagen WhatsApp] Imagen interpretada por {proveedor_vision}.")
+                texto_cliente = (
+                    f"{texto_cliente.strip()}\n\n" if texto_cliente.strip() else ""
+                ) + f"Observaciones de la imagen adjunta: {observaciones}"
+            except Exception as exc:
+                try:
+                    await gemini_rate_limiter.persistir_estado_local_db()
+                except Exception as persist_exc:
+                    logger.warning(
+                        "[Imagen WhatsApp] No se pudo replicar el estado de cuota Gemini: "
+                        f"{type(persist_exc).__name__}"
+                    )
+                logger.warning(f"[Imagen WhatsApp] No se pudo analizar la imagen: {type(exc).__name__}")
+                dto = ResultadoDiagnostico(
+                    respuesta_texto=(
+                        "📷 Recibí la imagen, pero no pude analizarla ahora. "
+                        "Escribe qué componente aparece y qué observas (o vuelve a enviar una foto "
+                        "JPEG, PNG o WEBP clara) para continuar."
+                    ),
+                    diagnostico_ml="Imagen pendiente de análisis",
+                    confianza_ml=0.0,
+                    contexto_manual="",
+                    titulo_manual="",
+                    requiere_revision_humana=True,
+                    estado_sesion="esperando_clarificacion",
+                    modo_diagnostico="esperando_clarificacion",
+                    tipo_consulta="aclaracion",
+                )
+            else:
+                dto = await TechnicalDiagnosticWorkflow._procesar_texto(
+                    gestor, texto_cliente, placa, marca_modelo, id_sesion, remitente, proveedor, usuario, conversacion,
+                    diagnostico_forzado=diagnostico_forzado,
+                )
         else:
             dto = await TechnicalDiagnosticWorkflow._procesar_texto(
                 gestor, texto_cliente, placa, marca_modelo, id_sesion, remitente, proveedor, usuario, conversacion,
                 diagnostico_forzado=diagnostico_forzado,
             )
 
-        ctx = dict(conversacion.contexto or {})
-        ctx.update(gestor.session_manager.exportar_contexto(id_sesion))
-        conversacion.contexto = ctx
+        # Fusión segura del contexto durable
+        contexto_previo = dict(conversacion.contexto or {})
+        contexto_exportado = dict(gestor.session_manager.exportar_contexto(id_sesion) or {})
+        estado_previo = contexto_previo.get("conversation_state")
+        case_id_previo = contexto_previo.get("case_id") or (
+            estado_previo.get("case_id") if isinstance(estado_previo, dict) else None
+        )
+        case_id_actual = contexto_exportado.get("case_id")
+        cambio_de_caso = bool(case_id_actual and case_id_previo != case_id_actual)
+        if cambio_de_caso:
+            estado_actual = contexto_exportado.get("conversation_state") or {}
+            contexto_actualizado = {
+                "case_id": case_id_actual,
+                "conversation_state": estado_actual,
+            }
+            if contexto_exportado.get("placa"):
+                contexto_actualizado["placa"] = contexto_exportado["placa"]
+                contexto_actualizado["placa_posttest"] = contexto_exportado["placa"]
+            else:
+                contexto_actualizado["posttest_placa_pendiente"] = True
+        else:
+            contexto_actualizado = {**contexto_previo, **contexto_exportado}
+
+        # Las placas externas solo se conservan mientras permanezca el mismo caso.
+        if not cambio_de_caso:
+            if "placa_posttest" in contexto_previo and "placa_posttest" not in contexto_actualizado:
+                contexto_actualizado["placa_posttest"] = contexto_previo["placa_posttest"]
+            if "placa" in contexto_previo and "placa" not in contexto_actualizado:
+                contexto_actualizado["placa"] = contexto_previo["placa"]
+
+        conversacion.contexto = contexto_actualizado
         return ResultadoFlujoDiagnostico(
             dto=dto,
             texto_cliente=texto_cliente,
@@ -151,18 +259,31 @@ class TechnicalDiagnosticWorkflow:
     ) -> ResultadoDiagnostico:
         from src.core.conversacion.models import ConversationState
         from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
-        from src.core.conversacion.repositorio import InMemoryConversationRepository
+        from src.core.conversacion.repositorio import PostgresConversationRepository
 
-        repo = InMemoryConversationRepository()
+        # Reutilizar / inyectar la infraestructura persistente existente
+        repo = getattr(gestor, "conversation_repo", None)
+        if repo is None:
+            repo = PostgresConversationRepository()
+            try:
+                setattr(gestor, "conversation_repo", repo)
+            except Exception:
+                pass
+
         if conversacion and getattr(conversacion, "contexto", None):
             ctx = conversacion.contexto
             if isinstance(ctx, dict):
                 st_dict = ctx.get("conversation_state") if "conversation_state" in ctx else ctx
-                if isinstance(st_dict, dict) and "hechos" in st_dict:
+                if isinstance(st_dict, dict) and ("hechos" in st_dict or "case_id" in st_dict):
                     try:
                         st_init = ConversationState.from_dict(st_dict)
                         st_init.session_id = id_sesion
-                        await repo.save_session(id_sesion, st_init)
+                        if placa and not st_init.placa:
+                            st_init.placa = placa
+                        if hasattr(repo, "_fallback"):
+                            await repo._fallback.save_session(id_sesion, st_init)
+                        else:
+                            await repo.save_session(id_sesion, st_init)
                     except Exception as e:
                         logger.warning(f"[DiagnosticWorkflow] Error al deserializar contexto previo: {e}")
 
@@ -183,24 +304,52 @@ class TechnicalDiagnosticWorkflow:
         )
 
         estado_actual = res_turno.get("estado")
-        if estado_actual:
-            ctx = dict(conversacion.contexto or {})
-            exportado = estado_actual.exportar_dict()
-            ctx.update(exportado)
-            ctx["conversation_state"] = exportado
-            ctx["case_id"] = estado_actual.case_id
-            conversacion.contexto = ctx
-            gestor.session_manager.cargar_contexto(
-                id_sesion,
-                {
-                    "conversation_state": exportado,
-                    "case_id": estado_actual.case_id,
-                },
-            )
-
         decision = res_turno.get("decision")
-        if res_turno.get("status") in ("reinicio", "saludo") or decision in ("REINICIO", "SALUDO"):
-            es_saludo = (decision == "SALUDO" or res_turno.get("status") == "saludo")
+        decision_transicion = res_turno.get("decision_transicion")
+        es_cambio_caso = (
+            decision in ("REINICIO", "REANUDAR_CASO")
+            or decision_transicion == "CAMBIO_DE_CASO"
+        )
+
+        if estado_actual:
+            contexto_previo = dict(conversacion.contexto or {}) if conversacion else {}
+            contexto_export_estado = estado_actual.exportar_dict()
+
+            if es_cambio_caso:
+                contexto_fusion = {
+                    "case_id": estado_actual.case_id,
+                    "conversation_state": contexto_export_estado,
+                }
+                if estado_actual.placa:
+                    contexto_fusion["placa"] = estado_actual.placa
+                    contexto_fusion["placa_posttest"] = estado_actual.placa
+                elif decision != "REANUDAR_CASO":
+                    contexto_fusion["posttest_placa_pendiente"] = True
+            else:
+                contexto_fusion = {**contexto_previo, "conversation_state": contexto_export_estado}
+                contexto_fusion["case_id"] = estado_actual.case_id
+                placa_efectiva = (
+                    estado_actual.placa
+                    or placa
+                    or contexto_previo.get("placa_posttest")
+                    or contexto_previo.get("placa")
+                )
+                if placa_efectiva and placa_efectiva not in ("WAPP-01", "SIN-PLACA", ""):
+                    contexto_fusion["placa"] = placa_efectiva
+                    contexto_fusion["placa_posttest"] = placa_efectiva
+
+            conversacion.contexto = contexto_fusion
+
+            # Sincronizar SessionManager
+            datos_sesion_manager = dict(contexto_fusion)
+            datos_sesion_manager["conversation_state"] = contexto_export_estado
+            datos_sesion_manager["case_id"] = estado_actual.case_id
+            if not es_cambio_caso and estado_actual.placa:
+                datos_sesion_manager["placa"] = estado_actual.placa
+            gestor.session_manager.cargar_contexto(id_sesion, datos_sesion_manager)
+
+        if res_turno.get("status") in ("reinicio", "saludo", "saludo_caso_activo") or decision in ("REINICIO", "SALUDO"):
+            es_saludo = (decision == "SALUDO" or res_turno.get("status") in ("saludo", "saludo_caso_activo"))
             return ResultadoDiagnostico(
                 respuesta_texto=res_turno["respuesta_texto"],
                 diagnostico_ml="Saludo / Bienvenida" if es_saludo else "Reinicio de sesión",
@@ -208,8 +357,8 @@ class TechnicalDiagnosticWorkflow:
                 contexto_manual="",
                 titulo_manual="",
                 requiere_revision_humana=False,
-                estado_sesion="inicio",
-                modo_diagnostico="inicio",
+                estado_sesion=estado_actual.fase.value if (estado_actual and res_turno.get("status") == "saludo_caso_activo") else "inicio",
+                modo_diagnostico=estado_actual.fase.value if (estado_actual and res_turno.get("status") == "saludo_caso_activo") else "inicio",
                 tipo_consulta="saludo" if es_saludo else "reinicio",
             )
         elif decision in ("PREGUNTAR", "PLAN_B") or (
@@ -240,6 +389,19 @@ class TechnicalDiagnosticWorkflow:
                 estado_sesion="diferencial",
                 modo_diagnostico="diferencial",
                 tipo_consulta="diagnostico",
+            )
+        elif decision == "ORIENTACION_PROVISIONAL" or res_turno.get("status") == "orientacion_provisional":
+            return ResultadoDiagnostico(
+                respuesta_texto=res_turno["respuesta_texto"],
+                diagnostico_ml=res_turno.get("diagnostico_ml", "Orientación provisional"),
+                confianza_ml=res_turno.get("confianza_ml", 0.5),
+                contexto_manual="",
+                titulo_manual="",
+                requiere_revision_humana=True,
+                estado_sesion="en_revision",
+                modo_diagnostico="orientacion_provisional",
+                tipo_consulta="orientacion_provisional",
+                es_orientacion_provisional=True,
             )
         elif decision == "DETALLE" or res_turno.get("status") == "detalle":
             return ResultadoDiagnostico(

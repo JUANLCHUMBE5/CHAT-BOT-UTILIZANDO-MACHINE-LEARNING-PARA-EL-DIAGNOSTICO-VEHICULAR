@@ -58,6 +58,7 @@ async def _procesar_y_responder_whatsapp(
     tipo_mensaje: str,
     texto_cliente: str = "",
     audio_id: str = "",
+    image_id: str = "",
     placa: str = "WAPP-01",
     marca_modelo: str = "Vehiculo Generico",
     session_id: str = None,
@@ -77,6 +78,7 @@ async def _procesar_y_responder_whatsapp(
             tipo_mensaje=tipo_mensaje,
             texto_cliente=texto_cliente,
             audio_id=audio_id,
+            image_id=image_id,
             placa=placa,
             marca_modelo=marca_modelo,
             proveedor=proveedor,
@@ -141,6 +143,7 @@ async def recibir_mensaje_meta(
         tipo_mensaje = "text"
         texto_cliente = ""
         audio_id = ""
+        image_id = ""
         meta_message_id = f"meta_{time.time_ns()}"
         telefono_id_meta = None
 
@@ -206,6 +209,12 @@ async def recibir_mensaje_meta(
                     texto_cliente = texto_cliente[: settings.user_text_max_chars]
             elif tipo_mensaje == "audio":
                 audio_id = msg.get("audio", {}).get("id", "")
+            elif tipo_mensaje == "image":
+                image = msg.get("image", {})
+                image_id = image.get("id", "")
+                texto_cliente = image.get("caption", "")[: settings.user_text_max_chars]
+                if not image_id:
+                    raise HTTPException(status_code=400, detail="Meta no incluyó el ID de la imagen.")
             else:
                 logger.info(f"[Webhook Meta] Tipo de mensaje no soportado: {tipo_mensaje}")
                 return JSONResponse(
@@ -223,6 +232,7 @@ async def recibir_mensaje_meta(
             "tipo_mensaje": tipo_mensaje,
             "texto_cliente": texto_cliente,
             "audio_id": audio_id,
+            "image_id": image_id,
             "placa": "WAPP-01",
             "marca_modelo": "Vehiculo Generico",
             "session_id": remitente,
@@ -303,8 +313,10 @@ async def recibir_mensaje_twilio(
         )
         texto_cliente = texto_cliente[: settings.user_text_max_chars]
     media_url = params_dict.get("MediaUrl0", "")
-    tipo_mensaje = "audio" if media_url else "text"
-    audio_id = media_url if media_url else ""
+    mime_media = params_dict.get("MediaContentType0", "").split(";")[0].lower()
+    tipo_mensaje = "image" if mime_media.startswith("image/") else "audio" if media_url else "text"
+    audio_id = media_url if tipo_mensaje == "audio" else ""
+    image_id = media_url if tipo_mensaje == "image" else ""
     twilio_message_sid = params_dict.get("MessageSid", f"twilio_{time.time_ns()}")
 
     rem_anon = anonimizar_identificador(remitente)
@@ -315,6 +327,7 @@ async def recibir_mensaje_twilio(
         "tipo_mensaje": tipo_mensaje,
         "texto_cliente": texto_cliente,
         "audio_id": audio_id,
+        "image_id": image_id,
         "placa": "WAPP-01",
         "marca_modelo": "Vehiculo Generico",
         "session_id": remitente,
