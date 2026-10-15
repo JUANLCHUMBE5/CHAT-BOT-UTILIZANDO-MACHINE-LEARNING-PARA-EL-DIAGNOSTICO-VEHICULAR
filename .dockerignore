@@ -25,3 +25,8 @@ tmp
 machine_learning/models/experimentos
 machine_learning/data/tracker_diagnosticos.csv
 machine_learning/data/evidencias_evaluacion
+
+# Include only the frozen, hash-verified C1 runtime models.
+!machine_learning/models/c1_fase10_final/modelo_diagnostico_c1.pkl
+!machine_learning/models/c1_fase10_final/modelo_sistema_c1_macrofix.pkl
+!machine_learning/models/c1_fase10_final/vectorizador_c1.pkl
