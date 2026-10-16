@@ -103,3 +103,15 @@ BANNER_RADIADOR_CALIENTE = (
     "El sistema puede expulsar vapor y refrigerante a presión y causar quemaduras graves. "
     "Espere a que el motor se enfríe antes de realizar una inspección segura.\n\n"
 )
+
+BANNER_FRENO_PRECAUCION = (
+    "⚠️ **ADVERTENCIA DE SEGURIDAD VIAL: SISTEMA DE FRENOS**\n"
+    "Cualquier anomalía, chirrido o vibración en frenos compromete la distancia de detención y la estabilidad. "
+    "Se recomienda precaución al circular y una inspección física prioritaria en taller especializado con elevador.\n\n"
+)
+
+BANNER_SUSPENSION_CRITICA = (
+    "⚠️ **ADVERTENCIA DE SEGURIDAD VIAL: SUSPENSIÓN Y DIRECCIÓN**\n"
+    "Ruidos secos o golpes metálicos al circular sobre baches indican holguras críticas en rótulas, bieletas o bujes "
+    "que pueden comprometer el control direccional. Se recomienda inspección física inmediata en elevador por un taller especializado.\n\n"
+)

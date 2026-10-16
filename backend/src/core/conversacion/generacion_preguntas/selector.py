@@ -259,7 +259,7 @@ def seleccionar_pregunta_con_filtro(
             "¿El problema aparece con el motor en frío (primeros minutos tras arrancar) "
             "o únicamente después de que el motor alcanza su temperatura de trabajo normal tras circular?"
         )
-        opc_m = ["En frío", "En caliente tras andar"]
+        opc_m = ["En frío", "En caliente tras andar", "En frío y en caliente"]
         candidatas.append((txt_m, opc_m, QuestionIntent.TEMPERATURA_APARICION, prio_marcha))
 
     if puede_preguntar(QuestionIntent.TEMPERATURA_APARICION, estado):
@@ -268,7 +268,7 @@ def seleccionar_pregunta_con_filtro(
             "¿La dificultad para arrancar ocurrió con el motor totalmente frío (primer intento tras horas o días estacionado) "
             "o intentaste encenderlo poco después de haber apagado el motor?"
         )
-        opc_a = ["Primer intento en frío", "Poco después de apagar"]
+        opc_a = ["Primer intento en frío", "Poco después de apagar", "En ambas condiciones"]
         candidatas.append((txt_a, opc_a, QuestionIntent.TEMPERATURA_APARICION, prio_arr))
 
     # 4. Escáner / Testigo Check Engine

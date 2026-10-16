@@ -56,7 +56,10 @@ def cargar_candidato_congelado(motor) -> None:
     bundle_path = base / "manifests" / "verified_frozen_bundle.json"
     bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
     for relative, expected in bundle["files"].items():
-        if _sha(_ruta_segura(base, relative).read_bytes()) != expected:
+        data = _ruta_segura(base, relative).read_bytes()
+        if relative.endswith(".txt") and b"\r\n" in data:
+            data = data.replace(b"\r\n", b"\n")
+        if _sha(data) != expected:
             raise FrozenRAGMismatch(f"Hash RAG incompatible: {relative}")
     index_path = base / "indexes" / "indice_faiss_v1.index"
     if _sha(index_path.read_bytes()) != bundle["index_sha256"]:

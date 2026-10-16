@@ -166,6 +166,7 @@ class AppSettings(BaseModel):
     version: str = "1.0.0"
     description: str = "Chatbot utilizando machine learning para el diagnóstico vehicular en talleres mecánicos."
     environment: str = os.getenv("ENVIRONMENT", "development").strip().lower()
+    enable_laboratory: bool = Field(default_factory=lambda: _env_bool("ENABLE_LABORATORY", default=False))
     debug: bool = _env_bool("DEBUG")
     port: int = _env_int("PORT", 8000)
     ngrok_domain: str = os.getenv("NGROK_DOMAIN", "")

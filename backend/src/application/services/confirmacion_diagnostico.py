@@ -285,9 +285,30 @@ def interpretar_seleccion_top3(
     # Selección conservadora por nombre de la falla
     # ------------------------------------------------------------
     if hipotesis:
+        # Si el texto describe síntomas, limitaciones o explicaciones libres sin verbo de elección, no es selección
+        tiene_marcador_eleccion = bool(
+            re.search(
+                r"\b(elijo|escojo|opto|me\s+inclino|me\s+quedo|confirmo|correcta|es\s+la\s+de|la\s+opcion\s+de|la\s+falla\s+es)\b",
+                t,
+            )
+        )
+        tiene_retroalimentacion_sintoma = bool(
+            re.search(
+                r"\b(no\s+tengo|no\s+puedo|no\s+cuento|no\s+dispongo|siento|escucho|nota|vibra|chirr|golpe|bache|pero\s+si|esponjoso|al\s+fondo|desmontar)\b",
+                t,
+            )
+        )
+        if len(t.split()) > 5 and not tiene_marcador_eleccion:
+            return None
+        if tiene_retroalimentacion_sintoma and not tiene_marcador_eleccion:
+            return None
+
         STOP = {
             "de", "del", "la", "las", "el", "los", "por", "o", "y",
-            "en", "con", "sin", "una", "un", "falla", "problema"
+            "en", "con", "sin", "una", "un", "falla", "problema",
+            "freno", "frenos", "motor", "rueda", "ruedas", "coche",
+            "auto", "vehiculo", "pedal", "sistema", "parte", "delantera",
+            "delanteras", "trasera", "traseras", "cuando", "donde",
         }
 
         tokens_usuario = {

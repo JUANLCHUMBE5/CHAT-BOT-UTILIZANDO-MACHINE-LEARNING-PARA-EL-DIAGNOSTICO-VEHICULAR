@@ -461,13 +461,15 @@ class OrquestadorConversacion:
             if not tiene_caso_activo:
                 if estado.fase == ConversationPhase.RESULTADO or not estado.hechos:
                     estado.iniciar_nuevo_caso()
+                await self.repositorio.save_session(session_id, estado)
                 resp_saludo = (
                     "👋 *¡Hola! Soy CarBot, chatbot de diagnóstico vehicular con Inteligencia Artificial.*\n\n"
                     "¿En qué te puedo ayudar hoy o qué falla presenta el auto? Para empezar, cuéntame el problema o síntomas que notas."
                 )
                 return {
                     "status": "saludo", "respuesta_texto": resp_saludo, "diagnostico_ml": "Saludo / Bienvenida",
-                    "confianza_ml": 1.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "SALUDO",
+                    "confianza_ml": 0.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "SALUDO",
+                    "case_id": estado.case_id,
                     "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
                 }
             else:
@@ -704,6 +706,7 @@ class OrquestadorConversacion:
         if transicion.decision.value == "CAMBIO_DE_CASO":
             contexto_previo = estado.exportar_dict(incluir_trazabilidad=False)
 
+        from src.core.conversacion.gestor_plan_b import GestorPlanB
         from src.core.conversacion.orientacion_provisional import (
             es_imposibilidad_completa,
             generar_orientacion_provisional,
@@ -712,6 +715,7 @@ class OrquestadorConversacion:
         es_imposible_declarado = (
             (tipo_mensaje == "imposibilidad_comprobacion" or es_imposibilidad_completa(texto_limpio))
             and not ExtractorHechos.contiene_informacion_diagnostica(texto_limpio)
+            and not GestorPlanB.detectar_indisponibilidad_en_texto(texto_limpio)
         )
 
         if es_imposible_declarado:
@@ -854,6 +858,40 @@ class OrquestadorConversacion:
         if interpretacion_corta:
             cat_resp = interpretacion_corta.get("categoria_respuesta", interpretacion_corta.get("categoria", ""))
             val_resp = interpretacion_corta.get("valor", "")
+            if cat_resp == "OPCION_NUMERICA_FUERA_DE_RANGO":
+                total_opc = int(interpretacion_corta.get("total_opciones", 0))
+                opc_pedida = interpretacion_corta.get("indice_opcion", val_resp)
+                if total_opc == 1:
+                    hip_unica = (
+                        estado.top3_actual[0].get("falla", "")
+                        if getattr(estado, "top3_actual", None) and isinstance(estado.top3_actual[0], dict)
+                        else (estado.falla_principal or "opción 1")
+                    )
+                    msg_fuera_rango = (
+                        f"La opción {opc_pedida} no está disponible porque solo se presentó 1 opción activa "
+                        f"({hip_unica}). Indica *1* si deseas seleccionar esa hipótesis para comprobarla, "
+                        "o describe el síntoma o comprobación realizada."
+                    )
+                else:
+                    msg_fuera_rango = (
+                        f"La opción {opc_pedida} está fuera de rango (opciones disponibles: 1 a {total_opc}). "
+                        f"Indica un número entre *1* y *{total_opc}* o describe la comprobación o síntoma."
+                    )
+                await self.repositorio.save_session(session_id, estado)
+                return {
+                    "status": "completado",
+                    "respuesta_texto": msg_fuera_rango,
+                    "diagnostico_ml": estado.falla_principal or "Opción fuera de rango",
+                    "confianza_ml": estado.confianza_actual,
+                    "top3_actual": estado.top3_actual,
+                    "fase": estado.fase.value,
+                    "es_pregunta": True,
+                    "decision": "OPCION_NUMERICA_INVALIDA",
+                    "pregunta_final": msg_fuera_rango,
+                    "case_id": estado.case_id,
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                    "estado": estado,
+                }
             estado.registrar_respuesta(
                 texto=texto_limpio,
                 interpretacion=f"{cat_resp}:{val_resp}",
@@ -874,7 +912,11 @@ class OrquestadorConversacion:
                     metadata={
                         "case_id": estado.case_id,
                         "hipotesis_provisional": hipotesis_elegida,
-                        "origen_intent": estado.preguntas_realizadas[-1]["intent"],
+                        "origen_intent": (
+                            estado.preguntas_realizadas[-1]["intent"]
+                            if estado.preguntas_realizadas
+                            else QuestionIntent.MEDICION_TECNICA.value
+                        ),
                     },
                 )
                 estado.establecer_pregunta_pendiente(
@@ -883,9 +925,10 @@ class OrquestadorConversacion:
                     related_hypothesis=hipotesis_elegida,
                 )
                 estado.pending_question["case_id"] = estado.case_id
+                estado.falla_principal = hipotesis_elegida
                 await self.repositorio.save_session(session_id, estado)
                 return {
-                    "status": "comprobacion_pendiente",
+                    "status": "completado",
                     "respuesta_texto": pregunta_comprobacion,
                     "diagnostico_ml": estado.falla_principal or "Hipótesis por comprobar",
                     "confianza_ml": estado.confianza_actual,
@@ -957,9 +1000,14 @@ class OrquestadorConversacion:
         # 4b. Manejo de consulta técnica informativa pura o solicitud de detalle paso a paso
         es_solicitud_detalle = ExtractorHechos.es_solicitud_detalle(texto_limpio)
         from src.core.intent_classifier import clasificar_intencion_consulta
-        tiene_sintomas = any(
-            h.categoria == "sintoma" or h.tipo == FactType.SINTOMA
-            for h in estado.hechos.values()
+        tiene_sintomas = bool(
+            estado.active_symptoms
+            or estado.top3_actual
+            or getattr(estado, "falla_principal", None)
+            or any(
+                h.categoria in ("sintoma", "condicion") or h.tipo == FactType.SINTOMA
+                for h in estado.hechos.values()
+            )
         )
         if es_solicitud_detalle or (not tiene_sintomas and clasificar_intencion_consulta(texto_limpio) == "consulta_tecnica"):
             dto_tecnico = gestor_diagnostico._procesar_consulta_tecnica(

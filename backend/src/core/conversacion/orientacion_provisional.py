@@ -18,10 +18,11 @@ def _normalizar(texto: str) -> str:
 
 PATRONES_IMPOSIBILIDAD_FISICA = (
     r"\bno\s+(?:puedo|podemos|tengo\s+forma\s+de|tengo\s+como)\s+(?:realizar|hacer|efectuar|ejecutar)?\s*(?:m[aá]s\s+)?(?:comprobaciones?|pruebas?|revisiones?|mediciones?|inspecciones?|desarmes?)\b",
-    r"\bno\s+(?:puedo|podemos|tengo\s+como)\s+(?:revisar|comprobar|probar|medir|desmontar|desarmar|verificar)\b",
+    r"\b(?:no|ni|tampoco)\s+(?:puedo|podemos|tengo\s+como)\s+(?:revisar|comprobar|probar|medir|desmontar|desarmar|verificar)\b",
     r"\b(?:imposible|no\s+es\s+posible)\s+(?:realizar|hacer|revisar|comprobar)\s+(?:comprobaciones?|pruebas?)\b",
-    r"\bno\s+(?:puedo|podemos)\s+desmontar\s+(?:la\s+)?rueda\b",
-    r"\bno\s+(?:puedo|podemos|tengo\s+c[oó]mo)\s+verificar(?:lo)?\b",
+    r"\b(?:no|ni|tampoco)\s+(?:puedo|podemos)\s+desmontar\s+(?:las?\s+)?ruedas?\b",
+    r"\b(?:no|ni|tampoco)\s+(?:puedo|podemos|tengo\s+c[oó]mo)\s+verificar(?:lo)?\b",
+    r"\b(?:no|ni|tampoco)\s+tengo\s+(?:un\s+)?(?:reloj\s+comparador|esc[aá]ner|scanner|mult[ií]metro|man[oó]metro|herramientas?)\b",
 )
 
 PATRONES_SIN_MAS_SINTOMAS = (

@@ -54,6 +54,14 @@ import {
   getTrabajosFallidos,
   reintentarTrabajoFallido,
 } from './api/colaApi';
+import {
+  enviarMensajeLaboratorio,
+  reiniciarLaboratorio,
+  ejecutarCasoPredefinido,
+  type MensajeLabResponse,
+  type ComprobacionResult,
+  type CasoReplayResponse,
+} from './api/laboratorioApi';
 
 import type {
   AprobarSolicitudResponseDTO,
@@ -236,6 +244,18 @@ export class ApiService {
   descargarFichasAnexo2Csv(periodo: { fecha_desde?: string; fecha_hasta?: string }): Promise<void> {
     return descargarFichasAnexo2Csv(periodo);
   }
+
+  enviarMensajeLaboratorio(mensaje: string, sessionId?: string): Promise<MensajeLabResponse> {
+    return enviarMensajeLaboratorio(mensaje, sessionId);
+  }
+
+  reiniciarLaboratorio(sessionId: string): Promise<{ status: string; mensaje: string }> {
+    return reiniciarLaboratorio(sessionId);
+  }
+
+  ejecutarCasoPredefinido(casoNombre: 'toyota' | 'nissan'): Promise<CasoReplayResponse> {
+    return ejecutarCasoPredefinido(casoNombre);
+  }
 }
 
 export const apiService = new ApiService();
@@ -275,6 +295,10 @@ export {
   descargarValidacionCsv,
   getExportarFichasAnexo2CsvUrl,
   descargarFichasAnexo2Csv,
+  enviarMensajeLaboratorio,
+  reiniciarLaboratorio,
+  ejecutarCasoPredefinido,
   authFetch,
   extractErrorMessage,
 };
+export type { MensajeLabResponse, ComprobacionResult, CasoReplayResponse };

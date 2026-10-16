@@ -17,9 +17,14 @@ class ManejadorConsultasTecnicas:
     def es_consulta_o_procedimiento(cls, texto_limpio: str, estado: ConversationState) -> bool:
         """Determina si el turno es una consulta técnica pura o procedimiento paso a paso."""
         es_solicitud_detalle = ExtractorHechos.es_solicitud_detalle(texto_limpio)
-        tiene_sintomas = any(
-            h.categoria == "sintoma" or h.tipo == FactType.SINTOMA
-            for h in estado.hechos.values()
+        tiene_sintomas = bool(
+            estado.active_symptoms
+            or estado.top3_actual
+            or getattr(estado, "falla_principal", None)
+            or any(
+                h.categoria in ("sintoma", "condicion") or h.tipo == FactType.SINTOMA
+                for h in estado.hechos.values()
+            )
         )
         return es_solicitud_detalle or (
             not tiene_sintomas and clasificar_intencion_consulta(texto_limpio) == "consulta_tecnica"

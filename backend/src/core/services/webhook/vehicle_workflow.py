@@ -59,7 +59,58 @@ async def preparar_flujo_vehiculo(
         await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_cancelar)
         await session.commit()
         return ({'status': 'consulta_cancelada', 'respuesta': respuesta_cancelar}, placa, marca_modelo, texto_cliente)
-    if comando_caso == 'nuevo':
+    es_solicitud_nuevo_caso = bool(
+        comando_caso == 'nuevo'
+        or (
+            tipo_mensaje == 'text'
+            and ExtractorHechos.es_reinicio_solicitado(texto_cliente)
+            and not ExtractorHechos.es_consulta_memoria(texto_cliente)
+        )
+    )
+    if es_solicitud_nuevo_caso and comando_caso != 'cancelar':
+        placa_nueva_detectada = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
+        perfil_nuevo_detectado = extraer_datos_vehiculo(texto_cliente) if tipo_mensaje == 'text' else {}
+        tiene_sintomas_nuevos = ExtractorHechos.contiene_informacion_diagnostica(texto_cliente) if tipo_mensaje == 'text' else False
+
+        if placa_nueva_detectada or perfil_nuevo_detectado.get('marca'):
+            self.gestor.session_manager.finalizar_caso(str(conversacion.id))
+            for clave in (
+                'validacion_diagnostico', 'conversation_state', 'estado_conversacion',
+                'posttest_placa_pendiente', 'preplate_pending_input',
+                'nueva_consulta_placa_pendiente', 'perfil_vehiculo_pendiente',
+                'perfil_vehiculo', 'placa', 'placa_posttest',
+            ):
+                contexto_placa.pop(clave, None)
+
+            if placa_nueva_detectada:
+                placa = normalizar_placa(placa_nueva_detectada)
+                contexto_placa['placa'] = placa
+                contexto_placa['placa_posttest'] = placa
+
+            if perfil_nuevo_detectado.get('marca'):
+                contexto_placa['perfil_vehiculo'] = perfil_nuevo_detectado
+                marca_modelo = _texto_perfil_vehiculo(perfil_nuevo_detectado)
+
+            conversacion.contexto = contexto_placa
+
+            if placa and _perfil_completo(perfil_nuevo_detectado) and tiene_sintomas_nuevos:
+                await session.commit()
+                return None, placa, marca_modelo, texto_cliente
+
+            if placa and _perfil_completo(perfil_nuevo_detectado):
+                respuesta_perfil = f'✅ Vehículo registrado: *{marca_modelo}* (placa {placa}).\n\nAhora describe el síntoma del vehículo.'
+                await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
+                await session.commit()
+                return ({'status': 'esperando_sintoma', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
+
+            if placa and not _perfil_completo(perfil_nuevo_detectado):
+                contexto_placa['perfil_vehiculo_pendiente'] = True
+                conversacion.contexto = contexto_placa
+                respuesta_perfil = f'Placa registrada: *{placa}*. ' + _mensaje_solicitar_perfil()
+                await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
+                await session.commit()
+                return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
+
         self.gestor.session_manager.finalizar_caso(str(conversacion.id))
         for clave in ('validacion_diagnostico', 'conversation_state', 'estado_conversacion'):
             contexto_placa.pop(clave, None)
@@ -101,7 +152,12 @@ async def preparar_flujo_vehiculo(
         await session.commit()
         return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
     placa_persistida = contexto_placa.get('placa_posttest') or contexto_placa.get('placa')
-    if placa_persistida and placa in ('WAPP-01', 'SIN-PLACA', ''):
+    placa_en_texto = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
+    if placa_en_texto:
+        placa = normalizar_placa(placa_en_texto)
+        contexto_placa['placa'] = placa
+        contexto_placa['placa_posttest'] = placa
+    elif placa_persistida and placa in ('WAPP-01', 'SIN-PLACA', ''):
         placa = placa_persistida
     if placa in ('WAPP-01', 'SIN-PLACA', ''):
         continuar_diagnostico_preplate = False

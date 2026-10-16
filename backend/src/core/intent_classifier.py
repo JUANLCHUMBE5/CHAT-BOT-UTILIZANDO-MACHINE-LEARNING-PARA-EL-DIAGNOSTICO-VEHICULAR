@@ -6,11 +6,14 @@ import re
 import unicodedata
 from typing import Literal
 
+from src.core.traductor_jerga import normalizar_jerga_peruana
+
 TipoConsulta = Literal["diagnostico", "consulta_tecnica", "fuera_de_alcance"]
 
 
 def _normalizar(texto: str) -> str:
-    sin_tildes = unicodedata.normalize("NFKD", texto.lower())
+    texto_norm = normalizar_jerga_peruana(texto)
+    sin_tildes = unicodedata.normalize("NFKD", texto_norm.lower())
     return " ".join(
         "".join(caracter for caracter in sin_tildes if not unicodedata.combining(caracter)).split()
     )
@@ -25,7 +28,7 @@ PATRONES_SINTOMA = (
     r"\bno (?:pasa|pasaba|puedo pasar|puede pasar|podia pasar|pudo pasar|llega|llegaba|sube|subia) de \d+\b",
     r"\bno (?:jala|jalaba|jalo|jalando|tira|tiraba|tirando|levanta|levantaba|desarrolla|desarrollaba)\b",
     r"\b(?:cuesta|costaba|demora|demoraba|tarda|tardaba|pesado para)\s+(?:en\s+)?(?:arrancar|encender|prender|partir)\b",
-    r"\b(?:vibra|vibraba|vibrando|tiembla|temblaba|temblando|jalonea|jaloneaba|jaloneando|tironea|tironeaba|tironeando|ratea|rateaba|cabecea|cabeceaba|corcovea|corcoveaba|cascabelea|cascabeleaba|recalienta|recalentaba|hierve|hervia|patina|patinaba|gotea|goteaba|humea|humeaba|chilla|chillaba|rechina|rechinaba|golpea|golpeaba|raspa|raspaba|zumba|zumbaba|aulla|aullaba|ronca|roncaba|traquetea|traqueteaba|chasquea|chasqueaba|cruje|crujia)\b",
+    r"\b(?:vibra|vibraba|vibrando|tiembla|timebla|tiemlba|temblaba|temblando|jalonea|jaloneaba|jaloneando|tironea|tironeaba|tironeando|ratea|rateaba|cabecea|cabeceaba|corcovea|corcoveaba|cascabelea|cascabeleaba|recalienta|recalentaba|hierve|hervia|patina|patinaba|gotea|goteaba|humea|humeaba|chilla|chillaba|rechina|rechinaba|golpea|golpeaba|raspa|raspaba|zumba|zumbaba|aulla|aullaba|ronca|roncaba|traquetea|traqueteaba|chasquea|chasqueaba|cruje|crujia)\b",
     r"\b(?:ruido|zumbido|aullido|ronquido|chillido|rechinido|golpeteo|traqueteo|chasquido|crujido|vibracion(?:es)?|fuga|humo|olor a quemado|luz de falla|check engine)\b",
     r"\b(?:se apaga|se apagaba|se apago|se apagando|se me apaga|se me apagaba|se corta|se cortaba|se muere|se moria|esta duro|esta esponjoso|se traba|esta trabado|se quedo trabado|trabado|inclinada|inclinado|no encaja|se descarga|consume demasiado)\b",
     r"\b(?:falla|fallando|averia|defectuoso|roto|quemado|sulfatado|baja presion|alta temperatura)\b",
@@ -56,7 +59,8 @@ PATRONES_SINTOMA = (
 
 PATRONES_PREGUNTA = (
     r"^(?:que|cual|cuanto|cuanta|cuantos|cuantas|por que)\b",
-    r"^(?:como|cuando|donde)\s+(?:se|puedo|debo|va|funciona|hago|cambio|cambiar|calibro|calibrar|saber|instalar|desarmar|probar|medir|limpiar|revisar|identificar)\b",
+    r"^(?:como|donde)\s+(?:se|puedo|debo|va|funciona|hago|cambio|cambiar|calibro|calibrar|saber|instalar|desarmar|probar|medir|limpiar|revisar|identificar)\b",
+    r"^cuando\s+(?:se|puedo|debo|funciona|hago|cambio|cambiar|calibro|calibrar|saber|instalar|desarmar|probar|medir|limpiar|revisar|identificar)\b",
     r"(?:^|[:;]\s*)(?:que|cual|cuanto|cuanta|cuantos|cuantas|por que)\b",
     r"^(?:se puede|puedo|debo|conviene|es recomendable|es normal|cada cuanto|necesito saber)\b",
     r"\b(?:que porcentaje|que potencia|que tipo|cuantos kilometros|cuanto kilometraje)\b",

@@ -25,10 +25,11 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
     ),
     (
         "vibración",
-        re.compile(r"\b(vibraci[oó]n|vibracion|tiemblan?|zapatean?|vibran?)\b", re.IGNORECASE),
+        re.compile(r"\b(vibraci[oó]n(?:es)?|vibraciones|vibracion|tiemblan?|timebla|tiemlba|zapatean?|vibran?)\b", re.IGNORECASE),
         re.compile(
-            r"\b(no\s+(?:se\s+|le\s+|me\s+)?(?:siente\s+)?(?:vibra|tiembla|zapatea|vibraci[oó]n)|"
-            r"al\s+frenar\s+no\s+vibra|sin\s+vibraci[oó]n|cero\s+vibraci[oó]n)\b",
+            r"\b(no\s+(?:se\s+|le\s+|me\s+)?(?:(?:sient[eo]|percib[eo]|not[ao]|hay|tiene|presenta|escuch[ao])\s+)?"
+            r"(?:ninguna\s+)?(?:vibra(?:n|ciones|ci[oó]n)?|tiemblan?|timebla|zapatean?)|"
+            r"al\s+frenar\s+no\s+vibra|sin\s+vibraci(?:[oó]n|ones)|cero\s+vibraci(?:[oó]n|ones))\b",
             re.IGNORECASE,
         ),
     ),
@@ -41,7 +42,9 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
         "pérdida de potencia",
         re.compile(
             r"\b(p[eé]rdida\s+de\s+potencia|no\s+jala|se\s+chupa|pierde\s+fuerza|"
-            r"perdi[aáoó]\s+fuerza|sin\s+fuerza|se\s+ahoga|chanchea|se\s+aguanta|est[aá]\s+chancho)\b",
+            r"perdi[aáoó]\s+fuerza|sin\s+fuerza|se\s+ahoga|chanchea|se\s+aguanta|est[aá]\s+chancho|"
+            r"(?:problemas?|rpoblemas?|porblemas?|fallas?|inconvenientes?)\b[^.;,]{0,35}?\b(?:al\s+acelerar|para\s+acelerar|cuando\s+aceler[oa]|acelerando)|"
+            r"no\s+acelera\s+bien)\b",
             re.IGNORECASE,
         ),
         re.compile(
@@ -109,7 +112,9 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
             re.IGNORECASE,
         ),
         re.compile(
-            r"\b(no\s+(?:hace|se\s+oye|se\s+escucha|hay)\s+(?:ning[uú]n\s+)?(?:ruido|golpeteo|chillido|sonido)|"
+            r"\b(no\s+(?:hace|se\s+oye|se\s+escuchan?|escucho|siento|percibo|noto|hay|tiene|presenta)\s+"
+            r"(?:ning[uú]n\s+|ninguna\s+)?(?:ruidos?|golpeteos?|golpes?|chillidos?|chirridos?|zumbidos?|traqueteos?|crujidos?|sonidos?)|"
+            r"sin\s+(?:ruidos?|chirridos?|chillidos?|golpeteos?|zumbidos?)|"
             r"no\s+hace\s+ruido\s+al\s+girar)\b",
             re.IGNORECASE,
         ),
@@ -118,12 +123,56 @@ DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
         "anomalía en frenos",
         re.compile(
             r"\b(frena\s+raro|frenos\s+raros|frena\s+mal|freno\s+raro|anomal[ií]a\s+en\s+frenos|"
-            r"pedal(?:\s+de\s+freno)?\s+(?:(?:se\s+siente|est[aá]|se\s+puso|queda)\s+)?(?:muy\s+)?esponjoso|"
-            r"pedal(?:\s+de\s+freno)?\s+(?:(?:se\s+)?(?:va\s+al\s+fondo|hunde|al\s+fondo|bajo|largo|blando))|"
             r"frena\s+largo|sin\s+frenos?)\b",
             re.IGNORECASE,
         ),
-        re.compile(r"\b(frena\s+bien|frena\s+normal|no\s+frena\s+mal)\b", re.IGNORECASE),
+        re.compile(
+            r"\b(frena\s+bien|frena\s+normal|no\s+frena\s+mal|"
+            r"no\s+(?:presenta|tiene)\s+problemas\s+de\s+frenos|sin\s+problemas\s+de\s+frenos)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "pedal esponjoso",
+        re.compile(
+            r"\b(pedal(?:\s+de\s+freno)?\s+(?:(?:se\s+siente|est[aá]|se\s+puso|queda)\s+)?(?:muy\s+)?esponjoso)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b(no\s+(?:est[aá]|se\s+siente)\s+(?:muy\s+)?esponjoso)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "pedal se va al fondo",
+        re.compile(
+            r"\b(pedal(?:\s+de\s+freno)?\s+(?:(?:se\s+)?(?:va\s+al\s+fondo|hunde|al\s+fondo|bajo|blando)))\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b((?:no|ni)\s+(?:se\s+)?va\s+al\s+fondo|no\s+se\s+hunde)\b",
+            re.IGNORECASE,
+        ),
+    ),
+    (
+        "golpes en suspensión",
+        re.compile(
+            r"\b(golpe(?:s)?\s+met[aá]lico(?:s)?|golpe(?:s)?\s+en\s+(?:la\s+)?suspensi[oó]n|"
+            r"sonido\s+en\s+baches|ruido\s+al\s+pasar\s+baches|golpeteo\s+en\s+baches|"
+            r"bujes?\s+(?:gastados?|rotos?)|amortiguadores?\s+(?:reventados?|vencidos?)|"
+            r"sonido\s+met[aá]lico\s+en\s+baches)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b(no\s+(?:golpea|hace\s+ruido)\s+en\s+baches|"
+            r"no\s+(?:escucho|siento|percibo|noto|se\s+escuchan?|se\s+oyen?|hay|tiene|presenta)\s+"
+            r"(?:ning[uú]n\s+|ninguna\s+)?(?:golpes?(?:\s+met[aá]licos?)?|golpeteos?|ruidos?|sonidos?)"
+            r"(?:\s+en\s+(?:la\s+)?suspensi[oó]n|\s+en\s+baches)?|"
+            r"suspensi[oó]n\s+(?:bien|normal)|"
+            r"sin\s+golpes?(?:\s+met[aá]licos?)?(?:\s+en\s+(?:la\s+)?suspensi[oó]n)?|"
+            r"sin\s+problemas\s+de\s+suspensi[oó]n)\b",
+            re.IGNORECASE,
+        ),
     ),
     (
         "patinado de transmisión / embrague",
@@ -210,6 +259,30 @@ class DetectorPolaridad:
             return False
         return hay_negada
 
+    @staticmethod
+    def _match_esta_negado_localmente(txt_l: str, m: re.Match, m_neg: re.Match | None) -> bool:
+        if m_neg and m.start() >= m_neg.start() and m.end() <= m_neg.end() + 15:
+            return True
+        cortes = list(
+            re.finditer(
+                r"[.;?!]+|\b(?:pero|aunque|sin\s+embargo|sino|mas\s+bien)\b|,\s*(?:pero|aunque|sino)\b",
+                txt_l[: m.start()],
+            )
+        )
+        inicio_clausula = cortes[-1].end() if cortes else 0
+        prefijo_clausula = txt_l[inicio_clausula : m.start()]
+        return bool(
+            re.search(
+                r"\b(?:no\s+(?:(?:se|le|me)\s+)?(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|"
+                r"oyen?|veo|not[ao]|percib[eo]|hace|existe|muestra|da)\s+)?(?:ning[uú]n\s+|ninguna\s+)?|"
+                r"tampoco\s+(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|veo|hace|vibra|tiembla|suena)\s+)?|"
+                r"sin\s+(?:ning[uú]n\s+|ninguna\s+)?|"
+                r"ni\s+(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|vibra|tiembla|suena)\s+)?|"
+                r"nunca\s+|jam[aá]s\s+|cero\s+|descartad[oa]\s+(?:el\s+|la\s+)?)\s*$",
+                prefijo_clausula,
+            )
+        )
+
     @classmethod
     def extraer_sintomas(cls, texto: str) -> List[Tuple[str, str, FactState]]:
         """
@@ -221,26 +294,19 @@ class DetectorPolaridad:
 
         for nombre_sintoma, pat_pos, pat_neg in DEFINICIONES_SINTOMAS:
             m_neg = pat_neg.search(txt_l)
-            m_pos = pat_pos.search(txt_l)
+            matches_pos = list(pat_pos.finditer(txt_l))
+            if not m_neg and not matches_pos:
+                continue
 
-            if m_neg:
-                # Comprobar si además hay una mención positiva genuina fuera del ámbito de la negación
-                hay_positivo_genuino = False
-                if m_pos:
-                    neg_start, neg_end = m_neg.start(), m_neg.end()
-                    for m in pat_pos.finditer(txt_l):
-                        if m.end() <= neg_start or m.start() >= neg_end + 15:
-                            hay_positivo_genuino = True
-                            break
-
-                campo = f"sintoma_{nombre_sintoma.replace(' ', '_').replace('/', '_')}"
-                if hay_positivo_genuino:
-                    resultados.append((campo, nombre_sintoma, FactState.CONFIRMADO))
-                else:
-                    resultados.append((campo, nombre_sintoma, FactState.AUSENTE_NEGADO))
-            elif m_pos:
-                campo = f"sintoma_{nombre_sintoma.replace(' ', '_').replace('/', '_')}"
+            hay_positivo_genuino = any(
+                not cls._match_esta_negado_localmente(txt_l, m, m_neg)
+                for m in matches_pos
+            )
+            campo = f"sintoma_{nombre_sintoma.replace(' ', '_').replace('/', '_')}"
+            if hay_positivo_genuino:
                 resultados.append((campo, nombre_sintoma, FactState.CONFIRMADO))
+            else:
+                resultados.append((campo, nombre_sintoma, FactState.AUSENTE_NEGADO))
 
         if re.search(r"\btemperatura\s+(?:del\s+motor\s+)?empieza\s+a\s+subir\b", txt_l):
             resultados.append(("sintoma_sobrecalentamiento", "sobrecalentamiento", FactState.CONFIRMADO))
@@ -317,11 +383,20 @@ class DetectorPolaridad:
         txt_l = texto.lower()
 
         patron = re.compile(
-            r"\b(?:el\s+)?(motor|caja|transmisi[oó]n|frenos?|direcci[oó]n|alternador|aire|clima)\s+"
+            r"\b(?:el\s+)?(motor|caja|transmisi[oó]n|frenos?|direcci[oó]n|alternador|aire|clima|suspensi[oó]n)\s+"
             r"(?:funciona|anda|marcha|responde|est[aá])\s+(?:normal|bien|perfecto|sin\s+problemas?)\b",
             re.IGNORECASE,
         )
         for m in patron.finditer(txt_l):
+            sis = m.group(1).lower()
+            canon = "motor" if "motor" in sis else ("transmisión" if "trans" in sis or "caja" in sis else sis)
+            resultados.append((f"funcionamiento_{canon}", f"{canon} funciona normal"))
+
+        patron_sin_prob = re.compile(
+            r"\b(?:no\s+(?:presenta|tiene|muestra)|sin)\s+problemas?\s+de\s+(motor|caja|transmisi[oó]n|frenos?|direcci[oó]n|alternador|aire|clima|suspensi[oó]n)\b",
+            re.IGNORECASE,
+        )
+        for m in patron_sin_prob.finditer(txt_l):
             sis = m.group(1).lower()
             canon = "motor" if "motor" in sis else ("transmisión" if "trans" in sis or "caja" in sis else sis)
             resultados.append((f"funcionamiento_{canon}", f"{canon} funciona normal"))

@@ -33,7 +33,40 @@ def interpretar_respuesta_corta(
     accion = interpretar_accion_previa(estado, texto_usuario, ultima_preg)
     if accion is not None:
         return accion
+    def _parsear_indice_opcion(raw_val: str) -> int:
+        mapa = {
+            "1": 0, "primera": 0, "1️⃣": 0,
+            "2": 1, "segunda": 1, "2️⃣": 1,
+            "3": 2, "tercera": 2, "3️⃣": 2,
+            "4": 3, "cuarta": 3,
+            "5": 4, "quinta": 4,
+            "0": -1,
+        }
+        if raw_val in mapa:
+            return mapa[raw_val]
+        return int(raw_val) - 1 if raw_val.isdigit() else 2
+
     if not ultima_preg:
+        m_opt_pre = PATRON_OPCION_NUMERICA.fullmatch(texto_l)
+        if m_opt_pre and getattr(estado, "top3_actual", None):
+            raw_val = m_opt_pre.group(3).lower()
+            idx = _parsear_indice_opcion(raw_val)
+            if 0 <= idx < len(estado.top3_actual):
+                item = estado.top3_actual[idx]
+                hip_val = item.get("falla", "") if isinstance(item, dict) else str(item)
+                return {
+                    "categoria_respuesta": "OPCION_NUMERICA_PROVISIONAL",
+                    "campo": "hipotesis_seleccionada_provisional",
+                    "valor": hip_val,
+                    "indice_opcion": idx + 1,
+                }
+            return {
+                "categoria_respuesta": "OPCION_NUMERICA_FUERA_DE_RANGO",
+                "campo": "opcion_fuera_de_rango",
+                "valor": raw_val,
+                "indice_opcion": idx + 1,
+                "total_opciones": len(estado.top3_actual),
+            }
         if PATRON_NO_SE.fullmatch(texto_l):
             hecho = estado.registrar_hecho(
                 "desconocido", "no determinado / no se fijó", categoria="desconocido",
@@ -322,22 +355,85 @@ def interpretar_respuesta_corta(
         ))
         and (not ultima_preg.get("case_id") or ultima_preg["case_id"] == estado.case_id)
     )
-    if (
-        m_opt and hipotesis and pregunta_vigente
-        and intent_str in (
+    hipotesis_candidatas = (
+        list(hipotesis)
+        if intent_str in (
             QuestionIntent.DISCRIMINACION_TOP3.value,
             QuestionIntent.CONFIRMACION_ALTERNATIVA.value,
         )
+        else []
+    )
+    if not hipotesis_candidatas and getattr(estado, "top3_actual", None):
+        hipotesis_candidatas = [
+            h.get("falla") if isinstance(h, dict) else str(h)
+            for h in estado.top3_actual
+            if (h.get("falla") if isinstance(h, dict) else str(h))
+        ]
+    es_intent_medicion = intent_str in (
+        QuestionIntent.MEDICION_VOLTAJE.value,
+        QuestionIntent.MEDICION_PRESION.value,
+        QuestionIntent.MEDICION_TECNICA.value,
+    )
+    tiene_prefijo_opcion = bool(m_opt and (m_opt.group(1) or m_opt.group(2)))
+    if (
+        m_opt
+        and (not es_intent_medicion or tiene_prefijo_opcion or m_opt.group(3).lower() in ("1", "2", "3", "primera", "segunda", "tercera", "1️⃣", "2️⃣", "3️⃣"))
+        and hipotesis_candidatas
+        and (
+            pregunta_vigente
+            or (
+                bool(getattr(estado, "top3_actual", None))
+                and not estado.pending_question
+            )
+        )
     ):
         raw_val = m_opt.group(3).lower()
-        idx = 0 if raw_val in ("1", "primera", "1️⃣") else (1 if raw_val in ("2", "segunda", "2️⃣") else 2)
-        if idx < len(hipotesis):
+        idx = _parsear_indice_opcion(raw_val)
+        if 0 <= idx < len(hipotesis_candidatas):
             return {
                 "categoria_respuesta": "OPCION_NUMERICA_PROVISIONAL",
                 "campo": "hipotesis_seleccionada_provisional",
-                "valor": hipotesis[idx],
+                "valor": hipotesis_candidatas[idx],
                 "indice_opcion": idx + 1,
             }
+        return {
+            "categoria_respuesta": "OPCION_NUMERICA_FUERA_DE_RANGO",
+            "campo": "opcion_fuera_de_rango",
+            "valor": raw_val,
+            "indice_opcion": idx + 1,
+            "total_opciones": len(hipotesis_candidatas),
+        }
+
+    opciones_preg = ultima_preg.get("opciones") or []
+    if (
+        m_opt
+        and not hipotesis_candidatas
+        and opciones_preg
+        and intent_str not in (
+            QuestionIntent.COMPORTAMIENTO_ARRANQUE.value,
+            QuestionIntent.ACLARACION_CONTRADICCION.value,
+        )
+    ):
+        raw_val = m_opt.group(3).lower()
+        idx = _parsear_indice_opcion(raw_val)
+        if idx < 0 or idx >= len(opciones_preg):
+            return {
+                "categoria_respuesta": "OPCION_NUMERICA_FUERA_DE_RANGO",
+                "campo": "opcion_fuera_de_rango",
+                "valor": raw_val,
+                "indice_opcion": idx + 1,
+                "total_opciones": len(opciones_preg),
+            }
+        opc_txt = str(opciones_preg[idx]).lower()
+        if intent_str == QuestionIntent.TEMPERATURA_APARICION.value:
+            val_temp = "frío" if idx == 0 else ("caliente" if idx == 1 else "frío y caliente")
+            h = estado.registrar_hecho("temperatura", val_temp, categoria="temperatura", texto_crudo=texto_usuario)
+            return {"categoria_respuesta": "CONDICION", "campo": "temperatura", "valor": val_temp, "hecho": h.to_dict()}
+        if intent_str == QuestionIntent.CONDICION_OPERACION.value:
+            h = estado.registrar_hecho("condicion_operacion", opc_txt, categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            return {"categoria_respuesta": "CONDICION", "campo": "condicion_operacion", "valor": opc_txt, "hecho": h.to_dict()}
+        h = estado.registrar_hecho(f"respuesta_{intent_str}", opc_txt, categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+        return {"categoria_respuesta": "CONDICION", "campo": f"respuesta_{intent_str}", "valor": opc_txt, "hecho": h.to_dict()}
 
     # Una unidad de presión no identifica el circuito. Las medidas explícitas
     # de otro sistema las conserva el extractor técnico, no la respuesta de riel.
