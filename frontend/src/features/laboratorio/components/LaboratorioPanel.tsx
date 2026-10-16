@@ -1,6 +1,6 @@
 import React from 'react';
 import { Car, Cpu, ShieldAlert } from 'lucide-react';
-import type { MensajeLabResponse, ComprobacionResult } from '../../../services/api';
+import type { MensajeLabResponse, ComprobacionResult } from '../../../services/api/laboratorioApi';
 
 interface LaboratorioPanelProps {
   estado: MensajeLabResponse | null;

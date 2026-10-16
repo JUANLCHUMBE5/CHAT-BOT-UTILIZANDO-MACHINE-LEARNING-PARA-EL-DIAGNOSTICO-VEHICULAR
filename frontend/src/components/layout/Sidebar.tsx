@@ -1,8 +1,8 @@
 import React from 'react';
-import { LayoutDashboard, Users, Brain, FlaskConical, X } from 'lucide-react';
+import { LayoutDashboard, Users, Brain, X } from 'lucide-react';
 import type { UsuarioSesion } from '../../types';
 
-export type NavTab = 'inicio' | 'gestion' | 'proyecto' | 'laboratorio';
+export type NavTab = 'inicio' | 'gestion' | 'proyecto';
 
 interface SidebarProps {
   user?: UsuarioSesion | null;
@@ -26,7 +26,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'inicio', label: 'Inicio', icon: <LayoutDashboard size={18} /> },
     { id: 'gestion', label: 'Accesos y diagnósticos', icon: <Users size={18} />, badgeCount: solicitudesPendientesCount },
     { id: 'proyecto', label: 'Impacto y validación', icon: <Brain size={18} /> },
-    { id: 'laboratorio', label: 'Laboratorio de Pruebas', icon: <FlaskConical size={18} /> },
   ];
 
   const content = (

@@ -33,3 +33,24 @@ intercepción de seguridad: aceptar «la 2» ahí sería un error. La entrada ge
 no cambia el contrato térmico: `test_thermal_coverage_independent_of_numeric_fixture`
 verifica la advertencia del radiador a 108 grados por separado, y las regresiones
 Codex conservan el rechazo de opciones inexistentes. No se relajan esas expectativas.
+
+## Entradas exclusivamente locales
+
+El backend público `main:app` no registra `/api/v1/laboratorio`, con ningún valor de ENABLE_LABORATORY.
+La entrada independiente se inicia localmente (desde backend) con:
+
+```powershell
+$env:ENABLE_LABORATORY='true'
+$env:CARBOT_BLOCK_DOTENV='true'
+# Configurar JWT_SECRET_KEY idéntico al backend local de pruebas, sin mostrarlo.
+# Gemini/Groq deben quedar sin credenciales. No usar bases ni credenciales productivas.
+python -m uvicorn src.interfaces.api.v1.endpoints.laboratorio_local.app:create_laboratory_app --factory --host 127.0.0.1 --port 8001
+```
+
+Desde frontend: `npm run dev:laboratorio` y abrir http://127.0.0.1:5174/laboratorio.html.
+El login usa la API local de pruebas en 8000; las consultas de laboratorio van al proceso local 8001.
+Ambos deben compartir la configuración JWT local autorizada. La UI exige login administrativo y hostname loopback.
+`npm run build:laboratorio` genera solo `dist-laboratorio/`; no publicar ese directorio.
+El build público habitual continúa generando `dist/`, sin rutas, menús, componentes ni cliente API del laboratorio.
+La aplicación independiente tampoco registra rutas en producción, aunque el flag se active por error.
+El harness Docker `/lab` previo sigue independiente y se conserva sin cambios.

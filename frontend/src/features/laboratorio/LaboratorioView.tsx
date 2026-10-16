@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
-import {
-  apiService,
-  type MensajeLabResponse,
-} from '../../services/api';
+import * as apiService from '../../services/api/laboratorioApi';
+import type { MensajeLabResponse } from '../../services/api/laboratorioApi';
 import { LaboratorioHeader } from './components/LaboratorioHeader';
 import { LaboratorioChat, type ChatEntry } from './components/LaboratorioChat';
 import { LaboratorioPanel } from './components/LaboratorioPanel';

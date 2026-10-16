@@ -13,7 +13,6 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from main import app
 from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.models import ConversationState, FactState, QuestionIntent
@@ -24,6 +23,9 @@ from src.core.diagnostico.politica_seguridad import (
     SeveridadSeguridad,
 )
 from src.core.parser.message_parser import IntentType, SinglePassMessageParser
+from src.interfaces.api.v1.endpoints.laboratorio_local.app import create_laboratory_app
+
+app = create_laboratory_app()
 
 
 @pytest.fixture
@@ -33,6 +35,8 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
 
     monkeypatch.setattr(settings, "enable_laboratory", True)
     monkeypatch.setenv("CARBOT_BLOCK_DOTENV", "true")
+    global app
+    app = create_laboratory_app()
     token = crear_jwt_token(usuario_id="00000000-0000-0000-0000-000000000021")
     return TestClient(app, headers={"Authorization": f"Bearer {token}"})
 
@@ -266,6 +270,9 @@ def test_arg04_laboratorio_rechaza_opcion_fuera_de_rango_sin_clamping(
 ) -> None:
     """Verifica en el endpoint que responder '3' o 'la 2' con 1 sola opción no seleccione la primera."""
     session_id = f"test_arg04_single_hypo_{hash(entrada_fuera_rango)}"
+    # La aplicación independiente empieza vacía; no depender de otra prueba.
+    inicial = client.post("/api/v1/laboratorio/mensaje", json={"session_id": session_id, "mensaje": "Hola"})
+    assert inicial.status_code == 200
     gestor_lab = getattr(app.state, "gestor_laboratorio", None)
     assert gestor_lab is not None
     sesion = gestor_lab.session_manager.obtener_o_crear_sesion(f"lab::{session_id}")

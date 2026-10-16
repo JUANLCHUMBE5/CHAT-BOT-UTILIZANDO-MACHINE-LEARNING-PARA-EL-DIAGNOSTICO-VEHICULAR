@@ -14,7 +14,9 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from main import app
+from src.interfaces.api.v1.endpoints.laboratorio_local.app import create_laboratory_app
+
+app = create_laboratory_app()
 
 
 @pytest.fixture
@@ -24,6 +26,8 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
 
     monkeypatch.setattr(settings, "enable_laboratory", True)
     monkeypatch.setenv("CARBOT_BLOCK_DOTENV", "true")
+    global app
+    app = create_laboratory_app()
     token = crear_jwt_token(usuario_id="00000000-0000-0000-0000-000000000021")
     return TestClient(app, headers={"Authorization": f"Bearer {token}"})
 

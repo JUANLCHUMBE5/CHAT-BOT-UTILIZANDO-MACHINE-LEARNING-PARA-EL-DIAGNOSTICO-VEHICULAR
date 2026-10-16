@@ -8,8 +8,7 @@ export type AppRoute =
   | '/personas'
   | '/diagnosticos'
   | '/validacion'
-  | '/fichas'
-  | '/laboratorio';
+  | '/fichas';
 
 /**
  * Solo las cuentas administrativas pueden navegar por el panel web.
@@ -17,8 +16,6 @@ export type AppRoute =
 export const getValidRoute = (path: string, user: UsuarioSesion | null): AppRoute => {
   if (!user || !['administrador', 'admin'].includes(user.rol)) return '/login';
   if (path === '/login' || path === '/' || path === '/resumen') return '/inicio';
-  // Laboratorio de Pruebas Web
-  if (path === '/laboratorio') return '/laboratorio';
   // Redirecciones unificadas a Gestión (Personas, Diagnósticos, Mecánicos, Solicitudes)
   if (['/gestion', '/personas', '/diagnosticos', '/mecanicos', '/clientes', '/solicitudes'].includes(path)) {
     return '/gestion';

@@ -9,7 +9,6 @@ import {
   useMecanicos,
 } from './features/management';
 import { ProyectoCarbotView } from './features/project';
-import { LaboratorioView } from './features/laboratorio';
 import {
   apiService,
   SESSION_EXPIRED_EVENT,
@@ -29,7 +28,7 @@ const LAST_ROUTE_KEY = 'carbot_last_route';
 
 const readLastRoute = (): AppRoute => {
   const saved = localStorage.getItem(LAST_ROUTE_KEY);
-  return ['/inicio', '/gestion', '/proyecto', '/personas', '/diagnosticos', '/validacion', '/fichas', '/laboratorio'].includes(saved || '')
+  return ['/inicio', '/gestion', '/proyecto', '/personas', '/diagnosticos', '/validacion', '/fichas'].includes(saved || '')
     ? (saved === '/personas' || saved === '/diagnosticos' ? '/gestion' : saved) as AppRoute
     : '/inicio';
 };
@@ -176,8 +175,6 @@ export const App: React.FC = () => {
       ? 'gestion'
       : currentRoute === '/proyecto'
       ? 'proyecto'
-      : currentRoute === '/laboratorio'
-      ? 'laboratorio'
       : 'inicio';
 
   // Load module data on demand when tab changes
@@ -336,10 +333,6 @@ export const App: React.FC = () => {
 
           {activeTab === 'proyecto' && (
             <ProyectoCarbotView />
-          )}
-
-          {activeTab === 'laboratorio' && (
-            <LaboratorioView />
           )}
         </main>
       </div>

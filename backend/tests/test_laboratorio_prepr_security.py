@@ -2,9 +2,11 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from main import app
 from src.config import AppSettings, settings
 from src.core.security import crear_jwt_token
+from src.interfaces.api.v1.endpoints.laboratorio_local.app import create_laboratory_app
+
+app = create_laboratory_app()
 
 
 @pytest.fixture
@@ -14,6 +16,8 @@ def enabled(monkeypatch):
     monkeypatch.setattr(settings, "gemini_api_key", "")
     monkeypatch.setattr(settings, "groq_api_key", "")
     monkeypatch.setenv("CARBOT_BLOCK_DOTENV", "true")
+    global app
+    app = create_laboratory_app()
 
 
 def client(user="00000000-0000-0000-0000-000000000031", role="administrador", workshop=None):
@@ -25,7 +29,7 @@ def test_disabled_by_default(monkeypatch):
     monkeypatch.delenv("ENABLE_LABORATORY", raising=False)
     assert AppSettings().enable_laboratory is False
     monkeypatch.setattr(settings, "enable_laboratory", False)
-    assert client().post("/api/v1/laboratorio/mensaje", json={"mensaje": "Hola"}).status_code == 403
+    assert TestClient(create_laboratory_app()).post("/api/v1/laboratorio/mensaje", json={"mensaje": "Hola"}).status_code == 404
 
 
 @pytest.mark.parametrize("path,body", [
@@ -97,3 +101,22 @@ def test_thermal_coverage_independent_of_numeric_fixture(enabled):
     text = r.json()["respuesta_texto"].lower()
     assert "no" in text and "radiador" in text
     assert "quemadura" in text or "presurizado" in text
+
+
+@pytest.mark.parametrize("environment", ["production", "prod"])
+def test_independent_app_does_not_register_routes_in_production(enabled, monkeypatch, environment):
+    monkeypatch.setattr(settings, "environment", environment)
+    independent = create_laboratory_app()
+    assert not any("laboratorio" in route.path for route in independent.routes)
+    assert not independent.openapi()["paths"]
+    assert TestClient(independent).post("/api/v1/laboratorio/mensaje", json={"mensaje": "Hola"}).status_code == 404
+
+
+def test_public_api_has_no_laboratory_even_with_opt_in(enabled):
+    from main import app as public_app
+
+    paths = public_app.openapi()["paths"]
+    assert not any("laboratorio" in path for path in paths)
+    assert any("diagnostico" in path for path in paths)
+    assert "/api/v1/auth/login" in paths
+    assert TestClient(public_app).post("/api/v1/laboratorio/mensaje", json={"mensaje": "Hola"}).status_code == 404

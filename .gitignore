@@ -104,3 +104,6 @@ machine_learning/experimentos/
 machine_learning/data/experimental_nhtsa/*.jsonl
 *.index
 
+
+# Build independiente del laboratorio local; nunca imagen web pública.
+frontend/dist-laboratorio/
