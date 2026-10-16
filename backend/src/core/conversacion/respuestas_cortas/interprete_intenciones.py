@@ -106,6 +106,15 @@ def interpretar_respuesta_corta(
     texto_preg = str(ultima_preg.get("texto", "")).lower()
     hipotesis = ultima_preg.get("hipotesis") or []
 
+    # Prioridad: Interpretación de mediciones físicas y metrológicas cuantitativas (si no es opción numérica de menú)
+    from .contexto_presion import presion_de_otro_circuito
+    from .mediciones_turno import interpretar_mediciones
+
+    if not PATRON_OPCION_NUMERICA.fullmatch(texto_l) and not presion_de_otro_circuito(texto_usuario):
+        respuesta_numerica = interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_str)
+        if respuesta_numerica:
+            return respuesta_numerica
+
     if intent_str == QuestionIntent.MEDICION_TECNICA.value and texto_l in (
         "no", "no se", "no sé", "no lo tengo", "no tengo ese dato"
     ):

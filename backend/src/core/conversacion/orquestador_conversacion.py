@@ -1540,6 +1540,41 @@ class OrquestadorConversacion:
                     intent_elegido = intent_arranque.value
                     pregunta_elegida = pregunta_arranque
 
+            # 0.5c Medición técnica de ALABEO DE DISCO DE FRENO
+            elif (campo_ic in ("medicion_alabeo_disco", "alabeo_disco") or (interpretacion_corta.get("tipo_medicion") == "alabeo_disco" and interpretacion_corta.get("valor") is not None)):
+                val = interpretacion_corta.get("valor")
+                unidad = interpretacion_corta.get("unidad", "mm")
+                try:
+                    val_float = float(val)
+                except (ValueError, TypeError):
+                    val_float = 0.0
+                estado.registrar_medicion("alabeo_disco", val_float, unidad, contexto="disco_freno", prueba="alabeo_disco")
+                estado.registrar_prueba_completada("alabeo_disco", f"{val} {unidad}")
+                estado.limpiar_pregunta_pendiente()
+
+                ref_oem = "Toyota (Manual de Servicio BR-Brake: máx. 0.05 mm en disco montado)" if (estado.marca and "toyota" in estado.marca.lower()) else "OEM del fabricante (tolerancia estándar 0.05 a 0.07 mm)"
+                if val_float > 0.07:
+                    respuesta_texto = (
+                        f"🔬 *Evaluación metrológica (Alabeo lateral de disco): {val} {unidad}*\n\n"
+                        f"• **Referencia de taller:** Según la especificación oficial {ref_oem}, una lectura de {val} {unidad} "
+                        f"supera el límite de servicio admisible y explica físicamente la pulsación en el pedal y la vibración al frenar.\n"
+                        f"• **Incertidumbre y comprobación requerida:** Para no confirmar un cambio o rectificado a ciegas, se requiere descartar falso alabeo inducido: "
+                        f"1) Verificar que la cara de acoplamiento de la maza esté libre de óxido y las tuercas torqueadas al par especificado. "
+                        f"2) Medir con micrómetro el espesor remanente del disco para comprobar que admita rectificado sin quedar por debajo del espesor mínimo de seguridad (MIN THK grabado en el rotor).\n\n"
+                        f"¿Pudiste verificar el asiento en la maza o tienes la medida del espesor actual del disco?"
+                    )
+                else:
+                    respuesta_texto = (
+                        f"🔬 *Evaluación metrológica (Alabeo lateral de disco): {val} {unidad}*\n\n"
+                        f"• **Referencia de taller:** La lectura de {val} {unidad} se encuentra dentro de la tolerancia de servicio {ref_oem}.\n"
+                        f"• **Orientación técnica:** El disco montado no presenta alabeo lateral excesivo. La causa de vibración o chirrido apunta a "
+                        f"pastillas de freno cristalizadas, calzas antiruido defectuosas o desbalanceo dinámico de ruedas.\n\n"
+                        f"¿El chirrido desaparece al frenar suavemente o las pastillas presentan desgaste irregular?"
+                    )
+                decision = "CONCLUSION_TECNICA"
+                motivo_decision = f"Medición de alabeo {val} {unidad} evaluada contra tolerancia OEM con solicitud de espesor"
+                es_pregunta = False
+
             # 0.6 Acople de compresor de A/C confirmado (Fase 11.3: consumo de prueba física)
             elif campo_ic == "compresor_acopla" or estado.obtener_valor_confirmado("compresor_acopla") == "SI":
                 pregunta_ac = (

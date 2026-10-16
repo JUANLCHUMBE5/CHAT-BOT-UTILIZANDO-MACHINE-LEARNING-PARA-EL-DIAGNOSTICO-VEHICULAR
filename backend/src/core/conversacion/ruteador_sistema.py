@@ -188,7 +188,7 @@ def tiene_descarte_de_componente(estado: Any, falla: str) -> bool:
     # 1. Comprobación contra hechos estructurados de descarte en el estado
     hechos = getattr(estado, "hechos", {}) or {}
     for h_clave, h_obj in hechos.items():
-        h_txt = f"{h_clave} {getattr(h_obj, 'valor', '')} {getattr(h_obj, 'texto_crudo', '')}".lower()
+        h_txt = _normalizar(f"{h_clave} {getattr(h_obj, 'valor', '')} {getattr(h_obj, 'texto_crudo', '')}")
         cat = getattr(h_obj, "categoria", "")
         if cat in ("componente_descartado", "rechazo_hipotesis_usuario") or any(
             w in h_txt for w in ("descartad", "probado", "reemplazad", "nuevo", "buen estado", "intact")
@@ -201,7 +201,7 @@ def tiene_descarte_de_componente(estado: Any, falla: str) -> bool:
     mensajes = getattr(estado, "historial_mensajes_usuario", []) or []
     patron_descarte = re.compile(
         r"\b(descartad[oa]s?|est[aá]n?\s+(?:bien|buen[oa]s?|operativ[oa]s?|intact[oa]s?)|"
-        r"funciona\s+bien|sigue\s+igual|cambi[eé]\s+nuev[oa]s?|son\s+nuev[oa]s?|"
+        r"funciona\s+bien|sigue\s+igual|cambi[eé]\s+(?:las?\s+|los?\s+)?|cambi[eé]\s+nuev[oa]s?|son\s+nuev[oa]s?|"
         r"reci[eé]n\s+(?:puest|cambiad)[oa]s?|no\s+son?\s+(?:l[ao]s|el|la)|"
         r"nuev[oa]s?\s+originales|prob[eé]\s+con\s+otr[ao]|no\s+es\s+(?:el|la|los|las))\b",
         re.IGNORECASE,

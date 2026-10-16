@@ -19,9 +19,9 @@ def interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_st
             QuestionIntent.MEDICION_PRESION.value,
             QuestionIntent.DISPONIBILIDAD_HERRAMIENTA.value,
         )
-        or any(u in texto_l for u in ("v", "volt", "psi", "bar", "kpa", "rpm", "baja a", "marca", "da"))
-        or any(k in texto_preg for k in ("voltaje", "multimetro", "presion", "manometro", "psi"))
-        or (estado.pending_question and estado.pending_question.get("intent") in (QuestionIntent.MEDICION_PRESION.value, QuestionIntent.MEDICION_VOLTAJE.value))
+        or any(u in texto_l for u in ("v", "volt", "psi", "bar", "kpa", "rpm", "mm", "ml", "inhg", "ohm", "kohm", "baja a", "marca", "da", "dio", "mide", "midio"))
+        or any(k in texto_preg for k in ("voltaje", "multimetro", "presion", "manometro", "psi", "alabeo", "disco", "comparador", "espesor", "holgura", "mm"))
+        or (estado.pending_question and estado.pending_question.get("intent") in (QuestionIntent.MEDICION_PRESION.value, QuestionIntent.MEDICION_VOLTAJE.value, QuestionIntent.MEDICION_TECNICA.value))
     ):
         mediciones = extraer_todas_mediciones(texto_l, intent_str, texto_preg, estado.pending_question)
         if mediciones:
