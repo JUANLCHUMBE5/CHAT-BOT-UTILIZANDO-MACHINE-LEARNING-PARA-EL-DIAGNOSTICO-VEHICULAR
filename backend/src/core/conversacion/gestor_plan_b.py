@@ -301,8 +301,8 @@ class GestorPlanB:
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 
-        # 5. Suspensión / Dirección: Rótulas, trapecios, bujes, amortiguador
-        if any(k in falla_l for k in ("suspension", "buje", "rotula", "rótula", "trapecio", "bieleta", "amortiguador")):
+        # 5. Suspensión / Dirección / Tracción: Rótulas, trapecios, bujes, amortiguador, homocinéticas, palieres
+        if any(k in falla_l for k in ("suspension", "buje", "rotula", "rótula", "trapecio", "bieleta", "amortiguador", "homocinetica", "homocinética", "palier", "semieje", "flecha", "rodamiento")):
             if not estado.ya_preguntado_texto("movimientos cortos de vaivén"):
                 return (
                     "comprobación segura de holgura mediante vaivén de dirección en plano sin elevar el vehículo.",

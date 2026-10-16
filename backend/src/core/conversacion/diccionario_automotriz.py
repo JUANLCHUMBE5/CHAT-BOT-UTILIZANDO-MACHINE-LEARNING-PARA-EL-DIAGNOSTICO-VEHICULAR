@@ -73,7 +73,7 @@ PATRONES_CONDICION: List[Tuple[re.Pattern, str, str]] = [
     # (patrón, categoría, valor canónico)
     (
         re.compile(
-            r"\b((al\s+girar(?!\s+la\s+llave|\s+el\s+motor|\s+el\s+arranque)|girando|cuando\s+giro|al\s+doblar|doblando|cuando\s+doblo)(\s+la\s+direcci[oó]n)?|en\s+curva|toda\s+la\s+direcci[oó]n)\b",
+            r"\b((al\s+girar(?!\s+(?:la\s+)?llave|\s+(?:el\s+)?motor|\s+(?:el\s+)?arranque|\s+(?:el\s+)?contacto)|girando|cuando\s+giro|al\s+doblar|doblando|cuando\s+doblo)(\s+la\s+direcci[oó]n)?|en\s+curva|toda\s+la\s+direcci[oó]n)\b",
             re.IGNORECASE,
         ),
         "condicion_operacion",

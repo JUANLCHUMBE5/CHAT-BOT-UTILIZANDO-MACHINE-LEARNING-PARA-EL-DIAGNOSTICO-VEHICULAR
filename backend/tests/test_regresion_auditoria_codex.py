@@ -34,6 +34,9 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
     from src.core.security import crear_jwt_token
 
     monkeypatch.setattr(settings, "enable_laboratory", True)
+    monkeypatch.setattr(settings, "environment", "test")
+    monkeypatch.setattr(settings, "gemini_api_key", "")
+    monkeypatch.setattr(settings, "groq_api_key", "")
     monkeypatch.setenv("CARBOT_BLOCK_DOTENV", "true")
     global app
     app = create_laboratory_app()

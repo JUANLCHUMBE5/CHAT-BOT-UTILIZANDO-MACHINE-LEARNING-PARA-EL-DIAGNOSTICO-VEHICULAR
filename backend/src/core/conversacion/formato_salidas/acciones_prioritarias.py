@@ -183,6 +183,22 @@ def generar_pregunta_contextual(
         return "¿El patinamiento ocurre con el pedal completamente liberado y bajo carga?", QuestionIntent.CONDICION_OPERACION
 
     if "freno" in falla_l or "disco" in falla_l or "pastilla" in falla_l:
+        sintomas_usuario = ""
+        if estado:
+            sintomas_usuario = " ".join([
+                str(s) for s in getattr(estado, "active_symptoms", [])
+            ] + [
+                str(getattr(h, "valor", "")) for h in getattr(estado, "hechos", {}).values()
+            ]).lower()
+        texto_total = f"{texto_usuario.lower()} {sintomas_usuario}"
+        ya_reporto_vibracion = any(w in texto_total for w in ("vibra", "vibracion", "vibración", "pulsa", "pulsacion", "pulsación", "tiembla"))
+        ya_reporto_esponjoso = any(w in texto_total for w in ("esponjoso", "al fondo", "se va al fondo", "hunde"))
+        
+        if ya_reporto_vibracion or ya_reporto_esponjoso:
+            return (
+                "Para verificar el estado físico de los frenos: ¿has medido el alabeo del disco con reloj comparador o revisado el espesor útil de las pastillas?",
+                QuestionIntent.COMPONENTE_REVISADO,
+            )
         return "¿Sientes que el pedal esponjoso se va al fondo o vibra el volante al frenar?", QuestionIntent.CONDICION_OPERACION
 
     if "desbalanceo" in falla_l or "suspension" in falla_l or "rotula" in falla_l:
