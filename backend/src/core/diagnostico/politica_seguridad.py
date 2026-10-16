@@ -6,6 +6,7 @@ import re
 from enum import Enum
 from typing import Any, Optional, Tuple
 
+from src.core.conversacion.polaridad_proposiciones import polaridad_evento
 from src.core.diagnostico.banners_seguridad import (
     BANNER_ACEITE,
     BANNER_BATERIA_MOTOR_ENCENDIDO,
@@ -167,29 +168,14 @@ class PoliticaSeguridad:
     @classmethod
     def _hay_peligro_combustible_no_negado(cls, texto_usuario: str, txt_comb: str) -> bool:
         """Verifica por cláusula si existe al menos un indicio de peligro de combustible no negado."""
-        clausulas = re.split(
-            r"[.;?!]+|\b(?:pero|aunque|sin\s+embargo|sino|mas\s+bien|no\s+obstante)\b|,\s*(?:pero|aunque|sino)\b",
-            texto_usuario,
-            flags=re.IGNORECASE,
-        )
-        patron_negacion_local = re.compile(
-            r"\b(?:no\s+(?:hay|presenta|detect[oó]|encontr[eé]|se\s+observa|veo|tiene|existe|"
-            r"gotea|chorrea|pierde|bota|huele|not[oó]|percib[oó]|siento)|"
-            r"sin\s+(?:ninguna\s+)?(?:fugas?|olor|goteo|p[eé]rdida|derrame)|"
-            r"tampoco\s+(?:hay|presenta|tiene|gotea|chorrea|pierde|bota|huele)|"
-            r"descartad[oa]\s+(?:la\s+)?fuga)\b",
-            re.IGNORECASE,
-        )
-        hubo_match_usuario = False
-        for clausula in clausulas:
-            for m in PATRON_COMBUSTIBLE_CRITICO.finditer(clausula):
-                hubo_match_usuario = True
-                prefijo = clausula[: m.start()]
-                if not patron_negacion_local.search(prefijo):
-                    return True
-        if hubo_match_usuario:
-            return False
-        return not bool(patron_negacion_local.search(texto_usuario))
+        matches = list(PATRON_COMBUSTIBLE_CRITICO.finditer(texto_usuario))
+        if matches:
+            return any(
+                polaridad_evento(texto_usuario, m.start(), m.end()) != "negado"
+                for m in matches
+            )
+        # Sin un evento en la entrada, conservar el control sobre el diagnóstico.
+        return bool(PATRON_COMBUSTIBLE_CRITICO.search(txt_comb))
 
     @classmethod
     def evaluar_severidad(

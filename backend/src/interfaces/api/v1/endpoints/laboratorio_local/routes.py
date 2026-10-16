@@ -12,6 +12,7 @@ from src.core.gestor_diagnostico import GestorDiagnostico
 
 from .access import obtener_gestor, verificar_laboratorio_permitido
 from .checks import _evaluar_comprobaciones
+from .concurrency import turno_exclusivo
 from .schemas import MensajeLabRequest, MensajeLabResponse
 
 router = APIRouter()
@@ -35,8 +36,14 @@ async def procesar_mensaje_laboratorio(
     gestor: GestorDiagnostico = Depends(obtener_gestor),
 ):
     """Ejecuta un mensaje de prueba sobre el motor de inferencia real de CarBot en sesión aislada."""
-    t0 = time.perf_counter()
+    _, session_key = _normalizar_session_id_lab(req.session_id)
+    async with turno_exclusivo(gestor, session_key):
+        return await _procesar_turno(req, gestor)
+
+
+async def _procesar_turno(req: MensajeLabRequest, gestor: GestorDiagnostico):
     session_id_publico, session_key = _normalizar_session_id_lab(req.session_id)
+    t0 = time.perf_counter()
 
     # Obtener o crear sesión aislada del laboratorio
     sesion = gestor.session_manager.obtener_o_crear_sesion(session_key)
@@ -191,10 +198,12 @@ async def reiniciar_sesion_laboratorio(
 ):
     """Limpia el estado conversacional de la sesión de prueba aislada."""
     session_id_publico, session_key = _normalizar_session_id_lab(session_id)
-    gestor.session_manager.reiniciar_sesion(session_key)
-    repo = getattr(gestor, "conversation_repo", None)
-    if repo and hasattr(repo, "delete_session"):
-        await repo.delete_session(session_key)
+    async with turno_exclusivo(gestor, session_key):
+        gestor.session_manager.reiniciar_sesion(session_key)
+        repo = getattr(gestor, "conversation_repo", None)
+        if repo and hasattr(repo, "delete_session"):
+            await repo.delete_session(session_key)
+
     return {"status": "ok", "mensaje": f"Sesión de laboratorio '{session_id_publico}' reiniciada."}
 
 

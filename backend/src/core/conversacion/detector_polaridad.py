@@ -6,6 +6,7 @@ import re
 from typing import List, Tuple
 
 from src.core.conversacion.models import FactState
+from src.core.conversacion.polaridad_proposiciones import polaridad_evento
 
 # Catálogo de síntomas con patrones positivos y patrones de negación explícita
 DEFINICIONES_SINTOMAS: List[Tuple[str, re.Pattern, re.Pattern]] = [
@@ -261,27 +262,9 @@ class DetectorPolaridad:
 
     @staticmethod
     def _match_esta_negado_localmente(txt_l: str, m: re.Match, m_neg: re.Match | None) -> bool:
-        if m_neg and m.start() >= m_neg.start() and m.end() <= m_neg.end() + 15:
+        if m_neg and m_neg.start() <= m.start() and m.end() <= m_neg.end():
             return True
-        cortes = list(
-            re.finditer(
-                r"[.;?!]+|\b(?:pero|aunque|sin\s+embargo|sino|mas\s+bien)\b|,\s*(?:pero|aunque|sino)\b",
-                txt_l[: m.start()],
-            )
-        )
-        inicio_clausula = cortes[-1].end() if cortes else 0
-        prefijo_clausula = txt_l[inicio_clausula : m.start()]
-        return bool(
-            re.search(
-                r"\b(?:no\s+(?:(?:se|le|me)\s+)?(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|"
-                r"oyen?|veo|not[ao]|percib[eo]|hace|existe|muestra|da)\s+)?(?:ning[uú]n\s+|ninguna\s+)?|"
-                r"tampoco\s+(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|veo|hace|vibra|tiembla|suena)\s+)?|"
-                r"sin\s+(?:ning[uú]n\s+|ninguna\s+)?|"
-                r"ni\s+(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|vibra|tiembla|suena)\s+)?|"
-                r"nunca\s+|jam[aá]s\s+|cero\s+|descartad[oa]\s+(?:el\s+|la\s+)?)\s*$",
-                prefijo_clausula,
-            )
-        )
+        return polaridad_evento(txt_l, m.start(), m.end()) == "negado"
 
     @classmethod
     def extraer_sintomas(cls, texto: str) -> List[Tuple[str, str, FactState]]:
@@ -298,6 +281,9 @@ class DetectorPolaridad:
             if not m_neg and not matches_pos:
                 continue
 
+            matches_pos = [m for m in matches_pos if polaridad_evento(txt_l, m.start(), m.end()) != "desconocido"]
+            if not matches_pos and not m_neg:
+                continue
             hay_positivo_genuino = any(
                 not cls._match_esta_negado_localmente(txt_l, m, m_neg)
                 for m in matches_pos
