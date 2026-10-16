@@ -299,6 +299,10 @@ def formatear_respuesta_diagnostico(
     texto_eval_seg = f"{sintoma_original} {getattr(estado, 'active_symptoms', [])}".lower()
     if any(w in texto_eval_seg for w in ("recalienta", "sobrecalentamiento", "temperatura", "108 grados", "hirviendo")):
         advertencia_seguridad = "\n\n⚠️ *Seguridad:* Evite circular con temperatura elevada para proteger el empaque de culata. No abrir la tapa del radiador ni del depósito de expansión mientras el motor permanezca caliente por riesgo de quemaduras por vapor presurizado."
+    elif any(w in texto_eval_seg for w in ("suspensi", "bache", "amortiguador", "bujes", "rotula", "tren delantero")):
+        advertencia_seguridad = "\n\n⚠️ *Seguridad:* En comprobaciones de suspensión, utilice siempre elevador automotriz con trabas mecánicas o caballetes certificados. Nunca realice inspecciones bajo el vehículo sostenido únicamente con gata hidráulica."
+    elif any(w in texto_eval_seg for w in ("freno", "frenar", "pastilla", "disco")):
+        advertencia_seguridad = "\n\n⚠️ *Seguridad:* Al tratarse del sistema de frenos, la inspección física presencial en taller es indispensable antes de seguir circulando para evitar pérdida de frenado."
 
     return (
         f"{titulo_causas}\n\n"

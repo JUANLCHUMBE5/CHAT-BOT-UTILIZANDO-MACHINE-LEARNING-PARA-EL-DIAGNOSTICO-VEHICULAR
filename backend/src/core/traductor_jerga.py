@@ -48,6 +48,10 @@ DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
         r"\b(?:se\s+)?(?:chanchea|chanchaea|achancha|achanchea|chanchonea)\b",
         "pierde potencia y presenta tirones al acelerar",
     ),
+    (r"\brpoblemas?\b|\bporblemas?\b", "problemas"),
+    (r"\bvehciuelos?\b|\bvehiuclos?\b|\bvehicul[ao]s?\b", "vehiculo"),
+    (r"\btimebla\b|\btiemlba\b", "tiembla"),
+    (r"\bholla+\b|\bholaa+\b", "hola"),
 )
 
 # Las frases más específicas deben ir antes que las palabras individuales.

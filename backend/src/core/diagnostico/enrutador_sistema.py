@@ -60,8 +60,10 @@ _REGLAS: dict[str, tuple[str, ...]] = {
     ),
     "FRENOS": (
         r"\b(?:vibra|tiembla)\b.{0,80}\bal\s+frenar\b",
+        r"\b(?:cuando|al)\s+fren(?:o|ar|a)\b.{0,80}\b(?:vibra|tiembla|chirrido|ruido)\b",
         r"\bdisco(?:s)?\s+alabeado(?:s)?\b",
-        r"\bruido\s+(?:al|cuando)\s+frenar\b", r"\b(?:frena|frenado)\b",
+        r"\bruido\s+(?:al|cuando)\s+frenar\b",
+        r"\bchirrido\b.{0,60}\b(?:ruedas?|fren(?:o|ar|a))\b",
         r"\bpedal\s+de\s+freno\b", r"\bdisco(?:s)?\s+de\s+freno\b",
         r"\bpastillas?\s+(?:de\s+)?freno\b", r"\babs\b",
     ),
@@ -71,8 +73,12 @@ _REGLAS: dict[str, tuple[str, ...]] = {
         r"\b(?:dsg|cvt|caja\s+automatica|pasar\s+(?:los\s+)?cambios|al\s+pasar\s+cambios)\b",
     ),
     "SUSPENSION_DIRECCION": (
-        r"\bse\s+inclina\s+en\s+(?:las\s+)?curvas\b", r"\b(?:golpeteo|rebota)\s+en\s+(?:baches|huecos)\b",
+        r"\bse\s+inclina\s+en\s+(?:las\s+)?curvas\b",
+        r"\b(?:golpeteo|golpes?|rebota)\s+(?:met[aá]licos?\s+)?(?:en\s+)?(?:baches|huecos)\b",
+        r"\bgolpes?\s+met[aá]licos?\b.{0,60}\b(?:suspensi[oó]n|baches?)\b",
+        r"\bsuspensi[oó]n\b.{0,60}\b(?:golpes?|baches?|ruido|met[aá]licos?)\b",
         r"\bdesbalanceo\b", r"\balineacion\b", r"\brotula(?:s)?\b", r"\bamortiguador(?:es)?\b",
+        r"\bbujes?\s+(?:de\s+)?(?:trapecio|suspensi[oó]n|barra)\b",
         r"\b(?:timon|volante)\s+vibra\b.{0,35}\b(?:\d{2,3}\s*km/?h|velocidad)\b",
     ),
     "ELECTRICO_ECU": (
@@ -166,12 +172,12 @@ _MARCADORES_CAUSA = {
 _CAUSAS_PROHIBIDAS = {
     "climatizacion": ("bujia", "embrague", "pastilla", "inyector", "bateria de traccion", "inversor"),
     "refrigeracion": ("oxigeno", "o2", "lambda", "mezcla", "llanta", "embrague", "bujia", "bobina", "inyector", "maf", "freno"),
-    "combustible_admision": ("radiador", "termostato", "ventilador", "llanta", "embrague", "pastilla", "amortiguador"),
-    "encendido": ("radiador", "termostato", "llanta", "embrague", "pastilla", "amortiguador"),
-    "frenos": ("inyector", "sensor o2", "radiador", "embrague", "amortiguador"),
-    "transmision": ("inyector", "sensor o2", "radiador", "pastilla", "amortiguador"),
-    "suspension_direccion": ("inyector", "sensor o2", "radiador", "pastilla", "embrague"),
-    "electrico_ecu": ("llanta", "pastilla", "radiador", "embrague"),
+    "combustible_admision": ("radiador", "termostato", "ventilador", "llanta", "embrague", "pastilla", "amortiguador", "freno"),
+    "encendido": ("radiador", "termostato", "llanta", "embrague", "pastilla", "amortiguador", "freno", "disco"),
+    "frenos": ("inyector", "sensor o2", "radiador", "embrague", "amortiguador", "bujia", "bobina", "chispa", "misfire", "alternador", "bateria"),
+    "transmision": ("inyector", "sensor o2", "radiador", "pastilla", "amortiguador", "freno"),
+    "suspension_direccion": ("inyector", "sensor o2", "radiador", "pastilla", "embrague", "freno", "disco", "liquido de freno", "caliper", "mordaza", "bujia", "bobina", "chispa"),
+    "electrico_ecu": ("llanta", "pastilla", "radiador", "embrague", "amortiguador"),
 }
 
 # Un vehículo con motor de combustión no debe recibir hipótesis de tracción
@@ -285,6 +291,12 @@ def detectar_sistema_ruteo(texto: str, usar_modelo: bool = True) -> str | None:
             re.search(r"\bno\s+(?:es\s+)?(?:de\s+)?" + patron.removeprefix(r"\b").removesuffix(r"\b"), normalizado)
             for patron in patrones
         )
+        if area == "FRENOS" and re.search(r"\b(?:no\s+(?:presenta|tiene|hay)\s+problemas?\s+(?:de\s+)?frenos?|sin\s+problemas?\s+de\s+frenos?)\b", normalizado):
+            negada = True
+        elif area == "SUSPENSION_DIRECCION" and re.search(r"\b(?:no\s+(?:presenta|tiene|hay)\s+problemas?\s+(?:de\s+)?suspensi[oó]n|sin\s+problemas?\s+de\s+suspensi[oó]n)\b", normalizado):
+            negada = True
+        elif area == "ENCENDIDO" and re.search(r"\b(?:no\s+(?:presenta|tiene|hay)\s+problemas?\s+(?:de\s+)?encendido|sin\s+problemas?\s+de\s+encendido)\b", normalizado):
+            negada = True
         if not negada:
             filtradas.append(area)
     if not filtradas:

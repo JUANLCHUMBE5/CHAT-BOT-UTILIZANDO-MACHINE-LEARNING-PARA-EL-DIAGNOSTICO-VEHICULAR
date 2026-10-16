@@ -1,0 +1,9 @@
+# Optional fresh test image; runtime stays free of test-only dependencies.
+ARG RUNTIME_IMAGE=carbot-harness:local
+FROM ${RUNTIME_IMAGE}
+USER root
+COPY backend/requirements-dev.txt /tmp/requirements-dev.txt
+COPY backend/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements-dev.txt
+USER carbot
+

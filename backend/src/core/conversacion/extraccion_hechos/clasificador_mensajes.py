@@ -87,7 +87,7 @@ def extraer_placa(texto: str) -> Optional[str]:
 
 
 def es_reinicio_solicitado(texto: str) -> bool:
-    """Determina si el usuario solicita iniciar un caso nuevo."""
+    """Determina si el usuario solicita afirmativamente iniciar un caso nuevo."""
     if not texto:
         return False
     if _es_mencion_no_destructiva(texto):
@@ -100,15 +100,18 @@ def es_reinicio_solicitado(texto: str) -> bool:
     )
     return bool(
         re.search(
-            r"\b(otro\s+(?:carro|auto|vehiculo|veh.culo)|nuevo\s+(?:caso|diagnostico)|"
-            r"caso\s+nuevo|vamos\s+con\s+otro\s+cliente|termine\s+ese|tengo\s+uno\s+nuevo)\b",
+            r"\b(otro\s+(?:carro|auto|vehiculo|veh.culo|caso|cliente)|"
+            r"nuevo\s+(?:caso|diagnostico|auto|carro|vehiculo)|"
+            r"diagnostico\s+nuevo|caso\s+nuevo|"
+            r"iniciar\s+(?:un\s+)?(?:diagnostico\s+nuevo|nuevo\s+diagnostico|nuevo\s+caso|caso\s+nuevo)|"
+            r"vamos\s+con\s+otro\s+cliente|termine\s+ese|tengo\s+uno\s+nuevo)\b",
             txt,
         )
     )
 
 
 def _es_mencion_no_destructiva(texto: str) -> bool:
-    """Evita tratar como orden una acción citada, negada o consultada."""
+    """Evita tratar como orden una acción citada, negada, condicional o ambigua."""
     normalizado = "".join(
         c for c in unicodedata.normalize("NFD", texto.casefold())
         if unicodedata.category(c) != "Mn"
@@ -118,13 +121,24 @@ def _es_mencion_no_destructiva(texto: str) -> bool:
     if re.search(r'["«“].{0,60}\b(?:nuevo\s+caso|nuevo\s+diagnostico|reiniciar|cerrar)\b', normalizado):
         return True
     if re.search(
-        r"\bno\s+(?:(?:es|son|hay|tengo|existe|se trata de)\s+)?"
-        r"(?:otro|otra|nuevo|nueva)\s+(?:caso|diagnostico|problema|consulta|carro|vehiculo|auto)\b",
+        r"\b(?:no|tampoco|nunca|jamas)\s+(?:(?:es|son|hay|tengo|existe|se\s+trata\s+de|"
+        r"quiero|deseo|necesito|busco|pido|solicito|voy\s+a|vamos\s+a|vayas\s+a|debes?|hay\s+que)\s+)?"
+        r"(?:(?:iniciar|inicies|empezar|empieces|abrir|abras|generar|generes|hacer|hagas|"
+        r"crear|crees|cambiar|cambies|reiniciar|reinicies|cerrar|cierres|borrar|borres)\s+)?"
+        r"(?:un\s+|una\s+|el\s+|al\s+)?(?:otro|otra|nuevo|nueva)?\s*"
+        r"(?:caso|diagnostico|problema|consulta|carro|vehiculo|auto)\b",
+        normalizado,
+    ):
+        return True
+    if re.search(
+        r"\b(?:no\s+se\s+si|dudo\s+si|me\s+pregunto\s+si|en\s+vez\s+de|antes\s+de|sin)\s+"
+        r"(?:iniciar|empezar|abrir|generar|hacer|crear|cambiar|reiniciar|cerrar)\b",
         normalizado,
     ):
         return True
     return bool(re.search(
-        r"\b(?:no\s+(?:generes|inicies|cierres|reinicies|cambies|abras|borres|quiero|deseo|vayas\s+a|debes?)|sin\s+(?:generar|cerrar|reiniciar)|"
+        r"\b(?:no\s+(?:generes|inicies|cierres|reinicies|cambies|abras|borres)|"
+        r"sin\s+(?:generar|cerrar|reiniciar|iniciar|abrir)|"
         r"(?:menciona|dije|dice|palabra|termino)\s+(?:nuevo\s+diagnostico|cerrar|reiniciar))\b",
         normalizado,
     ))
@@ -248,12 +262,13 @@ def contiene_informacion_diagnostica(texto: str) -> bool:
         ),
         re.compile(
             r"\b(recalienta|recalentar|recalntar|se\s+calienta|temperatura\s+(?:del\s+motor\s+)?(?:sube|empieza\s+a\s+subir|alta)|"
-            r"pierde\s+(?:agua|refrigerante|l[iÃ­]quido)|fuga|gotea|"
-            r"no\s+enfr[iÃ­]a|sale\s+aire\s+(?:caliente|tibio)|"
-            r"vibra|vibraci[oó]n|tiembla|jalonea|tironea|cascabelea|cascabeleo|"
+            r"pierde\s+(?:agua|refrigerante|l[ií]quido)|fuga|gotea|"
+            r"no\s+enfr[ií]a|sale\s+aire\s+(?:caliente|tibio)|"
+            r"vibra|vibraci[oó]n|vibraciones|tiembla|jalonea|tironea|cascabelea|cascabeleo|"
             r"pierde\s+(?:fuerza|potencia)|no\s+jala|"
             r"demora\s+en\s+(?:enganchar|entrar|acoplar)|reversa|"
-            r"golpe|ruido|zumbido|chillido|frena\s+mal|pedal\s+esponjoso)\b",
+            r"golpe|golpes|ruido|ruidos|zumbido|chillido|chirrido|frena|freno|frenos|frena\s+mal|pedal|volante|"
+            r"suspensi[oó]n|bache|baches|amortiguador|amortiguadores|buje|bujes|r[oó]tula|r[oó]tulas)\b",
             re.IGNORECASE,
         ),
     ]

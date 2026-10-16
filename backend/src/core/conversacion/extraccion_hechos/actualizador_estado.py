@@ -520,13 +520,44 @@ def extraer_y_actualizar(
             h_c = estado.registrar_hecho("condicion_operacion", "al dar arranque en frío", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
             hechos_extraidos.append(h_c.to_dict())
 
+    def _clausula_de_match(txt: str, pos: int) -> Tuple[str, str]:
+        cortes_ant = list(
+            re.finditer(
+                r"[.;?!]+|\b(?:pero|aunque|sin\s+embargo|sino|mas\s+bien)\b|,\s*(?:pero|aunque|sino)\b",
+                txt[:pos],
+            )
+        )
+        ini = cortes_ant[-1].end() if cortes_ant else 0
+        m_sig = re.search(
+            r"[.;?!]+|\b(?:pero|aunque|sin\s+embargo|sino|mas\s+bien)\b|,\s*(?:pero|aunque|sino)\b",
+            txt[pos:],
+        )
+        fin = pos + m_sig.start() if m_sig else len(txt)
+        return txt[ini:pos], txt[ini:fin]
+
+    def _prefijo_negado(prefijo_clausula: str) -> bool:
+        return bool(
+            re.search(
+                r"\b(?:no\s+(?:(?:se|le|me)\s+)?(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|"
+                r"oyen?|veo|not[ao]|percib[eo]|hace|existe|muestra|da|vibra|tiembla|suena)\b)?|"
+                r"tampoco\s+(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|veo|hace|vibra|tiembla|suena)\b)?|"
+                r"sin\s+(?!frenar\b)|"
+                r"ni\s+(?:(?:hay|tiene|presenta|sient[eo]|escuch[ao]|vibra|tiembla|suena)\b)?|"
+                r"nunca\b|jam[aá]s\b|cero\b|descartad[oa]\b)",
+                prefijo_clausula,
+            )
+        )
+
     # 8. Ubicación, velocidad y freno
     es_volante_motor = bool(
         re.search(r"\bvolante\s+(?:de\s+inercia|motor|bimasa)\b|\b(?:alabeo|rectific|disco|embrague|caja|remaches)\b.{0,35}\bvolante\b|\bvolante\b.{0,35}\b(?:alabeo|rectific|disco|embrague|caja|remaches|inercia)\b", texto_l)
     )
-    if not es_volante_motor and re.search(r"\b(en\s+el\s+volante|en\s+el\s+tim[oó]n|en\s+la\s+direcci[oó]n|volante|tim[oó]n)\b", texto_l):
-        h = estado.registrar_hecho("ubicacion_sintoma", "en el volante", categoria="ubicacion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-        hechos_extraidos.append(h.to_dict())
+    m_volante = re.search(r"\b(en\s+el\s+volante|en\s+el\s+tim[oó]n|en\s+la\s+direcci[oó]n|volante|tim[oó]n)\b", texto_l)
+    if not es_volante_motor and m_volante:
+        pref_vol, _ = _clausula_de_match(texto_l, m_volante.start())
+        if not _prefijo_negado(pref_vol):
+            h = estado.registrar_hecho("ubicacion_sintoma", "en el volante", categoria="ubicacion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+            hechos_extraidos.append(h.to_dict())
     if re.search(r"\b(en\s+el\s+pedal|pedal\s+de\s+freno)\b", texto_l):
         if re.search(r"\b(no\s+siento|casi\s+no|sin\s+vibraci[oó]n|no\s+vibra|apenas)\b", texto_l):
             h = estado.registrar_hecho("vibracion_pedal", "mínima o nula", categoria="polaridad", estado=FactState.AUSENTE_NEGADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
@@ -565,6 +596,95 @@ def extraer_y_actualizar(
     if nuevo_estado_op == EstadoOperativo.FRENADO and not estado.obtener_hecho("condicion_operacion"):
         h_freno = estado.registrar_hecho("condicion_operacion", "al frenar", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
         hechos_extraidos.append(h_freno.to_dict())
+
+    # 10. Duración reportada, limitaciones y síntomas específicos
+    m_dur = re.search(
+        r"\b(?:el\s+problema\s+)?(?:empez[oó]|inici[oó]\s+)?hace\s+([a-záéíóú0-9]+\s+(?:d[ií]as?|semanas?|meses?|horas?))\b",
+        texto_usuario,
+        re.IGNORECASE,
+    )
+    if m_dur:
+        val_dur = f"hace {m_dur.group(1)}"
+        h_dur = estado.registrar_hecho("duracion_problema", val_dur, categoria="duracion", tipo=FactType.CONDICION, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_dur.to_dict())
+
+    from src.core.conversacion.gestor_plan_b import GestorPlanB
+    herramientas_indisp = GestorPlanB.detectar_indisponibilidad_en_texto(texto_usuario)
+    for her in herramientas_indisp:
+        estado.bloquear_herramienta(her)
+        if her not in estado.tools_unavailable:
+            estado.tools_unavailable.append(her)
+        h_her = estado.registrar_hecho(f"herramienta_{her}", f"{her} no disponible", categoria="herramienta", estado=FactState.AUSENTE_NEGADO, tipo=FactType.CONDICION, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_her.to_dict())
+
+    if re.search(r"\b(?:no|ni|tampoco)\s+(?:puedo|podemos)\s+desmontar\s+(?:las?\s+)?ruedas?\b", texto_usuario, re.IGNORECASE):
+        estado.bloquear_prueba("desmontar_ruedas", "taller", "imposibilidad_fisica")
+        h_desm = estado.registrar_hecho("limitacion_desmontar_ruedas", "no puede desmontar ruedas", categoria="limitacion", estado=FactState.AUSENTE_NEGADO, tipo=FactType.CONDICION, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_desm.to_dict())
+
+    m_ch = re.search(r"\bchirridos?\b.{0,35}\bruedas?\b|\bchirridos?\s+(?:en\s+(?:las?\s+)?ruedas?|al\s+frenar)\b", texto_l)
+    if m_ch:
+        pref_ch, cl_ch = _clausula_de_match(texto_l, m_ch.start())
+        estado_ch = FactState.AUSENTE_NEGADO if _prefijo_negado(pref_ch) else FactState.CONFIRMADO
+        if re.search(r"\bdelanter[oa]s?\b", cl_ch):
+            val_ch = "chirrido en ruedas delanteras"
+        elif re.search(r"\btraser[oa]s?\b", cl_ch):
+            val_ch = "chirrido en ruedas traseras"
+        elif re.search(r"\bruedas?\b", cl_ch):
+            val_ch = "chirrido en ruedas"
+        else:
+            val_ch = "chirrido al frenar"
+        h_ch = estado.registrar_hecho("sintoma_chirrido_ruedas", val_ch, categoria="sintoma", estado=estado_ch, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_ch.to_dict())
+    m_vp = re.search(r"\bpedal\s+vibra\b|\bvibraci(?:[oó]n|ones)\s+(?:en\s+el\s+pedal|del\s+pedal)\b", texto_l)
+    if m_vp:
+        pref_vp, cl_vp = _clausula_de_match(texto_l, m_vp.start())
+        estado_vp = FactState.AUSENTE_NEGADO if _prefijo_negado(pref_vp) or re.search(r"\bno\s+vibra\b", cl_vp) else FactState.CONFIRMADO
+        if re.search(r"\b(?:fren|frenar|frenada)\b", cl_vp):
+            val_pedal = "vibración en el pedal de freno"
+        elif re.search(r"\b(?:embrague|clutch|soltar|suelto|primera|zapate|trepida)\b", cl_vp):
+            val_pedal = "vibración en pedal de embrague"
+        else:
+            val_pedal = "vibración en el pedal"
+        h_vp = estado.registrar_hecho("sintoma_vibracion_pedal", val_pedal, categoria="sintoma", estado=estado_vp, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_vp.to_dict())
+    m_vv = re.search(r"\bvibraci(?:[oó]n|ones)\s+(?:en\s+el\s+volante|del\s+volante)\b|\bvolante\s+vibra\b", texto_l)
+    if m_vv:
+        pref_vv, cl_vv = _clausula_de_match(texto_l, m_vv.start())
+        estado_vv = FactState.AUSENTE_NEGADO if _prefijo_negado(pref_vv) or re.search(r"\bno\s+vibra\b", cl_vv) else FactState.CONFIRMADO
+        h_vv = estado.registrar_hecho("sintoma_vibracion_volante", "vibración en el volante", categoria="sintoma", estado=estado_vv, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_vv.to_dict())
+    m_gs = re.search(r"\bgolpe(?:s)?\s+met[aá]lico(?:s)?\b|\bgolpes?\s+en\s+(?:la\s+)?suspensi[oó]n\b|\bsonido\s+en\s+baches\b", texto_l)
+    if m_gs:
+        pref_gs, cl_gs = _clausula_de_match(texto_l, m_gs.start())
+        estado_gs = FactState.AUSENTE_NEGADO if _prefijo_negado(pref_gs) else FactState.CONFIRMADO
+        tiene_metalico = bool(re.search(r"\bmet[aá]lic[oa]s?\b", cl_gs))
+        tiene_susp = bool(re.search(r"\bsuspensi[oó]n\b", cl_gs))
+        ubic_susp = (
+            " delantera"
+            if re.search(r"\bdelanter[oa]s?\b", cl_gs)
+            else (" trasera" if re.search(r"\btraser[oa]s?\b", cl_gs) else "")
+        )
+        if tiene_metalico and tiene_susp:
+            val_gs = f"golpes metálicos en la suspensión{ubic_susp}"
+        elif tiene_metalico:
+            val_gs = f"golpes metálicos{ubic_susp}"
+        elif tiene_susp:
+            val_gs = f"golpes en la suspensión{ubic_susp}"
+        else:
+            val_gs = "sonido en baches"
+        h_gs = estado.registrar_hecho("sintoma_golpes_suspension", val_gs, categoria="sintoma", estado=estado_gs, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_gs.to_dict())
+
+    if re.search(r"\b(?:el\s+)?pedal\s+no\s+est[aá]\s+(?:muy\s+)?esponjoso\b|\bno\s+est[aá]\s+esponjoso\b", texto_l):
+        h_ne = estado.registrar_hecho("sintoma_pedal_esponjoso", "pedal esponjoso", categoria="sintoma", estado=FactState.AUSENTE_NEGADO, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_ne.to_dict())
+    if re.search(r"\b(?:no|ni)\s+(?:se\s+)?va\s+al\s+fondo\b", texto_l):
+        h_nf = estado.registrar_hecho("sintoma_pedal_se_va_al_fondo", "pedal se va al fondo", categoria="sintoma", estado=FactState.AUSENTE_NEGADO, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_nf.to_dict())
+    if re.search(r"\bno\s+presenta\s+problemas\s+de\s+frenos\b|\bsin\s+problemas\s+de\s+frenos\b", texto_l):
+        h_np = estado.registrar_hecho("sintoma_problemas_frenos", "problemas de frenos", categoria="sintoma", estado=FactState.AUSENTE_NEGADO, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_np.to_dict())
 
     if es_conflicto:
         h = estado.registrar_hecho("conflicto_operativo", "arranque_vs_marcha", categoria="conflicto", texto_crudo=texto_usuario, tipo=FactType.CONDICION)

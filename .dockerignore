@@ -30,3 +30,16 @@ machine_learning/data/evidencias_evaluacion
 !machine_learning/models/c1_fase10_final/modelo_diagnostico_c1.pkl
 !machine_learning/models/c1_fase10_final/modelo_sistema_c1_macrofix.pkl
 !machine_learning/models/c1_fase10_final/vectorizador_c1.pkl
+outputs/
+.review*/
+.release*/
+node_modules/
+carbot-calidad-diagnostica/
+carbot-pr31-37-stabilizacion/
+*.zip
+**/.env
+**/.env.*
+!**/.env.example
+backend/artifacts/
+backend/logs/
+backend/data/

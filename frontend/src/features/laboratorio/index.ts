@@ -1,0 +1,1 @@
+export { LaboratorioView } from './LaboratorioView';

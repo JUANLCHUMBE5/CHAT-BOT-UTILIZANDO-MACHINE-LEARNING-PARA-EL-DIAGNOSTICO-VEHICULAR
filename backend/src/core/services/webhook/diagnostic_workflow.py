@@ -60,6 +60,7 @@ class TechnicalDiagnosticWorkflow:
             tipo_mensaje == "text"
             and ExtractorHechos.es_reinicio_solicitado(texto_cliente)
             and not ExtractorHechos.contiene_informacion_diagnostica(texto_cliente)
+            and not ExtractorHechos.extraer_placa(texto_cliente)
         ):
             gestor.session_manager.reiniciar_sesion(id_sesion)
             contexto_limpio = gestor.session_manager.exportar_contexto(id_sesion)

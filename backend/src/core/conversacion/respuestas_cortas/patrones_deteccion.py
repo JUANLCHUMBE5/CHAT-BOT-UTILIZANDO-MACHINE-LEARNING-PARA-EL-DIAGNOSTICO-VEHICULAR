@@ -5,7 +5,8 @@ from __future__ import annotations
 import re
 
 PATRON_OPCION_NUMERICA = re.compile(
-    r"^(la\s+)?(opci[oó]n\s+)?([1-3]|primera|segunda|tercera|1️⃣|2️⃣|3️⃣)\s*[.!]?\s*$", re.IGNORECASE
+    r"^(la\s+)?(opci[oó]n\s+)?([1-9]|0|primera|segunda|tercera|cuarta|quinta|1️⃣|2️⃣|3️⃣)\s*[.!]?\s*$",
+    re.IGNORECASE,
 )
 
 PATRON_NO_SE = re.compile(

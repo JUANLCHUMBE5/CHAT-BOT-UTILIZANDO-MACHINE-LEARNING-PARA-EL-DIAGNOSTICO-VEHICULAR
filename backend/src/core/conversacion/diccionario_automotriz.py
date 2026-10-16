@@ -9,6 +9,8 @@ from typing import Any, Dict, List, Tuple
 EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
     # Error ortográfico frecuente en mensajes de WhatsApp de taller.
     (re.compile(r"\binjector(es)?\b", re.IGNORECASE), r"inyector\1"),
+    (re.compile(r"\brpoblemas?\b|\bporblemas?\b", re.IGNORECASE), "problemas"),
+    (re.compile(r"\bvehciuelos?\b|\bvehiuclos?\b", re.IGNORECASE), "vehículo"),
     # Frenos
     (re.compile(r"\b(mordaza(s)?)\b", re.IGNORECASE), "cáliper"),
     (re.compile(r"\b(caliper(s)?)\b", re.IGNORECASE), "cáliper"),
@@ -53,7 +55,7 @@ EQUIVALENCIAS_TERMINOLOGICAS: List[Tuple[re.Pattern, str]] = [
     # Rodamientos
     (re.compile(r"\b(rodaje(s)?|rodamientos?)\b", re.IGNORECASE), "rodamiento"),
     # Síntomas de motor
-    (re.compile(r"\b(zapatea|tiembla|vibra)\b", re.IGNORECASE), "vibración"),
+    (re.compile(r"\b(zapatea|tiembla|timebla|tiemlba|vibra)\b", re.IGNORECASE), "vibración"),
     (re.compile(r"\b(se\s+muere|se\s+apaga|se\s+me\s+apaga)\b", re.IGNORECASE), "apagado de motor"),
     (re.compile(r"\b(no\s+jala|esta\s+chancho|está\s+chancho|chanchea|se\s+aguanta|aguantado|se\s+queda|se\s+chupa|amarrado|pesado|(pierde|perd[ií][aáoó]|sin|falta\s+de)\s+fuerza|se\s+ahog(a|aba|ó|o)|no\s+(?:puedo\s+)?pasar\s+de\s+\d+)\b", re.IGNORECASE), "pérdida de potencia"),
     (re.compile(r"\b(ratea|cabecea|corcovea)\b", re.IGNORECASE), "funcionamiento irregular misfire"),
@@ -111,7 +113,7 @@ PATRONES_CONDICION: List[Tuple[re.Pattern, str, str]] = [
     ),
     (
         re.compile(
-            r"\b(a\s+alta\s+velocidad|(?:en|a\s+la)\s+carretera|a\s+(?:m[aá]s\s+de\s+)?(80|90|100|120)\s*(?:km/h)?|en\s+pista|en\s+viaje|en\s+ruta|circulando|en\s+marcha|andando|voy\s+a\s+\d+)\b",
+            r"\b((?:a|cuando\s+va\s+a)\s+\d+\s*(?:km/h|kilometros|kmh|kph)?|a\s+alta\s+velocidad|(?:en|a\s+la)\s+carretera|a\s+(?:m[aá]s\s+de\s+)?(80|90|100|120)\s*(?:km/h)?|en\s+pista|en\s+viaje|en\s+ruta|circulando|en\s+marcha|andando|voy\s+a\s+\d+)\b",
             re.IGNORECASE,
         ),
         "condicion_operacion",

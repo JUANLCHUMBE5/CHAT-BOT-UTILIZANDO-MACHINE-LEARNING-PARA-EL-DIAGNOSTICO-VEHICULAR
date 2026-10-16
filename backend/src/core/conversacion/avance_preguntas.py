@@ -105,12 +105,17 @@ def asegurar_pregunta_util(
             respuesta + "\nEl caso permanece sin confirmar. Se requiere revisión presencial antes de concluir la falla.",
             None,
         )
+    from src.core.conversacion.extractor_hechos import ExtractorHechos
     from src.core.conversacion.orientacion_provisional import (
         es_imposibilidad_completa,
         generar_orientacion_provisional,
     )
     ultimo_mensaje = getattr(estado, "historial_mensajes_usuario", [])[-1:]
-    if ultimo_mensaje and es_imposibilidad_completa(ultimo_mensaje[0]):
+    if (
+        ultimo_mensaje
+        and es_imposibilidad_completa(ultimo_mensaje[0])
+        and not ExtractorHechos.contiene_informacion_diagnostica(ultimo_mensaje[0])
+    ):
         return generar_orientacion_provisional(estado), None
 
     anteriores = {

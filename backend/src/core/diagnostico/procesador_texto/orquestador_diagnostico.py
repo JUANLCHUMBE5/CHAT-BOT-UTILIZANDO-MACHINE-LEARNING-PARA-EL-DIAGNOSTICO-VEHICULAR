@@ -216,8 +216,6 @@ def procesar_consulta_texto(
             )
 
     if tipo_consulta == "fuera_de_alcance":
-        if clave_sesion:
-            gestor.session_manager.reiniciar_sesion(clave_sesion)
         return ResultadoDiagnostico(
             respuesta_texto="🚗 Describe el síntoma, por ejemplo: *vibra al manejar*.",
             diagnostico_ml="Consulta fuera del alcance automotriz",

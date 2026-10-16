@@ -273,11 +273,14 @@ ESCENARIOS_50_MULTITURNO: List[Dict[str, Any]] = [
         "debe_reiniciar_en_turno": 1,
         "marca_final_esperada": "Hyundai",
     },
-    # 22. Selección de opción: 'la 2' (2 turnos)
+    # 22. Selección de opción: 'la 2' (2 turnos). La entrada debe permitir
+    # varias alternativas: el sobrecalentamiento prioriza seguridad y puede dejar
+    # una sola hipótesis. Su cobertura térmica permanece en las pruebas de seguridad;
+    # opciones inexistentes se rechazan en test_regresion_auditoria_codex.py.
     {
         "id": "caso_22_opcion_la_2",
         "turnos": [
-            "el motor recalienta",
+            "falla intermitente en el motor",
             "la 2",
         ],
         "respuesta_corta_turno": 1,

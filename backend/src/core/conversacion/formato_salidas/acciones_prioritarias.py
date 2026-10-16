@@ -90,6 +90,8 @@ def extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optio
         return "alabeo de los discos con reloj comparador y comparación con la especificación del fabricante para ese vehículo."
     if "pastilla" in falla_l or "freno" in falla_l:
         return "espesor de las pastillas y estado de discos, comparados con el límite de servicio del fabricante para ese vehículo."
+    if "amortiguador" in falla_l or "buje" in falla_l or "suspension" in falla_l:
+        return "inspección visual de fugas en amortiguadores y prueba de holgura en bujes con palanca en elevador."
 
     if "termostato" in falla_l or "ventilador" in falla_l or "recalienta" in falla_l:
         return "temperatura en ambas mangueras del radiador y activación oportuna del electroventilador."

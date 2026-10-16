@@ -81,6 +81,7 @@ class SinglePassMessageParser:
     PATRONES_CAMBIO_CASO = re.compile(
         r"\b(otro\s+(?:carro|auto|veh[ií]culo|caso|cliente|problema)|"
         r"nuevo\s+(?:caso|diagn[oó]stico|auto|carro|veh[ií]culo)|"
+        r"diagn[oó]stico\s+nuevo|iniciar\s+(?:un\s+)?(?:diagn[oó]stico\s+nuevo|nuevo\s+diagn[oó]stico)|"
         r"caso\s+nuevo|vamos\s+con\s+otro|termin[eé]\s+(?:ese|con\s+ese)|"
         r"este\s+es\s+otro\s+(?:carro|auto|veh[ií]culo)|"
         r"tengo\s+otro\s+(?:carro|auto|veh[ií]culo)\s+en\s+el\s+taller)\b",
@@ -332,6 +333,9 @@ class SinglePassMessageParser:
             (r"\bno\s+(?:pierde|bota|gotea|consume)\s+(?:agua|refrigerante|liquido)\b", "sintoma_fuga_refrigerante", "no pierde refrigerante"),
             (r"\bno\s+(?:bota|sale|humo\s+por\s+el)\s+humo\b|\bsin\s+humo\b", "sintoma_humo_escape", "no bota humo"),
             (r"\bluces\s+(?:no\s+bajan|no\s+se\s+aten[uú]an|est[aá]n\s+fuertes)\b", "estado_bateria_luces", "luces no se atenúan"),
+            (r"\bno\s+(?:presenta|tiene)\s+problemas\s+de\s+frenos\b|\bsin\s+problemas\s+de\s+frenos\b", "sintoma_frenos", "sin problemas de frenos"),
+            (r"\b(?:el\s+)?pedal\s+no\s+est[aá]\s+(?:muy\s+)?esponjoso\b|\bno\s+est[aá]\s+esponjoso\b", "sintoma_frenos_pedal_esponjoso", "pedal no esponjoso"),
+            (r"\b(?:no|ni)\s+(?:se\s+)?va\s+al\s+fondo\b", "sintoma_frenos_pedal_fondo", "pedal no se va al fondo"),
         ]
         for pat, campo, val in negaciones_patrones:
             if re.search(pat, texto_l):
@@ -358,15 +362,30 @@ class SinglePassMessageParser:
             (r"\b(temperatura\s+(?:alta|sube|al\s+m[aá]ximo)|se\s+recalienta|hierve)\b", "sintoma_sobrecalentamiento", "sobrecalentamiento"),
             (r"\b(pedal\s+(?:al\s+piso|se\s+hunde|esponjoso|largo))\b", "sintoma_frenos_pedal", "pedal de freno esponjoso/al piso"),
             (r"\b(vibra\s+al\s+frenar|tiembla\s+al\s+frenar)\b", "sintoma_vibracion_frenos", "vibra al frenar"),
+            (r"\b(chirrido|chillido)(?:\s+en\s+(?:las?\s+)?ruedas?(?:\s+delanteras?|\s+traseras?)?)?\b", "sintoma_chirrido_frenos", "chirrido en ruedas"),
+            (r"\b(vibraci[oó]n|vibraciones)\s+(?:en\s+el\s+volante|al\s+volante|del\s+volante)\b", "sintoma_vibracion_volante", "vibración en volante"),
+            (r"\b(pedal\s+vibra|vibraci[oó]n\s+(?:en\s+el\s+pedal|al\s+pedal))\b", "sintoma_vibracion_pedal", "vibración en pedal"),
+            (r"\b(golpe(?:s)?\s+met[aá]lico(?:s)?(?:\s+en\s+(?:la\s+)?suspensi[oó]n)?|sonido\s+en\s+baches|ruido\s+en\s+baches|golpeteo\s+en\s+suspensi[oó]n)\b", "sintoma_golpes_suspension", "golpes metálicos en suspensión"),
         ]
         for pat, campo, val in afirmaciones_patrones:
-            # Solo agregar afirmado si no fue explícitamente negado en este mismo turno
+            # Solo agregar afirmado si no fue explícitamente negado en su misma cláusula
             coincidencias = list(re.finditer(pat, texto_l))
             positivas = []
             for coincidencia in coincidencias:
-                prefijo = texto_l[:coincidencia.start()]
+                cortes = list(
+                    re.finditer(
+                        r"[.;?!]+|\b(?:pero|aunque|sin\s+embargo|sino)\b|,\s*(?:pero|aunque|sino)\b",
+                        texto_l[: coincidencia.start()],
+                    )
+                )
+                ini_clausula = cortes[-1].end() if cortes else 0
+                prefijo = texto_l[ini_clausula : coincidencia.start()]
                 negada = bool(re.search(
-                    r"\b(?:no|tampoco|sin)(?:\s+(?:presenta|hay|tiene))?\s*$", prefijo
+                    r"\b(?:no|tampoco|sin|ni|nunca|jam[aá]s|cero)"
+                    r"(?:\s+(?:se|le|me))?"
+                    r"(?:\s+(?:presenta|hay|tiene|sient[eo]|escuch[ao]|oyen?|veo|not[ao]|percib[eo]|hace|existe|muestra|da))?"
+                    r"(?:\s+(?:ning[uú]n|ninguna))?\s*$",
+                    prefijo,
                 ))
                 if negada:
                     if not any(n.campo == campo for n in negados):
@@ -385,7 +404,7 @@ class SinglePassMessageParser:
                     valor=val,
                     polaridad=True,
                     categoria="sintoma",
-                    texto_origen=val,
+                    texto_origen=positivas[0].group(),
                 ))
 
         return afirmados, negados
