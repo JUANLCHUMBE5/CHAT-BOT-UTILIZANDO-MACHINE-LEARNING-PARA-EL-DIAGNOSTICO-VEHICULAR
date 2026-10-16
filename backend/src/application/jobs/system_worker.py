@@ -167,14 +167,24 @@ class SystemWorker:
                 )
                 if trabajo.tipo == "webhook_mensaje":
                     meta_message_id = str(payload.get("meta_message_id") or "")
-                    async with session.begin():
+                    if session.in_transaction():
                         registrado = await asegurar_turno_webhook_registrado(session, meta_message_id)
+                    else:
+                        async with session.begin():
+                            registrado = await asegurar_turno_webhook_registrado(session, meta_message_id)
                     if not registrado:
                         raise RuntimeError("El webhook no dejó un mensaje entrante durable para su transición.")
-                async with session.begin():
+
+                if session.in_transaction():
                     await TrabajoSistemaRepository(session).marcar_completado(trabajo.id, resumen)
+                    await session.commit()
+                else:
+                    async with session.begin():
+                        await TrabajoSistemaRepository(session).marcar_completado(trabajo.id, resumen)
                 logger.info("[System Worker] Trabajo %s completado (%s).", trabajo.id, trabajo.tipo)
             except Exception as exc:
+                if session.in_transaction():
+                    await session.rollback()
                 async with session.begin():
                     estado = await TrabajoSistemaRepository(session).marcar_error(trabajo, str(exc))
                 logger.error(
