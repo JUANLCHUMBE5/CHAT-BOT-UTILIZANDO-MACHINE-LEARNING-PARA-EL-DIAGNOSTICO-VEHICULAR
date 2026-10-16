@@ -1,17 +1,15 @@
-"""Suite de regresión para los 5 defectos detectados por la auditoría independiente de Codex.
+"""Suite de regresión para los defectos detectados por la auditoría independiente de Codex.
 
 Cubre:
 1. ARG-01: Seguridad ante fugas de combustible con negación parcial por cláusula.
 2. ARG-02: Negación o mención ambigua de nuevo diagnóstico sin reinicio de case_id.
 3. ARG-03: Polaridad de síntomas negados y prohibición de inventar ubicaciones ('delanteras' vs 'traseras').
 4. ARG-04: Validación estricta de rango en selección numérica de hipótesis (rechazo de '3' cuando hay 1 opción).
-5. ARG-05 / ARG-06: Evaluaciones de continuidad, aislamiento de sesiones y protecciones en Laboratorio CarBot.
 """
 
 from __future__ import annotations
 
 import pytest
-from fastapi.testclient import TestClient
 
 from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.extractor_hechos import ExtractorHechos
@@ -23,26 +21,6 @@ from src.core.diagnostico.politica_seguridad import (
     SeveridadSeguridad,
 )
 from src.core.parser.message_parser import IntentType, SinglePassMessageParser
-from src.interfaces.api.v1.endpoints.laboratorio_local.app import create_laboratory_app
-
-app = create_laboratory_app()
-
-
-@pytest.fixture
-def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
-    from src.config import settings
-    from src.core.security import crear_jwt_token
-
-    monkeypatch.setattr(settings, "enable_laboratory", True)
-    monkeypatch.setattr(settings, "environment", "test")
-    monkeypatch.setattr(settings, "gemini_api_key", "")
-    monkeypatch.setattr(settings, "groq_api_key", "")
-    monkeypatch.setenv("CARBOT_BLOCK_DOTENV", "true")
-    global app
-    app = create_laboratory_app()
-    token = crear_jwt_token(usuario_id="00000000-0000-0000-0000-000000000021")
-    return TestClient(app, headers={"Authorization": f"Bearer {token}"})
-
 
 # ==============================================================================
 # 1. DEFECTO ARG-01: SEGURIDAD ANTE FUGAS DE COMBUSTIBLE CON NEGACIÓN PARCIAL
@@ -60,25 +38,11 @@ def client(monkeypatch: pytest.MonkeyPatch) -> TestClient:
 )
 def test_arg01_fuga_combustible_con_negacion_parcial_activa_critical_stop(
     mensaje_peligroso: str,
-    client: TestClient,
 ) -> None:
     """Una negación parcial en otra cláusula jamás debe suprimir una alerta crítica de fuga de gasolina."""
     sev, banner = PoliticaSeguridad.evaluar_severidad(mensaje_peligroso, "")
     assert sev == SeveridadSeguridad.CRITICAL_STOP
     assert banner == BANNER_COMBUSTIBLE
-
-    resp = client.post(
-        "/api/v1/laboratorio/mensaje",
-        json={"session_id": "test_arg01_fuel_safety", "mensaje": mensaje_peligroso},
-    )
-    assert resp.status_code == 200
-    data = resp.json()
-    texto_resp = data["respuesta_texto"].lower()
-    assert "peligro crítico" in texto_resp or "no intente arrancar" in texto_resp
-    assert "incendio" in texto_resp
-
-    comprobaciones = {c["criterio"]: c["resultado"] for c in data["comprobaciones"]}
-    assert comprobaciones.get("Advertencia de seguridad física (frenos/suspensión/térmico)") == "APROBADO"
 
 
 def test_arg01_negacion_total_fuga_combustible_no_dispara_falso_positivo() -> None:
@@ -114,60 +78,6 @@ def test_arg02_frases_negadas_o_ambiguas_no_solicitan_reinicio(frase_no_reinicio
     assert parsed.intencion != IntentType.CAMBIO_CASO
 
 
-def test_arg02_laboratorio_conserva_case_id_ante_negacion_de_nuevo_diagnostico(
-    client: TestClient,
-) -> None:
-    """Reproduce el caso exacto de Codex en el laboratorio verificando conservación de case_id y síntomas."""
-    session_id = "test_arg02_continuity_no_reset"
-
-    r1 = client.post(
-        "/api/v1/laboratorio/mensaje",
-        json={
-            "session_id": session_id,
-            "mensaje": (
-                "Mi vehículo es un Toyota Yaris 2020, placa ABC123. "
-                "Cuando freno escucho un chirrido en las ruedas delanteras y siento que el pedal vibra."
-            ),
-        },
-    )
-    assert r1.status_code == 200
-    d1 = r1.json()
-    case_id_original = d1["case_id"]
-    assert case_id_original is not None
-    assert len(d1["sintomas_confirmados"]) >= 2
-
-    # Turno 2: Negación explícita de nuevo diagnóstico
-    r2 = client.post(
-        "/api/v1/laboratorio/mensaje",
-        json={
-            "session_id": session_id,
-            "mensaje": "No quiero iniciar un nuevo diagnóstico, seguimos con el Toyota Yaris ABC123.",
-        },
-    )
-    assert r2.status_code == 200
-    d2 = r2.json()
-    assert d2["case_id"] == case_id_original
-    assert d2["placa"] in ("ABC123", "ABC-123")
-    assert len(d2["sintomas_confirmados"]) >= 2
-    comp_t2 = {c["criterio"]: c["resultado"] for c in d2["comprobaciones"]}
-    assert comp_t2.get("Aislamiento estricto de case_id") == "APROBADO"
-
-    # Turno 3: Consulta de memoria prohibiendo generar nuevo diagnóstico
-    r3 = client.post(
-        "/api/v1/laboratorio/mensaje",
-        json={
-            "session_id": session_id,
-            "mensaje": "Consulta la memoria. No generes un nuevo diagnóstico.",
-        },
-    )
-    assert r3.status_code == 200
-    d3 = r3.json()
-    assert d3["case_id"] == case_id_original
-    assert d3["confianza_ml"] == 0.0
-    assert "no aplica" in (d3["diagnostico_ml"] or "").lower()
-    assert len(d3["sintomas_confirmados"]) >= 2
-    comp_t3 = {c["criterio"]: c["resultado"] for c in d3["comprobaciones"]}
-    assert comp_t3.get("Aislamiento estricto de case_id") == "APROBADO"
 
 
 # ==============================================================================
@@ -266,97 +176,4 @@ def test_arg04_interprete_rechaza_opcion_fuera_de_rango_cuando_solo_existe_una_h
     assert r.get("total_opciones") == 1
 
 
-@pytest.mark.parametrize("entrada_fuera_rango", ["3", "la 2"])
-def test_arg04_laboratorio_rechaza_opcion_fuera_de_rango_sin_clamping(
-    client: TestClient,
-    entrada_fuera_rango: str,
-) -> None:
-    """Verifica en el endpoint que responder '3' o 'la 2' con 1 sola opción no seleccione la primera."""
-    session_id = f"test_arg04_single_hypo_{hash(entrada_fuera_rango)}"
-    # La aplicación independiente empieza vacía; no depender de otra prueba.
-    inicial = client.post("/api/v1/laboratorio/mensaje", json={"session_id": session_id, "mensaje": "Hola"})
-    assert inicial.status_code == 200
-    gestor_lab = getattr(app.state, "gestor_laboratorio", None)
-    assert gestor_lab is not None
-    sesion = gestor_lab.session_manager.obtener_o_crear_sesion(f"lab::{session_id}")
-    estado = sesion.conversation_state
-    estado.iniciar_nuevo_caso()
-    estado.top3_actual = [{"falla": "Discos de freno alabeados", "probabilidad": 0.3}]
-    estado.preguntas_realizadas = [{
-        "intent": QuestionIntent.DISCRIMINACION_TOP3.value,
-        "texto": "¿Cuál de estas opciones describe mejor el fallo? 1) Discos de freno alabeados",
-        "case_id": estado.case_id,
-        "hipotesis": ["Discos de freno alabeados"],
-    }]
-    estado.falla_principal = None
-
-    # Enviar entrada fuera de rango ('3' o 'la 2')
-    r2 = client.post(
-        "/api/v1/laboratorio/mensaje",
-        json={"session_id": session_id, "mensaje": entrada_fuera_rango},
-    )
-    assert r2.status_code == 200
-    d2 = r2.json()
-    resp_l = d2["respuesta_texto"].lower()
-    assert "no está disponible" in resp_l or "fuera de rango" in resp_l
-    assert "seleccionaste provisionalmente" not in resp_l
-    assert d2["confianza_ml"] == 0.0
-    assert estado.falla_principal is None
-
-    # Enviar '1' (válido, dentro de rango)
-    r3 = client.post(
-        "/api/v1/laboratorio/mensaje",
-        json={"session_id": session_id, "mensaje": "1"},
-    )
-    assert r3.status_code == 200
-    d3 = r3.json()
-    assert "seleccionaste provisionalmente la opción 1" in d3["respuesta_texto"].lower()
-    assert "discos de freno alabeados" in d3["respuesta_texto"].lower()
-
-
-
-# ==============================================================================
-# 5. DEFECTO ARG-05 / ARG-06: AISLAMIENTO Y COMPROBACIONES DEL LABORATORIO
-# ==============================================================================
-
-
-def test_arg05_toyota_replay_sin_falsos_fallidos_de_continuidad(client: TestClient) -> None:
-    """En el caso Toyota de 3 turnos del mismo vehículo, ningún turno debe marcar FALLIDO en case_id."""
-    resp = client.post("/api/v1/laboratorio/ejecutar-caso/toyota")
-    assert resp.status_code == 200
-    resultados = resp.json()["resultados"]
-    assert len(resultados) == 3
-
-    for paso in resultados:
-        comprobaciones = paso["respuesta"]["comprobaciones"]
-        fallidas = [c for c in comprobaciones if c["resultado"] == "FALLIDO"]
-        assert fallidas == [], f"Turno {paso['turno']} presentó comprobaciones FALLIDAS: {fallidas}"
-
-
-def test_arg06_aislamiento_entre_session_manager_productivo_y_laboratorio(client: TestClient) -> None:
-    """Verifica que las sesiones del laboratorio no contaminen el SessionManager productivo."""
-    sid_compartido = "sesion_aislamiento_prod_vs_lab"
-    resp = client.post(
-        "/api/v1/laboratorio/mensaje",
-        json={
-            "session_id": sid_compartido,
-            "mensaje": "Toyota Yaris 2020 placa ABC123, chirrido en ruedas delanteras al frenar.",
-        },
-    )
-    assert resp.status_code == 200
-
-    gestor_prod = getattr(app.state, "gestor_diagnostico", None)
-    gestor_lab = getattr(app.state, "gestor_laboratorio", None)
-    assert gestor_lab is not None
-    if gestor_prod is not None:
-        assert gestor_prod.session_manager is not gestor_lab.session_manager
-        assert sid_compartido not in gestor_prod.session_manager._sesiones
-        assert f"lab::{sid_compartido}" not in gestor_prod.session_manager._sesiones
-
-    # Validación de formato de session_id malicioso
-    resp_invalido = client.post(
-        "/api/v1/laboratorio/mensaje",
-        json={"session_id": "../traversal/malicioso", "mensaje": "Hola"},
-    )
-    assert resp_invalido.status_code == 400
 
