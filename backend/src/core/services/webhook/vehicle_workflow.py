@@ -139,12 +139,18 @@ async def preparar_flujo_vehiculo(
 
             conversacion.contexto = contexto_placa
 
-            if placa and _perfil_completo(perfil_nuevo_detectado) and tiene_sintomas_nuevos:
+            if _perfil_completo(perfil_nuevo_detectado) and tiene_sintomas_nuevos:
+                if not placa:
+                    placa = "SIN-PLACA"
+                    contexto_placa['placa'] = placa
+                    contexto_placa['placa_posttest'] = placa
+                conversacion.contexto = contexto_placa
                 await session.commit()
                 return None, placa, marca_modelo, texto_cliente
 
-            if placa and _perfil_completo(perfil_nuevo_detectado):
-                respuesta_perfil = f'✅ Vehículo registrado: *{marca_modelo}* (placa {placa}).\n\nAhora describe el síntoma del vehículo.'
+            if _perfil_completo(perfil_nuevo_detectado):
+                placa_str = f' (placa {placa})' if placa and placa not in ('SIN-PLACA', 'WAPP-01') else ''
+                respuesta_perfil = f'✅ Vehículo registrado: *{marca_modelo}*{placa_str}.\n\nAhora describe el síntoma del vehículo.'
                 await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
                 await session.commit()
                 return ({'status': 'esperando_sintoma', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
@@ -257,22 +263,40 @@ async def preparar_flujo_vehiculo(
             conversacion.contexto = contexto_placa
             continuar_diagnostico_preplate = True
         if not continuar_diagnostico_preplate and contexto_placa.get('posttest_placa_pendiente'):
-            try:
-                placa = normalizar_placa(texto_cliente)
-            except ValueError:
-                respuesta_placa = 'Indique una placa válida para continuar el diagnóstico.'
-            else:
-                contexto_placa['placa_posttest'] = placa
+            es_sin_placa = bool(
+                re.search(
+                    r"\b(?:no\s+(?:tengo|dispongo|cuento\s+con|se|sé|recuerdo|hay)\s+(?:la\s+)?placa|"
+                    r"sin\s+placa|placa\s+no\s+disponible|no\s+me\s+la\s+s[eé]|no\s+tengo\s+placa|"
+                    r"no\s+se\s+la\s+placa|sin\s+la\s+placa)\b",
+                    texto_cliente,
+                    re.IGNORECASE,
+                )
+            )
+            if es_sin_placa or ExtractorHechos.contiene_informacion_diagnostica(texto_cliente) or len(texto_cliente.split()) > 4:
+                placa = contexto_placa.get('placa') or 'SIN-PLACA'
                 contexto_placa['placa'] = placa
+                contexto_placa['placa_posttest'] = placa
                 contexto_placa.pop('posttest_placa_pendiente', None)
                 texto_preplate = contexto_placa.pop('preplate_pending_input', None)
                 conversacion.contexto = contexto_placa
-                if texto_preplate:
-                    texto_cliente = texto_preplate
-                    continuar_diagnostico_preplate = True
+                continuar_diagnostico_preplate = True
+            else:
+                try:
+                    placa = normalizar_placa(texto_cliente)
+                except ValueError:
+                    respuesta_placa = 'Indique una placa válida para continuar el diagnóstico.'
                 else:
-                    respuesta_placa = 'Placa registrada. ' + _mensaje_solicitar_perfil()
-                    contexto_placa['perfil_vehiculo_pendiente'] = True
+                    contexto_placa['placa_posttest'] = placa
+                    contexto_placa['placa'] = placa
+                    contexto_placa.pop('posttest_placa_pendiente', None)
+                    texto_preplate = contexto_placa.pop('preplate_pending_input', None)
+                    conversacion.contexto = contexto_placa
+                    if texto_preplate:
+                        texto_cliente = texto_preplate
+                        continuar_diagnostico_preplate = True
+                    else:
+                        respuesta_placa = 'Placa registrada. ' + _mensaje_solicitar_perfil()
+                        contexto_placa['perfil_vehiculo_pendiente'] = True
         elif not continuar_diagnostico_preplate:
             contexto_placa['posttest_placa_pendiente'] = True
             if tipo_mensaje == 'image':

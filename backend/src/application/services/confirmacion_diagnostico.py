@@ -32,7 +32,7 @@ def _extraer_observacion(texto: str, prefijos: tuple[str, ...]) -> str | None:
         if normalizado == prefijo:
             return None
         if normalizado.startswith(prefijo):
-            resto = original[len(prefijo) :].lstrip(" :-–—\t")
+            resto = original[len(prefijo) :].lstrip(" :–—\t")
             return resto.strip()[:4000] or None
     return None
 
@@ -113,12 +113,19 @@ def interpretar_respuesta_validacion_whatsapp(texto: str) -> str | None:
     return None
 
 
-def instrucciones_confirmacion_whatsapp() -> str:
-    """Pregunta breve que acompaña cada resultado dirigido a personal técnico."""
-
-    return (
-        "\n\n🔎 ¿Fue correcta? *SÍ / NO* (1/2/3)"
-    )
+def instrucciones_confirmacion_whatsapp(cantidad_hipotesis: int = 3) -> str:
+    """Pregunta breve que acompaña cada resultado dirigido a personal técnico.
+    
+    Adapta las opciones numéricas a la cantidad de hipótesis realmente visibles:
+    - 1 hipótesis: '¿Fue correcta? *SÍ / NO*' (sin opciones numéricas).
+    - 2 hipótesis: '¿Fue correcta? *SÍ / NO* (1/2)'
+    - 3 hipótesis: '¿Fue correcta? *SÍ / NO* (1/2/3)'
+    """
+    if cantidad_hipotesis <= 1:
+        return "\n\n🔎 ¿Fue correcta? *SÍ / NO*"
+    if cantidad_hipotesis == 2:
+        return "\n\n🔎 ¿Fue correcta? *SÍ / NO* (1/2)"
+    return "\n\n🔎 ¿Fue correcta? *SÍ / NO* (1/2/3)"
 
 
 @dataclass
