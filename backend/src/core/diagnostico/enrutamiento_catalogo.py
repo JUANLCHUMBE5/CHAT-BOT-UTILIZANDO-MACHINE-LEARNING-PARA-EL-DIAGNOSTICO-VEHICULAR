@@ -239,5 +239,3 @@ _PATRON_FUERA_RUTEO_EXPERIMENTAL = re.compile(
     r"dpf|fap|adblue|filtro\s+de\s+particulas|presion\s+de\s+aceite|bomba\s+de\s+aceite|"
     r"consumo\s+de\s+aceite|humo\s+azul)\b"
 )
-
-
