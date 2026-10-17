@@ -31,3 +31,19 @@ El Backend independiente conserva sus archivos de persistencia, migraciones y wo
 Las correcciones recientes de SystemWorker del integrador no se incorporan automáticamente en
 su main 58ab3473: no afirmar equivalencia de despliegue entre ambos repositorios.
 No desplegar ni fusionar hasta CI y E2E reales aprobados; Docker ausente es bloqueo, no aprobación.
+
+### Cierre de procedencia C1 (17/10/2026)
+La discrepancia historica queda explicada sin cambiar ningun artefacto ni manifiesto:
+metadata_c1_macrofix.json en Git tiene LF, 1096 bytes y SHA256
+6192633d156db24d8d4548077c20336f961141f3b8afc473f24b0542b0dc40f8.
+Los mismos bytes con saltos CRLF (conversion solo en memoria) tienen 1134 bytes y SHA256
+c1ac4a528ee759316480691f4cf05b29c5d28829964d25a7d27ab239e80a084e,
+exactamente los dos valores del manifiesto C1 original. El contenido JSON es identico.
+Los commits e0597fb8 y 6afa00dd conservan la version LF; no se encontro cambio semantico.
+El modelo macro y el vectorizador coinciden con los hashes internos del JSON.
+ModeloML._cargar_modelos carga los binarios con joblib; no utiliza este JSON para inferir.
+Referencia correcta de archivo Git: hash LF. Referencia historica del manifiesto: bytes CRLF.
+No se sustituyen hashes entre esas representaciones ni se debilitan verificaciones de binarios.
+La diferencia de serializacion no bloquea la ejecucion ni la integridad del modelo.
+El frontend presenta statistical_probability (0..1) como porcentaje SVM; null/ausente
+se muestra Sin probabilidad estadistica. operational_score (0..1) es un score sin porcentaje.
