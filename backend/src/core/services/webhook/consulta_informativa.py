@@ -11,7 +11,7 @@ from src.core.services.webhook.diagnostic_persister import DiagnosticPersister
 async def responder_consulta_informativa(
     gestor, session, usuario, conversacion, texto, meta_message_id, remitente, proveedor
 ):
-    contexto = conversacion.contexto or {}
+    contexto = (conversacion.contexto or {}) if conversacion is not None else {}
     tiene_caso_activo = bool(
         contexto.get("conversation_state")
         or contexto.get("estado_conversacion")
@@ -35,15 +35,22 @@ async def responder_consulta_informativa(
     dto = await asyncio.to_thread(
         gestor._procesar_consulta_tecnica,
         texto, inicio_total=inicio, remitente=remitente, proveedor=proveedor,
-        taller_id=str(usuario.taller_id), usuario_id=str(usuario.id),
-        conversacion_id=str(conversacion.id), slot_gemini_preconcedido=None,
+        taller_id=str(usuario.taller_id) if usuario else None,
+        usuario_id=str(usuario.id) if usuario else None,
+        conversacion_id=str(conversacion.id) if conversacion else None,
+        slot_gemini_preconcedido=None,
         diferir_encolado_persistente=True,
     )
     resultado, _ = await DiagnosticPersister.persistir_y_responder(
-        session=session, dto=dto, usuario=usuario, conversacion=conversacion,
-        texto_cliente=texto, meta_message_id=meta_message_id, remitente=remitente,
-        proveedor=proveedor, placa="", marca_modelo="",
-        duracion_ms=int((time.perf_counter()-inicio)*1000),
-        corpus_version=getattr(gestor.motor_rag, "corpus_version", "desconocido"),
+        session=session,
+        dto=dto,
+        usuario=usuario,
+        conversacion=conversacion,
+        texto_cliente=texto,
+        tipo_mensaje="text",
+        meta_message_id=meta_message_id,
+        remitente=remitente,
+        proveedor=proveedor,
+        inicio_total=inicio,
     )
     return resultado
