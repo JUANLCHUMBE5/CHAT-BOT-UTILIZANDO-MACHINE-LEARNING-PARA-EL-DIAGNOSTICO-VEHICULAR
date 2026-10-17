@@ -449,6 +449,73 @@ class OrquestadorConversacion:
                 "estado": estado,
             }
 
+        # 2.0d Detección prioritaria de síntomas fuera de catálogo (OOD) y abstención segura
+        from src.core.diagnostico.detector_ood import detectar_sintoma_fuera_de_catalogo
+        es_ood, regla_ood = detectar_sintoma_fuera_de_catalogo(texto_limpio)
+        if es_ood and regla_ood is not None:
+            if texto_limpio not in estado.historial_mensajes_usuario:
+                estado.historial_mensajes_usuario.append(texto_limpio)
+            estado.registrar_hecho(
+                f"alerta_ood_{regla_ood.categoria.lower()}",
+                "SI",
+                categoria="seguridad",
+                texto_crudo=texto_limpio,
+                tipo=FactType.CONDICION,
+            )
+            logger.info(
+                f"[DetectorOOD] Abstención segura activada en conversación {session_id} Turno {estado.turno_actual}: {regla_ood.categoria}"
+            )
+            resp_ood = regla_ood.mensaje_abstencion.strip()
+            traza = TurnTrace(
+                turno=estado.turno_actual,
+                mensaje_original=texto_limpio,
+                contexto_previo=contexto_previo,
+                hechos_nuevos_extraidos=[],
+                hechos_actualizados=[h.to_dict() for h in estado.hechos.values() if h.estado == FactState.CONFIRMADO],
+                consulta_consolidada=texto_limpio,
+                top3=[],
+                confianza=0.0,
+                origen_confianza="ABSTENCION_OOD",
+                decision="ABSTENCION_OOD",
+                motivo_decision=f"Síntoma fuera de catálogo: {regla_ood.categoria}",
+                respuesta_enviada=resp_ood,
+                estado_operativo=estado.estado_operativo.value,
+                question_intent=None,
+                preguntas_candidatas=[],
+                preguntas_descartadas=[],
+                pregunta_final=None,
+                hipotesis_rechazadas_usuario=list(estado.hipotesis_descartadas),
+                version_orquestador=ORCHESTRATOR_VERSION,
+                tipo_mensaje="abstencion_ood",
+            )
+            estado.trazabilidad.append(traza.to_dict())
+            if len(estado.trazabilidad) > 15:
+                estado.trazabilidad = estado.trazabilidad[-15:]
+
+            await self.repositorio.save_session(session_id, estado)
+            if hasattr(gestor_diagnostico, "session_manager") and gestor_diagnostico.session_manager is not None:
+                gestor_diagnostico.session_manager.cargar_contexto(
+                    session_id,
+                    {"case_id": estado.case_id, "conversation_state": estado.exportar_dict()},
+                )
+
+            return {
+                "status": "abstencion_ood",
+                "respuesta_texto": resp_ood,
+                "diagnostico_ml": f"Fuera de Catálogo: {regla_ood.sistema_objetivo}",
+                "confianza_ml": 0.0,
+                "top3_actual": [],
+                "scores_presentacion": {},
+                "fase": estado.fase.value,
+                "es_pregunta": False,
+                "decision": "ABSTENCION_OOD",
+                "motivo_decision": f"Síntoma fuera de catálogo: {regla_ood.categoria}",
+                "pregunta_final": None,
+                "case_id": estado.case_id,
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
+            }
+
         # 2.1 Detección de saludo ("hola", "buenas", "buenos días")
         if ExtractorHechos.es_saludo(texto_limpio):
             tiene_caso_activo = bool(
