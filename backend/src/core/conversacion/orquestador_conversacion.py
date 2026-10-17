@@ -453,6 +453,7 @@ class OrquestadorConversacion:
         from src.core.diagnostico.detector_ood import detectar_sintoma_fuera_de_catalogo
         es_ood, regla_ood = detectar_sintoma_fuera_de_catalogo(texto_limpio)
         if es_ood and regla_ood is not None:
+            ExtractorHechos.extraer_y_actualizar(estado, texto_limpio)
             if texto_limpio not in estado.historial_mensajes_usuario:
                 estado.historial_mensajes_usuario.append(texto_limpio)
             estado.registrar_hecho(
@@ -1011,6 +1012,92 @@ class OrquestadorConversacion:
             if "diagnostico_forzado" in interpretacion_corta:
                 falla_forzada_alternativa = interpretacion_corta["diagnostico_forzado"]
 
+        # 4. Comprensión semántica con LLM y extracción acumulativa de hechos clínicos
+        interp_semantica = None
+        try:
+            from src.core.conversacion.comprension_semantica import (
+                EstadoHechoSemantico,
+                TipoHechoSemantico,
+                interpretar_mensaje_usuario,
+            )
+            interp_semantica = interpretar_mensaje_usuario(texto_limpio, contexto_estado=estado)
+            if interp_semantica and interp_semantica.datos_vehiculo:
+                if not estado.marca and interp_semantica.datos_vehiculo.get("marca"):
+                    estado.marca = interp_semantica.datos_vehiculo["marca"]
+                    estado.registrar_hecho("marca", estado.marca, categoria="vehiculo", tipo=FactType.CONDICION, texto_crudo=texto_limpio)
+                if not estado.modelo and interp_semantica.datos_vehiculo.get("modelo"):
+                    estado.modelo = interp_semantica.datos_vehiculo["modelo"]
+                    estado.registrar_hecho("modelo", estado.modelo, categoria="vehiculo", tipo=FactType.CONDICION, texto_crudo=texto_limpio)
+                if not estado.anio and interp_semantica.datos_vehiculo.get("anio"):
+                    estado.anio = str(interp_semantica.datos_vehiculo["anio"])
+                    estado.registrar_hecho("anio", estado.anio, categoria="vehiculo", tipo=FactType.CONDICION, texto_crudo=texto_limpio)
+                if not estado.placa and interp_semantica.datos_vehiculo.get("placa"):
+                    estado.placa = interp_semantica.datos_vehiculo["placa"]
+                    estado.registrar_hecho("placa", estado.placa, categoria="vehiculo", tipo=FactType.CONDICION, texto_crudo=texto_limpio)
+
+            if interp_semantica:
+                for hs in interp_semantica.hechos_nuevos:
+                    if hs.estado == EstadoHechoSemantico.NO_REVISADO:
+                        estado.registrar_hecho(
+                            campo=hs.campo,
+                            valor=hs.valor,
+                            categoria="inspeccion_pendiente",
+                            estado=FactState.NO_REVISADO,
+                            texto_crudo=hs.evidencia_texto,
+                            tipo=FactType.CONDICION,
+                        )
+                    elif hs.estado == EstadoHechoSemantico.REEMPLAZADO:
+                        estado.registrar_hecho(
+                            campo=hs.campo,
+                            valor=hs.valor,
+                            categoria="componente_reemplazado",
+                            estado=FactState.CONFIRMADO,
+                            texto_crudo=hs.evidencia_texto,
+                            tipo=FactType.CONDICION,
+                        )
+                    elif hs.estado == EstadoHechoSemantico.DESCARTADO:
+                        estado.registrar_hecho(
+                            campo=hs.campo,
+                            valor=hs.valor,
+                            categoria="componente_descartado",
+                            estado=FactState.CONFIRMADO,
+                            texto_crudo=hs.evidencia_texto,
+                            tipo=FactType.CAUSA,
+                        )
+                        if hs.campo not in estado.hipotesis_descartadas:
+                            estado.hipotesis_descartadas.append(hs.campo)
+                    elif hs.estado == EstadoHechoSemantico.AUSENTE_NEGADO:
+                        estado.registrar_hecho(
+                            campo=hs.campo,
+                            valor=hs.valor,
+                            categoria="sintoma",
+                            estado=FactState.AUSENTE_NEGADO,
+                            texto_crudo=hs.evidencia_texto,
+                            tipo=FactType.SINTOMA,
+                        )
+                    elif hs.tipo == TipoHechoSemantico.CONDICION:
+                        estado.registrar_hecho(
+                            campo=hs.campo,
+                            valor=hs.valor,
+                            categoria="condicion",
+                            estado=FactState.CONFIRMADO,
+                            texto_crudo=hs.evidencia_texto,
+                            tipo=FactType.CONDICION,
+                        )
+                    elif hs.tipo == TipoHechoSemantico.SINTOMA:
+                        if hs.valor and hs.valor not in estado.active_symptoms:
+                            estado.active_symptoms.append(hs.valor)
+                        estado.registrar_hecho(
+                            campo=hs.campo,
+                            valor=hs.valor,
+                            categoria="sintoma",
+                            estado=FactState.CONFIRMADO,
+                            texto_crudo=hs.evidencia_texto,
+                            tipo=FactType.SINTOMA,
+                        )
+        except Exception as exc:
+            logger.warning(f"[OrquestadorConversacion] Error no bloqueante en comprensión semántica: {exc}")
+
         # 4. Extracción acumulativa obligatoria de hechos clínicos
         estado_previo_hechos = dict(estado.hechos)
         hechos_extraidos = ExtractorHechos.extraer_y_actualizar(estado, texto_limpio)
@@ -1214,6 +1301,9 @@ class OrquestadorConversacion:
 
         # 5. Evaluación de suficiencia de información
         score, categorias_vistas, es_suficiente, motivo_suficiencia = EvaluadorSuficiencia.evaluar(estado)
+        if interp_semantica and interp_semantica.solicita_causas_alternativas:
+            es_suficiente = True
+            motivo_suficiencia = "Mecánico solicita hipótesis diferenciales y causas alternativas"
         medicion_area_pendiente = GeneradorPreguntas.falta_medicion_discriminante_por_area(estado)
         if (
             medicion_area_pendiente
@@ -1788,8 +1878,11 @@ class OrquestadorConversacion:
                     session_id,
                     {"conversation_state": estado.exportar_dict(), "case_id": estado.case_id}
                 )
+            consulta_para_diagnostico = consulta_consolidada
+            if interp_semantica and interp_semantica.pregunta_tecnica_usuario:
+                consulta_para_diagnostico = f"{consulta_consolidada}. Consulta técnica adicional del mecánico: {interp_semantica.pregunta_tecnica_usuario}"
             dto_resultado = gestor_diagnostico.procesar_consulta_texto(
-                texto_usuario=consulta_consolidada,
+                texto_usuario=consulta_para_diagnostico,
                 placa=estado.placa or "WAPP-01",
                 marca_modelo=f"{estado.marca or 'Vehiculo'} {estado.modelo or 'Generico'}",
                 session_id=session_id,
@@ -1834,10 +1927,12 @@ class OrquestadorConversacion:
                 nueva_evidencia=texto_limpio if hechos_extraidos else None,
             )
 
+            from src.core.conversacion.ruteador_sistema import tiene_descarte_de_componente
             tiene_descartada_en_top3 = any(
                 hipotesis_rechazada_en_texto(
                     str(h.get("falla", "")), estado.hipotesis_descartadas,
                 )
+                or tiene_descarte_de_componente(estado, str(h.get("falla", "")))
                 for h in estado.top3_actual
             )
             if not (es_evidencia_duplicada and estado.top3_actual and not tiene_descartada_en_top3):

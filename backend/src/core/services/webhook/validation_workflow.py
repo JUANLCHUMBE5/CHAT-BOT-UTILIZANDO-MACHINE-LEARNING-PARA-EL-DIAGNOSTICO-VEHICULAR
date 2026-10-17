@@ -39,19 +39,42 @@ _PATRON_OBSERVACION_TECNICA = re.compile(
 
 
 def _es_evidencia_diagnostica_nueva(texto_cliente: str) -> bool:
-    """Evita que una confirmación pendiente consuma datos técnicos nuevos."""
+    """Evita que una confirmación pendiente consuma datos técnicos nuevos o consultas."""
     texto_normalizado = _normalizar(texto_cliente).strip(" .,!¡¿?")
     if texto_normalizado in {"si", "no", "correcto", "negativo", "incorrecto", "incorrecta"}:
         return False
+    from src.core.conversacion.orientacion_provisional import es_feedback_conversacional
+
+    if es_feedback_conversacional(texto_cliente):
+        return False
     from src.core.conversacion.extractor_hechos import ExtractorHechos
 
-    return bool(
-        ExtractorHechos.contiene_informacion_diagnostica(texto_cliente)
-        or _PATRON_DTC_O_MEDICION.search(texto_cliente)
-        or (
-            len(texto_normalizado.split()) >= 3
-            and _PATRON_OBSERVACION_TECNICA.search(texto_cliente)
+    tiene_pregunta = bool(
+        "?" in texto_cliente
+        or "¿" in texto_cliente
+        or re.search(
+            r"\b(?:qu[eé]|c[oó]mo|cu[aá]l(?:es)?|por\s*qu[eé]|diferenci\w*|explic\w*|sospech\w*|otra\s+causa|otras\s+posibles\s+causas)\b",
+            texto_normalizado,
         )
+    )
+    tiene_evidencia_hechos = ExtractorHechos.contiene_informacion_diagnostica(texto_cliente)
+    tiene_dtc_o_medicion = bool(_PATRON_DTC_O_MEDICION.search(texto_cliente))
+    tiene_observacion_tecnica = bool(
+        len(texto_normalizado.split()) >= 3
+        and _PATRON_OBSERVACION_TECNICA.search(texto_cliente)
+    )
+    tiene_condicion_operativa = bool(
+        re.search(
+            r"\b(?:pendiente|subida|plano|terreno|carga|aceler\w*|combustible|tanque|nivel|fuerza|potencia|tiron\w*|freno\w*|pedal|embrague|recalienta|humo)\b",
+            texto_normalizado,
+        )
+    )
+    return bool(
+        tiene_pregunta
+        or tiene_evidencia_hechos
+        or tiene_dtc_o_medicion
+        or tiene_observacion_tecnica
+        or tiene_condicion_operativa
     )
 
 
@@ -111,8 +134,9 @@ def _respuesta_detalle_hipotesis(hipotesis: Any, orden: int) -> str:
 
 
 def _solicita_continuar_sin_confirmacion(texto: str) -> bool:
-    """Detecta que el mecánico aún no aporta evidencia física y quiere seguir."""
-
+    """Detecta que el mecánico aún no aporta evidencia física y quiere seguir sin datos adicionales."""
+    if _es_evidencia_diagnostica_nueva(texto):
+        return False
     normalizado = _normalizar(texto)
     patrones = (
         r"\bquiero\s+(?:seguir|continuar)\b",
@@ -365,7 +389,7 @@ class ValidationWorkflow:
             await session.commit()
             return None
 
-        # Una medición, DTC o resultado de prueba posterior debe volver al
+        # Una medición, DTC, pregunta técnica o resultado de prueba posterior debe volver al
         # orquestador. Antes podía responderse desde esta validación y el
         # mensaje quedaba en la tabla de entrada pero fuera de ConversationState.
         if (
@@ -375,7 +399,7 @@ class ValidationWorkflow:
         ):
             contexto_conversacion.pop("validacion_diagnostico", None)
             conversacion.contexto = contexto_conversacion
-            logger.info("[Validación] Nueva evidencia técnica; se reanuda el flujo diagnóstico.")
+            logger.info("[Validación] Nueva evidencia técnica o consulta; se reanuda el flujo diagnóstico con el orquestador.")
             return None
 
         if tipo_mensaje == "text" and etapa_validacion:

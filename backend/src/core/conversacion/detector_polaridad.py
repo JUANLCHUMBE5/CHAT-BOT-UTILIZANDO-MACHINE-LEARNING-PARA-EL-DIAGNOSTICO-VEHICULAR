@@ -303,6 +303,10 @@ class DetectorPolaridad:
         ):
             resultados.append(("sintoma_fuga_de_refrigerante", "fuga de refrigerante", FactState.CONFIRMADO))
 
+        if re.search(r"\b(?:se\s+siente|siento)\s+(?:principalmente\s+)?en\s+el\s+volante\b", txt_l):
+            resultados = [r for r in resultados if r[0] != "sintoma_vibración"]
+            resultados.append(("sintoma_vibración", "vibración", FactState.CONFIRMADO))
+
         nombres_detectados = {r[1] for r in resultados}
         if "trepidación y zapateo de embrague" in nombres_detectados:
             resultados = [r for r in resultados if r[1] != "vibración"]

@@ -87,6 +87,7 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         texto_filtrado = re.sub(r"\bpastilla(?:s)?\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado += " llantas desbalanceadas desalineadas vibracion velocidad direccion plomos balanceo alineacion"
     elif afirma_freno and any(f in limpio for f in ("freno", "frenar", "pedal")):
+        texto_filtrado = re.sub(r"\bresto\s+del\s+veh[ií]culo\s+no\s+vibra\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado += " discos de freno alabeados desgastados deformados alabeo variacion espesor dtv reloj comparador vibracion pedal volante al frenar"
 
     # 3. Descarte de encendido (bujías) cuando el síntoma es de suministro/presión de combustible
