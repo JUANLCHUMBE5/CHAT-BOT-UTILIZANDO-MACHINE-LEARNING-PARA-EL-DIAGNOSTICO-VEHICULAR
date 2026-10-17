@@ -64,8 +64,12 @@ REGLAS_OOD: list[DefinicionOOD] = [
         patrones_positivos=[
             r"\b(?:conmutador de gas|tanque de (?:glp|gnv)|fase de gas|riel de gas|inyectores de gas)\b",
             r"\b(?:reductor de (?:glp|gnv)|vaporizador de (?:glp|gnv)|calibracion de gas)\b",
-            r"\b(?:se regresa|se pasa|cambia) solo a gasolina\b",
+            r"\b(?:se regresa|se pasa|cambia|no pasa) solo? a gas(?:olina)?\b",
             r"\bpita (?:el )?conmutador\b",
+            r"\b(?:pita|chilla|bip)\b.{0,30}\b(?:llave selectora|conmutador|equipo de gas)\b",
+            r"\b(?:llave selectora|llave de gas)\b.{0,30}\b(?:pita|chilla|bip|parpadea|no pasa a gas)\b",
+            r"\b(?:auto|carro|vehiculo) a gas glp\b.{0,40}\b(?:no pasa a gas|se queda en gasolina|llave selectora)\b",
+            r"\b(?:no pasa a gas|se queda en gasolina)\b",
         ],
         patrones_negativos=[],
         sistema_objetivo="Combustibles Alternativos (GLP / GNV)",
@@ -118,6 +122,9 @@ REGLAS_OOD: list[DefinicionOOD] = [
             r"\b(?:compuerta de mezcla|actuador de mezcla|blend door|servomotor de mezcla)\b",
             r"\bclac[- ]clac\b.{0,40}\b(?:detras del tablero|debajo del tablero)\b.{0,40}\b(?:caliente|frio|temperatura)\b",
             r"\b(?:termistor|sensor)\s+(?:del\s+)?evaporador\b",
+            r"\bclimatizador bizona\b.{0,60}\b(?:caliente.*frio|frio.*caliente|compuerta)\b",
+            r"\bcompuerta\b.{0,30}\b(?:tac[- ]tac|trabada|atascada)\b",
+            r"\b(?:aire caliente por (?:el )?(?:lado del )?piloto|frio por (?:el )?copiloto)\b",
         ],
         patrones_negativos=[
             r"\b(?:compresor|r134a|gas refrigerante|presion de alta|presion de baja)\b",
@@ -135,6 +142,9 @@ REGLAS_OOD: list[DefinicionOOD] = [
         patrones_positivos=[
             r"\b(?:convertidor de par|convertidor de torque)\b.{0,30}\b(?:patina|resbala|falla|vibracion)\b",
             r"\bmecatronica\s+dsg\b.{0,40}\b(?:acumulador|presion hidraulica|reventado)\b",
+            r"\b(?:caja|transmision)\s+(?:automatica\s+)?dsg\b",
+            r"\b(?:caja|transmision)\s+de\s+doble\s+embrague\s+dsg\b",
+            r"\b(?:caja|transmision)\s+(?:automatica\s+)?cvt\b",
         ],
         patrones_negativos=[],
         sistema_objetivo="Transmisión Hidráulica Automática / Mecatrónica DSG",

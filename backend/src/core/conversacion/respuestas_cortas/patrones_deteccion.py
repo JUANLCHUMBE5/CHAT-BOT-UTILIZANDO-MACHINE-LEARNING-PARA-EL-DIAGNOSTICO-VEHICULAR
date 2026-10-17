@@ -10,7 +10,9 @@ PATRON_OPCION_NUMERICA = re.compile(
 )
 
 PATRON_NO_SE = re.compile(
-    r"\b(no\s+s[eé]|ni\s+idea|no\s+me\s+fij[eé]|no\s+sabr[ií]a|no\s+estoy\s+seguro|desconozco)\b",
+    r"\b(no\s+s[eé]|ni\s+idea|no\s+me\s+fij[eé]|no\s+sabr[ií]a|no\s+estoy\s+seguro|desconozco|"
+    r"tendr[ií]a\s+que\s+revisar|no\s+tengo\s+c[oó]mo\s+(?:comprobarlo|probarlo|revisarlo)|"
+    r"no\s+tengo\s+como\s+(?:comprobarlo|probarlo|revisarlo)|no\s+sabr[ií]a\s+decir(?:te)?)\b",
     re.IGNORECASE,
 )
 
@@ -20,7 +22,8 @@ PATRON_NO_APLICA = re.compile(
 )
 
 PATRON_AMBIGUO = re.compile(
-    r"\b(a\s+veces|creo|creo\s+que\s+s[ií]|m[aá]s\s+o\s+menos|puede\s+ser|de\s+vez\s+en\s+cuando|a\s+ratos|tal\s+vez)\b",
+    r"\b(a\s+veces|creo|creo\s+que\s+s[ií]|m[aá]s\s+o\s+menos|puede\s+ser|de\s+vez\s+en\s+cuando|a\s+ratos|tal\s+vez|"
+    r"parece\s+que\s+s[ií]|capaz|por\s+ratos|a\s+momentos)\b",
     re.IGNORECASE,
 )
 
@@ -45,6 +48,10 @@ CUES_RESPUESTA_CORTA = (
     "ya conseguí", "ya consegui", "me prestaron", "no dispongo",
     "sí tengo", "si tengo", "sí cuento", "si cuento", "lo tengo",
     "ya lo conecté", "ya lo conecte", "sí maestro", "si maestro",
+    "si causa", "ajá", "aja", "así es", "asi es", "exactamente", "eso mismo",
+    "para nada", "negativo", "nunca", "eso no pasa", "tendría que revisar",
+    "tendria que revisar", "no tengo cómo comprobarlo", "no tengo como comprobarlo",
+    "no estoy seguro",
 )
 
 
@@ -62,7 +69,10 @@ def es_respuesta_corta(texto: str) -> bool:
     if re.search(r"\b(?:corrijo|me\s+equivoqu[eé]|me\s+confund[ií]|en\s+realidad|quise\s+decir)\b", limpio):
         return False
     # Afirmaciones
-    if re.search(r"^(?:s[ií](?:[,\s]+maestro|[,\s]+amigo|[,\s]+bot|[,\s]+carbot)?|[aá]firmativo|correcto|lo\s+tengo|ya\s+lo\s+conect[eé]|s[ií]\s+(?:tengo|cuento|dispongo))\b", limpio):
+    if re.search(r"^(?:s[ií](?:[,\\s]+(?:causa|maestro|amigo|bot|carbot))?|[aá]firmativo|correcto|exactamente|eso\s+mismo|as[ií]\s+es|aj[aá]|claro(?:\s+que\s+s[ií])?|por\s+supuesto|efectivamente|lo\s+tengo|ya\s+lo\s+conect[eé]|s[ií]\s+(?:tengo|cuento|dispongo))\b", limpio):
+        return True
+    # Negaciones
+    if re.search(r"^(?:no(?:[,\\s]+(?:causa|maestro|amigo|bot|carbot))?|negativo|para\s+nada|nunca|eso\s+no\s+pasa|en\s+lo\s+absoluto|jam[aá]s|tampoco)\b", limpio):
         return True
     # Menciones numéricas con unidades técnicas explícitas
     tiene_unidad_tecnica = bool(re.search(r"\b\d+(?:[.,]\d+)?\s*(?:psi|bar|kpa|mv|v(?:oltios?|olts?)?|ma|a(?:mperios?)?|ohm(?:ios)?|Ω|°c|°f|rpm|km/h|%|mm|ms)\b", limpio))

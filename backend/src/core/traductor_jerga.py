@@ -15,7 +15,15 @@ DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
         r"se\s+queda\s+sin\s+fuerza|no\s+tiene\s+fuerza\s+en\s+subida)\b",
         "pierde potencia y presenta tirones al acelerar",
     ),
-    # Errores de escritura frecuentes en consultas reales de taller/WhatsApp.
+    # Errores de escritura y modismos peruanos frecuentes en consultas reales de taller/WhatsApp.
+    (r"\bno\s+aranca\b", "no arranca"),
+    (r"\b(?:frena\s+)?malaso\b", "frena muy mal anomalia en frenos"),
+    (r"\b(?:suena|ruido)\s+cuado\s+giro\b", "suena cuando giro chasquido palier junta homocinetica"),
+    (r"\b(?:se\s+)?calienta\s+muxo\b", "se calienta mucho sobrecalentamiento del motor"),
+    (r"\b(?:se\s+amarra|esta\s+amarrado|está\s+amarrado)\b", "caliper trabado o freno pegado se amarra"),
+    (r"\b(?:esta\s+temblando\s+feo|está\s+temblando\s+feo)\b", "vibracion excesiva e inestabilidad en el motor"),
+    (r"\b(?:suena\s+como\s+lata|traqueteo\s+de\s+lata)\b", "ruido metalico o golpeteo suelto"),
+    (r"\b(?:rompemuelle|rompemuelles)\b", "baches o desniveles"),
     (r"\b(?:menjar|manejarlo|manejando)\b", "manejar"),
     (r"\b(?:vibraciones|vibracion|vibración)\s+al\s+manejar\b", "vibracion al manejar"),
     (r"\b(?:llanta|llantas)\s+desbalancead[ao]s?\b", "llantas desbalanceadas"),
@@ -25,7 +33,7 @@ DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
         r"(?=.*(?:refrigerante|agua|culata|temperatura|recalienta|calienta))\b",
         "humo blanco por escape vapor blanco consume refrigerante posible empaque de culata",
     ),
-    # Mulsión agua-aceite ("café con leche" / "mayonesa" en tapa o varilla) -> Empaque de culata
+    # Emulsión agua-aceite ("café con leche" / "mayonesa" en tapa o varilla) -> Empaque de culata
     (
         r"\b(?:cafe\s+con\s+leche|café\s+con\s+leche|mayonesa|lechoso|chocolatada|emulsionad[oa])\b",
         "se mezcla el agua con el aceite chocolatada en el motor empaque de culata soplado",
@@ -163,7 +171,3 @@ def normalizar_jerga_peruana(texto: str) -> str:
         texto_procesado = re.sub(patron, reemplazo, texto_procesado, flags=re.IGNORECASE)
 
     return re.sub(r"\s+", " ", texto_procesado).strip()
-
-
-if __name__ == "__main__":
-    pass

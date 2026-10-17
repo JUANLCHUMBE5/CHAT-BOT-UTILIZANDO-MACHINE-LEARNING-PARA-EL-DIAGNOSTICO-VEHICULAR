@@ -63,7 +63,7 @@ def extraer_comprobaciones_mecanicas(
         )
         hechos_extraidos.append(h_intercambio.to_dict())
         dtc = re.search(r"\b([pucb]\d{4})\b", texto_l, re.IGNORECASE)
-        if dtc and re.search(r"\b(?:no\s+se\s+movi[oó]|sigui[oó]|persiste|no\s+cambi[oó])\b", texto_l):
+        if dtc and re.search(r"\b(?:no\s+se\s+movi[oó]|sigui[oó]|persiste|no\s+cambi[oó]|falla\s+persiste)\b", texto_l):
             codigo = dtc.group(1).upper()
             h_persistente = estado.registrar_hecho(
                 f"dtc_persistente_tras_intercambio_{codigo}",
@@ -74,6 +74,79 @@ def extraer_comprobaciones_mecanicas(
                 procedencia="user_reported",
             )
             hechos_extraidos.append(h_persistente.to_dict())
+            # Si el DTC persiste tras intercambio de bobina, se descarta la bobina de encendido
+            if componente == "bobina":
+                estado.descartar_hipotesis("bobina_de_encendido")
+                estado.descartar_hipotesis("bobina")
+    else:
+        # Detección de intercambio simple reportado en talleres: "bobina 2 intercambiada, falla persiste en cilindro 2"
+        intercambio_simple = re.search(
+            r"\b(?:(bobina|inyector|buj[ií]a)\s*(?:del\s+)?(?:cilindro\s*)?(\d+)?\s*(?:fue\s+)?intercambiada|"
+            r"intercambi[eé]\s+(?:la\s+)?(bobina|inyector|buj[ií]a)\s*(?:del\s+)?(?:cilindro\s*)?(\d+)?)\b",
+            texto_l,
+        )
+        if intercambio_simple:
+            comp_sim = intercambio_simple.group(1) or intercambio_simple.group(3) or "bobina"
+            cil_sim = intercambio_simple.group(2) or intercambio_simple.group(4) or ""
+            h_sim = estado.registrar_hecho(
+                f"prueba_intercambio_{comp_sim}",
+                f"{comp_sim} {cil_sim} intercambiada".strip(),
+                categoria="prueba_cruzada",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+                procedencia="user_reported",
+            )
+            hechos_extraidos.append(h_sim.to_dict())
+            if re.search(r"\b(?:no\s+se\s+movi[oó]|sigui[oó]|persiste|no\s+cambi[oó]|falla\s+persiste)\b", texto_l):
+                if comp_sim == "bobina":
+                    estado.descartar_hipotesis("bobina_de_encendido")
+                    estado.descartar_hipotesis("bobina")
+                elif comp_sim == "bujía" or comp_sim == "bujia":
+                    estado.descartar_hipotesis("bujias_desgastadas")
+                    estado.descartar_hipotesis("bujia")
+                elif comp_sim == "inyector":
+                    estado.descartar_hipotesis("inyector_averiado")
+                    estado.descartar_hipotesis("inyector")
+                h_desc = estado.registrar_hecho(
+                    f"{comp_sim}_descartada_tras_intercambio",
+                    f"{comp_sim} descartada, falla persiste en el mismo cilindro",
+                    categoria="descarte_componente",
+                    texto_crudo=texto_usuario,
+                    tipo=FactType.CONDICION,
+                    procedencia="user_reported",
+                )
+                hechos_extraidos.append(h_desc.to_dict())
+
+    # Piezas ya reemplazadas sin éxito reportadas por mecánico o propietario
+    m_reemp_sin_exito = re.search(
+        r"\b(?:ya\s+)?(?:cambi[eé]|reemplac[eé]|puse\s+nuev[ao]s?)\s+(?:las?\s+)?(buj[ií]as?|bobinas?|bomba(?:\s+de\s+gasolina)?|filtro(?:\s+de\s+gasolina)?)\s+(?:y\s+)?(?:sigue|contin[uú]a)\s+(?:igual|la\s+falla|el\s+problema)\b",
+        texto_l,
+    )
+    if m_reemp_sin_exito:
+        comp_reemp = m_reemp_sin_exito.group(1).lower()
+        if "buj" in comp_reemp:
+            nom_comp = "bujias"
+            estado.descartar_hipotesis("bujia")
+            estado.descartar_hipotesis("bujias_desgastadas")
+        elif "bobin" in comp_reemp:
+            nom_comp = "bobinas"
+            estado.descartar_hipotesis("bobina_de_encendido")
+            estado.descartar_hipotesis("bobina")
+        elif "bomba" in comp_reemp:
+            nom_comp = "bomba_gasolina"
+            estado.descartar_hipotesis("bomba_combustible")
+        else:
+            nom_comp = comp_reemp
+            estado.descartar_hipotesis(comp_reemp)
+        h_reemp_desc = estado.registrar_hecho(
+            f"{nom_comp}_reemplazada_sin_exito",
+            f"{nom_comp} reemplazada nueva sin cambio en la falla",
+            categoria="descarte_componente",
+            texto_crudo=texto_usuario,
+            tipo=FactType.CONDICION,
+            procedencia="user_reported",
+        )
+        hechos_extraidos.append(h_reemp_desc.to_dict())
 
     if re.search(r"\b(?:empaque\s+de\s+culata|junta\s+de\s+culata)\b", texto_l) and re.search(r"\b(?:quemado|soplado|roto|solucionado|cambio|nuevo)\b", texto_l):
         h_cul = estado.registrar_hecho("empaque_culata", "empaque de culata confirmado", categoria="componente_averiado", tipo=FactType.CONDICION)
@@ -92,7 +165,7 @@ def extraer_comprobaciones_mecanicas(
         hechos_extraidos.append(h_traf.to_dict())
 
     m_sol = re.search(
-        r"\b(?:qued[oó]\s+resuelto|caso\s+solucionado|falla\s+qued[oó]\s+resuelta|solucionado\s+con|reparaci[oó]n:\s*)\s*(?:cambiando|con|reemplazando|instalando)?\s*([a-záéíóú0-9\s/-]+?)(?:\.|$|,|\s+genera|\s+consolida)",
+        r"\b(?:qued[oó]\s+resuelto|caso\s+solucionado|falla\s+qued[oó]\s+resuelta|solucionado\s+con|reparaci[oó]n:\s*)\s*(?:cambiando|con|reemplazando|instalando)?\s*([a-z\u00e1\u00e9\u00ed\u00f3\u00fa0-9\s/-]+?)(?:\.|$|,|\s+genera|\s+consolida)",
         texto_l,
     )
     if m_sol:
@@ -105,7 +178,7 @@ def extraer_comprobaciones_mecanicas(
         h_ret = estado.registrar_hecho(f"retorno_anomalo_inyector{num_iny}", f"retorno anómalo inyector {num_iny}", categoria="medicion_anomala", tipo=FactType.CONDICION)
         hechos_extraidos.append(h_ret.to_dict())
 
-    if re.search(r"\b(?:no\s+(?:tiene|hay|registra|arroja)\s+(?:ning[uú]n\s+)?c[oó]digo|sin\s+(?:c[oó]digos?|dtc)|sin\s+fallas?\s+en\s+el\s+esc[aá]ner|esc[aá]ner\s+(?:limpio|no\s+tiene\s+ning[uú]n\s+c[oó]digo)|no\s+tiene\s+dtc)\b", texto_l):
+    if re.search(r"\b(?:no\s+(?:tiene|hay|registra|arroja)\s+(?:ning[u\u00fa]n\s+)?c[o\u00f3]digo|sin\s+(?:c[o\u00f3]digos?|dtc)|sin\s+fallas?\s+en\s+el\s+esc[a\u00e1]ner|esc[a\u00e1]ner\s+(?:limpio|no\s+tiene\s+ning[u\u00fa]n\s+c[o\u00f3]digo)|no\s+tiene\s+dtc)\b", texto_l):
         h_sdtc = estado.registrar_hecho("sin_dtc", "sin códigos DTC", categoria="dtc", tipo=FactType.CONDICION)
         hechos_extraidos.append(h_sdtc.to_dict())
 
@@ -126,7 +199,7 @@ def extraer_comprobaciones_mecanicas(
         hechos_extraidos.append(h.to_dict())
 
     # 3. Herramientas disponibles / no disponibles (Plan B / ConversationState)
-    m_herramienta = re.search(r"\b(?:no\s+tengo|sin|carezco\s+de)\s+(osciloscopio|esc[aá]ner|scanner|man[oó]metro|vacu[oó]metro|compres[ií]metro|mult[ií]metro)\b", texto_l)
+    m_herramienta = re.search(r"\b(?:no\s+tengo|sin|carezco\s+de)\s+(osciloscopio|esc[a\u00e1]ner|scanner|man[o\u00f3]metro|vacu[o\u00f3]metro|compres[i\u00ed]metro|mult[i\u00ed]metro)\b", texto_l)
     if m_herramienta:
         raw_herr = m_herramienta.group(1).lower()
         herr = "escaner" if "scan" in raw_herr or "esc" in raw_herr else raw_herr
@@ -137,7 +210,7 @@ def extraer_comprobaciones_mecanicas(
             h_esc = estado.registrar_hecho("escaner_disponible", "NO", estado=FactState.NO_APLICA)
             hechos_extraidos.append(h_esc.to_dict())
 
-    m_disp = re.search(r"\b(?:s[ií],?\s+)?(?:tengo|dispongo\s+de|cuento\s+con)\s+(?:un\s+|el\s+)?(osciloscopio|esc[aá]ner|scanner|man[oó]metro|vacu[oó]metro|compres[ií]metro|mult[ií]metro)\b", texto_l)
+    m_disp = re.search(r"\b(?:s[i\u00ed],?\s+)?(?:tengo|dispongo\s+de|cuento\s+con)\s+(?:un\s+|el\s+)?(osciloscopio|esc[a\u00e1]ner|scanner|man[o\u00f3]metro|vacu[o\u00f3]metro|compres[i\u00ed]metro|mult[i\u00ed]metro)\b", texto_l)
     if m_disp and not m_herramienta:
         raw_disp = m_disp.group(1).lower()
         herr_disp = "escaner" if "scan" in raw_disp or "esc" in raw_disp else raw_disp
@@ -146,19 +219,19 @@ def extraer_comprobaciones_mecanicas(
 
     # 4. Estado de acople de compresor / clic A/C
     if "compresor" in texto_l or "clic" in texto_l:
-        if re.search(r"\bno\s+s[eé]\s+(?:si\s+)?(?:acopla|se\s+escucha)\b", texto_l):
+        if re.search(r"\bno\s+s[e\u00e9]\s+(?:si\s+)?(?:acopla|se\s+escucha)\b", texto_l):
             h = estado.registrar_hecho("compresor_acopla", "DESCONOCIDO", estado=FactState.DESCONOCIDO)
             hechos_extraidos.append(h.to_dict())
         elif re.search(r"\b(?:no\s+acopla|no\s+pega|no\s+entra|no\s+se\s+escucha(?:\s+el)?\s+clic)\b", texto_l):
             estado.registrar_prueba_completada("acople_compresor", "NO")
             h = estado.registrar_hecho("compresor_acopla", "NO", estado=FactState.CONFIRMADO)
             hechos_extraidos.append(h.to_dict())
-        elif re.search(r"\b(?:s[ií]\s+acopla|acopla\s+bien|s[ií]\s+pega|se\s+escucha\s+(?:el\s+)?clic|escuch[oó]\s+(?:el\s+)?clic|hace\s+clic)\b", texto_l):
+        elif re.search(r"\b(?:s[i\u00ed]\s+acopla|acopla\s+bien|s[i\u00ed]\s+pega|se\s+escucha\s+(?:el\s+)?clic|escuch[o\u00f3]\s+(?:el\s+)?clic|hace\s+clic)\b", texto_l):
             estado.registrar_prueba_completada("acople_compresor", "SI")
             h = estado.registrar_hecho("compresor_acopla", "SI", estado=FactState.CONFIRMADO)
             hechos_extraidos.append(h.to_dict())
 
-    if re.search(r"\bno\s+s[eé]\s+(?:si\s+)?tiene\s+c[oó]digos\b", texto_l):
+    if re.search(r"\bno\s+s[e\u00e9]\s+(?:si\s+)?tiene\s+c[o\u00f3]digos\b", texto_l):
         h_cd = estado.registrar_hecho("codigos_dtc_observados", "NO_SABE", estado=FactState.DESCONOCIDO)
         hechos_extraidos.append(h_cd.to_dict())
 
@@ -175,7 +248,7 @@ def extraer_comprobaciones_mecanicas(
         menciona_chispa
         and not chispa_ausente
         and re.search(
-            r"\b(s[ií]\s+(?:hay|tiene|da|sale|salta|se\s+observa)|chispa\s+(?:buena|fuerte|azul|presente|normal|correcta|bien)|salta\s+chispa)\b",
+            r"\b(s[i\u00ed]\s+(?:hay|tiene|da|sale|salta|se\s+observa)|chispa\s+(?:buena|fuerte|azul|presente|normal|correcta|bien)|salta\s+chispa)\b",
             texto_l,
         )
     )
@@ -219,56 +292,6 @@ def extraer_comprobaciones_mecanicas(
     ):
         h_reemp = estado.registrar_hecho("reemplazado_aceite", "SI", categoria="seguridad", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
         hechos_extraidos.append(h_reemp.to_dict())
-        h_aceite_desc = estado.registrar_hecho("dilucion_aceite_combustible", "CORREGIDO", categoria="seguridad", estado=FactState.DESCARTADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-        hechos_extraidos.append(h_aceite_desc.to_dict())
-
-    # Mariposa con carbón
-    if re.search(
-        r"\b(?:cuerpo(?:\s+de)?\s+aceleraci[oó]n|mariposa|admisi[oó]n)\b.{0,50}\b(?:carb[oó]n|holl[ií]n|suciedad|costra|sedimento|sucio|obstruid[oa]|capa\s+gruesa)\b|\b(?:carb[oó]n|holl[ií]n|suciedad|costra)\b.{0,40}\b(?:cuerpo(?:\s+de)?\s+aceleraci[oó]n|mariposa)\b",
-        texto_l,
-    ):
-        h_carb = estado.registrar_hecho("mariposa_con_carbon", "SI", categoria="comprobacion_fisica", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-        hechos_extraidos.append(h_carb.to_dict())
-        h_carb2 = estado.registrar_hecho("cuerpo_aceleracion_sucio", "SI", categoria="comprobacion_fisica", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-        hechos_extraidos.append(h_carb2.to_dict())
-
-    # Presión de combustible normal
-    if re.search(
-        r"\bpresi[oó]n\s+de\s+combustible\b.{0,40}\b(\d+)\s*psi\b.{0,20}\b(?:fija|normal|buena|ok|constante)\b|\bpresi[oó]n\s+de\s+combustible\b.{0,30}\b(?:fija|normal|buena|ok)\b",
-        texto_l,
-    ):
-        h_pcomb = estado.registrar_hecho("presion_combustible_ok", "SI", categoria="medicion", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-        hechos_extraidos.append(h_pcomb.to_dict())
-
-    # Compresión
-    m_comp = re.search(r"\bcompresi[oó]n\b", texto_l)
-    if m_comp:
-        m_psi = re.search(r"\b(\d+)\s*(?:psi|bar)\b", texto_l)
-        es_pareja = bool(re.search(r"\b(?:parej[oa]|igual(?:es)?|normal(?:es)?|buen[oa]s?|sin\s+diferencias?)\b", texto_l))
-        if m_psi or es_pareja:
-            val_psi = m_psi.group(1) if m_psi else ""
-            val_str = f"{val_psi} PSI parejo" if (val_psi and es_pareja) else (f"{val_psi} PSI" if val_psi else "pareja")
-            h_comp = estado.registrar_hecho("compresion_pareja_ok", val_str, categoria="medicion", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            hechos_extraidos.append(h_comp.to_dict())
-            if val_psi:
-                estado.registrar_medicion("compresion_motor", float(val_psi), "PSI", contexto="cilindros", prueba="compresion_pareja_ok", estado="observado")
-                estado.registrar_prueba_completada("compresion_pareja_ok", val_str)
-
-    # Presión diferencial DPF
-    if re.search(
-        r"\b(?:presi[oó]n\s+diferencial|sensor\s+(?:de\s+)?presi[oó]n\s+diferencial|dpf)\b.{0,50}\b(\d+)\s*kpa\b|\b(\d+)\s*kpa\b.{0,40}\b(?:presi[oó]n\s+diferencial|dpf)\b",
-        texto_l,
-    ):
-        h_dpf = estado.registrar_hecho("presion_diferencial_dpf_alta", "SI", categoria="medicion", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-        hechos_extraidos.append(h_dpf.to_dict())
-
-    # Contrapresión de escape
-    if re.search(
-        r"\b(?:contrapresi[oó]n|presi[oó]n\s+de\s+escape|man[oó]metro\b.{0,35}\bsensor\s+1|man[oó]metro\b.{0,35}\bescape)\b",
-        texto_l,
-    ) and ("psi" in texto_l or "bar" in texto_l):
-        h_cp = estado.registrar_hecho("contrapresion_medida", "SI", categoria="medicion", estado=FactState.CONFIRMADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-        hechos_extraidos.append(h_cp.to_dict())
 
     from .comprobaciones_sistemas import extraer_comprobaciones_sistemas
     hechos_extraidos.extend(extraer_comprobaciones_sistemas(estado, texto_usuario, texto_normalizado))

@@ -62,7 +62,7 @@ def seleccionar_pregunta_con_filtro(
         candidatas.append((txt_multi, opc_multi, QuestionIntent.ACLARACION_CONTRADICCION, 98))
 
     # 1. Preguntas operacionales de ARRANQUE
-    if estado.estado_operativo == EstadoOperativo.ARRANQUE:
+    if estado.estado_operativo == EstadoOperativo.ARRANQUE or dominio == "ARRANQUE":
         if estado.obtener_hecho("sintoma_demora_arranque") and estado.obtener_hecho("giro_motor") is None and puede_preguntar(QuestionIntent.COMPORTAMIENTO_ARRANQUE, estado):
             txt_dem = (
                 "Al intentar arrancar por las mañanas: ¿el motor gira con buena velocidad pero tarda muchos segundos en encender, "
@@ -100,28 +100,75 @@ def seleccionar_pregunta_con_filtro(
         )
         opc = ["Detenido en ralentí / tráfico", "En carretera a velocidad", "En cualquier condición"]
         candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 85))
-    elif estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
+    elif estado.estado_operativo == EstadoOperativo.DESCONOCIDO and dominio in ("DESCONOCIDO", "GENERAL") and not tiene_queja_arranque and puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
         txt = (
             "Para orientar el diagnóstico: ¿la falla se presenta cuando el vehículo está detenido en ralentí, "
             "al acelerar con fuerza en carretera o únicamente al pisar el pedal de freno?"
         )
         opc = ["Detenido en ralentí", "Al acelerar bajo carga", "Al frenar"]
-        candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 75))
+        candidatas.append((txt, opc, QuestionIntent.CONDICION_OPERACION, 45))
 
-    if estado.estado_operativo == EstadoOperativo.DESCONOCIDO and not tiene_queja_arranque and not tiene_queja_termica and puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
+    if estado.estado_operativo == EstadoOperativo.DESCONOCIDO and dominio in ("DESCONOCIDO", "GENERAL") and not tiene_queja_arranque and not tiene_queja_termica and puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
         txt_sensorial = (
             "Para precisar la falla: ¿se percibe algún ruido anómalo (como cascabeleo, chillido o golpeteo), humo o vibración?"
         )
         opc_sensorial = ["Ruido anómalo evidente", "Humo o vibración", "Ningún ruido ni humo"]
-        candidatas.append((txt_sensorial, opc_sensorial, QuestionIntent.PRESENCIA_RUIDO, 55))
+        candidatas.append((txt_sensorial, opc_sensorial, QuestionIntent.PRESENCIA_RUIDO, 42))
 
     # 2b. Preguntas por dominio
-    if dominio == "TRANSMISION":
+    if dominio == "ELECTRICO":
+        if puede_preguntar(QuestionIntent.MEDICION_VOLTAJE, estado):
+            candidatas.append((
+                "Con el motor encendido en marcha mínima: ¿has medido con multímetro en bornes de la batería si el alternador genera entre 13.5V y 14.5V?",
+                ["Marca menos de 13V (no carga)", "Marca más de 15V (sobrecarga)", "No tengo multímetro"],
+                QuestionIntent.MEDICION_VOLTAJE,
+                89,
+            ))
+        if puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
+            candidatas.append((
+                "Al encender los faros altos y el desempañador: ¿se escucha chillido en la faja de accesorios o el testigo de batería parpadea con mayor intensidad?",
+                ["Chillido en la faja", "Testigo fijo / parpadea", "Sin chillido"],
+                QuestionIntent.COMPONENTE_REVISADO,
+                82,
+            ))
+    elif dominio == "MARCHA_MOTOR":
+        mensajes_m = " ".join(estado.historial_mensajes_usuario).lower()
+        if ("humo negro" in mensajes_m or "consumo" in mensajes_m) and puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
+            candidatas.append((
+                "Respecto al exceso de humo negro y consumo: ¿las bujías salieron con carbón negro seco aterciopelado o se observa el filtro de aire totalmente saturado?",
+                ["Bujías con carbón negro seco", "Filtro de aire saturado", "No se ha desmontado"],
+                QuestionIntent.COMPONENTE_REVISADO,
+                78,
+            ))
+        elif ("tironea" in mensajes_m or "ratea" in mensajes_m or "cascabele" in mensajes_m) and puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
+            candidatas.append((
+                "¿El tironeo o pérdida de potencia ocurre constantemente o se manifiesta con mayor fuerza al acelerar en subidas o adelantamientos?",
+                ["Al acelerar bajo carga / cuestas", "En todo momento", "Solo en frío"],
+                QuestionIntent.CONDICION_OPERACION,
+                77,
+            ))
+        elif puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
+            candidatas.append((
+                "¿Has revisado si las bujías o bobinas de encendido presentan chispa débil, o si algún inyector tiene fuga en el riel?",
+                ["Bujías/bobinas con desgaste", "Inyector goteando", "No se ha revisado"],
+                QuestionIntent.COMPONENTE_REVISADO,
+                76,
+            ))
+    elif dominio == "TRANSMISION":
         es_embrague_manual = any(
             "embrague" in str(h.valor).lower() or "clutch" in str(h.valor).lower() or "zapate" in str(h.valor).lower()
             for h in estado.hechos.values()
         ) or any("embrague" in m.lower() or "clutch" in m.lower() or "zapate" in m.lower() for m in estado.historial_mensajes_usuario)
-        if es_embrague_manual:
+        
+        es_pedal_pegado = any("pegado" in m.lower() or "al piso" in m.lower() or "sin retorno" in m.lower() for m in estado.historial_mensajes_usuario)
+        if es_pedal_pegado and puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
+            candidatas.append((
+                "Al quedar el pedal de embrague pegado abajo: ¿has revisado el nivel del depósito de líquido hidráulico o si hay fuga visible en la bomba principal o bombín auxiliar?",
+                ["Nivel bajo / fuga en bombín", "Nivel normal sin fugas visibles", "No se ha revisado el bombín"],
+                QuestionIntent.COMPONENTE_REVISADO,
+                92,
+            ))
+        elif es_embrague_manual:
             if puede_preguntar(QuestionIntent.CONDICION_OPERACION, estado):
                 candidatas.append((
                     "¿El síntoma de zapateo o patinamiento se acentúa al arrancar en primera marcha o al acelerar en pendientes pronunciadas?",
@@ -216,16 +263,17 @@ def seleccionar_pregunta_con_filtro(
                 75,
             ))
     elif dominio == "CLIMATIZACION":
+        compresor_hecho = estado.obtener_hecho("compresor_acopla")
         acople_ya_hecho = (
             estado.ya_comprobado_o_respondido("acople_compresor")
             or estado.completed_tests.get("acople_compresor") is not None
-            or estado.obtener_hecho("compresor_acopla") is not None
+            or compresor_hecho is not None
         )
         if acople_ya_hecho:
-            if not estado.ya_comprobado_o_respondido("electroventilador_condensador") and puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
+            if puede_preguntar(QuestionIntent.COMPONENTE_REVISADO, estado):
                 candidatas.append((
-                    "Con el A/C encendido y compresor acoplado: ¿gira el electroventilador del condensador (adelante) y al tocar las tuberías en el vano motor se siente una bien fría y la otra caliente?",
-                    ["Electroventilador gira y tubería fría", "Electroventilador no gira", "Ambas tuberías a temperatura ambiente (posible fuga de gas)"],
+                    "Respecto al climatizador: ¿has verificado si el fusible del ventilador frontal está sano o si el sistema perdió el gas refrigerante por alguna fuga visible?",
+                    ["Fusible en buen estado", "Fuga visible de refrigerante", "No se ha revisado"],
                     QuestionIntent.COMPONENTE_REVISADO,
                     85,
                 ))
@@ -309,40 +357,48 @@ def seleccionar_pregunta_con_filtro(
         estado.falla_principal
         or (estado.top3_actual[0]["falla"] if estado.top3_actual else estado.estado_operativo.value)
     )
-    active_system = CompatibilidadPreguntas.dominio_actual(estado)
-    top3_fallas = [h.get("falla") for h in estado.top3_actual] if estado.top3_actual else []
-    txt_elegido = None
-    opc_elegida = None
-    intent_elegido = None
+    c1_top3_falla = [h.get("falla", "") for h in estado.top3_actual]
 
-    if compatibles:
-        compatibles.sort(key=lambda x: x[3], reverse=True)
-        txt_elegido, opc_elegida, intent_elegido, _ = compatibles[0]
+    if not compatibles:
+        for item in descartadas:
+            logger.info(
+                "[QUESTION_DECISION] case_id=%s active_problem=%s active_system=%s c1_top3=%s "
+                "candidate_question='%s' candidate_system=%s compatible=False reason=%s selected=False",
+                estado.case_id,
+                active_problem,
+                estado.active_system,
+                c1_top3_falla,
+                item["pregunta"],
+                item["dominio_pregunta"],
+                item["motivo"],
+            )
+        return None
+
+    compatibles.sort(key=lambda x: x[3], reverse=True)
+    seleccionada = compatibles[0]
 
     for item in candidatas_traza:
-        p_txt = item["pregunta"]
-        is_sel = (p_txt == txt_elegido)
-        p_comp = item["aplicable"]
-        p_dom = item["dominio_pregunta"]
-        p_mot = next((d["motivo"] for d in descartadas if d["pregunta"] == p_txt), "OK")
+        es_sel = item["pregunta"] == seleccionada[0] and item["aplicable"]
         logger.info(
             "[QUESTION_DECISION] case_id=%s active_problem=%s active_system=%s c1_top3=%s "
-            "candidate_question='%s' candidate_system=%s compatible=%s reason=%s selected=%s",
+            "candidate_question='%s' candidate_system=%s compatible=%s reason=OK selected=%s",
             estado.case_id,
             active_problem,
-            active_system,
-            top3_fallas,
-            p_txt,
-            p_dom,
-            p_comp,
-            p_mot,
-            is_sel,
+            estado.active_system,
+            c1_top3_falla,
+            item["pregunta"],
+            item["dominio_pregunta"],
+            item["aplicable"],
+            es_sel,
         )
 
-    if compatibles:
-        return txt_elegido, opc_elegida, intent_elegido, candidatas_traza, descartadas
-
-    return None
+    return (
+        seleccionada[0],
+        seleccionada[1],
+        seleccionada[2],
+        candidatas_traza,
+        descartadas,
+    )
 
 
 def generar_pregunta_aclaratoria_inicial(

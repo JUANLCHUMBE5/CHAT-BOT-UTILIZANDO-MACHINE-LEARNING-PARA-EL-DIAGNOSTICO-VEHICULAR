@@ -62,14 +62,15 @@ class ConversationState:
     preguntas_realizadas: List[Dict[str, Any]] = field(default_factory=list)
     respuestas_obtenidas: List[Dict[str, Any]] = field(default_factory=list)
     historial_mensajes_usuario: List[str] = field(default_factory=list)
-    trazabilidad: List[Dict[str, Any]] = field(default_factory=list)
+    trazabilidad: List[str] = field(default_factory=list)
     created_at: float = field(default_factory=time.time)
     updated_at: float = field(default_factory=time.time)
 
-    @property
     def hechos_caso_activo(self) -> Dict[str, DiagnosticFact]:
-        """Retorna exclusivamente los hechos pertenecientes al caso activo."""
-        return self.hechos
+        return {
+            k: h for k, h in self.hechos.items()
+            if h.estado in (FactState.CONFIRMADO, FactState.AUSENTE_NEGADO, FactState.NO_REVISADO, FactState.NO_SABE_REALIZAR)
+        }
 
     def obtener_hecho(self, campo: str) -> Optional[DiagnosticFact]:
         return self.hechos.get(campo)
@@ -80,7 +81,7 @@ class ConversationState:
 
     def es_hecho_negado(self, campo: str) -> bool:
         hecho = self.hechos.get(campo)
-        return hecho is not None and hecho.estado == FactState.AUSENTE_NEGADO
+        return hecho is not None and hecho.estado in (FactState.AUSENTE_NEGADO, FactState.DESCARTADO)
 
     def es_hecho_confirmado(self, campo: str) -> bool:
         hecho = self.hechos.get(campo)
@@ -114,7 +115,7 @@ class ConversationState:
     def obtener_hecho_negado(self, patron_o_campo: str) -> Optional[DiagnosticFact]:
         p = patron_o_campo.lower()
         for k, h in self.hechos.items():
-            if h.estado == FactState.AUSENTE_NEGADO and (p in k.lower() or p in h.valor.lower()):
+            if h.estado in (FactState.AUSENTE_NEGADO, FactState.DESCARTADO) and (p in k.lower() or p in h.valor.lower()):
                 return h
         return None
 
@@ -126,27 +127,86 @@ class ConversationState:
         return None
 
     def bloquear_herramienta(self, her: str) -> None:
-        if her not in self.herramientas_no_disponibles:
-            self.herramientas_no_disponibles.append(her)
+        h = her.lower().strip()
+        if h and h not in self.herramientas_no_disponibles:
+            self.herramientas_no_disponibles.append(h)
             self.updated_at = time.time()
 
     def desbloquear_herramienta(self, her: str) -> None:
-        if her in self.herramientas_no_disponibles:
-            self.herramientas_no_disponibles.remove(her)
-            self.pruebas_no_disponibles = [p for p in self.pruebas_no_disponibles if p.get("herramienta") != her]
+        h = her.lower().strip()
+        if h in self.herramientas_no_disponibles:
+            self.herramientas_no_disponibles.remove(h)
+            self.pruebas_no_disponibles = [p for p in self.pruebas_no_disponibles if p.get("herramienta") != h]
             self.updated_at = time.time()
 
-    def bloquear_prueba(self, prueba: str, herramienta: str, motivo: str = "sin_herramienta") -> None:
-        if not self.es_prueba_bloqueada(prueba):
-            self.pruebas_no_disponibles.append({"prueba": prueba, "herramienta": herramienta, "motivo": motivo})
-            self.updated_at = time.time()
+    def es_herramienta_bloqueada(self, her: str) -> bool:
+        return her.lower().strip() in self.herramientas_no_disponibles
 
-    def es_prueba_bloqueada(self, prueba: str) -> bool:
-        return any(p.get("prueba") == prueba for p in self.pruebas_no_disponibles)
+    def bloquear_prueba(self, p_dict: Any, herramienta: str = "", motivo: str = "sin_herramienta") -> None:
+        if isinstance(p_dict, dict):
+            intent = p_dict.get("intent")
+            if intent and not any(p.get("intent") == intent for p in self.pruebas_no_disponibles):
+                self.pruebas_no_disponibles.append(dict(p_dict))
+                self.updated_at = time.time()
+        else:
+            prueba = str(p_dict)
+            if not self.es_prueba_bloqueada(prueba):
+                self.pruebas_no_disponibles.append({"prueba": prueba, "herramienta": herramienta, "motivo": motivo})
+                self.updated_at = time.time()
+
+    def es_prueba_bloqueada(self, intent: Any) -> bool:
+        i_str = intent.value if hasattr(intent, "value") else str(intent)
+        return any(
+            p.get("intent") == i_str or p.get("prueba") == i_str
+            for p in self.pruebas_no_disponibles
+        )
 
     def ya_preguntado_texto(self, fragmento: str) -> bool:
         frag = fragmento.lower()
         return any(frag in str(p.get("texto", "")).lower() for p in self.preguntas_realizadas)
+
+    def registrar_sintoma_reportado(
+        self,
+        sintoma: str,
+        categoria: str = "sintoma",
+        confianza: float = 1.0,
+        texto_crudo: Optional[str] = None,
+        tipo: FactType = FactType.SINTOMA,
+        procedencia: str = "user_reported",
+    ) -> DiagnosticFact:
+        s_clean = sintoma.strip()
+        if s_clean and s_clean not in self.active_symptoms:
+            self.active_symptoms.append(s_clean)
+        return self.registrar_hecho(
+            campo=f"sintoma_{s_clean.lower().replace(' ', '_')}",
+            valor="SI",
+            categoria=categoria,
+            estado=FactState.CONFIRMADO,
+            confianza=confianza,
+            texto_crudo=texto_crudo or s_clean,
+            tipo=tipo,
+            procedencia=procedencia,
+        )
+
+    def registrar_hecho_observable(
+        self,
+        campo: str,
+        valor: str,
+        categoria: str = "observacion",
+        confianza: float = 1.0,
+        texto_crudo: Optional[str] = None,
+        procedencia: str = "user_reported",
+    ) -> DiagnosticFact:
+        return self.registrar_hecho(
+            campo=campo,
+            valor=valor,
+            categoria=categoria,
+            estado=FactState.CONFIRMADO,
+            confianza=confianza,
+            texto_crudo=texto_crudo,
+            tipo=FactType.OBSERVACION,
+            procedencia=procedencia,
+        )
 
     def registrar_hecho(
         self,
@@ -281,63 +341,70 @@ class ConversationState:
     ) -> None:
         self.completed_tests[prueba] = resultado
         self.limpiar_pregunta_pendiente()
+        self.updated_at = time.time()
 
     def registrar_medicion(
         self,
-        tipo: str,
-        valor: float,
-        unidad: str,
+        tipo: Optional[str] = None,
+        valor: float = 0.0,
+        unidad: str = "",
         contexto: Optional[str] = None,
         prueba: Optional[str] = None,
         procedencia: str = "measured",
         estado: str = "observado",
+        magnitud: Optional[str] = None,
+        componente: Optional[str] = None,
+        **kwargs: Any,
     ) -> Dict[str, Any]:
+        clave = tipo or magnitud or "medicion"
         val_float = float(valor)
-        val_str = f"{int(val_float) if val_float.is_integer() else val_float} {unidad}"
+        val_str = f"{int(val_float) if val_float.is_integer() else val_float} {unidad}".strip()
         med = {
-            "tipo": tipo,
+            "tipo": clave,
+            "magnitud": clave,
             "valor": val_float,
             "unidad": unidad,
             "formato": val_str,
             "contexto": contexto,
+            "componente": componente,
             "prueba": prueba or (self.pending_question.get("intent") if self.pending_question else None),
             "estado": estado,
             "turno": self.turno_actual,
             "procedencia": procedencia,
             "timestamp": time.time(),
         }
-        anterior = self.measurements.get(tipo)
+        anterior = self.measurements.get(clave)
         if isinstance(anterior, dict) and (
             anterior.get("valor") != val_float
             or str(anterior.get("unidad", "")).casefold() != unidad.casefold()
         ):
             turno_anterior = anterior.get("turno", "sin_turno")
-            clave_hist = f"{tipo}_turno_{turno_anterior}"
+            clave_hist = f"{clave}_turno_{turno_anterior}"
             sufijo = 2
             while clave_hist in self.measurements:
-                clave_hist = f"{tipo}_turno_{turno_anterior}_{sufijo}"
+                clave_hist = f"{clave}_turno_{turno_anterior}_{sufijo}"
                 sufijo += 1
             self.measurements[clave_hist] = dict(anterior)
-        self.measurements[tipo] = med
+        self.measurements[clave] = med
         self.limpiar_pregunta_pendiente()
         self.updated_at = time.time()
         return med
 
     def marcar_herramienta_disponible(self, her: str) -> None:
-        h_norm = her.lower().strip()
-        if h_norm not in self.tools_available:
-            self.tools_available.append(h_norm)
-        if h_norm in self.tools_unavailable:
-            self.tools_unavailable.remove(h_norm)
-        self.desbloquear_herramienta(h_norm)
+        h = her.lower().strip()
+        if h not in self.tools_available:
+            self.tools_available.append(h)
+        if h in self.tools_unavailable:
+            self.tools_unavailable.remove(h)
+        self.updated_at = time.time()
 
     def marcar_herramienta_indisponible(self, her: str) -> None:
-        h_norm = her.lower().strip()
-        if h_norm not in self.tools_unavailable:
-            self.tools_unavailable.append(h_norm)
-        if h_norm in self.tools_available:
-            self.tools_available.remove(h_norm)
-        self.bloquear_herramienta(h_norm)
+        h = her.lower().strip()
+        if h not in self.tools_unavailable:
+            self.tools_unavailable.append(h)
+        if h in self.tools_available:
+            self.tools_available.remove(h)
+        self.updated_at = time.time()
 
     def es_herramienta_disponible(self, her: str) -> bool:
         return her.lower().strip() in self.tools_available
@@ -351,6 +418,12 @@ class ConversationState:
         if c_low in self.hechos and self.hechos[c_low].estado in (FactState.CONFIRMADO, FactState.DESCONOCIDO):
             return True
         return False
+
+    def descartar_hipotesis(self, hipotesis: str) -> None:
+        """Agrega una hipótesis o componente a la lista de hipótesis descartadas."""
+        if hipotesis and hipotesis not in self.hipotesis_descartadas:
+            self.hipotesis_descartadas.append(hipotesis)
+            self.updated_at = time.time()
 
     def _archivar_estado_activo(self) -> None:
         """Conserva el estado específico del caso solo dentro del histórico."""
