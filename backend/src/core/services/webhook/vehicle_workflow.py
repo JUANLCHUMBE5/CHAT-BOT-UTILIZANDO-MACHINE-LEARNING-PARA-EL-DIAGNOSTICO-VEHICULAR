@@ -3,12 +3,13 @@ import re
 from typing import Any
 
 from src.core.conversacion.extractor_hechos import ExtractorHechos
+from src.core.intent_classifier import clasificar_intencion_consulta
 from src.core.services.whatsapp_provider import whatsapp_provider_service
 from src.core.vehicle_profile import extraer_datos_vehiculo
 from src.infrastructure.database.repositories.vehiculo_repository import normalizar_placa
 
 _COMANDO_NUEVO_CASO = re.compile(
-    r"^\s*(?:nuevo\s+(?:caso|problema|diagnostico|diagnóstico|vehiculo|vehículo)|"
+    r"^\s*(?:(?:nuevo|neuvo)\s+(?:caso|problema|diagnostico|diagnóstico|vehiculo|vehículo)|"
     r"nueva\s+consulta|otro\s+(?:caso|vehiculo|vehículo|carro)|reiniciar)\s*[.!]*\s*$",
     re.IGNORECASE,
 )
@@ -79,12 +80,18 @@ async def preparar_flujo_vehiculo(
     if es_solicitud_nuevo_caso and comando_caso != 'cancelar':
         placa_nueva_detectada = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
         perfil_nuevo_detectado = extraer_datos_vehiculo(texto_cliente) if tipo_mensaje == 'text' else {}
-        tiene_sintomas_nuevos = ExtractorHechos.contiene_informacion_diagnostica(texto_cliente) if tipo_mensaje == 'text' else False
+        tiene_sintomas_nuevos = (
+            ExtractorHechos.contiene_informacion_diagnostica(texto_cliente)
+        ) if tipo_mensaje == 'text' else False
 
         placa_previa = contexto_placa.get('placa_posttest') or contexto_placa.get('placa')
         mismo_vehiculo_solicitado = bool(
             (solicitud_caso and solicitud_caso.get("preservar_vehiculo"))
-            or (placa_nueva_detectada and placa_previa and normalizar_placa(placa_nueva_detectada) == placa_previa)
+            or (
+                placa_nueva_detectada
+                and placa_previa
+                and normalizar_placa(placa_nueva_detectada) == normalizar_placa(placa_previa)
+            )
         )
 
         if mismo_vehiculo_solicitado and placa_previa:
@@ -139,7 +146,7 @@ async def preparar_flujo_vehiculo(
 
             conversacion.contexto = contexto_placa
 
-            if _perfil_completo(perfil_nuevo_detectado) and tiene_sintomas_nuevos:
+            if tiene_sintomas_nuevos:
                 if not placa:
                     placa = "SIN-PLACA"
                     contexto_placa['placa'] = placa
@@ -164,10 +171,15 @@ async def preparar_flujo_vehiculo(
                 return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
 
         self.gestor.session_manager.finalizar_caso(str(conversacion.id))
-        for clave in ('validacion_diagnostico', 'conversation_state', 'estado_conversacion'):
+        for clave in (
+            'validacion_diagnostico', 'conversation_state', 'estado_conversacion',
+            'posttest_placa_pendiente', 'preplate_pending_input',
+            'nueva_consulta_placa_pendiente', 'perfil_vehiculo_pendiente',
+            'perfil_vehiculo', 'placa', 'placa_posttest',
+        ):
             contexto_placa.pop(clave, None)
         placa_anterior = contexto_placa.get('placa_posttest') or contexto_placa.get('placa')
-        if placa_anterior:
+        if placa_anterior and not (solicitud_caso and solicitud_caso.get("otro_vehiculo")):
             contexto_placa['nueva_consulta_placa_pendiente'] = True
             respuesta_nuevo = '🔄 Nueva consulta iniciada. ¿Deseas usar la misma placa registrada?\nResponde *SÍ* para usarla o envía la placa del otro vehículo.'
         else:
@@ -188,22 +200,47 @@ async def preparar_flujo_vehiculo(
             await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
             await session.commit()
             return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
-        try:
-            placa_nueva = normalizar_placa(texto_cliente)
-        except ValueError:
-            respuesta_placa = 'Responde *SÍ* para usar la misma placa o ingresa una placa válida.'
-            await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_placa)
-            await session.commit()
-            return ({'status': 'esperando_placa', 'respuesta': respuesta_placa}, placa, marca_modelo, texto_cliente)
-        contexto_placa['placa'] = placa_nueva
-        contexto_placa['placa_posttest'] = placa_nueva
-        contexto_placa.pop('nueva_consulta_placa_pendiente', None)
-        contexto_placa['perfil_vehiculo_pendiente'] = True
-        conversacion.contexto = contexto_placa
-        respuesta_perfil = _mensaje_solicitar_perfil()
-        await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
-        await session.commit()
-        return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
+        
+        datos_vehiculo_msg = extraer_datos_vehiculo(texto_cliente) if tipo_mensaje == 'text' else {}
+        tiene_sintomas_msg = (
+            ExtractorHechos.contiene_informacion_diagnostica(texto_cliente)
+        ) if tipo_mensaje == 'text' else False
+        es_sin_placa = bool(
+            re.search(
+                r"\b(?:no\s+(?:tengo|dispongo|cuento\s+con|se|sé|recuerdo|hay)\s+(?:la\s+)?placa|"
+                r"sin\s+placa|placa\s+no\s+disponible|no\s+me\s+la\s+s[eé]|no\s+tengo\s+placa|"
+                r"no\s+se\s+la\s+placa|sin\s+la\s+placa)\b",
+                texto_cliente,
+                re.IGNORECASE,
+            )
+        )
+        if es_sin_placa or datos_vehiculo_msg.get('marca') or tiene_sintomas_msg or len(texto_cliente.split()) > 3:
+            contexto_placa.pop('nueva_consulta_placa_pendiente', None)
+            placa = 'SIN-PLACA'
+            contexto_placa['placa'] = placa
+            contexto_placa['placa_posttest'] = placa
+            if datos_vehiculo_msg.get('marca'):
+                contexto_placa['perfil_vehiculo'] = datos_vehiculo_msg
+                marca_modelo = _texto_perfil_vehiculo(datos_vehiculo_msg)
+            conversacion.contexto = contexto_placa
+        else:
+            try:
+                placa_nueva = normalizar_placa(texto_cliente)
+            except ValueError:
+                respuesta_placa = 'Responde *SÍ* para usar la misma placa o ingresa una placa válida.'
+                await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_placa)
+                await session.commit()
+                return ({'status': 'esperando_placa', 'respuesta': respuesta_placa}, placa, marca_modelo, texto_cliente)
+            else:
+                contexto_placa['placa'] = placa_nueva
+                contexto_placa['placa_posttest'] = placa_nueva
+                contexto_placa.pop('nueva_consulta_placa_pendiente', None)
+                contexto_placa['perfil_vehiculo_pendiente'] = True
+                conversacion.contexto = contexto_placa
+                respuesta_perfil = _mensaje_solicitar_perfil()
+                await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
+                await session.commit()
+                return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
 
     placa_persistida = contexto_placa.get('placa_posttest') or contexto_placa.get('placa')
     placa_en_texto = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
@@ -272,11 +309,22 @@ async def preparar_flujo_vehiculo(
                     re.IGNORECASE,
                 )
             )
-            if es_sin_placa or ExtractorHechos.contiene_informacion_diagnostica(texto_cliente) or len(texto_cliente.split()) > 4:
+            datos_vehiculo_msg = extraer_datos_vehiculo(texto_cliente) if tipo_mensaje == 'text' else {}
+            tiene_info_diagnostica = (
+                ExtractorHechos.contiene_informacion_diagnostica(texto_cliente)
+            ) if tipo_mensaje == 'text' else False
+            tiene_perfil_vehiculo = bool(datos_vehiculo_msg.get('marca'))
+
+            if es_sin_placa or tiene_info_diagnostica or tiene_perfil_vehiculo or len(texto_cliente.split()) > 3:
                 placa = contexto_placa.get('placa') or 'SIN-PLACA'
                 contexto_placa['placa'] = placa
                 contexto_placa['placa_posttest'] = placa
                 contexto_placa.pop('posttest_placa_pendiente', None)
+                if tiene_perfil_vehiculo:
+                    perfil_existente = contexto_placa.get('perfil_vehiculo') or {}
+                    perfil_existente.update(datos_vehiculo_msg)
+                    contexto_placa['perfil_vehiculo'] = perfil_existente
+                    marca_modelo = _texto_perfil_vehiculo(perfil_existente)
                 texto_preplate = contexto_placa.pop('preplate_pending_input', None)
                 conversacion.contexto = contexto_placa
                 continuar_diagnostico_preplate = True

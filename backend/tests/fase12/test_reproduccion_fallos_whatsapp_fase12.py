@@ -6,7 +6,8 @@ real de WhatsApp (Commit base main 15dad809b7339ffec62678b78578a6d1fda5f8d6):
 2. Interpretación de "No he comprobado si los discos están dañados" y negaciones múltiples.
 3. Clasificación errónea de consultas con síntomas ("chirrido") como consulta informativa técnica OEM.
 4. Bucle infinito de solicitud de placa ("Indique una placa válida...") al no disponer de placa o al reintentar el diagnóstico.
-5. Reproducción secuencial de los 5 turnos de la conversación real de WhatsApp.
+5. Reproducción secuencial de los 5 turnos de la conversación real de WhatsApp (Toyota Corolla 2015).
+6. Reproducción de evidencia adicional de WhatsApp real (Caso "NEUVO CASO" y Nissan Sentra 2018).
 """
 
 from types import SimpleNamespace
@@ -159,7 +160,7 @@ async def test_usuario_indica_no_tener_placa_permite_continuar_diagnostico(monke
 
 
 # ==============================================================================
-# TEST 5: REPRODUCCIÓN COMPLETA DE LA CONVERSACIÓN REAL DE 5 TURNOS
+# TEST 5: REPRODUCCIÓN COMPLETA DE LA CONVERSACIÓN REAL DE 5 TURNOS (COROLLA 2015)
 # ==============================================================================
 
 @pytest.mark.anyio
@@ -251,3 +252,111 @@ async def test_reproduccion_conversacion_real_5_turnos(monkeypatch):
         f"FALLO REPRODUCIDO Turno 4: Disparó fallback OEM de procedimiento: {resp4_str}"
     )
     assert "Indique una placa válida para continuar el diagnóstico" not in resp4_str
+
+
+# ==============================================================================
+# TEST 6: CASO "NEUVO CASO" Y NISSAN SENTRA 2018 (EVIDENCIA ADICIONAL FASE 12)
+# ==============================================================================
+
+@pytest.mark.anyio
+async def test_reproduccion_evidencia_adicional_nissan_sentra_y_typo(monkeypatch):
+    """Reproduce y valida la evidencia adicional reportada en Fase 12:
+    1. 'NEUVO CASO' (con typo) no debe rebotar con error rígido de placa inválida.
+    2. Solicitud de cerrar diagnóstico anterior y comenzar con otro vehículo.
+    3. Párrafo con Nissan Sentra 2018 y síntomas de aceleración sin placa no debe bloquearse.
+    """
+    gestor = GestorDiagnostico()
+    gestor.api_key = ""
+    gestor.conversation_repo = InMemoryConversationRepository()
+    monkeypatch.setattr(modulo.settings, "groq_api_key", "")
+
+    usuario = SimpleNamespace(
+        id=uuid.uuid4(), taller_id=uuid.uuid4(), nombres="Mecánico Prueba",
+        rol=SimpleNamespace(codigo="mecanico"),
+    )
+    conversacion = SimpleNamespace(
+        id=uuid.uuid4(),
+        contexto={
+            "conversation_state": {
+                "session_id": "prev-session",
+                "dominio_probable": "FRENOS",
+                "active_system": "FRENOS",
+            },
+            "posttest_placa_pendiente": True,  # Sesión previa dejó gate de placa activo
+        },
+    )
+    session = MagicMock()
+    session.commit = AsyncMock()
+    session.rollback = AsyncMock()
+    session.begin_nested.return_value.__aenter__ = AsyncMock()
+    session.begin_nested.return_value.__aexit__ = AsyncMock()
+    context = MagicMock()
+    context.__aenter__ = AsyncMock(return_value=session)
+    context.__aexit__ = AsyncMock()
+
+    monkeypatch.setattr(modulo, "database_configurada", lambda: True)
+    monkeypatch.setattr(modulo, "obtener_engine", lambda: None)
+    monkeypatch.setattr(modulo, "AsyncSession", lambda *a, **k: context)
+    mensaje_repo = MagicMock()
+    mensaje_repo.existe_meta_message_id = AsyncMock(return_value=False)
+    mensaje_repo.crear_mensaje = AsyncMock(return_value=SimpleNamespace(id=uuid.uuid4()))
+    monkeypatch.setattr(modulo, "MensajeRepository", lambda *a: mensaje_repo)
+    conv_repo = SimpleNamespace(obtener_o_crear_activa=AsyncMock(return_value=conversacion))
+    monkeypatch.setattr(modulo, "ConversacionRepository", lambda *a: conv_repo)
+    monkeypatch.setattr(modulo, "OperacionesRepository", lambda *a: SimpleNamespace(registrar_uso_api=AsyncMock()))
+    monkeypatch.setattr(
+        modulo.IdentityResolver, "resolver_o_registrar",
+        AsyncMock(return_value=SimpleNamespace(status="ok", usuario=usuario)),
+    )
+
+    async def persistir_mock(**kwargs):
+        dto = kwargs["dto"]
+        return {"status": "completado", "respuesta": dto.respuesta_texto}, 0
+
+    monkeypatch.setattr(modulo.DiagnosticPersister, "persistir_y_responder", persistir_mock)
+    service = modulo.WebhookService(gestor)
+
+    # ---------------- TURNO 1: 'NEUVO CASO' (con typo) ----------------
+    t1_text = "NEUVO CASO"
+    r1 = await service.procesar_mensaje(
+        remitente="51999111222", meta_message_id=f"msg-nissan-1", texto_cliente=t1_text, proveedor="api",
+    )
+    assert r1 is not None
+    resp1_str = str(r1.get("respuesta", ""))
+    # NO debe responder 'Indique una placa válida para continuar el diagnóstico.'
+    assert "Indique una placa válida para continuar el diagnóstico." not in resp1_str, (
+        f"FALLO REPRODUCIDO: 'NEUVO CASO' fue tratado como placa errónea: {resp1_str}"
+    )
+    assert "Nueva consulta iniciada" in resp1_str or "placa" in resp1_str.lower()
+
+    # ---------------- TURNO 2: 'Quiero cerrar el diagnóstico anterior...' ----------------
+    t2_text = "Quiero cerrar el diagnóstico anterior y comenzar un caso completamente nuevo con otro vehículo."
+    r2 = await service.procesar_mensaje(
+        remitente="51999111222", meta_message_id=f"msg-nissan-2", texto_cliente=t2_text, proveedor="api",
+    )
+    assert r2 is not None
+    resp2_str = str(r2.get("respuesta", ""))
+    assert "Nueva consulta iniciada" in resp2_str
+
+    # ---------------- TURNO 3: Descripción completa de Nissan Sentra 2018 con síntomas ----------------
+    t3_text = (
+        "Tengo un Nissan Sentra 2018 automático. Cuando acelero para subir una pendiente, el motor "
+        "pierde fuerza y empieza a tironear. En terreno plano funciona mejor. No tengo ninguna luz "
+        "de advertencia encendida en el tablero. ¿Qué podría estar pasando?"
+    )
+    r3 = await service.procesar_mensaje(
+        remitente="51999111222", meta_message_id=f"msg-nissan-3", texto_cliente=t3_text, proveedor="api",
+    )
+    assert r3 is not None
+    resp3_str = str(r3.get("respuesta", ""))
+    # CRÍTICO: NO debe bloquear exigiendo placa
+    assert "Indique una placa válida para continuar el diagnóstico." not in resp3_str, (
+        f"BLOQUEO REPRODUCIDO: Exigió placa en vez de diagnosticar el Nissan Sentra: {resp3_str}"
+    )
+    # Debe ser una respuesta diagnóstica
+    assert r3.get("status") == "completado"
+    # El perfil de vehículo debe haberse capturado
+    perfil = conversacion.contexto.get("perfil_vehiculo", {})
+    assert perfil.get("marca") == "Nissan"
+    assert perfil.get("modelo") == "Sentra"
+    assert perfil.get("anio") == "2018"
