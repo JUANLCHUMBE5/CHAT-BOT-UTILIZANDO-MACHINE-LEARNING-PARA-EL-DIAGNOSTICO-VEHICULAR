@@ -10,9 +10,9 @@ real de WhatsApp (Commit base main 15dad809b7339ffec62678b78578a6d1fda5f8d6):
 6. Reproducción de evidencia adicional de WhatsApp real (Caso "NEUVO CASO" y Nissan Sentra 2018).
 """
 
+import uuid
 from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock
-import uuid
 
 import pytest
 
@@ -27,7 +27,6 @@ from src.core.conversacion.state_models.enums import FactState
 from src.core.conversacion.state_models.state import ConversationState
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.intent_classifier import clasificar_intencion_consulta
-
 
 # ==============================================================================
 # TEST 1: INCONSISTENCIA DE FEEDBACK (TOP-1 vs TOP-3)
@@ -219,21 +218,21 @@ async def test_reproduccion_conversacion_real_5_turnos(monkeypatch):
     # ---------------- TURNO 1 ----------------
     t1_text = "Hola, tengo un Toyota Corolla 2015. Cuando freno escucho un chirrido fuerte, especialmente cuando piso el pedal suavemente. ¿Me puedes ayudar a identificar qué podría estar fallando?"
     r1 = await service.procesar_mensaje(
-        remitente="51999111222", meta_message_id=f"msg-1", texto_cliente=t1_text, proveedor="api",
+        remitente="51999111222", meta_message_id="msg-1", texto_cliente=t1_text, proveedor="api",
     )
     assert r1 is not None
 
     # ---------------- TURNO 2 ----------------
     t2_text = "Es una falla diferente. Quiero iniciar un diagnóstico nuevo para un Toyota Corolla 2015 que presenta un chirrido fuerte al frenar suavemente."
     r2 = await service.procesar_mensaje(
-        remitente="51999111222", meta_message_id=f"msg-2", texto_cliente=t2_text, proveedor="api",
+        remitente="51999111222", meta_message_id="msg-2", texto_cliente=t2_text, proveedor="api",
     )
     assert r2 is not None
 
     # ---------------- TURNO 3 ----------------
     t3_text = "No he comprobado si los discos están dañados. El pedal no se va al fondo y tampoco vibra el volante al frenar. Solo escucho un chirrido cuando piso el freno suavemente. ¿Por qué sospechas de los discos y qué otras causas podrían ser?"
     r3 = await service.procesar_mensaje(
-        remitente="51999111222", meta_message_id=f"msg-3", texto_cliente=t3_text, proveedor="api",
+        remitente="51999111222", meta_message_id="msg-3", texto_cliente=t3_text, proveedor="api",
     )
     assert r3 is not None
     resp3_str = str(r3.get("respuesta", ""))
@@ -244,7 +243,7 @@ async def test_reproduccion_conversacion_real_5_turnos(monkeypatch):
     # ---------------- TURNO 4 ----------------
     t4_text = "No tengo la placa disponible en este momento. Ya te indiqué que es un Toyota Corolla 2015 y que presenta un chirrido al frenar suavemente. ¿Podemos continuar el diagnóstico con esa información sin perder el caso anterior?"
     r4 = await service.procesar_mensaje(
-        remitente="51999111222", meta_message_id=f"msg-4", texto_cliente=t4_text, proveedor="api",
+        remitente="51999111222", meta_message_id="msg-4", texto_cliente=t4_text, proveedor="api",
     )
     assert r4 is not None
     resp4_str = str(r4.get("respuesta", ""))
@@ -319,7 +318,7 @@ async def test_reproduccion_evidencia_adicional_nissan_sentra_y_typo(monkeypatch
     # ---------------- TURNO 1: 'NEUVO CASO' (con typo) ----------------
     t1_text = "NEUVO CASO"
     r1 = await service.procesar_mensaje(
-        remitente="51999111222", meta_message_id=f"msg-nissan-1", texto_cliente=t1_text, proveedor="api",
+        remitente="51999111222", meta_message_id="msg-nissan-1", texto_cliente=t1_text, proveedor="api",
     )
     assert r1 is not None
     resp1_str = str(r1.get("respuesta", ""))
@@ -332,7 +331,7 @@ async def test_reproduccion_evidencia_adicional_nissan_sentra_y_typo(monkeypatch
     # ---------------- TURNO 2: 'Quiero cerrar el diagnóstico anterior...' ----------------
     t2_text = "Quiero cerrar el diagnóstico anterior y comenzar un caso completamente nuevo con otro vehículo."
     r2 = await service.procesar_mensaje(
-        remitente="51999111222", meta_message_id=f"msg-nissan-2", texto_cliente=t2_text, proveedor="api",
+        remitente="51999111222", meta_message_id="msg-nissan-2", texto_cliente=t2_text, proveedor="api",
     )
     assert r2 is not None
     resp2_str = str(r2.get("respuesta", ""))
@@ -345,7 +344,7 @@ async def test_reproduccion_evidencia_adicional_nissan_sentra_y_typo(monkeypatch
         "de advertencia encendida en el tablero. ¿Qué podría estar pasando?"
     )
     r3 = await service.procesar_mensaje(
-        remitente="51999111222", meta_message_id=f"msg-nissan-3", texto_cliente=t3_text, proveedor="api",
+        remitente="51999111222", meta_message_id="msg-nissan-3", texto_cliente=t3_text, proveedor="api",
     )
     assert r3 is not None
     resp3_str = str(r3.get("respuesta", ""))

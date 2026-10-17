@@ -3,7 +3,6 @@ import re
 from typing import Any
 
 from src.core.conversacion.extractor_hechos import ExtractorHechos
-from src.core.intent_classifier import clasificar_intencion_consulta
 from src.core.services.whatsapp_provider import whatsapp_provider_service
 from src.core.vehicle_profile import extraer_datos_vehiculo
 from src.infrastructure.database.repositories.vehiculo_repository import normalizar_placa
