@@ -360,7 +360,7 @@ class DiagnosticPersister:
             else "Sin procedimiento RAG registrado"
         )
         predicciones_a_guardar = dto.predicciones_ml or []
-        if not predicciones_a_guardar:
+        if not predicciones_a_guardar and not dto.motivo_abstencion:
             predicciones_a_guardar = [
                 {"falla": dto.diagnostico_ml, "probabilidad": dto.confianza_ml}
             ]

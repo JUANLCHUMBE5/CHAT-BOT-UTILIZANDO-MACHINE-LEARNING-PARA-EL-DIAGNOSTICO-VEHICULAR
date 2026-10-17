@@ -106,3 +106,17 @@ def test_normalizacion_conserva_codigo_obd_exacto():
     from src.core.traductor_jerga import normalizar_jerga_peruana
     assert "p0301" in normalizar_jerga_peruana("DTC P0301 confirmado por escaner")
     assert "p0302" in normalizar_jerga_peruana("DTC P0302 confirmado por escaner")
+
+
+def test_presentacion_sin_hipotesis_es_abstencion_persistible():
+    from src.core.conversacion.presentacion_dto import alinear_predicciones_presentadas
+    from src.core.diagnostico.models import ResultadoDiagnostico
+    dto = ResultadoDiagnostico(respuesta_texto="pendiente", diagnostico_ml="hipotesis previa",
+        confianza_ml=.4, contexto_manual="", titulo_manual="",
+        predicciones_ml=[PrediccionML(falla="hipotesis previa", probabilidad=.4)])
+    result = alinear_predicciones_presentadas(dto, [])
+    assert result.diagnostico_ml == "Sin hipótesis compatible"
+    assert result.motivo_abstencion == "SIN_HIPOTESIS_PRESENTABLE"
+    assert result.predicciones_ml == []
+    assert result.predicciones_ml_raw[0].falla == "hipotesis previa"
+    assert ResultadoDiagnostico.model_validate(result.model_dump())
