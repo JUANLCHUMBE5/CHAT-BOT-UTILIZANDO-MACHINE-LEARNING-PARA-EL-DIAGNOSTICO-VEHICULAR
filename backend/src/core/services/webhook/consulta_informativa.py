@@ -41,16 +41,19 @@ async def responder_consulta_informativa(
         slot_gemini_preconcedido=None,
         diferir_encolado_persistente=True,
     )
+    duracion_ms = int((time.perf_counter() - inicio) * 1000)
     resultado, _ = await DiagnosticPersister.persistir_y_responder(
         session=session,
         dto=dto,
         usuario=usuario,
         conversacion=conversacion,
         texto_cliente=texto,
-        tipo_mensaje="text",
         meta_message_id=meta_message_id,
         remitente=remitente,
         proveedor=proveedor,
-        inicio_total=inicio,
+        placa="CONSULTA-TECNICA",
+        marca_modelo="GENERAL",
+        duracion_ms=duracion_ms,
+        corpus_version=getattr(getattr(gestor, "motor_rag", None), "corpus_version", "desconocido"),
     )
     return resultado
