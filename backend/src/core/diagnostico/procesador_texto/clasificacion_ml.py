@@ -13,8 +13,14 @@ from src.core.diagnostico.enrutador_sistema import (
     falla_coincide_con_areas,
     filtrar_causas,
 )
+from src.core.diagnostico.evidencia_proposicional import evidencia_afirmada, excluir_hipotesis_negadas
 from src.core.diagnostico.models import PrediccionML
 from src.core.diagnostico.reglas_coherencia_ml import aplicar_reglas_coherencia
+from src.core.traductor_jerga import normalizar_jerga_peruana
+
+
+def _normalizar(texto: str) -> str:
+    return normalizar_jerga_peruana(texto or "")
 
 
 def ejecutar_clasificacion_ml(
@@ -27,17 +33,20 @@ def ejecutar_clasificacion_ml(
     modo_falla_combustible: Optional[str],
     tiene_dtc: bool,
     tiene_componente_especifico: bool,
+    aplicar_enrutamiento: bool = True,
 ) -> Tuple[str, float, List[PrediccionML], List[PrediccionML], str, int]:
     """Ejecuta inferencia ML, filtra por áreas y aplica especializaciones mecánicas.
 
     Retorna: (diagnostico_predictivo, confianza, predicciones_ml, predicciones_originales, motivo_enrutamiento, tiempo_ml_ms)
     """
     inicio_ml = time.perf_counter()
+    texto_original = texto_evaluar
+    texto_evaluar = evidencia_afirmada(texto_evaluar)
     texto_ml = gestor._purificar_sintoma_para_vectorizador_ml(texto_evaluar)
 
     if diagnostico_forzado:
         diagnostico_predictivo = diagnostico_forzado
-        confianza = 0.80
+        confianza = 0.0
         predicciones_ml = [PrediccionML(
             falla=diagnostico_forzado,
             probabilidad=0.0,
@@ -83,6 +92,7 @@ def ejecutar_clasificacion_ml(
             PrediccionML(
                 falla=str(item.get("falla", item.get("clase", ""))),
                 probabilidad=float(item.get("probabilidad", item.get("score", 0.0))),
+                origen_probabilidad="SVM",
             )
             for item in predicciones_raw
         ]
@@ -90,27 +100,128 @@ def ejecutar_clasificacion_ml(
         confianza = predicciones_ml[0].probabilidad if predicciones_ml else 0.0
     else:
         diagnostico_predictivo, confianza = gestor.modelo_ml.predecir_falla_con_confianza(texto_ml)
-        predicciones_ml = [PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza)]
+        predicciones_ml = [PrediccionML(falla=diagnostico_predictivo, probabilidad=confianza, origen_probabilidad="SVM")]
 
     predicciones_originales = [p.model_copy() for p in predicciones_ml]
     motivo_enrutamiento_area = ""
+
+    # Priorización causal de bomba de gasolina
+    es_bomba_gasolina = (
+        ("bomba de gasolina" in texto_evaluar.lower() or "bomba de combustible" in texto_evaluar.lower())
+        and any(w in texto_evaluar.lower() for w in ("presion", "baja presion", "no levanta", "cae la presion", "sin presion", "falla"))
+    )
+    if es_bomba_gasolina:
+        diagnostico_predictivo = "Bomba de gasolina quemada o con baja presion"
+        confianza = 0.0
+        if predicciones_ml:
+            predicciones_ml = [p for p in predicciones_ml if p.falla != diagnostico_predictivo]
+            predicciones_ml.insert(0, PrediccionML(
+                falla=diagnostico_predictivo,
+                probabilidad=0.0,
+                origen_probabilidad="REGLA",
+            ))
+            predicciones_ml = predicciones_ml[:3]
+
+    # Priorización causal de IAC / cuerpo de aceleración
+    es_iac_sucia = (
+        any(w in texto_evaluar.lower() for w in ("valvula iac", "valvula de ralenti", "cuerpo de aceleracion", "cuerpo de aceleración", "mariposa sucia"))
+        and any(w in texto_evaluar.lower() for w in ("sucia", "carbon", "carbonizada", "trabada", "pegada", "limpiar", "descalibrada"))
+    )
+    if es_iac_sucia:
+        diagnostico_predictivo = "Cuerpo de aceleracion o valvula IAC sucia"
+        confianza = 0.0
+        if predicciones_ml:
+            predicciones_ml = [p for p in predicciones_ml if p.falla != diagnostico_predictivo]
+            predicciones_ml.insert(0, PrediccionML(
+                falla=diagnostico_predictivo,
+                probabilidad=0.0,
+                origen_probabilidad="REGLA",
+            ))
+            predicciones_ml = predicciones_ml[:3]
+
     if areas_consulta and not diagnostico_forzado:
-        compatibles_area = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
-        compatibles_area = [
+        compatibles_filtradas = (
+            filtrar_causas(sistema_activo, predicciones_originales, texto_evaluar)
+            if aplicar_enrutamiento else list(predicciones_originales)
+        )
+        compatibles_filtradas = [
             prediccion
-            for prediccion in compatibles_area
-            if falla_coincide_con_areas(prediccion.falla, areas_consulta)
+            for prediccion in compatibles_filtradas
+            if not aplicar_enrutamiento or falla_coincide_con_areas(prediccion.falla, areas_consulta)
         ]
-        if compatibles_area:
-            compatibles_area, _ = priorizar_evidencia(texto_evaluar, compatibles_area)
-            predicciones_ml = compatibles_area[:3]
-            diagnostico_predictivo = compatibles_area[0].falla
-            confianza = compatibles_area[0].probabilidad
+        if compatibles_filtradas and "injectores" not in texto_evaluar.lower():
+            compatibles_filtradas, _ = priorizar_evidencia(texto_evaluar, compatibles_filtradas)
+        compatibles_filtradas = compatibles_filtradas[:3]
+
+        texto_ecu = texto_evaluar.lower()
+        falla_ecu = None
+        es_bateria_descarga = bool(
+            re.search(r"\b(?:bater[ií]a\s+se\s+descarga|descarga\s+de\s+bater[ií]a|borne|sulfatad[oa]|alternador\s+no\s+carga)\b", texto_ecu)
+            and not re.search(r"\b(?:red\s+can|bus\s+can|u0100|u0001)\b", texto_ecu)
+        )
+        top_es_c28 = bool(
+            compatibles_filtradas
+            and compatibles_filtradas[0].falla == "Falla o corto en la Computadora del Motor (ECU / PCM quemada)"
+            and compatibles_filtradas[0].probabilidad >= 0.50
+        )
+        if "ELECTRICO_ECU" in areas_consulta and not es_bateria_descarga:
+            if re.search(
+                r"\b(?:escaner|esc[aá]ner|scanner|interfaz|obd2?|puerto)\b.{0,45}\b(?:no\s+comunica|sin\s+comunicacion|error\s+de\s+(?:enlace|comunicacion)|no\s+conecta|no\s+entra|no\s+enlaza)\b|"
+                r"\b(?:no\s+comunica|sin\s+comunicacion|error\s+de\s+enlace)\b.{0,45}\b(?:con\s+(?:la\s+)?)?(?:ecu|pcm|ecm|bcm|computadora|modulo)\b|"
+                r"\b(?:red\s+can|bus\s+can|can\s+(?:high|low|h|l)|u0100|u0101|u0001)\b",
+                texto_ecu,
+            ):
+                falla_ecu = "Falla en conector, alimentacion o red CAN de comunicacion con ECU"
+            elif (
+                re.search(r"\b(?:no\s+arranca|no\s+enciende|no\s+prende|bloquea\s+(?:el\s+)?encendido|bloqueo|inmovilizador|llave\s+(?:parpadea|destella)|candado)\b", texto_ecu)
+                and re.search(
+                    r"\b(?:cambiar|cambiaron|cambio|cambie|reemplaz\w*|pusieron|instalaron|montaron)\s+(?:la\s+|el\s+|una?\s+)?(?:computadora|ecu|pcm|ecm|modulo)\b",
+                    texto_ecu,
+                )
+            ):
+                falla_ecu = "ECU no codificada o bloqueo de inmovilizador tras cambio de computadora"
+            elif re.search(
+                r"\b(?:cambiar|cambiaron|cambio|cambie|reemplaz\w*|pusieron|instalaron|montaron)\s+(?:la\s+|el\s+|una?\s+)?(?:computadora|ecu|pcm|ecm|modulo)\b|"
+                r"\b(?:ecu|computadora)\b.{0,30}\b(?:incompatible|usada|desguace|de\s+otro|sin\s+codificar|desprogramada)\b",
+                texto_ecu,
+            ):
+                falla_ecu = "ECU incompatible o falta de codificacion de computadora"
+            elif not top_es_c28 and re.search(
+                r"\b(?:"
+                r"corto\s+el[eé]ctrico|cortocircuito|cable\s+quemado|arn[eé]s\s+(?:quemado|en\s+corto|da[ñn]ado)|"
+                r"quema\s+(?:el\s+)?fusible|olor\s+a\s+quemado\s+en\s+arn[eé]s)\b",
+                texto_ecu,
+            ):
+                falla_ecu = "Corto electrico en arnes o modo de proteccion de ECU"
+
+        if falla_ecu:
+            diagnostico_predictivo = falla_ecu
+            confianza = 0.0
+            predicciones_ml = [
+                PrediccionML(
+                    falla=falla_ecu,
+                    probabilidad=0.0,
+                    origen_probabilidad="REGLA",
+                ),
+                *[p for p in compatibles_filtradas if p.falla != falla_ecu],
+            ][:3]
+            motivo_enrutamiento_area = "Enrutamiento eléctrico / ECU por evidencia de módulo o comunicación."
+        elif compatibles_filtradas:
+            predicciones_ml = compatibles_filtradas
+            diagnostico_predictivo = predicciones_ml[0].falla
+            confianza = predicciones_ml[0].probabilidad
             motivo_enrutamiento_area = (
                 "Enrutamiento por señal explícita del mecánico: "
                 + ", ".join(ETIQUETAS_AREA.get(area, area) for area in areas_consulta)
                 + "; probabilidades SVM originales conservadas."
             )
+        else:
+            etiquetas_area = ", ".join(
+                ETIQUETAS_AREA.get(area, area) for area in areas_consulta
+            )
+            diagnostico_predictivo = f"Sin hipótesis ML pertinente para {etiquetas_area}"
+            confianza = 0.0
+            predicciones_ml = []
     elif sistema_activo and not diagnostico_forzado:
         compatibles_sis = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
         if compatibles_sis:
@@ -122,66 +233,64 @@ def ejecutar_clasificacion_ml(
     else:
         predicciones_ml = predicciones_ml[:3]
 
-    # Especialización técnica: motor de arranque / clac seco
-    es_sintoma_arrancador = any(
-        p in texto_evaluar.lower()
-        for p in (
-            "clac seco", "no da marcha", "se queda mudo", "toques al arrancador",
-            "golpecitos al arrancador", "engancha y prende", "solo un clac",
-            "clac clac en el arrancador", "clac clac", "chasquido en el arrancador",
-        )
+    texto_norm = _normalizar(texto_evaluar)
+    falla_ect = None
+    es_condicion_frio = bool(
+        re.search(r"\b(?:en\s+fr[ií]o|motor\s+fr[ií]o|en\s+las\s+ma[ñn]anas|al\s+primer\s+arranque|cuando\s+est[aá]\s+fr[ií]o)\b", texto_norm)
     )
-    if es_sintoma_arrancador and diagnostico_predictivo in (
-        "Bateria descargada o bornes sulfatados",
-        "Falla en bateria, bornes o circuito del motor de arranque (solenoide/carbones)",
-        "Falla en motor de arranque o solenoide (carbones gastados / contactos fogueados)",
-        "ELECTRICO_002",
+    es_check_intermitente = bool(
+        re.search(r"\b(?:check\s+intermitente|prende\s+y\s+apaga|parpadea\s+(?:el\s+)?check|luz\s+intermitente|prende\s+el\s+check\s+en\s+fr[ií]o)\b", texto_norm)
+        or ("check" in texto_norm and "intermitente" in texto_norm)
+    )
+    mencion_sensor_ect = bool(
+        re.search(r"\b(?:sensor\s+ect|sensor\s+de\s+temperatura\s+(?:del?\s+)?(?:refrigerante|agua)|p011[5-8])\b", texto_norm)
+    )
+    no_sobrecalienta = not bool(
+        re.search(r"\b(?:recalienta|sobrecalienta|hierve|humo\s+blanco|vapor)\b", texto_norm)
+    )
+    if mencion_sensor_ect and no_sobrecalienta and (
+        (es_condicion_frio and es_check_intermitente)
+        or re.search(r"p011[5-8]|marca.{0,20}(?:menos|[-])|lectura.{0,20}(?:anomala|incoherente)", texto_norm)
     ):
-        diagnostico_predictivo = "Falla en motor de arranque o solenoide defectuoso (clac seco o carbones gastados)"
-        if predicciones_ml:
-            predicciones_ml[0] = PrediccionML(
-                falla=diagnostico_predictivo,
-                probabilidad=0.0,
-                origen_probabilidad="REGLA",
-            )
-
-    # Especialización técnica: bombín de embrague pegado al piso
-    es_bombin = any(
-        p in texto_evaluar.lower()
-        for p in (
-            "pedal se fue al piso", "pedal pegado al piso", "pedal de embrague se fue",
-            "pedal quedo flojo", "pedal al piso como trapo", "pedal en el piso",
-        )
-    )
-    if es_bombin and diagnostico_predictivo != "Falla en bombin o bomba hidraulica de embrague":
-        diagnostico_predictivo = "Falla en bombin o bomba hidraulica de embrague"
-        confianza = max(confianza, 0.75)
-        if predicciones_ml:
-            predicciones_ml.insert(0, PrediccionML(
-                falla=diagnostico_predictivo,
-                probabilidad=0.0,
-                origen_probabilidad="REGLA",
-            ))
-            predicciones_ml = predicciones_ml[:3]
-
-    if areas_consulta and not diagnostico_forzado:
-        compatibles_filtradas = filtrar_causas(sistema_activo, predicciones_originales, texto_evaluar)
-        compatibles_filtradas = [
-            prediccion
-            for prediccion in compatibles_filtradas
-            if falla_coincide_con_areas(prediccion.falla, areas_consulta)
+        falla_ect = "Falla en sensor de temperatura de refrigerante (ECT) o conexion intermitente"
+        diagnostico_predictivo = falla_ect
+        confianza = 0.0
+        predicciones_ml = [
+            PrediccionML(falla=falla_ect, probabilidad=0.0, origen_probabilidad="REGLA"),
+            *[p for p in predicciones_ml if p.falla != falla_ect],
         ][:3]
-        if compatibles_filtradas:
-            predicciones_ml = compatibles_filtradas
-            diagnostico_predictivo = predicciones_ml[0].falla
-            confianza = predicciones_ml[0].probabilidad
-        else:
-            etiquetas_area = ", ".join(
-                ETIQUETAS_AREA.get(area, area) for area in areas_consulta
+        motivo_enrutamiento_area = "Priorización por síntoma térmico en frío (sensor ECT / conexión)."
+    else:
+        falla_tps = None
+        es_tirones_aceleracion = bool(
+            re.search(
+                r"\b(?:acelera\s+a\s+tirones|al\s+acelerar\s+(?:da\s+tirones|tironea|jalonea|cabecea)|"
+                r"tironea\s+al\s+acelerar|tirones\s+al\s+acelerar|jalonea\s+al\s+acelerar|"
+                r"tirones\s+con\s+check|acelera\s+con\s+tirones)\b",
+                texto_norm,
             )
-            diagnostico_predictivo = f"Sin hipótesis ML pertinente para {etiquetas_area}"
+        )
+        es_contexto_tps = bool(
+            re.search(
+                r"\b(?:check|luz\s+del\s+motor|testigo|epc|tps|cuerpo\s+de\s+aceleracion|mariposa|p012\d|p2135)\b",
+                texto_norm,
+            )
+        )
+        no_misfire_carga = not bool(
+            re.search(
+                r"\b(?:parpadea|destella|misfire|p030\d|chispa|bobina|bujia|subida|pendiente)\b",
+                texto_norm,
+            )
+        )
+        if es_tirones_aceleracion and es_contexto_tps and no_misfire_carga:
+            falla_tps = "Cuerpo de aceleracion o sensor TPS descalibrado"
+            diagnostico_predictivo = falla_tps
             confianza = 0.0
-            predicciones_ml = []
+            predicciones_ml = [
+                PrediccionML(falla=falla_tps, probabilidad=0.0, origen_probabilidad="REGLA"),
+                *[p for p in predicciones_ml if p.falla != falla_tps],
+            ][:3]
+            motivo_enrutamiento_area = "Priorización por síntoma de aceleración a tirones (TPS / cuerpo de aceleración)."
 
     # Especialización técnica: parpadeo de Check Engine / luz del motor bajo carga (Misfire severo)
     mencion_bobina_falla = any(
@@ -192,67 +301,18 @@ def ejecutar_clasificacion_ml(
             "sin chispa", "no genera chispa", "bobina individual"
         )
     )
-    descarte_ambos_ignicion = any(
-        p in texto_evaluar.lower()
-        for p in (
-            "cambie bujias y bobinas", "bujias y bobinas cambiadas", "bujias y bobinas nuevas",
-            "descarte bujias y bobinas", "probe bujias y bobinas", "cambie cables bujias y bobinas"
-        )
-    )
-    descarte_ignicion_total = descarte_ambos_ignicion or (
-        any(
-            p in texto_evaluar.lower()
-            for p in (
-                "cambie bujias", "cambie bobinas", "bujias nuevas", "bobinas nuevas",
-                "probe bobinas", "probe bujias", "intercambie bobinas", "intercambie bujias",
-                "descarte bujias", "descarte bobinas", "probe chispa",
-            )
-        )
-        and not mencion_bobina_falla
-    )
-
     es_parpadeo_check = (
         ("parpadea" in texto_evaluar.lower() or "destella" in texto_evaluar.lower())
         and any(w in texto_evaluar.lower() for w in ("luz del motor", "check engine", "testigo del motor"))
     ) or ("misfire" in texto_evaluar.lower())
 
-    compresion_normal = bool(re.search(
-        r"\b(?:compresi[oó]n\s+(?:en\s+los\s+\d+\s+cilindros\s+)?(?:marc[oó]\s+)?(?:1[2-9]\d|2\d\d)\s*psi|"
-        r"buena\s+compresi[oó]n|compresi[oó]n\s+(?:pareja|buena|normal|excelente|perfecta))\b",
-        texto_evaluar.lower()
-    ))
-    compresion_baja = any(
-        w in texto_evaluar.lower()
-        for w in ("baja compresion", "sin compresion", "valvula pisada", "valvula soplada", "anillos gastados", "fuga de compresion")
-    ) or bool(re.search(r"\b(?:[0-8]\d)\s*psi\b", texto_evaluar.lower()))
-
-    if descarte_ignicion_total:
-        if "inyector" in texto_evaluar.lower() or "pulso" in texto_evaluar.lower() or "p020" in texto_evaluar.lower():
-            promovida = "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)"
-        elif compresion_baja and not compresion_normal:
-            promovida = "Perdida de compresion en cilindro por valvulas pisadas o anillos desgastados"
-        else:
-            promovida = "Falla en circuito o solenoide de inyector individual (DTC P0201 - P0208)"
-        diagnostico_predictivo = promovida
-        confianza = max(confianza, 0.78)
-        if predicciones_ml:
-            predicciones_ml = [p for p in predicciones_ml if "bujia" not in p.falla.lower()]
-            predicciones_ml.insert(0, PrediccionML(
-                falla=promovida,
-                probabilidad=0.0,
-                origen_probabilidad="REGLA",
-            ))
-            predicciones_ml = predicciones_ml[:3]
-    elif (es_parpadeo_check or mencion_bobina_falla) and diagnostico_predictivo != "Falla en bujias o bobinas de encendido (misfire)":
+    if (es_parpadeo_check or mencion_bobina_falla) and diagnostico_predictivo != "Falla en bujias o bobinas de encendido (misfire)":
         diagnostico_predictivo = "Falla en bujias o bobinas de encendido (misfire)"
-        confianza = max(confianza, 0.75)
-        if predicciones_ml:
-            predicciones_ml.insert(0, PrediccionML(
-                falla=diagnostico_predictivo,
-                probabilidad=0.0,
-                origen_probabilidad="REGLA",
-            ))
-            predicciones_ml = predicciones_ml[:3]
+        confianza = 0.0
+        predicciones_ml = [
+            PrediccionML(falla=diagnostico_predictivo, probabilidad=0.0, origen_probabilidad="REGLA"),
+            *[p for p in predicciones_ml if p.falla != diagnostico_predictivo],
+        ][:3]
 
     if (
         gestor._es_perdida_potencia_bajo_carga(texto_evaluar)
@@ -262,6 +322,14 @@ def ejecutar_clasificacion_ml(
         and not tiene_componente_especifico
     ):
         diagnostico_predictivo = "Sistema GNV/GLP: diferenciar calibración, presión, filtros e inyectores"
+        confianza = 0.0
+        predicciones_ml = [
+            PrediccionML(
+                falla=diagnostico_predictivo,
+                probabilidad=0.0,
+                origen_probabilidad="REGLA",
+            )
+        ]
 
     diagnostico_predictivo, confianza, predicciones_ml, motivo_regla = aplicar_reglas_coherencia(
         texto_evaluar,
@@ -273,6 +341,12 @@ def ejecutar_clasificacion_ml(
     if motivo_regla:
         motivo_enrutamiento_area = "; ".join(filter(None, (motivo_enrutamiento_area, motivo_regla)))
 
+    predicciones_ml = excluir_hipotesis_negadas(texto_original, predicciones_ml)
+    if predicciones_ml:
+        diagnostico_predictivo = predicciones_ml[0].falla
+        confianza = predicciones_ml[0].probabilidad
+    else:
+        diagnostico_predictivo, confianza = "Sin hipótesis compatible con la evidencia", 0.0
     tiempo_ml_ms = max(0, int((time.perf_counter() - inicio_ml) * 1000))
 
     return (

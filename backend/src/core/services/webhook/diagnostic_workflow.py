@@ -62,6 +62,43 @@ class TechnicalDiagnosticWorkflow:
             and not ExtractorHechos.contiene_informacion_diagnostica(texto_cliente)
             and not ExtractorHechos.extraer_placa(texto_cliente)
         ):
+            solicitud_caso = ExtractorHechos.clasificar_solicitud_caso(texto_cliente)
+            preservar_vehiculo = bool(solicitud_caso and solicitud_caso.get("preservar_vehiculo"))
+            placa_existente = contexto_actual.get("placa") or contexto_actual.get("placa_posttest")
+            perfil_existente = contexto_actual.get("perfil_vehiculo")
+
+            if preservar_vehiculo and placa_existente:
+                gestor.session_manager.finalizar_caso(id_sesion, preservar_vehiculo=True)
+                contexto_limpio = dict(gestor.session_manager.exportar_contexto(id_sesion) or {})
+                contexto_limpio.pop("validacion_diagnostico", None)
+                contexto_limpio.pop("preplate_pending_input", None)
+                contexto_limpio.pop("posttest_placa_pendiente", None)
+                contexto_limpio["placa"] = placa_existente
+                contexto_limpio["placa_posttest"] = placa_existente
+                if perfil_existente:
+                    contexto_limpio["perfil_vehiculo"] = perfil_existente
+                conversacion.contexto = contexto_limpio
+                respuesta_reinicio = (
+                    f"🚗 *Caso anterior cerrado.* Conservo los datos del vehículo (*{marca_modelo}*, placa *{placa_existente}*).\n\n"
+                    "Describe la nueva falla o síntoma a diagnosticar."
+                )
+                dto = ResultadoDiagnostico(
+                    respuesta_texto=respuesta_reinicio,
+                    diagnostico_ml="Reinicio de sesión mismo vehículo",
+                    confianza_ml=1.0,
+                    contexto_manual="",
+                    titulo_manual="",
+                    requiere_revision_humana=False,
+                    estado_sesion="inicio",
+                    modo_diagnostico="inicio",
+                    tipo_consulta="reinicio",
+                )
+                return ResultadoFlujoDiagnostico(
+                    dto=dto,
+                    texto_cliente=texto_cliente,
+                    duracion_ms=int((time.perf_counter() - inicio) * 1000),
+                )
+
             gestor.session_manager.reiniciar_sesion(id_sesion)
             contexto_limpio = gestor.session_manager.exportar_contexto(id_sesion)
             for clave in (

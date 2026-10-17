@@ -15,6 +15,7 @@ import unicodedata
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
+from src.core.diagnostico.evidencia_proposicional import evidencia_afirmada
 from src.core.diagnostico.taxonomia_sistemas import (
     DTC_A_SISTEMA,
     obtener_macro_sistema,
@@ -58,7 +59,7 @@ class PoliticaFusionDiagnostica:
         codigos_dtc: Optional[List[str]] = None,
         rag_evidencia_validada: bool = False,
     ) -> ResultadoFusion:
-        texto_norm = _norm(sintoma_texto)
+        texto_norm = _norm(evidencia_afirmada(sintoma_texto))
         dtcs = [d.strip().upper() for d in (codigos_dtc or []) if d]
         fallas_ml = [p.get("falla", "") for p in predicciones_ml] if predicciones_ml else []
         probs_ml = [float(p.get("probabilidad", 0.0)) for p in predicciones_ml] if predicciones_ml else []
@@ -96,14 +97,9 @@ class PoliticaFusionDiagnostica:
                 "no genera chispa", "bobina individual", "bobina no manda", "bobina mala"
             )
         )
-        descarte_ignicion = any(
-            p in texto_norm
-            for p in (
-                "cambie bujia", "cambie bobina", "bujias nuevas", "bobinas nuevas",
-                "probe bobina", "probe bujia", "intercambie bobina", "intercambie bujia",
-                "cambie bujias y bobinas", "descarte bujia", "descarte bobina", "probe chispa",
-            )
-        )
+        descarte_ignicion = bool(re.search(
+            r"\b(?:descarte|descartad[oa]s?)\s+(?:las?\s+)?(?:bujias?|bobinas?)\b", texto_norm,
+        ))
         if descarte_ignicion and not mencion_bobina_falla:
             componentes_descartados.append("Bujías de encendido (reemplazadas/probadas)")
         elif descarte_ignicion and mencion_bobina_falla:
@@ -196,7 +192,7 @@ class PoliticaFusionDiagnostica:
 
         # Zumbido de rodaje de maza / rueda con carga lateral
         es_rodaje_rueda = any(
-            w in texto_norm for w in ("wub-wub", "avion", "rueda delantera", "rueda trasera")
+            w in texto_norm for w in ("wub-wub", "avion", "zumbido de rodadura", "zumbido en rueda")
         ) and any(w in texto_norm for w in ("al girar", "al doblar", "curva", "cargando peso"))
         if es_rodaje_rueda:
             evidencia_confirmada.append("Zumbido de rodadura variable dependiente de la transferencia de carga lateral")

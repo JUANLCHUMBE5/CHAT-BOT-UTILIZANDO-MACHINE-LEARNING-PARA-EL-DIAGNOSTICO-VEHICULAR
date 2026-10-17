@@ -13,15 +13,19 @@ def registrar_recepcion(texto_normalizado, placa, session_id, proveedor):
     )
 
 
-
 def tiene_componente_tecnico(texto_evaluar: str) -> bool:
+    texto_l = texto_evaluar.lower()
     return any(
-        c in texto_evaluar.lower()
+        c in texto_l
         for c in (
             "bobina", "bujia", "bujía", "inyector", "sensor", "valvula", "válvula",
             "compresion", "compresión", "bomba de gasolina", "bomba de combustible",
             "cables de bujia", "distribuidor", "catalizador", "egr", "maf", "map", "cilindro",
             "presion de combustible", "presión de combustible", "la bomba", "manometro", "manómetro",
             "cae fuerte", "aforador", "tanque casi vacio", "tanque casi vacío",
+            "parpadea", "destella", "misfire", "tps", "cuerpo de aceleracion", "cuerpo de aceleración",
+            "mariposa", "iac", "turbo", "intercooler", "dpf", "adblue", "fap",
+            "ecu", "computadora", "alternador", "bateria", "batería",
+            "cascabelea", "cascabeleo", "preignicion", "preignición",
         )
     )

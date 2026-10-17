@@ -1,0 +1,241 @@
+"""Catálogo de señales y restricciones del enrutador, sin estado ni inferencia."""
+import re
+
+ETIQUETAS_AREA: dict[str, str] = {
+    "SOPORTES_MOTOR": "soportes de motor",
+    "CLIMATIZACION": "climatización",
+    "INYECCION_MEZCLA": "inyección / mezcla",
+    "ADMISION_MAP": "admisión / sensor MAP-MAF",
+    "RALENTI": "ralentí",
+    "REFRIGERACION": "refrigeración",
+    "ENCENDIDO": "encendido",
+    "FRENOS": "frenos",
+    "TRANSMISION": "transmisión",
+    "SUSPENSION_DIRECCION": "suspensión / dirección",
+    "ELECTRICO_ECU": "eléctrico / ECU",
+}
+
+_AREAS_EN_ORDEN: tuple[str, ...] = (
+    "SOPORTES_MOTOR",
+    "CLIMATIZACION",
+    "INYECCION_MEZCLA",
+    "ADMISION_MAP",
+    "RALENTI",
+    "REFRIGERACION",
+    "ENCENDIDO",
+    "FRENOS",
+    "TRANSMISION",
+    "SUSPENSION_DIRECCION",
+    "ELECTRICO_ECU",
+)
+
+_REGLAS: dict[str, tuple[str, ...]] = {
+    "SOPORTES_MOTOR": (
+        r"\bsoportes?\s+(?:de\s+)?motor\b", r"\btacos?\s+(?:de\s+)?motor\b",
+    ),
+    "CLIMATIZACION": (
+        r"\baire acondicionado\b", r"\bclimatizacion\b", r"\ba/c\b",
+        r"\bcompresor\b", r"\bcondensador\b", r"\br134a\b",
+    ),
+    "INYECCION_MEZCLA": (
+        r"\binyector(?:es)?\b", r"\binyeccion\b", r"\bmezcla\s+pobre\b",
+        r"\bmezcla\s+rica\b", r"\bsensor\s+(?:de\s+)?oxigeno\b",
+        r"\bsonda\s+lambda\b", r"\bsensor\s+lambda\b", r"\b(?:p0171|p0172)\b",
+        r"\b(?:stft|ltft|fuel\s+trim)\b", r"\briel\s+de\s+combustible\b",
+        r"\bbomba\s+de\s+(?:gasolina|combustible)\b", r"\b(?:fscm|pem)\b",
+        r"\bcommon\s+rail\b", r"\b(?:dpf|fap|adblue)\b",
+    ),
+    "ADMISION_MAP": (
+        r"\bsensor\s+map\b", r"\bcarga\s+absoluta\b", r"\bpresion\s+(?:del\s+)?multiple\b",
+        r"\bmap\b", r"\bmaf\b", r"\b(?:p0105|p0106|p0107|p0108|p0109)\b",
+    ),
+    "RALENTI": (
+        r"\bralenti\b", r"\bmarcha\s+minima\b", r"\bminimo\b", r"\biac\b",
+        r"\bcuerpo\s+de\s+aceleracion\b", r"\bmariposa\b",
+        r"\b(?:revoluciones|rpm)\b.{0,45}\b(?:suben?\s+y\s+bajan?|oscila\w*|inestable)\b",
+        r"\b(?:suben?\s+y\s+bajan?|oscila\w*)\b.{0,45}\b(?:revoluciones|rpm)\b",
+    ),
+    "REFRIGERACION": (
+        r"\brefrigeracion\b",
+        r"\brecalienta\w*\b", r"\brecalent\w*\b", r"\bsobrecalienta\w*\b", r"\bsobrecalent\w*\b",
+        r"\btemperatura\s+(?:del\s+)?motor\b", r"\btemperatura\s+(?:sube|alta|elevada)\b",
+        r"\b(?:se\s+calienta|calienta\s+demasiado|motor\s+calienta)\b",
+        r"\btermostato\b", r"\bcaja\s+termostatica\b", r"\bradiador\b",
+        r"\bmotoventilador\b", r"\brefrigerante\b",
+    ),
+    "ENCENDIDO": (
+        r"\bbujias?\b", r"\bbobinas?\b", r"\bsin\s+chispa\b", r"\bmisfire\b",
+        r"\b(?:el\s+)?motor\s+(?:tiembla|vibra|ratea)\b",
+        r"\b(?:tiembla|vibra|ratea)\b.{0,35}\b\d{2,4}\s*rpm\b",
+        r"\b\d{2,4}\s*rpm\b.{0,35}\b(?:tiembla|vibra|ratea)\b",
+        r"\bminimo\s+bajo\b.{0,30}\bse\s+apaga\b",
+        r"\b(?:p030[0-9])\b",
+    ),
+    "FRENOS": (
+        r"\b(?:vibra|tiembla)\b.{0,80}\bal\s+frenar\b",
+        r"\b(?:cuando|al)\s+fren(?:o|ar|a)\b.{0,80}\b(?:vibra|tiembla|chirrido|ruido)\b",
+        r"\bdisco(?:s)?\s+alabeado(?:s)?\b",
+        r"\bruido\s+(?:al|cuando)\s+frenar\b",
+        r"\bchirrido\b.{0,60}\b(?:ruedas?|fren(?:o|ar|a))\b",
+        r"\bpedal\s+de\s+freno\b", r"\bdisco(?:s)?\s+de\s+freno\b",
+        r"\bpastillas?\s+(?:de\\s+)?freno\b", r"\babs\b",
+    ),
+    "TRANSMISION": (
+        r"\b(?:patina|patinando)\s+(?:el\s+)?embrague\b", r"\bembrague\s+patina\b",
+        r"\btransmision\b", r"\bcaja manual\b", r"\bcaja\s+(?:de\s+)?cambios\b", r"\bno\s+entran\s+los\s+cambios\b",
+        r"\b(?:dsg|cvt|caja\s+automatica|pasar\s+(?:los\s+)?cambios|al\s+pasar\s+cambios)\b",
+    ),
+    "SUSPENSION_DIRECCION": (
+        r"\bse\s+inclina\s+en\s+(?:las\s+)?curvas\b",
+        r"\b(?:golpeteo|golpes?|rebota)\s+(?:met[aá]licos?\s+)?(?:en\s+)?(?:baches|huecos)\b",
+        r"\bgolpes?\s+met[aá]licos?\b.{0,60}\b(?:suspensi[oón]|baches?)\b",
+        r"\bsuspensi[oón]\b.{0,60}\b(?:golpes?|baches?|ruido|met[aá]licos?)\b",
+        r"\b(?:palier|homocinetica)\b", r"\bru\w*da\b.{0,60}\b(?:cruje|crujido|traqueteo)\b", r"\b(?:crujido|traqueteo)\b.{0,80}\b(?:rueda|direccion|doblar)\b", r"\bdesbalanceo\b", r"\balineacion\b", r"\brotula(?:s)?\b", r"\bamortiguador(?:es)?\b",
+        r"\bbujes?\s+(?:de\s+)?(?:trapecio|suspensi[oón]|barra)\b",
+        r"\b(?:timon|volante)\s+vibra\b.{0,35}\b(?:\d{2,3}\s*km/?h|velocidad)\b",
+    ),
+    "ELECTRICO_ECU": (
+        r"\balternador\b", r"\bbateria\s+(?:se\s+)?descarga\w*\b",
+        r"\b(?:ecu|pcm|ecm|bcm|tcm|computadora|modulo(?:\s+de\s+control)?)\b.{0,55}\b(?:incompatible|de\s+otra\s+version|otro\s+modelo|desguace|usad[oa]|no\s+comunica|sin\s+comunicacion|bloquead[oa]|no\s+codificad[oa]|reprogramar|programar|hermanar|clonar|virgen|emergencia|proteccion)\b",
+        r"\b(?:escaner|scanner|interfaz|obd2?|puerto)\b.{0,55}\b(?:no\s+comunica|sin\s+comunicacion|error\s+de\s+(?:enlace|comunicacion)|no\s+conecta|no\s+entra|no\s+enlaza)\b",
+        r"\b(?:cambie|cambio|cambiar|cambiaron|reemplaz\w*|pusieron|instalaron|montaron)\b.{0,35}\b(?:la\s+|el\s+|una?\s+)?(?:ecu|pcm|ecm|computadora|modulo(?:\s+de\s+motor)?)\b",
+        r"\b(?:error|falla|falta)\s+(?:de\s+)?(?:codificacion|programacion|sincronizacion|inmovilizador|enlace)\b",
+        r"\b(?:inmovilizador|llave\s+codificada|transponder|testigo\s+(?:de\s+)?(?:llave|candado|inmovilizador))\b.{0,55}\b(?:parpadea|encendido|activo|bloquea\w*|no\s+arranca|se\s+apaga)\b",
+        r"\b(?:perdida\s+de\s+comunicacion|red\s+can|bus\s+can|can\s+(?:high|low|h|l)|u0100|u0101|u0121|u0140|u0155|p0601|p0602|p0606)\b",
+        r"\b(?:corto\s+electrico|cortocircuito|cable(?:s)?\s+(?:pelado|quemado|en\s+corto|aterrizado|a\s+masa)|arnes\s+(?:en\s+corto|quemado|danado|dañado)|quema\s+(?:el\s+)?fusible|modo\s+(?:de\s+)?(?:proteccion|emergencia|seguro|degradado)|limp\s+mode)\b",
+        r"\bantecedente\s+(?:electrico[/\s]+)?(?:ecu|computadora|arnes)\b",
+    ),
+}
+
+_TERMINOS_DOCUMENTO: dict[str, tuple[str, ...]] = {
+    "SOPORTES_MOTOR": ("soporte de motor", "soportes de motor", "taco de motor"),
+    "CLIMATIZACION": ("aire acondicionado", "climatizacion", "compresor", "condensador", "r134a"),
+    "INYECCION_MEZCLA": (
+        "inyector", "inyeccion", "mezcla pobre", "mezcla rica", "oxigeno", "lambda",
+        "fuel trim", "stft", "ltft", "p0171", "p0172", "presion de combustible",
+        "bomba de gasolina", "baja presion", "fscm", "pem", "common rail",
+        "intercooler", "turbocompresor", "vgt", "gdi", "descarbonizacion",
+        "dpf", "fap", "adblue", "evap", "canister", "catalitico", "flex", "etanol",
+    ),
+    "ADMISION_MAP": (
+        "sensor map", "presion map", "carga absoluta", "presion del multiple", "p0106",
+        "sensor maf", "flujo de aire", "admision", "fuga de vacio",
+    ),
+    "RALENTI": ("ralenti", "marcha minima", "minimo", "valvula iac", "cuerpo de aceleracion", "mariposa", "tps"),
+    "REFRIGERACION": (
+        "refrigeracion", "recalent", "refrigerante", "radiador", "termostato", "motoventilador",
+        "culata", "junta", "sensor de temperatura", "ect",
+    ),
+    "ENCENDIDO": (
+        "bujia", "bobina", "chispa", "misfire", "p030", "ciguenal", "ckp", "cmp",
+        "arbol de levas", "distribucion", "vvt", "valvetronic", "compresion",
+    ),
+    "FRENOS": (
+        "freno", "pastilla", "disco", "abs", "frenar", "servofreno", "booster",
+        "caliper", "mordaza", "secador aps", "maxi-brake",
+    ),
+    "TRANSMISION": (
+        "embrague", "transmision", "caja de cambios", "sincronizador",
+        "aceite de caja", "dsg", "cvt", "automatica", "bombin", "diferencial",
+        "dualogic", "i-motion", "easytronic", "collarin", "crapodina",
+    ),
+    "SUSPENSION_DIRECCION": (
+        "suspension", "direccion", "amortiguador", "rotula", "desbalance", "desaline",
+        "alineacion", "llanta", "bache", "homocinetica", "palier", "cremallera", "rodamiento", "maza",
+    ),
+    "ELECTRICO_ECU": (
+        "ecu", "computadora", "red can", "corto electrico", "comunicacion electrica",
+        "alternador", "bateria", "inmovilizador", "codificacion", "motor de arranque",
+        "solenoide", "fuga parasita", "inversor", "igbt", "fscm", "pem",
+    ),
+}
+
+_ETIQUETA_A_SISTEMA = {
+    "CLIMATIZACION": "climatizacion",
+    "INYECCION_MEZCLA": "combustible_admision",
+    "ADMISION_MAP": "combustible_admision",
+    "RALENTI": "combustible_admision",
+    "REFRIGERACION": "refrigeracion",
+    "ENCENDIDO": "encendido",
+    "FRENOS": "frenos",
+    "TRANSMISION": "transmision",
+    "SUSPENSION_DIRECCION": "suspension_direccion",
+    "ELECTRICO_ECU": "electrico_ecu",
+}
+
+_ALIAS_SISTEMA_A_AREA = {
+    "climatizacion": "CLIMATIZACION",
+    "refrigeracion": "REFRIGERACION",
+    "combustible_admision": "INYECCION_MEZCLA",
+    "encendido": "ENCENDIDO",
+    "frenos": "FRENOS",
+    "transmision": "TRANSMISION",
+    "suspension_direccion": "SUSPENSION_DIRECCION",
+    "electrico_ecu": "ELECTRICO_ECU",
+}
+
+_MARCADORES_CAUSA = {
+    "climatizacion": ("compresor", "aire acondicionado", "condensador", "r134a", "climatizacion"),
+    "refrigeracion": ("refriger", "radiador", "termostato", "ventilador", "bomba de agua", "refrigerante", "ect"),
+    "combustible_admision": (
+        "inyector", "inyeccion", "mezcla", "maf", "map", "oxigeno", "lambda", "o2",
+        "vacio", "combustible", "iac", "cuerpo de aceleracion", "tps", "admision",
+        "mariposa", "ralenti", "fscm", "pem", "common rail", "intercooler", "turbo",
+        "vgt", "gdi", "dpf", "fap", "adblue", "evap", "canister", "catalitico", "etanol", "flex",
+    ),
+    "encendido": (
+        "bujia", "bobina", "encendido", "chispa", "misfire", "cilindro",
+        "ciguenal", "ckp", "cmp", "arbol de levas", "distribucion", "vvt",
+        "valvetronic", "compresion", "preignicion", "detonacion",
+    ),
+    "frenos": (
+        "freno", "pastilla", "disco", "caliper", "abs", "liquido de frenos",
+        "servofreno", "booster", "mordaza", "secador aps", "maxi-brake",
+    ),
+    "transmision": (
+        "embrague", "caja", "transmision", "sincronizador", "convertidor", "marcha",
+        "bombin", "diferencial", "dualogic", "i-motion", "easytronic", "cvt", "dsg",
+        "collarin", "crapodina",
+    ),
+    "suspension_direccion": (
+        "amortiguador", "rotula", "buje", "bieleta", "direccion", "cremallera",
+        "llanta", "balanceo", "alineacion", "suspension", "homocinetica",
+        "palier", "rodamiento", "maza", "soporte",
+    ),
+    "electrico_ecu": (
+        "ecu", "computadora", "corto", "can", "cableado", "masa electrica", "eléctrica",
+        "alternador", "bateria", "bornes", "inmovilizador", "codificacion",
+        "motor de arranque", "solenoide", "fuga parasita", "inversor", "igbt", "fscm", "pem",
+    ),
+}
+
+_CAUSAS_PROHIBIDAS = {
+    "climatizacion": ("bujia", "embrague", "pastilla", "inyector", "bateria de traccion", "inversor"),
+    "refrigeracion": ("oxigeno", "o2", "lambda", "mezcla", "llanta", "embrague", "bujia", "bobina", "inyector", "maf", "freno"),
+    "combustible_admision": ("radiador", "termostato", "ventilador", "llanta", "embrague", "pastilla", "amortiguador", "freno"),
+    "encendido": ("radiador", "termostato", "llanta", "embrague", "pastilla", "amortiguador", "freno", "disco"),
+    "frenos": ("inyector", "sensor o2", "radiador", "embrague", "amortiguador", "bujia", "bobina", "chispa", "misfire", "alternador", "bateria"),
+    "transmision": ("inyector", "sensor o2", "radiador", "pastilla", "amortiguador", "freno"),
+    "suspension_direccion": ("inyector", "sensor o2", "radiador", "pastilla", "embrague", "freno", "disco", "liquido de freno", "caliper", "mordaza", "bujia", "bobina", "chispa"),
+    "electrico_ecu": ("llanta", "pastilla", "radiador", "embrague", "amortiguador"),
+}
+
+_CAUSAS_EV = (
+    "bateria", "bateria de traccion", "bateria de alto voltaje", "inversor",
+    "hibrido", "alto voltaje", "high voltage", "vehiculo electrico",
+    "motor electrico", "sistema electrico de traccion", "propulsion electrica",
+)
+
+_CAUSAS_EV_ESTRICTAS = (
+    "bateria de traccion", "bateria de alto voltaje", "inversor", "igbt",
+    "hibrido", "alto voltaje", "high voltage", "vehiculo electrico",
+    "motor electrico", "sistema electrico de traccion", "propulsion electrica",
+)
+
+_PATRON_FUERA_RUTEO_EXPERIMENTAL = re.compile(
+    r"\b(?:limpiaparabrisas|parabrisas|plumas?|cerradura|chapa|pestillo|manija|"
+    r"cierre\s+centralizado|elevalunas|alzacristales|alzavidrios|elevador\s+de\s+vidrio|"
+    r"frenos?\s+neumaticos?|frenos?\s+de\s+aire|secador\s+aps|maxi[- ]?brake|"
+    r"dpf|fap|adblue|filtro\s+de\s+particulas|presion\s+de\s+aceite|bomba\s+de\s+aceite|"
+    r"consumo\s+de\s+aceite|humo\s+azul)\b"
+)

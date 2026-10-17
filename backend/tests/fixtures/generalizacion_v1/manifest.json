@@ -1,0 +1,11 @@
+{
+  "file": "grupos_b_c_d.json",
+  "sha256": "0ccf3071838fbbc9859bcf549a318be5896671340f772fae18602be81fd55d2a",
+  "counts": {
+    "C": 13,
+    "D": 32,
+    "B": 48
+  },
+  "source_commit": "a9deb1462b8e7870b6ae3df6471468e280252bde",
+  "independent": false
+}

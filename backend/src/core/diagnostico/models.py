@@ -4,13 +4,39 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class PrediccionML(BaseModel):
     falla: str
     probabilidad: float
     origen_probabilidad: str = "SVM"
+    class_id: Optional[str] = None
+    raw_svm_score: Optional[float] = None
+    operational_score: Optional[float] = None
+    calibrated_probability: Optional[float] = None
+    statistical_probability: Optional[float] = None
+    prediction_source: Optional[str] = None
+    model_version: Optional[str] = None
+    taxonomy_version: Optional[str] = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def preservar_procedencia(cls, data):
+        if not isinstance(data, dict):
+            return data
+        data = dict(data)
+        fuente = data.get("prediction_source") or data.get("origen_probabilidad", "SVM")
+        data["prediction_source"] = fuente
+        data["origen_probabilidad"] = fuente
+        data.setdefault("operational_score", data.get("probabilidad"))
+        if fuente.startswith("REGLA"):
+            data["calibrated_probability"] = None
+            data["statistical_probability"] = None
+            data["raw_svm_score"] = None
+        else:
+            data.setdefault("statistical_probability", data.get("raw_svm_score"))
+        return data
 
 
 class ResultadoDiagnostico(BaseModel):

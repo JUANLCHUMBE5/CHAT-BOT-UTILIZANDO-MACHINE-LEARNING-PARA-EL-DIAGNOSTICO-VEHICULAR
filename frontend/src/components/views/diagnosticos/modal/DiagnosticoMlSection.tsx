@@ -1,6 +1,7 @@
 import React from 'react';
 import { Cpu } from 'lucide-react';
 import type { Diagnostico } from '../../../../types';
+import { presentarPrediccion } from '../../../../utils/prediccionPresentation';
 
 interface DiagnosticoMlSectionProps {
   diagnostico: Diagnostico;
@@ -31,7 +32,7 @@ export const DiagnosticoMlSection: React.FC<DiagnosticoMlSectionProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <Cpu size={15} style={{ color: '#2563eb' }} />
           <strong style={{ fontSize: '12.5px', color: 'var(--text-main)' }}>
-            Confianza ML · Linear SVM (TF-IDF)
+            Hipótesis · Linear SVM (TF-IDF) y reglas
           </strong>
         </div>
         <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
@@ -69,6 +70,7 @@ export const DiagnosticoMlSection: React.FC<DiagnosticoMlSectionProps> = ({
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {diagnostico.predicciones_ml.map((prediccion) => {
+          const presentacion = presentarPrediccion(prediccion);
           const esPrincipal = prediccion.orden === 1;
           const barColor = esPrincipal
             ? 'linear-gradient(90deg, #2563eb 0%, #3b82f6 100%)'
@@ -127,10 +129,15 @@ export const DiagnosticoMlSection: React.FC<DiagnosticoMlSectionProps> = ({
                   )}
                 </div>
                 <strong style={{ color: textColor, fontSize: '12px', whiteSpace: 'nowrap' }}>
-                  {prediccion.probabilidad}%
+                  {presentacion.probabilidadTexto}
                 </strong>
               </div>
-              <div
+              {presentacion.scoreTexto && (
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                  {presentacion.scoreTexto}
+                </div>
+              )}
+              {presentacion.porcentaje !== null && <div
                 style={{
                   width: '100%',
                   height: '6px',
@@ -141,14 +148,14 @@ export const DiagnosticoMlSection: React.FC<DiagnosticoMlSectionProps> = ({
               >
                 <div
                   style={{
-                    width: `${Math.max(1, Math.min(100, prediccion.probabilidad))}%`,
+                    width: `${presentacion.porcentaje}%`,
                     height: '100%',
                     borderRadius: '999px',
                     background: barColor,
                     transition: 'width 0.4s ease',
                   }}
                 />
-              </div>
+              </div>}
             </div>
           );
         })}

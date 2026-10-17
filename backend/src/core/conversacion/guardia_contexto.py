@@ -6,6 +6,7 @@ compuesta únicamente por hechos antiguos cuando el mensaje actual aporta sínto
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -70,9 +71,16 @@ class GuardiaContextoDiagnostico:
 
         # Verificar si la consulta consolidada contiene alguno de los síntomas del mensaje actual
         consulta_norm = consulta_consolidada.lower()
+        palabras_ignorar = {"para", "este", "esta", "como", "cuando", "pero", "sobre", "entre", "hace", "tiene", "donde", "desde"}
+        
         contiene_sintoma_nuevo = any(
-            s.lower() in consulta_norm or any(w in consulta_norm for w in s.lower().split() if len(w) > 4)
+            s.lower() in consulta_norm
+            or any(w in consulta_norm for w in re.split(r"[\s_]+", s.lower()) if len(w) >= 3)
             for s in sintomas_mensaje
+        ) or any(
+            w in consulta_norm
+            for w in re.findall(r"\b[a-záéíóúñ]{4,}\b", mensaje_actual.lower())
+            if w not in palabras_ignorar
         )
 
         # Si el mensaje actual aporta síntomas pero la consulta consolidada NO contiene ninguno

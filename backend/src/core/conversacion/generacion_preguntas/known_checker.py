@@ -180,6 +180,17 @@ def pregunta_por_area(
             QuestionIntent.MEDICION_TECNICA,
         )
 
+    correccion_mezcla_en_refrigeracion = (
+        estado.active_system == "refrigeracion"
+        and re.search(r"\bno\s+(?:es\s+)?(?:de\s+)?(?:me|mes)cla\b", texto)
+    )
+    if correccion_mezcla_en_refrigeracion:
+        return (
+            "Entendido: seguimos en refrigeración. ¿El electroventilador del radiador se activa "
+            "cuando la temperatura empieza a subir en tráfico?",
+            QuestionIntent.TEMPERATURA_MOTOR_EN_MARCHA,
+        )
+
     if not areas and estado.active_system != "electrico_ecu":
         return None
 
@@ -193,24 +204,13 @@ def pregunta_por_area(
             QuestionIntent.MEDICION_TECNICA,
         )
 
-    correccion_mezcla_en_refrigeracion = (
-        estado.active_system == "refrigeracion"
-        and re.search(r"\bno\s+(?:es\s+)?(?:de\s+)?(?:me|mes)cla\b", texto)
-    )
-    if correccion_mezcla_en_refrigeracion:
-        return (
-            "Entendido: seguimos en refrigeración. ¿El electroventilador del radiador se activa "
-            "cuando la temperatura empieza a subir en tráfico?",
-            QuestionIntent.TEMPERATURA_MOTOR_EN_MARCHA,
-        )
-
     if "ELECTRICO_ECU" in areas and re.search(
         r"(?:cambie|cambio|cambiar|cambiaron|reemplazaron|reemplazo).{0,45}(?:ecu|computadora)|"
-        r"(?:error|falla)\s+(?:de\s+)?codificaci[oó]n",
+        r"(?:error|falla)\s+(?:de\s+)?codificaci[oón]",
         texto,
     ):
         if estado.ya_preguntado_texto("qué mensaje/código exacto aparece al codificar"):
-            if re.search(r"error\s+(?:de\s+)?codificaci[oó]n", estado.historial_mensajes_usuario[-1]):
+            if re.search(r"error\s+(?:de\s+)?codificaci[oón]", estado.historial_mensajes_usuario[-1]):
                 return (
                     "Ya indicaste que el escáner se comunica y reporta codificación. "
                     "¿Cuál es el código o texto exacto de ese error?",

@@ -1,0 +1,43 @@
+name: E2E Compose isolated
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  e2e-compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      COMPOSE_PROJECT_NAME: carbot_e2e_${{ github.run_id }}
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start synthetic isolated services
+        run: |
+          mkdir -p artifacts/e2e
+          chmod 777 artifacts/e2e
+          docker compose -f docker-compose.e2e.yml up --build -d --wait api postgres redis
+          docker compose -f docker-compose.e2e.yml up -d worker
+      - name: Execute frozen 80-turn webhook conversations and integrity gates
+        run: docker compose -f docker-compose.e2e.yml run --rm runner --phase initial
+      - name: Verify continuity after each individual restart
+        run: |
+          for service in api worker redis postgres; do
+            docker compose -f docker-compose.e2e.yml restart "$service"
+            docker compose -f docker-compose.e2e.yml up -d --wait api postgres redis
+            docker compose -f docker-compose.e2e.yml run --rm runner --phase continuity --restart-service "$service"
+          done
+      - name: Collect isolated logs
+        if: always()
+        run: docker compose -f docker-compose.e2e.yml logs --no-color > artifacts/e2e/compose.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-compose-${{ github.sha }}
+          path: backend/artifacts/e2e
+      - name: Remove only this ephemeral runner stack
+        if: always()
+        run: docker compose -f docker-compose.e2e.yml down -v --remove-orphans

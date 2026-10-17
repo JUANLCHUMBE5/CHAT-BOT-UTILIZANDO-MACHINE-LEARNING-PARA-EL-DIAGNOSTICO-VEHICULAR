@@ -70,6 +70,10 @@ def presentar_historial(diag_db_list):
                     falla=str(item.get("falla", "Sin clasificación")),
                     probabilidad=round(float(item.get("probabilidad", 0)) * 100, 1),
                     origen_probabilidad=str(item.get("origen_probabilidad", "NO_REGISTRADO")),
+                    **{key: item.get(key) for key in (
+                        "statistical_probability", "operational_score", "raw_svm_score", "prediction_source",
+                        "class_id", "model_version", "taxonomy_version",
+                    )},
                 )
                 for indice, item in enumerate(predicciones_traza[:3], start=1)
             ]

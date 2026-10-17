@@ -36,7 +36,8 @@ VOCABULARIO_COMPONENTES = [
     "sensor de detonacion", "eje balanceador", "bujia de precalentamiento", "soporte de motor",
     "valvula de admision", "valvula de escape", "tapa de valvulas", "pcv", "filtro de aire",
     "regulador de presion", "tanque de combustible", "tps", "sensor de posicion del acelerador",
-    "liquido de direccion", "direccion hidraulica", "convertidor de par", "cubo de rueda", "tpms"
+    "liquido de direccion", "direccion hidraulica", "convertidor de par", "cubo de rueda", "tpms",
+    "check", "cilindro", "cilindros", "trafico", "tráfico", "ect", "ckp", "cmp", "ecu", "computadora", "escaner", "scanner",
 ]
 
 
@@ -68,13 +69,15 @@ VERBOS_FALLA = [
     "desalineado", "desalineada", "bloqueado", "bloqueada", "desbloquea", "salta", "no sube", "no baja", "se cayo", "se cayó",
     "chirria", "chirría", "chillido", "rechina", "rechinido", "vibra", "vibracion", "vibración", "tiembla", "cascabelea",
     "cascabeleo", "golpeteo", "crujido", "chasquido", "sonido", "ruido", "se apaga", "apaga", "pierde fuerza", "sin fuerza",
-    "no arranca", "cuesta arrancar", "jalonea", "jaloneo", "tirones", "gotea", "fuga", "bota", "humo", "recalienta",
-    "hierve", "patina", "esponjoso", "duro", "pesado", "no responde", "no funciona", "falla", "defectuoso", "quemado", "roto", "partido",
+    "no arranca", "cuesta arrancar", "jalonea", "jaloneo", "tirones", "tiron", "gotea", "fuga", "bota", "humo", "recalienta",
+    "recalentar", "recalntar", "calienta", "hierve", "patina", "esponjoso", "duro", "pesado", "no responde", "no funciona",
+    "falla", "defectuoso", "quemado", "roto", "partido", "misfire", "intermitente", "lean", "mezcla pobre", "mezcla rica",
     "suelto", "oxido", "sulfatado", "baja presion", "alta presion", "no enfria", "no marca", "oscila",
     "permanece encendido", "se amarra", "bambolea", "se inclina", "rebota", "pulsa", "demora en acoplar",
     "flujo debil", "poca presion", "olor", "raspa", "golpea", "se mueve demasiado", "trabaja disparejo",
     "zapatea", "zapateo", "se hunde", "se va al fondo", "traca traca", "trac trac", "clac clac", "tac tac",
     "prende en rojo", "se prende en rojo", "aceitera", "robot", "i-motion", "dualogic",
+    "se descarga", "descarga", "no comunica", "cambiaron",
 ]
 
 PALABRAS_MECANICAS = VOCABULARIO_COMPONENTES[:30]

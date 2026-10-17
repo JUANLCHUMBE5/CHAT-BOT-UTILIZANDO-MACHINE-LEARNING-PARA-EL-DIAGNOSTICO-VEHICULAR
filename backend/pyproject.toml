@@ -72,3 +72,6 @@ source = ["src"]
 [tool.coverage.report]
 fail_under = 55
 show_missing = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]

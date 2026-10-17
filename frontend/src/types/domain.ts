@@ -17,6 +17,14 @@ export interface PrediccionML {
   orden: number;
   falla: string;
   probabilidad: number;
+  statistical_probability?: number | null; // SVM predict_proba, escala 0..1; ausencia no equivale a cero
+  operational_score?: number | null; // Score de priorización 0..1, no probabilidad
+  raw_svm_score?: number | null;
+  prediction_source?: string | null;
+  origen_probabilidad?: string;
+  class_id?: string | null;
+  model_version?: string | null;
+  taxonomy_version?: string | null;
 }
 
 export interface EtapaProcesamiento {

@@ -22,17 +22,17 @@ def _normalizar(texto: str) -> str:
 PATRONES_SINTOMA = (
     r"\bse\s+calienta\b.{0,50}\b(?:trafico|subida|carretera|ralenti|motor)\b|"
     r"\b(?:trafico|subida|carretera)\b.{0,50}\bse\s+calienta\b",
-    r"\bno (?:arranca|arrancaba|arranco|enciende|encendia|encendio|prende|prendia|prendio|da marcha|frena|frenaba|freno|acelera|aceleraba|acelero|enfria|enfriaba|funciona|funcionaba|abre|cierra|sube|subia|baja|bajaba|responde|respondia|carga|cargaba)\b",
+    r"\bno (?:arranca|arrancaba|arranco|enciende|encendia|encendio|prende|prendia|prendio|da marcha|frena|frenaba|freno|acelera|aceleraba|acelero|enfria|enfriaba|funciona|funcionaba|abre|cierra|sube|subia|baja|bajaba|responde|respondia|carga|cargaba|comunica|conecta|enlaza|entra)\b",
     r"\b(?:pierde|perdio|perdia|perdiendo|perder|perdida) (?:de\s+)?(?:fuerza|potencia|aceite|refrigerante|pique|velocidad|desarrollo)\b",
     r"\b(?:se\s+)?(?:ahoga|ahogaba|ahogo|ahogando|ahogar|chupa|chupaba|chupo|chupando|chanchea|chancheaba|chancheando|aguanta|aguantaba|aguantando|amarrado|amarrada)\b",
     r"\bno (?:pasa|pasaba|puedo pasar|puede pasar|podia pasar|pudo pasar|llega|llegaba|sube|subia) de \d+\b",
     r"\bno (?:jala|jalaba|jalo|jalando|tira|tiraba|tirando|levanta|levantaba|desarrolla|desarrollaba)\b",
     r"\b(?:cuesta|costaba|demora|demoraba|tarda|tardaba|pesado para)\s+(?:en\s+)?(?:arrancar|encender|prender|partir)\b",
-    r"\b(?:vibra|vibraba|vibrando|tiembla|timebla|tiemlba|temblaba|temblando|jalonea|jaloneaba|jaloneando|tironea|tironeaba|tironeando|ratea|rateaba|cabecea|cabeceaba|corcovea|corcoveaba|cascabelea|cascabeleaba|recalienta|recalentaba|hierve|hervia|patina|patinaba|gotea|goteaba|humea|humeaba|chilla|chillaba|rechina|rechinaba|golpea|golpeaba|raspa|raspaba|zumba|zumbaba|aulla|aullaba|ronca|roncaba|traquetea|traqueteaba|chasquea|chasqueaba|cruje|crujia)\b",
-    r"\b(?:ruido|zumbido|aullido|ronquido|chillido|rechinido|golpeteo|traqueteo|chasquido|crujido|vibracion(?:es)?|fuga|humo|olor a quemado|luz de falla|check engine)\b",
-    r"\b(?:se apaga|se apagaba|se apago|se apagando|se me apaga|se me apagaba|se corta|se cortaba|se muere|se moria|esta duro|esta esponjoso|se traba|esta trabado|se quedo trabado|trabado|inclinada|inclinado|no encaja|se descarga|consume demasiado)\b",
-    r"\b(?:falla|fallando|averia|defectuoso|roto|quemado|sulfatado|baja presion|alta temperatura)\b",
-    r"\b(?:atranca|atracando|atascado|oscila|sube y baja|no enfria|solo enfria|solo enfría|enfria solo|enfría solo|aire caliente|aire tibio|fuerza con la pierna|bloqueado|bloqueada|deja de enfriar|enfria poco|enfría poco|clima caliente|compresor no entra|compresor no acopla|sin gas)\b",
+    r"\b(?:vibra|vibraba|vibrando|tiembla|timebla|tiemlba|temblaba|temblando|jalonea|jaloneaba|jaloneando|tironea|tironeaba|tironeando|ratea|rateaba|cabecea|cabeceaba|corcovea|corcoveaba|cascabelea|cascabeleaba|recalienta|recalentaba|recalentar|recalntar|hierve|hervia|patina|patinaba|gotea|goteaba|humea|humeaba|chilla|chillaba|rechina|rechinaba|golpea|golpeaba|raspa|raspaba|zumba|zumbaba|aulla|aullaba|ronca|roncaba|traquetea|traqueteaba|chasquea|chasqueaba|cruje|crujia)\b",
+    r"\b(?:ruido|zumbido|aullido|ronquido|chillido|rechinido|golpeteo|traqueteo|chasquido|crujido|vibracion(?:es)?|fuga|humo|olor a quemado|cable quemado|luz de falla|check engine)\b",
+    r"\b(?:se apaga|se apagaba|se apago|se apagando|se me apaga|se me apagaba|se corta|se cortaba|se muere|se moria|esta duro|esta esponjoso|se traba|esta trabado|se quedo trabado|trabado|inclinada|inclinado|no encaja|se descarga|consume demasiado|se bloquea|bloquea el encendido)\b",
+    r"\b(?:falla|fallando|averia|defectuoso|roto|quemado|sulfatado|baja presion|alta temperatura|error de enlace|sin comunicacion|modo de emergencia|modo de proteccion|limp mode)\b",
+    r"\b(?:atranca|atracando|atascado|oscila|oscilan|sube y baja|suben y bajan|no enfria|solo enfria|solo enfría|enfria solo|enfría solo|aire caliente|aire tibio|fuerza con la pierna|bloqueado|bloqueada|deja de enfriar|enfria poco|enfría poco|clima caliente|compresor no entra|compresor no acopla|sin gas)\b",
 
     r"\b(?:se hunde|hundiendose|hundido|se va al fondo|llega al fondo|al fondo contra|se cae hasta el piso|pedal esponjoso|pedal largo|pedal bajo|pedal blando|pedal duro|bomba de freno|cilindro maestro|liquido de freno|liquido de frenos|bombeo|bombear|sin presion|sin frenos?|frena mal|frenaba mal|frena largo|pedal raro)\b",
     r"\bpedal(?:\s+\w+){0,3}\s+(?:esponjoso|largo|bajo|blando|duro|se va al fondo|al fondo|en el piso|raro)\b",
@@ -46,15 +46,20 @@ PATRONES_SINTOMA = (
     r"\b(?:luces tenues|intento arrancar|al intentar arrancar|no da arranque)\b",
     r"\b(?:al acelerar|en subida|en pendiente|a fondo|en neutro|en ralenti|subiendo una cuesta)\b",
     r"\b(?:se siente|siento)\s+(?:raro|inestable|pesado|duro|suelto)\b",
-    r"\b(?:temperatura\s+(?:alta|al\s+maximo|al\s+m[aá]ximo|en\s+rojo|sube|elevada|pegada)|vapor\s+(?:blanco\s+)?(?:por\s+el|del|bajo\s+el)\s+cap[oó]|sale\s+vapor|humo\s+blanco\s+por\s+el\s+cap[oó])\b",
+    r"\b(?:temperatura\s+(?:alta|al\s+maximo|al\s+máximo|en\s+rojo|sube|elevada|pegada)|vapor\s+(?:blanco\s+)?(?:por\s+el|del|bajo\s+el)\s+cap[oó]|sale\s+vapor|humo\s+blanco\s+por\s+el\s+cap[oó])\b",
     r"\b(?:arroja|marca|indica|reporta|muestra|presenta|sale)\b.{0,80}\b(?:mezcla\s+(?:pobre|rica)|p0171|p0172)\b",
     r"\b(?:mezcla\s+(?:pobre|rica)|p0171|p0172)\b.{0,60}\b(?:en\s+(?:el\s+)?(?:scanner|escaner)|check(?:\s+engine|\s+del\s+motor)?)\b",
     r"\binyectores?\b.{0,60}\b(?:no\s+inyectan|inyectan\s+(?:poco|insuficiente|lo\s+suficiente)|caudal\s+(?:bajo|insuficiente))\b",
     r"\b(?:carga\s+absoluta|sensor\s+map|map)\b.{0,70}\b(?:fuera\s+de\s+rango|fueron\s+de\s+rango|alto|bajo|irregular|anomalo|anormal)\b",
     r"\b(?:fuera\s+de\s+rango|fueron\s+de\s+rango|alto|bajo|irregular|anomalo|anormal)\b.{0,70}\b(?:carga\s+absoluta|sensor\s+map|map)\b",
     r"\b(?:sensor\s+(?:de\s+)?oxigeno|sonda\s+lambda|sensor\s+o2)\b.{0,50}\b(?:se\s+queda|marca|mide|lee)\s+(?:en\s+)?\d+(?:[.,]\d+)?\b",
-    r"\b(?:se\s+(?:me\s+)?prende|enciende)\b.{0,35}\b(?:check|testigo|luz)\b",
+    r"\b(?:se\s+(?:me\s+)?prende|enciende|prende\s+y\s+apaga|parpadea|destella)\b.{0,35}\b(?:check|testigo|luz)\b",
     r"\b(?:p|b|c|u)\d{4}\b",
+    r"\bmisfire\b",
+    r"\bcilindro\s*\d+\b",
+    r"\b(?:tiron(?:es)?|acelera\s+a\s+tirones)\b",
+    r"\bcheck\b.{0,35}\b(?:intermitente|frio|caliente|tirones|mezcla|parpadea|encendido|prendido)\b",
+    r"\b(?:revoluciones|rpm)\b.{0,45}\b(?:suben|bajan|oscilan|inestable|caen)\b",
 )
 
 PATRONES_PREGUNTA = (
@@ -86,7 +91,7 @@ TERMINOS_AUTOMOTRICES = {
     "alto voltaje", "common rail", "etanol", "flex", "valvulina", "diferencial",
     "arranque", "arrancador", "solenoide", "solenoides", "alternador", "frenar", "aceitera",
     "robot", "i-motion", "dualogic", "traca", "zapatea", "zapateo",
-    "acelerar", "aceleracion", "aceleración", "subida", "cuesta", "pista rapida",
+    "acelerar", "acelera", "aceleracion", "aceleración", "acelerador", "subida", "cuesta", "pista rapida",
     "zumbido", "asiento", "asientos", "bomba", "aforador", "tanque de gasolina",
     "suspension", "suspensión", "bache", "baches", "rompemuelle", "rompemuelles",
     "pastilla", "pastillas", "pedal", "pedales", "caliper", "calipers", "mordaza",
@@ -101,8 +106,14 @@ TERMINOS_AUTOMOTRICES = {
     "arrancar", "encender", "prender", "luces", "potencia", "perdida", "climatizacion",
     "climatización", "manejar", "manejando", "conducir", "conduciendo",
     "temperatura", "vapor", "capo", "capó", "aguja",
+    "misfire", "cilindro", "cilindros", "check", "tiron", "tirones",
+    "recalienta", "recalentar", "recalntar", "calienta", "lean", "rich",
+    "tps", "ect", "ckp", "cmp", "pcv", "evap", "can", "ecu", "computadora",
+    "revoluciones", "rpm", "semaforo", "semaforos", "tacometro", "tablero",
+    "testigo", "testigos", "puerto", "obd", "obd2", "inmovilizador", "llave",
+    "arnes", "fusible", "fusibles", "rele", "termostato", "ventilador",
+    "electroventilador", "manguera", "mangueras", "compresion", "humo",
 }
-
 
 
 def clasificar_intencion_consulta(texto: str) -> TipoConsulta:

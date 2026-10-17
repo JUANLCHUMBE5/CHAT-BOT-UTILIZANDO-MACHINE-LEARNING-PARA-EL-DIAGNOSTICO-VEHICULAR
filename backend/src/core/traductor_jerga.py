@@ -1,76 +1,84 @@
-"""Normalización de jerga de taller de Perú y otros países de LATAM.
-
-El objetivo no es diagnosticar mediante reemplazos, sino convertir nombres
-regionales de piezas y síntomas a vocabulario técnico peruano que el pipeline
-ML + RAG pueda interpretar de forma consistente.
-"""
-
-from __future__ import annotations
-
 import re
 
-# Variantes frecuentes de dictado/ASR y escritura informal. Son equivalencias
-# automotrices cerradas: evitamos un corrector difuso general que pueda cambiar
-# nombres de modelos, marcas o componentes válidos.
 DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
+    # Correcciones de dictado/tipeo frecuente en siglas de combustible.
+    (r"\bg\s*[.\-/]?\s*n\s*[.\-/]?\s*[vb]\b", "gnv"),
+    (r"\bg\s*[.\-/]?\s*l\s*[.\-/]?\s*[pb]\b", "glp"),
+    (r"\b(?:gas\s+natural\s+vehicular|gas\s+natural)\b", "gnv"),
+    (r"\b(?:gas\s+licuado(?:\s+de\s+petroleo|\s+de\s+petróleo)?|autogas|auto\s+gas)\b", "glp"),
+    (r"\b(?:nafta|bencina)\b", "gasolina"),
+    (r"\b(?:gasoil|acpm)\b", "diesel"),
+    # Expresiones coloquiales de pérdida de potencia o respuesta lenta.
     (
-        r"\bhumo blanco\b[^.]{0,100}\b(?:consume|pierde)\s+(?:el\s+)?refrigerante\b",
-        "vapor blanco consume refrigerante posible empaque de culata",
-    ),
-    (
-        r"\b(?:pasta|grasa|color|parece)\s+(?:como\s+)?caf[eé]\s+con\s+leche\b|"
-        r"\b(?:mayonesa|nata|crema)\s+(?:en\s+la\s+tapa|en\s+el\s+aceite|pegada)\b|"
-        r"\baceite\s+(?:lechoso|emulsionado|blanquecino|con\s+agua)\b|"
-        r"\bcaf[eé]\s+con\s+leche\b",
-        "aceite de motor parece leche con cafe chocolatada se mezcla el agua con el aceite",
-    ),
-    (
-        r"\bmangueras?\s+(?:[a-z]+\s+)*(?:duras?|infladas?|hinchadas?|como\s+piedra)\b|"
-        r"\bburbujeo\s+(?:violento\s+)?(?:en\s+el\s+dep[oó]sito|en\s+el\s+radiador)\b|"
-        r"\bburbujas\s+en\s+el\s+(?:dep[oó]sito|refrigerante|radiador)\b",
-        "el radiador bota burbujas con el motor encendido y consume agua",
-    ),
-    (
-        r"\bhumo\s+blanco\s+(?:espeso|denso)?\s*(?:y\s+)?dulce\b",
-        "sale bastante humo blanco espeso por el tubo de escape bota vapor blanco",
-    ),
-    (
-        r"\bp\s*0*300\b",
-        "codigo p0300 de falla de encendido multiple misfire en cilindros, revisar bujias o bobinas",
-    ),
-    (r"\bg\s*[.\-]?\s*n\s*[.\-]?\s*[bv]\b|\b(?:gnb|gnev|genebe)\b", "gnv"),
-    (r"\bg\s*[.\-]?\s*l\s*[.\-]?\s*[bp]\b|\b(?:glb|gelepe)\b", "glp"),
-    (r"\bgas licuado(?: de petr[oó]leo)?\b|\b(?:autogas|propano)\b", "glp"),
-    (r"\b(?:menjar|menejar|manegar)\b", "manejar"),
-    (r"\bvibraci[oó]n(?:es)?\b", "vibracion"),
-    (
-        r"\b(?:se\s+)?(?:vuelve|pone|queda)\s+chanch[oa]\b|"
-        r"\b(?:se\s+)?(?:chanchea|chanchaea|achancha|achanchea|chanchonea)\b",
+        r"\b(?:se\s+chanchea|se\s+achancha|se\s+pone\s+chancho|"
+        r"se\s+vuelve\s+chancho|esta\s+chancho|está\s+chancho|"
+        r"se\s+queda\s+sin\s+fuerza|no\s+tiene\s+fuerza\s+en\s+subida)\b",
         "pierde potencia y presenta tirones al acelerar",
     ),
-    (r"\brpoblemas?\b|\bporblemas?\b", "problemas"),
-    (r"\bvehciuelos?\b|\bvehiuclos?\b|\bvehicul[ao]s?\b", "vehiculo"),
-    (r"\btimebla\b|\btiemlba\b", "tiembla"),
-    (r"\bholla+\b|\bholaa+\b", "hola"),
+    # Errores de escritura frecuentes en consultas reales de taller/WhatsApp.
+    (r"\b(?:menjar|manejarlo|manejando)\b", "manejar"),
+    (r"\b(?:vibraciones|vibracion|vibración)\s+al\s+manejar\b", "vibracion al manejar"),
+    (r"\b(?:llanta|llantas)\s+desbalancead[ao]s?\b", "llantas desbalanceadas"),
+    # Términos técnicos que mejoran coincidencia con clases canónicas del modelo ML.
+    (
+        r"\b(?:humo\s+blanco|bota\s+humo\s+blanco|sale\s+humo\s+blanco)"
+        r"(?=.*(?:refrigerante|agua|culata|temperatura|recalienta|calienta))\b",
+        "humo blanco por escape vapor blanco consume refrigerante posible empaque de culata",
+    ),
+    # Mulsión agua-aceite ("café con leche" / "mayonesa" en tapa o varilla) -> Empaque de culata
+    (
+        r"\b(?:cafe\s+con\s+leche|café\s+con\s+leche|mayonesa|lechoso|chocolatada|emulsionad[oa])\b",
+        "se mezcla el agua con el aceite chocolatada en el motor empaque de culata soplado",
+    ),
+    # Burbujeo en radiador o botella de expansión -> Empaque de culata
+    (
+        r"\b(?:burbujea\s+(?:el\s+)?(?:radiador|deposito|depósito|agua|refrigerante)|"
+        r"burbujas\s+en\s+(?:el\s+)?(?:radiador|deposito|depósito|vaso|botella))\b",
+        "radiador bota burbujas presion en sistema de refrigeracion empaque de culata",
+    ),
+    # Jerga eléctrica de taller: "roba corriente" -> Fuga parásita
+    (
+        r"\b(?:roba\s+corriente|consume\s+corriente\s+apagado|se\s+baja\s+la\s+bateria\s+sola|"
+        r"se\s+descarga\s+de\s+noche|amanece\s+muerta\s+la\s+bateria)\b",
+        "fuga parasita de corriente en reposo consumo nocturno de bateria amanece descargada",
+    ),
+    # Jerga de frenos: "rueda frenada" / "llanta amarrada" -> Cáliper trabado
+    (
+        r"\b(?:rueda\s+(?:frenada|amarrada|pegada|trabada)|llanta\s+(?:frenada|amarrada|pegada)|"
+        r"mordaza\s+pegada|caliper\s+pegado)\b",
+        "caliper de freno trabado o mordaza pegada piston agarrotado recalienta un solo aro",
+    ),
+    # Jerga de dirección: "cajas de dirección" / "cremallera"
+    (
+        r"\b(?:caja\s+de\s+direccion|caja\s+hidraulica|botella\s+de\s+direccion)\b",
+        "cremallera de direccion asistida",
+    ),
+    # Jerga de transmisión/embrague: "collarín" / "crapodina" / "ruleman de empuje"
+    (
+        r"\b(?:ruleman\s+de\s+empuje|rodamiento\s+de\s+empuje|cojinete\s+de\s+embrague|"
+        r"crapodina|collarin\s+de\s+embrague)\b",
+        "collarin de empuje o crapodina de embrague",
+    ),
+    # Códigos OBD-II frecuentes hacia síntomas canónicos
+    (r"\bp030[0-8]\b", r"codigo \g<0> de falla de encendido multiple en cilindros bujias o bobinas"),
+    (r"\bp0420\b", "codigo p0420 eficiencia de catalizador por debajo del umbral convertidor catalitico"),
+    (r"\bp0171\b", "codigo p0171 mezcla pobre en banco 1 vacio o inyeccion"),
+    (r"\bp0172\b", "codigo p0172 mezcla rica en banco 1 sensor de oxigeno o inyectores"),
 )
 
-# Las frases más específicas deben ir antes que las palabras individuales.
-# No se incluyen equivalencias regionales ambiguas (por ejemplo, ``cardán`` no
-# se transforma en ``palier``) porque podrían cambiar el sistema diagnosticado.
+
 DICCIONARIO_JERGA_LATAM: tuple[tuple[str, str], ...] = (
-    # Frenos: México, Chile, Centroamérica y Caribe -> término usado en Perú.
-    (r"\b(?:galletas?|balatas?|fricciones?)\s+de\s+freno\b", "pastillas de freno"),
-    (r"\b(?:balatas?|fricciones?)\b", "pastillas de freno"),
-    (r"\bbandas?\s+de\s+freno\b", "zapatas de freno"),
-    (r"\b(?:maestro|bomba maestra)\s+de\s+frenos?\b", "bomba principal de freno"),
-    (r"\bflexible\s+de\s+freno\b", "manguera de freno"),
-    (r"\bbooster\b", "servofreno"),
-    # Embrague y transmisión.
-    (r"\b(?:cloche|croche|clutch)\b", "embrague"),
-    (r"\b(?:balero|ruleman|rulemán)\s+de\s+(?:clutch|embrague)\b", "rodamiento de embrague"),
-    (r"\b(?:semi[ -]?eje|flecha)\b", "palier"),
-    (r"\b(?:balero|ruleman|rulemán)\b", "rodamiento"),
-    (r"\bslushbox\b", "caja automática"),
+    # Frenos y rodamientos: México, Colombia, Chile, Argentina y Venezuela.
+    (r"\bbalatas?\b", "pastillas de freno"),
+    (r"\b(?:bandas|cintas)\s+de\s+freno\b", "zapatas de freno"),
+    (r"\b(?:bomba\s+central\s+de\s+freno|cilindro\s+maestro)\b", "bomba de freno"),
+    (r"\b(?:mordaza\s+de\s+freno|c[aá]liper)\b", "caliper de freno"),
+    (r"\b(?:rulem[aá]n|rolinera|balero|maza\s+de\s+rueda)\b", "rodamiento"),
+    # Transmisión, embrague y tracción.
+    (r"\b(?:clutch|cloche|croche)\b", "embrague"),
+    (r"\b(?:flecha\s+homocin[eé]tica|semieje|eje\s+homocin[eé]tico)\b", "palier"),
+    (r"\b(?:triceta|tripoide)\b", "junta homocinetica interior"),
+    (r"\b(?:caja\s+de\s+velocidades|transmisi[oó]n\s+mec[aá]nica)\b", "caja de cambios"),
     # Arranque, carga y encendido.
     (r"\b(?:burro de arranque|motor de partida|starter)\b", "motor de arranque"),
     (r"\bla\s+marcha\s+(?:no\s+gira|no\s+da|pesada|pegada|arrastra|falla)\b", "el motor de arranque no gira"),
@@ -92,7 +100,7 @@ DICCIONARIO_JERGA_LATAM: tuple[tuple[str, str], ...] = (
     (r"\b(?:cajuela|baul|baúl)\b", "maletera"),
     (r"\bcofre\b", "capot"),
     (r"\b(?:volante de direccion|volante de dirección)\b", "timon"),
-    (r"\b(?:elevavidrios|elevalunas|alzavidrios|alzacristales)\b", "elevador de vidrio"),
+    (r"\b(?:elevavidrios|elevalunas|alzavidrios|alzacristales)\b", "elevalunas alzacristales elevador de vidrio"),
     (r"\b(?:plumillas|escobillas)\s+(?:del\s+)?limpiaparabrisas\b", "plumas de limpiaparabrisas"),
 )
 
@@ -129,8 +137,8 @@ DICCIONARIO_JERGA_PERUANA: tuple[tuple[str, str], ...] = (
     (r"\bhumo negro\b", "humo negro por mezcla rica o combustion incompleta"),
     (r"\bhumo blanco\b", "humo blanco o vapor por ingreso de refrigerante"),
     (r"\bplumas\b", "plumas de limpiaparabrisas"),
-    (r"\bchapa\b", "cerradura de puerta"),
-    (r"\bpestillo\b", "mecanismo de cierre de puerta"),
+    (r"\bchapa\b", "chapa cerradura de puerta"),
+    (r"\bpestillo\b", "pestillo cerradura"),
     (r"\ben minimo\b", "motor en ralenti sin acelerar"),
     (r"\bjalonea\b", "presenta tirones al circular o acelerar"),
     (r"\bgolpe en baches\b", "golpe de suspension al pasar baches"),
@@ -158,6 +166,4 @@ def normalizar_jerga_peruana(texto: str) -> str:
 
 
 if __name__ == "__main__":
-    prueba = "Mi caña usa balatas, cascabelea y el burro de arranque hace clic"
-    print("Texto original:", prueba)
-    print("Texto normalizado:", normalizar_jerga_peruana(prueba))
+    pass

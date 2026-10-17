@@ -38,7 +38,7 @@ def instruccion_hallazgo(pregunta: str, titulo: str, contexto: str) -> str:
     fuente = ""
     if not contexto:
         fuente = (
-            "Declara: corpus preliminar no inyectado, pendiente de validación OEM/taller. "
+            "Declara que no dispones de procedimiento RAG validado aplicable: corpus preliminar no inyectado, pendiente de validación OEM/taller. "
             if "preliminar" in titulo.lower()
             else "Declara que no dispones de procedimiento RAG validado aplicable. "
         )

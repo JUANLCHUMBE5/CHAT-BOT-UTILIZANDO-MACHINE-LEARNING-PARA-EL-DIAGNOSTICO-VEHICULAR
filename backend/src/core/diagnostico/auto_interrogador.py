@@ -326,6 +326,18 @@ def evaluar_auto_pregunta_descarte(
     if any(w in texto_l for w in ("caliper", "mordaza", "piston oxidado", "piston agarrotado", "al rojo vivo", "queman de calor")) and any(w in texto_l for w in ("rueda", "freno", "recalienta", "calor")):
         return None
 
+    # Caso 1j: Carrocería / cerradura / pestillo / cierre centralizado / elevalunas / limpiaparabrisas con discriminador claro
+    if any(
+        w in texto_l
+        for w in (
+            "pestillo", "mecanismo de cierre", "manija exterior", "manija interior",
+            "cerradura de puerta", "bisagra", "actuador electrico", "mando a distancia",
+            "cierre centralizado", "limpiaparabrisas", "alzacristales", "elevalunas",
+            "elevador de vidrio",
+        )
+    ):
+        return None
+
     # REGLA 2: GENERACIÓN DINÁMICA BASADA EN LAS PREDICCIONES TOP DEL MACHINE LEARNING
     if predicciones_top and len(predicciones_top) >= 2:
         opciones_generadas = []

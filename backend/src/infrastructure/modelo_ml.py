@@ -7,13 +7,18 @@ from __future__ import annotations
 import os
 import re
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 import joblib
 import numpy as np
 
 from src.config import settings
 from src.core.diagnostico.taxonomia_sistemas import (
+    MODEL_VERSION,
+    TAXONOMY_VERSION,
+    ContratoPrediccionML,
+    construir_contrato_prediccion,
+    obtener_class_id,
     obtener_macro_sistema,
     obtener_sistema_por_dtc,
 )
@@ -105,33 +110,93 @@ class ModeloML:
         clases = self.modelo.classes_
         indices = np.argsort(probabilidades)[::-1][:max(1, min(int(limite), len(clases)))]
         return [
-            {"falla": str(clases[int(i)]), "probabilidad": float(probabilidades[int(i)])}
+            {
+                "falla": str(clases[int(i)]),
+                "probabilidad": float(probabilidades[int(i)]),
+                "raw_svm_score": float(probabilidades[int(i)]),
+                "class_id": obtener_class_id(str(clases[int(i)])),
+                "subsystem": obtener_macro_sistema(str(clases[int(i)])),
+            }
             for i in indices
         ]
 
     def predecir_top_fallas(
         self, texto: str, limite: int = 3, dtc_codigo: Optional[str] = None
-    ) -> list[dict[str, float | str]]:
+    ) -> list[dict[str, Any]]:
         """
         Devuelve las clases más probables mediante inferencia jerárquica (Macro-Sistema -> Falla).
-        Integra autoridad estructurada para códigos DTC.
+        Integra autoridad estructurada para códigos DTC y expone metadatos del contrato ML.
         """
         if self.modelo is None or self.vectorizador is None:
-            return [{"falla": "Falla mecanica no clasificada (modelo ML ausente)", "probabilidad": 0.0}]
+            return [
+                {
+                    "falla": "Falla mecanica no clasificada (modelo ML ausente)",
+                    "probabilidad": 0.0,
+                    "raw_svm_score": 0.0,
+                    "calibrated_probability": 0.0,
+                    "class_id": "ABSTENCION",
+                    "subsystem": "INDETERMINADO",
+                    "prediction_source": "ABSTENCION",
+                    "abstention_reason": "modelo_ml_ausente",
+                    "model_version": MODEL_VERSION,
+                    "taxonomy_version": TAXONOMY_VERSION,
+                }
+            ]
 
         try:
             texto_limpio = str(texto or "").strip()[:4000]
             if not texto_limpio:
-                return [{"falla": "Sintoma fuera del vocabulario del modelo", "probabilidad": 0.0}]
+                return [
+                    {
+                        "falla": "Sintoma fuera del vocabulario del modelo",
+                        "probabilidad": 0.0,
+                        "raw_svm_score": 0.0,
+                        "calibrated_probability": 0.0,
+                        "class_id": "ABSTENCION",
+                        "subsystem": "INDETERMINADO",
+                        "prediction_source": "ABSTENCION",
+                        "abstention_reason": "consulta_vacia",
+                        "model_version": MODEL_VERSION,
+                        "taxonomy_version": TAXONOMY_VERSION,
+                    }
+                ]
             entrada = self.vectorizador.transform([texto_limpio])
             if getattr(entrada, "nnz", 0) == 0:
-                return [{"falla": "Sintoma fuera del vocabulario del modelo", "probabilidad": 0.0}]
+                return [
+                    {
+                        "falla": "Sintoma fuera del vocabulario del modelo",
+                        "probabilidad": 0.0,
+                        "raw_svm_score": 0.0,
+                        "calibrated_probability": 0.0,
+                        "class_id": "ABSTENCION",
+                        "subsystem": "INDETERMINADO",
+                        "prediction_source": "ABSTENCION",
+                        "abstention_reason": "fuera_de_vocabulario_tfidf",
+                        "model_version": MODEL_VERSION,
+                        "taxonomy_version": TAXONOMY_VERSION,
+                    }
+                ]
 
             if not hasattr(self.modelo, "predict_proba"):
-                return [{"falla": str(self.modelo.predict(entrada)[0]), "probabilidad": 0.0}]
+                pred_lbl = str(self.modelo.predict(entrada)[0])
+                return [
+                    {
+                        "falla": pred_lbl,
+                        "probabilidad": 0.0,
+                        "raw_svm_score": 0.0,
+                        "calibrated_probability": 0.0,
+                        "class_id": obtener_class_id(pred_lbl),
+                        "subsystem": obtener_macro_sistema(pred_lbl),
+                        "prediction_source": "SVM",
+                        "model_version": MODEL_VERSION,
+                        "taxonomy_version": TAXONOMY_VERSION,
+                    }
+                ]
 
-            probabilidades_fallas = self.modelo.predict_proba(entrada)[0].copy()
+            probabilidades_raw = self.modelo.predict_proba(entrada)[0].copy()
+            probabilidades_fallas = probabilidades_raw.copy()
             clases_fallas = list(self.modelo.classes_)
+            fallas_impulsadas_dtc: set[str] = set()
 
             # Detección o extracción de DTC
             codigos_dtc = []
@@ -159,13 +224,13 @@ class ModeloML:
                             for idx_f, f_nom in enumerate(clases_fallas):
                                 if f_nom in fallas_dtc:
                                     probabilidades_fallas[idx_f] *= 2.5
+                                    fallas_impulsadas_dtc.add(f_nom)
 
                 # Combinación jerárquica de probabilidades: P(Falla) * P(Sistema)^0.65
                 scores_combinados = np.zeros(len(clases_fallas), dtype=float)
                 for idx_f, f_nom in enumerate(clases_fallas):
                     macro_sist = obtener_macro_sistema(f_nom)
                     p_sist = sist_map.get(macro_sist, 0.05)
-                    # Exponenciación suave para penalizar sistemas cruzados absurdos
                     scores_combinados[idx_f] = probabilidades_fallas[idx_f] * (p_sist ** 0.65)
 
                 suma_scores = np.sum(scores_combinados)
@@ -187,13 +252,54 @@ class ModeloML:
 
             limite_seguro = max(1, min(int(limite), len(probabilidades_finales)))
             indices = probabilidades_finales.argsort()[::-1][:limite_seguro]
-            return [
-                {
-                    "falla": str(clases_fallas[int(indice)]),
-                    "probabilidad": round(float(probabilidades_finales[int(indice)]), 4),
-                }
-                for indice in indices
-            ]
+            resultados: list[dict[str, Any]] = []
+            for indice in indices:
+                idx_int = int(indice)
+                etiqueta = str(clases_fallas[idx_int])
+                prob_cal = round(float(probabilidades_finales[idx_int]), 4)
+                prob_raw = round(float(probabilidades_raw[idx_int]), 4)
+                fuente = "SVM_DTC" if etiqueta in fallas_impulsadas_dtc else "SVM"
+                resultados.append(
+                    {
+                        "falla": etiqueta,
+                        "probabilidad": prob_cal,
+                        "raw_svm_score": prob_raw,
+                        "calibrated_probability": prob_raw,
+                        "statistical_probability": prob_raw,
+                        "operational_score": prob_cal,
+                        "class_id": obtener_class_id(etiqueta),
+                        "subsystem": obtener_macro_sistema(etiqueta),
+                        "prediction_source": fuente,
+                        "model_version": MODEL_VERSION,
+                        "taxonomy_version": TAXONOMY_VERSION,
+                    }
+                )
+            return resultados
         except Exception as exc:
             logger.error("Error al predecir falla con el modelo ML jerárquico: %s", exc)
-            return [{"falla": "Error de prediccion", "probabilidad": 0.0}]
+            return [{"falla": "Error de prediccion", "probabilidad": 0.0, "raw_svm_score": 0.0, "calibrated_probability": 0.0}]
+
+    def predecir_contrato(
+        self, texto: str, limite: int = 3, dtc_codigo: Optional[str] = None
+    ) -> ContratoPrediccionML:
+        """Devuelve el objeto ContratoPrediccionML versionado listo para trazabilidad."""
+        top = self.predecir_top_fallas(texto, limite=limite, dtc_codigo=dtc_codigo)
+        if not top:
+            return construir_contrato_prediccion(
+                class_label="Error de prediccion",
+                raw_svm_score=0.0,
+                calibrated_probability=0.0,
+                prediction_source="ABSTENCION",
+                top_k=[],
+                abstention_reason="sin_predicciones",
+            )
+        principal = top[0]
+        return construir_contrato_prediccion(
+            class_label=str(principal.get("falla", "")),
+            raw_svm_score=float(principal.get("raw_svm_score", 0.0)),
+            calibrated_probability=principal.get("calibrated_probability"),
+            operational_score=principal.get("operational_score", principal.get("probabilidad")),
+            prediction_source=str(principal.get("prediction_source", "SVM")),
+            top_k=top,
+            abstention_reason=principal.get("abstention_reason"),
+        )

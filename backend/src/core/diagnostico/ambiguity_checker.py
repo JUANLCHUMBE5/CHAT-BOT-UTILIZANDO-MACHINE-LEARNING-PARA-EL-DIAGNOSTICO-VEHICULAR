@@ -90,7 +90,6 @@ def es_continuacion_contextual(texto: str) -> bool:
     return any(limpio.startswith(valor) or valor in limpio for valor in conectores)
 
 
-
 def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
     """Determina si la consulta del usuario es incompleta o ambigua utilizando contexto técnico dinámico."""
     if es_respuesta_opcion_o_combustible(texto):
@@ -100,10 +99,14 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
     if re.fullmatch(r"\d{2,4}\s*rpm", texto_limpio):
         return True, "El valor de RPM por sí solo no identifica una falla: ¿ocurre al arrancar, acelerar o frenar? ¿Tiembla o solo observaste esa lectura?"
 
-    # Una lectura explícita de MAP/carga absoluta ya aporta un sistema y una
-    # medición técnica. No debe convertirse en la pregunta genérica de
-    # vibración aunque el normalizador haya traducido "cabecea" a vibración.
-    if any(termino in texto_limpio for termino in ("sensor map", "carga absoluta", "presion absoluta")):
+    # Un código DTC explícito (ej. P0171, P0300) o sobrecalentamiento/misfire explícito no es ambiguo
+    if re.search(r"\b[pbcu]\d{4}\b", texto_limpio):
+        return False, ""
+    if re.search(
+        r"\b(?:recalienta|recalentar|recalntar|recalentando|sobrecalienta|calienta\s+en\s+(?:el\s+)?tr[aá]fico|"
+        r"acelera\s+a\s+tirones|check\s+intermitente|misfire)\b",
+        texto_limpio,
+    ):
         return False, ""
 
     # Una lectura explícita de MAP/carga absoluta ya aporta un sistema y una
@@ -130,6 +133,7 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
             "volante",
             "asiento",
             "pedal",
+            "cvt", "dsg", "caja", "transmision", "transmisión", "embrague",
             "zapatea",
             "zapateo",
         )
@@ -142,18 +146,27 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
         "falla mi carro", "mi auto tiene una falla", "ayuda con mi carro"
     ]
 
-    # Un contacto genérico todavía no contiene evidencia para escoger una
-    # condición de operación. Pedimos el síntoma libre antes de derivar al
-    # clasificador ML y a las preguntas técnicas por dominio.
     if texto_limpio in frases_ambiguas:
         return True, "👋 Especifique qué ocurre, cuándo sucede y si aparece luz o código."
 
-    # Si el mensaje es descriptivo (>= 6 palabras) no declararlo ambiguo ciegamente
-    if len(words) >= 6:
-        return False, ""
-
     tiene_componente = any(comp in texto_limpio for comp in VOCABULARIO_COMPONENTES)
     tiene_verbo_falla = any(vf in texto_limpio for vf in VERBOS_FALLA)
+
+    # Frases difusas de sensación genérica sin componente ni síntoma concreto
+    es_sensacion_difusa = bool(
+        re.search(
+            r"\b(?:siento\s+raro|se\s+siente\s+raro|anda\s+raro|funciona\s+raro|"
+            r"algo\s+raro|algo\s+extra[nñ]o|no\s+anda\s+bien|tiene\s+un\s+problema|"
+            r"tiene\s+una\s+falla)\b",
+            texto_limpio,
+        )
+    )
+    if es_sensacion_difusa and not tiene_componente and not tiene_verbo_falla:
+        return True, "👋 Especifique qué ocurre, cuándo sucede y si aparece luz o código."
+
+    # Si el mensaje es descriptivo (>= 6 palabras) y no es una frase vaga sin síntoma, no declararlo ambiguo
+    if len(words) >= 6 and (tiene_componente or tiene_verbo_falla or not es_sensacion_difusa):
+        return False, ""
 
     if tiene_componente and tiene_verbo_falla:
         return False, ""
