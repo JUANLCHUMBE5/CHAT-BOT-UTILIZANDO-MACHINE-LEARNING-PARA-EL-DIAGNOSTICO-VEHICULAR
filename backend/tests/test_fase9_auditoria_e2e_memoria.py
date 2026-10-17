@@ -12,42 +12,34 @@ Cubre:
 from __future__ import annotations
 
 import time
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from src.core.conversacion.models import (
-    ConversationPhase,
-    ConversationState,
-    DtcStatus,
-    EstadoOperativo,
-    FactState,
-    QuestionIntent,
-)
-from src.core.conversacion.session_persistence import (
-    persistir_sesion_en_almacenes,
-    sincronizar_sesion_desde_persistencia,
-)
-from src.core.conversacion.respuestas_cortas.interprete_intenciones import (
-    interpretar_respuesta_corta,
-)
-from src.core.conversacion.respuestas_cortas.patrones_deteccion import (
-    es_respuesta_corta,
-    PATRON_AMBIGUO,
-    PATRON_NO_SE,
-)
+import pytest
+
 from src.core.conversacion.extraccion_hechos.comprobaciones_mecanicas import (
     extraer_comprobaciones_mecanicas,
-)
-from src.core.conversacion.orquestador.manejador_intenciones_especiales import (
-    ManejadorIntencionesEspeciales,
 )
 from src.core.conversacion.generacion_preguntas.compatibilidad import (
     es_pregunta_compatible,
     puede_preguntar,
 )
+from src.core.conversacion.models import (
+    ConversationPhase,
+    ConversationState,
+    EstadoOperativo,
+    QuestionIntent,
+)
+from src.core.conversacion.orquestador.manejador_intenciones_especiales import (
+    ManejadorIntencionesEspeciales,
+)
+from src.core.conversacion.respuestas_cortas.interprete_intenciones import (
+    interpretar_respuesta_corta,
+)
+from src.core.conversacion.session_persistence import (
+    sincronizar_sesion_desde_persistencia,
+)
 from src.core.session_manager import DiagnosticSession, SessionManager
 from src.core.traductor_jerga import normalizar_jerga_peruana
-
 
 # ==============================================================================
 # OBJETIVO 1: COMPRENSIÓN NATURAL DE ENTRADAS (20 CASOS)
@@ -396,7 +388,7 @@ def test_caso_piezas_ya_cambiadas_descarte_automatico():
     estado = ConversationState(session_id="test_piezas_cambiadas")
     texto = "Ya cambié las bujías y sigue la falla de tirones."
 
-    hechos = extraer_comprobaciones_mecanicas(estado, texto, texto.lower())
+    _ = extraer_comprobaciones_mecanicas(estado, texto, texto.lower())
     assert any("bujia" in d for d in estado.hipotesis_descartadas)
 
     # El generador de preguntas no debe insistir en comprobar bujías
