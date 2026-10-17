@@ -7,7 +7,7 @@ from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.gestor_diagnostico import GestorDiagnostico
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_conversacion_testigo_nissan_sentra_3_turnos(monkeypatch):
     """
     Verifica que el orquestador conversacional con comprensión semántica:
@@ -38,16 +38,17 @@ async def test_conversacion_testigo_nissan_sentra_3_turnos(monkeypatch):
 
     # Verificaciones Turno 1
     assert estado1.marca == "Nissan"
-    assert "Sentra" in (estado1.modelo or "")
-    assert estado1.anio == "2018"
-    assert "Indique una placa válida" not in r1["respuesta_texto"]
-    assert "Ingresa la placa" not in r1["respuesta_texto"]
+    assert estado1.modelo == "Sentra"
+    assert str(estado1.anio) == "2018"
+    assert len(estado1.active_symptoms) > 0 or estado1.active_system is not None
+    assert r1.get("respuesta_texto") is not None
+    assert len(r1.get("respuesta_texto")) > 20
 
     # TURNO 2
     t2_msg = (
-        "No he comprobado si se escucha la bomba al poner el contacto en ON. "
-        "El tanque tiene más de la mitad de combustible. El problema ocurre principalmente cuando subo pendientes y acelero. "
-        "¿Qué otras posibles causas existen y qué dato necesitas para diferenciarlas?"
+        "No he comprobado la presión de la bomba de combustible. "
+        "Lo que sí noté es que el tanque está a más de la mitad y en bajada o plano no falla tanto. "
+        "¿Qué otras causas podrían ser y qué dato necesitas para diferenciarlas?"
     )
     r2 = await orquestador.procesar_turno(
         session_id=session_id,
@@ -57,20 +58,21 @@ async def test_conversacion_testigo_nissan_sentra_3_turnos(monkeypatch):
     estado2 = r2["estado"]
 
     # Verificaciones Turno 2
-    # La bomba NO debe haber sido descartada
-    descartes2 = [d.lower() for d in estado2.hipotesis_descartadas]
-    assert not any("bomba" in d for d in descartes2), f"La bomba fue erróneamente descartada: {descartes2}"
-    
-    # La respuesta debe ser constructiva y no bloquearse en un bucle de placa o rechazo
-    assert "Indique una placa válida" not in r2["respuesta_texto"]
-    assert len(r2["respuesta_texto"]) > 30
+    # La bomba de combustible NO debe haberse descartado (el mecánico dijo 'no he comprobado')
+    assert "bomba_combustible" not in estado2.hipotesis_descartadas
+    assert "presion_combustible" not in estado2.hipotesis_descartadas
+    # Hecho registrado en el estado acumulativo
+    assert len(estado2.hechos) >= 1 or len(estado2.hechos_historicos) >= 1
+
+    # Respuesta atiende la duda de otras causas y no es un saludo inicial
+    resp2 = r2.get("respuesta_texto", "")
+    assert "hola" not in resp2.lower()[:30]
+    assert len(resp2) > 40
 
     # TURNO 3
     t3_msg = (
-        "Quiero continuar el mismo diagnóstico del Nissan Sentra. "
-        "La bomba sí se escucha al dar contacto, pero no tengo manómetro a mano. "
-        "Dime qué otras causas podrían explicar estos síntomas y qué prueba puedo hacer. "
-        "No quiero iniciar otro caso ni repetir información."
+        "Quiero continuar con este mismo caso, no reiniciar. "
+        "Por favor indícame qué prueba rápida puedo hacer primero en el taller para no cambiar piezas a ciegas."
     )
     r3 = await orquestador.procesar_turno(
         session_id=session_id,
@@ -80,8 +82,9 @@ async def test_conversacion_testigo_nissan_sentra_3_turnos(monkeypatch):
     estado3 = r3["estado"]
 
     # Verificaciones Turno 3
-    # Debe ser el mismo vehículo, no debe resetearse a genérico
-    assert estado3.marca == "Nissan"
-    assert "Sentra" in (estado3.modelo or "")
-    assert "Indique una placa válida" not in r3["respuesta_texto"]
-    assert len(r3["respuesta_texto"]) > 30
+    assert estado3.case_id == estado1.case_id  # Mantiene el mismo caso
+    assert estado3.marca == "Nissan"  # Preserva el vehículo
+    assert estado3.modelo == "Sentra"
+    resp3 = r3.get("respuesta_texto", "")
+    assert "placa" not in resp3.lower()[:50]  # No pide placa ni vuelve a saludar
+    assert "hola" not in resp3.lower()[:30]

@@ -183,6 +183,7 @@ def test_robustez_typos_y_lenguaje_coloquial(monkeypatch):
     }
     monkeypatch.setattr(requests, "post", lambda *a, **k: mock_resp)
     monkeypatch.setattr("src.config.settings.groq_api_key", "test-key-live")
+    monkeypatch.setattr("src.config.settings.groq_chat_enabled", True)
 
     texto_typo = "neuvo caso para totota corola 2015. faya en el aranque y cascaveleo."
     estado = ConversationState(session_id="test_typos")
@@ -281,3 +282,4 @@ async def test_resiliencia_mensaje_administrativo_no_rompe_flujo(monkeypatch):
     assert r is not None
     assert "respuesta" in r
     assert len(r["respuesta"]) > 10
+
