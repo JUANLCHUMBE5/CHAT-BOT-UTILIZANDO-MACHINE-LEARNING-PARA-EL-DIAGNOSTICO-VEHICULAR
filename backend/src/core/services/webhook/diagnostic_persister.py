@@ -168,9 +168,12 @@ class DiagnosticPersister:
         respuesta_texto = dto.respuesta_texto
         solicitar_feedback = DiagnosticPersister.debe_solicitar_feedback(dto)
         if solicitar_feedback:
+            cant_hip = len(dto.predicciones_ml) if getattr(dto, "predicciones_ml", None) else 1
+            if not any(f"\n{i}." in dto.respuesta_texto or f"*{i}.*" in dto.respuesta_texto or f"Opción {i}" in dto.respuesta_texto or "• " in dto.respuesta_texto for i in (2, 3)):
+                cant_hip = 1
             respuesta_texto = (
                 respuesta_texto.rstrip()
-                + instrucciones_confirmacion_whatsapp()
+                + instrucciones_confirmacion_whatsapp(cantidad_hipotesis=cant_hip)
             )
 
         # 3. Asociar vehículo si aplica

@@ -169,7 +169,7 @@ def crear_resumen_whatsapp(
         )
     elif solo_gas:
         primera_prueba = (
-            "Revisar primero la calibración/mapa de inyección de gas y la presión bajo carga; "
+            "Revisar primero la calibración/mapa de inyeccion de gas y la presión bajo carga; "
             "después verificar filtros e inyectores de gas."
         )
     elif es_gas and not (directriz_actual and directriz_actual.es_mecanica_pura):
@@ -252,6 +252,7 @@ def crear_resumen_whatsapp(
 
     revision = " Se requiere validación física." if solicitud.requiere_revision_humana else ""
     linea_comprobacion = f"Tipo de comprobación: *{tipo_comprobacion}*\n" if tipo_comprobacion else ""
+    cantidad_hipotesis_total = 1 + len(lineas_diferencial)
     return (
         "🔧 *Resumen de diagnóstico (ML + RAG + LLM)*\n"
         f"Hipótesis ML: *{hipotesis}*\n"
@@ -262,5 +263,5 @@ def crear_resumen_whatsapp(
         f"Primera prueba: {primera_prueba}\n"
         f"Gravedad: *{gravedad}*.\n"
         "📋 Análisis completo disponible en el panel del taller."
-        f"{instrucciones_confirmacion_whatsapp()}"
+        f"{instrucciones_confirmacion_whatsapp(cantidad_hipotesis=cantidad_hipotesis_total)}"
     )

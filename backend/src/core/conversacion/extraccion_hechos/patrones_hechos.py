@@ -6,13 +6,13 @@ import re
 from typing import List, Optional, Tuple
 
 PATRONES_REINICIO = [
-    re.compile(r"^\s*(?:quiero\s+)?cancelar(?:\s+(?:el\s+)?(?:caso|diagn[oó]stico|consulta))?\s*[.!]?\s*$", re.IGNORECASE),
-    re.compile(r"^\s*nuevo\s*[.!]?\s*$", re.IGNORECASE),
+    re.compile(r"^\s*(?:quiero\s+)?cancelar(?:(?:\s+el)?\s+(?:caso|diagn[oó]stico|consulta))?\s*[.!]?\s*$", re.IGNORECASE),
+    re.compile(r"^\s*(?:nuevo|neuvo)\s*[.!]?\s*$", re.IGNORECASE),
     re.compile(r"\b(otro\s+(carro|auto|veh[ií]culo))\b", re.IGNORECASE),
-    re.compile(r"\b(nuevo\s+diagn[oó]stico|nuevo\s+caso)\b", re.IGNORECASE),
+    re.compile(r"\b((?:nuevo|neuvo)\s+diagn[oó]stico|(?:nuevo|neuvo)\s+caso)\b", re.IGNORECASE),
     re.compile(r"\b(reiniciar|empezar\s+de\s+nuevo|comenzar\s+de\s+nuevo)\b", re.IGNORECASE),
-    re.compile(r"\b(limpiar\s+sesi[oó]n|caso\s+nuevo)\b", re.IGNORECASE),
-    re.compile(r"\b(vamos\s+con\s+otro\s+cliente|termin[eé]\s+ese|tengo\s+uno\s+nuevo)\b", re.IGNORECASE),
+    re.compile(r"\b(limpiar\s+sesi[oó]n|caso\s+(?:nuevo|neuvo))\b", re.IGNORECASE),
+    re.compile(r"\b(vamos\s+con\s+otro\s+cliente|termin[eé]\s+ese|tengo\s+uno\s+(?:nuevo|neuvo))\b", re.IGNORECASE),
 ]
 
 PATRON_NO_ARRANCA = re.compile(

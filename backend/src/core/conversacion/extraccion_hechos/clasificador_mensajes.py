@@ -101,10 +101,11 @@ def es_reinicio_solicitado(texto: str) -> bool:
     return bool(
         re.search(
             r"\b(otro\s+(?:carro|auto|vehiculo|veh.culo|caso|cliente)|"
-            r"nuevo\s+(?:caso|diagnostico|auto|carro|vehiculo)|"
-            r"diagnostico\s+nuevo|caso\s+nuevo|"
-            r"iniciar\s+(?:un\s+)?(?:diagnostico\s+nuevo|nuevo\s+diagnostico|nuevo\s+caso|caso\s+nuevo)|"
-            r"vamos\s+con\s+otro\s+cliente|termine\s+ese|tengo\s+uno\s+nuevo)\b",
+            r"(?:nuevo|neuvo)\s+(?:caso|diagnostico|auto|carro|vehiculo)|"
+            r"diagnostico\s+(?:nuevo|neuvo)|caso\s+(?:nuevo|neuvo)|"
+            r"iniciar\s+(?:un\s+)?(?:diagnostico\s+nuevo|nuevo\s+diagnostico|nuevo\s+caso|neuvo\s+caso|caso\s+nuevo)|"
+            r"cerrar\s+(?:el\s+)?diagnostico\s+anterior|"
+            r"vamos\s+con\s+otro\s+cliente|termine\s+ese|tengo\s+uno\s+(?:nuevo|neuvo))\b",
             txt,
         )
     )
@@ -116,7 +117,7 @@ def _es_mencion_no_destructiva(texto: str) -> bool:
         c for c in unicodedata.normalize("NFD", texto.casefold())
         if unicodedata.category(c) != "Mn"
     )
-    if re.search(r"^\s*(?:¿|por\s+que\b|que\s+significa\b|como\s+se\b)", normalizado):
+    if re.search(r"^\s*(?:\?|por\s+que\b|que\s+significa\b|como\s+se\b)", normalizado):
         return True
     if re.search(r'["«“].{0,60}\b(?:nuevo\s+caso|nuevo\s+diagnostico|reiniciar|cerrar)\b', normalizado):
         return True
@@ -186,7 +187,7 @@ def clasificar_solicitud_caso(texto: str) -> Dict[str, Any] | None:
     if _es_mencion_no_destructiva(texto):
         return None
 
-    if re.fullmatch(r"(?:quiero\s+)?cancelar(?:\s+(?:el\s+)?(?:caso|diagnostico|consulta))?[.!]*", limpio):
+    if re.fullmatch(r"(?:quiero\s+)?cancelar(?:(?:\s+el)?\s+(?:caso|diagnostico|consulta))?[.!]*", limpio):
         return {"accion": "cancelar", "preservar_vehiculo": False}
 
     patron_uuid = (
@@ -215,20 +216,20 @@ def clasificar_solicitud_caso(texto: str) -> Dict[str, Any] | None:
     )
     nuevo_caso = bool(
         re.search(
-            r"\b(?:nuevo|otro)\s+(?:caso|diagnostico|problema)\b|"
+            r"\b(?:nuevo|neuvo|otro)\s+(?:caso|diagnostico|problema)\b|"
             r"\b(?:falla|problema)\s+diferente\b|"
             r"\btengo\s+otra\s+(?:falla|consulta)\b|"
             r"\ben\s+el\s+mismo\s+vehiculo[, ]+ahora\s+"
             r"(?:el\s+)?(?:problema|falla)\s+es\b|"
             r"\b(?:cambiemos|pasemos)\s+(?:a\s+)?otro\s+caso\b|"
             r"\b(?:empezar|empecemos|comenzar|comencemos|iniciar|iniciemos)\s+"
-            r"(?:todo\s+)?(?:de\s+nuevo|desde\s+cero)\b|"
+            r"(?:un\s+)?(?:caso\s+completamente\s+nuevo|caso\s+nuevo|diagnostico\s+nuevo|todo\s+)?(?:de\s+nuevo|desde\s+cero)?\b|"
             r"\breiniciar\s+(?:el\s+)?(?:caso|diagnostico)\b|"
             r"\botro\s+(?:vehiculo|carro|auto|coche)\b|"
             r"\b(?:tengo|llego|lleg[oó])\s+(?:un\s+)?otro\s+"
             r"(?:vehiculo|carro|auto|coche|caso|problema)\b|"
             r"\b(?:olvida|olvidemos)\s+lo\s+anterior\b|"
-            r"^nuevo[.!]*$",
+            r"^\s*(?:nuevo|neuvo)[.!]*\s*$",
             limpio,
         )
     )
@@ -262,10 +263,12 @@ def contiene_informacion_diagnostica(texto: str) -> bool:
         ),
         re.compile(
             r"\b(recalienta|recalentar|recalntar|se\s+calienta|temperatura\s+(?:del\s+motor\s+)?(?:sube|empieza\s+a\s+subir|alta)|"
-            r"pierde\s+(?:agua|refrigerante|l[ií]quido)|fuga|gotea|"
+            r"pierde\s+(?:agua|refrigerante|l[ií]quido|fuerza|potencia)|fuga|gotea|"
             r"no\s+enfr[ií]a|sale\s+aire\s+(?:caliente|tibio)|"
-            r"vibra|vibraci[oó]n|vibraciones|tiembla|jalonea|tironea|cascabelea|cascabeleo|"
-            r"pierde\s+(?:fuerza|potencia)|no\s+jala|"
+            r"vibra|vibraci[oó]n|vibraciones|tiembla|jalonea|tironea|tironear|tirones|cascabelea|cascabeleo|"
+            r"no\s+jala|sin\s+fuerza|se\s+(?:me\s+)?apaga|se\s+apag[oó]|no\s+acelera|al\s+acelerar|"
+            r"humo\s+(?:negro|blanco|azul)|consume\s+(?:aceite|refrigerante)|"
+            r"luz\s+de\s+(?:advertencia|falla|check|motor)|"
             r"demora\s+en\s+(?:enganchar|entrar|acoplar)|reversa|"
             r"golpe|golpes|ruido|ruidos|zumbido|chillido|chirrido|frena|freno|frenos|frena\s+mal|pedal|volante|"
             r"suspensi[oó]n|bache|baches|amortiguador|amortiguadores|buje|bujes|r[oó]tula|r[oó]tulas)\b",

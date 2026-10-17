@@ -648,10 +648,10 @@ def extraer_y_actualizar(
             val_pedal = "vibración en el pedal"
         h_vp = estado.registrar_hecho("sintoma_vibracion_pedal", val_pedal, categoria="sintoma", estado=estado_vp, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
         hechos_extraidos.append(h_vp.to_dict())
-    m_vv = re.search(r"\bvibraci(?:[oó]n|ones)\s+(?:en\s+el\s+volante|del\s+volante)\b|\bvolante\s+vibra\b", texto_l)
+    m_vv = re.search(r"\bvibraci(?:[oó]n|ones)\s+(?:en\s+el\s+volante|del\s+volante)\b|\bvolante\s+vibra\b|\bvibra\s+(?:el\s+)?volante\b", texto_l)
     if m_vv:
         pref_vv, cl_vv = _clausula_de_match(texto_l, m_vv.start())
-        estado_vv = FactState.AUSENTE_NEGADO if _prefijo_negado(pref_vv) or re.search(r"\bno\s+vibra\b", cl_vv) else FactState.CONFIRMADO
+        estado_vv = FactState.AUSENTE_NEGADO if _prefijo_negado(pref_vv) or re.search(r"\b(?:no|tampoco)\s+vibra\b", cl_vv) else FactState.CONFIRMADO
         h_vv = estado.registrar_hecho("sintoma_vibracion_volante", "vibración en el volante", categoria="sintoma", estado=estado_vv, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
         hechos_extraidos.append(h_vv.to_dict())
     m_gs = re.search(r"\bgolpe(?:s)?\s+met[aá]lico(?:s)?\b|\bgolpes?\s+en\s+(?:la\s+)?suspensi[oó]n\b|\bsonido\s+en\s+baches\b", texto_l)
@@ -679,9 +679,12 @@ def extraer_y_actualizar(
     if re.search(r"\b(?:el\s+)?pedal\s+no\s+est[aá]\s+(?:muy\s+)?esponjoso\b|\bno\s+est[aá]\s+esponjoso\b", texto_l):
         h_ne = estado.registrar_hecho("sintoma_pedal_esponjoso", "pedal esponjoso", categoria="sintoma", estado=FactState.AUSENTE_NEGADO, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
         hechos_extraidos.append(h_ne.to_dict())
-    if re.search(r"\b(?:no|ni)\s+(?:se\s+)?va\s+al\s+fondo\b", texto_l):
+    if re.search(r"\b(?:no|ni)\s+(?:se\s+)?(?:va\s+al\s+fondo|hunde)\b", texto_l):
         h_nf = estado.registrar_hecho("sintoma_pedal_se_va_al_fondo", "pedal se va al fondo", categoria="sintoma", estado=FactState.AUSENTE_NEGADO, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
         hechos_extraidos.append(h_nf.to_dict())
+    if re.search(r"\bno\s+he\s+comprobado\b.{0,30}\bdiscos?\b|\bno\s+(?:s[eé]|revis[eé]|comprob[eé]|he\s+revisado|he\s+visto)\b.{0,30}\bdiscos?\b", texto_l):
+        h_disc = estado.registrar_hecho("inspeccion_discos_freno", "discos no comprobados", categoria="inspeccion_pendiente", estado=FactState.NO_REVISADO, tipo=FactType.CONDICION, texto_crudo=texto_usuario)
+        hechos_extraidos.append(h_disc.to_dict())
     if re.search(r"\bno\s+presenta\s+problemas\s+de\s+frenos\b|\bsin\s+problemas\s+de\s+frenos\b", texto_l):
         h_np = estado.registrar_hecho("sintoma_problemas_frenos", "problemas de frenos", categoria="sintoma", estado=FactState.AUSENTE_NEGADO, tipo=FactType.SINTOMA, texto_crudo=texto_usuario)
         hechos_extraidos.append(h_np.to_dict())

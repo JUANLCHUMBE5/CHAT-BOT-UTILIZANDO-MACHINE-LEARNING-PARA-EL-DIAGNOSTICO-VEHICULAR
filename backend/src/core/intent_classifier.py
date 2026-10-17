@@ -28,14 +28,14 @@ PATRONES_SINTOMA = (
     r"\bno (?:pasa|pasaba|puedo pasar|puede pasar|podia pasar|pudo pasar|llega|llegaba|sube|subia) de \d+\b",
     r"\bno (?:jala|jalaba|jalo|jalando|tira|tiraba|tirando|levanta|levantaba|desarrolla|desarrollaba)\b",
     r"\b(?:cuesta|costaba|demora|demoraba|tarda|tardaba|pesado para)\s+(?:en\s+)?(?:arrancar|encender|prender|partir)\b",
-    r"\b(?:vibra|vibraba|vibrando|tiembla|timebla|tiemlba|temblaba|temblando|jalonea|jaloneaba|jaloneando|tironea|tironeaba|tironeando|ratea|rateaba|cabecea|cabeceaba|corcovea|corcoveaba|cascabelea|cascabeleaba|recalienta|recalentaba|recalentar|recalntar|hierve|hervia|patina|patinaba|gotea|goteaba|humea|humeaba|chilla|chillaba|rechina|rechinaba|golpea|golpeaba|raspa|raspaba|zumba|zumbaba|aulla|aullaba|ronca|roncaba|traquetea|traqueteaba|chasquea|chasqueaba|cruje|crujia)\b",
-    r"\b(?:ruido|zumbido|aullido|ronquido|chillido|rechinido|golpeteo|traqueteo|chasquido|crujido|vibracion(?:es)?|fuga|humo|olor a quemado|cable quemado|luz de falla|check engine)\b",
+    r"\b(?:vibra|vibraba|vibrando|tiembla|timebla|tiemlba|temblaba|temblando|jalonea|jaloneaba|jaloneando|tironea|tironeaba|tironeando|ratea|rateaba|cabecea|cabeceaba|corcovea|corcoveaba|cascabelea|cascabeleaba|recalienta|recalentaba|recalentar|recalntar|hierve|hervia|patina|patinaba|gotea|goteaba|humea|humeaba|chilla|chillaba|chillando|chirria|chirriaba|chirriando|rechina|rechinaba|rechinando|golpea|golpeaba|raspa|raspaba|zumba|zumbaba|aulla|aullaba|ronca|roncaba|traquetea|traqueteaba|chasquea|chasqueaba|cruje|crujia)\b",
+    r"\b(?:ruido|zumbido|aullido|ronquido|chillido|chillidos|chirrido|chirridos|rechinido|rechinidos|golpeteo|traqueteo|chasquido|crujido|vibracion(?:es)?|fuga|humo|olor a quemado|cable quemado|luz de falla|check engine)\b",
     r"\b(?:se apaga|se apagaba|se apago|se apagando|se me apaga|se me apagaba|se corta|se cortaba|se muere|se moria|esta duro|esta esponjoso|se traba|esta trabado|se quedo trabado|trabado|inclinada|inclinado|no encaja|se descarga|consume demasiado|se bloquea|bloquea el encendido)\b",
     r"\b(?:falla|fallando|averia|defectuoso|roto|quemado|sulfatado|baja presion|alta temperatura|error de enlace|sin comunicacion|modo de emergencia|modo de proteccion|limp mode)\b",
     r"\b(?:atranca|atracando|atascado|oscila|oscilan|sube y baja|suben y bajan|no enfria|solo enfria|solo enfría|enfria solo|enfría solo|aire caliente|aire tibio|fuerza con la pierna|bloqueado|bloqueada|deja de enfriar|enfria poco|enfría poco|clima caliente|compresor no entra|compresor no acopla|sin gas)\b",
 
     r"\b(?:se hunde|hundiendose|hundido|se va al fondo|llega al fondo|al fondo contra|se cae hasta el piso|pedal esponjoso|pedal largo|pedal bajo|pedal blando|pedal duro|bomba de freno|cilindro maestro|liquido de freno|liquido de frenos|bombeo|bombear|sin presion|sin frenos?|frena mal|frenaba mal|frena largo|pedal raro)\b",
-    r"\bpedal(?:\s+\w+){0,3}\s+(?:esponjoso|largo|bajo|blando|duro|se va al fondo|al fondo|en el piso|raro)\b",
+    r"\bpedal(?:\s+\\w+){0,3}\s+(?:esponjoso|largo|bajo|blando|duro|se va al fondo|al fondo|en el piso|raro)\b",
     r"\b(?:frenos? (?:largos?|esponjosos?|sin presion|raros?)|pastillas? (?:gastadas?|desgastadas?)|discos? alabeados?)\b",
     r"\b(?:cremallera|rotula|rotulas|bieleta|bieletas|amortiguador|amortiguadores|palier|palieres|homocinetica|homocineticas|fuelle|guardapolvo|rodaje|rodamiento|desalineado|desalineada|alabeo)\b",
     r"\b(?:timon duro|direccion dura|juego en el timon|timon jala|tira a un lado|volante torcido|doblar|doblo|doblando)\b",
@@ -60,6 +60,7 @@ PATRONES_SINTOMA = (
     r"\b(?:tiron(?:es)?|acelera\s+a\s+tirones)\b",
     r"\bcheck\b.{0,35}\b(?:intermitente|frio|caliente|tirones|mezcla|parpadea|encendido|prendido)\b",
     r"\b(?:revoluciones|rpm)\b.{0,45}\b(?:suben|bajan|oscilan|inestable|caen)\b",
+    r"\b(?:frenar|frena|freno|frenos)\b.{0,40}\b(?:chirrido|chillido|ruido|rechinido|tiembla|vibra)\b|\b(?:chirrido|chillido|ruido|rechinido|tiembla|vibra)\b.{0,40}\b(?:frenar|frena|freno|frenos)\b",
 )
 
 PATRONES_PREGUNTA = (
@@ -98,8 +99,6 @@ TERMINOS_AUTOMOTRICES = {
     "mordazas", "bombeo", "bombazo", "bombazos", "purga", "purgado", "sangrado",
     "crapodina", "collarin", "maza", "bobina", "bobinas", "resorte", "maxi-brake",
     "acumulador", "parasito", "bcm", "corriente", "fuga", "multimetro",
-    # Evidencia de inyección/mezcla: aunque sea un mensaje corto, nunca es
-    # texto ajeno al taller (p. ej. “sonda en 0.1”, “MAF incoherente”).
     "sensor", "oxigeno", "sonda", "lambda", "maf", "map", "stft", "ltft",
     "mezcla", "riel", "inyeccion", "inyección", "presion de combustible",
     "presión de combustible", "fuel trim",
@@ -113,6 +112,7 @@ TERMINOS_AUTOMOTRICES = {
     "testigo", "testigos", "puerto", "obd", "obd2", "inmovilizador", "llave",
     "arnes", "fusible", "fusibles", "rele", "termostato", "ventilador",
     "electroventilador", "manguera", "mangueras", "compresion", "humo",
+    "chirrido", "chirridos", "chirria", "chirriar", "chillido", "chillidos", "rechinido",
 }
 
 
