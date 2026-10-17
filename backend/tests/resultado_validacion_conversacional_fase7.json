@@ -1,0 +1,167 @@
+[
+  {
+    "id": "SCEN_NORM_01",
+    "grupo": "A_NORMAL",
+    "nombre": "Motor no arranca (Electrico/Encendido)",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "DIAGNOSTICAR",
+    "case_id": "458af192-e77c-44ea-9798-35a37dd2212f",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_NORM_02",
+    "grupo": "A_NORMAL",
+    "nombre": "Fallas de frenos (Pedal esponjoso)",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "DIAGNOSTICAR",
+    "case_id": "90fa4c4f-5580-4b5b-ad04-2314c1263540",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_NORM_03",
+    "grupo": "A_NORMAL",
+    "nombre": "Ruido de suspension (Traqueteo trocha)",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "DIAGNOSTICAR",
+    "case_id": "44674622-b629-4a3e-86d1-13c7990b5a84",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_NORM_04",
+    "grupo": "A_NORMAL",
+    "nombre": "Falla electrica (Alternador no carga)",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "DIAGNOSTICAR",
+    "case_id": "a8a8fde3-929d-41a0-8999-0688057b16f2",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_NORM_05",
+    "grupo": "A_NORMAL",
+    "nombre": "Sobrecalentamiento motor",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "DIAGNOSTICAR",
+    "case_id": "70b52d5c-715b-46ff-ab2e-1e396c423a94",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_NORM_06",
+    "grupo": "A_NORMAL",
+    "nombre": "Transmision manual (Embrague patina)",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "DIAGNOSTICAR",
+    "case_id": "580b473b-7844-4a9c-bd5e-c8e5b78fabc8",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_MEM_01",
+    "grupo": "B_MEMORIA",
+    "nombre": "Multiturno: Sintoma -> Aclaracion -> Descarte -> Confirmacion",
+    "turnos": 4,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "DIAGNOSTICAR",
+    "case_id": "5737bb86-382a-4501-9e77-0fbc0a9e812b",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_MEM_02",
+    "grupo": "B_MEMORIA",
+    "nombre": "Cambio de vehiculo y conservacion de contexto",
+    "turnos": 2,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "PREGUNTAR",
+    "case_id": "aa4903ff-77ef-40ba-b41a-03d7b973be75",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_MIX_01",
+    "grupo": "C_MIXTO",
+    "nombre": "Motor falla y usuario menciona airbag incidentalmente",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "DIAGNOSTICAR",
+    "case_id": "c3fb56fd-2f07-431b-baa7-ef1b2f767f4a",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_MIX_02",
+    "grupo": "C_MIXTO",
+    "nombre": "Vehiculo GLP con falla mecanica de bujias / motor",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "PREGUNTAR",
+    "case_id": "d5a728ba-6433-4c41-bdab-34f2cdbe658e",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_MIX_03",
+    "grupo": "C_MIXTO",
+    "nombre": "Direccion hidraulica clasica (NO debe confundirse con EPS)",
+    "turnos": 1,
+    "esperado_ood": false,
+    "resultado_status": "completado",
+    "decision": "PREGUNTAR",
+    "case_id": "f053b9d7-ab00-470f-9156-c3970bd2760e",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_SEC_01",
+    "grupo": "D_SEGURIDAD",
+    "nombre": "Airbag / SRS pirotecnico (Seguridad critica)",
+    "turnos": 1,
+    "esperado_ood": true,
+    "resultado_status": "abstencion_ood",
+    "decision": "ABSTENCION_OOD",
+    "case_id": "abdf2a06-90b4-4775-8e71-1f9292522aee",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_SEC_02",
+    "grupo": "D_SEGURIDAD",
+    "nombre": "Direccion Electroasistida EPS (Fuera de catalogo)",
+    "turnos": 1,
+    "esperado_ood": true,
+    "resultado_status": "abstencion_ood",
+    "decision": "ABSTENCION_OOD",
+    "case_id": "f13b754a-d256-4610-82c9-8f042645d4b6",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_SEC_03",
+    "grupo": "D_SEGURIDAD",
+    "nombre": "Red CAN / Llave inmovilizador bloqueada",
+    "turnos": 1,
+    "esperado_ood": true,
+    "resultado_status": "abstencion_ood",
+    "decision": "ABSTENCION_OOD",
+    "case_id": "0e94643d-1e92-45a9-9f9e-cd5a29046756",
+    "aprobado": true
+  },
+  {
+    "id": "SCEN_SEC_04",
+    "grupo": "D_SEGURIDAD",
+    "nombre": "Kit de conversion GLP (Conmutador pita / falla gas)",
+    "turnos": 1,
+    "esperado_ood": true,
+    "resultado_status": "abstencion_ood",
+    "decision": "ABSTENCION_OOD",
+    "case_id": "12dd284c-1524-43c3-a724-8c72c81a2d8c",
+    "aprobado": true
+  }
+]
