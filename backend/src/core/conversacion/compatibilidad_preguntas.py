@@ -33,30 +33,52 @@ class CompatibilidadPreguntas:
         if estado.estado_operativo == EstadoOperativo.FRENADO:
             return "FRENOS"
 
-        # 2. Por hechos confirmados explícitos en el caso clínico activo
+        # 2. Por hechos explícitos en el caso clínico activo (confirmados, reportados u observados)
         for campo, hecho in estado.hechos.items():
-            if hecho.estado != FactState.CONFIRMADO:
-                continue
             c = campo.lower()
-            if any(k in c for k in ("demora_arranque", "motor_arranca", "ruido_arranque")):
+            v = str(getattr(hecho, "valor", "") or "").lower()
+            cv = f"{c} {v}"
+            if any(k in cv for k in ("demora_arranque", "motor_arranca", "ruido_arranque")):
                 return "ARRANQUE"
-            if any(k in c for k in ("climatizacion", "compresor_acopla")):
+            if any(k in cv for k in ("climatizacion", "compresor_acopla", "aire_acondicionado")):
                 return "CLIMATIZACION"
-            if any(k in c for k in ("freno", "pastilla", "disco")):
+            if any(k in cv for k in ("freno", "pastilla", "disco")):
                 return "FRENOS"
-            if any(k in c for k in ("reversa", "transmision", "caja", "embrague", "clutch", "trepidacion")):
+            if any(k in cv for k in ("reversa", "transmision", "caja", "embrague", "clutch", "trepidacion")):
                 return "TRANSMISION"
-            if any(k in c for k in ("suspension", "bache", "rotula", "amortiguador")):
+            if any(k in cv for k in ("suspension", "bache", "rotula", "amortiguador", "trapecio")):
                 return "SUSPENSION"
-            if any(k in c for k in ("sobrecalentamiento", "refrigerante", "temperatura_motor", "recalienta")):
+            if any(k in cv for k in ("sobrecalentamiento", "refrigerante", "temperatura_motor", "recalienta")):
                 return "REFRIGERACION"
+            if any(k in cv for k in ("alternador", "bateria", "voltaje", "borne")):
+                return "ELECTRICO"
+            if any(k in cv for k in ("humo_negro", "inyector", "bujia", "bobina", "misfire")):
+                return "MARCHA_MOTOR"
 
         # 3. Dominio probable asignado al caso
         dominio = str(getattr(estado, "dominio_probable", "DESCONOCIDO") or "DESCONOCIDO")
         if dominio != "DESCONOCIDO":
             return dominio
 
-        # 4. Fallback por EstadoOperativo restante
+        # 4. Inferencia por texto acumulado de mensajes del usuario
+        if estado.historial_mensajes_usuario:
+            txt_user = _normalizar(" ".join(estado.historial_mensajes_usuario))
+            if any(k in txt_user for k in ("bateria", "alternador", "multimetro", "voltaje", "borne")):
+                return "ELECTRICO"
+            if any(k in txt_user for k in ("embrague", "clutch", "pedal de embrague", "caja de cambio", "primera marcha")):
+                return "TRANSMISION"
+            if any(k in txt_user for k in ("pedal de freno", "liquido de freno", "pastilla", "disco de freno")):
+                return "FRENOS"
+            if any(k in txt_user for k in ("amortiguador", "rotula", "bache", "trapecio", "golpeteo adelante")):
+                return "SUSPENSION"
+            if any(k in txt_user for k in ("aire acondicionado", "clima", "compresor", "sopla tibio")):
+                return "CLIMATIZACION"
+            if any(k in txt_user for k in ("recalienta", "sobrecalentamiento", "refrigerante", "aguja pasa la mitad", "termostato")):
+                return "REFRIGERACION"
+            if any(k in txt_user for k in ("humo negro", "tironea", "bujia", "bobina", "falla de encendido", "p030")):
+                return "MARCHA_MOTOR"
+
+        # 5. Fallback por EstadoOperativo restante
         if estado.estado_operativo in (EstadoOperativo.MARCHA, EstadoOperativo.RALENTI):
             return "MARCHA_MOTOR"
         return "DESCONOCIDO"
@@ -114,6 +136,24 @@ class CompatibilidadPreguntas:
             if dominio_sub in ("MARCHA_MOTOR", "REFRIGERACION") and any(k in top_texto for k in ("inyeccion", "bujia", "bobina", "refrigerante", "valvula", "termostato", "radiador")):
                 return True
 
+        # D. Evidencia por historial de mensajes del usuario
+        if estado.historial_mensajes_usuario:
+            txt_user = _normalizar(" ".join(estado.historial_mensajes_usuario))
+            if dominio_sub == "ELECTRICO" and any(k in txt_user for k in ("bateria", "alternador", "multimetro", "voltaje", "borne")):
+                return True
+            if dominio_sub == "TRANSMISION" and any(k in txt_user for k in ("embrague", "clutch", "caja", "reversa", "primera marcha")):
+                return True
+            if dominio_sub == "FRENOS" and any(k in txt_user for k in ("freno", "disco", "pastilla", "pedal")):
+                return True
+            if dominio_sub == "SUSPENSION" and any(k in txt_user for k in ("suspension", "bache", "rotula", "amortiguador")):
+                return True
+            if dominio_sub == "CLIMATIZACION" and any(k in txt_user for k in ("aire acondicionado", "clima", "compresor", "enfria")):
+                return True
+            if dominio_sub == "REFRIGERACION" and any(k in txt_user for k in ("recalienta", "sobrecalentamiento", "refrigerante", "temperatura")):
+                return True
+            if dominio_sub == "MARCHA_MOTOR" and any(k in txt_user for k in ("humo negro", "tironea", "bujia", "bobina", "p030")):
+                return True
+
         return False
 
     @staticmethod
@@ -129,12 +169,13 @@ class CompatibilidadPreguntas:
             return "TRANSMISION"
         if any(k in txt for k in ("freno", "frenar", "pedal esponjoso", "pastilla", "disco")):
             return "FRENOS"
-        if any(k in txt for k in ("refrigerante", "termostato", "electroventilador", "radiador", "recalienta", "sobrecalentamiento", "temperatura del motor")):
-            return "REFRIGERACION"
-        if any(k in txt for k in ("aire acondicionado", "compresor", "clima", "enfria", "r134a")) or bool(
+        # CLIMATIZACION evaluado antes de REFRIGERACION para evitar que 'condensador/compresor' caiga en refrigeración
+        if any(k in txt for k in ("aire acondicionado", "compresor", "clima", "enfria", "r134a", "condensador")) or bool(
             re.search(r"\ba/?c\b", txt)
         ):
             return "CLIMATIZACION"
+        if any(k in txt for k in ("refrigerante", "termostato", "electroventilador", "radiador", "recalienta", "sobrecalentamiento", "temperatura del motor")):
+            return "REFRIGERACION"
         if any(k in txt for k in ("suspension", "amortiguador", "bache", "rotula", "bujes", "trapecio")):
             return "SUSPENSION"
         if intent in (

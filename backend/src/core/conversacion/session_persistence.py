@@ -65,9 +65,9 @@ async def recuperar_contexto_sesion_redis(sesion_efectiva: str) -> Optional[Dict
 
 
 async def guardar_contexto_sesion_redis(
-    sesion_efectiva: str, contexto: Dict[str, Any], ttl_segundos: int = 1800
+    sesion_efectiva: str, contexto: Dict[str, Any], ttl_segundos: int = 86400
 ) -> None:
-    """Guarda el contexto de sesión en Redis con tiempo de expiración."""
+    """Guarda el contexto de sesión en Redis con tiempo de expiración (24 horas por defecto)."""
     client = _cliente_redis()
     if client is None or not contexto:
         return
@@ -90,13 +90,16 @@ async def sincronizar_sesion_desde_persistencia(
     # 1. Intentar Redis primero para máxima velocidad
     ctx = await recuperar_contexto_sesion_redis(sesion_efectiva)
 
-    # 2. Si no está en Redis, recuperar de PostgreSQL (contexto_db)
+    # 2. Si no está en Redis (expiró, se reinició o flushall), recuperar de PostgreSQL (contexto_db)
     if not ctx and contexto_db:
         sesiones_guardadas = contexto_db.get("sesiones")
         if isinstance(sesiones_guardadas, dict) and sesion_efectiva in sesiones_guardadas:
             ctx = sesiones_guardadas[sesion_efectiva]
         elif contexto_db.get("session_id") == sesion_efectiva:
             ctx = contexto_db
+        elif "sesiones" not in contexto_db and not contexto_db.get("session_id"):
+            if "conversation_state" in contexto_db or "case_id" in contexto_db:
+                ctx = contexto_db
 
     if ctx and isinstance(ctx, dict):
         gestor.session_manager.cargar_contexto(sesion_efectiva, ctx)
@@ -120,9 +123,8 @@ async def persistir_sesion_en_almacenes(
     if case_id and not ctx.get("case_id"):
         ctx["case_id"] = case_id
 
-    # 1. Persistir en Redis
-    if conversacion is None:
-        await guardar_contexto_sesion_redis(sesion_efectiva, ctx)
+    # 1. Persistir siempre en Redis (con TTL de 24 horas)
+    await guardar_contexto_sesion_redis(sesion_efectiva, ctx, ttl_segundos=86400)
 
     # 2. Persistir en PostgreSQL a través de conversacion.contexto
     if conversacion is not None:

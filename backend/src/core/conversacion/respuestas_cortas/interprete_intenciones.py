@@ -22,6 +22,19 @@ from src.core.conversacion.respuestas_cortas.patrones_deteccion import (
 if TYPE_CHECKING:
     from src.core.conversacion.models import ConversationState
 
+RESPUESTAS_AFIRMATIVAS = {
+    "si", "sí", "si causa", "ajá", "aja", "así es", "asi es",
+    "correcto", "exactamente", "eso mismo", "afirmativo", "sí maestro",
+    "si maestro", "claro", "claro que sí", "claro que si", "por supuesto",
+    "efectivamente", "de acuerdo", "seguro", "exacto", "simon", "sii", "siii",
+}
+
+RESPUESTAS_NEGATIVAS = {
+    "no", "para nada", "negativo", "nunca", "eso no pasa", "en lo absoluto",
+    "jamás", "jamas", "tampoco", "falso", "nada que ver", "no pasa eso",
+    "incorrecto", "noo", "nooo", "no maestro", "de ninguna manera",
+}
+
 
 def interpretar_respuesta_corta(
     estado: ConversationState,
@@ -74,7 +87,7 @@ def interpretar_respuesta_corta(
             )
             return {"categoria_respuesta": "DESCONOCIDO", "campo": "desconocido",
                     "valor": "desconocido", "hecho": hecho.to_dict()}
-        if texto_l in ("si", "sí", "afirmativo", "correcto"):
+        if texto_l in RESPUESTAS_AFIRMATIVAS:
             h = estado.registrar_hecho(
                 f"confirmado_pregunta_{estado.turno_actual}",
                 "sí",
@@ -87,7 +100,7 @@ def interpretar_respuesta_corta(
                 "valor": "sí",
                 "hecho": h.to_dict(),
             }
-        if texto_l in ("no", "negativo"):
+        if texto_l in RESPUESTAS_NEGATIVAS:
             h = estado.registrar_hecho(
                 f"descartado_pregunta_{estado.turno_actual}",
                 "no",
@@ -115,8 +128,10 @@ def interpretar_respuesta_corta(
         if respuesta_numerica:
             return respuesta_numerica
 
-    if intent_str == QuestionIntent.MEDICION_TECNICA.value and texto_l in (
-        "no", "no se", "no sé", "no lo tengo", "no tengo ese dato"
+    if intent_str == QuestionIntent.MEDICION_TECNICA.value and (\
+        texto_l in RESPUESTAS_NEGATIVAS
+        or PATRON_NO_SE.search(texto_l)
+        or texto_l in ("no lo tengo", "no tengo ese dato")
     ):
         hecho = estado.registrar_hecho(
             campo="medicion_tecnica_pendiente",
@@ -133,17 +148,16 @@ def interpretar_respuesta_corta(
             "hecho": hecho.to_dict(),
         }
 
-    if intent_str == QuestionIntent.MEDICION_TECNICA.value and texto_l in (
-        "si", "sí", "afirmativo", "correcto"
-    ):
+    if intent_str == QuestionIntent.MEDICION_TECNICA.value and texto_l in RESPUESTAS_AFIRMATIVAS:
         return {
             "categoria_respuesta": "MEDICION_INCOMPLETA",
             "campo": "medicion_tecnica_pendiente",
             "valor": "disponible_sin_valor",
         }
 
-    if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and texto_l in (
-        "no", "no aun", "todavia no", "aun no"
+    if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and (\
+        texto_l in RESPUESTAS_NEGATIVAS
+        or texto_l in ("no aun", "todavia no", "aun no")
     ):
         hecho = estado.registrar_hecho(
             campo="estado_inspeccion_previa",
@@ -160,8 +174,9 @@ def interpretar_respuesta_corta(
             "hecho": hecho.to_dict(),
         }
 
-    if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and texto_l in (
-        "si", "sí", "ya", "correcto", "lo revise", "lo revisé"
+    if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and (\
+        texto_l in RESPUESTAS_AFIRMATIVAS
+        or texto_l in ("ya", "lo revise", "lo revisé")
     ):
         hecho = estado.registrar_hecho(
             campo="revision_componente_pendiente",
@@ -225,8 +240,8 @@ def interpretar_respuesta_corta(
         }
 
     if intent_str == QuestionIntent.CONFIRMACION_ALTERNATIVA.value:
-        es_si = texto_l in ("si", "sí", "correcto", "afirmativo", "así es", "asi es")
-        es_no = texto_l in ("no", "negativo", "incorrecto")
+        es_si = texto_l in RESPUESTAS_AFIRMATIVAS
+        es_no = texto_l in RESPUESTAS_NEGATIVAS
         if es_si or es_no:
             diagnostico = next(
                 (
@@ -295,7 +310,7 @@ def interpretar_respuesta_corta(
             "hecho": primer_hecho,
         }
 
-    # 0.1 Manejo de 'No sé' / 'Ni idea'
+    # 0.1 Manejo de 'No sé' / 'Ni idea' / 'Tendría que revisar'
     if PATRON_NO_SE.search(texto_l) and not GestorPlanB.detectar_no_sabe_usar(texto_l) and not GestorPlanB.detectar_no_sabe_realizar(texto_l):
         campo_desconocido = "desconocido"
         if intent_str in (QuestionIntent.DISPONIBILIDAD_HERRAMIENTA.value, QuestionIntent.MEDICION_VOLTAJE.value) or any(t in texto_preg for t in ("multimetro", "tester", "manometro")):
@@ -444,8 +459,6 @@ def interpretar_respuesta_corta(
         h = estado.registrar_hecho(f"respuesta_{intent_str}", opc_txt, categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
         return {"categoria_respuesta": "CONDICION", "campo": f"respuesta_{intent_str}", "valor": opc_txt, "hecho": h.to_dict()}
 
-    # Una unidad de presión no identifica el circuito. Las medidas explícitas
-    # de otro sistema las conserva el extractor técnico, no la respuesta de riel.
     from .contexto_presion import presion_de_otro_circuito
 
     if presion_de_otro_circuito(texto_usuario):
@@ -553,10 +566,10 @@ def interpretar_respuesta_corta(
             return {"categoria_respuesta": "ACLARACION", "campo": "antecedente_marcha", "valor": "otro_vehiculo", "hecho": h.to_dict()}
 
     # 9. Respuestas genéricas SÍ / NO
-    if texto_l in ("si", "sí", "afirmativo", "correcto"):
+    if texto_l in RESPUESTAS_AFIRMATIVAS:
         h = estado.registrar_hecho(f"confirmado_pregunta_{estado.turno_actual}", "sí", categoria="confirmacion", texto_crudo=texto_usuario)
         return {"categoria_respuesta": "AFIRMACION", "campo": "confirmacion", "valor": "sí", "hecho": h.to_dict()}
-    if texto_l in ("no", "negativo"):
+    if texto_l in RESPUESTAS_NEGATIVAS:
         h = estado.registrar_hecho(f"descartado_pregunta_{estado.turno_actual}", "no", categoria="descarte", texto_crudo=texto_usuario)
         return {"categoria_respuesta": "NEGACION", "campo": "confirmacion", "valor": "no", "hecho": h.to_dict()}
 

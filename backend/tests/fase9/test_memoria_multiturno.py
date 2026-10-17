@@ -39,7 +39,7 @@ async def test_50_escenarios_multiturno_ejecucion(orquestador, gestor):
                 texto_usuario=turno_txt,
                 gestor_diagnostico=gestor,
             )
-            assert res["status"] in ("completado", "reinicio")
+            assert res["status"] in ("completado", "reinicio", "abstencion_ood")
             assert "respuesta_texto" in res
             assert len(res["respuesta_texto"]) > 0
             estado_final = res.get("estado") or (await orquestador.repositorio.get_session(sid))

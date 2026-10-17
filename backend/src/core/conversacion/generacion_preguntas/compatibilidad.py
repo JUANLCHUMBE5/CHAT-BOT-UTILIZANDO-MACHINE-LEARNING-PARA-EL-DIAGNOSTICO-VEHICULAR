@@ -58,25 +58,19 @@ def es_pregunta_compatible(
         veces = estado.veces_preguntado(intent)
         if veces >= 2:
             return False, "PREGUNTA_REPETIDA"
-        if veces == 1 and len(estado.respuestas_obtenidas) >= 1:
-            return False, "PREGUNTA_REPETIDA"
-    else:
-        veces = estado.veces_preguntado(intent)
-        if veces >= 3:
-            return False, "PREGUNTA_REPETIDA"
 
     # 2. INTENT_YA_RESUELTO
-    if intent == QuestionIntent.CONDICION_OPERACION and (
-        estado.estado_operativo != EstadoOperativo.DESCONOCIDO
-        or estado.obtener_hecho("condicion_operacion") is not None
-        or estado.ya_preguntado(QuestionIntent.CONDICION_OPERACION)
-    ):
+    if intent == QuestionIntent.COMPORTAMIENTO_ARRANQUE and already_known(QuestionIntent.COMPORTAMIENTO_ARRANQUE, estado):
         return False, "INTENT_YA_RESUELTO"
-    if intent == QuestionIntent.TEMPERATURA_APARICION and (
-        estado.obtener_hecho("temperatura") is not None
-        or any(h.categoria == "temperatura" for h in estado.hechos.values())
-        or estado.ya_preguntado(QuestionIntent.TEMPERATURA_APARICION)
-    ):
+    if intent == QuestionIntent.CAIDA_TENSION_ARRANQUE and already_known(QuestionIntent.CAIDA_TENSION_ARRANQUE, estado):
+        return False, "INTENT_YA_RESUELTO"
+    if intent == QuestionIntent.TEMPERATURA_MOTOR_EN_MARCHA and already_known(QuestionIntent.TEMPERATURA_MOTOR_EN_MARCHA, estado):
+        return False, "INTENT_YA_RESUELTO"
+    if intent == QuestionIntent.TEMPERATURA_AMBIENTAL_ARRANQUE and already_known(QuestionIntent.TEMPERATURA_AMBIENTAL_ARRANQUE, estado):
+        return False, "INTENT_YA_RESUELTO"
+    if intent == QuestionIntent.TEMPERATURA_APARICION and already_known(QuestionIntent.TEMPERATURA_APARICION, estado):
+        return False, "INTENT_YA_RESUELTO"
+    if intent == QuestionIntent.CONDICION_OPERACION and already_known(QuestionIntent.CONDICION_OPERACION, estado):
         return False, "INTENT_YA_RESUELTO"
     if intent == QuestionIntent.CODIGO_DTC and already_known(QuestionIntent.CODIGO_DTC, estado):
         return False, "INTENT_YA_RESUELTO"
@@ -98,11 +92,11 @@ def es_pregunta_compatible(
     if re.search(r"\b(ralent[ií]|en\s+marcha|aceleraci[oó]n\s+en\s+marcha)\b", texto_l):
         if estado.estado_operativo != EstadoOperativo.DESCONOCIDO or estado.obtener_hecho("condicion_operacion") is not None:
             return False, "HECHO_YA_CONOCIDO"
-    if re.search(r"\b(check\s+engine|testigo\s+encendido|testigo\s+en\s+el\s+tablero)\b", texto_l):
+    if re.search(r"\b(check\s+engine|testigo\s+encendido|testigo\s+en\s+el\s+tablero|esc[aá]ner|obd)\b", texto_l):
         if (
             estado.obtener_hecho("sintoma_testigo_check_engine") is not None
             or estado.dtc_status in (DtcStatus.DTC_OBSERVADO, DtcStatus.DTC_DESCONOCIDO)
-            or any("check" in k.lower() or "testigo" in k.lower() for k in estado.hechos.keys())
+            or any("check" in k.lower() or "testigo" in k.lower() or "dtc" in k.lower() for k in estado.hechos.keys())
         ):
             return False, "HECHO_YA_CONOCIDO"
     if ("clic" in texto_l or "metralleta" in texto_l or "chasquido" in texto_l) and estado.obtener_hecho("ruido_arranque") is not None:
@@ -111,7 +105,7 @@ def es_pregunta_compatible(
         return False, "HECHO_YA_CONOCIDO"
     if "intento de girar" in texto_l and estado.obtener_hecho("giro_motor") is not None:
         return False, "HECHO_YA_CONOCIDO"
-    if ("compresor" in texto_l or "clic" in texto_l or "acopla" in texto_l) and (
+    if ("compresor" in texto_l or "clic" in texto_l or "acopla" in texto_l) and (\
         estado.ya_comprobado_o_respondido("acople_compresor")
         or estado.completed_tests.get("acople_compresor") is not None
         or estado.obtener_hecho("compresor_acopla") is not None
@@ -120,6 +114,16 @@ def es_pregunta_compatible(
     if "electroventilador" in texto_l and (
         estado.ya_comprobado_o_respondido("electroventilador_condensador")
         or estado.completed_tests.get("electroventilador_condensador") is not None
+    ):
+        return False, "HECHO_YA_CONOCIDO"
+    if ("bobina" in texto_l or "bobinas" in texto_l) and (
+        any("bobina" in d.lower() for d in getattr(estado, "hipotesis_descartadas", []))
+        or any("bobina" in k.lower() for k in estado.hechos.keys())
+    ):
+        return False, "HECHO_YA_CONOCIDO"
+    if any(b in texto_l for b in ("bujia", "bujía", "bujias", "bujías")) and (
+        any("bujia" in d.lower() or "bujía" in d.lower() for d in getattr(estado, "hipotesis_descartadas", []))
+        or any("bujia" in k.lower() or "bujía" in k.lower() for k in estado.hechos.keys())
     ):
         return False, "HECHO_YA_CONOCIDO"
 

@@ -77,7 +77,6 @@ class DiagnosticSession:
             self.contexto = {}
             self.estado = "inicio"
             self.updated_at = time.time()
-            self.updated_at = time.time()
 
     def finalizar_caso(
         self,
@@ -232,9 +231,6 @@ class DiagnosticSession:
                 pregunta_pendiente = estado.pending_question or {}
                 self.consulta_tecnica_pendiente = pregunta_pendiente.get("texto")
                 self.campos_requeridos = list(pregunta_pendiente.get("campos_requeridos") or [])
-                # Las consultas técnicas antiguas guardaban su pregunta fuera de
-                # conversation_state. Recuperarla solo si pertenece al mismo caso
-                # y el estado conversacional aún está al inicio.
                 if (
                     not pregunta_pendiente
                     and estado.fase.value.lower() == "inicio"
@@ -312,14 +308,16 @@ class DiagnosticSession:
                     self.placa = self.conversation_state.placa
             self.updated_at = time.time()
 
-    def ha_expirado(self, ttl_segundos: int = 1800) -> bool:
+    def ha_expirado(self, ttl_segundos: int = 86400) -> bool:
+        """Determina si la sesión ha superado su tiempo de vida (24h por defecto)."""
         with self._lock:
             return (time.time() - self.updated_at) > ttl_segundos
+
 
 class SessionManager:
     """Gestor en memoria THREAD-SAFE de sesiones de diálogo conversacional y slot-filling."""
     
-    def __init__(self, ttl_seconds: int = 1800):
+    def __init__(self, ttl_seconds: int = 86400):
         self._sesiones: Dict[str, DiagnosticSession] = {}
         self.ttl_seconds: int = ttl_seconds
         self._ultimo_limpieza: float = 0.0
@@ -419,10 +417,10 @@ class SessionManager:
             return
         self.obtener_o_crear_sesion(session_id).cargar_contexto(contexto)
 
-    def _limpiar_sesiones_expiradas(self, ttl_segundos: int = 1800, force: bool = False):
+    def _limpiar_sesiones_expiradas(self, ttl_segundos: int = 86400, force: bool = False):
         with self._lock:
             ahora = time.time()
-            ttl = ttl_segundos if ttl_segundos != 1800 else self.ttl_seconds
+            ttl = ttl_segundos if ttl_segundos != 86400 else self.ttl_seconds
             if not force and len(self._sesiones) >= 100 and (ahora - self._ultimo_limpieza < 30):
                 return
 
