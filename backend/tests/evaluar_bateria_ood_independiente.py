@@ -11,11 +11,9 @@ Evalúa:
 
 import sys
 from collections import defaultdict
-from typing import Dict, List, Tuple
 
 sys.path.insert(0, "backend")
 from src.core.diagnostico.detector_ood import detectar_sintoma_fuera_de_catalogo
-
 
 CASOS_PRUEBA_OOD = [
     # --- 1. OOD POSITIVOS (Deben abstenerse) ---

@@ -19,7 +19,7 @@ import json
 import os
 import sys
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 # Forzar codificación utf-8 en stdout de Windows
 if sys.stdout.encoding != "utf-8":
@@ -32,7 +32,6 @@ sys.path.insert(0, os.path.abspath("backend"))
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
 from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.gestor_diagnostico import GestorDiagnostico
-
 
 CASOS_BENCHMARK_30 = [
     # =========================================================================
@@ -514,7 +513,7 @@ async def ejecutar_benchmark_completo() -> Dict[str, Any]:
             resp_txt = res.get("respuesta_texto", "")
             decision = res.get("decision", "")
             es_preg = res.get("es_pregunta", False)
-            preg_fin = res.get("pregunta_final")
+            res.get("pregunta_final")
 
             historial_respuestas.append({
                 "turno": idx_t,
@@ -575,7 +574,7 @@ async def ejecutar_benchmark_completo() -> Dict[str, Any]:
 
         # Verificación de aislamiento al cambiar caso
         if verifs.get("cambia_case_id") is True:
-            prim_case = res.get("case_id")
+            res.get("case_id")
 
         if caso_exitoso:
             casos_aprobados += 1
