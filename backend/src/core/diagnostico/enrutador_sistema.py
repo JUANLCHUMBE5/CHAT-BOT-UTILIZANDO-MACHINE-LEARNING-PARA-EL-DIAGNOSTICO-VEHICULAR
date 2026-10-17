@@ -317,10 +317,11 @@ def detectar_areas_tecnicas(texto: str) -> list[str]:
         normalizado = re.sub(r"modo (?:de )?(?:degradado|proteccion|emergencia)", "limitacion de potencia", normalizado)
     if re.search(r"\bno\s+es\s+(?:de\s+)?mezcla\b", normalizado) and "refrigeracion" in normalizado:
         return ["REFRIGERACION"]
+    fragmentos = re.split(r"[;!?]|[.,](?!\d)", normalizado)
     detectadas = [
         area
         for area in _AREAS_EN_ORDEN
-        if any(re.search(patron, normalizado) for patron in _REGLAS[area])
+        if any(re.search(patron, fragmento) for fragmento in fragmentos for patron in _REGLAS[area])
     ]
     filtradas = []
     for area in detectadas:
