@@ -190,7 +190,7 @@ def test_memoria_expira_despues_de_24_horas():
     assert sesion.ha_expirado(ttl_segundos=86400) is True
 
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_recuperacion_desde_postgres_si_redis_vacio():
     """Verifica que si Redis pierde la clave (flushall/reinicio), se recupere desde PostgreSQL."""
     session_id = "test_resiliencia_redis"
@@ -242,7 +242,7 @@ async def test_recuperacion_desde_postgres_si_redis_vacio():
         "un momento por favor",
     ],
 )
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_interrupcion_espera_no_borra_diagnostico(frase_espera: str):
     """Verifica que mensajes de espera no fuercen diagnósticos ni cambien la fase activa."""
     estado = ConversationState(session_id="test_pausa")
@@ -283,7 +283,7 @@ async def test_interrupcion_espera_no_borra_diagnostico(frase_espera: str):
         "listo, continuemos",
     ],
 )
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_retoma_caso_recuerda_pregunta_pendiente(frase_retoma: str):
     """Verifica que al reanudar se recuerde el vehículo y la pregunta que quedó pendiente."""
     estado = ConversationState(session_id="test_retoma")
