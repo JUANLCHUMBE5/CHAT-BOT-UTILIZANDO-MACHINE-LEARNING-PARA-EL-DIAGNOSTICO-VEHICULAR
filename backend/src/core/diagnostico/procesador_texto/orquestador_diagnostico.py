@@ -395,6 +395,10 @@ def procesar_consulta_texto(
     )
     es_critico_seguridad = (sev_seguridad == SeveridadSeguridad.CRITICAL_STOP)
 
+    es_hipotesis_regla = bool(
+        predicciones_ml and getattr(predicciones_ml[0], "origen_probabilidad", "") == "REGLA"
+    )
+
     auto_preg = evaluar_auto_pregunta_descarte(
         texto=texto_evaluar,
         diagnostico_top1=diagnostico_predictivo,
@@ -405,6 +409,7 @@ def procesar_consulta_texto(
         clave_sesion
         and auto_preg
         and auto_preg.es_necesaria
+        and not es_hipotesis_regla
         and not diagnostico_forzado
         and not ya_aclarado
         and not es_critico_seguridad

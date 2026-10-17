@@ -108,14 +108,15 @@ def ejecutar_recuperacion_y_fusion_rag(
         probabilidades_svm = {
             pred.falla: pred.probabilidad
             for pred in predicciones_pre_fusion
-            if pred.origen_probabilidad == "SVM"
+            if pred.origen_probabilidad in ("SVM", "SVM_ORIGINAL_REORDENADO_REGLA")
         }
         fuentes_candidatas = {
             pred.falla: pred.origen_probabilidad for pred in predicciones_pre_fusion
         }
         confianza_principal_svm = probabilidades_svm.get(diagnostico_predictivo)
         origen_principal = (
-            "SVM" if confianza_principal_svm is not None
+            fuentes_candidatas.get(diagnostico_predictivo, "SVM")
+            if confianza_principal_svm is not None
             else fuentes_candidatas.get(
                 diagnostico_predictivo,
                 resultado_fusion.origen_confianza,
@@ -139,7 +140,7 @@ def ejecutar_recuperacion_y_fusion_rag(
         predicciones_ml = nuevas_preds
         confianza = (
             float(confianza_principal_svm)
-            if origen_principal == "SVM" and confianza_principal_svm is not None
+            if origen_principal in ("SVM", "SVM_ORIGINAL_REORDENADO_REGLA") and confianza_principal_svm is not None
             else 0.0
         )
     else:
@@ -158,8 +159,8 @@ def ejecutar_recuperacion_y_fusion_rag(
         contexto_manual,
         titulo_manual,
         similitud_rag,
-        meta_rag_dict,
-        rag_valido,
+        meta_rag_dict or {},
+        bool(rag_valido),
         resultado_fusion,
         diagnostico_predictivo,
         confianza,

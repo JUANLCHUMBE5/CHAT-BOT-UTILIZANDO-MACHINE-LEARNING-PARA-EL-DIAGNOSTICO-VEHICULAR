@@ -117,7 +117,7 @@ def instrucciones_confirmacion_whatsapp() -> str:
     """Pregunta breve que acompaña cada resultado dirigido a personal técnico."""
 
     return (
-        "\n\n🔎 ¿Fue correcta? *SÍ / NO*"
+        "\n\n🔎 ¿Fue correcta? *SÍ / NO* (1/2/3)"
     )
 
 
@@ -261,14 +261,14 @@ def interpretar_seleccion_top3(
         # se considera selección afirmativa.
         permitido = bool(
             re.fullmatch(
-                r"(?:si\s+)?(?:la\s+|opcion\s+)?"
+                r"(?:si\s+)?(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?"
                 r"(?:1|2|3|primera|segunda|tercera)"
                 r"(?:\s+si)?",
                 t,
             )
             or re.search(
-                r"\b(es|seria|confirmo|correcta|correcto)\s+"
-                r"(?:la\s+|opcion\s+)?(?:1|2|3|primera|segunda|tercera)\b",
+                r"\b(es|seria|confirmo|correcta|correcto|acerto|fue|elijo|escojo)\s+"
+                r"(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?(?:1|2|3|primera|segunda|tercera)\b",
                 t,
             )
         )

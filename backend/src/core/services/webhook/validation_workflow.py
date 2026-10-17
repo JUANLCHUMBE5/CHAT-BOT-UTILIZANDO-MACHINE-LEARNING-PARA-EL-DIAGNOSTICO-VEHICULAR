@@ -607,6 +607,12 @@ class ValidationWorkflow:
                     hipotesis_elegida,
                     seleccion_top3.orden or 1,
                 )
+                flujo_validacion["orden_seleccionado"] = seleccion_top3.orden
+                flujo_validacion["hipotesis_seleccionada"] = _nombre_hipotesis(hipotesis_elegida)
+                flujo_validacion["etapa"] = "esperando_confirmacion"
+                contexto_conversacion["validacion_diagnostico"] = flujo_validacion
+                conversacion.contexto = contexto_conversacion
+
                 await cls.guardar_respuesta_validacion_outbox(
                     msg_repo,
                     conversacion,
@@ -732,7 +738,7 @@ class ValidationWorkflow:
                 confirmacion = ConfirmacionDiagnosticoWhatsApp(
                     estado="confirmado"
                 )
-                orden_hipotesis_seleccionada = 1
+                orden_hipotesis_seleccionada = flujo_validacion.get("orden_seleccionado") or 1
                 metodo_seleccion = "binario"
 
             elif confirmacion is None and respuesta_binaria == "no":

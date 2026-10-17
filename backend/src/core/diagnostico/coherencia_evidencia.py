@@ -27,6 +27,30 @@ def priorizar_evidencia(texto, predicciones):
         compatibles = [p for p in predicciones if re.search(r"culata|junta", normalizar(p.falla))]
         if compatibles:
             motivo = "Humo blanco y consumo de refrigerante: comprobar estanqueidad, sin confirmar culata."
+    elif re.search(r"\b(?:p0171|lean)\b", positivas) and not re.search(
+        r"\b(?:oxigeno|o2|lambda|inyector|injectores)\b", txt
+    ):
+        compatibles = [
+            p for p in predicciones if "fuga de vacio" in normalizar(p.falla)
+        ] + [
+            p for p in predicciones if "maf" in normalizar(p.falla)
+        ]
+        if compatibles:
+            motivo = "Código P0171 / condición lean: priorizar comprobación de fuga de vacío y sensor MAF."
+    elif re.search(r"\bmaf\b", positivas) and not re.search(
+        r"\b(?:oxigeno|o2|lambda|inyector|injectores)\b", txt
+    ):
+        compatibles = [p for p in predicciones if "maf" in normalizar(p.falla)]
+        if compatibles:
+            motivo = "Lectura anómala de sensor MAF reportada: priorizar comprobación de MAF."
+    elif re.search(r"\bmezcla\s+pobre\b", positivas) and not re.search(
+        r"\b(?:oxigeno|o2|lambda|sonda|inyector|injectores|mezcla\s+rica)\b", txt
+    ):
+        compatibles = [
+            p for p in predicciones if re.search(r"maf|fuga de vacio|inyector", normalizar(p.falla))
+        ]
+        if compatibles:
+            motivo = "Condición de mezcla pobre: priorizar admisión/MAF/inyección sobre mezcla rica."
     # Síntoma de acoplamiento + contexto de caja, no solo la letra R o D.
     caja = re.search(r"\b(automatic[oa]|transmision|caja|reversa|marcha atras)\b", positivas)
     acoplamiento = re.search(
@@ -126,7 +150,7 @@ def preparar_contexto_rag_para_llm(contexto, titulo, metadatos, corpus_validado)
     if not contexto:
         return "", "Sin procedimiento RAG recuperado aplicable"
     if not verificado:
-        return "", "Fuente RAG omitida: pendiente de validación OEM y de taller"
+        return "", "Fuente RAG omitida (Corpus preliminar no inyectado): pendiente de validación OEM y de taller"
     return contexto, titulo
 
 

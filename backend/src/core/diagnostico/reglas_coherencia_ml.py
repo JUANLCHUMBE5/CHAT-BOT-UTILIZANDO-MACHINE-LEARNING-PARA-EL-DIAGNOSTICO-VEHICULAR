@@ -71,10 +71,17 @@ def aplicar_reglas_coherencia(
         predicciones, confianza = _promover(COMMON_RAIL, predicciones, originales)
         return COMMON_RAIL, confianza, predicciones, "Regla Common Rail: presión de riel medida baja; score SVM original conservado"
 
-    inspeccion_restriccion = combustible_diesel and bool(re.search(
-        r"\b(?:pescador|malla|filtro).{0,35}(?:colmatad[oa]|obstruid[oa]|tapad[oa]|sedimento|baba)\b",
-        normalizado,
-    ))
+    es_contexto_dpf = bool(re.search(r"\b(?:filtro\s+de\s+particulas|dpf|fap|adblue|def)\b", normalizado))
+    inspeccion_restriccion = (
+        combustible_diesel
+        and not es_contexto_dpf
+        and bool(
+            re.search(
+                r"\b(?:pescador|malla|filtro(?!\s+de\s+(?:particulas|aire|aceite|cabina|polen))).{0,35}(?:colmatad[oa]|obstruid[oa]|tapad[oa]|sedimento|baba)\b",
+                normalizado,
+            )
+        )
+    )
     medicion_restriccion = combustible_diesel and bool(re.search(
         r"\b(?:vacuometro.{0,25}-?\d+(?:[.,]\d+)?\s*(?:inhg|bar)|presion.{0,30}(?:cae|baja).{0,15}\d+(?:[.,]\d+)?\s*(?:bar|psi))\b",
         normalizado,

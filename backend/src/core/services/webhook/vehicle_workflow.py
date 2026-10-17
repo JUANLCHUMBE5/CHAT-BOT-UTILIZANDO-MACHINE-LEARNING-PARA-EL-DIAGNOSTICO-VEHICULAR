@@ -51,7 +51,12 @@ async def preparar_flujo_vehiculo(
     comando_caso = _comando_caso(texto_cliente) if tipo_mensaje == 'text' else None
     if comando_caso == 'cancelar':
         self.gestor.session_manager.finalizar_caso(str(conversacion.id))
-        for clave in ('validacion_diagnostico', 'conversation_state', 'estado_conversacion', 'posttest_placa_pendiente', 'preplate_pending_input', 'nueva_consulta_placa_pendiente', 'perfil_vehiculo_pendiente', 'perfil_vehiculo', 'placa', 'placa_posttest'):
+        for clave in (
+            'validacion_diagnostico', 'conversation_state', 'estado_conversacion',
+            'posttest_placa_pendiente', 'preplate_pending_input',
+            'nueva_consulta_placa_pendiente', 'perfil_vehiculo_pendiente',
+            'perfil_vehiculo', 'placa', 'placa_posttest',
+        ):
             contexto_placa.pop(clave, None)
         contexto_placa['posttest_placa_pendiente'] = True
         conversacion.contexto = contexto_placa
@@ -59,18 +64,59 @@ async def preparar_flujo_vehiculo(
         await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_cancelar)
         await session.commit()
         return ({'status': 'consulta_cancelada', 'respuesta': respuesta_cancelar}, placa, marca_modelo, texto_cliente)
+
+    solicitud_caso = ExtractorHechos.clasificar_solicitud_caso(texto_cliente) if tipo_mensaje == 'text' else {}
     es_solicitud_nuevo_caso = bool(
         comando_caso == 'nuevo'
+        or (solicitud_caso and solicitud_caso.get("accion") == "nuevo_caso")
         or (
             tipo_mensaje == 'text'
             and ExtractorHechos.es_reinicio_solicitado(texto_cliente)
             and not ExtractorHechos.es_consulta_memoria(texto_cliente)
         )
     )
+
     if es_solicitud_nuevo_caso and comando_caso != 'cancelar':
         placa_nueva_detectada = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
         perfil_nuevo_detectado = extraer_datos_vehiculo(texto_cliente) if tipo_mensaje == 'text' else {}
         tiene_sintomas_nuevos = ExtractorHechos.contiene_informacion_diagnostica(texto_cliente) if tipo_mensaje == 'text' else False
+
+        placa_previa = contexto_placa.get('placa_posttest') or contexto_placa.get('placa')
+        mismo_vehiculo_solicitado = bool(
+            (solicitud_caso and solicitud_caso.get("preservar_vehiculo"))
+            or (placa_nueva_detectada and placa_previa and normalizar_placa(placa_nueva_detectada) == placa_previa)
+        )
+
+        if mismo_vehiculo_solicitado and placa_previa:
+            self.gestor.session_manager.finalizar_caso(str(conversacion.id), preservar_vehiculo=True)
+            for clave in (
+                'validacion_diagnostico', 'conversation_state', 'estado_conversacion',
+                'posttest_placa_pendiente', 'nueva_consulta_placa_pendiente', 'perfil_vehiculo_pendiente',
+            ):
+                contexto_placa.pop(clave, None)
+
+            placa = placa_previa
+            contexto_placa['placa'] = placa
+            contexto_placa['placa_posttest'] = placa
+            perfil_existente = contexto_placa.get('perfil_vehiculo') or {}
+            if perfil_nuevo_detectado.get('marca'):
+                perfil_existente.update(perfil_nuevo_detectado)
+                contexto_placa['perfil_vehiculo'] = perfil_existente
+            if perfil_existente.get('marca'):
+                marca_modelo = _texto_perfil_vehiculo(perfil_existente)
+            conversacion.contexto = contexto_placa
+
+            if tiene_sintomas_nuevos:
+                await session.commit()
+                return None, placa, marca_modelo, texto_cliente
+
+            respuesta_preservada = (
+                f"🚗 *Caso anterior cerrado.* Conservo los datos del vehículo (*{marca_modelo}*, placa *{placa}*).\n\n"
+                "Describe la nueva falla o síntoma a diagnosticar."
+            )
+            await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_preservada)
+            await session.commit()
+            return ({'status': 'esperando_sintoma', 'respuesta': respuesta_preservada}, placa, marca_modelo, texto_cliente)
 
         if placa_nueva_detectada or perfil_nuevo_detectado.get('marca'):
             self.gestor.session_manager.finalizar_caso(str(conversacion.id))
@@ -125,6 +171,7 @@ async def preparar_flujo_vehiculo(
         await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_nuevo)
         await session.commit()
         return ({'status': 'esperando_placa', 'respuesta': respuesta_nuevo}, placa, marca_modelo, texto_cliente)
+
     if contexto_placa.get('nueva_consulta_placa_pendiente'):
         respuesta_corta = texto_cliente.strip().lower().strip(' .,!¡¿?')
         if respuesta_corta in {'si', 'sí', 's', 'correcto', 'correcta'}:
@@ -151,14 +198,54 @@ async def preparar_flujo_vehiculo(
         await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
         await session.commit()
         return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
+
     placa_persistida = contexto_placa.get('placa_posttest') or contexto_placa.get('placa')
     placa_en_texto = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
+
+    # Si hay placa en el texto y no teníamos placa o vino en mensaje nuevo:
     if placa_en_texto:
         placa = normalizar_placa(placa_en_texto)
         contexto_placa['placa'] = placa
         contexto_placa['placa_posttest'] = placa
+        contexto_placa.pop('posttest_placa_pendiente', None)
+
+        datos_perfil = extraer_datos_vehiculo(texto_cliente) if tipo_mensaje == 'text' else {}
+        tiene_sintomas = ExtractorHechos.contiene_informacion_diagnostica(texto_cliente) if tipo_mensaje == 'text' else False
+
+        if datos_perfil.get('marca'):
+            contexto_placa['perfil_vehiculo'] = datos_perfil
+            contexto_placa.pop('perfil_vehiculo_pendiente', None)
+            marca_modelo = _texto_perfil_vehiculo(datos_perfil)
+            conversacion.contexto = contexto_placa
+
+            if tiene_sintomas:
+                # Multidato en un solo mensaje: Placa + Modelo + Síntoma
+                pass
+            else:
+                respuesta_perfil = f'✅ Vehículo registrado: *{marca_modelo}* (placa {placa}).\n\nAhora describe el síntoma o falla del vehículo.'
+                await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
+                await session.commit()
+                return ({'status': 'esperando_sintoma', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
+        else:
+            if tiene_sintomas:
+                # Placa + Síntoma (sin modelo)
+                conversacion.contexto = contexto_placa
+            else:
+                texto_preplate = contexto_placa.pop('preplate_pending_input', None)
+                if texto_preplate:
+                    texto_cliente = texto_preplate
+                    conversacion.contexto = contexto_placa
+                else:
+                    contexto_placa['perfil_vehiculo_pendiente'] = True
+                    conversacion.contexto = contexto_placa
+                    respuesta_perfil = f'Placa registrada: *{placa}*. ' + _mensaje_solicitar_perfil()
+                    await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
+                    await session.commit()
+                    return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
+
     elif placa_persistida and placa in ('WAPP-01', 'SIN-PLACA', ''):
         placa = placa_persistida
+
     if placa in ('WAPP-01', 'SIN-PLACA', ''):
         continuar_diagnostico_preplate = False
         placa_en_texto = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
@@ -199,6 +286,7 @@ async def preparar_flujo_vehiculo(
             await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_placa)
             await session.commit()
             return ({'status': 'esperando_placa', 'respuesta': respuesta_placa}, placa, marca_modelo, texto_cliente)
+
     placa = contexto_placa.get('placa_posttest') or contexto_placa.get('placa') or placa
     if contexto_placa.get('perfil_vehiculo_pendiente') and tipo_mensaje == 'text':
         datos_perfil = extraer_datos_vehiculo(texto_cliente)

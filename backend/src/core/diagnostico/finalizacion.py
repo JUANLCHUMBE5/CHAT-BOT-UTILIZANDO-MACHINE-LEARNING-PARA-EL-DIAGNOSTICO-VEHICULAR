@@ -60,11 +60,6 @@ def finalizar_diagnostico(
     case_id: Any,
 ) -> ResultadoDiagnostico:
     """Cierra el pipeline sin cambiar la selección ni las probabilidades del SVM."""
-    # Si el RAG declara una falla específica y contradice la hipótesis fusionada,
-    # el documento deja de ser aplicable.
-    #
-    # Los procedimientos transversales/procedurales pueden tener falla=None;
-    # en ese caso NO deben descartarse únicamente por carecer de una clase ML.
     from src.core.diagnostico.rag_hypothesis_compatibility import procedimiento_apoya_hipotesis
 
     falla_rag = (meta_rag_dict or {}).get("falla")
@@ -88,7 +83,12 @@ def finalizar_diagnostico(
         contexto_manual, titulo_manual, similitud_rag = "", "Sin procedimiento compatible verificado", 0.0
         rag_valido = False
 
-    if confianza < 0.10 and not areas_consulta:
+    es_hipotesis_regla = bool(
+        predicciones_ml
+        and getattr(predicciones_ml[0], "origen_probabilidad", "") == "REGLA"
+    )
+
+    if confianza < 0.10 and not areas_consulta and not es_hipotesis_regla:
         if rag_valido:
             diagnostico_predictivo = f"Hipótesis ML de baja confianza: {diagnostico_predictivo}"
             requiere_revision_humana = True
@@ -115,9 +115,6 @@ def finalizar_diagnostico(
                 tiempo_total_ms=max(0, int((time.perf_counter() - inicio_total) * 1000)),
             )
     elif confianza < 0.10:
-        # Con un área técnica explícita, la abstención del SVM no debe cortar
-        # la ruta RAG/LLM. El filtro de categoría retirará antes cualquier
-        # candidato ML ajeno y el fallback solicitará evidencia pertinente.
         requiere_revision_humana = True
     else:
         requiere_revision_humana = confianza < settings.diagnostic.confidence_threshold
@@ -125,7 +122,7 @@ def finalizar_diagnostico(
     if rag_valido and not getattr(gestor.motor_rag, "corpus_validado", False):
         requiere_revision_humana = True
 
-    if areas_consulta and not diagnostico_forzado:
+    if areas_consulta and not diagnostico_forzado and not es_hipotesis_regla:
         predicciones_en_area = filtrar_causas(sistema_activo, predicciones_ml, texto_evaluar)
         predicciones_en_area = [
             prediccion
@@ -144,7 +141,6 @@ def finalizar_diagnostico(
             diagnostico_predictivo = predicciones_en_area[0].falla
             confianza = predicciones_en_area[0].probabilidad
 
-    # Enriquecimiento con Catálogo Oficial DTC (18,805 códigos en SQLite)
     info_dtc_texto = ""
     if tiene_dtc:
         dtc_service = ServiceContainer.get_dtc_service()
@@ -168,7 +164,6 @@ def finalizar_diagnostico(
             if pv_fmt:
                 perfil_vehiculo_str = pv_fmt
 
-    # PASO 3: Gemini LLM
     inicio_llm = time.perf_counter()
     predicciones_llm = predicciones_ml
     diagnostico_llm = diagnostico_predictivo
@@ -224,9 +219,6 @@ def finalizar_diagnostico(
         respuesta_explicativa,
         predicciones_llm,
         motivo_prioridad,
-        # El corpus candidate_v1 actual es preliminar: aunque recupere un
-        # texto pertinente, no se presentan sus pasos como procedimiento OEM
-        # validado hasta que pase la revisión documental/mecánica.
         sin_documento=(
             not rag_valido
             or not getattr(gestor.motor_rag, "corpus_validado", False)
