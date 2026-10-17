@@ -303,6 +303,13 @@ def respuesta_menciona_causa_fuera_de_sistema(
 def detectar_areas_tecnicas(texto: str) -> list[str]:
     """Devuelve áreas explícitas mencionadas por el usuario en orden de especificidad."""
     normalizado = _normalizar(evidencia_afirmada(texto))
+    # A negated event cannot supply the positive predicate of an area rule.
+    # Preserve the surrounding components and independent affirmative events.
+    normalizado = re.sub(
+        r"\bno\s+(?:(?:vibra|tiembla)\w*|hace\s+ruido)\b",
+        "evento ausente",
+        normalizado,
+    )
     # A thermal symptom belongs to the explicitly named assembly, not always engine cooling.
     if re.search(r"\b(?:cvt|dsg|caja automatica|aceite de transmision)\b", normalizado):
         normalizado = re.sub(r"\b(?:sobrecalent\w*|recalent\w*)\b", "temperatura de transmision", normalizado)

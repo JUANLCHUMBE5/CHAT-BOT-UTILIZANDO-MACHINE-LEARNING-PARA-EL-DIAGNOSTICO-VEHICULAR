@@ -108,6 +108,18 @@ def test_normalizacion_conserva_codigo_obd_exacto():
     assert "p0302" in normalizar_jerga_peruana("DTC P0302 confirmado por escaner")
 
 
+@pytest.mark.parametrize("negacion", ["no vibra", "no tiembla", "no hace ruido"])
+def test_evento_negado_al_frenar_no_activa_area(negacion):
+    from src.core.diagnostico.enrutador_sistema import detectar_areas_tecnicas
+
+    assert "FRENOS" not in detectar_areas_tecnicas(
+        f"Al frenar {negacion} el volante. Golpeteo en baches"
+    )
+    assert "FRENOS" in detectar_areas_tecnicas(
+        f"Al frenar {negacion} el volante, pero el pedal de freno se va al fondo"
+    )
+
+
 def test_presentacion_sin_hipotesis_es_abstencion_persistible():
     from src.core.conversacion.presentacion_dto import alinear_predicciones_presentadas
     from src.core.diagnostico.models import ResultadoDiagnostico
