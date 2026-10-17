@@ -133,6 +133,7 @@ def es_consulta_ambigua(texto: str) -> Tuple[bool, str]:
             "volante",
             "asiento",
             "pedal",
+            "cvt", "dsg", "caja", "transmision", "transmisión", "embrague",
             "zapatea",
             "zapateo",
         )

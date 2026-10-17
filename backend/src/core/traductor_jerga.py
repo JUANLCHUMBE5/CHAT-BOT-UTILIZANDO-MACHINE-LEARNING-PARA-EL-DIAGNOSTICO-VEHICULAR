@@ -1,6 +1,5 @@
 import re
 
-
 DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
     # Correcciones de dictado/tipeo frecuente en siglas de combustible.
     (r"\bg\s*[.\-/]?\s*n\s*[.\-/]?\s*[vb]\b", "gnv"),
@@ -61,7 +60,7 @@ DICCIONARIO_VARIANTES_ENTRADA: tuple[tuple[str, str], ...] = (
         "collarin de empuje o crapodina de embrague",
     ),
     # Códigos OBD-II frecuentes hacia síntomas canónicos
-    (r"\bp030[0-8]\b", "codigo p0300 de falla de encendido multiple en cilindros bujias o bobinas"),
+    (r"\bp030[0-8]\b", r"codigo \g<0> de falla de encendido multiple en cilindros bujias o bobinas"),
     (r"\bp0420\b", "codigo p0420 eficiencia de catalizador por debajo del umbral convertidor catalitico"),
     (r"\bp0171\b", "codigo p0171 mezcla pobre en banco 1 vacio o inyeccion"),
     (r"\bp0172\b", "codigo p0172 mezcla rica en banco 1 sensor de oxigeno o inyectores"),

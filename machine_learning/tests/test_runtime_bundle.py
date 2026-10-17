@@ -76,7 +76,7 @@ def test_inference_contract_distinguishes_svm_from_rule():
         top_k=[],
     )
     assert contrato_regla.class_id == "HIPOTESIS_REGLA"
-    assert contrato_regla.calibrated_probability == 0.0
+    assert contrato_regla.calibrated_probability is None
     assert contrato_regla.prediction_source == "REGLA"
 
 

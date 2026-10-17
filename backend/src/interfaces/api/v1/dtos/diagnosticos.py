@@ -17,6 +17,13 @@ class PrediccionMLDTO(BaseModel):
     falla: str
     probabilidad: float
     origen_probabilidad: str = "SVM"
+    statistical_probability: Optional[float] = None
+    operational_score: Optional[float] = None
+    raw_svm_score: Optional[float] = None
+    prediction_source: Optional[str] = None
+    class_id: Optional[str] = None
+    model_version: Optional[str] = None
+    taxonomy_version: Optional[str] = None
 
 
 class EtapaProcesamientoDTO(BaseModel):

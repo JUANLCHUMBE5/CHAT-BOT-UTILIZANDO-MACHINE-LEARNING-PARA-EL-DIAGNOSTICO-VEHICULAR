@@ -273,7 +273,8 @@ class ContratoPrediccionML:
     subsystem: str
     top_k: List[Dict[str, Any]]
     raw_svm_score: float
-    calibrated_probability: float
+    calibrated_probability: Optional[float]
+    operational_score: Optional[float]
     prediction_source: str
     abstention_reason: Optional[str] = None
 
@@ -344,7 +345,8 @@ def construir_contrato_prediccion(
     *,
     class_label: str,
     raw_svm_score: float,
-    calibrated_probability: float,
+    calibrated_probability: Optional[float],
+    operational_score: Optional[float] = None,
     prediction_source: str,
     top_k: Optional[List[Dict[str, Any]]] = None,
     abstention_reason: Optional[str] = None,
@@ -352,7 +354,7 @@ def construir_contrato_prediccion(
     """Construye una instancia validada del contrato de inferencia ML."""
     fuente = str(prediction_source or "SVM").upper()
     es_svm = es_clase_entrenada_svm(class_label) and fuente in {"SVM", "SVM_JERARQUICO", "SVM_DTC"}
-    prob_calibrada = float(calibrated_probability) if es_svm else 0.0
+    prob_calibrada = float(calibrated_probability) if es_svm and calibrated_probability is not None else None
     return ContratoPrediccionML(
         model_version=MODEL_VERSION,
         taxonomy_version=TAXONOMY_VERSION,
@@ -361,7 +363,8 @@ def construir_contrato_prediccion(
         subsystem=obtener_macro_sistema(class_label),
         top_k=list(top_k or []),
         raw_svm_score=round(float(raw_svm_score), 4),
-        calibrated_probability=round(prob_calibrada, 4),
+        calibrated_probability=round(prob_calibrada, 4) if prob_calibrada is not None else None,
+        operational_score=operational_score,
         prediction_source=fuente,
         abstention_reason=abstention_reason,
     )

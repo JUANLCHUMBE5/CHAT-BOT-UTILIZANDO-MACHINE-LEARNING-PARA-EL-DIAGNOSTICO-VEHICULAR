@@ -104,11 +104,18 @@ def ejecutar_recuperacion_y_fusion_rag(
             codigos_dtc=dtcs_encontrados,
             rag_evidencia_validada=rag_evidencia_validada,
         )
-        diagnostico_predictivo = resultado_fusion.falla_principal
+        # A documentation match cannot silently replace a specific evidence rule.
+        regla = next((p for p in predicciones_pre_fusion if p.falla == diagnostico_predictivo), None)
+        preservar_regla = bool(
+            regla and regla.origen_probabilidad.startswith("REGLA")
+            and resultado_fusion.origen_decision != "RESCATE_EVIDENCIA_FISICA"
+        )
+        if not preservar_regla:
+            diagnostico_predictivo = resultado_fusion.falla_principal
         probabilidades_svm = {
             pred.falla: pred.probabilidad
             for pred in predicciones_pre_fusion
-            if pred.origen_probabilidad in ("SVM", "SVM_ORIGINAL_REORDENADO_REGLA")
+            if pred.origen_probabilidad.startswith("SVM")
         }
         fuentes_candidatas = {
             pred.falla: pred.origen_probabilidad for pred in predicciones_pre_fusion
@@ -122,25 +129,22 @@ def ejecutar_recuperacion_y_fusion_rag(
                 resultado_fusion.origen_confianza,
             )
         )
-        nuevas_preds = [PrediccionML(
-            falla=diagnostico_predictivo,
-            probabilidad=(
-                confianza_principal_svm
-                if confianza_principal_svm is not None
-                else 0.0
-            ),
-            origen_probabilidad=origen_principal,
+        por_falla = {p.falla: p for p in predicciones_pre_fusion}
+        principal = por_falla.get(diagnostico_predictivo)
+        nuevas_preds = [principal.model_copy() if principal else PrediccionML(
+            falla=diagnostico_predictivo, probabilidad=0.0, origen_probabilidad=origen_principal,
         )]
         for dif in resultado_fusion.diferenciales:
-            nuevas_preds.append(PrediccionML(
-                falla=dif["falla"],
-                probabilidad=float(dif.get("probabilidad", 0.0) or 0.0),
-                origen_probabilidad=dif.get("origen_probabilidad", "SVM"),
+            if dif["falla"] == diagnostico_predictivo:
+                continue
+            original = por_falla.get(dif["falla"])
+            nuevas_preds.append(original.model_copy() if original else PrediccionML(
+                falla=dif["falla"], probabilidad=0.0, origen_probabilidad="REGLA_SIN_PROBABILIDAD",
             ))
         predicciones_ml = nuevas_preds
         confianza = (
             float(confianza_principal_svm)
-            if origen_principal in ("SVM", "SVM_ORIGINAL_REORDENADO_REGLA") and confianza_principal_svm is not None
+            if origen_principal.startswith("SVM") and confianza_principal_svm is not None
             else 0.0
         )
     else:

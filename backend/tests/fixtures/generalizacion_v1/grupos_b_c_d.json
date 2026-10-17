@@ -1,0 +1,570 @@
+{
+  "version": 1,
+  "scope": "regresion_sintetica_observada_no_independiente",
+  "groups": {
+    "C": [
+      {
+        "id": "C_01",
+        "texto": "motor tironea en subidas y la luz de check parpadea cuando le exijo",
+        "gt": "Falla en bujias o bobinas de encendido (misfire)",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_02",
+        "texto": "en caliente el minimo se cae a 500 vueltas y oscila bastante en neutro",
+        "gt": "Cuerpo de aceleracion o valvula IAC sucia",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_03",
+        "texto": "chillido insoportable de metal con metal en las ruedas delanteras al pisar el freno",
+        "gt": "Desgaste de pastillas y zapatas de freno",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_04",
+        "texto": "la temperatura trepa al maximo cuando me quedo varado en el trafico lento",
+        "gt": "Falla en termostato o motoventilador de radiador",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_05",
+        "texto": "cambie la computadora del motor por otra y ahora el carro da marcha pero no arranca parpadea la llave",
+        "gt": "ECU no codificada o bloqueo de inmovilizador tras cambio de computadora",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_06",
+        "texto": "no entra el escaner al puerto obd2 dice error de enlace en la red can con la ecu",
+        "gt": "Falla en conector, alimentacion o red CAN de comunicacion con ECU",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_07",
+        "texto": "bota humo azul denso todo el tiempo por el tubo de escape y gasta un litro de aceite por semana",
+        "gt": "Consumo de aceite por desgaste de anillos o retenes",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_08",
+        "texto": "el pedal del clutch se fue hasta abajo como trapo y no regresa no entran las marchas",
+        "gt": "Falla en bombin o bomba hidraulica de embrague",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_09",
+        "texto": "humo blanco con olor dulce por el escape y burbujea el vaso de expansion con refrigerante bajo",
+        "gt": "Empaque de culata soplado o danado",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_10",
+        "texto": "zumbido insoportable en la caja manual que sube mientras mas rapido voy en pista",
+        "gt": "Rodajes de caja mecanica o diferencial gastados",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_11",
+        "texto": "al dar contacto el tablero se apaga por completo y solo hace un tac tac seco en el arrancador",
+        "gt": "Bateria descargada o bornes sulfatados",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_12",
+        "texto": "crujido o traqueteo fuerte en la rueda delantera al doblar toda la direccion a la esquina",
+        "gt": "Juntas homocineticas o palieres danados",
+        "vehiculo": ""
+      },
+      {
+        "id": "C_13",
+        "texto": "olor fuerte a combustible crudo humo negro y bujias empapadas en gasolina",
+        "gt": "Falla en sensor de oxigeno o mezcla rica",
+        "vehiculo": ""
+      }
+    ],
+    "D": [
+      {
+        "id": "D_01",
+        "texto": "camioneta hilux common rail no arranca en caliente se cae la presion del riel a 120 bar",
+        "gt": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+        "vehiculo": "Toyota Hilux 2018"
+      },
+      {
+        "id": "D_02",
+        "texto": "testigo de dpf saturado en tablero y motor diesel en modo degradado no pasa de 2000 rpm",
+        "gt": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+        "vehiculo": "Volkswagen Amarok 2019"
+      },
+      {
+        "id": "D_03",
+        "texto": "humo negro excesivo al acelerar y se escucha soplido fuerte en manguera de intercooler rajada",
+        "gt": "Fuga en mangueras de intercooler o turbocompresor danado",
+        "vehiculo": "Nissan Frontier 2017"
+      },
+      {
+        "id": "D_04",
+        "texto": "filtro de petroleo con sedimento negro y motor se apaga en alta exigencia por restriccion",
+        "gt": "Inyectores sucios o filtro de combustible obstruido",
+        "vehiculo": "Isuzu D-Max 2020"
+      },
+      {
+        "id": "D_05",
+        "texto": "prius hibrido arroja codigo p0a80 triangulo rojo y celda de bateria de traccion desbalanceada",
+        "gt": "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)",
+        "vehiculo": "Toyota Prius 2018"
+      },
+      {
+        "id": "D_06",
+        "texto": "inversor igbt recalienta y motor electrico de traccion entra en modo proteccion",
+        "gt": "Fallo en inversor de corriente IGBT o motor electrico (EV)",
+        "vehiculo": "Nissan Leaf 2020"
+      },
+      {
+        "id": "D_07",
+        "texto": "frenado regenerativo no carga la bateria y la transicion al freno de disco da golpe",
+        "gt": "Falla en sistema de frenado regenerativo (EV / Hibridos)",
+        "vehiculo": "Hyundai Ioniq 2019"
+      },
+      {
+        "id": "D_08",
+        "texto": "bomba de refrigerante del inversor electrico no funciona y marca sobrecalentamiento de bateria de alto voltaje",
+        "gt": "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)",
+        "vehiculo": "Kia Niro EV 2021"
+      },
+      {
+        "id": "D_09",
+        "texto": "caja cvt nissan zapatea da tirones y el aceite de transmision esta sobrecalentado",
+        "gt": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+        "vehiculo": "Nissan Sentra 2019"
+      },
+      {
+        "id": "D_10",
+        "texto": "fiat palio robotizado marca cambio no disponible y no acopla la primera marcha bomba dualogic",
+        "gt": "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)",
+        "vehiculo": "Fiat Palio 2016"
+      },
+      {
+        "id": "D_11",
+        "texto": "patina la cuarta velocidad en caja automatica y solenoides de cambio trabados en cuerpo de valvulas",
+        "gt": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+        "vehiculo": "Honda Civic 2018"
+      },
+      {
+        "id": "D_12",
+        "texto": "zumbido metalico en caja mecanica y cambios muy duros por falta de aceite de transmision",
+        "gt": "Falta o degradacion de aceite de caja de cambios",
+        "vehiculo": "Toyota Yaris 2017"
+      },
+      {
+        "id": "D_13",
+        "texto": "red can con corto a masa codigo u0100 sin comunicacion con la computadora de motor ecu",
+        "gt": "Falla en conector, alimentacion o red CAN de comunicacion con ECU",
+        "vehiculo": "Chevrolet Cruze 2017"
+      },
+      {
+        "id": "D_14",
+        "texto": "modulo fscm de control de bomba de combustible sin comunicacion pem sin voltaje motor se apaga",
+        "gt": "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)",
+        "vehiculo": "Ford Focus 2016"
+      },
+      {
+        "id": "D_15",
+        "texto": "sensor ect marca menos cuarenta grados en frio y check prende intermitente sensor de temperatura refrigerante",
+        "gt": "Falla en sensor de temperatura de refrigerante (ECT) o conexion intermitente",
+        "vehiculo": "Hyundai Accent 2018"
+      },
+      {
+        "id": "D_16",
+        "texto": "tps descalibrado aceleracion a tirones con check engine encendido y mariposa desfasada",
+        "gt": "Cuerpo de aceleracion o sensor TPS descalibrado",
+        "vehiculo": "Volkswagen Gol 2019"
+      },
+      {
+        "id": "D_17",
+        "texto": "timon durisimo y fuga de liquido por retenes de la cremallera de direccion asistida",
+        "gt": "Cremallera de direccion asistida con holgura o fuga",
+        "vehiculo": "Toyota Corolla 2016"
+      },
+      {
+        "id": "D_18",
+        "texto": "golpe seco y rebote excesivo en baches amortiguadores reventados con fuga de aceite",
+        "gt": "Amortiguadores reventados o bujes de suspension gastados",
+        "vehiculo": "Kia Rio 2019"
+      },
+      {
+        "id": "D_19",
+        "texto": "sonido de trac trac en la rueda delantera al dar la vuelta cerrada palier o junta homocinetica danada",
+        "gt": "Juntas homocineticas o palieres danados",
+        "vehiculo": "Renault Sandero 2018"
+      },
+      {
+        "id": "D_20",
+        "texto": "vibracion a 90 km/h en carretera y vehiculo se jala a la derecha llantas desbalanceadas",
+        "gt": "Llantas desbalanceadas o desalineadas",
+        "vehiculo": "Nissan Versa 2020"
+      },
+      {
+        "id": "D_21",
+        "texto": "aire acondicionado solo tira aire tibio compresor no acopla y fuga gas refrigerante r134a",
+        "gt": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+        "vehiculo": "Suzuki Swift 2019"
+      },
+      {
+        "id": "D_22",
+        "texto": "vidrio del copiloto se cayo dentro de la puerta guaya de alzacristales rota elevalunas trabado",
+        "gt": "Elevalunas electrico o guaya de alzacristales rota o trabada",
+        "vehiculo": "Chevrolet Onix 2020"
+      },
+      {
+        "id": "D_23",
+        "texto": "mando a distancia no abre las puertas actuador del cierre centralizado fogueado",
+        "gt": "Falla electrica del cierre centralizado o actuador de puerta",
+        "vehiculo": "Hyundai Grand i10 2018"
+      },
+      {
+        "id": "D_24",
+        "texto": "brazos del parabrisas trabados motor pluma quemado no funciona en lluvia limpiaparabrisas",
+        "gt": "Limpiaparabrisas o motor pluma quemado",
+        "vehiculo": "Mazda 3 2017"
+      },
+      {
+        "id": "D_25",
+        "texto": "pedal de freno se va al fondo con sensacion esponjosa fuga o aire en circuito de frenos",
+        "gt": "Fuga hidraulica o aire en el sistema de frenos",
+        "vehiculo": "Toyota Yaris 2019"
+      },
+      {
+        "id": "D_26",
+        "texto": "vibracion violenta en el volante y pedal solo al frenar a alta velocidad discos alabeados",
+        "gt": "Discos de freno alabeados o desgastados",
+        "vehiculo": "Honda Civic 2019"
+      },
+      {
+        "id": "D_27",
+        "texto": "testigo de abs prendido sensor de velocidad de rueda abs sin lectura en el osciloscopio",
+        "gt": "Falla en sensor de velocidad de rueda ABS",
+        "vehiculo": "Volkswagen Vento 2018"
+      },
+      {
+        "id": "D_28",
+        "texto": "pedal de freno durisimo sin asistencia servofreno booster sin vacio manguera rota",
+        "gt": "Falla en servofreno (booster) o linea de vacio",
+        "vehiculo": "Nissan Tiida 2015"
+      },
+      {
+        "id": "D_29",
+        "texto": "sonido de cascabeleo en la tapa de distribucion cadena destensada y salto de punto",
+        "gt": "Faja o cadena de distribucion destensada o con salto de punto",
+        "vehiculo": "Toyota Corolla 2017"
+      },
+      {
+        "id": "D_30",
+        "texto": "humo blanco denso por el escape y refrigerante mezclado empaque de culata soplado",
+        "gt": "Empaque de culata soplado o danado",
+        "vehiculo": "Renault Duster 2019"
+      },
+      {
+        "id": "D_31",
+        "texto": "perdida de presion de aceite testigo de la aceitera parpadea en caliente bomba de aceite defectuosa",
+        "gt": "Baja presion de aceite o bomba de aceite defectuosa",
+        "vehiculo": "Chevrolet Spark 2018"
+      },
+      {
+        "id": "D_32",
+        "texto": "inyeccion directa gdi perdida de potencia por carbon acumulado en valvulas de admision descarbonizacion",
+        "gt": "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)",
+        "vehiculo": "Kia Sportage 2020"
+      }
+    ],
+    "B": [
+      {
+        "id": "B_01",
+        "texto": "testigo de bateria prendido en el tablero el alternador no carga y las luces bajan de intensidad",
+        "gt": "Alternador defectuoso o placa de diodos quemada",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_02",
+        "texto": "el carro rebota demasiado en los baches golpe seco y amortiguadores chorreados de aceite",
+        "gt": "Amortiguadores reventados o bujes de suspension gastados",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_03",
+        "texto": "testigo rojo de presion de aceite encendido testigo de la aceitera parpadea en caliente",
+        "gt": "Baja presion de aceite o bomba de aceite defectuosa",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_04",
+        "texto": "el carro no arranca bornes sulfatados y las luces del tablero se apagan al dar contacto",
+        "gt": "Bateria descargada o bornes sulfatados",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_05",
+        "texto": "no llega presion de combustible al riel la bomba de gasolina no zumba al poner contacto",
+        "gt": "Bomba de gasolina quemada o con baja presion",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_06",
+        "texto": "la puerta del piloto no cierra bien el pestillo mecanico o la chapa esta trabada",
+        "gt": "Cerradura, chapa o pestillo mecanico de puerta trabado o desalineado",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_07",
+        "texto": "humo azul constante por el escape baja el nivel de aceite consumo por anillos de piston",
+        "gt": "Consumo de aceite por desgaste de anillos o retenes",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_08",
+        "texto": "timon duro juego en la cremallera de direccion y fuga de liquido hidraulico",
+        "gt": "Cremallera de direccion asistida con holgura o fuga",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_09",
+        "texto": "revoluciones inestables suben y bajan en minimo ralenti inestable valvula iac sucia",
+        "gt": "Cuerpo de aceleracion o valvula IAC sucia",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_10",
+        "texto": "falla en celda del paquete de bateria de alto voltaje hibrido perdida de autonomia celda desbalanceada",
+        "gt": "Degradacion o falla en paquete de bateria de alto voltaje (EV / Hibridos)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_11",
+        "texto": "chirrido de fierro con fierro al pisar el freno pastillas de freno desgastadas al limite",
+        "gt": "Desgaste de pastillas y zapatas de freno",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_12",
+        "texto": "acelero a fondo y el motor se revoluciona pero el vehiculo no avanza disco de embrague patinando",
+        "gt": "Disco de embrague desgastado o patinando",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_13",
+        "texto": "vibracion intensa en el pedal de freno y timon al frenar a alta velocidad discos alabeados",
+        "gt": "Discos de freno alabeados o desgastados",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_14",
+        "texto": "la luna no sube ni baja motor de elevalunas hace ruido o guaya de ventana rota",
+        "gt": "Elevalunas electrico o guaya de alzacristales rota o trabada",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_15",
+        "texto": "sale bastante humo blanco espeso por el escape y se consume el refrigerante empaque de culata soplado",
+        "gt": "Empaque de culata soplado o danado",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_16",
+        "texto": "sonido de cascabeleo en la distribucion salto de punto faja o cadena destensada fuera de sincronia",
+        "gt": "Faja o cadena de distribucion destensada o con salto de punto",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_17",
+        "texto": "correa humeda banada en aceite degradada chupador de bomba de aceite tapado motor dragon turbo",
+        "gt": "Falla de correa dentada banada en aceite (Motor Ford 1.0 Dragon / GM Turbo)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_18",
+        "texto": "inyeccion directa gdi perdida de potencia por carbon acumulado en valvulas de admision cascabeleo",
+        "gt": "Falla de descarbonizacion e inyeccion directa GDI (acumulacion de carbon en valvulas)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_19",
+        "texto": "no abre con el mando a distancia actuador electrico de cierre centralizado no responde",
+        "gt": "Falla electrica del cierre centralizado o actuador de puerta",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_20",
+        "texto": "perdida de presion de sobrealimentacion actuador electronico de turbo vgt atascado motor tsi tfsi",
+        "gt": "Falla en actuador de turbocompresor o VGT en motores alemanes TSI / TFSI",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_21",
+        "texto": "pedal de embrague se queda en el fondo bombin o bombin esclavo hidraulico con fuga de liquido",
+        "gt": "Falla en bombin o bomba hidraulica de embrague",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_22",
+        "texto": "jaloneo al acelerar falla de chispa bobina quemada bujias con misfire cilindro 1",
+        "gt": "Falla en bujias o bobinas de encendido (misfire)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_23",
+        "texto": "error en pantalla de cambio no disponible bomba del robot Dualogic sin presion acumulador descargado",
+        "gt": "Falla en caja robotizada Dualogic / I-Motion / Easytronic (Fiat / VW)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_24",
+        "texto": "aire acondicionado no enfria compresor no acopla fuga de gas refrigerante r134a",
+        "gt": "Falla en compresor de aire acondicionado o fuga de gas R134a",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_25",
+        "texto": "testigo de dpf saturado filtro de particulas tapado sistema adblue no regenera diesel euro",
+        "gt": "Falla en filtro de particulas DPF / FAP y sistema AdBlue DEF (Diesel Euro 5/6)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_26",
+        "texto": "modulo de control de bomba de combustible fscm sin comunicacion pem sin voltaje motor se apaga",
+        "gt": "Falla en modulo de bomba de gasolina FSCM / PEM (Ford / Chevrolet)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_27",
+        "texto": "alto consumo de gasolina humo negro sensor de oxigeno lambda con lectura trabada mezcla rica",
+        "gt": "Falla en sensor de oxigeno o mezcla rica",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_28",
+        "texto": "testigo de ABS encendido sensor de velocidad de rueda abs sin lectura de revoluciones",
+        "gt": "Falla en sensor de velocidad de rueda ABS",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_29",
+        "texto": "pedal de freno duro como una piedra servofreno booster sin vacio manguera rota",
+        "gt": "Falla en servofreno (booster) o linea de vacio",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_30",
+        "texto": "dificultad de arranque en frio con etanol calibracion de sensor flex fuel porcentaje de alcohol incorrecto",
+        "gt": "Falla en sistema Flex / Bi-combustible (Alcohol/Etanol)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_31",
+        "texto": "frenado regenerativo no recupera energia falla de transicion entre regeneracion y freno hidraulico ev",
+        "gt": "Falla en sistema de frenado regenerativo (EV / Hibridos)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_32",
+        "texto": "valvula solenoide vvt trabada desfasaje de arbol de levas actuador valvetronic sin respuesta",
+        "gt": "Falla en sistema de sincronizacion variable de valvulas (VVT / VVT-i / Valvetronic)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_33",
+        "texto": "temperatura sube en trafico motoventilador del radiador no enciende o termostato pegado cerrado",
+        "gt": "Falla en termostato o motoventilador de radiador",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_34",
+        "texto": "falla en modulo de potencia igbt del inversor sobrecalentamiento del motor de traccion electrico",
+        "gt": "Fallo en inversor de corriente IGBT o motor electrico (EV)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_35",
+        "texto": "cambios entran duros zumbido en la caja mecanica falta de aceite de transmision valvolina quemada",
+        "gt": "Falta o degradacion de aceite de caja de cambios",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_36",
+        "texto": "bomba de refrigerante de alta tension quemada sobrecalentamiento de bateria de traccion ev",
+        "gt": "Foco o falla en sistema de refrigeracion de bateria/inversor (EV)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_37",
+        "texto": "silbido fuerte al acelerar manguera de intercooler rajada perdida de presion de turbo humo negro",
+        "gt": "Fuga en mangueras de intercooler o turbocompresor danado",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_38",
+        "texto": "charco verde bajo el motor fuga en manguera de radiador picado baja nivel de anticongelante",
+        "gt": "Fuga en mangueras de refrigerante o radiador picado",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_39",
+        "texto": "pedal de freno esponjoso se va hasta el fondo fuga de liquido o aire en el circuito de frenos",
+        "gt": "Fuga hidraulica o aire en el sistema de frenos",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_40",
+        "texto": "baja presion en riel common rail diesel no arranca en caliente fuga por retorno de inyector diesel",
+        "gt": "Fuga o baja presion en sistema Common Rail Diesel (Camiones/Pickups)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_41",
+        "texto": "perdida de presion de aire en calderines fuga en pulmon o manguera de freno de aire camion",
+        "gt": "Fugas de aire o fallos en el sistema de frenos neumático (Camiones)",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_42",
+        "texto": "tirones y perdida de potencia a cualquier velocidad inyectores tapados o filtro de gasolina sucio",
+        "gt": "Inyectores sucios o filtro de combustible obstruido",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_43",
+        "texto": "traqueteo o clac clac metalico al girar toda la direccion palier roto o junta homocinetica danada",
+        "gt": "Juntas homocineticas o palieres danados",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_44",
+        "texto": "plumas del parabrisas no se mueven motor de limpiaparabrisas quemado varillaje trabado",
+        "gt": "Limpiaparabrisas o motor pluma quemado",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_45",
+        "texto": "el timon vibra a 90 km/h en autopista y el carro se jala hacia la derecha llantas desbalanceadas",
+        "gt": "Llantas desbalanceadas o desalineadas",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_46",
+        "texto": "zumbido continuo que aumenta con la velocidad en diferencial o rodaje de eje de entrada de caja",
+        "gt": "Rodajes de caja mecanica o diferencial gastados",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_47",
+        "texto": "patinamiento y golpes al entrar los cambios en caja automatica cvt dsg sobrecalentamiento de fluido",
+        "gt": "Sobrecalentamiento o solenoides en caja automatica CVT / DSG",
+        "vehiculo": ""
+      },
+      {
+        "id": "B_48",
+        "texto": "valvula secadora aps de camion tapada humedad en el circuito neumático valvula de descarga no corta",
+        "gt": "Válvula de freno de aire o secador APS obstruido (Camiones)",
+        "vehiculo": ""
+      }
+    ]
+  }
+}

@@ -88,7 +88,11 @@ def finalizar_diagnostico(
         and getattr(predicciones_ml[0], "origen_probabilidad", "") == "REGLA"
     )
 
-    if confianza < 0.10 and not areas_consulta and not es_hipotesis_regla:
+    probabilidad_original = (
+        predicciones_ml[0].statistical_probability if predicciones_ml else None
+    )
+    confianza_abstencion = probabilidad_original if probabilidad_original is not None else confianza
+    if confianza_abstencion < 0.10 and not areas_consulta and not es_hipotesis_regla:
         if rag_valido:
             diagnostico_predictivo = f"Hipótesis ML de baja confianza: {diagnostico_predictivo}"
             requiere_revision_humana = True

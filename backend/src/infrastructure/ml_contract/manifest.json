@@ -1,0 +1,7 @@
+{
+  "source": "machine_learning/models/taxonomia_sistemas.py",
+  "taxonomy_version": "61_clases_7_macrosistemas_v2",
+  "sha256": "fc079aeccf2cb6201bb081f011b60e7369e065b4ca8fcd446fbcc83d056e961b",
+  "generated": true,
+  "hash_scope": "UTF8 source with LF line endings, no model artifacts"
+}
