@@ -1,0 +1,127 @@
+{
+  "version": "RAG-03F-AGENTE2-20261018",
+  "descripcion": "Manifiesto reproducible del paquete experimental RAG-03F con metadatos normalizados y contrato documental Agente 1",
+  "worktree_rama": "feat/rag03c3-remediacion-corpus-trazable",
+  "tolerancia_l2_vectorial": 1e-06,
+  "total_documentos_corpus_b": 256,
+  "total_fragmentos_experimentales": 17,
+  "archivos_fuente_pdfs": {
+    "brembo_guide_brake_disc_diagnostics.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\brembo_guide_brake_disc_diagnostics.pdf",
+      "tamano_bytes": 1198416,
+      "sha256": "ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1"
+    },
+    "hyundai_tsb_mdps_flexible_coupling_replacement.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\hyundai_tsb_mdps_flexible_coupling_replacement.pdf",
+      "tamano_bytes": 3159170,
+      "sha256": "3b051b41ae128a2a971f103d8908bc99f1be9720b1d4df5b2699ab8a3967d282"
+    },
+    "hyundai_tsb_mdps_steering_bearing_noise.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\hyundai_tsb_mdps_steering_bearing_noise.pdf",
+      "tamano_bytes": 1385037,
+      "sha256": "533fce2dd167be31bd9ab7799f77b04c7b80d06d4ca737202708479912935b37"
+    },
+    "kia_tsb_cmdps_steering_column_repair.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\kia_tsb_cmdps_steering_column_repair.pdf",
+      "tamano_bytes": 810480,
+      "sha256": "deded09b3e1ecfea115faf2f2c0171a087056c1873f2cd187b2928b3ffa8d0b9"
+    },
+    "kia_tsb_mdps_logic_update_c1259_c1112.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\kia_tsb_mdps_logic_update_c1259_c1112.pdf",
+      "tamano_bytes": 768107,
+      "sha256": "e05abfd983035add1a3f3c2b6a1ea5261b613b826ee34eb5922f96e1e18f6993"
+    },
+    "laser_5524_instrucciones_es.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\laser_5524_instrucciones_es.pdf",
+      "tamano_bytes": 2291603,
+      "sha256": "513d6c527cc661e92503c7c35fb3c85c981e4af6726ec3bfb56a99e66840b63d"
+    },
+    "nissan_tsb_ntb21_004a_sentra_fuel_pump_service.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\nissan_tsb_ntb21_004a_sentra_fuel_pump_service.pdf",
+      "tamano_bytes": 121726,
+      "sha256": "1a155544074a0b6cd1afd78c098f9641f929003a8a28049da0555603bef5bf82"
+    },
+    "pico_wps500x_pressure_transducer_manual.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\pico_wps500x_pressure_transducer_manual.pdf",
+      "tamano_bytes": 390612,
+      "sha256": "3de1537817f51acb803cc77a79ed85a2bb044d2438a6dd4cd12fcb28227af678"
+    },
+    "schaeffler_luk_dmf_sensor_ring_timing.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_dmf_sensor_ring_timing.pdf",
+      "tamano_bytes": 272065,
+      "sha256": "b171bddf5c990424a81e9b3f4076ccd15c3c81de49e2e3b55fb2a1c06d48adc5"
+    },
+    "schaeffler_luk_embrague_doble_guia_tecnica_es.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_embrague_doble_guia_tecnica_es.pdf",
+      "tamano_bytes": 5213470,
+      "sha256": "0a7367db1b5822c52ab95711065499cbed3b74d857a2c3b9cfcf0bf1dfafc585"
+    },
+    "schaeffler_luk_sac_embrague_autoajustable_info.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_sac_embrague_autoajustable_info.pdf",
+      "tamano_bytes": 271363,
+      "sha256": "3b09b8dd70ee2f61d060f414534a9720d0c85a4b1c9a090de2b5e208107b1c08"
+    },
+    "toyota_tsb_0098_19_corolla_valvematic_controller.pdf": {
+      "ruta_relativa": "machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\toyota_tsb_0098_19_corolla_valvematic_controller.pdf",
+      "tamano_bytes": 351855,
+      "sha256": "4f3a657b2c4832c91db946a5d6cc5996ec7cbc4fbe81e5862e4f9062807c6037"
+    }
+  },
+  "artefactos_experimentales": {
+    "fragmentos_data.py": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\fragmentos_data.py",
+      "tamano_bytes": 67239,
+      "sha256": "70ef14bbbd9a67fc25413a2bb344b79b2dbc568480a1b6428b7428d49447e76b"
+    },
+    "ejecutar_experimento_rag03c.py": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\ejecutar_experimento_rag03c.py",
+      "tamano_bytes": 18756,
+      "sha256": "05d133b4bac35b2b57eb7c1ad90fbd473e115a8b0bf1bd20de47ceea3491543d"
+    },
+    "corpus_A_original_239.json": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\corpus_experimental\\corpus_A_original_239.json",
+      "tamano_bytes": 521298,
+      "sha256": "9a9df860d90f82b45775ae412cb97d35c669fea766decf5e01dc87e28321f8b3"
+    },
+    "corpus_B_experimental.json": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\corpus_experimental\\corpus_B_experimental.json",
+      "tamano_bytes": 591373,
+      "sha256": "66c7b28033c3fbc3e2b31867cf4247e0a37a791e91aaf3e104fe546897c1dd17"
+    },
+    "fragmentos_nuevos_5pdfs.json": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\corpus_experimental\\fragmentos_nuevos_5pdfs.json",
+      "tamano_bytes": 62138,
+      "sha256": "0397137e87ed144ff3a4848090ea477457f330993f288f67865a38811282f4a3"
+    },
+    "vectorizador_test_B.joblib": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\indices_temporales\\vectorizador_test_B.joblib",
+      "tamano_bytes": 962491,
+      "sha256": "0f33f5fa66b083a2fb038e844d59f5ea8a5f835c02318e79d127106c53b96030"
+    },
+    "indice_faiss_test_B.index": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\indices_temporales\\indice_faiss_test_B.index",
+      "tamano_bytes": 36085805,
+      "sha256": "9df0a2a9e5da56118c4577f0304094f75f4952a3006beab907854f0153d930c1"
+    },
+    "reporte_evaluacion_rag03c.json": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\resultados\\reporte_evaluacion_rag03c.json",
+      "tamano_bytes": 23270,
+      "sha256": "b9343969713fbf32ee07382593900a438d223e535e2a2937cd479eeada160874"
+    },
+    "resumen_metricas.json": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\resultados\\resumen_metricas.json",
+      "tamano_bytes": 880,
+      "sha256": "fdbcbe782bababf963f08df286f25fc46ac42c75c3b62d96208ccba1e491ab5e"
+    },
+    "comparacion_metrica_A_vs_B.csv": {
+      "ruta_relativa": "machine_learning\\rag\\experimentos\\rag03c\\resultados\\comparacion_metrica_A_vs_B.csv",
+      "tamano_bytes": 4850,
+      "sha256": "1b13800bc7b26cf619200802d7901adae1a9a65edb2df4181ed2a193703dd88b"
+    },
+    "test_rag03f_agente2_compatibilidad.py": {
+      "ruta_relativa": "test_rag03f_agente2_compatibilidad.py",
+      "tamano_bytes": 18725,
+      "sha256": "af426dd35c11aa5684f457491ee51b067593daaf16e96c3210886dabb7d9aacc"
+    }
+  }
+}

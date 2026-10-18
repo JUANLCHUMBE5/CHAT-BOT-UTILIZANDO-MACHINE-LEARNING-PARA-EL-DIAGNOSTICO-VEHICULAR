@@ -16,7 +16,9 @@ def expandir_consulta(consulta: str) -> str:
             consulta_lower,
         )
     )
-    vibracion_al_frenar = ("vibr" in consulta_lower and "fren" in consulta_lower) and not niega_vibracion_freno
+    vibracion_al_frenar = (
+        "vibr" in consulta_lower and "fren" in consulta_lower
+    ) and not niega_vibracion_freno
     if vibracion_al_frenar:
         expansiones.append("vibracion pedal freno discos deformados durante frenado")
     elif niega_vibracion_freno:
@@ -24,11 +26,13 @@ def expandir_consulta(consulta: str) -> str:
 
     # 2. Desambiguación contextual de síntomas térmicos (sin sobreexpansión de hipótesis no confirmadas)
     # Solo asociar a corte/falla de encendido (CKP/bobina) si el síntoma indica explícitamente corte, apagado o falta de arranque al calentar
-    sintoma_corte_termico = bool(re.search(
-        r"\b(?:en\s+caliente|cuando\s+calienta|al\s+calentar)\b.{0,45}\b(?:se\s+apaga|no\s+arranca|se\s+para|corta\s+corriente|pierde\s+chispa)\b|"
-        r"\b(?:se\s+apaga|no\s+arranca|corta\s+chispa)\b.{0,45}\b(?:en\s+caliente|al\s+calentar|espera\s+que\s+enfr[ií]e)\b",
-        consulta_lower,
-    ))
+    sintoma_corte_termico = bool(
+        re.search(
+            r"\b(?:en\s+caliente|cuando\s+calienta|al\s+calentar)\b.{0,45}\b(?:se\s+apaga|no\s+arranca|se\s+para|corta\s+corriente|pierde\s+chispa)\b|"
+            r"\b(?:se\s+apaga|no\s+arranca|corta\s+chispa)\b.{0,45}\b(?:en\s+caliente|al\s+calentar|espera\s+que\s+enfr[ií]e)\b",
+            consulta_lower,
+        )
+    )
     if sintoma_corte_termico:
         expansiones.append(
             "sensor de posicion cigueñal ckp efecto hall inductivo dilatacion termica "
@@ -36,13 +40,15 @@ def expandir_consulta(consulta: str) -> str:
         )
 
     # 3. Jerga de taller y detección robusta para Empaque / Junta de Culata
-    patron_culata = bool(re.search(
-        r"\b(?:soplo|sopla|soplado|soplo\s+de)?\s*(?:empaque|empaquetadura|junta)\s+(?:de\s+)?culata\b|"
-        r"\b(?:soplo|sopla)\s+(?:el\s+)?(?:empaque|junta|culata)\b|"
-        r"\b(?:hierve|burbujea|presion\s+en)\s+(?:el\s+)?(?:refrigerante|agua|tacho|deposito|radiador)\b.{0,40}\bhumo\s+blanco\b|"
-        r"\bhumo\s+blanco\b.{0,40}\b(?:consume|pasa|hierve|bota)\s+(?:refrigerante|agua)\b",
-        consulta_lower,
-    ))
+    patron_culata = bool(
+        re.search(
+            r"\b(?:soplo|sopla|soplado|soplo\s+de)?\s*(?:empaque|empaquetadura|junta)\s+(?:de\s+)?culata\b|"
+            r"\b(?:soplo|sopla)\s+(?:el\s+)?(?:empaque|junta|culata)\b|"
+            r"\b(?:hierve|burbujea|presion\s+en)\s+(?:el\s+)?(?:refrigerante|agua|tacho|deposito|radiador)\b.{0,40}\bhumo\s+blanco\b|"
+            r"\bhumo\s+blanco\b.{0,40}\b(?:consume|pasa|hierve|bota)\s+(?:refrigerante|agua)\b",
+            consulta_lower,
+        )
+    )
     if patron_culata:
         expansiones.append(
             "empaque de culata junta de culata compresion humo blanco refrigerante "
@@ -186,13 +192,28 @@ def expandir_consulta(consulta: str) -> str:
     for clave, valor in diccionario_dtc.items():
         if clave == "vibra" and vibracion_al_frenar:
             continue
-        if clave in ["arrancador", "clac", "mudo", "no da marcha", "no da arranque"] and not arranque_falla and "gira con fuerza" in consulta_lower:
+        if (
+            clave in ["arrancador", "clac", "mudo", "no da marcha", "no da arranque"]
+            and not arranque_falla
+            and "gira con fuerza" in consulta_lower
+        ):
             continue
-        if clave == "zumbido" and es_zumbido_mecanico:
-            if any(re.search(rf"\b{re.escape(x)}\b", consulta_lower) for x in ["rueda", "maza", "curva"]):
-                expansiones.append("rodamiento de maza rodaje de rueda zumbido rodadura alabeo")
-            elif any(re.search(rf"\b{re.escape(x)}\b", consulta_lower) for x in ["caja", "transmision", "embrague", "neutro"]):
-                expansiones.append("rodajes transmision manual eje primario crapodina collarin zumbido caja")
+        if clave == "zumbido":
+            if re.search(rf"\b{re.escape(clave)}\b", consulta_lower):
+                if es_zumbido_mecanico:
+                    if any(
+                        re.search(rf"\b{re.escape(x)}\b", consulta_lower) for x in ["rueda", "maza", "curva"]
+                    ):
+                        expansiones.append("rodamiento de maza rodaje de rueda zumbido rodadura alabeo")
+                    elif any(
+                        re.search(rf"\b{re.escape(x)}\b", consulta_lower)
+                        for x in ["caja", "transmision", "embrague", "neutro"]
+                    ):
+                        expansiones.append(
+                            "rodajes transmision manual eje primario crapodina collarin zumbido caja"
+                        )
+                else:
+                    expansiones.append(valor)
             continue
 
         # Coincidencia con límites de palabra (\b) para evitar coincidencias de subcadenas falsas

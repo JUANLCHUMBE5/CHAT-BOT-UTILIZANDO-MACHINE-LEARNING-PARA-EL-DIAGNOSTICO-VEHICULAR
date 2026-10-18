@@ -44,24 +44,75 @@ def es_solicitud_detalle(texto: str) -> bool:
     """
     if not texto:
         return False
-    if re.search(r"\bno\s+(?:s[eé]|tengo\s+idea|sabemos|sabe)\s+(?:muy\s+|tan\s+|bien\s+)?(?:c[oó]mo|de\s+qu[eé]\s+forma|de\s+qu[eé]\s+manera)\b", texto, re.IGNORECASE):
+    if re.search(
+        r"\bno\s+(?:s[eé]|tengo\s+idea|sabemos|sabe)\s+(?:muy\s+|tan\s+|bien\s+)?(?:c[oó]mo|de\s+qu[eé]\s+forma|de\s+qu[eé]\s+manera)\b",
+        texto,
+        re.IGNORECASE,
+    ):
         return False
     if PATRON_MEDICION.search(texto) and re.search(
         r"\b(?:med[ií]|dio|marc[oó]|obtuve|lectura|arroj[oó]|marcando|midiendo|registr[oó])\b",
         texto,
         re.IGNORECASE,
     ):
-        if not re.search(r"\b(?:c[oó]mo\s+(?:(?:lo|la|se|puedo|debo|hay\s+que)\s+)?(?:hace|hacer|mide|medir|usa|usar|utiliza|utilizar|probar|prueba|calibrar|calibra|ajustar|ajusta|comprobar|comprueba)|paso\s+a\s+paso|tutorial|manual|gu[ií]a|instrucciones)\b", texto, re.IGNORECASE):
+        if not re.search(
+            r"\b(?:c[oó]mo\s+(?:(?:lo|la|se|puedo|debo|hay\s+que)\s+)?(?:hace|hacer|mide|medir|usa|usar|utiliza|utilizar|probar|prueba|calibrar|calibra|ajustar|ajusta|comprobar|comprueba)|paso\s+a\s+paso|tutorial|manual|gu[ií]a|instrucciones)\b",
+            texto,
+            re.IGNORECASE,
+        ):
             return False
     return any(p.search(texto.strip()) for p in PATRONES_SOLICITUD_DETALLE)
 
 
 PALABRAS_NO_PLACA = {
-    "FUE", "ERA", "SON", "DIO", "HAY", "IBA", "VEO", "LOS", "LAS", "CON", "SIN",
-    "POR", "DEL", "UNA", "UNO", "MAS", "MUY", "TAN", "QUE", "CADA", "SOLO",
-    "DESDE", "HASTA", "ENTRE", "SOBRE", "TRAS", "HACIA", "COMO", "PERO", "PARA",
-    "BIEN", "MAL", "SUBE", "BAJA", "SALE", "PONE", "LLEVA", "LLEVO", "VIENE", "VINO",
-    "CIL", "CILINDRO", "CILINDROS", "KILOMETROS", "HORAS", "DIAS", "MINUTOS", "SEGUNDOS",
+    "FUE",
+    "ERA",
+    "SON",
+    "DIO",
+    "HAY",
+    "IBA",
+    "VEO",
+    "LOS",
+    "LAS",
+    "CON",
+    "SIN",
+    "POR",
+    "DEL",
+    "UNA",
+    "UNO",
+    "MAS",
+    "MUY",
+    "TAN",
+    "QUE",
+    "CADA",
+    "SOLO",
+    "DESDE",
+    "HASTA",
+    "ENTRE",
+    "SOBRE",
+    "TRAS",
+    "HACIA",
+    "COMO",
+    "PERO",
+    "PARA",
+    "BIEN",
+    "MAL",
+    "SUBE",
+    "BAJA",
+    "SALE",
+    "PONE",
+    "LLEVA",
+    "LLEVO",
+    "VIENE",
+    "VINO",
+    "CIL",
+    "CILINDRO",
+    "CILINDROS",
+    "KILOMETROS",
+    "HORAS",
+    "DIAS",
+    "MINUTOS",
+    "SEGUNDOS",
 }
 
 
@@ -105,10 +156,7 @@ def es_reinicio_solicitado(texto: str) -> bool:
         return False
     if any(p.search(texto) for p in PATRONES_REINICIO):
         return True
-    txt = "".join(
-        c for c in unicodedata.normalize("NFD", texto.lower())
-        if unicodedata.category(c) != "Mn"
-    )
+    txt = "".join(c for c in unicodedata.normalize("NFD", texto.lower()) if unicodedata.category(c) != "Mn")
     return bool(
         re.search(
             r"\b(otro\s+(?:carro|auto|vehiculo|veh.culo|caso|cliente)|"
@@ -116,6 +164,10 @@ def es_reinicio_solicitado(texto: str) -> bool:
             r"diagnostico\s+(?:nuevo|neuvo)|caso\s+(?:nuevo|neuvo)|"
             r"iniciar\s+(?:un\s+)?(?:diagnostico\s+nuevo|nuevo\s+diagnostico|nuevo\s+caso|neuvo\s+caso|caso\s+nuevo)|"
             r"cerrar\s+(?:el\s+)?diagnostico\s+anterior|"
+            r"cambiemos\s+de\s+(?:auto|carro|vehiculo|coche)|"
+            r"cambio\s+de\s+(?:auto|carro|vehiculo|coche)|"
+            r"dejemos\s+el\s+[a-z]+|"
+            r"ahora\s+tengo\s+(?:un|una)\s+[a-z]+|"
             r"vamos\s+con\s+otro\s+cliente|termine\s+ese|tengo\s+uno\s+(?:nuevo|neuvo))\b",
             txt,
         )
@@ -125,8 +177,7 @@ def es_reinicio_solicitado(texto: str) -> bool:
 def _es_mencion_no_destructiva(texto: str) -> bool:
     """Evita tratar como orden una acción citada, negada, condicional o ambigua."""
     normalizado = "".join(
-        c for c in unicodedata.normalize("NFD", texto.casefold())
-        if unicodedata.category(c) != "Mn"
+        c for c in unicodedata.normalize("NFD", texto.casefold()) if unicodedata.category(c) != "Mn"
     )
     if re.search(r"^\s*(?:\?|por\s+que\b|que\s+significa\b|como\s+se\b)", normalizado):
         return True
@@ -153,12 +204,14 @@ def _es_mencion_no_destructiva(texto: str) -> bool:
         normalizado,
     ):
         return True
-    return bool(re.search(
-        r"\b(?:no\s+(?:generes|inicies|cierres|reinicies|cambies|abras|borres)|"
-        r"sin\s+(?:generar|cerrar|reiniciar|iniciar|abrir)|"
-        r"(?:menciona|dije|dice|palabra|termino)\s+(?:nuevo\s+diagnostico|cerrar|reiniciar))\b",
-        normalizado,
-    ))
+    return bool(
+        re.search(
+            r"\b(?:no\s+(?:generes|inicies|cierres|reinicies|cambies|abras|borres)|"
+            r"sin\s+(?:generar|cerrar|reiniciar|iniciar|abrir)|"
+            r"(?:menciona|dije|dice|palabra|termino)\s+(?:nuevo\s+diagnostico|cerrar|reiniciar))\b",
+            normalizado,
+        )
+    )
 
 
 def es_consulta_memoria(texto: str) -> bool:
@@ -166,8 +219,7 @@ def es_consulta_memoria(texto: str) -> bool:
     if not texto:
         return False
     normalizado = "".join(
-        c for c in unicodedata.normalize("NFD", texto.casefold())
-        if unicodedata.category(c) != "Mn"
+        c for c in unicodedata.normalize("NFD", texto.casefold()) if unicodedata.category(c) != "Mn"
     )
     # Si el usuario pide causas alternativas, preguntas para diferenciar o diagnóstico, NO es una consulta pasiva de memoria
     if re.search(
@@ -176,17 +228,25 @@ def es_consulta_memoria(texto: str) -> bool:
     ):
         return False
 
-    if re.search(r"\b(?:de\s+donde|de\s+que\s+(?:caso|diagnostico)|por\s+que)\b.{0,100}\b(?:obtuviste|salio|registraste|mencionaste|proviene)\b", normalizado):
+    if re.search(
+        r"\b(?:de\s+donde|de\s+que\s+(?:caso|diagnostico)|por\s+que)\b.{0,100}\b(?:obtuviste|salio|registraste|mencionaste|proviene)\b",
+        normalizado,
+    ):
         return True
-    if re.search(r"\b(?:cual\s+es\s+el\s+origen|de\s+donde\s+(?:salio|viene|proviene))\b.{0,100}\b(?:misfire|sintoma|hipotesis|falla)\b", normalizado):
+    if re.search(
+        r"\b(?:cual\s+es\s+el\s+origen|de\s+donde\s+(?:salio|viene|proviene))\b.{0,100}\b(?:misfire|sintoma|hipotesis|falla)\b",
+        normalizado,
+    ):
         return True
     if re.search(r"\b(?:fue\s+mencionado|proviene\s+del\s+diagnostico\s+anterior)\b", normalizado):
         return True
-    return bool(re.search(
-        r"\b(?:que|cual|cuales|indica|muestra|resume|consulta|consultar)\b.{0,80}"
-        r"\b(?:registrad[oa]s?|memoria|recuerdas|guardad[oa]s?)\b",
-        normalizado,
-    ))
+    return bool(
+        re.search(
+            r"\b(?:que|cual|cuales|indica|muestra|resume|consulta|consultar)\b.{0,80}"
+            r"\b(?:registrad[oa]s?|memoria|recuerdas|guardad[oa]s?)\b",
+            normalizado,
+        )
+    )
 
 
 def es_cancelacion_solicitada(texto: str) -> bool:
@@ -213,9 +273,7 @@ def clasificar_solicitud_caso(texto: str) -> Dict[str, Any] | None:
     if re.fullmatch(r"(?:quiero\s+)?cancelar(?:(?:\s+el)?\s+(?:caso|diagnostico|consulta))?[.!]*", limpio):
         return {"accion": "cancelar", "preservar_vehiculo": False}
 
-    patron_uuid = (
-        r"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
-    )
+    patron_uuid = r"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})"
     reanudar = re.search(
         rf"\b(?:retomar|reanudar|continuar|volver\s+a)\s+(?:el\s+)?"
         rf"(?:caso|diagnostico)(?:\s+(?:anterior|previo))?(?:\s+{patron_uuid})?\b",
@@ -235,10 +293,17 @@ def clasificar_solicitud_caso(texto: str) -> Dict[str, Any] | None:
     )
     otro_vehiculo = bool(
         re.search(r"\b(?:otro|otra)\s+(?:vehiculo|carro|auto|coche)\b", limpio)
-        or re.search(r"\bcambio\s+de\s+vehiculo\b", limpio)
+        or re.search(r"\b(?:cambio|cambiemos)\s+de\s+(?:vehiculo|auto|carro|coche)\b", limpio)
+        or re.search(r"\bdejemos\s+el\s+[a-z]+\b", limpio)
+        or re.search(r"\bahora\s+tengo\s+(?:un|una)\s+[a-z]+\b", limpio)
     )
     nuevo_caso = bool(
         re.search(
+            r"\b(?:cerremos|cerrar|cerrando)\s+(?:este\s+)?caso\b|\b(?:abramos|abrir)\s+(?:otro|nuevo)\s+caso\b|\b(?:abramos|abrir)\s+otro\b|\b(?:empecemos|comencemos)\s+con\s+otro\b|"
+            r"\b(?:cambiemos|pasemos)\s+(?:a\s+)?(?:otro\s+caso|otro\s+auto|otro\s+vehiculo|otro\s+carro)\b|"
+            r"\b(?:cambiemos\s+de|cambio\s+de)\s+(?:auto|carro|vehiculo|coche)\b|"
+            r"\bahora\s+tengo\s+(?:un|una)\s+[a-z]+\b|"
+            r"\bdejemos\s+el\s+[a-z]+\b|"
             r"\b(?:nuevo|neuvo|otro)\s+(?:caso|diagnostico|problema)\b|"
             r"\b(?:falla|problema)\s+diferente\b|"
             r"\btengo\s+otra\s+(?:falla|consulta)\b|"
@@ -307,9 +372,7 @@ def inferir_estado_operativo(
 ) -> Tuple[EstadoOperativo, bool, Dict[str, Any]]:
     """Infiere el EstadoOperativo contextual con prioridad de evidencia temporal (Fase 9.10)."""
     texto_l = texto_usuario.lower()
-    hechos_confirmados = {
-        k: h.valor for k, h in estado.hechos.items() if h.estado == FactState.CONFIRMADO
-    }
+    hechos_confirmados = {k: h.valor for k, h in estado.hechos.items() if h.estado == FactState.CONFIRMADO}
 
     es_no_arranca_comp = bool(
         re.search(
@@ -323,11 +386,20 @@ def inferir_estado_operativo(
         or PATRON_DEMORA_ARRANQUE.search(texto_l)
     )
     frenado_actual = bool(
-        re.search(r"\b(al\s+frenar|frenando|cuando\s+fren[ao]|frena(ndo)?|pedal\s+de\s+freno|al\s+pisar\s+el\s+(?:pedal\s+de\s+)?freno)\b", texto_l)
-        and not DetectorPolaridad.es_condicion_negada(r"\b(al\s+frenar|frenando|cuando\s+fren[ao]|al\s+pisar\s+el\s+(?:pedal\s+de\s+)?freno|frena)\b", texto_l)
+        re.search(
+            r"\b(al\s+frenar|frenando|cuando\s+fren[ao]|frena(ndo)?|pedal\s+de\s+freno|al\s+pisar\s+el\s+(?:pedal\s+de\s+)?freno)\b",
+            texto_l,
+        )
+        and not DetectorPolaridad.es_condicion_negada(
+            r"\b(al\s+frenar|frenando|cuando\s+fren[ao]|al\s+pisar\s+el\s+(?:pedal\s+de\s+)?freno|frena)\b",
+            texto_l,
+        )
     )
     ralenti_actual = bool(
-        re.search(r"\b(en\s+ralent[ií]|en\s+el\s+sem[aá]foro|detenido(\s+en\s+ralent[ií])?|en\s+neutro|parado\s+esperando)\b", texto_l)
+        re.search(
+            r"\b(en\s+ralent[ií]|en\s+el\s+sem[aá]foro|detenido(\s+en\s+ralent[ií])?|en\s+neutro|parado\s+esperando)\b",
+            texto_l,
+        )
         and not DetectorPolaridad.es_condicion_negada(r"\b(en\s+ralent[ií]|detenido|en\s+neutro)\b", texto_l)
     )
     marcha_actual = bool(
@@ -339,9 +411,7 @@ def inferir_estado_operativo(
         )
     )
     estacionado_actual = bool(
-        re.search(r"\b(estacionado|parqueado)\b", texto_l)
-        and not arranque_actual
-        and not marcha_actual
+        re.search(r"\b(estacionado|parqueado)\b", texto_l) and not arranque_actual and not marcha_actual
     )
 
     arranque_heredado = bool(
@@ -359,7 +429,8 @@ def inferir_estado_operativo(
     )
     ralenti_heredado = bool(hechos_confirmados.get("condicion_operacion") == "detenido en ralentí")
     marcha_heredada = bool(
-        hechos_confirmados.get("condicion_operacion") in ("en carretera a velocidad", "al acelerar bajo carga")
+        hechos_confirmados.get("condicion_operacion")
+        in ("en carretera a velocidad", "al acelerar bajo carga")
     )
 
     metadata = {

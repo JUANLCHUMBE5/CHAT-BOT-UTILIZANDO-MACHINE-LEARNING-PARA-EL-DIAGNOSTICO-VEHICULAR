@@ -23,3 +23,7 @@
 
 # El paquete RAG verificado debe conservar hashes entre Windows y Linux.
 machine_learning/manuals/candidates/v1/**/*.txt text eol=lf
+# El manifiesto experimental usa hashes de bytes; preservar entrega entre plataformas.
+machine_learning/rag/** -text
+machine_learning/rag/**/*.index binary
+machine_learning/rag/**/*.joblib binary

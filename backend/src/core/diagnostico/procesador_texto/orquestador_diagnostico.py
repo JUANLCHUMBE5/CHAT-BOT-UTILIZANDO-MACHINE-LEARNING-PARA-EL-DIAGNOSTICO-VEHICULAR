@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 import time
 import uuid
@@ -35,6 +36,19 @@ from src.core.vehicle_profile import (
     extraer_datos_vehiculo,
     kilometraje_es_ambiguo,
 )
+
+
+def _resumen_hash_hechos(hechos: Any) -> str:
+    """Genera un digest SHA-256 de los hechos para diferenciar estados con igual cantidad pero distinto contenido."""
+    if not hechos or not isinstance(hechos, dict):
+        return "vacio"
+    items = []
+    for k, h in sorted(hechos.items()):
+        val = getattr(h, "valor", str(h))
+        st = getattr(h, "estado", "")
+        items.append(f"{k}:{val}:{st}")
+    raw = "|".join(items)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:12]
 
 
 def procesar_consulta_texto(
@@ -148,8 +162,8 @@ def procesar_consulta_texto(
         and not tiene_componente_especifico
     ):
         sesion_combustible = gestor.session_manager.obtener_o_crear_sesion(clave_sesion)
-        combustible_confirmado = (
-            combustible_detectado or sesion_combustible.perfil_vehiculo.get("combustible")
+        combustible_confirmado = combustible_detectado or sesion_combustible.perfil_vehiculo.get(
+            "combustible"
         )
         modo_confirmado = modo_falla_combustible or sesion_combustible.modo_falla_combustible
         if combustible_detectado:
@@ -157,13 +171,9 @@ def procesar_consulta_texto(
         if modo_falla_combustible:
             sesion_combustible.establecer_modo_falla_combustible(modo_falla_combustible)
         if not combustible_confirmado or not modo_confirmado:
-            consulta_orig = (
-                sesion_combustible.sintomas[0] if sesion_combustible.sintomas else texto_evaluar
-            )
+            consulta_orig = sesion_combustible.sintomas[0] if sesion_combustible.sintomas else texto_evaluar
             sesion_combustible.establecer_consulta_combustible(consulta_orig)
-            return gestor._resultado_solicitud_combustible(
-                sesion_combustible, combustible_confirmado
-            )
+            return gestor._resultado_solicitud_combustible(sesion_combustible, combustible_confirmado)
 
     tipo_consulta = clasificar_intencion_consulta(texto_evaluar)
     if tipo_consulta == "consulta_tecnica":
@@ -231,17 +241,16 @@ def procesar_consulta_texto(
         )
 
     # 3. Consulta de Caché LRU
-    clave_cache = None
-    if case_id_actual:
-        clave_cache = diagnostico_cache.generar_clave(
-            sintoma=texto_evaluar,
-            marca_modelo=marca_evaluar or "",
-            placa=placa_evaluar or "",
-            case_id=case_id_actual,
-        )
+    sesion_pre_cache = gestor.session_manager.obtener_sesion(clave_sesion) if clave_sesion else None
+    estado_pre_cache = getattr(sesion_pre_cache, "conversation_state", None)
+    from src.core.diagnostico.cache_contextual import generar_clave_contextual
+
+    clave_cache = generar_clave_contextual(
+        texto_evaluar, marca_evaluar, placa_evaluar, case_id_actual, taller_id, clave_sesion, estado_pre_cache
+    )
     resultado_en_cache = diagnostico_cache.obtener(clave_cache) if clave_cache else None
     if resultado_en_cache is not None:
-        logger.info("⚡ Diagnóstico obtenido instantáneamente desde Memoria Caché LRU (< 5ms)")
+        logger.info("Diagnóstico recuperado de caché para el mismo contexto")
         return resultado_en_cache.model_copy(
             update={
                 "desde_cache": True,
@@ -301,6 +310,7 @@ def procesar_consulta_texto(
         )
 
     from .cobertura_svm import evaluar_cobertura_svm
+
     predicciones_svm_raw, tiempo_telemetria_svm_ms, abstencion = evaluar_cobertura_svm(
         gestor, texto_evaluar, diagnostico_forzado, inicio_total
     )
@@ -339,17 +349,24 @@ def procesar_consulta_texto(
         texto_evaluar, predicciones_originales, sesion_compatibilidad
     )
     if exclusiones and sesion_compatibilidad:
-        sesion_compatibilidad.conversation_state.trazabilidad.append({"exclusiones_compatibilidad": exclusiones})
+        sesion_compatibilidad.conversation_state.trazabilidad.append(
+            {"exclusiones_compatibilidad": exclusiones}
+        )
     if exclusiones and predicciones_ml:
         diagnostico_predictivo = predicciones_ml[0].falla
         confianza = predicciones_ml[0].probabilidad
     elif exclusiones:
         return ResultadoDiagnostico(
             respuesta_texto="Las hipótesis disponibles no son compatibles con el vehículo registrado. "
-                            "Se requiere evidencia técnica adicional, sin confirmar una falla.",
-            diagnostico_ml="Sin hipótesis compatible", confianza_ml=0.0, contexto_manual="", titulo_manual="",
-            requiere_revision_humana=True, modo_diagnostico="baja_confianza",
-            motivo_abstencion="INCOMPATIBILIDAD_VEHICULO", predicciones_ml=[],
+            "Se requiere evidencia técnica adicional, sin confirmar una falla.",
+            diagnostico_ml="Sin hipótesis compatible",
+            confianza_ml=0.0,
+            contexto_manual="",
+            titulo_manual="",
+            requiere_revision_humana=True,
+            modo_diagnostico="baja_confianza",
+            motivo_abstencion="INCOMPATIBILIDAD_VEHICULO",
+            predicciones_ml=[],
             predicciones_svm_raw=predicciones_svm_raw,
         )
 
@@ -393,7 +410,7 @@ def procesar_consulta_texto(
     sev_seguridad, banner_seguridad = PoliticaSeguridad.evaluar_severidad(
         f"{texto_usuario} {texto_evaluar}", diagnostico_predictivo
     )
-    es_critico_seguridad = (sev_seguridad == SeveridadSeguridad.CRITICAL_STOP)
+    es_critico_seguridad = sev_seguridad == SeveridadSeguridad.CRITICAL_STOP
 
     es_hipotesis_regla = bool(
         predicciones_ml and getattr(predicciones_ml[0], "origen_probabilidad", "") == "REGLA"

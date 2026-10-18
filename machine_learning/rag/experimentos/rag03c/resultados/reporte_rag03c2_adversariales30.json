@@ -1,0 +1,571 @@
+{
+  "suite": "suite_30_adversariales",
+  "n": 30,
+  "precision_at_1_total": {
+    "val": 73.3,
+    "ci95": [
+      55.6,
+      85.8
+    ]
+  },
+  "precision_at_1_indomain": {
+    "val": 100.0,
+    "ci95": [
+      34.2,
+      100.0
+    ]
+  },
+  "recall_at_3_indomain": {
+    "val": 100.0,
+    "ci95": [
+      34.2,
+      100.0
+    ]
+  },
+  "abstencion_correcta_ood": {
+    "val": 71.4,
+    "ci95": [
+      52.9,
+      84.7
+    ]
+  },
+  "tasa_falsos_positivos": {
+    "val": 26.7,
+    "ci95": [
+      14.2,
+      44.4
+    ]
+  },
+  "por_familia": {
+    "ADV_COMPONENTE_CRUZADO": {
+      "n": 10,
+      "precision_at_1": 90.0,
+      "abstencion": 90.0,
+      "falsos_positivos": 10.0
+    },
+    "ADV_TOLERANCIA_INEXISTENTE": {
+      "n": 10,
+      "precision_at_1": 50.0,
+      "abstencion": 50.0,
+      "falsos_positivos": 50.0
+    },
+    "ADV_VARIANTE_MERCADO_PERU": {
+      "n": 10,
+      "precision_at_1": 80.0,
+      "abstencion": 60.0,
+      "falsos_positivos": 20.0
+    }
+  },
+  "detalle": [
+    {
+      "id": "ADV_TOL_01",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿Cuál es la tolerancia máxima admisible de alabeo lateral en el pistón hidráulico del cáliper de freno?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_TOL_02",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿Cuál es el par de apriete en N.m del tornillo central del volante de cuero a la caña de dirección en Accent 2015?",
+      "vehiculo": "Hyundai Accent",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_TOL_03",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿Cuántas gotas de reactivo químico azul bromotimol se deben agregar por cada litro de refrigerante verde?",
+      "vehiculo": "Motores Gasolina",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_TOL_04",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿Cuál es la presión de ruptura en bar de la manguera plástica del transductor WPS500X sometida a fuego directo?",
+      "vehiculo": "Universal",
+      "sistema": "INSTRUMENTAL",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "RANGOS DE MEDICIÓN Y ESCALAMIENTO EN TRANSDUCTOR DE PRESIÓN AUTOMOTRIZ WPS500X",
+        "score": 0.1372791923582554,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "ADV_TOL_05",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿Cuál es la variación de espesor de disco DTV admisible en milímetros para una motocicleta eléctrica de 1000W?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "DIAGNÓSTICO DE VARIACIÓN DE ESPESOR DE DISCO (DTV) Y PULSACIÓN EN PEDAL DE FRENO",
+        "score": 0.36520353555679325,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "ADV_TOL_06",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿A cuántos microamperios debe calibrarse la corriente de polarización del sensor hall de ángulo SAS en reposo?",
+      "vehiculo": "Kia Rio",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "DIAGNÓSTICO DE SENSOR DE ÁNGULO DE DIRECCIÓN DTC C1259 Y C1260 EN KIA",
+        "score": 0.13122180551290513,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "ADV_TOL_07",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿A qué ángulo en minutos y segundos abre la válvula de escape en la torre de 720 grados con el WPS500X?",
+      "vehiculo": "Motores Gasolina",
+      "sistema": "MOTOR",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "DIAGNÓSTICO DE COMPRESIÓN DINÁMICA EN CILINDRO (IN-CYLINDER PRESSURE ANALYSIS)",
+        "score": 0.13016057014465332,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "ADV_TOL_08",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿Cuál es la temperatura máxima en grados Kelvin que puede soportar la pintura antitérmica de la campana Brembo?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_TOL_09",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿Cuál es la inductancia en milihenrios de los devanados del motor de dirección asistida C-MDPS?",
+      "vehiculo": "Hyundai Sonata",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "TABLA DE CÓDIGOS DTC Y DIAGNÓSTICO EN DIRECCIÓN ASISTIDA KIA C-MDPS",
+        "score": 0.1368015855550766,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "ADV_TOL_10",
+      "familia": "ADV_TOLERANCIA_INEXISTENTE",
+      "consulta": "¿A qué presión de vacío en hectopascales debe succionar la perilla de goma del útil Laser 5524?",
+      "vehiculo": "Motores Diésel",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_01",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cuál es el alabeo lateral admisible en el plato flexible o volante de inercia del cigüeñal?",
+      "vehiculo": "Universal Gasolina",
+      "sistema": "MOTOR_CIGÜEÑAL",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_02",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cómo calibrar a cero grados el sensor de posición del selector de marchas de la caja automática de Accent?",
+      "vehiculo": "Hyundai Accent",
+      "sistema": "TRANSMISIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_03",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cuál es el par de apriete en N.m del tornillo pasante de la rótula inferior del trapecio al portamangueta en Rio?",
+      "vehiculo": "Kia Rio",
+      "sistema": "SUSPENSIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_04",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cuál es la carrera del pedal de freno en centímetros antes de que comience a actuar el servofreno de vacío?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_05",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cuál es el par de apriete del perno de la polea dámper del cigüeñal en N.m y grados angulares?",
+      "vehiculo": "Universal Motores",
+      "sistema": "DISTRIBUCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_06",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cuál es la resistencia en ohmios de la electroválvula proporcional de caudal en la cremallera de dirección?",
+      "vehiculo": "Hyundai Elantra",
+      "sistema": "DIRECCIÓN_BOMBA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_07",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cuál es el torque de apriete de la sonda lambda de oxígeno de banda ancha roscada al catalizador?",
+      "vehiculo": "Kia Soul",
+      "sistema": "ESCAPE",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_08",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿A qué par en N.m se aprieta la tuerca central de 30mm del cojinete del tambor de freno trasero?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS_TAMBOR",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+        "score": 0.12794539332389832,
+        "categoria_doc": "PROCEDIMIENTO_GENERAL"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_09",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cuál es el par de apriete oficial del tapón magnético de drenaje de aceite en el cárter?",
+      "vehiculo": "Universal Motores",
+      "sistema": "LUBRICACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_CRUZ_10",
+      "familia": "ADV_COMPONENTE_CRUZADO",
+      "consulta": "¿Cuál es el par de apriete en N.m de los tornillos de fijación de la bomba de agua al bloque motor?",
+      "vehiculo": "Universal Motores",
+      "sistema": "REFRIGERACIÓN_BOMBA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_MKT_01",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Cuál es la presión de gas en bar calibrada en el reductor vaporizador de GLP Tomásetto montado en un Yaris en Lima?",
+      "vehiculo": "Toyota Yaris GLP Perú",
+      "sistema": "COMBUSTIBLE_GLP",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_MKT_02",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Aplica el boletín estadounidense T-SB-0098-19 de controlador Valvematic al motor 1.3L 2NZ-FE del Yaris peruano?",
+      "vehiculo": "Toyota Yaris 1.3L 2NZ-FE",
+      "sistema": "MOTOR",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_MKT_03",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Cuál es el avance de encendido en grados del variador electrónico de chip para GNV de 5ta generación en Nissan Tiida?",
+      "vehiculo": "Nissan Tiida GNV Lima",
+      "sistema": "COMBUSTIBLE_GNV",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_MKT_04",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿El boletín Kia CHA084 de columna C-MDPS es aplicable al Kia Rio sedán con motor 1.2L Kappa comercializado en Perú?",
+      "vehiculo": "Kia Rio 1.2L Kappa Mercosur/Perú",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE SERVOMOTOR ELÉCTRICO Y CIRCUITO FAIL-SAFE DTC C2400 Y C2401",
+        "score": 0.1069282740354538,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "ADV_MKT_05",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Cuál es la tolerancia de alabeo en volante de embrague para el Nissan Sentra B13 con motor GA16DNE versión Perú?",
+      "vehiculo": "Nissan Sentra B13 Clásico Tsuru",
+      "sistema": "TRANSMISIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_MKT_06",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Se debe ajustar la prueba química de CO2 en el radiador si el motor Accent usa gasolina corriente de 90 octanos con etanol en Perú?",
+      "vehiculo": "Hyundai Accent Gasolina 90 Octanos",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "PROCEDIMIENTO DE DETECCIÓN QUÍMICA DE CO2 EN EL SISTEMA DE REFRIGERACIÓN",
+        "score": 0.1324681043624878,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "ADV_MKT_07",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Cuál es el par de apriete en N.m de las ruedas en la camioneta Toyota Avanza con tambores traseros y tracción trasera?",
+      "vehiculo": "Toyota Avanza Perú",
+      "sistema": "FRENOS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_MKT_08",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Aplica la campaña estadounidense de bomba de combustible NTB21-004A al Versa V-Drive fabricado en México vendido en Perú?",
+      "vehiculo": "Nissan Versa V-Drive 1.6",
+      "sistema": "ALIMENTACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "ADV_MKT_09",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Utiliza el Hyundai Grand i10 el mismo acoplador flexible 56315-2K000-FFF del boletín 17-ST-002 de Accent?",
+      "vehiculo": "Hyundai Grand i10 India/Perú",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "SUSTITUCIÓN DE ACOPLADOR FLEXIBLE DE CAUCHO EN SERVODIRECCIÓN C-MDPS",
+        "score": 0.28313231468200684,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "ADV_MKT_10",
+      "familia": "ADV_VARIANTE_MERCADO_PERU",
+      "consulta": "¿Cuál es el par de apriete en N.m de los pernos de fijación de la columna de dirección en el sedán Kia Soluto?",
+      "vehiculo": "Kia Soluto Perú",
+      "sistema": "SUSPENSIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "PARES DE APRIETE OFICIALES EN COLUMNA DE DIRECCIÓN MDPS HYUNDAI",
+        "score": 0.1981867164373398,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    }
+  ]
+}

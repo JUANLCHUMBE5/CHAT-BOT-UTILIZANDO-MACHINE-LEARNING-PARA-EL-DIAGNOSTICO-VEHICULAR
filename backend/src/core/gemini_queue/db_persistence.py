@@ -42,7 +42,9 @@ async def persistir_estado_local_db(estado: dict[str, Any]) -> None:
             )
 
 
-async def obtener_estado_gemini_compartido(local_state: dict[str, Any], api_key_valida: bool) -> dict[str, Any]:
+async def obtener_estado_gemini_compartido(
+    local_state: dict[str, Any], api_key_valida: bool
+) -> dict[str, Any]:
     """Prioriza el último estado persistido para que todos los workers informen lo mismo."""
     if not api_key_valida or not database_configurada():
         return local_state
@@ -68,11 +70,7 @@ async def obtener_estado_gemini_compartido(local_state: dict[str, Any], api_key_
         "estado": estado,
         "disponible": estado == "disponible",
         "ultima_verificacion": compartido["ultima_verificacion"].isoformat(),
-        "ultimo_exito": (
-            compartido["ultimo_exito"].isoformat()
-            if compartido["ultimo_exito"]
-            else None
-        ),
+        "ultimo_exito": (compartido["ultimo_exito"].isoformat() if compartido["ultimo_exito"] else None),
         "ultimo_codigo_http": codigo,
         "ultimo_error": error,
         "cooldown_segundos": cooldown,
@@ -153,7 +151,9 @@ async def persistir_solicitud_en_sesion_db(
     tipo_consulta: str = "diagnostico",
 ) -> None:
     """Persiste el trabajo de Gemini en la misma transacción del webhook."""
-    proveedor_normalizado = "meta" if (proveedor or "").lower() in ("meta", "whatsapp") else (proveedor or "meta").lower()
+    proveedor_normalizado = (
+        "meta" if (proveedor or "").lower() in ("meta", "whatsapp") else (proveedor or "meta").lower()
+    )
     if proveedor_normalizado not in {"meta", "twilio", "api"}:
         raise ValueError(f"Proveedor de cola no soportado: {proveedor}")
 
@@ -193,13 +193,13 @@ async def procesar_siguiente_entrega_whatsapp() -> bool:
         async with AsyncSession(obtener_engine(), expire_on_commit=False) as session:
             async with session.begin():
                 result = await session.execute(
-                    select(Conversacion)
-                    .where(Conversacion.id == mensaje.conversacion_id)
-                    .with_for_update()
+                    select(Conversacion).where(Conversacion.id == mensaje.conversacion_id).with_for_update()
                 )
                 conversacion = result.scalar_one_or_none()
-                if not mensaje.case_id or not conversacion or not solicitud_corresponde_a_caso(
-                    mensaje.case_id, conversacion.contexto
+                if (
+                    not mensaje.case_id
+                    or not conversacion
+                    or not solicitud_corresponde_a_caso(mensaje.case_id, conversacion.contexto)
                 ):
                     await MensajeRepository(session).registrar_resultado_entrega(
                         mensaje.id,
@@ -209,6 +209,9 @@ async def procesar_siguiente_entrega_whatsapp() -> bool:
                     return True
 
     try:
+        from src.core.services.webhook.gobernanza_outbox import proteger_mensaje_saliente
+
+        mensaje = await proteger_mensaje_saliente(mensaje)
         destino = descifrar_texto_reversible(mensaje.destinatario_cifrado)
     except ValueError as exc:
         resultado_estado, externo, error = "fallido", None, str(exc)
@@ -290,9 +293,9 @@ async def actualizar_diagnostico_y_trabajo_db(
                                 etapa["detalle"] = metadatos.get("modelo") or settings.gemini_model
                                 etapa["duracion_ms"] = int(metadatos.get("tiempo_llm_ms", 0))
                         trazabilidad["etapas"] = etapas
-                        trazabilidad["tiempo_total_ms"] = int(
-                            trazabilidad.get("tiempo_total_ms", 0)
-                        ) + int(metadatos.get("tiempo_llm_ms", 0))
+                        trazabilidad["tiempo_total_ms"] = int(trazabilidad.get("tiempo_total_ms", 0)) + int(
+                            metadatos.get("tiempo_llm_ms", 0)
+                        )
                         diag.trazabilidad = trazabilidad
                         diag.duracion_ms = int(trazabilidad["tiempo_total_ms"])
 
@@ -405,8 +408,7 @@ async def persistir_mensaje_saliente_db(
                     moneda="USD",
                     proveedor=("meta" if solicitud.proveedor == "whatsapp" else solicitud.proveedor),
                     destinatario_cifrado=(
-                        cifrar_texto_reversible(solicitud.remitente)
-                        if solicitud.remitente else None
+                        cifrar_texto_reversible(solicitud.remitente) if solicitud.remitente else None
                     ),
                     disponible_entrega_en=datetime.now(timezone.utc),
                     case_id=solicitud.case_id,

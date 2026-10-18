@@ -10,7 +10,7 @@ from src.core.logger import logger
 
 class DiagnosticSession:
     """Representa el estado de una sesión de diálogo conversacional multiturno."""
-    
+
     def __init__(self, session_id: str):
         self.session_id: str = session_id
         self.case_id: Optional[str] = None
@@ -207,9 +207,7 @@ class DiagnosticSession:
                 self.case_id = estado.case_id
                 self.placa = estado.placa
                 self.marca_modelo = (
-                    f"{estado.marca} {estado.modelo}".strip()
-                    if estado.marca or estado.modelo
-                    else None
+                    f"{estado.marca} {estado.modelo}".strip() if estado.marca or estado.modelo else None
                 )
                 self.perfil_vehiculo = {
                     campo: valor
@@ -223,7 +221,9 @@ class DiagnosticSession:
                     }.items()
                     if valor not in (None, "")
                 }
-                sintomas_exportados = contexto.get("sintomas")
+                # El estado del caso es la fuente de verdad; el resumen externo
+                # puede pertenecer al vehículo anterior tras un cambio de caso.
+                sintomas_exportados = list(estado.active_symptoms)
                 if isinstance(sintomas_exportados, list) and sintomas_exportados:
                     vistos = set()
                     sintomas_unicos = []
@@ -249,10 +249,7 @@ class DiagnosticSession:
                     and estado.fase.value.lower() == "inicio"
                     and contexto.get("estado") == "esperando_datos_vehiculo"
                     and contexto.get("consulta_tecnica_pendiente")
-                    and (
-                        not contexto.get("case_id")
-                        or str(contexto["case_id"]) == str(estado.case_id)
-                    )
+                    and (not contexto.get("case_id") or str(contexto["case_id"]) == str(estado.case_id))
                 ):
                     self.consulta_tecnica_pendiente = str(contexto["consulta_tecnica_pendiente"])
                     self.campos_requeridos = list(contexto.get("campos_requeridos") or [])
@@ -273,10 +270,7 @@ class DiagnosticSession:
                     else estado.fase.value.lower()
                 )
                 case_id_externo = contexto.get("case_id")
-                case_ids_coinciden = (
-                    not case_id_externo
-                    or str(case_id_externo) == str(estado.case_id)
-                )
+                case_ids_coinciden = not case_id_externo or str(case_id_externo) == str(estado.case_id)
                 self.contexto = (
                     dict(contexto.get("contexto") or {})
                     if case_ids_coinciden and isinstance(contexto.get("contexto"), dict)
@@ -329,46 +323,56 @@ class DiagnosticSession:
 
 class SessionManager:
     """Gestor en memoria THREAD-SAFE de sesiones de diálogo conversacional y slot-filling."""
-    
+
     def __init__(self, ttl_seconds: int = 86400):
         self._sesiones: Dict[str, DiagnosticSession] = {}
         self.ttl_seconds: int = ttl_seconds
         self._ultimo_limpieza: float = 0.0
         self._lock = threading.RLock()
 
-    def obtener_sesion(self, session_id: str, ttl_segundos: Optional[int] = None) -> Optional[DiagnosticSession]:
+    def obtener_sesion(
+        self, session_id: str, ttl_segundos: Optional[int] = None
+    ) -> Optional[DiagnosticSession]:
         with self._lock:
             ttl = ttl_segundos if ttl_segundos is not None else self.ttl_seconds
             self._limpiar_sesiones_expiradas(ttl_segundos=ttl)
             sesion = self._sesiones.get(session_id)
             if sesion and sesion.ha_expirado(ttl):
-                logger.debug(f"[SessionManager] Expulsando sesión expirada instantáneamente session_id='{session_id}'")
+                logger.debug(
+                    f"[SessionManager] Expulsando sesión expirada instantáneamente session_id='{session_id}'"
+                )
                 self._sesiones.pop(session_id, None)
                 return None
             return sesion
 
-    def obtener_o_crear_sesion(self, session_id: str, ttl_segundos: Optional[int] = None) -> DiagnosticSession:
+    def obtener_o_crear_sesion(
+        self, session_id: str, ttl_segundos: Optional[int] = None
+    ) -> DiagnosticSession:
         with self._lock:
             ttl = ttl_segundos if ttl_segundos is not None else self.ttl_seconds
             self._limpiar_sesiones_expiradas(ttl_segundos=ttl)
             sesion = self._sesiones.get(session_id)
             if sesion and sesion.ha_expirado(ttl):
-                logger.debug(f"[SessionManager] Expulsando sesión expirada instantáneamente session_id='{session_id}'")
+                logger.debug(
+                    f"[SessionManager] Expulsando sesión expirada instantáneamente session_id='{session_id}'"
+                )
                 self._sesiones.pop(session_id, None)
                 sesion = None
 
             if sesion is None:
-                logger.debug(f"[SessionManager] Creando nueva sesión de diálogo para session_id='{session_id}'")
+                logger.debug(
+                    f"[SessionManager] Creando nueva sesión de diálogo para session_id='{session_id}'"
+                )
                 sesion = DiagnosticSession(session_id)
                 self._sesiones[session_id] = sesion
             return sesion
 
     def actualizar_datos_vehiculo(
-        self, 
-        session_id: str, 
-        placa: Optional[str] = None, 
+        self,
+        session_id: str,
+        placa: Optional[str] = None,
         marca_modelo: Optional[str] = None,
-        sesion: Optional[DiagnosticSession] = None
+        sesion: Optional[DiagnosticSession] = None,
     ):
         with self._lock:
             if sesion is None:
@@ -377,15 +381,20 @@ class SessionManager:
                 sesion.placa = placa
                 if sesion.conversation_state and not sesion.conversation_state.placa:
                     sesion.conversation_state.placa = placa
-            if marca_modelo and marca_modelo not in ("Vehiculo Generico", "Generico Generico", "Generico", ""):
+            if marca_modelo and marca_modelo not in (
+                "Vehiculo Generico",
+                "Generico Generico",
+                "Generico",
+                "",
+            ):
                 sesion.marca_modelo = marca_modelo
 
     def acumular_input_usuario(
-        self, 
-        session_id: str, 
-        texto_usuario: str, 
-        placa: Optional[str] = None, 
-        marca_modelo: Optional[str] = None
+        self,
+        session_id: str,
+        texto_usuario: str,
+        placa: Optional[str] = None,
+        marca_modelo: Optional[str] = None,
     ) -> DiagnosticSession:
         with self._lock:
             sesion = self.obtener_o_crear_sesion(session_id)
@@ -438,9 +447,6 @@ class SessionManager:
                 return
 
             self._ultimo_limpieza = ahora
-            expiradas = [
-                sid for sid, s in list(self._sesiones.items())
-                if s.ha_expirado(ttl)
-            ]
+            expiradas = [sid for sid, s in list(self._sesiones.items()) if s.ha_expirado(ttl)]
             for sid in expiradas:
                 self._sesiones.pop(sid, None)

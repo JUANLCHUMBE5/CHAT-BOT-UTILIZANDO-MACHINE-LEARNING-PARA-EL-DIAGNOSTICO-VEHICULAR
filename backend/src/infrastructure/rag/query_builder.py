@@ -2,14 +2,43 @@
 Constructor de consultas enriquecidas multiseñal para el motor RAG.
 Combina:
 1. Síntomas textuales limpios del usuario y jerga técnica normalizada.
-2. Códigos DTC detectados y sus definiciones técnicas estándar.
+2. Códigos DTC detectados y sus definiciones técnica estándar.
 3. Hipótesis Top 1, Top 2 y Top 3 predichas por el clasificador ML jerárquico.
 4. Perfil del vehículo (marca, modelo, sistema).
 """
 
 from __future__ import annotations
 
+import re
+import unicodedata
 from typing import Any, Dict, List, Optional
+
+
+def _normalizar(texto: str) -> str:
+    if not texto:
+        return ""
+    return "".join(c for c in unicodedata.normalize("NFD", texto.lower()) if unicodedata.category(c) != "Mn")
+
+
+def _es_pregunta_procedimental_directa(texto: str) -> bool:
+    """Detecta si la consulta es una solicitud procedimental directa sin reporte de avería personal."""
+    txt = _normalizar(texto)
+    prefijo_procedimiento = bool(
+        re.search(
+            r"\b(?:como\s+(?:medir|probar|calibrar|inspeccionar|revisar|verificar|desarmar|cambiar|purgar)|"
+            r"cual\s+es\s+(?:la|el|las|los)\s+(?:tolerancia|presion|valor|compresion|luz|calibracion|especificacion)|"
+            r"procedimiento\s+(?:para|de)|pasos\s+para|"
+            r"prueba\s+(?:de|para)|inspeccion\s+(?:de|para|y)|comprobacion\s+(?:de|para)|calibracion\s+(?:de|para)|diagnostico\s+de)\b",
+            txt,
+        )
+    )
+    tiene_queja_personal = bool(
+        re.search(
+            r"\b(?:mi\s+(?:auto|carro|motor|camioneta|vehiculo)|tengo\s+(?:un\s+)?(?:problema|falla)|me\s+falla|se\s+me\s+apaga|siento\s+que)\b",
+            txt,
+        )
+    )
+    return prefijo_procedimiento and not tiene_queja_personal
 
 
 def construir_consulta_hibrida(
@@ -53,7 +82,9 @@ def construir_consulta_hibrida(
 
     # 5. Top 3 candidatos del clasificador Level 2; al haber señal específica,
     # solo se añaden candidatos del mismo tema (sin alterar sus probabilidades).
-    if top_fallas:
+    # Si la consulta es una solicitud procedimental directa sin reporte de queja,
+    # no inyectar hipótesis residuales de avería para evitar falsos positivos de recuperación.
+    if top_fallas and not _es_pregunta_procedimental_directa(base):
         if areas_consulta:
             from src.core.diagnostico.enrutador_sistema import falla_coincide_con_areas
 

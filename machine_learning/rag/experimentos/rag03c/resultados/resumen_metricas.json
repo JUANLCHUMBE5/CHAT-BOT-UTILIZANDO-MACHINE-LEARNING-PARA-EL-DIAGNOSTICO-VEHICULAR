@@ -1,0 +1,30 @@
+{
+  "metricas_consolidadas": {
+    "corpus_A_239": {
+      "precision_at_1_total": 36.0,
+      "recall_at_3_total": 36.0,
+      "precision_at_1_indomain": 20.0,
+      "recall_at_3_indomain": 20.0,
+      "abstencion_correcta_ood": 100.0,
+      "tasa_recuperacion_incorrecta": 0.0,
+      "trazabilidad_documental": 0.0,
+      "latencia_promedio_ms": 2.33
+    },
+    "corpus_B_256": {
+      "precision_at_1_total": 60.0,
+      "recall_at_3_total": 60.0,
+      "precision_at_1_indomain": 50.0,
+      "recall_at_3_indomain": 50.0,
+      "abstencion_correcta_ood": 100.0,
+      "tasa_recuperacion_incorrecta": 0.0,
+      "trazabilidad_documental": 60.0,
+      "latencia_promedio_ms": 2.52
+    },
+    "balance_casos": {
+      "total_consultas": 25,
+      "consultas_mejoradas": 6,
+      "consultas_empeoradas": 0,
+      "consultas_sin_cambio": 19
+    }
+  }
+}

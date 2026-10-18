@@ -1,0 +1,1779 @@
+{
+  "suite": "benchmark_100_queries",
+  "n": 100,
+  "precision_at_1_total": {
+    "val": 89.0,
+    "ci95": [
+      81.4,
+      93.7
+    ]
+  },
+  "precision_at_1_indomain": {
+    "val": 88.6,
+    "ci95": [
+      74.0,
+      95.5
+    ]
+  },
+  "recall_at_3_indomain": {
+    "val": 88.6,
+    "ci95": [
+      74.0,
+      95.5
+    ]
+  },
+  "abstencion_correcta_ood": {
+    "val": 89.2,
+    "ci95": [
+      79.4,
+      94.7
+    ]
+  },
+  "tasa_falsos_positivos": {
+    "val": 7.0,
+    "ci95": [
+      3.4,
+      13.7
+    ]
+  },
+  "por_familia": {
+    "COBERTURA_PARCIAL": {
+      "n": 15,
+      "precision_at_1": 80.0,
+      "abstencion": 20.0,
+      "falsos_positivos": 0.0
+    },
+    "COBERTURA_TOTAL": {
+      "n": 20,
+      "precision_at_1": 95.0,
+      "abstencion": 5.0,
+      "falsos_positivos": 0.0
+    },
+    "ESPECIFICACIONES_OEM_NO_PRESENTES": {
+      "n": 15,
+      "precision_at_1": 80.0,
+      "abstencion": 80.0,
+      "falsos_positivos": 20.0
+    },
+    "SIN_COBERTURA_OOD": {
+      "n": 20,
+      "precision_at_1": 100.0,
+      "abstencion": 100.0,
+      "falsos_positivos": 0.0
+    },
+    "VEHICULO_INCOMPATIBLE": {
+      "n": 15,
+      "precision_at_1": 80.0,
+      "abstencion": 80.0,
+      "falsos_positivos": 20.0
+    },
+    "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS": {
+      "n": 15,
+      "precision_at_1": 93.3,
+      "abstencion": 93.3,
+      "falsos_positivos": 6.7
+    }
+  },
+  "detalle": [
+    {
+      "id": "COB_01",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cuál es la tolerancia máxima admisible de alabeo lateral en un disco de freno montado según Brembo?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": true,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "COB_02",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cuál es el alabeo lateral máximo permitido directamente sobre la cara de apoyo del buje de rueda limpio?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "TOLERANCIA DE ALABEO LATERAL EN DISCOS DE FRENO Y BUJE DE RUEDA",
+        "score": 0.23993927836418152,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "COB_03",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Qué es la variación de espesor de disco DTV y cuánto es el valor máximo admisible?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE VARIACIÓN DE ESPESOR DE DISCO (DTV) Y PULSACIÓN EN PEDAL DE FRENO",
+        "score": 0.3182870015501976,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "COB_04",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Por qué no se debe apretar la rueda con pistola de impacto neumática al instalar discos de freno?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "CONTROL DE PAR DE APRIETE DE RUEDAS Y DEFORMACIÓN DE CAMPANA DE DISCO",
+        "score": 0.18934085965156555,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_05",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cuáles son los límites de profundidad para grietas térmicas en discos de freno antes del reemplazo?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "CRITERIOS DE DAÑO TÉRMICO, AGRIETAMIENTO Y ESPESOR MÍNIMO EN DISCOS DE FRENO",
+        "score": 0.25069403648376465,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_06",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿A qué se debe el ruido metálico de traqueteo clack-clack en la columna de dirección asistida de Hyundai Accent?",
+      "vehiculo": "Hyundai Accent",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE RUIDO DE GOLPETEO Y TRAQUETEO EN COLUMNA DE DIRECCIÓN C-MDPS",
+        "score": 0.26972270011901855,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_07",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cuál es el número de parte mejorado del acoplador flexible de columna de dirección MDPS en Hyundai?",
+      "vehiculo": "Hyundai Elantra",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "SUSTITUCIÓN DE ACOPLADOR FLEXIBLE DE CAUCHO EN SERVODIRECCIÓN C-MDPS",
+        "score": 0.25673702359199524,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_08",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cuál es el par de apriete oficial de los pernos de fijación del motor MDPS a la carcasa en Hyundai?",
+      "vehiculo": "Hyundai Accent",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "SUSTITUCIÓN DE ACOPLADOR FLEXIBLE DE CAUCHO EN SERVODIRECCIÓN C-MDPS",
+        "score": 0.2007572963833809,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "COB_09",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cuál es el par de apriete de los 4 pernos de fijación de la columna de dirección al chasis en Hyundai?",
+      "vehiculo": "Hyundai Sonata",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "PARES DE APRIETE OFICIALES EN COLUMNA DE DIRECCIÓN MDPS HYUNDAI",
+        "score": 0.25004526525735854,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "COB_10",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cómo calibrar y reiniciar a cero el sensor de ángulo de dirección ASP tras reparar la columna MDPS?",
+      "vehiculo": "Hyundai Accent",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "CALIBRACIÓN Y PUESTA A CERO DEL SENSOR DE ÁNGULO DE DIRECCIÓN (ASP/SAS)",
+        "score": 0.3166375160217285,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_11",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Qué significa el código de falla DTC C1102 en la servodirección de Kia Rio?",
+      "vehiculo": "Kia Rio",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "TABLA DE CÓDIGOS DTC Y DIAGNÓSTICO EN DIRECCIÓN ASISTIDA KIA C-MDPS",
+        "score": 0.12212645262479782,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_12",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Qué indica el código DTC C1603 en la dirección asistida de Kia y cómo proceder?",
+      "vehiculo": "Kia Soul",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "TABLA DE CÓDIGOS DTC Y DIAGNÓSTICO EN DIRECCIÓN ASISTIDA KIA C-MDPS",
+        "score": 0.2039567530155182,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_13",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Qué verificaciones eléctricas realizar ante los códigos C1259 y C1260 del sensor de ángulo SAS en Kia?",
+      "vehiculo": "Kia Rio",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE SENSOR DE ÁNGULO DE DIRECCIÓN DTC C1259 Y C1260 EN KIA",
+        "score": 0.3829902410507202,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_14",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cuáles son los voltajes de referencia en reposo para diagnosticar el sensor de par con códigos C1290 y C1112 en Kia?",
+      "vehiculo": "Kia Forte",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE SENSOR DE PAR (TORQUE SENSOR) DTC C1290 Y C1112 EN KIA",
+        "score": 0.3241158425807953,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_15",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cómo diagnosticar el motor eléctrico de servodirección ante los códigos DTC C2400 y C2401 en Kia?",
+      "vehiculo": "Kia Rio",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE SERVOMOTOR ELÉCTRICO Y CIRCUITO FAIL-SAFE DTC C2400 Y C2401",
+        "score": 0.2898653745651245,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_16",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cuáles son los tres rangos de presión y escalas de voltaje del transductor Pico WPS500X?",
+      "vehiculo": "Universal Instrumental",
+      "sistema": "INSTRUMENTAL",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "RANGOS DE MEDICIÓN Y ESCALAMIENTO EN TRANSDUCTOR DE PRESIÓN AUTOMOTRIZ WPS500X",
+        "score": 0.19583956897258759,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_17",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cómo comprobar la contrapresión del sistema de escape analizando la torre de escape en la onda de 720 grados con transductor?",
+      "vehiculo": "Motores Gasolina",
+      "sistema": "MOTOR",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE COMPRESIÓN DINÁMICA EN CILINDRO (IN-CYLINDER PRESSURE ANALYSIS)",
+        "score": 0.2300800383090973,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_18",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cómo detectar una válvula de escape defectuosa midiendo los pulsos en el tubo de escape con osciloscopio?",
+      "vehiculo": "Motores Multicilíndricos",
+      "sistema": "MOTOR",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ANÁLISIS DE PULSOS DE ESCAPE Y ADMISIÓN CON TRANSDUCTOR DE ALTA SENSIBILIDAD",
+        "score": 0.1665593981742859,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_19",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Cómo funciona la detección de fugas de gases de combustión CO2 en el refrigerante usando el probador Laser 5524?",
+      "vehiculo": "Motores Térmicos",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "PROCEDIMIENTO DE DETECCIÓN QUÍMICA DE CO2 EN EL SISTEMA DE REFRIGERACIÓN",
+        "score": 0.1823153793811798,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "COB_20",
+      "familia": "COBERTURA_TOTAL",
+      "consulta": "¿Por qué la entrada accidental de líquido anticongelante causa un falso negativo en el comprobador químico de fugas de culata?",
+      "vehiculo": "Motores Térmicos",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "PRECAUCIONES CONTRA FALSOS NEGATIVOS Y CONTAMINACIÓN EN PRUEBA DE CO2",
+        "score": 0.19583085179328918,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_01",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Qué herramientas e instrumental se necesitan para comprobar si el disco de freno tiene alabeo o variación de espesor?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE VARIACIÓN DE ESPESOR DE DISCO (DTV) Y PULSACIÓN EN PEDAL DE FRENO",
+        "score": 0.18715461418032647,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "PARC_02",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿A qué velocidad o bajo qué condiciones de frenada se manifiesta con mayor fuerza la trepidación por DTV?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE VARIACIÓN DE ESPESOR DE DISCO (DTV) Y PULSACIÓN EN PEDAL DE FRENO",
+        "score": 0.1304719213396311,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "PARC_03",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Se puede reparar el ruido de la columna de dirección MDPS sin desmontar por completo la barra de dirección del vehículo?",
+      "vehiculo": "Hyundai Accent",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE RUIDO DE GOLPETEO Y TRAQUETEO EN COLUMNA DE DIRECCIÓN C-MDPS",
+        "score": 0.245738685131073,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_04",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Cómo afecta una batería defectuosa de 11.8V al funcionamiento de la asistencia eléctrica de dirección en Kia?",
+      "vehiculo": "Kia Rio",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": true,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "PARC_05",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Qué consecuencias dinámicas en carretera tiene no realizar la calibración de ángulo de volante ASP a cero?",
+      "vehiculo": "Kia Forte",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "CALIBRACIÓN Y PUESTA A CERO DEL SENSOR DE ÁNGULO DE DIRECCIÓN (ASP/SAS)",
+        "score": 0.15677525103092194,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_06",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Qué adaptador de rosca se necesita para acoplar el transductor de presión en la bujía de un motor moderno?",
+      "vehiculo": "Universal Motores",
+      "sistema": "INSTRUMENTAL",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE COMPRESIÓN DINÁMICA EN CILINDRO (IN-CYLINDER PRESSURE ANALYSIS)",
+        "score": 0.11804752051830292,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_07",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Por qué se debe sincronizar la señal de pulsos de escape con el encendido inductivo del cilindro 1?",
+      "vehiculo": "Universal Motores",
+      "sistema": "INSTRUMENTAL",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ANÁLISIS DE PULSOS DE ESCAPE Y ADMISIÓN CON TRANSDUCTOR DE ALTA SENSIBILIDAD",
+        "score": 0.2084936797618866,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_08",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Cómo verificar que el líquido reactivo de prueba de fugas de CO2 no esté vencido o dañado antes de usarlo?",
+      "vehiculo": "Motores Térmicos",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "PRECAUCIONES CONTRA FALSOS NEGATIVOS Y CONTAMINACIÓN EN PRUEBA DE CO2",
+        "score": 0.19216197729110718,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_09",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Cuántos centímetros debe bajarse el refrigerante en el radiador antes de conectar el probador de gases?",
+      "vehiculo": "Motores Gasolina",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": true,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "PARC_10",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Qué sucede si se rectifica un disco de freno que ya está por debajo del Min Th grabado?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "DIAGNÓSTICO DE VARIACIÓN DE ESPESOR DE DISCO (DTV) Y PULSACIÓN EN PEDAL DE FRENO",
+        "score": 0.14248357862234115,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "PARC_11",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Qué tipo de solvente se recomienda para limpiar las virutas del acoplador roto dentro del motor MDPS?",
+      "vehiculo": "Hyundai Elantra",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "SUSTITUCIÓN DE ACOPLADOR FLEXIBLE DE CAUCHO EN SERVODIRECCIÓN C-MDPS",
+        "score": 0.18026533722877502,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_12",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Cuánto tiempo de reposo se debe esperar tras activarse el modo de protección térmica C1603 en MDPS?",
+      "vehiculo": "Kia Soul",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "TABLA DE CÓDIGOS DTC Y DIAGNÓSTICO EN DIRECCIÓN ASISTIDA KIA C-MDPS",
+        "score": 0.20607124269008636,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_13",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿A qué régimen de ralentí debe estar el motor para registrar la onda de presión en cilindro con el osciloscopio?",
+      "vehiculo": "Universal Motores Gasolina",
+      "sistema": "MOTOR",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": true,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "PARC_14",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿Qué tonalidad verde debe esperarse en la prueba química de CO2 en un motor diésel y por qué no es amarilla?",
+      "vehiculo": "Motores Diésel",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "PROCEDIMIENTO DE DETECCIÓN QUÍMICA DE CO2 EN EL SISTEMA DE REFRIGERACIÓN",
+        "score": 0.14973729848861694,
+        "categoria_doc": "PROCEDIMIENTO_ESPECIFICO_OEM"
+      }
+    },
+    {
+      "id": "PARC_15",
+      "familia": "COBERTURA_PARCIAL",
+      "consulta": "¿A qué par de apriete deben fijarse las tuercas de rueda en un sedán o SUV mediano para no combar el disco?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS",
+      "espera_cobertura": true,
+      "eval": {
+        "abstencion": false,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "CONTROL DE PAR DE APRIETE DE RUEDAS Y DEFORMACIÓN DE CAMPANA DE DISCO",
+        "score": 0.14471870362758638,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "OOD_01",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es el procedimiento para desactivar el contactor pirotécnico de corte de batería de 400V en un Tesla Model S?",
+      "vehiculo": "Tesla Model S",
+      "sistema": "ALTO_VOLTAJE",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_02",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es el par de apriete de las bielas forjadas en un motor marino fuera de borda Yamaha V8 350hp?",
+      "vehiculo": "Yamaha V8 F350",
+      "sistema": "MARINO",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_03",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo calibrar los sensores de radar de onda milimétrica de 77 GHz de control crucero adaptativo en un camión Scania?",
+      "vehiculo": "Camión Scania R500",
+      "sistema": "RADAR_ADAS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_04",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo purgar la válvula moduladora del circuito neumático de frenos de aire Wabco EBS en un remolque de carga pesada?",
+      "vehiculo": "Remolque Articulado",
+      "sistema": "NEUMÁTICA_PESADA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_05",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es el código maestro para desbloquear la antena satelital SiriusXM en el centro multimedia de un Mach-E?",
+      "vehiculo": "Ford Mustang Mach-E",
+      "sistema": "INFOTAINMENT",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_06",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es el procedimiento de reglaje de magnetos Bendix en el motor de pistones aeronáutico Lycoming O-360?",
+      "vehiculo": "Cessna 172 Skyhawk",
+      "sistema": "AERONÁUTICA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_07",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo sincronizar el tensor hidráulico primario de la cadena de transmisión en una Harley-Davidson Street Glide?",
+      "vehiculo": "Harley-Davidson Milwaukee-Eight",
+      "sistema": "MOTOCICLETAS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_08",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo calibrar la electroválvula del elevador hidráulico de tres puntos en un tractor agrícola John Deere 8R?",
+      "vehiculo": "John Deere 8R",
+      "sistema": "AGRÍCOLA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_09",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo diagnosticar el sensor de inclinación del mástil SAS en una carretilla elevadora montacargas Toyota?",
+      "vehiculo": "Toyota Forklift 8FGU25",
+      "sistema": "CARRETILLAS_ELEVADORAS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_10",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es la holgura axial admisible de los turbocompresores mecánicos en un motor diésel de locomotora EMD 710?",
+      "vehiculo": "Locomotora EMD SD70ACe",
+      "sistema": "FERROVIARIO",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_11",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo purgar el circuito de frenos refrigerados por aceite húmedo en un camión minero dumper CAT 797F?",
+      "vehiculo": "Caterpillar 797F",
+      "sistema": "MINERÍA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_12",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo calibrar el sensor LIDAR omnidireccional y radar de escape de colisión en el dron agrícola DJI Agras?",
+      "vehiculo": "DJI Agras T40",
+      "sistema": "DRONES",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_13",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es la tensión recomendada de la oruga de goma reforzada en la suspensión de una motonieve Ski-Doo?",
+      "vehiculo": "Ski-Doo Rotax 850",
+      "sistema": "MOTONIEVE",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_14",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo presurizar el sistema de vadeo profundo del motor 6.5L Turbo Diesel en un vehículo blindado HMMWV?",
+      "vehiculo": "Humvee M1151A1",
+      "sistema": "MILITAR",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_15",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Qué mezcla de aceite sintético de 2 tiempos al 2% se utiliza para asentar el pistón de un kart de competición Rotax MAX?",
+      "vehiculo": "Rotax MAX 125cc",
+      "sistema": "KARTING",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_16",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es el torque de sellado de los tapones penetradores de presión estanca de 14 pines para robótica submarina?",
+      "vehiculo": "ROV BlueRobotics",
+      "sistema": "SUBMARINO_ROV",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_17",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo verificar la presión del acumulador hidráulico del freno de emergencia en el tren principal de un Boeing 737?",
+      "vehiculo": "Boeing 737-800",
+      "sistema": "AERONÁUTICA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_18",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cómo sincronizar el interruptor de transferencia automática ATS de un grupo electrógeno estacionario de gas natural?",
+      "vehiculo": "Generac 22kW Standby",
+      "sistema": "GENERADORES",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_19",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es la tolerancia de concentricidad del eje lento en la multiplicadora de paso de pala de un aerogenerador?",
+      "vehiculo": "Aerogenerador Vestas V90",
+      "sistema": "EÓLICA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "OOD_20",
+      "familia": "SIN_COBERTURA_OOD",
+      "consulta": "¿Cuál es el protocolo de purga del propelente hipergólico dinitrógeno tetróxido en los propulsores SuperDraco?",
+      "vehiculo": "Cápsula SpaceX Crew Dragon",
+      "sistema": "ESPACIAL",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_01",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cómo cambiar el acoplador flexible estrella 56315-2K000-FFF en la columna de dirección asistida de un Toyota Corolla 2018?",
+      "vehiculo": "Toyota Corolla",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "PROCEDIMIENTO: DIRECCIÓN ASISTIDA ELÉCTRICA (EPS / MDPS) Y REEMPLAZO DE ACOPLE FLEXIBLE DE COLUMNA (CHASQUIDO AL GIRAR EL TIMÓN)",
+        "score": 0.11064294576644898,
+        "categoria_doc": "PROCEDIMIENTO_GENERAL"
+      }
+    },
+    {
+      "id": "INCOMP_02",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cuál es el par de apriete de los pernos del motor eléctrico MDPS Hyundai 17-ST-002 montado en un Nissan Sentra B17?",
+      "vehiculo": "Nissan Sentra",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_03",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Dónde se ubica el conector de 4 pines del sensor de par C1290 Kia en la cremallera eléctrica de un Honda Civic?",
+      "vehiculo": "Honda Civic",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE PAR Y DIRECCIÓN ELECTROASISTIDA EPS (DTC C1511 / C1512 / C1524)",
+        "score": 0.10026439279317856,
+        "categoria_doc": "PROCEDIMIENTO_GENERAL"
+      }
+    },
+    {
+      "id": "INCOMP_04",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cómo calibrar el sensor de ángulo ASP a 0 grados en un Volkswagen Gol con servodirección hidráulica convencional?",
+      "vehiculo": "Volkswagen Gol",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_05",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cómo instalar el servomotor eléctrico Kia CHA084 con código C2400 en la columna de un Ford Fiesta Kinetic?",
+      "vehiculo": "Ford Fiesta",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_06",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Qué boletín de servicio Hyundai 17-ST-002 aplica para solucionar el traqueteo en la dirección EPS de un Chevrolet Onix?",
+      "vehiculo": "Chevrolet Onix",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_07",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cómo leer los códigos de avería C1102 y C1603 en la bomba electrohidráulica de un Mazda 3 SkyActiv?",
+      "vehiculo": "Mazda 3",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_08",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Se puede colocar el acoplador de goma 56315-2K000-FFF en la cremallera de piñón y cremallera hidráulica de Renault Duster?",
+      "vehiculo": "Renault Duster",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_09",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cómo resetear la dirección C-MDPS Kia con el procedimiento CHA084 en un Suzuki Swift Boosterjet?",
+      "vehiculo": "Suzuki Swift",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_10",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Dónde se introduce el software de campaña Kia SA456 en la centralita de dirección asistida de un Peugeot 208?",
+      "vehiculo": "Peugeot 208",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_11",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cómo cambiar el embrague seco LuK doble embrague 2CT en una transmisión automática convencional con convertidor de par en Toyota Corolla?",
+      "vehiculo": "Toyota Corolla",
+      "sistema": "TRANSMISIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO DE VÁLVULA DE BLOQUEO DEL CONVERTIDOR DE PAR TCC LOCK-UP (DTC P0740 / P0741 / P0742)",
+        "score": 0.11319438368082047,
+        "categoria_doc": "PROCEDIMIENTO_GENERAL"
+      }
+    },
+    {
+      "id": "INCOMP_12",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿A qué torque apretar la corona de sensor LuK DMF en el volante bimasa de un Nissan Tiida con caja manual de embrague simple?",
+      "vehiculo": "Nissan Tiida",
+      "sistema": "TRANSMISIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_13",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cómo comprobar el actuador Valvematic de apertura variable de válvulas TSB 0098-19 de Toyota montado en un Hyundai Accent?",
+      "vehiculo": "Hyundai Accent",
+      "sistema": "MOTOR",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_14",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cuál es la campaña de reemplazo del módulo de bomba de gasolina Nissan NTB21-004A aplicada a un Kia Rio 1.4L?",
+      "vehiculo": "Kia Rio",
+      "sistema": "ALIMENTACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "INCOMP_15",
+      "familia": "VEHICULO_INCOMPATIBLE",
+      "consulta": "¿Cómo apretar la tuerca de 49 N.m del acoplador de columna Hyundai 17-ST-002 en la caja de dirección de un Toyota Yaris?",
+      "vehiculo": "Toyota Yaris",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_01",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es el par de apriete en N.m de los tornillos de sombrerete de biela en un motor de 4 cilindros?",
+      "vehiculo": "Universal Gasolina",
+      "sistema": "MOTOR_BIELAS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_02",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es el par de apriete oficial de la corona al diferencial y la precarga de cojinetes cónicos?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "TRANSMISIÓN_DIFERENCIAL",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_03",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿A qué torque y secuencia se deben apretar los 18 tornillos de la bandeja de cárter de aceite del motor?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "MOTOR_CÁRTER",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_04",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es la tolerancia máxima admisible de juego axial y radial en el eje de la turbina del turbocompresor?",
+      "vehiculo": "Universal Diésel",
+      "sistema": "TURBOALIMENTACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_05",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es la holgura de empuje axial admisible en el árbol de levas antes de cambiar los cojinetes de culata?",
+      "vehiculo": "Universal Gasolina",
+      "sistema": "DISTRIBUCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_06",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Qué presión en bar y psi debe marcar el manómetro en la línea de baja y alta del gas refrigerante R134a del aire acondicionado?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "CLIMATIZACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_07",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es la presión de trabajo en el riel de combustible Common Rail Bosch CP4 en arranque y aceleración plena?",
+      "vehiculo": "Universal Diésel",
+      "sistema": "INYECCIÓN_DIÉSEL",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_08",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cómo medir con manómetro la presión de 150 a 200 bar generada por la bomba de alta presión de inyección directa de gasolina?",
+      "vehiculo": "Universal Gasolina",
+      "sistema": "INYECCIÓN_GDI",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_09",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es el par de apriete de las tuercas de la copela superior del amortiguador delantero a la torreta de carrocería?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "SUSPENSIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_10",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿A qué torque en N.m se aprietan las tuercas de los espárragos del múltiple de escape a la culata de aluminio?",
+      "vehiculo": "Universal Gasolina",
+      "sistema": "ESCAPE",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_11",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿A qué porcentaje de humedad o punto de ebullición en grados debe sustituirse el líquido de frenos DOT 4?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "FRENOS_LÍQUIDO",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "PROCEDIMIENTO: PRUEBA DE RETENCIÓN DE PRESIÓN EN BOMBA PRINCIPAL Y SANGRADO A PRESIÓN DE LÍQUIDO DE FRENOS DOT 4 (DTC C0040)",
+        "score": 0.14631152451038362,
+        "categoria_doc": "PROCEDIMIENTO_GENERAL"
+      }
+    },
+    {
+      "id": "AMBIG_12",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿A qué temperatura exacta en grados Celsius debe encender la segunda velocidad del electroventilador del radiador?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "REFRIGERACIÓN_VENTILADOR",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_13",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es la presión de alivio máxima en psi de la válvula reguladora de flujo en la bomba de dirección hidráulica de paletas?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "DIRECCIÓN_HIDRÁULICA",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_14",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es la presión de línea hidráulica principal medida con manómetro en el puerto de servicio de una caja automática a 2500 RPM?",
+      "vehiculo": "Universal Turismos",
+      "sistema": "TRANSMISIÓN_ATF",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "AMBIG_15",
+      "familia": "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS",
+      "consulta": "¿Cuál es el juego axial admisible en el cigüeñal medido con reloj palpador contra los cojinetes axiales de bancada?",
+      "vehiculo": "Universal Motores",
+      "sistema": "MOTOR_CIGÜEÑAL",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_01",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es el espesor mínimo nominal de descarte de pastillas de freno delanteras grabado por Toyota para Corolla 2017?",
+      "vehiculo": "Toyota Corolla 2017",
+      "sistema": "FRENOS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "DIAGNÓSTICO DE VARIACIÓN DE ESPESOR DE DISCO (DTV) Y PULSACIÓN EN PEDAL DE FRENO",
+        "score": 0.14884373545646667,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "NOOEM_02",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es el diámetro interior máximo admisible del tambor de freno trasero antes del reemplazo en Nissan Versa?",
+      "vehiculo": "Nissan Versa 2019",
+      "sistema": "FRENOS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "PROCEDIMIENTO: MANTENIMIENTO DE FRENOS DE TAMBOR Y ZAPATAS TRASERAS (FRENO DE MANO ALTO / DTC C0045)",
+        "score": 0.13478799015283585,
+        "categoria_doc": "PROCEDIMIENTO_GENERAL"
+      }
+    },
+    {
+      "id": "NOOEM_03",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es el par de apriete en N.m de las tuercas de los terminales exteriores de dirección a la mangueta en Toyota Yaris?",
+      "vehiculo": "Toyota Yaris 2016",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_04",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es el par de apriete del perno pasante del acoplamiento articulado inferior de la columna de dirección en Nissan Tiida?",
+      "vehiculo": "Nissan Tiida 2014",
+      "sistema": "DIRECCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_05",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es la presión de apertura en bar y psi de la tapa original del radiador recomendada por Hyundai para el Accent 1.6L?",
+      "vehiculo": "Hyundai Accent 1.6 GDI",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": false,
+        "p1": 0.0,
+        "r3": 0.0,
+        "falso_positivo": true,
+        "top_doc": "DIAGNÓSTICO DE COMPRESIÓN DINÁMICA EN CILINDRO (IN-CYLINDER PRESSURE ANALYSIS)",
+        "score": 0.1002610981464386,
+        "categoria_doc": "ESPECIFICACION_EXACTA_VERIFICADA"
+      }
+    },
+    {
+      "id": "NOOEM_06",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿A cuántos grados abre el termostato mecánico original y cuál es la carrera de apertura completa en milímetros en el motor Kia Rio 1.4?",
+      "vehiculo": "Kia Rio 1.4",
+      "sistema": "REFRIGERACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_07",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es la holgura en milímetros de válvulas de admisión y escape en frío medida con galgas en el motor Nissan HR16DE?",
+      "vehiculo": "Nissan HR16DE",
+      "sistema": "MOTOR_DISTRIBUCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_08",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es el par de apriete en N.m del tornillo central del engranaje variador VVT-i del árbol de levas en el motor 1NZ-FE?",
+      "vehiculo": "Toyota 1NZ-FE",
+      "sistema": "MOTOR_DISTRIBUCIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_09",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es la resistencia eléctrica en ohmios de la bobina de los inyectores de gasolina multipunto en el motor Sentra 1.8L?",
+      "vehiculo": "Nissan Sentra B17",
+      "sistema": "ALIMENTACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_10",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es la presión manométrica estática nominal en bar del regulador de presión de la bomba de gasolina en el Hyundai Elantra 1.8?",
+      "vehiculo": "Hyundai Elantra 1.8",
+      "sistema": "ALIMENTACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_11",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es la luz entre electrodos o gap en milímetros de las bujías de iridio originales Denso en el motor 2ZR-FE?",
+      "vehiculo": "Toyota Corolla 2ZR-FE",
+      "sistema": "ENCENDIDO",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_12",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es el espesor mínimo reglamentario Min Th en mm de los tambores de estacionamiento integrados en disco trasero de Kia Cerato?",
+      "vehiculo": "Kia Cerato 2015",
+      "sistema": "FRENOS",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_13",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuántos litros exactos de fluido NS-3 entran en un cambio de aceite por drenaje de cárter en la transmisión CVT de Nissan Versa?",
+      "vehiculo": "Nissan Versa CVT",
+      "sistema": "TRANSMISIÓN_CVT",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_14",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es el ángulo de avance de pivote (caster) y caída (camber) especificado de fábrica para el tren delantero de Hyundai Accent?",
+      "vehiculo": "Hyundai Accent",
+      "sistema": "SUSPENSIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    },
+    {
+      "id": "NOOEM_15",
+      "familia": "ESPECIFICACIONES_OEM_NO_PRESENTES",
+      "consulta": "¿Cuál es la presión de aceite mínima en ralentí en caliente medida con manómetro roscado en el interruptor de presión de aceite del Corolla?",
+      "vehiculo": "Toyota Corolla 1.8",
+      "sistema": "LUBRICACIÓN",
+      "espera_cobertura": false,
+      "eval": {
+        "abstencion": true,
+        "p1": 1.0,
+        "r3": 1.0,
+        "falso_positivo": false,
+        "top_doc": "ABSTENCIÓN (Sin especificación OEM verificada)",
+        "score": 0.0,
+        "categoria_doc": "AUSENCIA_DOCUMENTACION"
+      }
+    }
+  ]
+}

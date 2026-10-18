@@ -1,0 +1,752 @@
+[
+  {
+    "id": "Q_FRENOS_01",
+    "categoria": "FRENOS",
+    "consulta": "¿Cuál es la tolerancia máxima admisible de alabeo lateral en un disco de freno montado?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+      "top_score": 0.17079763114452362,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "TOLERANCIA DE ALABEO LATERAL EN DISCOS DE FRENO Y BUJE DE RUEDA",
+      "top_score": 0.19222906231880188,
+      "top_pag": 5,
+      "top_oem": "brembo_guide_brake_disc_diagnostics.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_FRENOS_02",
+    "categoria": "FRENOS",
+    "consulta": "¿Qué es la variación de espesor de disco DTV y cuánto es el límite máximo permitido?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: METROLOGÍA DE VARIACIÓN DE ESPESOR DTV Y PARALELISMO DE DISCOS DE FRENO VENTILADOS (VIBRACIÓN EN PEDAL)",
+      "top_score": 0.22630074620246887,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "DIAGNÓSTICO DE VARIACIÓN DE ESPESOR DE DISCO (DTV) Y PULSACIÓN EN PEDAL DE FRENO",
+      "top_score": 0.2763851583003998,
+      "top_pag": 7,
+      "top_oem": "brembo_guide_brake_disc_diagnostics.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_FRENOS_03",
+    "categoria": "FRENOS",
+    "consulta": "¿Cuál es el alabeo máximo permitido en el buje de rueda limpio sin disco?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+      "top_score": 0.12259504199028015,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "TOLERANCIA DE ALABEO LATERAL EN DISCOS DE FRENO Y BUJE DE RUEDA",
+      "top_score": 0.19500136375427246,
+      "top_pag": 5,
+      "top_oem": "brembo_guide_brake_disc_diagnostics.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_FRENOS_04",
+    "categoria": "FRENOS",
+    "consulta": "¿Por qué no se debe apretar la rueda con pistola de impacto neumática en discos nuevos?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 0.0,
+      "r3": 1.0,
+      "incorrecto": true,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO DEL SISTEMA DE SUSPENSIÓN MC PHERSON: CAZOLETAS, COJINETES DE TOPE Y MUELLES (CRUJIDO AL GIRAR EL TIMÓN)",
+      "top_score": 0.12746529281139374,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "CONTROL DE PAR DE APRIETE DE RUEDAS Y DEFORMACIÓN DE CAMPANA DE DISCO",
+      "top_score": 0.2010764181613922,
+      "top_pag": 8,
+      "top_oem": "brembo_guide_brake_disc_diagnostics.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_FRENOS_05",
+    "categoria": "FRENOS",
+    "consulta": "¿Cuáles son los criterios para sustituir un disco por fisuras térmicas y espesor mínimo?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": true,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO METROLÓGICO DEL ALABEO DE DISCOS DE FRENO Y VARIACIÓN DE ESPESOR DTV (VIBRACIÓN EN PEDAL / VOLANTE AL FRENAR)",
+      "top_score": 0.11146855354309082,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "CRITERIOS DE DAÑO TÉRMICO, AGRIETAMIENTO Y ESPESOR MÍNIMO EN DISCOS DE FRENO",
+      "top_score": 0.2825431227684021,
+      "top_pag": 10,
+      "top_oem": "brembo_guide_brake_disc_diagnostics.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_DIR_01",
+    "categoria": "DIRECCIÓN",
+    "consulta": "¿Cómo diagnosticar el ruido de golpeteo clack clack al girar el volante en Hyundai Accent o Elantra?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "DIAGNÓSTICO DE RUIDO DE GOLPETEO Y TRAQUETEO EN COLUMNA DE DIRECCIÓN C-MDPS",
+      "top_score": 0.21147450804710388,
+      "top_pag": 1,
+      "top_oem": "hyundai_tsb_mdps_flexible_coupling_replacement.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_DIR_02",
+    "categoria": "DIRECCIÓN",
+    "consulta": "¿Cuáles son los pares de apriete de los pernos del motor eléctrico MDPS a la columna de dirección?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIRECCIÓN ASISTIDA ELÉCTRICA (EPS / MDPS) Y REEMPLAZO DE ACOPLE FLEXIBLE DE COLUMNA (CHASQUIDO AL GIRAR EL TIMÓN)",
+      "top_score": 0.16267159581184387,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "PARES DE APRIETE OFICIALES EN COLUMNA DE DIRECCIÓN MDPS HYUNDAI",
+      "top_score": 0.2926948666572571,
+      "top_pag": 14,
+      "top_oem": "hyundai_tsb_mdps_flexible_coupling_replacement.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_DIR_03",
+    "categoria": "DIRECCIÓN",
+    "consulta": "¿Cómo calibrar y reiniciar a cero el sensor de ángulo de dirección ASP o SAS tras desmontar la columna?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: CALIBRACIÓN DEL SENSOR DE ÁNGULO DE DIRECCIÓN (SAS) Y CONTROL DE ESTABILIDAD ESP/VSC (DTC C1231 / C1210 / TABLERO ESP ENCENDIDO)",
+      "top_score": 0.24407365918159485,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "CALIBRACIÓN Y PUESTA A CERO DEL SENSOR DE ÁNGULO DE DIRECCIÓN (ASP/SAS)",
+      "top_score": 0.34807559847831726,
+      "top_pag": 9,
+      "top_oem": "hyundai_tsb_mdps_flexible_coupling_replacement.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_DIR_04",
+    "categoria": "DIRECCIÓN",
+    "consulta": "¿Qué significa el código DTC C1102 o C1603 en la dirección asistida de un Kia Rio?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: CALIBRACIÓN DE PUNTO CERO Y REAPRENDIZAJE DEL SISTEMA DE DIRECCIÓN ASISTIDA EPS CON ESCÁNER (DTC C1555 / ERROR DE CALIBRACIÓN EPS)",
+      "top_score": 0.12053846567869186,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "TABLA DE CÓDIGOS DTC Y DIAGNÓSTICO EN DIRECCIÓN ASISTIDA KIA C-MDPS",
+      "top_score": 0.2486650049686432,
+      "top_pag": 4,
+      "top_oem": "kia_tsb_cmdps_steering_column_repair.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_DIR_05",
+    "categoria": "DIRECCIÓN",
+    "consulta": "¿Cómo diagnosticar el sensor de par torque sensor con códigos DTC C1290 y C1112 en Kia?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO DEL SENSOR DE PAR Y DIRECCIÓN ELECTROASISTIDA EPS (DTC C1511 / C1512 / C1524)",
+      "top_score": 0.14696663618087769,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "DIAGNÓSTICO DE SENSOR DE PAR (TORQUE SENSOR) DTC C1290 Y C1112 EN KIA",
+      "top_score": 0.396013468503952,
+      "top_pag": 4,
+      "top_oem": "kia_tsb_cmdps_steering_column_repair.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_REFRIG_01",
+    "categoria": "REFRIGERACIÓN",
+    "consulta": "¿Cómo comprobar si hay fuga de gases de combustión CO2 en el refrigerante usando el probador Laser 5524?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "PROCEDIMIENTO DE DETECCIÓN QUÍMICA DE CO2 EN EL SISTEMA DE REFRIGERACIÓN",
+      "top_score": 0.20606832206249237,
+      "top_pag": 1,
+      "top_oem": "laser_5524_instrucciones_es.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_REFRIG_02",
+    "categoria": "REFRIGERACIÓN",
+    "consulta": "¿Qué cambio de color indica presencia de CO2 en el líquido reactivo en un motor a gasolina?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "PRECAUCIONES CONTRA FALSOS NEGATIVOS Y CONTAMINACIÓN EN PRUEBA DE CO2",
+      "top_score": 0.15864868462085724,
+      "top_pag": 2,
+      "top_oem": "laser_5524_instrucciones_es.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_REFRIG_03",
+    "categoria": "REFRIGERACIÓN",
+    "consulta": "¿A qué color vira el reactivo de CO2 cuando se prueba en un motor diésel?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "PRECAUCIONES CONTRA FALSOS NEGATIVOS Y CONTAMINACIÓN EN PRUEBA DE CO2",
+      "top_score": 0.1422852724790573,
+      "top_pag": 2,
+      "top_oem": "laser_5524_instrucciones_es.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_REFRIG_04",
+    "categoria": "REFRIGERACIÓN",
+    "consulta": "¿Por qué se produce un falso negativo si entra líquido refrigerante al probador de fugas de culata?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "PRECAUCIONES CONTRA FALSOS NEGATIVOS Y CONTAMINACIÓN EN PRUEBA DE CO2",
+      "top_score": 0.12573447823524475,
+      "top_pag": 2,
+      "top_oem": "laser_5524_instrucciones_es.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_REFRIG_05",
+    "categoria": "REFRIGERACIÓN",
+    "consulta": "¿A qué temperatura debe estar el motor para realizar la prueba química de fugas de combustión?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_INST_01",
+    "categoria": "INSTRUMENTAL",
+    "consulta": "¿Cuáles son los tres rangos de medición del transductor de presión automotriz Pico WPS500X?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "RANGOS DE MEDICIÓN Y ESCALAMIENTO EN TRANSDUCTOR DE PRESIÓN AUTOMOTRIZ WPS500X",
+      "top_score": 0.2909703254699707,
+      "top_pag": 10,
+      "top_oem": "pico_wps500x_pressure_transducer_manual.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_INST_02",
+    "categoria": "INSTRUMENTAL",
+    "consulta": "¿Qué escala de voltaje y rango se utiliza para medir compresión relativa en cilindro con el WPS500X?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO DE COMPRESIÓN RELATIVA Y DINÁMICA CON PINZA AMPERIMÉTRICA Y OSCILOSCOPIO",
+      "top_score": 0.14412635564804077,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO DE COMPRESIÓN RELATIVA Y DINÁMICA CON PINZA AMPERIMÉTRICA Y OSCILOSCOPIO",
+      "top_score": 0.1303929090499878,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_INST_03",
+    "categoria": "INSTRUMENTAL",
+    "consulta": "¿Cuál es la presión máxima que puede soportar el transductor WPS500X y por qué no usar en Common Rail?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: MEDICIÓN DE RETORNO DE INYECTORES Y CONTROL DE PRESIÓN COMMON RAIL DIESEL (DTC P0087 / P0088)",
+      "top_score": 0.11099060624837875,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "RANGOS DE MEDICIÓN Y ESCALAMIENTO EN TRANSDUCTOR DE PRESIÓN AUTOMOTRIZ WPS500X",
+      "top_score": 0.1793365776538849,
+      "top_pag": 10,
+      "top_oem": "pico_wps500x_pressure_transducer_manual.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_INST_04",
+    "categoria": "INSTRUMENTAL",
+    "consulta": "¿Cómo analizar la onda de compresión en cilindro de 720 grados para detectar escape obstruido?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": true,
+      "trazable": true,
+      "top_doc": "DIAGNÓSTICO DE COMPRESIÓN DINÁMICA EN CILINDRO (IN-CYLINDER PRESSURE ANALYSIS)",
+      "top_score": 0.17319169640541077,
+      "top_pag": 12,
+      "top_oem": "pico_wps500x_pressure_transducer_manual.pdf"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_INST_05",
+    "categoria": "INSTRUMENTAL",
+    "consulta": "¿Cómo detectar un cilindro con válvula de escape quemada mediante pulsos en el tubo de escape?",
+    "espera_cobertura": true,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": true,
+      "top_doc": "ANÁLISIS DE PULSOS DE ESCAPE Y ADMISIÓN CON TRANSDUCTOR DE ALTA SENSIBILIDAD",
+      "top_score": 0.18335798382759094,
+      "top_pag": 16,
+      "top_oem": "pico_wps500x_pressure_transducer_manual.pdf"
+    },
+    "mejora": true,
+    "empeoro": false
+  },
+  {
+    "id": "Q_OOD_01",
+    "categoria": "SIN_COBERTURA",
+    "consulta": "¿Cuál es el procedimiento para desactivar el inversor de alto voltaje de 650V en un Tesla Model S?",
+    "espera_cobertura": false,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": true,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE ALTO VOLTAJE E INVERSOR EN VEHÍCULOS ELÉCTRICOS E HÍBRIDOS (EV/HEV / DTC P0A80)",
+      "top_score": 0.12215368449687958,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": true,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNÓSTICO DE BATERÍA DE ALTO VOLTAJE E INVERSOR EN VEHÍCULOS ELÉCTRICOS E HÍBRIDOS (EV/HEV / DTC P0A80)",
+      "top_score": 0.12301795929670334,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_OOD_02",
+    "categoria": "SIN_COBERTURA",
+    "consulta": "¿Cómo calibrar los sensores de radar de onda milimétrica de 77 GHz de control crucero adaptativo en un camión Scania?",
+    "espera_cobertura": false,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": true,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_OOD_03",
+    "categoria": "SIN_COBERTURA",
+    "consulta": "¿Cuál es el par de apriete de las bielas forjadas en un motor marino fuera de borda Yamaha V8 350hp?",
+    "espera_cobertura": false,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": true,
+      "trazable": true,
+      "top_doc": "CONTROL DE PAR DE APRIETE DE RUEDAS Y DEFORMACIÓN DE CAMPANA DE DISCO",
+      "top_score": 0.1695398986339569,
+      "top_pag": 8,
+      "top_oem": "brembo_guide_brake_disc_diagnostics.pdf"
+    },
+    "mejora": false,
+    "empeoro": true
+  },
+  {
+    "id": "Q_OOD_04",
+    "categoria": "SIN_COBERTURA",
+    "consulta": "¿Cómo purgar el circuito neumático de frenos de aire Wabco EBS en un remolque de tractor articulado?",
+    "espera_cobertura": false,
+    "eval_A": {
+      "abstencion": false,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": true,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA DE FRENOS DE AIRE NEUMATICOS EN CAMIONES (FRENO_006 / FRENO_007)",
+      "top_score": 0.10362942516803741,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "eval_B": {
+      "abstencion": false,
+      "p1": 0.0,
+      "r3": 0.0,
+      "incorrecto": true,
+      "trazable": false,
+      "top_doc": "PROCEDIMIENTO: DIAGNOSTICO DE SISTEMA DE FRENOS DE AIRE NEUMATICOS EN CAMIONES (FRENO_006 / FRENO_007)",
+      "top_score": 0.10264210402965546,
+      "top_pag": 1,
+      "top_oem": ""
+    },
+    "mejora": false,
+    "empeoro": false
+  },
+  {
+    "id": "Q_OOD_05",
+    "categoria": "SIN_COBERTURA",
+    "consulta": "¿Cuál es el código de desbloqueo de la radio satelital del sistema SiriusXM en un Ford Mustang Mach-E?",
+    "espera_cobertura": false,
+    "eval_A": {
+      "abstencion": true,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "eval_B": {
+      "abstencion": true,
+      "p1": 1.0,
+      "r3": 1.0,
+      "incorrecto": false,
+      "trazable": false,
+      "top_doc": "ABSTENCIÓN (Sin cobertura suficiente)",
+      "top_score": 0.0,
+      "top_pag": 0,
+      "top_oem": "N/A"
+    },
+    "mejora": false,
+    "empeoro": false
+  }
+]

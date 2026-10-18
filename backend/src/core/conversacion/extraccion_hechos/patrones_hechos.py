@@ -6,13 +6,18 @@ import re
 from typing import List, Optional, Tuple
 
 PATRONES_REINICIO = [
-    re.compile(r"^\s*(?:quiero\s+)?cancelar(?:(?:\s+el)?\s+(?:caso|diagn[oó]stico|consulta))?\s*[.!]?\s*$", re.IGNORECASE),
+    re.compile(
+        r"^\s*(?:quiero\s+)?cancelar(?:(?:\s+el)?\s+(?:caso|diagn[oó]stico|consulta))?\s*[.!]?\s*$",
+        re.IGNORECASE,
+    ),
     re.compile(r"^\s*(?:nuevo|neuvo)\s*[.!]?\s*$", re.IGNORECASE),
     re.compile(r"\b(otro\s+(carro|auto|veh[ií]culo))\b", re.IGNORECASE),
     re.compile(r"\b((?:nuevo|neuvo)\s+diagn[oó]stico|(?:nuevo|neuvo)\s+caso)\b", re.IGNORECASE),
     re.compile(r"\b(reiniciar|empezar\s+de\s+nuevo|comenzar\s+de\s+nuevo)\b", re.IGNORECASE),
     re.compile(r"\b(limpiar\s+sesi[oó]n|caso\s+(?:nuevo|neuvo))\b", re.IGNORECASE),
-    re.compile(r"\b(vamos\s+con\s+otro\s+cliente|termin[eé]\s+ese|tengo\s+uno\s+(?:nuevo|neuvo))\b", re.IGNORECASE),
+    re.compile(
+        r"\b(vamos\s+con\s+otro\s+cliente|termin[eé]\s+ese|tengo\s+uno\s+(?:nuevo|neuvo))\b", re.IGNORECASE
+    ),
 ]
 
 PATRON_NO_ARRANCA = re.compile(
@@ -186,7 +191,9 @@ def seleccionar_entidad_vehicular(
 
         es_negado = bool(
             PATRON_NEGACION_VEHICULAR.search(ventana_pre)
-            or re.search(r"\bno\s+(?:es|era)\s+(?:[a-záéíóú0-9-]+\s+)*" + re.escape(nombre.lower()) + r"\b", texto_l)
+            or re.search(
+                r"\bno\s+(?:es|era)\s+(?:[a-záéíóú0-9-]+\s+)*" + re.escape(nombre.lower()) + r"\b", texto_l
+            )
         )
 
         if es_negado:
@@ -197,8 +204,7 @@ def seleccionar_entidad_vehicular(
         sufijo = texto[end:].lstrip(" ,;:")
         ventana_post = sufijo[:75]
         es_comparativo = bool(
-            PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre)
-            or PATRON_COMPARATIVO_POST.search(ventana_post)
+            PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre) or PATRON_COMPARATIVO_POST.search(ventana_post)
         )
         if es_comparativo:
             candidatos_validos.append((start, nombre, 1))
@@ -227,9 +233,7 @@ PATRON_PLACA_EXPLICITA = re.compile(
     r"\b(?:placa|patente)\s*(?:es\s+|:\s*|\s+)?([A-Za-z0-9]{2,3}[-\s]?[0-9]{3,4})\b",
     re.IGNORECASE,
 )
-PATRON_PLACA_FORMATO = re.compile(
-    r"\b([A-Za-z][0-9A-Za-z]{2}[-\s][0-9]{3,4})\b"
-)
+PATRON_PLACA_FORMATO = re.compile(r"\b([A-Za-z][0-9A-Za-z]{2}[-\s][0-9]{3,4})\b")
 
 PATRON_DTC = re.compile(r"\b([PBUCpbuc][0-3][0-9A-Fa-f]{3})\b")
 PATRON_ANIO = re.compile(
@@ -265,11 +269,19 @@ PATRON_HALLAZGO_MAF = re.compile(
     r"\b(?:sensor\s+)?maf\b.{0,30}\b(?:desconectad[oa]|desconect[eé])\b",
     re.IGNORECASE,
 )
-PATRON_SENSOR_OXIGENO = re.compile(r"\b(sensor\s+(?:de\s+)?ox[ií]geno|sonda\s+lambda|sensor\s+o2)\b", re.IGNORECASE)
+PATRON_SENSOR_OXIGENO = re.compile(
+    r"\b(sensor\s+(?:de\s+)?ox[ií]geno|sonda\s+lambda|sensor\s+o2)\b", re.IGNORECASE
+)
 
 PATRONES_SALUDO = [
-    re.compile(r"^\s*(hola+|buen(?:as|os)?(?:\s+(?:d[ií]as|tardes|noches))?|qu[eé]\s+tal|saludos?|alo|al[oó])\s*[!.,]*\s*$", re.IGNORECASE),
-    re.compile(r"^\s*(hola+\s+(?:buenas|buenos\s+d[ií]as|buenas\s+tardes|amigo|maestro|carbot|bot))\s*[!.,]*\s*$", re.IGNORECASE),
+    re.compile(
+        r"^\s*(hola+|buen(?:as|os)?(?:\s+(?:d[ií]as|tardes|noches))?|qu[eé]\s+tal|saludos?|alo|al[oó])\s*[!.,]*\s*$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^\s*(hola+\s+(?:(?:amigo|maestro|carbot|bot)\s+)?(?:buenas|buenos\s+d[ií]as|buenas\s+tardes|buenas\s+noches|amigo|maestro|carbot|bot)?)\s*[!.,]*\s*$",
+        re.IGNORECASE,
+    ),
 ]
 
 PATRONES_SOLICITUD_DETALLE = [
@@ -282,7 +294,7 @@ PATRONES_SOLICITUD_DETALLE = [
     ),
     re.compile(
         r"\b(?:c[oó]mo\s+(?:(?:lo|la|los|las|se)\s+)?"
-        r"(?:mide|mido|comprueba|compruebo|prueba|pruebo|calibra|calibro|ajusta|ajusto|revisa|reviso|chequea|chequeo|checa|testea|purga|reaprende))\b",
+        r"(?:mide|mido|comprueba|compruebo|prueba|pruebo|calibra|calibro|ajusta|ajusto|revisa|reviso|chequea|chequeo|checa|testea|purga|purgo|purgar|reaprende))\b",
         re.IGNORECASE,
     ),
     re.compile(

@@ -10,6 +10,7 @@ import numpy as np
 
 try:
     import faiss
+
     FAISS_AVAILABLE = True
 except ImportError:
     FAISS_AVAILABLE = False
@@ -22,6 +23,18 @@ from src.infrastructure.rag_checks.frozen_integrity import FrozenRAGMismatch
 from src.infrastructure.rag_checks.vectorizer_config import SPANISH_STOP_WORDS
 
 
+def validar_coherencia_paquete_experimental(
+    corpus_data, vectorizador, faiss_index, tolerancia_l2=1e-6, manifiesto=None, directorio_artefactos=None
+):
+    from src.infrastructure.rag.paquete_experimental import validar_vectores
+
+    if not manifiesto or directorio_artefactos is None:
+        return False, [], "Manifiesto versionado obligatorio"
+    return validar_vectores(
+        corpus_data, vectorizador, faiss_index, manifiesto, directorio_artefactos, tolerancia_l2
+    )
+
+
 def _normalizar_texto_rag(texto: str) -> str:
     texto = unicodedata.normalize("NFD", str(texto or "").lower())
     return "".join(caracter for caracter in texto if unicodedata.category(caracter) != "Mn")
@@ -29,6 +42,11 @@ def _normalizar_texto_rag(texto: str) -> str:
 
 def _consulta_indica_fuga_refrigerante(consulta: str) -> bool:
     texto = _normalizar_texto_rag(consulta)
+    if re.search(
+        r"\b(?:co2|quimico|quimica|reactivo|bromotimol|falso\s+negativo|comprobador|analizador|burbujas)\b",
+        texto,
+    ):
+        return False
     fluido = r"(?:refrigerante|anticongelante|agua|coolant)"
     fuga_negada = re.search(
         rf"\b(?:no\s+(?:hay|presenta|tiene|se observa|se detecta)|sin)\b"
@@ -53,9 +71,7 @@ def _consulta_indica_fuga_refrigerante(consulta: str) -> bool:
 
 def _candidato_trata_fuga_refrigerante(candidato: Dict[str, Any]) -> bool:
     meta = candidato.get("metadatos") or {}
-    texto = _normalizar_texto_rag(
-        f"{meta.get('falla', '')} {candidato.get('titulo', '')}"
-    )
+    texto = _normalizar_texto_rag(f"{meta.get('falla', '')} {candidato.get('titulo', '')}")
     return bool(
         re.search(r"\bfuga\b.{0,60}\b(?:refrigerante|radiador|enfriamiento)\b", texto)
         or re.search(r"\b(?:refrigerante|radiador|enfriamiento)\b.{0,60}\bfuga\b", texto)
@@ -85,14 +101,27 @@ class MotorRAG:
         self.corpus_version = "manual-ausente"
         # El corpus actual es referencial/experimental para tesis; FUENTES_Y_VALIDACION.md documenta su estado.
         self.corpus_validado = False
+        self.discrepancias_paquete: List[Dict[str, Any]] = []
         self.dtc_service: Optional[Any] = None
 
         if self.rag_version_id in ("candidate_v1", "v1", "rag_candidato_v1"):
             self.rag_version = "RAG_CANDIDATO_V1"
             self._cargar_candidato_v1()
-        else:
+        elif self.rag_version_id in (
+            "experimental_rag03e",
+            "rag03e",
+            "rag03c2",
+            "rag03c3",
+            "rag03f",
+            "rag03g",
+        ):
+            self.rag_version = "RAG_EXPERIMENTAL_RAG03E"
+            self._cargar_experimental_rag03e()
+        elif self.rag_version_id in ("baseline_f8_3", "baseline"):
             self.rag_version = "RAG_BASELINE_F8_3"
             self._indexar_manuales_multimarca()
+        else:
+            raise ValueError(f"CARBOT_RAG_VERSION no soportado: {self.rag_version_id}")
 
     def _cargar_candidato_v1(self):
         """Carga el paquete original verificado sin reconstruir el índice."""
@@ -104,6 +133,20 @@ class MotorRAG:
             logger.error("RAG congelado no disponible: %s", exc)
             self.faiss_index = None
             self.rag_version = "RAG_CANDIDATO_V1 (INCOMPATIBLE)"
+
+    def _cargar_experimental_rag03e(self):
+        from src.config import PROJECT_ROOT
+        from src.infrastructure.rag.paquete_experimental import cargar_paquete
+
+        corpus, self.vectorizador, self.faiss_index, manifest = cargar_paquete(PROJECT_ROOT)
+        self.documentos = [d["texto"] for d in corpus]
+        self.titulos = [d["titulo"] for d in corpus]
+        self.metadatos_procedimientos = [
+            dict(d, id_procedimiento=d["doc_id"], make=d.get("marca"), model=d.get("modelo")) for d in corpus
+        ]
+        self.corpus_version = manifest["version"]
+        self.rag_version = manifest["version"]
+        self.corpus_validado = False
 
     def _indexar_manuales_multimarca(self):
         """Indexa todos los manuales del directorio de manuales y carga metadatos_manuales.json si está disponible."""
@@ -186,7 +229,7 @@ class MotorRAG:
                 strip_accents="unicode",
                 stop_words=SPANISH_STOP_WORDS,
                 ngram_range=(1, 2),
-                sublinear_tf=True
+                sublinear_tf=True,
             )
             matriz_tfidf = self.vectorizador.fit_transform(textos_vectorizables).toarray().astype(np.float32)
 
@@ -258,31 +301,35 @@ class MotorRAG:
                 for termino in ("sensor map", "carga absoluta", "presion absoluta", "presión absoluta")
             )
             # Para MAP, explorar el corpus completo antes de restringirlo a la
-            # ficha con fuente verificable: los documentos históricos retirados
-            # aún pueden puntuar alto por compartir DTC/título.
-            k_busqueda = len(self.documentos) if consulta_map_explicita else min(k_candidatos, len(self.documentos))
-            similitudes, indices = self.faiss_index.search(consulta_vec, k=k_busqueda)
+            # única ficha de admisión que resuelve la discrepancia con MAF.
+            k_busqueda = (
+                len(self.documentos) if consulta_map_explicita else min(k_candidatos, len(self.documentos))
+            )
+            similitudes, indices = self.faiss_index.search(consulta_vec, k_busqueda)
 
             candidatos = []
-            for doc_idx, sim in zip(indices[0], similitudes[0]):
+            for sim, doc_idx in zip(similitudes[0], indices[0]):
                 if 0 <= doc_idx < len(self.documentos):
-                    if self.metadatos_procedimientos[doc_idx].get("knowledge_type") == "STUB":
+                    if np.isnan(sim) or np.isinf(sim):
                         continue
-                    candidatos.append({
-                        "indice": doc_idx,
-                        "titulo": self.titulos[doc_idx],
-                        "documento": self.documentos[doc_idx],
-                        "similitud": sim,
-                        "metadatos": (
-                            self.metadatos_procedimientos[doc_idx]
-                            if doc_idx < len(self.metadatos_procedimientos)
-                            else {}
-                        ),
-                    })
+                    candidatos.append(
+                        {
+                            "indice": doc_idx,
+                            "titulo": self.titulos[doc_idx],
+                            "documento": self.documentos[doc_idx],
+                            "similitud": sim,
+                            "metadatos": (
+                                self.metadatos_procedimientos[doc_idx]
+                                if doc_idx < len(self.metadatos_procedimientos)
+                                else {}
+                            ),
+                        }
+                    )
 
             if consulta_map_explicita:
                 candidatos = [
-                    candidato for candidato in candidatos
+                    candidato
+                    for candidato in candidatos
                     if (candidato.get("metadatos") or {}).get("id_procedimiento") == "RAG_PROC_116"
                 ]
             # Una mención explícita de subsistema prevalece sobre una clase ML
@@ -290,9 +337,7 @@ class MotorRAG:
             candidatos = filtrar_candidatos_por_area(candidatos, areas_consulta)
             if not areas_consulta and not (macro_sistema or top_fallas or codigos_dtc):
                 candidatos = [
-                    candidato
-                    for candidato in candidatos
-                    if tiene_anclaje_lexico(consulta, candidato)
+                    candidato for candidato in candidatos if tiene_anclaje_lexico(consulta, candidato)
                 ]
             if not candidatos:
                 if not areas_consulta:
@@ -313,7 +358,11 @@ class MotorRAG:
             conf_ml_val = None
             if top_fallas and len(top_fallas) > 0:
                 first_f = top_fallas[0]
-                conf_ml_val = float(first_f.get("probabilidad", 0.70) if isinstance(first_f, dict) else getattr(first_f, "probabilidad", 0.70))
+                conf_ml_val = float(
+                    first_f.get("probabilidad", 0.70)
+                    if isinstance(first_f, dict)
+                    else getattr(first_f, "probabilidad", 0.70)
+                )
 
             candidatos_reordenados = reordenar_candidatos_rag(
                 candidatos,
@@ -323,6 +372,7 @@ class MotorRAG:
                 confianza_ml=conf_ml_val,
                 marca=marca,
                 modelo=modelo,
+                consulta=consulta,
             )
 
             from src.core.diagnostico.coherencia_evidencia import documento_compatible
@@ -362,11 +412,16 @@ class MotorRAG:
                     "No se encontró un procedimiento específico en los manuales para esta consulta.",
                     "Coincidencia baja",
                     candidatos_reordenados[0]["similitud"] if candidatos_reordenados else 0.0,
-                    {}
+                    {},
                 )
 
             mejor = candidatos_reordenados[0]
-            return mejor["documento"], mejor["titulo"], mejor["similitud"], mejor["metadatos"]
+            metadatos_ret = dict(mejor.get("metadatos") or {})
+            metadatos_ret["score_base"] = mejor.get("score_base", mejor.get("similitud", 0.0))
+            metadatos_ret["similitud_rerank"] = mejor.get("similitud", 0.0)
+            metadatos_ret["categoria_doc"] = mejor.get("categoria_doc", "PROCEDIMIENTO_GENERAL")
+            metadatos_ret["dictamen_seguridad"] = mejor.get("dictamen_seguridad", "Aprobado")
+            return mejor["documento"], mejor["titulo"], mejor["similitud"], metadatos_ret
         except Exception as e:
             logger.error(f"Error durante la recuperación híbrida en FAISS: {e}")
             return "Error al buscar en el manual.", "Error", 0.0, {}

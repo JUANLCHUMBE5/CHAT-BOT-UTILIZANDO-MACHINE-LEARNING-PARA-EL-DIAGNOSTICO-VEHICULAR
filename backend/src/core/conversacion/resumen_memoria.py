@@ -36,28 +36,50 @@ def generar_resumen_memoria(estado: Any) -> str:
         vehiculo = "sin perfil completo"
 
     hechos = list(getattr(estado, "hechos", {}).values())
-    presentes = _unicos([
-        str(hecho.valor) for hecho in hechos
+    sintomas_extra = [str(s).replace("_", " ") for s in (getattr(estado, "active_symptoms", []) or []) if s]
+    if getattr(estado, "sintoma_principal", None):
+        sintomas_extra.append(str(estado.sintoma_principal).replace("_", " "))
+    for s in getattr(estado, "sintomas_observados", []) or []:
+        if s:
+            sintomas_extra.append(str(s).replace("_", " "))
+
+    hechos_sintomas = [
+        str(hecho.valor).replace("_", " ")
+        for hecho in hechos
         if hecho.categoria == "sintoma" and hecho.estado == FactState.CONFIRMADO
-    ])
-    negados = _unicos([
-        str(hecho.valor) for hecho in hechos
-        if hecho.categoria in {"sintoma", "polaridad", "sistema_normal"}
-        and hecho.estado == FactState.AUSENTE_NEGADO
-    ])
-    dtc = _unicos([
-        str(hecho.valor) for hecho in hechos
-        if hecho.categoria == "dtc" and hecho.estado == FactState.CONFIRMADO
-    ])
-    mediciones = _unicos([
-        str(valor.get("formato") or f"{valor.get('valor')} {valor.get('unidad', '')}".strip())
-        for valor in getattr(estado, "measurements", {}).values()
-        if isinstance(valor, dict) and valor.get("valor") is not None
-    ])
+    ]
+    presentes = _unicos([*hechos_sintomas, *sintomas_extra])
+
+    negados = _unicos(
+        [
+            str(hecho.valor)
+            for hecho in hechos
+            if hecho.categoria in {"sintoma", "polaridad", "sistema_normal"}
+            and hecho.estado == FactState.AUSENTE_NEGADO
+        ]
+    )
+    dtc = _unicos(
+        [
+            str(hecho.valor)
+            for hecho in hechos
+            if hecho.categoria == "dtc" and hecho.estado == FactState.CONFIRMADO
+        ]
+    )
+    mediciones = _unicos(
+        [
+            str(valor.get("formato") or f"{valor.get('valor')} {valor.get('unidad', '')}".strip())
+            for valor in getattr(estado, "measurements", {}).values()
+            if isinstance(valor, dict) and valor.get("valor") is not None
+        ]
+    )
     lim_raw = [
         *[str(valor).replace("_", " ") for valor in getattr(estado, "herramientas_no_disponibles", [])],
         *[str(valor).replace("_", " ") for valor in getattr(estado, "tools_unavailable", [])],
-        *[str(valor.get("prueba", "")).replace("_", " ") for valor in getattr(estado, "pruebas_no_disponibles", []) if isinstance(valor, dict)],
+        *[
+            str(valor.get("prueba", "")).replace("_", " ")
+            for valor in getattr(estado, "pruebas_no_disponibles", [])
+            if isinstance(valor, dict)
+        ],
         *[str(h.valor) for h in hechos if h.categoria == "limitacion"],
     ]
     lim_unicos = []
@@ -72,18 +94,37 @@ def generar_resumen_memoria(estado: Any) -> str:
         None,
     )
 
+    descartes_list = [
+        str(h.replace("componente:", "").replace("_", " ").capitalize())
+        for h in getattr(estado, "hipotesis_descartadas", [])
+    ]
+    for h in hechos:
+        if getattr(h, "categoria", "") in (
+            "componente_reemplazado",
+            "rechazo_hipotesis_usuario",
+        ) or "bujia" in getattr(h, "campo", ""):
+            nombre = getattr(h, "campo", "").replace("componente_reemplazado_", "").capitalize()
+            val = getattr(h, "valor", "")
+            item_str = f"{nombre}: {val}"
+            if item_str not in descartes_list:
+                descartes_list.append(item_str)
+    descartes = ", ".join(descartes_list) or "ninguno registrado"
+
     lineas = [
         "*Memoria técnica registrada*",
         f"Vehículo: {vehiculo}.",
         f"Síntomas confirmados: {presentes}.",
         f"Síntomas negados: {negados}.",
+        f"Descartes registrados: {descartes}.",
     ]
     if duracion_hecho:
         lineas.append(f"Duración: {duracion_hecho}.")
-    lineas.extend([
-        f"DTC: {dtc}.",
-        f"Mediciones: {mediciones}.",
-        f"Limitaciones registradas: {limitaciones}.",
-        "Consulta de solo lectura: no generé hipótesis ni modifiqué el diagnóstico.",
-    ])
+    lineas.extend(
+        [
+            f"DTC: {dtc}.",
+            f"Mediciones: {mediciones}.",
+            f"Limitaciones registradas: {limitaciones}.",
+            "Consulta de solo lectura: no generé hipótesis ni modifiqué el diagnóstico.",
+        ]
+    )
     return "\n".join(lineas)

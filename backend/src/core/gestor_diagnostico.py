@@ -37,6 +37,7 @@ from src.core.diagnostico import (
     texto_modo_combustible,
 )
 from src.core.diagnostico.constants import _vocabulario_desde_taxonomia
+from src.core.diagnostico.control_salida import con_gobernanza_documental
 from src.core.diagnostico.diagnostico_tracker import _tracker_lock
 from src.core.interfaces import IModeloML, IMotorRAG
 from src.core.session_manager import SessionManager
@@ -145,6 +146,7 @@ class GestorDiagnostico:
     ) -> None:
         registrar_en_tracker(placa, marca_modelo, sintoma, diagnostico_ml, campos_completos)
 
+    @con_gobernanza_documental
     def _procesar_consulta_tecnica(
         self,
         pregunta: str,
@@ -174,6 +176,7 @@ class GestorDiagnostico:
             diferir_encolado_persistente=diferir_encolado_persistente,
         )
 
+    @con_gobernanza_documental
     def procesar_consulta_texto(
         self,
         texto_usuario: str,
