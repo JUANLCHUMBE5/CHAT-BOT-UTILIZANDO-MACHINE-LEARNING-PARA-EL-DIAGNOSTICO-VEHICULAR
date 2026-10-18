@@ -140,6 +140,10 @@ def extraer_y_actualizar(
     if nueva_marca:
         if estado.marca and estado.marca != nueva_marca:
             es_correccion = bool(marca_actual_negada or PATRON_CORRECCION_VEHICULO.search(texto_usuario))
+            es_cambio_explicito = bool(
+                (re.search(r"\b(?:cambiar|cambio|otro|otra|nuevo|neuvo)\s+(?:de\s+)?(?:carro|auto|vehiculo|caso)\b", texto_usuario, re.IGNORECASE) if not re.search(r"\b(?:su|un|el|mi)?\s*otro\s+(?:auto|carro|vehiculo).{0,80}\b(?:pero|aunque|sin embargo|estamos|revisando|este)\b", texto_usuario, re.IGNORECASE) else False)
+                or re.search(r"\b(?:ahora|ahora\s+es|este\s+es)\s+(?:un|una)\b", texto_usuario, re.IGNORECASE)
+            )
             if es_correccion:
                 estado.last_user_correction = "marca"
                 estado.turno_ultima_correccion = estado.turno_actual
@@ -149,7 +153,16 @@ def extraer_y_actualizar(
                         re.sub(rf"\b(?:no\s+(?:es|era)\s+)?{marca_antigua}\b", nueva_marca, s, flags=re.IGNORECASE)
                         for s in estado.active_symptoms
                     ]
-            else:
+                estado.marca = nueva_marca
+                h = estado.registrar_hecho(
+                    "marca",
+                    nueva_marca,
+                    categoria="vehiculo",
+                    texto_crudo=texto_usuario,
+                    tipo=FactType.CONDICION,
+                )
+                hechos_extraidos.append(h.to_dict())
+            elif es_cambio_explicito:
                 p_prev = estado.placa or placa_encontrada
                 estado.reiniciar()
                 estado.historial_mensajes_usuario.append(texto_usuario)
@@ -163,15 +176,35 @@ def extraer_y_actualizar(
                         texto_crudo=texto_usuario,
                         tipo=FactType.CONDICION,
                     )
-        estado.marca = nueva_marca
-        h = estado.registrar_hecho(
-            "marca",
-            nueva_marca,
-            categoria="vehiculo",
-            texto_crudo=texto_usuario,
-            tipo=FactType.CONDICION,
-        )
-        hechos_extraidos.append(h.to_dict())
+                estado.marca = nueva_marca
+                h = estado.registrar_hecho(
+                    "marca",
+                    nueva_marca,
+                    categoria="vehiculo",
+                    texto_crudo=texto_usuario,
+                    tipo=FactType.CONDICION,
+                )
+                hechos_extraidos.append(h.to_dict())
+            else:
+                campo_ant = f"vehiculo_mencionado_{nueva_marca.lower()}"
+                h_ant = estado.registrar_hecho(
+                    campo_ant,
+                    nueva_marca,
+                    categoria="antecedente",
+                    texto_crudo=texto_usuario,
+                    tipo=FactType.CONDICION,
+                )
+                hechos_extraidos.append(h_ant.to_dict())
+        else:
+            estado.marca = nueva_marca
+            h = estado.registrar_hecho(
+                "marca",
+                nueva_marca,
+                categoria="vehiculo",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            hechos_extraidos.append(h.to_dict())
     elif marca_actual_negada and not nueva_marca:
         estado.marca = None
         if "marca" in estado.hechos:

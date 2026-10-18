@@ -72,7 +72,7 @@ def evaluar_transicion(
     es_meta_consulta = bool(
         re.search(
             r"\b(resumen|cotizar|cotizacion|presupuesto|informe|orden\s+de\s+reparacion|cuanto\s+cuesta|"
-            r"procedimiento|paso\s+a\s+paso|como\s+pruebo|como\s+compruebo|como\s+inspecciono|"
+            r"procedimiento|paso\s+a\s+paso|como\s+pruebo|como\s+compruebo|como\s+inspecciono|como\s+(?:se\s+)?mide|como\s+mido|como\s+(?:se\s+)?calibra|como\s+calibro|como\s+(?:se\s+)?prueba|reloj\s+comparador|alabeo|"
             r"por\s+que|explicacion|tolerancia|especificacion|que\s+significa|que\s+codigo|"
             r"confirma|descarta|indica|significa)\b",
             texto_l,

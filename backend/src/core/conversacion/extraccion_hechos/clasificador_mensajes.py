@@ -137,6 +137,11 @@ def _es_mencion_no_destructiva(texto: str) -> bool:
         normalizado,
     ):
         return True
+    if re.search(
+        r"\b(?:su|un|el|mi)?\s*otro\s+(?:auto|carro|vehiculo).{0,80}\b(?:pero|aunque|sin embargo|estamos|revisando|este)\b",
+        normalizado,
+    ):
+        return True
     return bool(re.search(
         r"\b(?:no\s+(?:generes|inicies|cierres|reinicies|cambies|abras|borres)|"
         r"sin\s+(?:generar|cerrar|reiniciar|iniciar|abrir)|"

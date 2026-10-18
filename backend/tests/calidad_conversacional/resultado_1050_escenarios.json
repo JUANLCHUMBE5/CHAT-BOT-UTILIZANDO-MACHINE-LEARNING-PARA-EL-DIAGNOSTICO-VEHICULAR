@@ -1,0 +1,24 @@
+{
+  "total_escenarios": 1050,
+  "total_turnos": 3150,
+  "tiempo_total_segundos": 491.84,
+  "latencia_promedio_turno_ms": 156.14,
+  "retencion_vehiculo": {
+    "aciertos": 1050,
+    "total": 1050,
+    "porcentaje": 100.0
+  },
+  "retencion_sintomas": {
+    "aciertos": 1050,
+    "total": 900,
+    "porcentaje": 116.67
+  },
+  "despacho_consultas_tecnicas": {
+    "aciertos": 150,
+    "total": 150,
+    "porcentaje": 100.0
+  },
+  "preguntas_repetidas_totales": 0,
+  "fallos_por_familia": {},
+  "ejemplos_fallos": []
+}

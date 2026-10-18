@@ -1154,16 +1154,8 @@ class OrquestadorConversacion:
         # 4b. Manejo de consulta técnica informativa pura o solicitud de detalle paso a paso
         es_solicitud_detalle = ExtractorHechos.es_solicitud_detalle(texto_limpio)
         from src.core.intent_classifier import clasificar_intencion_consulta
-        tiene_sintomas = bool(
-            estado.active_symptoms
-            or estado.top3_actual
-            or getattr(estado, "falla_principal", None)
-            or any(
-                h.categoria in ("sintoma", "condicion") or h.tipo == FactType.SINTOMA
-                for h in estado.hechos.values()
-            )
-        )
-        if es_solicitud_detalle or (not tiene_sintomas and clasificar_intencion_consulta(texto_limpio) == "consulta_tecnica"):
+        es_consulta_tecnica = clasificar_intencion_consulta(texto_limpio) == "consulta_tecnica"
+        if es_solicitud_detalle or es_consulta_tecnica:
             dto_tecnico = gestor_diagnostico._procesar_consulta_tecnica(
                 pregunta=texto_limpio,
                 inicio_total=t0,
@@ -1271,6 +1263,7 @@ class OrquestadorConversacion:
                 diagnostico_ml=getattr(dto_tecnico, "diagnostico_ml", "Consulta técnica"),
                 estado=estado,
             )
+            await self.repositorio.save_session(session_id, estado)
             return {
                 "status": "consulta_tecnica" if not es_solicitud_detalle else "solicitud_detalle",
                 "respuesta_texto": resp_texto,
