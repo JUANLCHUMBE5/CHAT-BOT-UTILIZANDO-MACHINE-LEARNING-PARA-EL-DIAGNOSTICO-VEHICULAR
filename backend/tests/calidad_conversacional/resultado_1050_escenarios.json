@@ -9,9 +9,9 @@
     "porcentaje": 100.0
   },
   "retencion_sintomas": {
-    "aciertos": 1050,
+    "aciertos": 900,
     "total": 900,
-    "porcentaje": 116.67
+    "porcentaje": 100.0
   },
   "despacho_consultas_tecnicas": {
     "aciertos": 150,

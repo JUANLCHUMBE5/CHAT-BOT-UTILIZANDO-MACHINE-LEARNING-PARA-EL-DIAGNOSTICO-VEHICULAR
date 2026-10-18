@@ -69,7 +69,7 @@ async def evaluar_un_escenario(
     # Verificación de retención de vehículo y síntomas
     estado = await repo.get_session(session_id)
     ret_veh = False
-    ret_sint = False
+    ret_sint = None
     if estado:
         esperado_v = esc.get("vehiculo_esperado", {})
         marca_esp = esperado_v.get("marca")
@@ -85,8 +85,6 @@ async def evaluar_un_escenario(
             else:
                 fallo = True
                 razon = "Síntomas o hechos borrados"
-        else:
-            ret_sint = True
 
     return {
         "id": session_id,
@@ -103,47 +101,69 @@ async def evaluar_un_escenario(
 async def ejecutar_lote(
     start_idx: int,
     end_idx: int,
-    concurrency: int = 15,
-    tag: str = "",
-) -> Dict[str, Any]:
-    gestor = GestorDiagnostico()
-    todos_escenarios = construir_1050_escenarios()
+    gestor: GestorDiagnostico,
+    todos_escenarios: List[Dict[str, Any]],
+    archivo_salida: str,
+    concurrencia: int = 10,
+):
     lote = todos_escenarios[start_idx:end_idx]
-    total = len(lote)
-    print(f"Iniciando evaluación del lote [{start_idx}:{end_idx}] ({total} escenarios) con concurrencia={concurrency}...")
+    sem = asyncio.Semaphore(concurrencia)
+    resultados = []
 
-    t0_global = time.perf_counter()
-    sem = asyncio.Semaphore(concurrency)
+    t0 = time.time()
 
-    async def sem_worker(esc):
+    async def _worker(esc):
         async with sem:
             return await evaluar_un_escenario(esc, gestor)
 
-    tasks = [sem_worker(e) for e in lote]
+    tasks = [_worker(esc) for esc in lote]
     resultados = await asyncio.gather(*tasks)
-    t_total = time.perf_counter() - t0_global
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    fn = f"parcial_{start_idx}_{end_idx}.json" if not tag else f"parcial_{tag}.json"
-    out_path = os.path.join(base_dir, fn)
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump({
-            "start": start_idx,
-            "end": end_idx,
-            "tiempo_segundos": round(t_total, 2),
-            "resultados": resultados,
-        }, f, indent=2, ensure_ascii=False)
+    t1 = time.time()
+    duracion = t1 - t0
 
-    print(f"Lote [{start_idx}:{end_idx}] completado en {t_total:.2f}s y guardado en {fn}")
-    return {"start": start_idx, "end": end_idx, "tiempo": t_total, "count": total}
+    payload = {
+        "start_idx": start_idx,
+        "end_idx": end_idx,
+        "total_procesados": len(resultados),
+        "tiempo_segundos": duracion,
+        "resultados": resultados,
+    }
+
+    with open(archivo_salida, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+
+    print(f"Lote [{start_idx}:{end_idx}] completado en {duracion:.2f}s ({len(resultados)} escenarios)")
 
 
-def consolidar_resultados() -> Dict[str, Any]:
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+async def main_async(args):
+    gestor = GestorDiagnostico()
+    todos_escenarios = construir_1050_escenarios()
+
+    total = len(todos_escenarios)
+    start = max(0, args.start)
+    end = min(total, args.end)
+
+    base_dir = os.path.dirname(__file__)
+    salida_parcial = os.path.join(base_dir, f"parcial_{start}_{end}.json")
+
+    print(f"Iniciando ejecucion de escenarios {start} a {end} (concurrencia={args.concurrencia})...")
+    await ejecutar_lote(
+        start_idx=start,
+        end_idx=end,
+        gestor=gestor,
+        todos_escenarios=todos_escenarios,
+        archivo_salida=salida_parcial,
+        concurrencia=args.concurrencia,
+    )
+
+
+def consolidar_resultados():
+    base_dir = os.path.dirname(__file__)
     todos_escenarios = construir_1050_escenarios()
     total_esperado = len(todos_escenarios)
 
-    resultados_map: Dict[str, Dict[str, Any]] = {}
+    resultados_map = {}
     tiempo_total = 0.0
 
     for fname in os.listdir(base_dir):
@@ -161,8 +181,15 @@ def consolidar_resultados() -> Dict[str, Any]:
     resultados = list(resultados_map.values())
     total = len(resultados)
 
+    fam_1_total = sum(1 for e in todos_escenarios if e["familia"] == "1_CONSULTAS_TECNICAS")
+    sint_escenario_ids = {e["id"] for e in todos_escenarios if e.get("sintoma_preservado")}
+    sint_total = len(sint_escenario_ids)
+
     retencion_vehiculo_aciertos = sum(1 for r in resultados if r["retencion_vehiculo"])
-    retencion_sintomas_aciertos = sum(1 for r in resultados if r["retencion_sintomas"])
+    retencion_sintomas_aciertos = sum(
+        1 for r in resultados
+        if r.get("id") in sint_escenario_ids and r.get("retencion_sintomas")
+    )
     consultas_tecnicas_aciertos = sum(r["consultas_tecnicas_ok"] for r in resultados)
     preguntas_repetidas_totales = sum(r["preguntas_repetidas"] for r in resultados)
 
@@ -178,9 +205,6 @@ def consolidar_resultados() -> Dict[str, Any]:
                 "familia": fam,
                 "razon": r["razon"],
             })
-
-    fam_1_total = sum(1 for e in todos_escenarios if e["familia"] == "1_CONSULTAS_TECNICAS")
-    sint_total = sum(1 for e in todos_escenarios if e.get("sintoma_preservado"))
 
     metricas = {
         "total_escenarios": total,
@@ -218,21 +242,21 @@ def consolidar_resultados() -> Dict[str, Any]:
     print(f"Retención de Vehículo: {metricas['retencion_vehiculo']['porcentaje']}% ({retencion_vehiculo_aciertos}/{total})")
     print(f"Retención de Síntomas: {metricas['retencion_sintomas']['porcentaje']}% ({retencion_sintomas_aciertos}/{sint_total})")
     print(f"Despacho de Consultas Técnicas: {metricas['despacho_consultas_tecnicas']['porcentaje']}% ({consultas_tecnicas_aciertos}/{fam_1_total})")
-    print(f"Preguntas repetidas: {preguntas_repetidas_totales}")
-    print(f"Fallos por familia: {fallos_por_familia}")
+    print(f"Repreguntas idénticas totales: {preguntas_repetidas_totales}")
+    print(f"Fallos totales: {len(detalles_fallos)}")
     print("=" * 60)
-    return metricas
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--start", type=int, default=0)
     parser.add_argument("--end", type=int, default=1050)
-    parser.add_argument("--concurrency", type=int, default=15)
-    parser.add_argument("--consolidate", action="store_true")
+    parser.add_argument("--concurrencia", type=int, default=15)
+    parser.add_argument("--consolidar", action="store_true")
+
     args = parser.parse_args()
 
-    if args.consolidate:
+    if args.consolidar:
         consolidar_resultados()
     else:
-        asyncio.run(ejecutar_lote(args.start, args.end, concurrency=args.concurrency))
+        asyncio.run(main_async(args))
