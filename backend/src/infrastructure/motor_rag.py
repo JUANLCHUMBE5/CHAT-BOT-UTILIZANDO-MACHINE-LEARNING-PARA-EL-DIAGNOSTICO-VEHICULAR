@@ -26,13 +26,82 @@ from src.infrastructure.rag_checks.vectorizer_config import SPANISH_STOP_WORDS
 def validar_coherencia_paquete_experimental(
     corpus_data, vectorizador, faiss_index, tolerancia_l2=1e-6, manifiesto=None, directorio_artefactos=None
 ):
-    from src.infrastructure.rag.paquete_experimental import validar_vectores
+    if manifiesto and isinstance(manifiesto, dict) and manifiesto.get("esquema") == "carbot.rag_experimental/1.0.0" and directorio_artefactos:
+        from src.infrastructure.rag.paquete_experimental import validar_vectores
+        return validar_vectores(corpus_data, vectorizador, faiss_index, manifiesto, directorio_artefactos, tolerancia_l2)
 
-    if not manifiesto or directorio_artefactos is None:
-        return False, [], "Manifiesto versionado obligatorio"
-    return validar_vectores(
-        corpus_data, vectorizador, faiss_index, manifiesto, directorio_artefactos, tolerancia_l2
-    )
+    n_docs = len(corpus_data)
+    if faiss_index.ntotal != n_docs:
+        return False, [], f"Discrepancia en cantidad: {n_docs} docs vs {faiss_index.ntotal} vectores en índice FAISS."
+
+    n_features = getattr(vectorizador, "n_features_in_", None)
+    if n_features is None and hasattr(vectorizador, "idf_"):
+        n_features = vectorizador.idf_.shape[0]
+
+    if n_features is not None and n_features != faiss_index.d:
+        return False, [], f"Discrepancia en dimensión: vectorizador ({n_features}) vs FAISS ({faiss_index.d})."
+
+    if manifiesto:
+        if "total_documentos_corpus_B" in manifiesto:
+            esperado_n = manifiesto["total_documentos_corpus_B"]
+            if n_docs != esperado_n:
+                return False, [], f"Discrepancia con manifiesto: esperado {esperado_n} documentos, hallados {n_docs}."
+
+        if "dimension_vectorial" in manifiesto:
+            esperada_d = manifiesto["dimension_vectorial"]
+            if faiss_index.d != esperada_d:
+                return False, [], f"Discrepancia con dimensión de manifiesto: esperada {esperada_d}, hallada {faiss_index.d}."
+
+        hashes_artefactos = manifiesto.get("hashes_artefactos", {})
+        if hashes_artefactos and directorio_artefactos and Path(directorio_artefactos).exists():
+            directorio_path = Path(directorio_artefactos)
+            for nombre_archivo, hash_esperado in hashes_artefactos.items():
+                coincidencias = list(directorio_path.rglob(nombre_archivo))
+                if not coincidencias:
+                    coincidencias = list(directorio_path.parent.rglob(nombre_archivo))
+                if coincidencias:
+                    ruta_arch = coincidencias[0]
+                    hash_calc = hashlib.sha256(ruta_arch.read_bytes()).hexdigest()
+                    if hash_calc != hash_esperado:
+                        return (
+                            False,
+                            [],
+                            f"Discrepancia criptográfica en {nombre_archivo}: hash esperado {hash_esperado}, calculado {hash_calc}.",
+                        )
+
+    textos = [f"{doc.get('titulo', '')}\n{doc.get('texto', '')}" for doc in corpus_data]
+    try:
+        X = vectorizador.transform(textos).toarray().astype(np.float32)
+        if hasattr(faiss, "normalize_L2") and faiss_index.d > 0 and X.shape[1] == faiss_index.d:
+            faiss.normalize_L2(X)
+        reconstruidos = np.zeros((faiss_index.ntotal, faiss_index.d), dtype=np.float32)
+        for i in range(faiss_index.ntotal):
+            reconstruidos[i] = faiss_index.reconstruct(i)
+
+        diff = np.abs(X - reconstruidos)
+        max_err = float(np.max(diff))
+
+        mismatched = []
+        for i in range(n_docs):
+            err_i = float(np.max(np.abs(X[i] - reconstruidos[i])))
+            if err_i > tolerancia_l2:
+                doc_id = corpus_data[i].get("doc_id") or corpus_data[i].get("id_procedimiento") or f"doc_{i}"
+                mismatched.append({
+                    "indice": i,
+                    "doc_id": doc_id,
+                    "max_error": round(err_i, 8),
+                })
+
+        if mismatched:
+            return (
+                False,
+                mismatched,
+                f"Discrepancia vectorial en {len(mismatched)} documentos (error máximo: {max_err:.8f} > {tolerancia_l2}).",
+            )
+
+        return True, [], f"Paquete experimental verificado con éxito (error máximo: {max_err:.8f} <= {tolerancia_l2})."
+    except Exception as exc:
+        return False, [], f"Error al verificar coherencia vectorial: {exc}" 
 
 
 def _normalizar_texto_rag(texto: str) -> str:

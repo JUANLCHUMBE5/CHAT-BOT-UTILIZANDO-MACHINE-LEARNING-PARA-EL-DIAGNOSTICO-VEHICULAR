@@ -4,7 +4,7 @@
   "agente": "Agente 2 — Remediación de Corpus OEM RAG-03",
   "total_documentos_corpus_B": 256,
   "total_fragmentos_remediados": 17,
-  "dimension_vectorial": 35181,
+  "dimension_vectorial": 35240,
   "max_error_absoluto_vectorial": 0.0,
   "criterio_tolerancia": 1e-06,
   "coherencia_matematica_aprobada": true,
@@ -15,11 +15,11 @@
     "A07_A09": "Resuelto: Datos en worktree aislado independiente, procedencia limpia registrada con hashes SHA-256."
   },
   "hashes_artefactos": {
-    "corpus_B_experimental.json": "d19dac0507b5c604c341e61d757c50761e54aaf338996a3a06ea6174b656bd06",
-    "fragmentos_nuevos_5pdfs.json": "c49960999ad98e27fcbed903e7f5bcaa18b5d03d0c3e9f1eba74e20c0a871e38",
-    "fragmentos_data.py": "36e13ed3de8e560ddaea98380722a42a731d747bfc31f8728921ca14b79644ac",
-    "vectorizador_test_B.joblib": "7d0218694b2b8b80a95e692891dcb32858d0aac1bbe382b8b9fe50bc1927bb97",
-    "indice_faiss_test_B.index": "28c4d9029f4d68fd4520190d53baeeff5116f1b1e1dfff88fb998cc74d624fa1"
+    "corpus_B_experimental.json": "ad6af0f0636086934dcc2f5703781f188ecd9b80a5b1d225be5d349b1b565eb0",
+    "fragmentos_nuevos_5pdfs.json": "d725b8cf7915f944b9897bb390c81be91ebf13d6acae1ab1b54b7b8b8eda9403",
+    "fragmentos_data.py": "70ef14bbbd9a67fc25413a2bb344b79b2dbc568480a1b6428b7428d49447e76b",
+    "vectorizador_test_B.joblib": "0f33f5fa66b083a2fb038e844d59f5ea8a5f835c02318e79d127106c53b96030",
+    "indice_faiss_test_B.index": "9df0a2a9e5da56118c4577f0304094f75f4952a3006beab907854f0153d930c1"
   },
   "hashes_pdfs_fuente": {
     "brembo_guide_brake_disc_diagnostics.pdf": "ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1",

@@ -7,6 +7,7 @@ Uso: python ejecutar.py --out DIR [--db] pytest tests/...
 import argparse
 import asyncio
 import faulthandler
+import importlib.util
 import inspect
 import json
 import os
@@ -15,11 +16,14 @@ import runpy
 import sys
 import tempfile
 
+sys.dont_write_bytecode = True
+
 ROOT = Path(__file__).resolve().parents[3]
 DB = "postgresql+asyncpg://carbot_test:isolated_rag03g_tests_only@127.0.0.1:55439/carbot_rag03g_test"
 
 
 def entorno(out, db=False):
+    sys.dont_write_bytecode = True
     # Ignorar cualquier credencial heredada antes de cargar config.
     for key in list(os.environ):
         if any(
@@ -67,6 +71,8 @@ def entorno(out, db=False):
             if writing and isinstance(path, (str, bytes, os.PathLike)):
                 p = Path(path).resolve()
                 if str(p).upper() in ("NUL", r"\\.\NUL"):
+                    return
+                if "__pycache__" in str(p) or str(p).endswith(".pyc"):
                     return
                 if p.is_relative_to(ROOT / "machine_learning") or not (
                     p.is_relative_to(ROOT) or p.is_relative_to(out)
@@ -126,15 +132,17 @@ def main():
                 timid=True,
             )
             cov.start()
-        rc = pytest.main(
+        pytest_args = [
+            "-q",
+            "-p",
+            "no:cacheprovider",
+            "-p",
+            "anyio.pytest_plugin",
+        ]
+        if importlib.util.find_spec("pytest_asyncio") is not None:
+            pytest_args.extend(["-p", "pytest_asyncio.plugin"])
+        pytest_args.extend(
             [
-                "-q",
-                "-p",
-                "no:cacheprovider",
-                "-p",
-                "anyio.pytest_plugin",
-                "-p",
-                "pytest_asyncio.plugin",
                 "-m",
                 "not real_gemini",
                 "--basetemp=" + str(out / "tmp"),
@@ -142,6 +150,7 @@ def main():
                 *extra,
             ]
         )
+        rc = pytest.main(pytest_args)
         if cov:
             cov.stop()
             cov.save()

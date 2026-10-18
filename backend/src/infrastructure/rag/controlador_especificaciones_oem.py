@@ -377,11 +377,6 @@ def clasificar_y_filtrar_oem(
 
     if tipo_q == "ESPECIFICACION_EXACTA":
         # Si NO tiene cifra numérica, unidad o fuente formal -> Jamás puede ser exacta verificada
-        from src.infrastructure.rag.documental_compatibilidad import acreditar_aplicabilidad_exacta
-
-        acreditado, motivo = acreditar_aplicabilidad_exacta(vehiculo_struct, candidato)
-        if not acreditado:
-            return EstadoDocumental.INFORMACION_PARCIAL.value, 0.01, motivo
         if not tiene_cifra_real:
             # Guía o procedimiento general que aporta orientación sin cota OEM exacta
             factor_parcial = 0.70 if not es_exp else 0.40

@@ -171,7 +171,8 @@ def verificar_presencia_cifra_y_trazabilidad(
     cifra, motivo = seleccionar_cifra(consulta, candidato, normalizar_texto, parsear_referencias_paginas)
     if cifra is None:
         return (False, None, motivo)
-    _, paginas, pagina = parsear_referencias_paginas(cifra["pagina"])
+    pag_ref = candidato.get("pagina") or meta.get("pagina") or cifra.get("pagina")
+    _, paginas, pagina = parsear_referencias_paginas(pag_ref)
     trazabilidad = TrazabilidadDocumental(
         fuente=fuente,
         pagina=pagina,
