@@ -4,6 +4,7 @@ Ajusta la puntuación de similitud coseno de FAISS utilizando:
 - Coherencia con el Macro-Sistema inferido (MOTOR, FRENOS, etc.).
 - Presencia y coincidencia de códigos DTC (autoridad diagnóstica).
 - Coincidencia con hipótesis Top 1 / Top 2 / Top 3 del clasificador ML.
+- Compatibilidad vehicular por marca y modelo (evita contaminación entre marcas).
 """
 
 from __future__ import annotations
@@ -43,6 +44,8 @@ def reordenar_candidatos_rag(
     top_fallas: Optional[List[Dict[str, Any]]] = None,
     codigos_dtc: Optional[List[str]] = None,
     confianza_ml: Optional[float] = None,
+    marca: Optional[str] = None,
+    modelo: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """
     Reordena los candidatos recuperados por FAISS aplicando pesos multiseñal adaptativos.
@@ -55,6 +58,10 @@ def reordenar_candidatos_rag(
     dtcs_norm = [c.strip().upper() for c in (codigos_dtc or []) if c]
     sistema_objetivo = (macro_sistema or "").strip().upper()
     conf_ml = float(confianza_ml) if confianza_ml is not None else 0.70
+
+    marca_norm = _normalizar(marca or "")
+    modelo_norm = _normalizar(modelo or "")
+    es_marca_generica = marca_norm in ("", "generico", "vehiculo generico", "n/a", "desconocido", "none")
 
     top_fallas_norm = []
     top_probs = []
@@ -73,6 +80,9 @@ def reordenar_candidatos_rag(
         doc_sistema = str(meta.get("sistema", "")).strip().upper()
         doc_falla = _normalizar(str(meta.get("falla", "")))
         doc_dtcs = [str(d).strip().upper() for d in meta.get("codigos_dtc", []) if d]
+        scope = meta.get("vehicle_scope", "UNIVERSAL")
+        doc_make = _normalizar(meta.get("make") or "")
+        doc_model = _normalizar(meta.get("model") or "")
 
         factor_ajuste = 1.0
 
@@ -92,10 +102,8 @@ def reordenar_candidatos_rag(
                 factor_ajuste *= 1.60
             elif doc_sistema and doc_sistema != sistema_objetivo:
                 if coincide_dtc:
-                    # Coincidencia con DTC oficial no se suprime por predicción estadística
                     pass
                 elif conf_ml < 0.70 or score_base >= 0.55:
-                    # Con baja confianza ML o alta evidencia RAG, penalización suave (0.80x)
                     factor_ajuste *= 0.80
                 else:
                     factor_supresion = 0.35 if dtcs_norm else 0.60
@@ -108,6 +116,21 @@ def reordenar_candidatos_rag(
                     factor_ajuste *= (1.15 + (p_val * 1.50))
                     break
 
+        # 4. Ajuste por compatibilidad vehicular (Marca y Modelo)
+        # Evita atribuir manuales específicos de una marca (ej. Toyota) a un vehículo de otra marca (ej. Nissan)
+        if not es_marca_generica:
+            if scope == "VEHICLE_SPECIFIC":
+                if doc_make and (doc_make in marca_norm or marca_norm in doc_make):
+                    factor_ajuste *= 1.40
+                    if modelo_norm and doc_model and (doc_model in modelo_norm or modelo_norm in doc_model):
+                        factor_ajuste *= 1.25
+                else:
+                    # Penalizar severamente manuales específicos de otra marca
+                    factor_ajuste *= 0.05
+            elif scope == "UNIVERSAL":
+                # Los procedimientos universales se mantienen neutros como orientación general
+                pass
+
         score_ajustado = score_base * factor_ajuste
 
         candidatos_ajustados.append({
@@ -117,7 +140,7 @@ def reordenar_candidatos_rag(
             "factor_ajuste": round(factor_ajuste, 3),
         })
 
-    # Ordenar descendente por similitud ajustada real (sin perder discriminación por tope artificial)
+    # Ordenar descendente por similitud ajustada real
     candidatos_ajustados.sort(key=lambda x: x["similitud"], reverse=True)
 
     # Normalizar similitud final en rango [0.0, 1.0] para contratos del sistema
