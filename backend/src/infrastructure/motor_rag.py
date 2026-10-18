@@ -264,9 +264,7 @@ class MotorRAG:
             similitudes, indices = self.faiss_index.search(consulta_vec, k=k_busqueda)
 
             candidatos = []
-            for k_idx in range(k_busqueda):
-                doc_idx = int(indices[0][k_idx])
-                sim = float(similitudes[0][k_idx])
+            for doc_idx, sim in zip(indices[0], similitudes[0]):
                 if 0 <= doc_idx < len(self.documentos):
                     if self.metadatos_procedimientos[doc_idx].get("knowledge_type") == "STUB":
                         continue
@@ -311,7 +309,7 @@ class MotorRAG:
                     {},
                 )
 
-            # Reordenar ponderando por Macro-Sistema ML, códigos DTC y Top-2 de fallas
+            # Reordenar ponderando por Macro-Sistema ML, códigos DTC, Top-2 de fallas y compatibilidad vehicular
             conf_ml_val = None
             if top_fallas and len(top_fallas) > 0:
                 first_f = top_fallas[0]
@@ -323,6 +321,8 @@ class MotorRAG:
                 top_fallas=top_fallas,
                 codigos_dtc=codigos_dtc,
                 confianza_ml=conf_ml_val,
+                marca=marca,
+                modelo=modelo,
             )
 
             from src.core.diagnostico.coherencia_evidencia import documento_compatible

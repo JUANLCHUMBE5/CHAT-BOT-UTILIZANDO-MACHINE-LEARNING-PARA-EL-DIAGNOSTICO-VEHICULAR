@@ -38,14 +38,15 @@ def construir_consulta_hibrida(
     if macro_sistema and macro_sistema != "DESCONOCIDO":
         partes.append(f"SISTEMA {macro_sistema}")
 
-    # 4. Enrutamiento por señales explícitas para evitar que una clase ML
-    # incompatible contamine la búsqueda técnica.
+    # 4. Descriptores neutros de subsistema
+    # Evitan inyectar componentes específicos pre-juzgados (como termostato en refrigeración)
+    # si el mecánico solo mencionó síntomas generales del sistema.
     terminos_area = {
-        "INYECCION_MEZCLA": "inyección combustible mezcla pobre sensor oxígeno lambda fuel trim P0171",
-        "ADMISION_MAP": "admisión sensor MAP presión múltiple carga absoluta P0106",
-        "RALENTI": "ralentí marcha mínima cuerpo aceleración IAC",
-        "REFRIGERACION": "refrigeración temperatura motor termostato radiador ventilador",
-        "ENCENDIDO": "encendido bujías bobinas chispa misfire P0300",
+        "INYECCION_MEZCLA": "inyección combustible mezcla sensor oxígeno fuel trim",
+        "ADMISION_MAP": "admisión presión colector múltiple admisión vacio",
+        "RALENTI": "ralentí marcha mínima estabilidad motor",
+        "REFRIGERACION": "refrigeración circuito enfriamiento temperatura motor sobrecalentamiento",
+        "ENCENDIDO": "encendido chispa combustión salto de chispa",
     }
     if areas_consulta:
         partes.extend(terminos_area[area] for area in areas_consulta if area in terminos_area)
@@ -72,10 +73,10 @@ def construir_consulta_hibrida(
         if nombres_fallas:
             partes.append(" ".join(nombres_fallas))
 
-    # 6. Datos vehiculares si no están ya en la consulta
-    if marca and marca.lower() not in base.lower() and marca not in ("Generico", "Vehiculo Generico"):
-        partes.append(marca)
-    if modelo and modelo.lower() not in base.lower():
-        partes.append(modelo)
+    # 6. Datos de vehículo si están disponibles
+    if marca:
+        partes.append(f"MARCA {marca}")
+    if modelo:
+        partes.append(f"MODELO {modelo}")
 
     return " ".join(partes)
