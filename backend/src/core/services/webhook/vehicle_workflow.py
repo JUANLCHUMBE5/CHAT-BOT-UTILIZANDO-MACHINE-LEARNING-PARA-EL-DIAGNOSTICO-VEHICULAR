@@ -288,7 +288,23 @@ async def preparar_flujo_vehiculo(
     elif placa_persistida and placa in ('WAPP-01', 'SIN-PLACA', ''):
         placa = placa_persistida
 
-    if placa in ('WAPP-01', 'SIN-PLACA', ''):
+    # Preservar continuidad en casos con placa provisional ya asignada:
+    tiene_caso_activo = bool(
+        contexto_placa.get('conversation_state')
+        or contexto_placa.get('perfil_vehiculo')
+        or contexto_placa.get('case_id')
+        or contexto_placa.get('validacion_diagnostico')
+    )
+
+    if placa == 'SIN-PLACA' and tiene_caso_activo and not contexto_placa.get('posttest_placa_pendiente'):
+        placa_en_texto = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
+        if placa_en_texto:
+            placa = normalizar_placa(placa_en_texto)
+            contexto_placa['placa'] = placa
+            contexto_placa['placa_posttest'] = placa
+            conversacion.contexto = contexto_placa
+        # Continúa el diagnóstico sin reiniciar ni volver a pedir placa
+    elif placa in ('WAPP-01', 'SIN-PLACA', ''):
         continuar_diagnostico_preplate = False
         placa_en_texto = ExtractorHechos.extraer_placa(texto_cliente) if tipo_mensaje == 'text' else None
         if placa_en_texto:

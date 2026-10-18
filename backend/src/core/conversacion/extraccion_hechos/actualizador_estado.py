@@ -501,6 +501,10 @@ def extraer_y_actualizar(
     for campo_s, val_s, estado_s in DetectorPolaridad.extraer_sintomas(texto_usuario):
         if golpe_cambios and campo_s == "sintoma_ruido_anómalo":
             continue
+        hecho_existente = estado.obtener_hecho(campo_s)
+        if hecho_existente and hecho_existente.estado == FactState.CONFIRMADO and estado_s == FactState.AUSENTE_NEGADO:
+            if re.search(r"\b(?:en\s+el\s+pedal|resto\s+del\s+veh[ií]culo)\b", texto_usuario, re.IGNORECASE):
+                continue
         h = estado.registrar_hecho(campo_s, val_s, categoria="sintoma", estado=estado_s, texto_crudo=texto_usuario, tipo=FactType.SINTOMA)
         hechos_extraidos.append(h.to_dict())
 
@@ -584,7 +588,7 @@ def extraer_y_actualizar(
         hechos_extraidos.append(h.to_dict())
 
     if re.search(r"\b((?:cuando|al)\s+(?:piso|pisa|se\s+pisa)\s+el\s+(?:pedal\s+de\s+)?freno|pisar\s+el\s+(?:pedal\s+de\s+)?freno)\b", texto_l):
-        h_pedal_freno = estado.registrar_hecho("condicion_operacion", "al pisar el pedal de freno", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
+        h_pedal_freno = estado.registrar_hecho("condicion_operacion", "al frenar", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
         hechos_extraidos.append(h_pedal_freno.to_dict())
 
     # 9. Estado operativo y contradicciones

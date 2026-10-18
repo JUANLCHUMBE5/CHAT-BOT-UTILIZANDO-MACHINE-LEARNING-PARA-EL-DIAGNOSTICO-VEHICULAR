@@ -188,11 +188,28 @@ def tiene_descarte_de_componente(estado: Any, falla: str) -> bool:
     # 1. Comprobación contra hechos estructurados de descarte en el estado
     hechos = getattr(estado, "hechos", {}) or {}
     for h_clave, h_obj in hechos.items():
-        h_txt = _normalizar(f"{h_clave} {getattr(h_obj, 'valor', '')} {getattr(h_obj, 'texto_crudo', '')}")
         cat = getattr(h_obj, "categoria", "")
-        if cat in ("componente_descartado", "rechazo_hipotesis_usuario") or any(
-            w in h_txt for w in ("descartad", "probado", "reemplazad", "nuevo", "buen estado", "intact")
-        ):
+        # Si es una inspección pendiente o no revisada, NO es un descarte bajo ninguna circunstancia
+        if cat in ("inspeccion_pendiente", "pendiente", "herramienta"):
+            continue
+        estado_h = str(getattr(h_obj, "estado", "")).upper()
+        if any(nd in estado_h for nd in ("NO_REVISADO", "DESCONOCIDO", "NO_SABE_REALIZAR", "PENDIENTE")):
+            continue
+
+        valor_h = str(getattr(h_obj, "valor", "")).lower()
+        if "no revisad" in valor_h or "pendiente" in valor_h or "sin revisar" in valor_h:
+            continue
+
+        h_txt = _normalizar(f"{h_clave} {valor_h} {getattr(h_obj, 'texto_crudo', '')}")
+
+        es_descarte_hecho = cat in ("componente_descartado", "rechazo_hipotesis_usuario")
+        if not es_descarte_hecho:
+            # Comprobar que no sea una no-comprobación ("no he comprobado", "sin probar", etc.)
+            if not re.search(r"\b(?:no\s+(?:he\s+)?(?:probado|comprobado|revisado|cambiado)|sin\s+(?:probar|comprobar|revisar))\b", h_txt):
+                if re.search(r"\b(?:descartad[oa]s?|reemplazad[oa]s?|cambiad[oa]s?|nuev[oa]s?|en buen estado|intact[oa]s?|operativ[oa]s?)\b", h_txt):
+                    es_descarte_hecho = True
+
+        if es_descarte_hecho:
             for clave, sinonimos in componentes.items():
                 if any(s in candidato for s in sinonimos) and any(s in h_txt for s in sinonimos):
                     return True
@@ -210,6 +227,9 @@ def tiene_descarte_de_componente(estado: Any, falla: str) -> bool:
         if any(s in candidato for s in sinonimos):
             for mensaje in mensajes:
                 for clausula in re.split(r"[.;]|\bpero\b", _normalizar(mensaje)):
+                    # Asegurar que no sea una no-comprobación ("no he comprobado", "no probe")
+                    if re.search(r"\bno\s+(?:he\s+)?(?:comprobado|probado|revisado|medido)\b", clausula):
+                        continue
                     if any(s in clausula for s in sinonimos) and patron_descarte.search(clausula):
                         return True
     return False

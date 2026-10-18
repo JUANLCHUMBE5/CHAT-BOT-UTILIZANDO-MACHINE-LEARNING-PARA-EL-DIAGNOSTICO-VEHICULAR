@@ -146,14 +146,21 @@ def _es_mencion_no_destructiva(texto: str) -> bool:
 
 
 def es_consulta_memoria(texto: str) -> bool:
-    """Reconoce preguntas de memoria sin convertirlas en una orden de caso."""
+    """Reconoce preguntas de memoria sin convertirlas en una orden de caso ni confundir preguntas diagnósticas."""
     if not texto:
         return False
     normalizado = "".join(
         c for c in unicodedata.normalize("NFD", texto.casefold())
         if unicodedata.category(c) != "Mn"
     )
-    if re.search(r"\b(?:de\s+donde|de\s+que\s+(?:caso|diagnostico)|por\s+que)\b.{0,100}\b(?:obtuviste|salio|registraste|mencionaste|proviene|sintoma)\b", normalizado):
+    # Si el usuario pide causas alternativas, preguntas para diferenciar o diagnóstico, NO es una consulta pasiva de memoria
+    if re.search(
+        r"\b(?:otra\s+causa|otras\s+causas|posibles\s+causas|explicar\s+estos\s+sintomas|diferenci\w*|pregunta\s+concreta|que\s+podria\s+estar|que\s+puede\s+ser)\b",
+        normalizado,
+    ):
+        return False
+
+    if re.search(r"\b(?:de\s+donde|de\s+que\s+(?:caso|diagnostico)|por\s+que)\b.{0,100}\b(?:obtuviste|salio|registraste|mencionaste|proviene)\b", normalizado):
         return True
     if re.search(r"\b(?:cual\s+es\s+el\s+origen|de\s+donde\s+(?:salio|viene|proviene))\b.{0,100}\b(?:misfire|sintoma|hipotesis|falla)\b", normalizado):
         return True
@@ -161,7 +168,7 @@ def es_consulta_memoria(texto: str) -> bool:
         return True
     return bool(re.search(
         r"\b(?:que|cual|cuales|indica|muestra|resume|consulta|consultar)\b.{0,80}"
-        r"\b(?:registrad[oa]s?|memoria|recuerdas|sintomas?)\b",
+        r"\b(?:registrad[oa]s?|memoria|recuerdas|guardad[oa]s?)\b",
         normalizado,
     ))
 
@@ -263,15 +270,15 @@ def contiene_informacion_diagnostica(texto: str) -> bool:
         ),
         re.compile(
             r"\b(recalienta|recalentar|recalntar|se\s+calienta|temperatura\s+(?:del\s+motor\s+)?(?:sube|empieza\s+a\s+subir|alta)|"
-            r"pierde\s+(?:agua|refrigerante|l[ií]quido|fuerza|potencia)|fuga|gotea|"
-            r"no\s+enfr[ií]a|sale\s+aire\s+(?:caliente|tibio)|"
-            r"vibra|vibraci[oó]n|vibraciones|tiembla|jalonea|tironea|tironear|tirones|cascabelea|cascabeleo|"
-            r"no\s+jala|sin\s+fuerza|se\s+(?:me\s+)?apaga|se\s+apag[oó]|no\s+acelera|al\s+acelerar|"
+            r"pierde\s+(?:agua|refrigerante|l[i\u00ed]quido|fuerza|potencia)|fuga|gotea|"
+            r"no\s+enfr[i\u00ed]a|sale\s+aire\s+(?:caliente|tibio)|"
+            r"vibra|vibraci[o\u00f3]n|vibraciones|tiembla|jalonea|tironea|tironear|tirones|cascabelea|cascabeleo|"
+            r"no\s+jala|sin\s+fuerza|se\s+(?:me\s+)?apaga|se\s+apag[o\u00f3]|no\s+acelera|al\s+acelerar|"
             r"humo\s+(?:negro|blanco|azul)|consume\s+(?:aceite|refrigerante)|"
             r"luz\s+de\s+(?:advertencia|falla|check|motor)|"
             r"demora\s+en\s+(?:enganchar|entrar|acoplar)|reversa|"
             r"golpe|golpes|ruido|ruidos|zumbido|chillido|chirrido|frena|freno|frenos|frena\s+mal|pedal|volante|"
-            r"suspensi[oó]n|bache|baches|amortiguador|amortiguadores|buje|bujes|r[oó]tula|r[oó]tulas)\b",
+            r"suspensi[o\u00f3]n|bache|baches|amortiguador|amortiguadores|buje|bujes|r[o\u00f3]tula|r[o\u00f3]tulas)\b",
             re.IGNORECASE,
         ),
     ]
@@ -311,7 +318,7 @@ def inferir_estado_operativo(
         re.search(
             r"\b(en\s+carretera|a\s+\d+\s*km/h|circulando|en\s+marcha|andando|anda|al\s+andar|a\s+velocidad|"
             r"acelerando|al\s+acelerar|bajo\s+aceleraci[oó]n|acelerando\s+con\s+fuerza|voy\s+a\s+\d+|cuando\s+voy\s+a|manejando|al\s+manejar|"
-            r"despu[eé]s\s+de\s+\d+\s+minutos|pistas?\s+irregulares?|baches?|trocha|calamina|empedrado)\b",
+            r"despu[eés]\s+de\s+\d+\s+minutos|pistas?\s+irregulares?|baches?|trocha|calamina|empedrado)\b",
             texto_l,
         )
     )

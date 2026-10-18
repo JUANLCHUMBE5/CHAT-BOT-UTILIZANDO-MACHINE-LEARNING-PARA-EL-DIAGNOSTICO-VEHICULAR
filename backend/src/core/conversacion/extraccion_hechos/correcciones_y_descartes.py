@@ -57,7 +57,7 @@ def detectar_correcciones(texto: str) -> List[Tuple[str, str, str, FactType]]:
         correcciones.append(("sintoma_motor_no_arranca", "ausente", "polaridad", FactType.CONDICION))
         correcciones.append(("motor_arranca", "SI", "condicion", FactType.CONDICION))
 
-    if re.search(r"\b(caliente|en\s+caliente|calent[oó]|calienta|despu[eé]s\s+de\s+calentar|ya\s+caliente)\b", texto_l) or re.search(r"\b(?:reci[eé]n\s+)?a\s+los\s+\d+\s*minutos\b", texto_l):
+    if re.search(r"\b(caliente|en\s+caliente|calent[oó]|calienta|despu[eés]\s+de\s+calentar|ya\s+caliente)\b", texto_l) or re.search(r"\b(?:reci[eén]\s+)?a\s+los\s+\d+\s*minutos\b", texto_l):
         correcciones.append(("temperatura", "caliente", "temperatura", FactType.CONDICION))
     elif re.search(r"\b(fr[ií]o|en\s+fr[ií]o|por\s+la\s+mañana)\b", texto_l) and not re.search(
         r"\b(?:en\s+fr[ií]o\s+(?:arranca|prende|funciona|anda)\s+(?:perfecto|bien|normal)|en\s+fr[ií]o\s+no\s+(?:falla|pasa)|no\s+(?:es|falla)\s+en\s+fr[ií]o)\b",
@@ -68,7 +68,7 @@ def detectar_correcciones(texto: str) -> List[Tuple[str, str, str, FactType]]:
     if re.search(r"\b(detenido\s+en\s+ralent[ií]|en\s+ralent[ií]|parado\s+en\s+el\s+sem[aá]foro)\b", texto_l):
         correcciones.append(("condicion_operacion", "detenido en ralentí", "condicion", FactType.CONDICION))
         correcciones.append(("estado_operativo", "RALENTI", "condicion", FactType.CONDICION))
-    elif re.search(r"\b((?:tambi[eé]n\s+)?(?:ocurre\s+|pasa\s+)?acelerando|al\s+acelerar(?:\s+(?:en\s+carretera|bajo\s+carga))?|en\s+carretera\s+a\s+alta\s+velocidad|en\s+marcha)\b", texto_l):
+    elif re.search(r"\b((?:tambi[eén]\s+)?(?:ocurre\s+|pasa\s+)?acelerando|al\s+acelerar(?:\s+(?:en\s+carretera|bajo\s+carga))?|en\s+carretera\s+a\s+alta\s+velocidad|en\s+marcha)\b", texto_l):
         correcciones.append(("condicion_operacion", "al acelerar en marcha", "condicion", FactType.CONDICION))
         correcciones.append(("estado_operativo", "MARCHA", "condicion", FactType.CONDICION))
 
@@ -85,7 +85,7 @@ def detectar_correcciones(texto: str) -> List[Tuple[str, str, str, FactType]]:
         correcciones.append(("sintoma_demora_arranque", "demora en arrancar", "sintoma", FactType.SINTOMA))
         correcciones.append(("estado_operativo", "ARRANQUE", "condicion", FactType.CONDICION))
     if re.search(
-        r"\b(?:no\s+(?:presenta|tiene|muestra)\s+|sin\s+)(?:p[eé]rdida\s+de\s+potencia|p[eé]rdida\s+de\s+fuerza)\b",
+        r"\b(?:no\s+(?:presenta|tiene|muestra)\s+|sin\s+)(?:p[eéd]rdida\s+de\s+potencia|p[eéd]rdida\s+de\s+fuerza)\b",
         texto_l,
     ):
         correcciones.append(("sintoma_pérdida_de_potencia", "ausente", "polaridad", FactType.SINTOMA))
@@ -126,7 +126,7 @@ def registrar_rechazos_explicitos(estado: ConversationState, texto: str) -> List
         r"manda\s+buena\s+presion|inyecta\s+bien|pulso\s+bueno)\b"
     )
     reemplazo_nuevo = re.compile(
-        r"\b(?:cambi[eé]\s+nuev[oa]s?|son\s+nuev[oa]s?|puse\s+nuev[oa]s?|"
+        r"\b(?:cambi[eé]\s+(?:las?\s+|los?\s+)?|cambi[eé]\s+nuev[oa]s?|son\s+nuev[oa]s?|puse\s+nuev[oa]s?|"
         r"estan\s+nuev[oa]s?|recien\s+cambiad[oa]s?|nuev[oa]s?\s+originales?)\b"
     )
     revision_contextual = bool(re.search(
@@ -165,23 +165,6 @@ def registrar_rechazos_explicitos(estado: ConversationState, texto: str) -> List
             )
             or es_comprobado
         )
-        if not rechazo_explicito:
-            continue
-        if re.search(r"\bno\s+(?:lo\s+|la\s+)?(?:revise|probe|medi|comprobe|descarte)\b", texto_componente):
-            continue
-        marcador = f"componente:{familia}"
-        if marcador not in estado.hipotesis_descartadas:
-            estado.hipotesis_descartadas.append(marcador)
-
-        hecho = estado.registrar_hecho(
-            campo=f"rechazo_usuario_{familia}",
-            valor="componente reportado como revisado/descartado; sin confirmación física independiente",
-            categoria="rechazo_hipotesis_usuario",
-            estado=FactState.AMBIGUO,
-            texto_crudo=texto,
-            tipo=FactType.CONDICION,
-        )
-        salida.append(hecho.to_dict())
 
         if es_nuevo:
             h_nuevo = estado.registrar_hecho(
@@ -193,7 +176,28 @@ def registrar_rechazos_explicitos(estado: ConversationState, texto: str) -> List
                 tipo=FactType.CONDICION,
             )
             salida.append(h_nuevo.to_dict())
-        elif es_comprobado:
+
+        if not rechazo_explicito:
+            continue
+        if re.search(r"\bno\s+(?:lo\s+|la\s+)?(?:revise|probe|medi|comprobe|descarte)\b", texto_componente):
+            continue
+
+        if not es_nuevo or re.search(r"\b(?:descart[ea]|no\s+(?:es|son))\b", texto_componente):
+            marcador = f"componente:{familia}"
+            if marcador not in estado.hipotesis_descartadas:
+                estado.hipotesis_descartadas.append(marcador)
+
+            hecho = estado.registrar_hecho(
+                campo=f"rechazo_usuario_{familia}",
+                valor="componente reportado como revisado/descartado; sin confirmación física independiente",
+                categoria="rechazo_hipotesis_usuario",
+                estado=FactState.AMBIGUO,
+                texto_crudo=texto,
+                tipo=FactType.CONDICION,
+            )
+            salida.append(hecho.to_dict())
+
+        if es_comprobado:
             h_comp = estado.registrar_hecho(
                 campo=f"componente_comprobado_{familia}",
                 valor="componente comprobado físicamente en funcionamiento normal",

@@ -143,8 +143,8 @@ def construir_prompt_diagnostico(
        - No añadas valores típicos (por ejemplo, 5 V), pines, procedimientos KOEO ni pasos de prueba que no estén escritos en el contexto recuperado.
        - No indiques desconectar bobinas o inyectores con el motor en marcha.
        - En "hipotesis", reproduce exactamente una hipótesis enumerada arriba; si ninguna aplica, escribe "información insuficiente".
-    3. DIAGNÓSTICO DIFERENCIAL OBLIGATORIO:
-       - Compara la Hipótesis Principal con la Hipótesis Secundaria (Top 2) y Alternativa (Top 3).
+    3. DIAGNÓSTICO DIFERENCIAL Y RESPUESTA A PREGUNTAS DEL MECÁNICO:
+       - Si el mecánico pregunta qué otras causas pueden ser o qué dato necesitas para diferenciarlas, responde directamente a su inquietud en la explicación: compara la Hipótesis Principal con las Hipótesis Diferenciales (Top 2 y Top 3) y aclara qué medición o dato instrumental requieres.
        - Explica al mecánico qué prueba física de descarte realizar para diferenciar entre ambas antes de desmontar o comprar repuestos.
     4. REGLA MECÁNICA PURA:
        - Si la avería es puramente mecánica (desgaste/alabeo de discos, desbalanceo/desalineación de ruedas, amortiguadores/bujes, holgura de rótulas/bieletas o embrague patinando), NUNCA sugieras escaneo DTC. La primera prueba debe ser siempre física o metrológica (reloj comparador, alineación láser/balanceo dinámico, barra de uña o prueba de calado).
