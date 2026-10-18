@@ -1,8 +1,8 @@
 {
   "total_escenarios": 1050,
   "total_turnos": 3150,
-  "tiempo_total_segundos": 501.03,
-  "latencia_promedio_turno_ms": 159.06,
+  "tiempo_total_segundos": 496.99,
+  "latencia_promedio_turno_ms": 157.77,
   "retencion_vehiculo": {
     "aciertos": 1050,
     "total": 1050,
@@ -14,64 +14,11 @@
     "porcentaje": 100.0
   },
   "despacho_consultas_tecnicas": {
-    "aciertos": 60,
+    "aciertos": 150,
     "total": 150,
-    "porcentaje": 40.0
+    "porcentaje": 100.0
   },
   "preguntas_repetidas_totales": 0,
-  "fallos_por_familia": {
-    "1_CONSULTAS_TECNICAS": 90
-  },
-  "ejemplos_fallos": [
-    {
-      "id": "ESC_PROC_0002",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0004",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0005",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0007",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0009",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0010",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0012",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0014",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0015",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    },
-    {
-      "id": "ESC_PROC_0017",
-      "familia": "1_CONSULTAS_TECNICAS",
-      "razon": "Consulta técnica turno 2 no despachada como DETALLE: decision=PREGUNTAR, status=completado"
-    }
-  ]
+  "fallos_por_familia": {},
+  "ejemplos_fallos": []
 }

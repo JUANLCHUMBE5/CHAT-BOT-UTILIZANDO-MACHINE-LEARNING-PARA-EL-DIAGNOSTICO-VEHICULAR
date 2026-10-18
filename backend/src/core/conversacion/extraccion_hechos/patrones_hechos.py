@@ -274,7 +274,28 @@ PATRONES_SALUDO = [
 
 PATRONES_SOLICITUD_DETALLE = [
     re.compile(r"\b(m[aá]s\s+detalles?|dame\s+m[aá]s\s+detalles?|detallar|detalle)\b", re.IGNORECASE),
-    re.compile(r"\b(c[oó]mo\s+(?:lo\s+)?reviso|c[oó]mo\s+(?:se\s+)?prueba|c[oó]mo\s+compruebo|c[oó]mo\s+se\s+mide|c[oó]mo\s+mido)\b", re.IGNORECASE),
-    re.compile(r"\b(c[oó]mo\s+(?:reviso|compruebo|mido)\s+(?:la\s+)?(?:1|2|3|primera|segunda|tercera))\b", re.IGNORECASE),
-    re.compile(r"\b(expl[íi]came|explica|por\s+qu[eé]|paso\s+a\s+paso|procedimiento|tolerancia|especificaci[oó]n|(?:c[oó]mo\s+(?:se\s+)?(?:usa|utiliza|coloca|monta|mide\s+con)\s+)?reloj\s+comparador\s+paso\s+a\s+paso)\b", re.IGNORECASE),
+    re.compile(
+        r"\b(?:c[oó]mo\s+(?:(?:lo|la|los|las|se|puedo|debo|podemos|hay\s+que)\s+)?"
+        r"(?:medir|comprobar|probar|calibrar|ajustar|revisar|chequear|checar|testear|purgar|diagnosticar|desarmar|limpiar|armar|reaprender|instalar|"
+        r"hacer\s+(?:la\s+)?(?:prueba|medici[oó]n|calibraci[oó]n|revisi[oó]n|purga)))\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:c[oó]mo\s+(?:(?:lo|la|los|las|se)\s+)?"
+        r"(?:mide|mido|comprueba|compruebo|prueba|pruebo|calibra|calibro|ajusta|ajusto|revisa|reviso|chequea|chequeo|checa|testea|purga|reaprende))\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:c[oó]mo\s+(?:(?:se|lo|la)\s+)?(?:revisa|reviso|revisar|comprueba|compruebo|comprobar|mide|mido|medir|prueba|pruebo|probar)\s+"
+        r"(?:la\s+|el\s+)?(?:1|2|3|primera|segunda|tercera|opci[oó]n\s+\d+|hip[oó]tesis\s+\d+))\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:paso\s+a\s+paso|procedimiento\s+(?:de\s+|para\s+)?|"
+        r"gu[ií]a\s+para\s+(?:medir|probar|calibrar|revisar)|"
+        r"instrucciones\s+para\s+(?:medir|probar|calibrar|revisar)|"
+        r"expl[ií]came\s+(?:el\s+procedimiento|paso\s+a\s+paso|c[oó]mo\s+se\s+hace)|"
+        r"tolerancia|especificaci[oó]n|(?:c[oó]mo\s+(?:se\s+)?(?:usa|utiliza|coloca|monta|mide\s+con)\s+)?reloj\s+comparador\s+paso\s+a\s+paso)\b",
+        re.IGNORECASE,
+    ),
 ]
