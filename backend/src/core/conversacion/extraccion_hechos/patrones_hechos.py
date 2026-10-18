@@ -139,11 +139,25 @@ PATRON_NEGACION_VEHICULAR = re.compile(
     re.IGNORECASE,
 )
 PATRON_ANTECEDENTE_VEHICULAR = re.compile(
-    r"(?:\bantes\s+(?:de\s+(?:este|mi|el)\s+)?(?:revis[eé]|vi|atend[ií]|ten[ií]|era)\b|\bel\s+anterior\s+(?:era|fue|carro|auto)\b|\b(?:en\s+un|en\s+el|como\s+en\s+un|como\s+un|al\s+igual\s+que\s+un)\b)(?:\s+(?:un|una|el|la|este|mi))?(?:\s+[a-záéíóú0-9-]+)?\s*$",
+    r"(?:"
+    r"\b(?:tiene|ten[i\u00ed]a)?\s*(?:su\s+|el\s+|la\s+|mi\s+|un\s+|una\s+)?otro\s+(?:auto|carro|veh[i\u00ed]culo|coche|camioneta)(?:\s+(?:del?\s+cliente|que\s+tiene))?(?:\s+(?:que\s+)?(?:es|era|fue))?\b|"
+    r"\b(?:otro|otra)\s+(?:carro|auto|veh[i\u00ed]culo|coche|camioneta)\s+del?\s+cliente(?:\s+(?:es|era|fue))?\b|"
+    r"\b(?:veh[i\u00ed]culo|auto|carro|coche|camioneta)\s+anterior(?:\s+(?:es|era|fue))?\b|"
+    r"\b(?:el|la)\s+(?:auto|carro|veh[i\u00ed]culo|coche|camioneta)\s+de\s+ayer(?:\s+(?:era|fue))?\b|"
+    r"\bantes\s+(?:de\s+(?:este|mi|el)\s+)?(?:revis[e\u00e9]|vi|atend[i\u00ed]|ten[i\u00ed]|era|tuve)\b|"
+    r"\bel\s+anterior\s+(?:era|fue|carro|auto|veh[i\u00ed]culo)\b|"
+    r"\b(?:en\s+un|en\s+el|como\s+en\s+un|como\s+un|al\s+igual\s+que\s+(?:en\s+)?(?:un|el)?)\b"
+    r")(?:(?:\s+(?:es|era|fue))?\s+(?:un|una|el|la|este|mi))?(?:\s+[a-z\u00e1\u00e9\u00ed\u00f3\u00fa0-9-]+)?\s*$",
     re.IGNORECASE,
 )
 PATRON_COMPARATIVO_POST = re.compile(
-    r"^(?:[a-záéíóú0-9-]+\s+)?(?:era\s+(?:de\s+)?(?:ayer|antes|otro|otra|la\s+semana\s+pasada)|fue\s+ayer|del?\s+otro|del?\s+anterior|me\s+pas[oó]|pasaba|ten[ií]|vi|recuerdo|ocurr[ií]|fallaba)",
+    r"^(?:[a-z\u00e1\u00e9\u00ed\u00f3\u00fa0-9-]+\s+)?(?:,\s*)?(?:"
+    r"pero\s+(?:estamos|sigo|sigue|seguimos|aqu[i\u00ed]|vamos\s+a)\s+(?:revisando|viendo|con|atendiendo|enfocados\s+en)\s+este|"
+    r"pero\s+(?:este|aqu[i\u00ed])\s+es|"
+    r"era\s+(?:de\s+)?(?:ayer|antes|otro|otra|la\s+semana\s+pasada)|"
+    r"fue\s+ayer|del?\s+otro|del?\s+anterior|"
+    r"me\s+pas[o\u00f3]|pasaba|ten[i\u00ed]|vi|recuerdo|ocurr[i\u00ed]|fallaba"
+    r")",
     re.IGNORECASE,
 )
 PATRON_AFIRMACION_VEHICULAR = re.compile(
@@ -168,7 +182,7 @@ def seleccionar_entidad_vehicular(
 
     for start, end, nombre in coincidencias:
         prefijo = texto[:start].rstrip(" ,;:")
-        ventana_pre = prefijo[-45:] if len(prefijo) > 45 else prefijo
+        ventana_pre = prefijo[-75:] if len(prefijo) > 75 else prefijo
 
         es_negado = bool(
             PATRON_NEGACION_VEHICULAR.search(ventana_pre)
@@ -181,7 +195,7 @@ def seleccionar_entidad_vehicular(
             continue
 
         sufijo = texto[end:].lstrip(" ,;:")
-        ventana_post = sufijo[:60]
+        ventana_post = sufijo[:75]
         es_comparativo = bool(
             PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre)
             or PATRON_COMPARATIVO_POST.search(ventana_post)

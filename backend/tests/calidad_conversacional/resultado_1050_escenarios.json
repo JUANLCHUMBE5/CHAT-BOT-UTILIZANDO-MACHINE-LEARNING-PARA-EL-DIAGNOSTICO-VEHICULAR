@@ -1,12 +1,12 @@
 {
   "total_escenarios": 1050,
   "total_turnos": 3150,
-  "tiempo_total_segundos": 484.13,
-  "latencia_promedio_turno_ms": 153.69,
+  "tiempo_total_segundos": 501.03,
+  "latencia_promedio_turno_ms": 159.06,
   "retencion_vehiculo": {
-    "aciertos": 1035,
+    "aciertos": 1050,
     "total": 1050,
-    "porcentaje": 98.57
+    "porcentaje": 100.0
   },
   "retencion_sintomas": {
     "aciertos": 900,
@@ -20,8 +20,7 @@
   },
   "preguntas_repetidas_totales": 0,
   "fallos_por_familia": {
-    "1_CONSULTAS_TECNICAS": 90,
-    "6_CORRECCION_Y_ANALOGIAS": 15
+    "1_CONSULTAS_TECNICAS": 90
   },
   "ejemplos_fallos": [
     {

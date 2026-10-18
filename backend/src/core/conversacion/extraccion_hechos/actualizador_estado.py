@@ -27,6 +27,7 @@ from src.core.conversacion.extraccion_hechos.patrones_hechos import (
     PATRON_ANIO,
     PATRON_ANTECEDENTE_MARCHA,
     PATRON_ANTECEDENTE_VEHICULAR,
+    PATRON_COMPARATIVO_POST,
     PATRON_CLIC_UNICO,
     PATRON_CLICS_REPETIDOS,
     PATRON_CORRECCION_VEHICULO,
@@ -235,7 +236,7 @@ def extraer_y_actualizar(
             for start, end, nombre in marcas_encontradas:
                 if nombre.casefold() != nueva_marca.casefold():
                     prefijo = texto_usuario[:start].rstrip(" ,;:")
-                    ventana_pre = prefijo[-45:] if len(prefijo) > 45 else prefijo
+                    ventana_pre = prefijo[-75:] if len(prefijo) > 75 else prefijo
                     if PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre):
                         campo_ant = f"vehiculo_mencionado_{nombre.lower()}"
                         h_ant = estado.registrar_hecho(
@@ -254,9 +255,9 @@ def extraer_y_actualizar(
         for start, end, nombre in marcas_encontradas:
             if not estado.marca or nombre.casefold() != estado.marca.casefold():
                 prefijo = texto_usuario[:start].rstrip(" ,;:")
-                ventana_pre = prefijo[-45:] if len(prefijo) > 45 else prefijo
+                ventana_pre = prefijo[-75:] if len(prefijo) > 75 else prefijo
                 sufijo = texto_usuario[end:].lstrip(" ,;:")
-                ventana_post = sufijo[:60]
+                ventana_post = sufijo[:75]
                 if PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre) or PATRON_COMPARATIVO_POST.search(ventana_post):
                     campo_ant = f"vehiculo_mencionado_{nombre.lower()}"
                     h_ant = estado.registrar_hecho(
@@ -318,6 +319,23 @@ def extraer_y_actualizar(
         estado.modelo = None
         if "modelo" in estado.hechos:
             del estado.hechos["modelo"]
+    else:
+        for start, end, nombre in modelos_encontrados:
+            if not estado.modelo or nombre.casefold() != estado.modelo.casefold():
+                prefijo = texto_usuario[:start].rstrip(" ,;:")
+                ventana_pre = prefijo[-75:] if len(prefijo) > 75 else prefijo
+                sufijo = texto_usuario[end:].lstrip(" ,;:")
+                ventana_post = sufijo[:75]
+                if PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre) or PATRON_COMPARATIVO_POST.search(ventana_post):
+                    campo_ant = f"modelo_mencionado_{nombre.lower()}"
+                    h_ant = estado.registrar_hecho(
+                        campo_ant,
+                        nombre,
+                        categoria="antecedente",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+                    hechos_extraidos.append(h_ant.to_dict())
 
     # El motor es parte del perfil del vehículo y no debe depender de que el
     # código sea conocido por una tabla de modelos. Se exige contexto explícito
