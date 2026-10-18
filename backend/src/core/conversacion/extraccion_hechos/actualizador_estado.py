@@ -23,8 +23,10 @@ from src.core.conversacion.extraccion_hechos.extraccion_taller import (
     extraer_comprobaciones_taller,
 )
 from src.core.conversacion.extraccion_hechos.patrones_hechos import (
+    PATRON_AFIRMACION_VEHICULAR,
     PATRON_ANIO,
     PATRON_ANTECEDENTE_MARCHA,
+    PATRON_ANTECEDENTE_VEHICULAR,
     PATRON_CLIC_UNICO,
     PATRON_CLICS_REPETIDOS,
     PATRON_CORRECCION_VEHICULO,
@@ -139,7 +141,22 @@ def extraer_y_actualizar(
     )
     if nueva_marca:
         if estado.marca and estado.marca != nueva_marca:
-            es_correccion = bool(marca_actual_negada or PATRON_CORRECCION_VEHICULO.search(texto_usuario))
+            marca_actual_como_antecedente = any(
+                nombre.casefold() == estado.marca.casefold()
+                and PATRON_ANTECEDENTE_VEHICULAR.search(texto_usuario[:start].rstrip(" ,;:"))
+                for start, end, nombre in marcas_encontradas
+            )
+            nueva_marca_afirmada = any(
+                nombre.casefold() == nueva_marca.casefold()
+                and PATRON_AFIRMACION_VEHICULAR.search(texto_usuario[:start].rstrip(" ,;:"))
+                for start, end, nombre in marcas_encontradas
+            )
+            es_correccion = bool(
+                marca_actual_negada
+                or marca_actual_como_antecedente
+                or nueva_marca_afirmada
+                or PATRON_CORRECCION_VEHICULO.search(texto_usuario)
+            )
             es_cambio_explicito = bool(
                 (re.search(r"\b(?:cambiar|cambio|otro|otra|nuevo|neuvo)\s+(?:de\s+)?(?:carro|auto|vehiculo|caso)\b", texto_usuario, re.IGNORECASE) if not re.search(r"\b(?:su|un|el|mi)?\s*otro\s+(?:auto|carro|vehiculo).{0,80}\b(?:pero|aunque|sin embargo|estamos|revisando|este)\b", texto_usuario, re.IGNORECASE) else False)
                 or re.search(r"\b(?:ahora|ahora\s+es|este\s+es)\s+(?:un|una)\b", texto_usuario, re.IGNORECASE)
@@ -162,6 +179,16 @@ def extraer_y_actualizar(
                     tipo=FactType.CONDICION,
                 )
                 hechos_extraidos.append(h.to_dict())
+                if marca_actual_como_antecedente and marca_antigua:
+                    campo_ant = f"vehiculo_mencionado_{marca_antigua.lower()}"
+                    h_ant = estado.registrar_hecho(
+                        campo_ant,
+                        marca_antigua,
+                        categoria="antecedente",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+                    hechos_extraidos.append(h_ant.to_dict())
             elif es_cambio_explicito:
                 p_prev = estado.placa or placa_encontrada
                 estado.reiniciar()
@@ -205,10 +232,41 @@ def extraer_y_actualizar(
                 tipo=FactType.CONDICION,
             )
             hechos_extraidos.append(h.to_dict())
+            for start, end, nombre in marcas_encontradas:
+                if nombre.casefold() != nueva_marca.casefold():
+                    prefijo = texto_usuario[:start].rstrip(" ,;:")
+                    ventana_pre = prefijo[-45:] if len(prefijo) > 45 else prefijo
+                    if PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre):
+                        campo_ant = f"vehiculo_mencionado_{nombre.lower()}"
+                        h_ant = estado.registrar_hecho(
+                            campo_ant,
+                            nombre,
+                            categoria="antecedente",
+                            texto_crudo=texto_usuario,
+                            tipo=FactType.CONDICION,
+                        )
+                        hechos_extraidos.append(h_ant.to_dict())
     elif marca_actual_negada and not nueva_marca:
         estado.marca = None
         if "marca" in estado.hechos:
             del estado.hechos["marca"]
+    else:
+        for start, end, nombre in marcas_encontradas:
+            if not estado.marca or nombre.casefold() != estado.marca.casefold():
+                prefijo = texto_usuario[:start].rstrip(" ,;:")
+                ventana_pre = prefijo[-45:] if len(prefijo) > 45 else prefijo
+                sufijo = texto_usuario[end:].lstrip(" ,;:")
+                ventana_post = sufijo[:60]
+                if PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre) or PATRON_COMPARATIVO_POST.search(ventana_post):
+                    campo_ant = f"vehiculo_mencionado_{nombre.lower()}"
+                    h_ant = estado.registrar_hecho(
+                        campo_ant,
+                        nombre,
+                        categoria="antecedente",
+                        texto_crudo=texto_usuario,
+                        tipo=FactType.CONDICION,
+                    )
+                    hechos_extraidos.append(h_ant.to_dict())
 
     m_anio = PATRON_ANIO.search(texto_usuario)
     if m_anio:
@@ -218,7 +276,7 @@ def extraer_y_actualizar(
             anio_viejo = estado.anio
             if anio_viejo and hasattr(estado, "active_symptoms") and estado.active_symptoms:
                 estado.active_symptoms = [
-                    re.sub(rf"\b{anio_viejo}\b", nuevo_anio, s)
+                    re.sub(rf"\b(?:no\s+(?:es|era)\s+)?{anio_viejo}\b", nuevo_anio, s, flags=re.IGNORECASE)
                     for s in estado.active_symptoms
                 ]
             estado.anio = nuevo_anio
@@ -239,22 +297,8 @@ def extraer_y_actualizar(
     nuevo_mod, mod_actual_negado = seleccionar_entidad_vehicular(
         texto_usuario, modelos_encontrados, estado.modelo
     )
-    if not nuevo_mod and (not estado.modelo or mod_actual_negado) and (estado.marca or nueva_marca):
-        m_marca = estado.marca or nueva_marca
-        m_gen = re.search(
-            rf"\b{re.escape(m_marca)}\s+([A-Za-z0-9-]+)\b(?!\s*(?:placa|diesel|gasolina|glp|gnv))",
-            texto_usuario,
-            re.IGNORECASE,
-        )
-        if m_gen and not re.match(r"^(?:19[89]\d|20[0-2]\d|[A-Za-z]{3}-\d{3})$", m_gen.group(1)):
-            cand = m_gen.group(1).title()
-            stop_mods = {"MOTOR", "AUTO", "CARRO", "CAMIONETA", "CON", "DEL", "EN", "ESPECIFICA", "INDICA", "DICE", "MANUAL"}
-            if len(cand) >= 2 and cand.upper() not in stop_mods:
-                nuevo_mod = cand
     if nuevo_mod:
         if estado.modelo and estado.modelo != nuevo_mod:
-            estado.last_user_correction = "modelo"
-            estado.turno_ultima_correccion = estado.turno_actual
             mod_antiguo = estado.modelo
             if mod_antiguo and hasattr(estado, "active_symptoms") and estado.active_symptoms:
                 estado.active_symptoms = [
@@ -540,6 +584,8 @@ def extraer_y_actualizar(
                 continue
         h = estado.registrar_hecho(campo_s, val_s, categoria="sintoma", estado=estado_s, texto_crudo=texto_usuario, tipo=FactType.SINTOMA)
         hechos_extraidos.append(h.to_dict())
+        if estado_s == FactState.CONFIRMADO and hasattr(estado, "active_symptoms") and val_s not in estado.active_symptoms:
+            estado.active_symptoms.append(val_s)
 
     if (
         not es_arranca_y_se_apaga
@@ -612,7 +658,7 @@ def extraer_y_actualizar(
         h = estado.registrar_hecho("falla_sin_frenar", "no vibra sin frenar", categoria="polaridad", estado=FactState.AUSENTE_NEGADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
         hechos_extraidos.append(h.to_dict())
 
-    if re.search(r"\b(todav[ií]a\s+no\s+he\s+revisado\s+el\s+veh[ií]culo|a[uú]n\s+no\s+se\s+ha\s+revisado|no\s+he\s+revisado\s+nada)\b", texto_l):
+    if re.search(r"\b(todav[ií]a\s+no\s+he\s+revisado\s+el\s+veh[ií]culo|a[ú]n\s+no\s+se\s+ha\s+revisado|no\s+he\s+revisado\s+nada)\b", texto_l):
         h = estado.registrar_hecho("inspeccion_vehiculo", "no revisado aún en taller", categoria="inspeccion_pendiente", estado=FactState.NO_REVISADO, texto_crudo=texto_usuario, tipo=FactType.CONDICION)
         hechos_extraidos.append(h.to_dict())
 

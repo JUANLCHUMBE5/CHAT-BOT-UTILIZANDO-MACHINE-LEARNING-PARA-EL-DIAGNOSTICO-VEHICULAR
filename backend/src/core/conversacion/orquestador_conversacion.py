@@ -1155,7 +1155,29 @@ class OrquestadorConversacion:
         es_solicitud_detalle = ExtractorHechos.es_solicitud_detalle(texto_limpio)
         from src.core.intent_classifier import clasificar_intencion_consulta
         es_consulta_tecnica = clasificar_intencion_consulta(texto_limpio) == "consulta_tecnica"
-        if es_solicitud_detalle or es_consulta_tecnica:
+
+        # Diferenciar solicitudes de diagnóstico diferencial o mensajes mixtos con síntomas/comprobaciones
+        solicita_alternativas = bool(
+            (interp_semantica and interp_semantica.solicita_causas_alternativas)
+            or re.search(
+                r"\b(?:otra[s]?\s+causa[s]?|posibles?\s+causa[s]?|hip[oó]tesis\s+alternativa[s]?|"
+                r"qu[eé]\s+(?:otras?|m[aá]s)\s+puede\s+ser|qu[eé]\s+otra\s+cosa|"
+                r"diferenciar(?:las)?|distinguir(?:las)?)\b",
+                texto_limpio,
+                re.IGNORECASE,
+            )
+        )
+        tiene_evidencia_mixta = bool(
+            hechos_extraidos
+            and any(
+                isinstance(h, dict) and h.get("categoria") in ("sintoma", "medicion", "condicion", "comprobacion", "componente_reemplazado")
+                for h in hechos_extraidos
+            )
+        )
+        tiene_caso_activo = bool(estado.top3_actual or getattr(estado, "falla_principal", None) or estado.hechos or estado.active_symptoms)
+        es_consulta_tecnica_pura = es_consulta_tecnica and not solicita_alternativas and not tiene_evidencia_mixta and not tiene_caso_activo
+
+        if es_solicitud_detalle or es_consulta_tecnica_pura:
             dto_tecnico = gestor_diagnostico._procesar_consulta_tecnica(
                 pregunta=texto_limpio,
                 inicio_total=t0,

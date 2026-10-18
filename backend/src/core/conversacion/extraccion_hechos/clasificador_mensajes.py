@@ -39,9 +39,20 @@ def es_saludo(texto: str) -> bool:
 
 
 def es_solicitud_detalle(texto: str) -> bool:
-    """Determina si el usuario solicita más detalles o el procedimiento técnico de comprobación."""
+    """Determina si el usuario solicita más detalles o el procedimiento técnico de comprobación.
+    Diferencia una medición reportada (ej: 'Medí el alabeo con reloj comparador y dio 0.12 mm')
+    de una solicitud de instrucciones (ej: '¿Cómo se utiliza el reloj comparador?').
+    """
     if not texto:
         return False
+    # Si el mensaje reporta una medición cuantitativa realizada, es reporte de evidencia y NO solicitud instructiva
+    if PATRON_MEDICION.search(texto) and re.search(
+        r"\b(?:med[ií]|dio|marc[oó]|obtuve|lectura|arroj[oó]|marcando|midiendo|registr[oó])\b",
+        texto,
+        re.IGNORECASE,
+    ):
+        if not re.search(r"\b(?:c[oó]mo\s+(?:se\s+)?(?:hace|mide|usa|utiliza|probar)|paso\s+a\s+paso|tutorial|manual)\b", texto, re.IGNORECASE):
+            return False
     return any(p.search(texto.strip()) for p in PATRONES_SOLICITUD_DETALLE)
 
 

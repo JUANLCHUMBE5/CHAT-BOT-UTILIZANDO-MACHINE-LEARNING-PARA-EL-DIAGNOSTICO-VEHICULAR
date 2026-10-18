@@ -1,8 +1,8 @@
 {
   "total_escenarios": 1050,
   "total_turnos": 3150,
-  "tiempo_total_segundos": 491.84,
-  "latencia_promedio_turno_ms": 156.14,
+  "tiempo_total_segundos": 1078.14,
+  "latencia_promedio_turno_ms": 342.27,
   "retencion_vehiculo": {
     "aciertos": 1050,
     "total": 1050,

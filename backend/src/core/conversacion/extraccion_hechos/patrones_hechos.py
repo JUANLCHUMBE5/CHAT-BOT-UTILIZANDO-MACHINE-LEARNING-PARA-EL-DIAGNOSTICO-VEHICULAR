@@ -48,7 +48,7 @@ PATRON_ANTECEDENTE_MARCHA = re.compile(
     re.IGNORECASE,
 )
 PATRON_DEMORA_ARRANQUE = re.compile(
-    r"\b(demora\s+(?:(?:mucho|bastante|demasiado|(?:unos?\s+)?(?:\d+|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+segundos?)\s+)?en\s+(?:arrancar|prender|encender)|"
+    r"\b(demora\s+(?:(?:mucho|bastante|demasiado|(?:unos?\s+)?(?:\\d+|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+segundos?)\s+)?en\s+(?:arrancar|prender|encender)|"
     r"le\s+cuesta\s+(?:arrancar|prender|encender)|"
     r"tarda\s+(?:(?:mucho|bastante|demasiado)\s+)?en\s+(?:arrancar|prender|encender)|"
     r"da\s+marcha\s+(?:varios\s+segundos|un\s+rato)\s+antes\s+de\s+encender|"
@@ -135,19 +135,19 @@ PATRONES_MODELO = [
 ]
 
 PATRON_NEGACION_VEHICULAR = re.compile(
-    r"(?:\bno\b|\bno\s+(?:es|era|fue|ser[ií]a)\b|\bnunca\s+fue\b|\btampoco\s+(?:es|era)?\b|\bdescart(?:o|ado)\b|\bmenos\b|\ben\s+vez\s+de\b)\s*(?:un\s+|una\s+|el\s+|la\s+)?(?:[a-záéíóú0-9-]+\s+)?$",
+    r"(?:\bno\b|\bno\s+(?:es|era|fue|ser[ií]a)\b|\bnunca\s+fue\b|\btampoco\s+(?:es|era)?\b|\bdescart(?:o|ado)\b|\bmenos\b|\ben\s+vez\s+de\b)\s*(?:un\b|una\b|el\b|la\b|\s)*(?:[a-záéíóú0-9-]+\s+)?$",
     re.IGNORECASE,
 )
 PATRON_ANTECEDENTE_VEHICULAR = re.compile(
-    r"(?:\bantes\s+(?:de\s+este\s+)?(?:revis[eé]|vi|atend[ií]|ten[ií]a|era)\b|\bel\s+anterior\s+(?:era|fue|carro|auto)\b|\b(?:en\s+un|en\s+el|como\s+en\s+un|como\s+un|al\s+igual\s+que\s+un)\b)\s*(?:un\s+|una\s+)?$",
+    r"(?:\bantes\s+(?:de\s+(?:este|mi|el)\s+)?(?:revis[eé]|vi|atend[ií]|ten[ií]|era)\b|\bel\s+anterior\s+(?:era|fue|carro|auto)\b|\b(?:en\s+un|en\s+el|como\s+en\s+un|como\s+un|al\s+igual\s+que\s+un)\b)\s*(?:un\b|una\b|\s)*$",
     re.IGNORECASE,
 )
 PATRON_COMPARATIVO_POST = re.compile(
-    r"^(?:[a-záéíóú0-9-]+\s+)?(?:me\s+pas[oó]|pasaba|ten[ií]a|vi|recuerdo|ocurr[ií]a|fallaba)",
+    r"^(?:[a-záéíóú0-9-]+\s+)?(?:me\s+pas[oó]|pasaba|ten[ií]|vi|recuerdo|ocurr[ií]a|fallaba)",
     re.IGNORECASE,
 )
 PATRON_AFIRMACION_VEHICULAR = re.compile(
-    r"(?:\bes\b|\bera\b|\btengo\b|\ben\b|\bdel?\b|\bpara\b|\bcorrijo\b|\bcorrecci[oó]n\b|\bme\s+equivoqu[eé](?:,\s*era|\s*es)?\b)\s*(?:un\s+|una\s+)?$",
+    r"(?:\bes\b|\bera\b|\btengo\b|\ben\b|\bdel?\b|\bpara\b|\bcorrijo\b|\bcorrecci[oó]n\b|\bme\s+equivoqu[eé](?:,\s*era|\s*es)?\b)\s*(?:un\b|una\b|\s)*$",
     re.IGNORECASE,
 )
 PATRON_CORRECCION_VEHICULO = re.compile(
@@ -196,7 +196,9 @@ def seleccionar_entidad_vehicular(
     if not candidatos_validos:
         return (None, fue_negada_actual)
 
-    candidatos_validos.sort(key=lambda x: (x[2], x[0]), reverse=True)
+    candidatos_validos.sort(key=lambda x: (x[2], -x[0]), reverse=True)
+    if entidad_actual and candidatos_validos[0][2] <= 1:
+        return (None, fue_negada_actual)
     return (candidatos_validos[0][1], fue_negada_actual)
 
 
@@ -238,7 +240,7 @@ PATRON_CAUSAL_INYECCION = re.compile(
 PATRON_HALLAZGO_MAF = re.compile(
     r"\b(?:el\s+)?maf\b.{0,55}\b(?:lecturas?\s+(?:raras?|irregulares?|anormales?)|"
     r"valores?\s+(?:raros?|irregulares?|anormales?)|fuera\s+de\s+rango|no\s+mide\s+bien)\b|"
-    r"\b(?:lecturas?\s+(?:raras?|irregulares?|anormales?)|valores?\s+(?:raros?|irregulares?|anormales?))"
+    r"\b(?:lecturas?\\s+(?:raras?|irregulares?|anormales?)|valores?\\s+(?:raros?|irregulares?|anormales?))"
     r".{0,55}\b(?:sensor\s+)?maf\b|"
     r"\b(?:desconect[eé]|solt[eé]|saqu[eé])\b.{0,30}\b(?:sensor\s+)?maf\b|"
     r"\b(?:sensor\s+)?maf\b.{0,30}\b(?:desconectad[oa]|desconect[eé])\b",
@@ -255,5 +257,5 @@ PATRONES_SOLICITUD_DETALLE = [
     re.compile(r"\b(m[aá]s\s+detalles?|dame\s+m[aá]s\s+detalles?|detallar|detalle)\b", re.IGNORECASE),
     re.compile(r"\b(c[oó]mo\s+(?:lo\s+)?reviso|c[oó]mo\s+(?:se\s+)?prueba|c[oó]mo\s+compruebo|c[oó]mo\s+se\s+mide|c[oó]mo\s+mido)\b", re.IGNORECASE),
     re.compile(r"\b(c[oó]mo\s+(?:reviso|compruebo|mido)\s+(?:la\s+)?(?:1|2|3|primera|segunda|tercera))\b", re.IGNORECASE),
-    re.compile(r"\b(expl[ií]came|explica|por\s+qu[eé]|paso\s+a\s+paso|procedimiento|tolerancia|especificaci[oó]n|reloj\s+comparador)\b", re.IGNORECASE),
+    re.compile(r"\b(expl[íi]came|explica|por\s+qu[eé]|paso\s+a\s+paso|procedimiento|tolerancia|especificaci[oó]n|(?:c[oó]mo\s+(?:se\s+)?(?:usa|utiliza|coloca|monta|mide\s+con)\s+)?reloj\s+comparador\s+paso\s+a\s+paso)\b", re.IGNORECASE),
 ]

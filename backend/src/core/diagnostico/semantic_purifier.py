@@ -10,6 +10,8 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
     Interpreta negaciones y contrastes físicos para evitar que términos descartados
     por el conductor (ej: 'la batería tiene fuerza pero no da marcha y suena clac')
     induzcan sesgo espurio en el vectorizador TF-IDF del SVM o en la búsqueda RAG.
+    Normaliza legítimamente síntomas sin inyectar etiquetas de fallas ni cadenas
+    diagnósticas sintéticas generadas por el sistema.
     """
     # La síntesis clínica ya contiene hechos vigentes y pruebas realizadas.
     # El anexo textual es trazabilidad para el LLM/auditoría, no nueva evidencia
@@ -39,9 +41,9 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
     if descarte_bateria and sintoma_arrancador_electrico:
         texto_filtrado = re.sub(r"\bbater[ií]a\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado = re.sub(r"\bluces\b", " ", texto_filtrado, flags=re.IGNORECASE)
-        texto_filtrado += " falla motor de arranque solenoide carbones terminal 50 no da marcha clac seco arrancador pegado"
+        texto_filtrado += " no da marcha clac seco arrancador no gira"
 
-    # 1.1 Desambiguación contextual de 'dar arranque' como ACCIÓN DEL CONDUCTOR (no avería de arrancador)
+    # 1.1 Desambiguación contextual de 'dar arranque' como ACCIÓN DEL CONDUCTOR
     accion_dar_arranque = bool(re.search(
         r"\b(?:le\s+doy\s+arranque|darle\s+arranque|dar\s+arranque|al\s+dar\s+arranque|"
         r"darle\s+a\s+la\s+llave|intento\s+prenderlo|insisto\s+con\s+la\s+llave)\b",
@@ -54,8 +56,6 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
             texto_filtrado,
             flags=re.IGNORECASE
         )
-        if any(w in limpio for w in ("gira", "bombeando", "tosa", "no enciende", "no prende", "no arranca")):
-            texto_filtrado += " motor gira con normalidad falta suministro de combustible bomba de gasolina o chispa no enciende"
 
     # 2. Descarte de freno en vibraciones de velocidad (Balanceo / Alineación de ruedas)
     # Detección exhaustiva de negaciones en frenado
@@ -85,13 +85,12 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         texto_filtrado = re.sub(r"\bfren(?:o|os|ar|ada)\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado = re.sub(r"\bdisco(?:s)?\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado = re.sub(r"\bpastilla(?:s)?\b", " ", texto_filtrado, flags=re.IGNORECASE)
-        texto_filtrado += " llantas desbalanceadas desalineadas vibracion velocidad direccion plomos balanceo alineacion"
+        texto_filtrado += " vibracion en marcha a velocidad constante"
     elif afirma_freno and any(f in limpio for f in ("freno", "frenar", "pedal")):
         texto_filtrado = re.sub(r"\bresto\s+del\s+veh[ií]culo\s+no\s+vibra\b", " ", texto_filtrado, flags=re.IGNORECASE)
-        texto_filtrado += " discos de freno alabeados desgastados deformados alabeo variacion espesor dtv reloj comparador vibracion pedal volante al frenar"
+        texto_filtrado += " vibracion al frenar pedal de freno volante al frenar alabeo de disco"
 
-    # 3. Descarte de encendido (bujías) cuando el síntoma es de suministro/presión de combustible
-    # Solo si no se afirma que la bobina o la chispa es la que está fallando
+    # 3. Descarte de encendido (bujías)
     mencion_bobina_falla = any(
         p in limpio for p in (
             "bobina falla", "cambiar la bobina", "falla de chispa", "sin chispa",
@@ -105,16 +104,9 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
             "bujias no son", "cambie filtro de aire pero sigue"
         )
     ) and not mencion_bobina_falla
-    sintoma_combustible = any(
-        p in limpio for p in (
-            "asientos de atras", "asientos de atrás", "asiento trasero", "debajo del asiento",
-            "zumbido", "tanque", "ahoga", "bomba", "filtro de gasolina", "pata a fondo",
-            "subida", "acelerar a fondo", "falta fuerza", "pierde toda la fuerza"
-        )
-    )
-    if descarte_bujias and sintoma_combustible:
+
+    if descarte_bujias:
         texto_filtrado = re.sub(r"\bbuj[ií]as?\b", " ", texto_filtrado, flags=re.IGNORECASE)
-        texto_filtrado += " bomba de gasolina quemada baja presion caudal obstruccion tanque combustible zumbido"
 
     # 4. Negación de sobrecalentamiento y fugas de refrigerante
     if any(p in limpio for p in ("no se calienta", "no calienta", "temperatura normal", "aguja en el medio")):
@@ -136,14 +128,8 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         limpio_full,
     ))
     if sintoma_trepidacion_embrague:
-        texto_filtrado += (
-            " disco de embrague trepidacion zapateo prensa plato opresor"
-            " volante bimasa pedal de embrague transmision manual"
-        )
+        texto_filtrado += " trepidacion y vibracion al salir en primera"
     elif sintoma_patinado_embrague:
-        texto_filtrado += (
-            " disco de embrague desgastado patinando olor a quemado"
-            " suben revoluciones no avanza transmision manual"
-        )
+        texto_filtrado += " patinado suben revoluciones sin avanzar"
 
     return texto_filtrado
