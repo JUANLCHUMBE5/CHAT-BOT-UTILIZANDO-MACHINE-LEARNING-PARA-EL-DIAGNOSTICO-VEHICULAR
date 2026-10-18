@@ -139,11 +139,11 @@ PATRON_NEGACION_VEHICULAR = re.compile(
     re.IGNORECASE,
 )
 PATRON_ANTECEDENTE_VEHICULAR = re.compile(
-    r"(?:\bantes\s+(?:de\s+(?:este|mi|el)\s+)?(?:revis[eé]|vi|atend[ií]|ten[ií]|era)\b|\bel\s+anterior\s+(?:era|fue|carro|auto)\b|\b(?:en\s+un|en\s+el|como\s+en\s+un|como\s+un|al\s+igual\s+que\s+un)\b)\s*(?:un\b|una\b|\s)*$",
+    r"(?:\bantes\s+(?:de\s+(?:este|mi|el)\s+)?(?:revis[eé]|vi|atend[ií]|ten[ií]|era)\b|\bel\s+anterior\s+(?:era|fue|carro|auto)\b|\b(?:en\s+un|en\s+el|como\s+en\s+un|como\s+un|al\s+igual\s+que\s+un)\b)(?:\s+(?:un|una|el|la|este|mi))?(?:\s+[a-záéíóú0-9-]+)?\s*$",
     re.IGNORECASE,
 )
 PATRON_COMPARATIVO_POST = re.compile(
-    r"^(?:[a-záéíóú0-9-]+\s+)?(?:me\s+pas[oó]|pasaba|ten[ií]|vi|recuerdo|ocurr[ií]a|fallaba)",
+    r"^(?:[a-záéíóú0-9-]+\s+)?(?:era\s+(?:de\s+)?(?:ayer|antes|otro|otra|la\s+semana\s+pasada)|fue\s+ayer|del?\s+otro|del?\s+anterior|me\s+pas[oó]|pasaba|ten[ií]|vi|recuerdo|ocurr[ií]|fallaba)",
     re.IGNORECASE,
 )
 PATRON_AFIRMACION_VEHICULAR = re.compile(
@@ -190,13 +190,18 @@ def seleccionar_entidad_vehicular(
             candidatos_validos.append((start, nombre, 1))
             continue
 
-        prioridad = 3 if PATRON_AFIRMACION_VEHICULAR.search(ventana_pre) else 2
+        if PATRON_CORRECCION_VEHICULO.search(ventana_pre):
+            prioridad = 4
+        elif PATRON_AFIRMACION_VEHICULAR.search(ventana_pre):
+            prioridad = 3
+        else:
+            prioridad = 2
         candidatos_validos.append((start, nombre, prioridad))
 
     if not candidatos_validos:
         return (None, fue_negada_actual)
 
-    candidatos_validos.sort(key=lambda x: (x[2], -x[0]), reverse=True)
+    candidatos_validos.sort(key=lambda x: (x[2], x[0]), reverse=True)
     if entidad_actual and candidatos_validos[0][2] <= 1:
         return (None, fue_negada_actual)
     return (candidatos_validos[0][1], fue_negada_actual)

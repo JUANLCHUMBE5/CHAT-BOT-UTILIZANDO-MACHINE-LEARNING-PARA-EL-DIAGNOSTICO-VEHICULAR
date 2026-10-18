@@ -31,8 +31,11 @@ def clasificar_mensaje(texto: str, estado: ConversationState) -> str:
         return "confirmacion"
     if re.fullmatch(r"(?:no|incorrecto|descarto|no es esa)", mensaje):
         return "descarte" if estado.top3_actual or estado.falla_principal else "respuesta_pendiente"
+    from src.core.conversacion.extraccion_hechos.correcciones_y_descartes import es_mencion_hipotetica
+
     if re.search(r"\b(?:ya\s+(?:lo\s+)?revis[eé]|ya\s+chequ[eé]|est[aá]\s+bien|no\s+es\s+|descart[ée])\b", mensaje):
-        return "descarte"
+        if not es_mencion_hipotetica(mensaje, mensaje):
+            return "descarte"
     if re.search(r"\b(?:encontr[eé]|hall[eé]|detect[eé]|inyectores?|injectores?|maf\s+da|fuga\s+de)\b", mensaje):
         return "hallazgo_mecanico"
     if estado.preguntas_realizadas and (

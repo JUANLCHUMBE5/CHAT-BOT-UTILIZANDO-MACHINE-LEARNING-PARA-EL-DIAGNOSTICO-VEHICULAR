@@ -221,6 +221,12 @@ def test_resumen_no_convierte_faltantes_en_cero_ni_suma_piloto():
 
 
 def test_persistencia_e2e_development_y_exclusion_oficial():
+    import pytest
+    from src.infrastructure.database.connection import database_configurada
+    from tests.conftest import _es_base_pruebas_segura
+
+    if not database_configurada() or not _es_base_pruebas_segura():
+        pytest.skip("PostgreSQL no est? configurado o no es base segura de pruebas (*_test).")
     asyncio.run(_persistencia_e2e_development_y_exclusion_oficial())
 
 

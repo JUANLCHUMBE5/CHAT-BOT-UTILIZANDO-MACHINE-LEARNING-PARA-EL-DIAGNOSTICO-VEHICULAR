@@ -223,11 +223,24 @@ class DiagnosticSession:
                     }.items()
                     if valor not in (None, "")
                 }
-                self.sintomas = list(estado.active_symptoms) or [
-                    hecho.texto_crudo or hecho.valor
-                    for hecho in estado.hechos.values()
-                    if hecho.categoria == "sintoma"
-                ]
+                sintomas_exportados = contexto.get("sintomas")
+                if isinstance(sintomas_exportados, list) and sintomas_exportados:
+                    vistos = set()
+                    sintomas_unicos = []
+                    for s in sintomas_exportados:
+                        st = str(s).strip()
+                        if st and st not in vistos:
+                            vistos.add(st)
+                            sintomas_unicos.append(st)
+                    self.sintomas = sintomas_unicos
+                elif estado.active_symptoms:
+                    self.sintomas = list(estado.active_symptoms)
+                else:
+                    self.sintomas = [
+                        hecho.texto_crudo or hecho.valor
+                        for hecho in estado.hechos.values()
+                        if hecho.categoria == "sintoma"
+                    ]
                 pregunta_pendiente = estado.pending_question or {}
                 self.consulta_tecnica_pendiente = pregunta_pendiente.get("texto")
                 self.campos_requeridos = list(pregunta_pendiente.get("campos_requeridos") or [])

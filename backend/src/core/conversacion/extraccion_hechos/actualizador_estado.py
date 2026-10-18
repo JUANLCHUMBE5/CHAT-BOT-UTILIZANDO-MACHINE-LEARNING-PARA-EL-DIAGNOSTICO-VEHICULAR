@@ -435,6 +435,20 @@ def extraer_y_actualizar(
     hechos_extraidos.extend(extraer_comprobaciones_taller(estado, texto_usuario, texto_normalizado))
     hechos_extraidos.extend(registrar_rechazos_explicitos(estado, texto_usuario))
 
+    # Extraccion de cilindro afectado
+    m_cil = re.search(r"\b(?:en\s+el\s+|del\s+|de\s+)?cilindro\s*([1-8])\b", texto_usuario.lower())
+    if m_cil:
+        num_cil = m_cil.group(1)
+        h_cil = estado.registrar_hecho(
+            "cilindro_afectado",
+            f"cilindro {num_cil}",
+            categoria="localizacion",
+            estado=FactState.CONFIRMADO,
+            texto_crudo=texto_usuario,
+            tipo=FactType.CONDICION,
+        )
+        hechos_extraidos.append(h_cil.to_dict())
+
     # 5. Modificadores y sistemas complementarios
     texto_l = texto_usuario.lower()
     es_queja_climatizacion = bool(
