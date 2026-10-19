@@ -1,4 +1,5 @@
 """Consulta informativa autorizada sin crear vehículo ni alterar el caso activo."""
+
 import asyncio
 import re
 import time
@@ -12,6 +13,10 @@ async def responder_consulta_informativa(
     gestor, session, usuario, conversacion, texto, meta_message_id, remitente, proveedor
 ):
     contexto = (conversacion.contexto or {}) if conversacion is not None else {}
+    # Con un caso activo, el orquestador atiende también las preguntas técnicas
+    # y conserva sus limitaciones y evidencia en todas las rutas.
+    if contexto.get("conversation_state") or contexto.get("case_id"):
+        return None
     tiene_caso_activo = bool(
         contexto.get("conversation_state")
         or contexto.get("estado_conversacion")
@@ -29,12 +34,18 @@ async def responder_consulta_informativa(
         if referencia_continuidad or ExtractorHechos.contiene_informacion_diagnostica(texto):
             return None
 
-    if ExtractorHechos.es_consulta_memoria(texto) or clasificar_intencion_consulta(texto) != "consulta_tecnica":
+    if (
+        ExtractorHechos.es_consulta_memoria(texto)
+        or clasificar_intencion_consulta(texto) != "consulta_tecnica"
+    ):
         return None
     inicio = time.perf_counter()
     dto = await asyncio.to_thread(
         gestor._procesar_consulta_tecnica,
-        texto, inicio_total=inicio, remitente=remitente, proveedor=proveedor,
+        texto,
+        inicio_total=inicio,
+        remitente=remitente,
+        proveedor=proveedor,
         taller_id=str(usuario.taller_id) if usuario else None,
         usuario_id=str(usuario.id) if usuario else None,
         conversacion_id=str(conversacion.id) if conversacion else None,

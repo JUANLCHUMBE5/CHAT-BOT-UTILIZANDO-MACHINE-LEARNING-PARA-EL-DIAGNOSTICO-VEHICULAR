@@ -146,8 +146,7 @@ class ManejadorIntencionesEspeciales:
         ):
             es_cancelacion = solicitud_caso["accion"] == "cancelar"
             preservar_vehiculo = bool(
-                solicitud_caso.get("preservar_vehiculo")
-                and any((estado.placa, estado.marca, estado.modelo))
+                solicitud_caso.get("preservar_vehiculo") and any((estado.placa, estado.marca, estado.modelo))
             )
             estado.iniciar_nuevo_caso(
                 None if es_cancelacion else str(uuid.uuid4()),
@@ -193,7 +192,19 @@ class ManejadorIntencionesEspeciales:
 
         # 2. Cierre / Agradecimiento
         if cls.PATRON_CIERRE.match(texto_limpio.strip()):
-            if any(w in texto_limpio.lower() for w in ("embalamiento", "seguridad", "riesgo", "peligro", "diesel", "diésel", "cárter", "carter")):
+            if any(
+                w in texto_limpio.lower()
+                for w in (
+                    "embalamiento",
+                    "seguridad",
+                    "riesgo",
+                    "peligro",
+                    "diesel",
+                    "diésel",
+                    "cárter",
+                    "carter",
+                )
+            ):
                 resp_cierre = (
                     "\U0001f91d *¡De nada maestro! Recuerda mantener el motor detenido y drenar completamente el cárter contaminado "
                     "antes de cualquier intento de arranque para evitar el peligro crítico de embalamiento diésel. "
@@ -239,7 +250,9 @@ class ManejadorIntencionesEspeciales:
 
         # 2c. Retoma / Continuación de caso activo
         if cls.PATRON_RETOMA.match(texto_limpio.strip()):
-            veh_info = f" del *{estado.marca} {estado.modelo}*".strip() if (estado.marca or estado.modelo) else ""
+            veh_info = (
+                f" del *{estado.marca} {estado.modelo}*".strip() if (estado.marca or estado.modelo) else ""
+            )
             preg_pendiente = estado.pending_question.get("texto") if estado.pending_question else None
             if not preg_pendiente and estado.preguntas_realizadas:
                 preg_pendiente = (estado.ultima_pregunta() or {}).get("texto")
@@ -289,9 +302,15 @@ class ManejadorIntencionesEspeciales:
                     "¿En qué te puedo ayudar hoy o qué falla presenta el auto? Para empezar, cuéntame el problema o síntomas que notas."
                 )
                 return {
-                    "status": "saludo", "respuesta_texto": resp_saludo, "diagnostico_ml": "Saludo / Bienvenida",
-                    "confianza_ml": 1.0, "fase": ConversationPhase.INICIO.value, "es_pregunta": False, "decision": "SALUDO",
-                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                    "status": "saludo",
+                    "respuesta_texto": resp_saludo,
+                    "diagnostico_ml": "Saludo / Bienvenida",
+                    "confianza_ml": float(estado.confianza_actual or 0.0),
+                    "fase": ConversationPhase.INICIO.value,
+                    "es_pregunta": False,
+                    "decision": "SALUDO",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                    "estado": estado,
                 }
             else:
                 placa_txt = f" del vehículo con placa *{estado.placa}*" if estado.placa else ""
@@ -300,58 +319,99 @@ class ManejadorIntencionesEspeciales:
                     "Cuéntame si tienes más síntomas que agregar o responde a la última indicación para continuar."
                 )
                 return {
-                    "status": "saludo_caso_activo", "respuesta_texto": resp_saludo,
+                    "status": "saludo_caso_activo",
+                    "respuesta_texto": resp_saludo,
                     "diagnostico_ml": "Saludo en caso activo",
-                    "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
-                    "es_pregunta": False, "decision": "SALUDO",
-                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                    "confianza_ml": estado.confianza_actual or 1.0,
+                    "fase": estado.fase.value,
+                    "es_pregunta": False,
+                    "decision": "SALUDO",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                    "estado": estado,
                 }
 
         # 4. Consultas de descartes o resumen de estado activo
         norm_txt_cons = texto_limpio.casefold()
-        if re.search(r"\bqu[eé]\s+(?:hemos|se\s+ha|tenemos)\s+descartado\b|\bdescartes?\s+hasta\s+ahora\b", norm_txt_cons):
+        if re.search(
+            r"\bqu[eé]\s+(?:hemos|se\s+ha|tenemos)\s+descartado\b|\bdescartes?\s+hasta\s+ahora\b",
+            norm_txt_cons,
+        ):
             desc_items = []
             for d in getattr(estado, "hipotesis_descartadas", []):
                 d_limpio = d.replace("componente:", "").replace("_", " ").capitalize()
                 desc_items.append(f"• {d_limpio}")
             for h in getattr(estado, "hechos", {}).values():
-                if getattr(h, "categoria", "") in ("componente_reemplazado", "verificacion_fisica", "rechazo_hipotesis_usuario"):
-                    nombre = getattr(h, "campo", "").replace("rechazo_usuario_", "").replace("componente_comprobado_", "").replace("componente_reemplazado_", "").capitalize()
+                if getattr(h, "categoria", "") in (
+                    "componente_reemplazado",
+                    "verificacion_fisica",
+                    "rechazo_hipotesis_usuario",
+                ):
+                    nombre = (
+                        getattr(h, "campo", "")
+                        .replace("rechazo_usuario_", "")
+                        .replace("componente_comprobado_", "")
+                        .replace("componente_reemplazado_", "")
+                        .capitalize()
+                    )
                     val = getattr(h, "valor", "")
                     item_str = f"• {nombre}: {val}"
                     if item_str not in desc_items:
                         desc_items.append(item_str)
             if desc_items:
-                resp_descartes = "\U0001f4cc *Comprobaciones y descartes registrados hasta el momento:*\n\n" + "\n".join(dict.fromkeys(desc_items))
+                resp_descartes = (
+                    "\U0001f4cc *Comprobaciones y descartes registrados hasta el momento:*\n\n"
+                    + "\n".join(dict.fromkeys(desc_items))
+                )
             else:
                 resp_descartes = "\U0001f4cc *Descartes registrados:* Hasta el momento no se han registrado componentes descartados en este caso."
             return {
-                "status": "resumen_descartes", "respuesta_texto": resp_descartes,
+                "status": "resumen_descartes",
+                "respuesta_texto": resp_descartes,
                 "diagnostico_ml": estado.falla_principal or "Descartes del caso",
-                "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
-                "es_pregunta": False, "decision": "RESUMEN_DESCARTES",
-                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                "confianza_ml": estado.confianza_actual or 1.0,
+                "fase": estado.fase.value,
+                "es_pregunta": False,
+                "decision": "RESUMEN_DESCARTES",
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
             }
 
-        if re.search(r"\bqu[eé]\s+(?:sabemos|tenemos)\s+hasta\s+ahora\b|\b(?:dame\s+(?:el\s+)?)?resumen\b", norm_txt_cons):
+        if re.search(
+            r"\bqu[eé]\s+(?:sabemos|tenemos)\s+hasta\s+ahora\b|\b(?:dame\s+(?:el\s+)?)?resumen\b",
+            norm_txt_cons,
+        ):
             veh_info = f"{estado.marca or 'Vehículo'} {estado.modelo or ''} {estado.anio or ''}".strip()
             comb_info = f" ({estado.combustible})" if estado.combustible else ""
             placa_info = f" - Placa: {estado.placa}" if estado.placa else ""
             sintomas_filtrados = []
-            for s in (estado.active_symptoms or []):
+            for s in estado.active_symptoms or []:
                 s_clean = s.strip()
                 s_l = s_clean.lower()
-                if (
-                    s_l.startswith("¿")
-                    or any(w in s_l for w in (
-                        "me equivoque", "me equivoqué", "no es kia", "no es rio",
-                        "no tengo escáner", "no tengo escaner", "gasolina", "diesel", "diésel",
-                        "buenas tardes", "hola", "disculpa maestro", "placa ", "corrijo", "corrección"
-                    ))
+                if s_l.startswith("¿") or any(
+                    w in s_l
+                    for w in (
+                        "me equivoque",
+                        "me equivoqué",
+                        "no es kia",
+                        "no es rio",
+                        "no tengo escáner",
+                        "no tengo escaner",
+                        "gasolina",
+                        "diesel",
+                        "diésel",
+                        "buenas tardes",
+                        "hola",
+                        "disculpa maestro",
+                        "placa ",
+                        "corrijo",
+                        "corrección",
+                    )
                 ):
                     continue
                 sintomas_filtrados.append(f"• {s_clean}")
-            sint_txt = "\n".join(sintomas_filtrados) if sintomas_filtrados else "• Síntomas en evaluación preliminar"
+            sint_txt = (
+                "\n".join(sintomas_filtrados) if sintomas_filtrados else "• Síntomas en evaluación preliminar"
+            )
 
             if estado.top3_actual:
                 top_items = []
@@ -362,7 +422,11 @@ class ManejadorIntencionesEspeciales:
                     top_items.append(f"  {idx}. {nom}{pct_str}")
                 hip_txt = "\n".join(top_items)
             else:
-                hip_txt = f"  1. {estado.falla_principal}" if estado.falla_principal else "Diagnóstico diferencial en curso"
+                hip_txt = (
+                    f"  1. {estado.falla_principal}"
+                    if estado.falla_principal
+                    else "Diagnóstico diferencial en curso"
+                )
 
             resp_resumen = (
                 f"\U0001f4cc *Resumen técnico del caso activo:*\n\n"
@@ -375,11 +439,15 @@ class ManejadorIntencionesEspeciales:
                 resp_resumen, norm_txt_cons, estado.falla_principal, estado=estado
             )
             return {
-                "status": "resumen_caso", "respuesta_texto": resp_resumen,
+                "status": "resumen_caso",
+                "respuesta_texto": resp_resumen,
                 "diagnostico_ml": estado.falla_principal or "Resumen del caso",
-                "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
-                "es_pregunta": True, "decision": "RESUMEN_CASO",
-                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                "confianza_ml": estado.confianza_actual or 1.0,
+                "fase": estado.fase.value,
+                "es_pregunta": True,
+                "decision": "RESUMEN_CASO",
+                "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                "estado": estado,
             }
 
         # 5. Explicaciones causales y consultas técnicas
@@ -398,34 +466,52 @@ class ManejadorIntencionesEspeciales:
                     resp_por_que, norm_txt_cons, estado.falla_principal, estado=estado
                 )
                 return {
-                    "status": "explicacion_causal", "respuesta_texto": resp_por_que,
+                    "status": "explicacion_causal",
+                    "respuesta_texto": resp_por_que,
                     "diagnostico_ml": estado.falla_principal or "Explicación técnica",
-                    "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
-                    "es_pregunta": False, "decision": "EXPLICACION_CAUSAL",
-                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                    "confianza_ml": estado.confianza_actual or 1.0,
+                    "fase": estado.fase.value,
+                    "es_pregunta": False,
+                    "decision": "EXPLICACION_CAUSAL",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                    "estado": estado,
                 }
 
         # 6. Tolerancias y especificaciones OEM
-        if re.search(r"\b(?:tolerancia|alabeo\s+m[aá]ximo|especificaci[oón]|temperatura\s+(?:debe\s+abrir|de\s+apertura))\b", norm_txt_cons):
+        if re.search(
+            r"\b(?:tolerancia|alabeo\s+m[aá]ximo|especificaci[oó]n|temperatura\s+(?:debe\s+abrir|de\s+apertura))\b",
+            norm_txt_cons,
+        ):
             resp_tol = cls._obtener_tolerancia_oem(norm_txt_cons)
             if resp_tol:
                 return {
-                    "status": "tolerancia_oem", "respuesta_texto": resp_tol,
-                    "diagnostico_ml": estado.falla_principal or "Tolerancia OEM",
-                    "confianza_ml": estado.confianza_actual or 1.0, "fase": estado.fase.value,
-                    "es_pregunta": False, "decision": "TOLERANCIA_OEM",
-                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2), "estado": estado,
+                    "status": "tolerancia_no_validada",
+                    "respuesta_texto": resp_tol,
+                    "diagnostico_ml": estado.falla_principal or "Tolerancia OEM pendiente de documentación",
+                    "confianza_ml": float(estado.confianza_actual or 0.0),
+                    "fase": estado.fase.value,
+                    "es_pregunta": False,
+                    "decision": "ABSTENCION_OEM_TOLERANCIA",
+                    "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
+                    "estado": estado,
                 }
 
         # 7. Solicitud de profundización técnica sobre caso activo
-        if ExtractorHechos.es_solicitud_detalle(texto_limpio) and (estado.top3_actual or getattr(estado, "falla_principal", None)):
-            return cls._procesar_detalle_caso_activo(estado, texto_limpio, norm_txt_cons, gestor_diagnostico, t0)
+        if ExtractorHechos.es_solicitud_detalle(texto_limpio) and (
+            estado.top3_actual or getattr(estado, "falla_principal", None)
+        ):
+            return cls._procesar_detalle_caso_activo(
+                estado, texto_limpio, norm_txt_cons, gestor_diagnostico, t0
+            )
 
         return None
 
     @classmethod
     def _obtener_explicacion_causal(cls, norm_txt: str) -> Optional[str]:
-        if (any(w in norm_txt for w in ("peligro", "seguridad", "arranco", "arrancar", "riesgo")) and any(w in norm_txt for w in ("carter", "cárter", "diesel", "diésel"))) or "embalamiento" in norm_txt:
+        if (
+            any(w in norm_txt for w in ("peligro", "seguridad", "arranco", "arrancar", "riesgo"))
+            and any(w in norm_txt for w in ("carter", "cárter", "diesel", "diésel"))
+        ) or "embalamiento" in norm_txt:
             return (
                 "\u26a0\ufe0f *Advertencia crítica de seguridad automotriz (Embalamiento Diésel):*\n\n"
                 "Si el nivel de aceite subió por encima del máximo y huele a combustible (diésel), "
@@ -435,7 +521,9 @@ class ManejadorIntencionesEspeciales:
                 "incontrolable y sobre-revolución destructiva (embalamiento). "
                 "Procedimiento obligatorio: remolcar en grúa, drenar cárter y cambiar aceite antes de cualquier diagnóstico."
             )
-        if any(w in norm_txt for w in ("mariposa", "cuerpo de aceleracion", "cuerpo de aceleración")) and any(w in norm_txt for w in ("carbon", "carbón", "500", "ralenti", "ralentí", "apaga", "cae")):
+        if any(w in norm_txt for w in ("mariposa", "cuerpo de aceleracion", "cuerpo de aceleración")) and any(
+            w in norm_txt for w in ("carbon", "carbón", "500", "ralenti", "ralentí", "apaga", "cae")
+        ):
             return (
                 "\U0001f4a1 *Explicación técnica del calado por carbonilla en mariposa de admisión:*\n\n"
                 "Sí, el carbón acumulado en la mariposa y el venturi restringe severamente el paso de aire mínimo de ralentí. "
@@ -443,7 +531,9 @@ class ManejadorIntencionesEspeciales:
                 "La mariposa electrónica motorizada intenta compensar la falta de aire, pero la obstrucción física retarda el flujo "
                 "y hace que las RPM se desplomen a 400-500 RPM provocando el calado inmediato por falta de caudal de aire."
             )
-        if any(w in norm_txt for w in ("calentadores", "testigo", "rulo", "precalentamiento")) and any(w in norm_txt for w in ("combustible", "riel", "presion", "presión", "p0087")):
+        if any(w in norm_txt for w in ("calentadores", "testigo", "rulo", "precalentamiento")) and any(
+            w in norm_txt for w in ("combustible", "riel", "presion", "presión", "p0087")
+        ):
             return (
                 "\U0001f4a1 *Explicación técnica del testigo de calentadores destellando en diésel:*\n\n"
                 "En motores diésel Common Rail modernos, el testigo de calentadores (rulo) cumple una doble función: "
@@ -451,7 +541,9 @@ class ManejadorIntencionesEspeciales:
                 "Cuando la presión en el riel cae drásticamente por debajo del valor demandado (código P0087), la ECU hace destellar "
                 "el testigo de calentadores y limita la potencia a modo de emergencia (limp mode) para proteger la bomba de alta presión CP4 y los inyectores."
             )
-        if any(w in norm_txt for w in ("retorno", "probeta", "probetas")) and any(w in norm_txt for w in ("explica", "caida", "caída", "presion", "presión", "riel")):
+        if any(w in norm_txt for w in ("retorno", "probeta", "probetas")) and any(
+            w in norm_txt for w in ("explica", "caida", "caída", "presion", "presión", "riel")
+        ):
             return (
                 "\U0001f4a1 *Explicación técnica del exceso de retorno en inyector Common Rail:*\n\n"
                 "Sí, el exceso de retorno en el inyector 3 explica directamente la caída de presión en el riel. "
@@ -460,7 +552,9 @@ class ManejadorIntencionesEspeciales:
                 "hacia la línea de retorno de baja presión (65 ml frente a 15 ml de los demás). Esta fuga supera la capacidad de entrega "
                 "de la bomba de alta a plena aceleración, provocando la caída de presión a 220 bar y el código P0087."
             )
-        if any(w in norm_txt for w in ("45 kpa", "presion diferencial", "presión diferencial")) and any(w in norm_txt for w in ("normal", "taponamiento", "dpf")):
+        if any(w in norm_txt for w in ("45 kpa", "presion diferencial", "presión diferencial")) and any(
+            w in norm_txt for w in ("normal", "taponamiento", "dpf")
+        ):
             return (
                 "\U0001f4a1 *Interpretación técnica de presión diferencial DPF (45 kPa):*\n\n"
                 "45 kPa (450 mbar) a 2000 RPM indica un **taponamiento severo y crítico del filtro de partículas DPF**. "
@@ -468,7 +562,9 @@ class ManejadorIntencionesEspeciales:
                 "Una lectura de 45 kPa asfixia el escape, eleva la temperatura EGT y sobrecarga la turbina del turbo; confirma acumulación extrema "
                 "de hollín (código P2463) y contraindica regeneraciones forzadas estáticas por riesgo de incendio; requiere desmontaje para lavado químico o cambio."
             )
-        if any(w in norm_txt for w in ("juego", "turbo", "eje")) and any(w in norm_txt for w in ("175", "compresion", "compresión", "humo", "sellos", "confirma")):
+        if any(w in norm_txt for w in ("juego", "turbo", "eje")) and any(
+            w in norm_txt for w in ("175", "compresion", "compresión", "humo", "sellos", "confirma")
+        ):
             return (
                 "\U0001f4a1 *Diagnóstico diferencial de consumo de aceite (Turbo vs Cilindros):*\n\n"
                 "Sí, confirma que la causa del humo azul son los sellos de turbina. La compresión de 175 PSI pareja en los tres cilindros "
@@ -476,7 +572,9 @@ class ManejadorIntencionesEspeciales:
                 "o fatiga de los sellos laberinto de estanqueidad dinámica, permitiendo que el aceite lubricante presurizado pase directamente "
                 "al circuito de admisión y escape, quemándose en la combustión. Requiere desmontaje y reparación del cartucho CHRA o cambio de turbo."
             )
-        if any(w in norm_txt for w in ("reaprendizaje", "calibrar", "calibracion", "calibración")) and any(w in norm_txt for w in ("manual", "llave", "pedal")):
+        if any(w in norm_txt for w in ("reaprendizaje", "calibrar", "calibracion", "calibración")) and any(
+            w in norm_txt for w in ("manual", "llave", "pedal")
+        ):
             return (
                 "\U0001f6e0\ufe0f *Procedimiento manual de reaprendizaje de mariposa (llave y pedal Drive-by-Wire):*\n\n"
                 "1. Motor a temperatura de trabajo (85-90 °C) y apagar todos los consumidores eléctricos (luces, A/C, radio).\n"
@@ -486,7 +584,9 @@ class ManejadorIntencionesEspeciales:
                 "5. Esperar 7 segundos con el pedal libre; luego pisar a fondo durante 20 segundos hasta que la luz check engine quede fija.\n"
                 "6. Soltar el acelerador, dar arranque en ralentí y dejar estabilizar durante 3 minutos sin acelerar para confirmar 700-750 RPM estables."
             )
-        if "recalienta" in norm_txt and any(w in norm_txt for w in ("trafico", "tráfico", "detenido", "parado")):
+        if "recalienta" in norm_txt and any(
+            w in norm_txt for w in ("trafico", "tráfico", "detenido", "parado")
+        ):
             return (
                 "\U0001f4a1 *Explicación técnica del comportamiento térmico:*\n\n"
                 "En carretera a velocidad sostenida, el flujo de aire natural que ingresa por la parrilla "
@@ -496,7 +596,9 @@ class ManejadorIntencionesEspeciales:
                 "Si el electroventilador no enciende en su velocidad adecuada o el termostato no abre por completo, "
                 "la temperatura ascenderá rápidamente hacia la zona crítica."
             )
-        if any(w in norm_txt for w in ("corta", "segundos", "inyeccion", "inyección", "inmovilizador", "ecu")):
+        if any(
+            w in norm_txt for w in ("corta", "segundos", "inyeccion", "inyección", "inmovilizador", "ecu")
+        ):
             return (
                 "\U0001f4a1 *Explicación técnica de la estrategia de inmovilizador:*\n\n"
                 "Al dar arranque, la ECU permite una activación inicial de 2 a 3 segundos mientras interroga "
@@ -529,30 +631,13 @@ class ManejadorIntencionesEspeciales:
         return None
 
     @classmethod
-    def _obtener_tolerancia_oem(cls, norm_txt: str) -> Optional[str]:
-        if any(w in norm_txt for w in ("termostato", "abrir", "temperatura")):
-            return (
-                "\U0001f52c *Especificación metrológica y tolerancia OEM (Termostato):*\n\n"
-                "Según el manual de servicio del fabricante, la temperatura de inicio de apertura del termostato "
-                "se sitúa entre 82 °C y 88 °C, alcanzando su carrera de apertura total a los 95 °C - 98 °C "
-                "(elevación mínima de la válvula de 8 mm). Si a 108 °C la manguera inferior permanece fría, "
-                "el termostato está trabado cerrado."
-            )
-        if any(w in norm_txt for w in ("volante", "inercia", "embrague")):
-            return (
-                "\U0001f52c *Especificación metrológica y tolerancia OEM (Volante de inercia):*\n\n"
-                "El alabeo o salto axial máximo admisible para el volante de inercia según manual es de 0.10 mm. "
-                "Cualquier lectura superior a 0.10 mm o presencia de fisuras y sobrecalentamiento térmico azulado "
-                "exige rectificado de la pista de fricción o reemplazo del volante."
-            )
-        if any(w in norm_txt for w in ("disco", "freno", "alabeo")):
-            return (
-                "\U0001f52c *Especificación metrológica y tolerancia OEM (Discos de freno):*\n\n"
-                "La tolerancia máxima de alabeo lateral en discos de freno instalados es de 0.05 mm a 0.07 mm. "
-                "Una medición de 0.12 mm excede significativamente el límite de servicio y provocará pulsación "
-                "en el pedal y vibración en el timón a alta velocidad; requiere rectificado o cambio de discos."
-            )
-        return None
+    def _obtener_tolerancia_oem(
+        cls, norm_txt: str, corpus_val: bool = False
+    ) -> Optional[str]:
+        """No inventa límites: este manejador no recibe citas/documentos recuperados."""
+        from ..formato_salidas.orientacion_segura import orientar_sin_manual
+
+        return orientar_sin_manual(norm_txt)
 
     @classmethod
     def _procesar_detalle_caso_activo(
@@ -564,7 +649,11 @@ class ManejadorIntencionesEspeciales:
         t0: float,
     ) -> Dict[str, Any]:
         top_actual = estado.top3_actual or []
-        falla_target = top_actual[0]["falla"] if top_actual else (estado.falla_principal or "Falla mecánica bajo revisión")
+        falla_target = (
+            top_actual[0]["falla"]
+            if top_actual
+            else (estado.falla_principal or "Falla mecánica bajo revisión")
+        )
 
         for patron_c, falla_c in cls.COMPONENTES_CONSULTA:
             if patron_c in norm_txt:

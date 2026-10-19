@@ -1,0 +1,24 @@
+name: carbot-rag03i-validation
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports: ["127.0.0.1:55439:5432"]
+    environment:
+      POSTGRES_DB: carbot_test
+      POSTGRES_USER: carbot_app
+      POSTGRES_PASSWORD: isolated_rag03i_tests_only
+    tmpfs: [/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U carbot_app -d carbot_test"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  redis:
+    image: redis:7-alpine
+    ports: ["127.0.0.1:56389:6379"]
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 30

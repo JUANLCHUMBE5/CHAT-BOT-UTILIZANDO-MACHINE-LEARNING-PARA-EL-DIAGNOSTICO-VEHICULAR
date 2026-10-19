@@ -2,14 +2,43 @@
 Constructor de consultas enriquecidas multiseñal para el motor RAG.
 Combina:
 1. Síntomas textuales limpios del usuario y jerga técnica normalizada.
-2. Códigos DTC detectados y sus definiciones técnicas estándar.
+2. Códigos DTC detectados y sus definiciones técnica estándar.
 3. Hipótesis Top 1, Top 2 y Top 3 predichas por el clasificador ML jerárquico.
 4. Perfil del vehículo (marca, modelo, sistema).
 """
 
 from __future__ import annotations
 
+import re
+import unicodedata
 from typing import Any, Dict, List, Optional
+
+
+def _normalizar(texto: str) -> str:
+    if not texto:
+        return ""
+    return "".join(c for c in unicodedata.normalize("NFD", texto.lower()) if unicodedata.category(c) != "Mn")
+
+
+def _es_pregunta_procedimental_directa(texto: str) -> bool:
+    """Detecta si la consulta es una solicitud procedimental directa sin reporte de avería personal."""
+    txt = _normalizar(texto)
+    prefijo_procedimiento = bool(
+        re.search(
+            r"\b(?:como\s+(?:medir|probar|calibrar|inspeccionar|revisar|verificar|desarmar|cambiar|purgar)|"
+            r"cual\s+es\s+(?:la|el|las|los)\s+(?:tolerancia|presion|valor|compresion|luz|calibracion|especificacion)|"
+            r"procedimiento\s+(?:para|de)|pasos\s+para|"
+            r"prueba\s+(?:de|para)|inspeccion\s+(?:de|para|y)|comprobacion\s+(?:de|para)|calibracion\s+(?:de|para)|diagnostico\s+de)\b",
+            txt,
+        )
+    )
+    tiene_queja_personal = bool(
+        re.search(
+            r"\b(?:mi\s+(?:auto|carro|motor|camioneta|vehiculo)|tengo\s+(?:un\s+)?(?:problema|falla)|me\s+falla|se\s+me\s+apaga|siento\s+que)\b",
+            txt,
+        )
+    )
+    return prefijo_procedimiento and not tiene_queja_personal
 
 
 def construir_consulta_hibrida(
@@ -38,21 +67,24 @@ def construir_consulta_hibrida(
     if macro_sistema and macro_sistema != "DESCONOCIDO":
         partes.append(f"SISTEMA {macro_sistema}")
 
-    # 4. Enrutamiento por señales explícitas para evitar que una clase ML
-    # incompatible contamine la búsqueda técnica.
+    # 4. Descriptores neutros de subsistema
+    # Evitan inyectar componentes específicos pre-juzgados (como termostato en refrigeración)
+    # si el mecánico solo mencionó síntomas generales del sistema.
     terminos_area = {
-        "INYECCION_MEZCLA": "inyección combustible mezcla pobre sensor oxígeno lambda fuel trim P0171",
-        "ADMISION_MAP": "admisión sensor MAP presión múltiple carga absoluta P0106",
-        "RALENTI": "ralentí marcha mínima cuerpo aceleración IAC",
-        "REFRIGERACION": "refrigeración temperatura motor termostato radiador ventilador",
-        "ENCENDIDO": "encendido bujías bobinas chispa misfire P0300",
+        "INYECCION_MEZCLA": "inyección combustible mezcla sensor oxígeno fuel trim",
+        "ADMISION_MAP": "admisión presión colector múltiple admisión vacio",
+        "RALENTI": "ralentí marcha mínima estabilidad motor",
+        "REFRIGERACION": "refrigeración circuito enfriamiento temperatura motor sobrecalentamiento",
+        "ENCENDIDO": "encendido chispa combustión salto de chispa",
     }
     if areas_consulta:
         partes.extend(terminos_area[area] for area in areas_consulta if area in terminos_area)
 
     # 5. Top 3 candidatos del clasificador Level 2; al haber señal específica,
     # solo se añaden candidatos del mismo tema (sin alterar sus probabilidades).
-    if top_fallas:
+    # Si la consulta es una solicitud procedimental directa sin reporte de queja,
+    # no inyectar hipótesis residuales de avería para evitar falsos positivos de recuperación.
+    if top_fallas and not _es_pregunta_procedimental_directa(base):
         if areas_consulta:
             from src.core.diagnostico.enrutador_sistema import falla_coincide_con_areas
 
@@ -72,10 +104,10 @@ def construir_consulta_hibrida(
         if nombres_fallas:
             partes.append(" ".join(nombres_fallas))
 
-    # 6. Datos vehiculares si no están ya en la consulta
-    if marca and marca.lower() not in base.lower() and marca not in ("Generico", "Vehiculo Generico"):
-        partes.append(marca)
-    if modelo and modelo.lower() not in base.lower():
-        partes.append(modelo)
+    # 6. Datos de vehículo si están disponibles
+    if marca:
+        partes.append(f"MARCA {marca}")
+    if modelo:
+        partes.append(f"MODELO {modelo}")
 
     return " ".join(partes)

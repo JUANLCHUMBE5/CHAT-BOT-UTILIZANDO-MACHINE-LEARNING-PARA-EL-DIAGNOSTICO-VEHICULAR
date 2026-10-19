@@ -20,3 +20,7 @@ d7d7370146175fe979f47812e3a9f4a6d410ce48:frontend/test_profile_edit_harness.js:g
 7ab2ac262834a154766598564f4601451c839453:tests/test_mecanicos_y_diagnosticos_api.py:generic-api-key:47
 # Spanish instruction placeholder to generate a JWT secret; not a credential.
 c58cf9e788310a86d4bb1480b09d353097d74e35:.env.example:generic-api-key:35
+# Synthetic isolated test environment keys in scripts/experiments/rag03g/ejecutar.py
+cfa3e65240a0094fd49632f4d4370b8e33ee1446:scripts/experiments/rag03g/ejecutar.py:generic-api-key:44
+cfa3e65240a0094fd49632f4d4370b8e33ee1446:scripts/experiments/rag03g/ejecutar.py:generic-api-key:45
+cfa3e65240a0094fd49632f4d4370b8e33ee1446:scripts/experiments/rag03g/ejecutar.py:generic-api-key:46

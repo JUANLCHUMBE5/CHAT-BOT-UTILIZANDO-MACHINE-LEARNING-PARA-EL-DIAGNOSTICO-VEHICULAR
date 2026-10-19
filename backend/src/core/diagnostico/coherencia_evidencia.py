@@ -10,11 +10,67 @@ def normalizar(texto):
     return "".join(c for c in unicodedata.normalize("NFD", texto.lower()) if unicodedata.category(c) != "Mn")
 
 
+def es_incompatible_accion_procedimiento(consulta: str, titulo: str, documento: str) -> bool:
+    """Detecta incompatibilidad lógica entre el procedimiento/acción solicitado y el contenido documental."""
+    q = normalizar(consulta)
+    tit = normalizar(titulo)
+    doc = normalizar(documento)
+
+    # 1. Medición / prueba manométrica de presión de aceite
+    # Si la consulta busca medir o comprobar presión de aceite con manómetro, solo es compatible
+    # un procedimiento específico de medición manométrica de presión de aceite.
+    es_medicion_presion_aceite = bool(
+        re.search(r"\b(?:presion\s+de\s+aceite|medir\s+(?:la\s+)?presion|manometro)\b", q)
+        and re.search(r"\b(?:aceite|lubricacion)\b", q)
+    )
+    if es_medicion_presion_aceite:
+        es_doc_medicion_aceite = bool(
+            re.search(
+                r"\b(?:medicion|prueba|comprobacion)\s+(?:manometrica\s+)?(?:de\s+)?presion\s+de\s+aceite\b",
+                tit,
+            )
+            or (re.search(r"\bmanometro\b", tit) and "aceite" in tit)
+        )
+        if not es_doc_medicion_aceite:
+            return True
+
+    # 2. Prueba química de CO2 en refrigerante / gases de combustión vs Enfriador de aceite
+    es_prueba_quimica_co2 = bool(
+        re.search(r"\b(?:detector\s+quimico|prueba\s+quimica|co2|gases\s+de\s+combustion)\b", q)
+        and re.search(r"\b(?:culata|empaque|empaquetadura|refrigerante|radiador)\b", q)
+    )
+    if es_prueba_quimica_co2:
+        es_doc_co2 = bool(re.search(r"\b(?:co2|quimico|reactivo|detector\s+quimico)\b", tit + " " + doc))
+        if not es_doc_co2:
+            return True
+
+    # 3. Consulta con "en ralenti" como condición operacional vs falla de marcha mínima (IAC / Mariposa)
+    es_condicion_ralenti = bool(
+        re.search(r"\b(?:en|a)\s+ralenti\b", q)
+        and not re.search(
+            r"\b(?:inestable|oscila\w*|falla|tirone\w*|se\s+apaga|tiembla|vibra|irregular|bajo|alto)\s+(?:en|a)\s+ralenti\b",
+            q,
+        )
+        and not re.search(
+            r"\b(?:en|a)\s+ralenti\s+(?:inestable|oscila\w*|falla|tirone\w*|irregular|bajo|alto)\b", q
+        )
+    )
+    es_doc_iac_mariposa = bool(
+        re.search(r"\b(?:cuerpo\s+de\s+aceleracion|valvula\s+iac|marcha\s+minima)\b", tit)
+    )
+    if es_condicion_ralenti and es_doc_iac_mariposa:
+        if not re.search(r"\b(?:cuerpo\s+de\s+aceleracion|valvula\s+iac|mariposa|acelerador|rpm)\b", q):
+            return True
+
+    return False
+
+
 def priorizar_evidencia(texto, predicciones):
     """Conserva las puntuaciones originales y evita usar hallazgos negados."""
     txt = normalizar(texto)
     positivas = " ".join(
-        frase for frase in re.split(r"[.;\n]|\bpero\b", txt)
+        frase
+        for frase in re.split(r"[.;\n]|\bpero\b", txt)
         if not re.search(r"\b(no|sin|descartado|descartada)\b", frase)
     )
     motivo = ""
@@ -30,9 +86,7 @@ def priorizar_evidencia(texto, predicciones):
     elif re.search(r"\b(?:p0171|lean)\b", positivas) and not re.search(
         r"\b(?:oxigeno|o2|lambda|inyector|injectores)\b", txt
     ):
-        compatibles = [
-            p for p in predicciones if "fuga de vacio" in normalizar(p.falla)
-        ] + [
+        compatibles = [p for p in predicciones if "fuga de vacio" in normalizar(p.falla)] + [
             p for p in predicciones if "maf" in normalizar(p.falla)
         ]
         if compatibles:
@@ -55,7 +109,8 @@ def priorizar_evidencia(texto, predicciones):
     caja = re.search(r"\b(automatic[oa]|transmision|caja|reversa|marcha atras)\b", positivas)
     acoplamiento = re.search(
         r"(?:demora|tarda|retardo).{0,60}(?:enganchar|acoplar|segundos)|"
-        r"(?:entra|engancha|acopla).{0,20}(?:golpe|brusco)|no engrana", positivas,
+        r"(?:entra|engancha|acopla).{0,20}(?:golpe|brusco)|no engrana",
+        positivas,
     )
     if caja and acoplamiento and not re.search(r"se apaga|ralenti inestable|motor tironea", positivas):
         compatibles = [p for p in predicciones if obtener_macro_sistema(p.falla) == "TRANSMISION"]
@@ -71,7 +126,8 @@ def priorizar_evidencia(texto, predicciones):
     # Hallazgo mecánico explícito, sin convertir una mera mención en confirmación.
     if re.search(r"\b(rotula|buje|bieleta)s?\b", positivas) and re.search(
         r"(?:encontre|detecte|observe|comprobe|med[ií]|en elevador).{0,100}(?:juego|holgura|rot[oa])|"
-        r"(?:rotula|buje|bieleta).{0,25}(?:con juego|con holgura|rot[oa])", positivas,
+        r"(?:rotula|buje|bieleta).{0,25}(?:con juego|con holgura|rot[oa])",
+        positivas,
     ):
         compatibles = [p for p in predicciones if re.search(r"buje|rotula|suspension", normalizar(p.falla))]
         motivo = "Hallazgo físico declarado en rótula/buje; priorizado sobre balanceo."
@@ -91,9 +147,13 @@ def bateria_ya_comprobada(texto):
 
 
 def documento_compatible(texto, titulo, contexto):
-    """Descarta documentos físicamente incompatibles con transmisión o combustible declarados."""
+    """Descarta documentos físicamente incompatibles con transmisión, combustible o acción declarados."""
     consulta = normalizar(texto)
     documento = normalizar(f"{titulo} {contexto}")
+
+    if es_incompatible_accion_procedimiento(consulta, titulo, contexto):
+        return False
+
     automatico = bool(re.search(r"\b(automatic[oa]|cvt|dsg)\b", consulta))
     manual = bool(re.search(r"\b(?:caja|transmision) manual\b", consulta))
     doc_manual = bool(re.search(r"\b(?:caja de cambios|caja|transmision) (?:manual|mecanica)\b", documento))
@@ -102,8 +162,7 @@ def documento_compatible(texto, titulo, contexto):
     doc_manual = doc_manual or bool(re.search(r"\b(?:collarin|crapodina|pedal de embrague)\b", documento))
     doc_auto = bool(re.search(r"\b(automatic[oa]|cvt|dsg)\b", documento))
     transmision_compatible = not (
-        (automatico and doc_manual and not doc_auto)
-        or (manual and doc_auto and not doc_manual)
+        (automatico and doc_manual and not doc_auto) or (manual and doc_auto and not doc_manual)
     )
 
     documento_gas_dedicado = bool(
@@ -112,9 +171,7 @@ def documento_compatible(texto, titulo, contexto):
             normalizar(titulo),
         )
     )
-    combustible_declarado = bool(
-        re.search(r"\b(?:gnv|glp|gasolina|diesel|di[eé]sel|gasohol)\b", consulta)
-    )
+    combustible_declarado = bool(re.search(r"\b(?:gnv|glp|gasolina|diesel|di[eé]sel|gasohol)\b", consulta))
     combustible_coincide = not documento_gas_dedicado or bool(
         combustible_declarado and re.search(r"\b(?:gnv|glp)\b", consulta)
     )
@@ -136,8 +193,7 @@ def preparar_contexto_rag_para_llm(contexto, titulo, metadatos, corpus_validado)
     estado = normalizar(str(meta.get("estado_validacion", ""))).replace(" ", "_")
     fuente = normalizar(str(meta.get("manual_oem", "")))
     fuente_generica = any(
-        palabra in fuente
-        for palabra in ("multimarca", "referencial", "universal", "estandar", "generico")
+        palabra in fuente for palabra in ("multimarca", "referencial", "universal", "estandar", "generico")
     )
     verificado = bool(
         corpus_validado
@@ -150,7 +206,10 @@ def preparar_contexto_rag_para_llm(contexto, titulo, metadatos, corpus_validado)
     if not contexto:
         return "", "Sin procedimiento RAG recuperado aplicable"
     if not verificado:
-        return "", "Fuente RAG omitida (Corpus preliminar no inyectado): pendiente de validación OEM y de taller"
+        return (
+            "",
+            "Fuente RAG omitida (Corpus preliminar no inyectado): pendiente de validación OEM y de taller",
+        )
     return contexto, titulo
 
 
@@ -170,7 +229,9 @@ def limitar_respuesta(
     unidades = r"(?<!\w)\d+(?:[.,]\d+)?\s*(?:nm|n·m|psi|bar|kpa|mm|rpm|°c|v|voltios|minutos)\b"
     cifras_respuesta = re.findall(unidades, respuesta or "", re.I)
     fuente_norm = normalizar(contexto_verificado or "")
-    cifra_sin_respaldo = any(normalizar(cifra).replace(" ", "") not in fuente_norm.replace(" ", "") for cifra in cifras_respuesta)
+    cifra_sin_respaldo = any(
+        normalizar(cifra).replace(" ", "") not in fuente_norm.replace(" ", "") for cifra in cifras_respuesta
+    )
     respuesta_norm = normalizar(respuesta or "")
     operacion_riesgosa = bool(
         re.search(
@@ -183,12 +244,7 @@ def limitar_respuesta(
             respuesta_norm,
         )
     )
-    if (
-        not sin_documento
-        and not cifra_sin_respaldo
-        and not operacion_riesgosa
-        and len(respuesta) <= 1200
-    ):
+    if not sin_documento and not cifra_sin_respaldo and not operacion_riesgosa and len(respuesta) <= 1200:
         return respuesta, False
     if not predicciones:
         return (

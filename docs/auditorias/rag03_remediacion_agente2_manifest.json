@@ -1,0 +1,31 @@
+{
+  "worktree": "feat/rag03c3-remediacion-corpus-trazable",
+  "commit_base": "edad69e5146c8b219125ca4b4762b66472376f77",
+  "agente": "Agente 2 — Remediación de Corpus OEM RAG-03",
+  "total_documentos_corpus_B": 256,
+  "total_fragmentos_remediados": 17,
+  "dimension_vectorial": 35240,
+  "max_error_absoluto_vectorial": 0.0,
+  "criterio_tolerancia": 1e-06,
+  "coherencia_matematica_aprobada": true,
+  "resolucion_hallazgos": {
+    "C01": "Resuelto: RAG_EXP_LASER_001 prohíbe tajantemente la apertura de tapón caliente; prescribe retiro exclusivamente con motor frío.",
+    "A08": "Resuelto: Eliminadas todas las cifras no documentadas (0.015mm, 100-120Nm, 2.5V, 4-6 bar); delimitación vehicular estricta por modelo, año y mercado.",
+    "A01": "Resuelto: Reconstrucción total de vectorizador e índice FAISS B; correspondencia exacta verificada con error máximo 0.00e+00 <= 1e-6.",
+    "A07_A09": "Resuelto: Datos en worktree aislado independiente, procedencia limpia registrada con hashes SHA-256."
+  },
+  "hashes_artefactos": {
+    "corpus_B_experimental.json": "ad6af0f0636086934dcc2f5703781f188ecd9b80a5b1d225be5d349b1b565eb0",
+    "fragmentos_nuevos_5pdfs.json": "d725b8cf7915f944b9897bb390c81be91ebf13d6acae1ab1b54b7b8b8eda9403",
+    "fragmentos_data.py": "70ef14bbbd9a67fc25413a2bb344b79b2dbc568480a1b6428b7428d49447e76b",
+    "vectorizador_test_B.joblib": "0f33f5fa66b083a2fb038e844d59f5ea8a5f835c02318e79d127106c53b96030",
+    "indice_faiss_test_B.index": "9df0a2a9e5da56118c4577f0304094f75f4952a3006beab907854f0153d930c1"
+  },
+  "hashes_pdfs_fuente": {
+    "brembo_guide_brake_disc_diagnostics.pdf": "ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1",
+    "hyundai_tsb_mdps_flexible_coupling_replacement.pdf": "3b051b41ae128a2a971f103d8908bc99f1be9720b1d4df5b2699ab8a3967d282",
+    "kia_tsb_cmdps_steering_column_repair.pdf": "deded09b3e1ecfea115faf2f2c0171a087056c1873f2cd187b2928b3ffa8d0b9",
+    "laser_5524_instrucciones_es.pdf": "513d6c527cc661e92503c7c35fb3c85c981e4af6726ec3bfb56a99e66840b63d",
+    "pico_wps500x_pressure_transducer_manual.pdf": "3de1537817f51acb803cc77a79ed85a2bb044d2438a6dd4cd12fcb28227af678"
+  }
+}

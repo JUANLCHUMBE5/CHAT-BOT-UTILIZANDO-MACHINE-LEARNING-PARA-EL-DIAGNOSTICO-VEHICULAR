@@ -1,0 +1,252 @@
+{
+  "benchmark_tamano": 100,
+  "fecha": "2026-10-18 03:07:16",
+  "configuraciones": {
+    "corpus_A_original_239": {
+      "p1_total": {
+        "val": 44.0,
+        "ci95": [
+          34.7,
+          53.8
+        ]
+      },
+      "p1_indomain": {
+        "val": 37.1,
+        "ci95": [
+          23.2,
+          53.7
+        ]
+      },
+      "recall_at_3_indomain": {
+        "val": 42.9,
+        "ci95": [
+          28.0,
+          59.1
+        ]
+      },
+      "abstencion_correcta_ood": {
+        "val": 47.7,
+        "ci95": [
+          36.0,
+          59.6
+        ]
+      },
+      "tasa_falsos_positivos": {
+        "val": 38.0,
+        "ci95": [
+          29.1,
+          47.8
+        ]
+      },
+      "trazabilidad_indomain": {
+        "val": 0.0,
+        "ci95": [
+          0.0,
+          9.9
+        ]
+      },
+      "por_familia": {
+        "COBERTURA_PARCIAL": {
+          "n": 15,
+          "precision_at_1": 26.7,
+          "abstencion": 60.0,
+          "falsos_positivos": 13.3
+        },
+        "COBERTURA_TOTAL": {
+          "n": 20,
+          "precision_at_1": 45.0,
+          "abstencion": 45.0,
+          "falsos_positivos": 10.0
+        },
+        "ESPECIFICACIONES_OEM_NO_PRESENTES": {
+          "n": 15,
+          "precision_at_1": 20.0,
+          "abstencion": 20.0,
+          "falsos_positivos": 80.0
+        },
+        "SIN_COBERTURA_OOD": {
+          "n": 20,
+          "precision_at_1": 85.0,
+          "abstencion": 85.0,
+          "falsos_positivos": 15.0
+        },
+        "VEHICULO_INCOMPATIBLE": {
+          "n": 15,
+          "precision_at_1": 46.7,
+          "abstencion": 46.7,
+          "falsos_positivos": 53.3
+        },
+        "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS": {
+          "n": 15,
+          "precision_at_1": 26.7,
+          "abstencion": 26.7,
+          "falsos_positivos": 73.3
+        }
+      }
+    },
+    "corpus_B_experimental_raw": {
+      "p1_total": {
+        "val": 55.0,
+        "ci95": [
+          45.2,
+          64.4
+        ]
+      },
+      "p1_indomain": {
+        "val": 82.9,
+        "ci95": [
+          67.3,
+          91.9
+        ]
+      },
+      "recall_at_3_indomain": {
+        "val": 85.7,
+        "ci95": [
+          70.6,
+          93.7
+        ]
+      },
+      "abstencion_correcta_ood": {
+        "val": 40.0,
+        "ci95": [
+          29.0,
+          52.1
+        ]
+      },
+      "tasa_falsos_positivos": {
+        "val": 42.0,
+        "ci95": [
+          32.8,
+          51.8
+        ]
+      },
+      "trazabilidad_indomain": {
+        "val": 77.1,
+        "ci95": [
+          61.0,
+          87.9
+        ]
+      },
+      "por_familia": {
+        "COBERTURA_PARCIAL": {
+          "n": 15,
+          "precision_at_1": 73.3,
+          "abstencion": 20.0,
+          "falsos_positivos": 6.7
+        },
+        "COBERTURA_TOTAL": {
+          "n": 20,
+          "precision_at_1": 90.0,
+          "abstencion": 0.0,
+          "falsos_positivos": 10.0
+        },
+        "ESPECIFICACIONES_OEM_NO_PRESENTES": {
+          "n": 15,
+          "precision_at_1": 20.0,
+          "abstencion": 20.0,
+          "falsos_positivos": 80.0
+        },
+        "SIN_COBERTURA_OOD": {
+          "n": 20,
+          "precision_at_1": 80.0,
+          "abstencion": 80.0,
+          "falsos_positivos": 20.0
+        },
+        "VEHICULO_INCOMPATIBLE": {
+          "n": 15,
+          "precision_at_1": 20.0,
+          "abstencion": 20.0,
+          "falsos_positivos": 80.0
+        },
+        "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS": {
+          "n": 15,
+          "precision_at_1": 26.7,
+          "abstencion": 26.7,
+          "falsos_positivos": 73.3
+        }
+      }
+    },
+    "corpus_B_experimental_segura": {
+      "p1_total": {
+        "val": 78.0,
+        "ci95": [
+          68.9,
+          85.0
+        ]
+      },
+      "p1_indomain": {
+        "val": 80.0,
+        "ci95": [
+          64.1,
+          90.0
+        ]
+      },
+      "recall_at_3_indomain": {
+        "val": 82.9,
+        "ci95": [
+          67.3,
+          91.9
+        ]
+      },
+      "abstencion_correcta_ood": {
+        "val": 76.9,
+        "ci95": [
+          65.4,
+          85.5
+        ]
+      },
+      "tasa_falsos_positivos": {
+        "val": 18.0,
+        "ci95": [
+          11.7,
+          26.7
+        ]
+      },
+      "trazabilidad_indomain": {
+        "val": 74.3,
+        "ci95": [
+          57.9,
+          85.8
+        ]
+      },
+      "por_familia": {
+        "COBERTURA_PARCIAL": {
+          "n": 15,
+          "precision_at_1": 66.7,
+          "abstencion": 26.7,
+          "falsos_positivos": 6.7
+        },
+        "COBERTURA_TOTAL": {
+          "n": 20,
+          "precision_at_1": 90.0,
+          "abstencion": 0.0,
+          "falsos_positivos": 10.0
+        },
+        "ESPECIFICACIONES_OEM_NO_PRESENTES": {
+          "n": 15,
+          "precision_at_1": 53.3,
+          "abstencion": 53.3,
+          "falsos_positivos": 46.7
+        },
+        "SIN_COBERTURA_OOD": {
+          "n": 20,
+          "precision_at_1": 100.0,
+          "abstencion": 100.0,
+          "falsos_positivos": 0.0
+        },
+        "VEHICULO_INCOMPATIBLE": {
+          "n": 15,
+          "precision_at_1": 80.0,
+          "abstencion": 80.0,
+          "falsos_positivos": 20.0
+        },
+        "VOCABULARIO_AMBIGUO_SISTEMAS_DISTINTOS": {
+          "n": 15,
+          "precision_at_1": 66.7,
+          "abstencion": 66.7,
+          "falsos_positivos": 33.3
+        }
+      }
+    }
+  }
+}

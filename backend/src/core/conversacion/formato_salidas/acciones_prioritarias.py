@@ -49,12 +49,20 @@ def extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optio
     """Extrae una prueba física o acción concreta y breve (<140 caracteres)."""
     if estado:
         from src.core.conversacion.gestor_plan_b import GestorPlanB
+
         plan_b = GestorPlanB.obtener_plan_b_para_falla(falla, estado)
         if plan_b:
             return plan_b[0]
 
     directriz = obtener_directriz_taller(falla)
-    falla_l = falla.lower().replace("í", "i").replace("á", "a").replace("é", "e").replace("ó", "o").replace("ú", "u")
+    falla_l = (
+        falla.lower()
+        .replace("í", "i")
+        .replace("á", "a")
+        .replace("é", "e")
+        .replace("ó", "o")
+        .replace("ú", "u")
+    )
 
     caida_excesiva = estado.obtener_hecho("caida_tension_excesiva") if estado else None
     voltaje_arranque_normal = estado.obtener_hecho("voltaje_arranque_normal") if estado else None
@@ -63,21 +71,24 @@ def extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optio
         or (voltaje_arranque_normal and voltaje_arranque_normal.valor == "SI")
     )
     if ("bateria" in falla_l or "borne" in falla_l) and not bateria_normal:
-        return "voltaje en reposo (referencial ≥12.6 V), caída en arranque (mínimo 9.6 V) y ajuste de bornes."
+        return "voltaje en reposo y caída en arranque; contrastar ambas lecturas con el manual aplicable."
     if "alternador" in falla_l or ("carga" in falla_l and "descarga" not in falla_l):
-        return "voltaje de carga en ralentí con motor encendido (debe situarse entre 13.8 V y 14.4 V)."
+        return "voltaje de carga en ralentí, con las condiciones y consumidores registrados; contrastar con el manual aplicable."
     if "arranque" in falla_l or "arrancador" in falla_l or "solenoide" in falla_l:
-        return "caída de tensión en el terminal 50 del solenoide y verificar si el motor gira al dar contacto."
+        return (
+            "caída de tensión en el terminal 50 del solenoide y verificar si el motor gira al dar contacto."
+        )
     if "bomba" in falla_l and "combustible" in falla_l:
-        return "presión de combustible en el riel con manómetro y comparar con la especificación del fabricante."
+        return (
+            "presión de combustible en el riel con manómetro y comparar con la especificación del fabricante."
+        )
     if "inyector" in falla_l or "filtro" in falla_l:
         return "presión en el riel de inyección y prueba de entrega/goteo en banco o probador."
     if any(k in falla_l for k in ("precalentamiento", "incandesc", "glow", "calentador")):
-        return "resistencia de las bujías incandescentes con multímetro (típico 0.5 a 1.5 Ω) y alimentación de 12 V del relé de precalentamiento."
+        return "resistencia y alimentación de las bujías incandescentes conforme al procedimiento y valores del fabricante."
     if "bujia" in falla_l or "bobina" in falla_l:
         prueba_chispa_completada = bool(
-            estado
-            and getattr(estado, "completed_tests", {}).get("prueba_chispa") is not None
+            estado and getattr(estado, "completed_tests", {}).get("prueba_chispa") is not None
         )
         if prueba_chispa_completada:
             return "estado físico y calibración del electrodo de las bujías."
@@ -126,10 +137,18 @@ def generar_pregunta_contextual(
     estado: Optional[Any] = None,
 ) -> Tuple[str, QuestionIntent]:
     """Genera la pregunta contextual según la hipótesis prioritaria."""
-    falla_l = falla.lower().replace("í", "i").replace("á", "a").replace("é", "e").replace("ó", "o").replace("ú", "u")
+    falla_l = (
+        falla.lower()
+        .replace("í", "i")
+        .replace("á", "a")
+        .replace("é", "e")
+        .replace("ó", "o")
+        .replace("ú", "u")
+    )
 
     if estado:
         from src.core.conversacion.gestor_plan_b import GestorPlanB
+
         plan_b = GestorPlanB.obtener_plan_b_para_falla(falla, estado)
         if plan_b:
             return plan_b[1], plan_b[2]
@@ -149,6 +168,22 @@ def generar_pregunta_contextual(
             luces_atenuan = getattr(h_luces, "valor", "").upper()
 
     if "bateria" in falla_l or "borne" in falla_l or "arranque" in falla_l or "alternador" in falla_l:
+        if estado and (
+            (
+                getattr(estado, "mediciones", None)
+                and any(
+                    m.get("tipo")
+                    in ("medicion_voltaje", "voltaje_reposo", "voltaje_arranque", "voltaje_carga")
+                    or m.get("unidad") in ("V", "v", "voltios")
+                    for m in getattr(estado, "mediciones", [])
+                )
+            )
+            or (getattr(estado, "hechos", None) and any("voltaje" in k for k in estado.hechos))
+        ):
+            return (
+                "Con las lecturas de voltaje registradas, ¿se escucha un clic en el arrancador al dar llave o el motor gira lentamente?",
+                QuestionIntent.COMPORTAMIENTO_ARRANQUE,
+            )
         if multimetro_disp == "NO":
             if luces_atenuan is None:
                 return (
@@ -161,7 +196,7 @@ def generar_pregunta_contextual(
             )
         elif multimetro_disp == "SI":
             return (
-                "Con el multímetro conectado en escala de 20 V DC: ¿cuánto marca en reposo y a cuánto baja al dar arranque?",
+                "Con el multímetro en tensión continua y un rango adecuado al circuito: ¿cuánto marca en reposo y a cuánto baja al dar arranque?",
                 QuestionIntent.MEDICION_VOLTAJE,
             )
         return "¿Tienes multímetro para comprobar el voltaje?", QuestionIntent.DISPONIBILIDAD_HERRAMIENTA
@@ -177,34 +212,56 @@ def generar_pregunta_contextual(
                 "Con el manómetro conectado al riel: ¿cuántos PSI marca con la llave en ON y al dar marcha?",
                 QuestionIntent.MEDICION_PRESION,
             )
-        return "¿Cuentas con manómetro para medir la presión de combustible?", QuestionIntent.DISPONIBILIDAD_HERRAMIENTA
+        return (
+            "¿Cuentas con manómetro para medir la presión de combustible?",
+            QuestionIntent.DISPONIBILIDAD_HERRAMIENTA,
+        )
 
     if "embrague" in falla_l or "clutch" in falla_l:
-        return "¿El patinamiento ocurre con el pedal completamente liberado y bajo carga?", QuestionIntent.CONDICION_OPERACION
+        return (
+            "¿El patinamiento ocurre con el pedal completamente liberado y bajo carga?",
+            QuestionIntent.CONDICION_OPERACION,
+        )
 
     if "freno" in falla_l or "disco" in falla_l or "pastilla" in falla_l:
         sintomas_usuario = ""
         if estado:
-            sintomas_usuario = " ".join([
-                str(s) for s in getattr(estado, "active_symptoms", [])
-            ] + [
-                str(getattr(h, "valor", "")) for h in getattr(estado, "hechos", {}).values()
-            ]).lower()
+            sintomas_usuario = " ".join(
+                [str(s) for s in getattr(estado, "active_symptoms", [])]
+                + [str(getattr(h, "valor", "")) for h in getattr(estado, "hechos", {}).values()]
+            ).lower()
         texto_total = f"{texto_usuario.lower()} {sintomas_usuario}"
-        ya_reporto_vibracion = any(w in texto_total for w in ("vibra", "vibracion", "vibración", "pulsa", "pulsacion", "pulsación", "tiembla"))
-        ya_reporto_esponjoso = any(w in texto_total for w in ("esponjoso", "al fondo", "se va al fondo", "hunde"))
-        
+        ya_reporto_vibracion = any(
+            w in texto_total
+            for w in ("vibra", "vibracion", "vibración", "pulsa", "pulsacion", "pulsación", "tiembla")
+        )
+        ya_reporto_esponjoso = any(
+            w in texto_total for w in ("esponjoso", "al fondo", "se va al fondo", "hunde")
+        )
+
         if ya_reporto_vibracion or ya_reporto_esponjoso:
             return (
                 "Para verificar el estado físico de los frenos: ¿has medido el alabeo del disco con reloj comparador o revisado el espesor útil de las pastillas?",
                 QuestionIntent.COMPONENTE_REVISADO,
             )
-        return "¿Sientes que el pedal esponjoso se va al fondo o vibra el volante al frenar?", QuestionIntent.CONDICION_OPERACION
+        return (
+            "¿Sientes que el pedal esponjoso se va al fondo o vibra el volante al frenar?",
+            QuestionIntent.CONDICION_OPERACION,
+        )
 
     if "desbalanceo" in falla_l or "suspension" in falla_l or "rotula" in falla_l:
-        return "¿El síntoma o vibración aumenta a partir de cierta velocidad (ej. más de 60-80 km/h)?", QuestionIntent.CONDICION_OPERACION
+        return (
+            "¿El síntoma o vibración aumenta a partir de cierta velocidad (ej. más de 60-80 km/h)?",
+            QuestionIntent.CONDICION_OPERACION,
+        )
 
     if "recalienta" in falla_l or "termostato" in falla_l or "refrigerante" in falla_l:
-        return "¿Has revisado si el nivel de refrigerante en el depósito disminuye?", QuestionIntent.COMPONENTE_REVISADO
+        return (
+            "¿Has revisado si el nivel de refrigerante en el depósito disminuye?",
+            QuestionIntent.COMPONENTE_REVISADO,
+        )
 
-    return "¿Has podido verificar este punto o deseas que te detalle el procedimiento de prueba?", QuestionIntent.CONFIRMACION_ALTERNATIVA
+    return (
+        "¿Has podido verificar este punto o deseas que te detalle el procedimiento de prueba?",
+        QuestionIntent.CONFIRMACION_ALTERNATIVA,
+    )

@@ -12,9 +12,14 @@ from src.infrastructure.rag_checks.frozen_integrity import FrozenRAGMismatch, va
 
 
 def test_motor_rag_puede_importarse_sin_orden_previo_de_imports():
+    import os
+    from pathlib import Path
+    env = os.environ.copy()
+    backend_dir = str(Path(__file__).resolve().parent.parent)
+    env["PYTHONPATH"] = backend_dir + (os.pathsep + env["PYTHONPATH"] if "PYTHONPATH" in env else "")
     resultado = subprocess.run(
         [sys.executable, "-c", "from src.infrastructure.motor_rag import MotorRAG"],
-        capture_output=True, text=True, timeout=30, check=False,
+        capture_output=True, text=True, timeout=30, check=False, env=env, cwd=backend_dir,
     )
     assert resultado.returncode == 0, resultado.stderr
 

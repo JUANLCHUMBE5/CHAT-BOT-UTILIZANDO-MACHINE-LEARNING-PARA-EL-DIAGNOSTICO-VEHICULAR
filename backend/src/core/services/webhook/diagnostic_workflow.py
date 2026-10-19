@@ -56,6 +56,7 @@ class TechnicalDiagnosticWorkflow:
             gestor.session_manager.cargar_contexto(id_sesion, contexto_actual)
 
         from src.core.conversacion.extractor_hechos import ExtractorHechos
+
         if (
             tipo_mensaje == "text"
             and ExtractorHechos.es_reinicio_solicitado(texto_cliente)
@@ -141,9 +142,7 @@ class TechnicalDiagnosticWorkflow:
 
         if tipo_mensaje == "audio":
             try:
-                audio_bytes, mime_type = await whatsapp_provider_service.descargar_audio(
-                    proveedor, audio_id
-                )
+                audio_bytes, mime_type = await whatsapp_provider_service.descargar_audio(proveedor, audio_id)
                 slot_audio, motivo_audio = await gemini_rate_limiter.intentar_adquirir_slot_db()
                 if not slot_audio:
                     raise RuntimeError(f"Transcripción no disponible: {motivo_audio}")
@@ -174,22 +173,26 @@ class TechnicalDiagnosticWorkflow:
                 )
             else:
                 dto = await TechnicalDiagnosticWorkflow._procesar_texto(
-                    gestor, texto_cliente, placa, marca_modelo, id_sesion, remitente, proveedor, usuario, conversacion,
+                    gestor,
+                    texto_cliente,
+                    placa,
+                    marca_modelo,
+                    id_sesion,
+                    remitente,
+                    proveedor,
+                    usuario,
+                    conversacion,
                     diagnostico_forzado=diagnostico_forzado,
                 )
         elif tipo_mensaje == "image":
             try:
                 if not image_id:
                     raise ValueError("Meta/Twilio no incluyó la referencia de la imagen.")
-                image_bytes, mime_type = await whatsapp_provider_service.descargar_imagen(
-                    proveedor, image_id
-                )
+                image_bytes, mime_type = await whatsapp_provider_service.descargar_imagen(proveedor, image_id)
                 permitir_gemini = False
                 if settings.gemini_api_key:
                     permitir_gemini, _ = await gemini_rate_limiter.intentar_adquirir_slot_db()
-                if not permitir_gemini and not (
-                    settings.groq_vision_enabled and settings.groq_api_key
-                ):
+                if not permitir_gemini and not (settings.groq_vision_enabled and settings.groq_api_key):
                     raise RuntimeError("No hay proveedor visual disponible o se alcanzó su cuota.")
                 from src.core.image_processor import ImageProcessor
 
@@ -236,12 +239,28 @@ class TechnicalDiagnosticWorkflow:
                 )
             else:
                 dto = await TechnicalDiagnosticWorkflow._procesar_texto(
-                    gestor, texto_cliente, placa, marca_modelo, id_sesion, remitente, proveedor, usuario, conversacion,
+                    gestor,
+                    texto_cliente,
+                    placa,
+                    marca_modelo,
+                    id_sesion,
+                    remitente,
+                    proveedor,
+                    usuario,
+                    conversacion,
                     diagnostico_forzado=diagnostico_forzado,
                 )
         else:
             dto = await TechnicalDiagnosticWorkflow._procesar_texto(
-                gestor, texto_cliente, placa, marca_modelo, id_sesion, remitente, proveedor, usuario, conversacion,
+                gestor,
+                texto_cliente,
+                placa,
+                marca_modelo,
+                id_sesion,
+                remitente,
+                proveedor,
+                usuario,
+                conversacion,
                 diagnostico_forzado=diagnostico_forzado,
             )
 
@@ -344,10 +363,7 @@ class TechnicalDiagnosticWorkflow:
         estado_actual = res_turno.get("estado")
         decision = res_turno.get("decision")
         decision_transicion = res_turno.get("decision_transicion")
-        es_cambio_caso = (
-            decision in ("REINICIO", "REANUDAR_CASO")
-            or decision_transicion == "CAMBIO_DE_CASO"
-        )
+        es_cambio_caso = decision in ("REINICIO", "REANUDAR_CASO") or decision_transicion == "CAMBIO_DE_CASO"
 
         if estado_actual:
             contexto_previo = dict(conversacion.contexto or {}) if conversacion else {}
@@ -377,6 +393,13 @@ class TechnicalDiagnosticWorkflow:
                     contexto_fusion["placa_posttest"] = placa_efectiva
 
             conversacion.contexto = contexto_fusion
+            contexto_fusion["sintomas"] = list(estado_actual.active_symptoms)
+            contexto_fusion["perfil_vehiculo"] = {
+                campo: getattr(estado_actual, campo)
+                for campo in ("marca", "modelo", "anio", "motor", "combustible", "transmision")
+                if getattr(estado_actual, campo, None)
+            }
+            conversacion.contexto = dict(contexto_fusion)
 
             # Sincronizar SessionManager
             datos_sesion_manager = dict(contexto_fusion)
@@ -386,8 +409,11 @@ class TechnicalDiagnosticWorkflow:
                 datos_sesion_manager["placa"] = estado_actual.placa
             gestor.session_manager.cargar_contexto(id_sesion, datos_sesion_manager)
 
-        if res_turno.get("status") in ("reinicio", "saludo", "saludo_caso_activo") or decision in ("REINICIO", "SALUDO"):
-            es_saludo = (decision == "SALUDO" or res_turno.get("status") in ("saludo", "saludo_caso_activo"))
+        if res_turno.get("status") in ("reinicio", "saludo", "saludo_caso_activo") or decision in (
+            "REINICIO",
+            "SALUDO",
+        ):
+            es_saludo = decision == "SALUDO" or res_turno.get("status") in ("saludo", "saludo_caso_activo")
             return ResultadoDiagnostico(
                 respuesta_texto=res_turno["respuesta_texto"],
                 diagnostico_ml="Saludo / Bienvenida" if es_saludo else "Reinicio de sesión",
@@ -395,12 +421,17 @@ class TechnicalDiagnosticWorkflow:
                 contexto_manual="",
                 titulo_manual="",
                 requiere_revision_humana=False,
-                estado_sesion=estado_actual.fase.value if (estado_actual and res_turno.get("status") == "saludo_caso_activo") else "inicio",
-                modo_diagnostico=estado_actual.fase.value if (estado_actual and res_turno.get("status") == "saludo_caso_activo") else "inicio",
+                estado_sesion=estado_actual.fase.value
+                if (estado_actual and res_turno.get("status") == "saludo_caso_activo")
+                else "inicio",
+                modo_diagnostico=estado_actual.fase.value
+                if (estado_actual and res_turno.get("status") == "saludo_caso_activo")
+                else "inicio",
                 tipo_consulta="saludo" if es_saludo else "reinicio",
             )
         elif decision in ("PREGUNTAR", "PLAN_B") or (
-            res_turno.get("es_pregunta") and decision not in ("DIAGNOSTICAR", "DIFERENCIAL", "DETALLE", "CONCLUSION_TECNICA")
+            res_turno.get("es_pregunta")
+            and decision not in ("DIAGNOSTICAR", "DIFERENCIAL", "DETALLE", "CONCLUSION_TECNICA")
         ):
             return ResultadoDiagnostico(
                 respuesta_texto=res_turno["respuesta_texto"],

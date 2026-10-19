@@ -1,4 +1,4 @@
-"""Orientación provisional segura y manejo de imposibilidad de comprobaciones físicas."""
+﻿"""Orientación provisional segura y manejo de imposibilidad de comprobaciones físicas."""
 
 from __future__ import annotations
 
@@ -17,12 +17,15 @@ def _normalizar(texto: str) -> str:
 
 
 PATRONES_IMPOSIBILIDAD_FISICA = (
-    r"\bno\s+(?:puedo|podemos|tengo\s+forma\s+de|tengo\s+como)\s+(?:realizar|hacer|efectuar|ejecutar)?\s*(?:m[aá]s\s+)?(?:comprobaciones?|pruebas?|revisiones?|mediciones?|inspecciones?|desarmes?)\b",
+    r"\b(?:sigo|seguimos|continuo|continuamos)\s+sin\s+(?:poder|posibilidad\s+de)\s+(?:comprobar|medir|verificar|revisar|probar)\b",
+    r"\bno\s+(?:puedo|podemos|tengo\s+forma\s+de|tengo\s+como)\s+(?:realizar|hacer|efectuar|ejecutar)?\s*(?:m[aá]s\s+|ninguna\s+|ningun\s+)?(?:comprobaciones?|pruebas?|revisiones?|mediciones?|inspecciones?|desarmes?)\b",
     r"\b(?:no|ni|tampoco)\s+(?:puedo|podemos|tengo\s+como)\s+(?:revisar|comprobar|probar|medir|desmontar|desarmar|verificar)\b",
     r"\b(?:imposible|no\s+es\s+posible)\s+(?:realizar|hacer|revisar|comprobar)\s+(?:comprobaciones?|pruebas?)\b",
     r"\b(?:no|ni|tampoco)\s+(?:puedo|podemos)\s+desmontar\s+(?:las?\s+)?ruedas?\b",
     r"\b(?:no|ni|tampoco)\s+(?:puedo|podemos|tengo\s+c[oó]mo)\s+verificar(?:lo)?\b",
     r"\b(?:no|ni|tampoco)\s+tengo\s+(?:un\s+)?(?:reloj\s+comparador|esc[aá]ner|scanner|mult[ií]metro|man[oó]metro|herramientas?)\b",
+    r"\bno\s+puedo\s+(?:hacer|realizar)\s+ninguna\s+prueba\b",
+    r"\b(?:no|ni)\s+(?:puedo\s+)?desarmar\s+nada\b",
 )
 
 PATRONES_SIN_MAS_SINTOMAS = (
@@ -73,8 +76,10 @@ def es_feedback_conversacional(texto: str) -> bool:
 
 def es_sistema_frenos(estado: Any) -> bool:
     """Determina si el caso actual corresponde o involucra al sistema de frenos."""
-    active_sys = getattr(estado, "active_system", "") or ""
-    if "freno" in active_sys.lower():
+    active_sys = (getattr(estado, "active_system", "") or "").lower()
+    if any(cl in active_sys for cl in ("embrague", "clutch", "transmision")):
+        return False
+    if "freno" in active_sys:
         return True
 
     textos_evaluar = []
@@ -86,11 +91,34 @@ def es_sistema_frenos(estado: Any) -> bool:
         textos_evaluar.append(str(estado.falla_principal))
 
     texto_unido = " ".join(textos_evaluar).lower()
+    if any(cl in texto_unido for cl in ("embrague", "clutch")) and not any(
+        f in texto_unido for f in ("freno", "frenar", "frenada", "caliper", "cáliper", "pastilla")
+    ):
+        return False
+
     terminos_frenos = (
-        "freno", "frenar", "frenada", "pedal", "pastilla",
-        "disco", "caliper", "cáliper", "alabeo", "chirrido al frenar",
+        "freno",
+        "frenar",
+        "frenada",
+        "pastilla",
+        "disco de freno",
+        "caliper",
+        "cáliper",
+        "alabeo",
+        "chirrido al frenar",
+        "liquido de frenos",
+        "líquido de frenos",
+        "bomba de freno",
     )
-    return any(term in texto_unido for term in terminos_frenos)
+    if any(term in texto_unido for term in terminos_frenos):
+        return True
+
+    if re.search(r"\bpedal\s+de\s+freno\b", texto_unido) or re.search(
+        r"\bdisco\s+(?:de\s+)?freno\b", texto_unido
+    ):
+        return True
+
+    return False
 
 
 def generar_orientacion_provisional(
@@ -118,11 +146,14 @@ def generar_orientacion_provisional(
     candidatas = list(hipotesis_disponibles or getattr(estado, "top3_actual", []) or [])
     h1 = falla_principal or (candidatas[0].get("falla") if candidatas else None)
     h2 = candidatas[1].get("falla") if len(candidatas) > 1 else None
+    h3 = candidatas[2].get("falla") if len(candidatas) > 2 else None
 
     if h1:
         txt_hipotesis = f"*{h1}*"
         if h2 and h2 != h1:
             txt_hipotesis += f" (y como alternativa técnica: *{h2}*)"
+        if h3 and h3 not in (h1, h2):
+            txt_hipotesis += f"; tercera hipótesis pendiente: *{h3}*"
         partes.append(
             f"Con los datos recopilados ({sintomas_txt}), la orientación preliminar apunta a {txt_hipotesis}, "
             "quedando solo como hipótesis de trabajo para la revisión presencial. No confirma una falla ni justifica "
@@ -136,18 +167,27 @@ def generar_orientacion_provisional(
         )
 
     # 4. El interlocutor es mecánico: conservar la limitación y sugerir solo
-    # una comprobación alternativa segura, sin convertirla en una exigencia.
-    if getattr(estado, "active_system", "") in {"encendido", "arranque"}:
+    # una comprobación alternativa segura (inspección visual/física directa).
+    historial = getattr(estado, "historial_mensajes_usuario", []) or []
+    if getattr(estado, "active_system", "") in {"encendido", "arranque"} or any(
+        w in str(getattr(estado, "active_symptoms", [])).lower() for w in ("acelera", "tironea", "arranc", "chispa")
+    ):
         partes.append(
-            "Dejo registrada la limitación de herramienta. Si dispones de escáner, una alternativa "
-            "segura es registrar DTC y RPM durante el arranque; si no, conserva el caso pendiente "
+            "Dejo registrada la limitación de herramienta. Procede mediante **inspección** visual de bujías, chispa y "
+            "conexiones físicas directas; si no dispones de escáner ni multímetro, conserva el caso pendiente "
             "sin sustituir piezas ni confirmar una causa."
         )
     else:
         partes.append(
-            "Dejo registrada la limitación de herramienta. Continúa solo cuando exista una "
-            "comprobación segura y pertinente disponible; no confirmes una causa ni sustituyas piezas "
-            "con la evidencia actual."
+            "Dejo registrada la limitación de herramienta. Procede mediante **inspección** visual y física de los "
+            "componentes periféricos o continúa solo cuando exista una comprobación segura y pertinente disponible; "
+            "no confirmes una causa ni sustituyas piezas con la evidencia actual."
+        )
+
+    if historial and es_imposibilidad_completa(historial[-1]):
+        partes.append(
+            "Mantengo el caso pendiente hasta que puedas realizar una comprobación segura "
+            "o una revisión presencial. No te pediré efectuar una prueba que hoy no puedes realizar."
         )
 
     if es_sistema_frenos(estado):

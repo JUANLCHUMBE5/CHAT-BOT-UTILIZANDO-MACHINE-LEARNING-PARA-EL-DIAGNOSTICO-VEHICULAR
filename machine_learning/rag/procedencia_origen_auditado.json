@@ -1,0 +1,322 @@
+{
+  "experimentos\\rag03c\\__pycache__\\benchmark_100_queries.cpython-314.pyc": {
+    "sha256": "bd3ff6bb62868f961021126c2fa7fbe1723baef646cea36465336ddf504d1fa9",
+    "size": 30807,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\__pycache__\\benchmark_100_queries.cpython-314.pyc"
+  },
+  "experimentos\\rag03c\\__pycache__\\benchmark_queries.cpython-314.pyc": {
+    "sha256": "7e9fb2ddcddae0b15570741cabeb5b7843fb84930fc668ec0afbba664996f7ef",
+    "size": 5956,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\__pycache__\\benchmark_queries.cpython-314.pyc"
+  },
+  "experimentos\\rag03c\\__pycache__\\controlador_especificaciones_oem.cpython-314.pyc": {
+    "sha256": "dca54a3a6356c5a08bb13657c53cbd4949d3bf740926671b20c0f3161e7ad437",
+    "size": 10514,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\__pycache__\\controlador_especificaciones_oem.cpython-314.pyc"
+  },
+  "experimentos\\rag03c\\__pycache__\\ejecutar_rag03c2_final.cpython-314.pyc": {
+    "sha256": "7cfd7a65395a9a58df961235e9f0867d87c54cf6ab02890af899eefa41d8161b",
+    "size": 18179,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\__pycache__\\ejecutar_rag03c2_final.cpython-314.pyc"
+  },
+  "experimentos\\rag03c\\__pycache__\\fragmentos_data.cpython-314.pyc": {
+    "sha256": "1b7e9fd19643e7943cb621f9725e89dcdf6d279f69c10c82131317d6c2247f72",
+    "size": 22561,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\__pycache__\\fragmentos_data.cpython-314.pyc"
+  },
+  "experimentos\\rag03c\\__pycache__\\nuevas_consultas_20_eval.cpython-314.pyc": {
+    "sha256": "7c43bb0a4baa4fa34a1ce9a118a5c691db20e45f82a18c36e8a70a238077f239",
+    "size": 4905,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\__pycache__\\nuevas_consultas_20_eval.cpython-314.pyc"
+  },
+  "experimentos\\rag03c\\__pycache__\\pruebas_adversariales_30.cpython-314.pyc": {
+    "sha256": "76eb5878771940651edb552f84db3e702b254be68efb06a8693a595cc54afbb7",
+    "size": 9933,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\__pycache__\\pruebas_adversariales_30.cpython-314.pyc"
+  },
+  "experimentos\\rag03c\\benchmark_100_queries.py": {
+    "sha256": "29628dbb819efdf5a99cfad9305c0cf11190e5ab894afe83646653f91359f15c",
+    "size": 44690,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\benchmark_100_queries.py"
+  },
+  "experimentos\\rag03c\\benchmark_queries.py": {
+    "sha256": "12898a6bc10e6ec412fcdb31492c11c3cccaac2f3dc21ca0470e8281ce163aec",
+    "size": 8287,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\benchmark_queries.py"
+  },
+  "experimentos\\rag03c\\controlador_especificaciones_oem.py": {
+    "sha256": "9bcaff83adf08d4af1fb3bfd4d66eedb26e8da393db7a56b899d09cb970ec059",
+    "size": 7821,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\controlador_especificaciones_oem.py"
+  },
+  "experimentos\\rag03c\\corpus_experimental\\corpus_A_original_239.json": {
+    "sha256": "9a9df860d90f82b45775ae412cb97d35c669fea766decf5e01dc87e28321f8b3",
+    "size": 521298,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\corpus_experimental\\corpus_A_original_239.json"
+  },
+  "experimentos\\rag03c\\corpus_experimental\\corpus_B_experimental.json": {
+    "sha256": "e851ce487de52eb5889dcecaa92d39bb1294203cce4d3c142bc1380e97fcb37c",
+    "size": 554560,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\corpus_experimental\\corpus_B_experimental.json"
+  },
+  "experimentos\\rag03c\\corpus_experimental\\fragmentos_nuevos_5pdfs.json": {
+    "sha256": "26f4ad5223d52bdf562de9a4eae7d76b4a29f67c7cf122381a38362c83c9534e",
+    "size": 23840,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\corpus_experimental\\fragmentos_nuevos_5pdfs.json"
+  },
+  "experimentos\\rag03c\\ejecutar_experimento_rag03c.py": {
+    "sha256": "2faa43c1ea4d5ccd1107de5aba1880f4a618190be265e7fc07b75fe9076c70fe",
+    "size": 16722,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\ejecutar_experimento_rag03c.py"
+  },
+  "experimentos\\rag03c\\ejecutar_rag03c2_final.py": {
+    "sha256": "1d3ee8a8ec634c88d481685b8dd6006976d7e6a7576000eab5c226b67cdb69ad",
+    "size": 12085,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\ejecutar_rag03c2_final.py"
+  },
+  "experimentos\\rag03c\\ejecutar_seguridad_rag03c1.py": {
+    "sha256": "cecb5dcc990b9c90e9677346cd1f6d11e3c072c834f1f555619fbaf9457f19f6",
+    "size": 19129,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\ejecutar_seguridad_rag03c1.py"
+  },
+  "experimentos\\rag03c\\evaluar_calibrado.py": {
+    "sha256": "63317b93d04ce8d40a9183ec0ed842f0b1af511b0359a010e3cc1c360c939fd9",
+    "size": 5886,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\evaluar_calibrado.py"
+  },
+  "experimentos\\rag03c\\fragmentos_data.py": {
+    "sha256": "930d25212ab3e1576e887b649364050fe56a644e257d6fa68a234f9877894f61",
+    "size": 28105,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\fragmentos_data.py"
+  },
+  "experimentos\\rag03c\\indices_temporales\\indice_faiss_test_A.index": {
+    "sha256": "a74e251eaed22471bf3ceabacbc1ee448d55bb11369259bf75a862b1a8f5da1e",
+    "size": 31358757,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\indices_temporales\\indice_faiss_test_A.index"
+  },
+  "experimentos\\rag03c\\indices_temporales\\indice_faiss_test_B.index": {
+    "sha256": "d956cfb1313f5b38d9e7b956745ca16ac47800c6557f5d78ce836cca4618c727",
+    "size": 35090477,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\indices_temporales\\indice_faiss_test_B.index"
+  },
+  "experimentos\\rag03c\\indices_temporales\\vectorizador_test_A.joblib": {
+    "sha256": "4aa0ceaa96dfca167b8e7ee8eaada5b6a5f310c2606aa66c45a69e433f9d5425",
+    "size": 894686,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\indices_temporales\\vectorizador_test_A.joblib"
+  },
+  "experimentos\\rag03c\\indices_temporales\\vectorizador_test_B.joblib": {
+    "sha256": "92f63f74b0e1f8599f484c3666b9a94469988e5e61d01453bf8197d1e023782a",
+    "size": 935631,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\indices_temporales\\vectorizador_test_B.joblib"
+  },
+  "experimentos\\rag03c\\nuevas_consultas_20_eval.py": {
+    "sha256": "1b09f65bd3903d4a48e1ae4927761da3919746a3420bfad6ef424c42c678e9e0",
+    "size": 7308,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\nuevas_consultas_20_eval.py"
+  },
+  "experimentos\\rag03c\\pruebas_adversariales_30.py": {
+    "sha256": "c7009c06ab14be6b71ae15d5c3ebf31549e392469f08953eaa96deebd3f7e8d8",
+    "size": 15443,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\pruebas_adversariales_30.py"
+  },
+  "experimentos\\rag03c\\resultados\\comparacion_100_consultas.csv": {
+    "sha256": "c6f16e40378571d15f9763a02b4c5543609fe8e9e33f892961b3f2b97dd77377",
+    "size": 28297,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\comparacion_100_consultas.csv"
+  },
+  "experimentos\\rag03c\\resultados\\comparacion_metrica_A_vs_B.csv": {
+    "sha256": "81934c30d9e07f8cd5bc9f26891a97342bd39b08e24f1babc514428d72ed6baf",
+    "size": 5026,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\comparacion_metrica_A_vs_B.csv"
+  },
+  "experimentos\\rag03c\\resultados\\detalle_100_consultas_rag03c1.json": {
+    "sha256": "b7c8b4faae1afe6dd03430432d2016a008b3a5fb30750641d49ae5e28247284e",
+    "size": 147608,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\detalle_100_consultas_rag03c1.json"
+  },
+  "experimentos\\rag03c\\resultados\\reporte_evaluacion_rag03c.json": {
+    "sha256": "d82a1d2ed3cd089fb97f86798ebe85a532e9f09c17204ef6b5f9b81a4b341ea9",
+    "size": 23827,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\reporte_evaluacion_rag03c.json"
+  },
+  "experimentos\\rag03c\\resultados\\reporte_evaluacion_rag03c_calibrado_010.json": {
+    "sha256": "f3de89de297cb037fb5a323f7fd27df2d5ff465ae7f0d84d3c30e9e982d1b048",
+    "size": 23372,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\reporte_evaluacion_rag03c_calibrado_010.json"
+  },
+  "experimentos\\rag03c\\resultados\\reporte_rag03c2_adversariales30.json": {
+    "sha256": "43669dfb218da8ab49b887e8d33cde49add526c27c344bf79d273af9984969d0",
+    "size": 19760,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\reporte_rag03c2_adversariales30.json"
+  },
+  "experimentos\\rag03c\\resultados\\reporte_rag03c2_benchmark100.json": {
+    "sha256": "2492dad737767f01d52fc730c1b49880c0d1f160ddd8ca28178d64a97227a15d",
+    "size": 63859,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\reporte_rag03c2_benchmark100.json"
+  },
+  "experimentos\\rag03c\\resultados\\reporte_seguridad_rag03c1.json": {
+    "sha256": "2d5ff4f8b22908a823972073dbe26d80b846f65f43f51838566cf19a5bbdb168",
+    "size": 5677,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\reporte_seguridad_rag03c1.json"
+  },
+  "experimentos\\rag03c\\resultados\\resumen_metricas.json": {
+    "sha256": "a08d7ea41b19ba20cc1a18294bb890f4100ee1f91e4d69d16e59914b4e4eb8df",
+    "size": 882,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\experimentos\\rag03c\\resultados\\resumen_metricas.json"
+  },
+  "fuentes_documentales\\casos_sinteticos\\caso_01_nissan_hr16de_fuga_alta_tension.md": {
+    "sha256": "c484f0adfe36b9faac041e11848440f9f59a4274b60843a75d0ff232d4ab0a1f",
+    "size": 3349,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\casos_sinteticos\\caso_01_nissan_hr16de_fuga_alta_tension.md"
+  },
+  "fuentes_documentales\\casos_sinteticos\\caso_02_toyota_1nzfe_vacio_admision_maf.md": {
+    "sha256": "e8651c64248d59008c01ceed48c56c28181ebcca2505946a5c288c5035d9b17b",
+    "size": 2947,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\casos_sinteticos\\caso_02_toyota_1nzfe_vacio_admision_maf.md"
+  },
+  "fuentes_documentales\\casos_sinteticos\\caso_03_toyota_corolla_cvt_judder_ssc_jsd.md": {
+    "sha256": "b9cad02c217a1e6cd4e78878b6d8fcc6099fe46c793e5112e8135b740cbb88dd",
+    "size": 2677,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\casos_sinteticos\\caso_03_toyota_corolla_cvt_judder_ssc_jsd.md"
+  },
+  "fuentes_documentales\\casos_sinteticos\\caso_04_hyundai_accent_mdps_acoplador_ruido.md": {
+    "sha256": "d90c5204d00c11e4c67ed7882e94ce57b1b452b29a8dbfff10fce49ff91712cd",
+    "size": 3280,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\casos_sinteticos\\caso_04_hyundai_accent_mdps_acoplador_ruido.md"
+  },
+  "fuentes_documentales\\casos_sinteticos\\caso_05_nissan_sentra_cvt_valvula_flujo_atascada.md": {
+    "sha256": "60a4954ab47cbe1bdc43c2f7c08c3701ebcabf2a4b070c676ce0c47eda383627",
+    "size": 3609,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\casos_sinteticos\\caso_05_nissan_sentra_cvt_valvula_flujo_atascada.md"
+  },
+  "fuentes_documentales\\fuentes\\resumen_fuentes_investigadas.md": {
+    "sha256": "d700dd16af1377557f0b591bb87ffedcd9c97a583eeb6282f2e1f53c29ad9549",
+    "size": 2084,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\fuentes\\resumen_fuentes_investigadas.md"
+  },
+  "fuentes_documentales\\inventario.csv": {
+    "sha256": "10080271dc8f67d3b2960e97320df2fd10416b188b45d547a7cf6a24f25cb897",
+    "size": 18220,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\inventario.csv"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\brembo_guide_brake_disc_diagnostics.pdf": {
+    "sha256": "ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1",
+    "size": 1198416,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\brembo_guide_brake_disc_diagnostics.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\hyundai_tsb_mdps_flexible_coupling_replacement.pdf": {
+    "sha256": "3b051b41ae128a2a971f103d8908bc99f1be9720b1d4df5b2699ab8a3967d282",
+    "size": 3159170,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\hyundai_tsb_mdps_flexible_coupling_replacement.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\hyundai_tsb_mdps_steering_bearing_noise.pdf": {
+    "sha256": "533fce2dd167be31bd9ab7799f77b04c7b80d06d4ca737202708479912935b37",
+    "size": 1385037,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\hyundai_tsb_mdps_steering_bearing_noise.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\kia_tsb_cmdps_steering_column_repair.pdf": {
+    "sha256": "deded09b3e1ecfea115faf2f2c0171a087056c1873f2cd187b2928b3ffa8d0b9",
+    "size": 810480,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\kia_tsb_cmdps_steering_column_repair.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\kia_tsb_mdps_logic_update_c1259_c1112.pdf": {
+    "sha256": "e05abfd983035add1a3f3c2b6a1ea5261b613b826ee34eb5922f96e1e18f6993",
+    "size": 768107,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\kia_tsb_mdps_logic_update_c1259_c1112.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\laser_5524_instrucciones_es.pdf": {
+    "sha256": "513d6c527cc661e92503c7c35fb3c85c981e4af6726ec3bfb56a99e66840b63d",
+    "size": 2291603,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\laser_5524_instrucciones_es.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\nissan_tsb_ntb21_004a_sentra_fuel_pump_service.pdf": {
+    "sha256": "1a155544074a0b6cd1afd78c098f9641f929003a8a28049da0555603bef5bf82",
+    "size": 121726,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\nissan_tsb_ntb21_004a_sentra_fuel_pump_service.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\pico_wps500x_pressure_transducer_manual.pdf": {
+    "sha256": "3de1537817f51acb803cc77a79ed85a2bb044d2438a6dd4cd12fcb28227af678",
+    "size": 390612,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\pico_wps500x_pressure_transducer_manual.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_dmf_sensor_ring_timing.pdf": {
+    "sha256": "b171bddf5c990424a81e9b3f4076ccd15c3c81de49e2e3b55fb2a1c06d48adc5",
+    "size": 272065,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_dmf_sensor_ring_timing.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_embrague_doble_guia_tecnica_es.pdf": {
+    "sha256": "0a7367db1b5822c52ab95711065499cbed3b74d857a2c3b9cfcf0bf1dfafc585",
+    "size": 5213470,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_embrague_doble_guia_tecnica_es.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_sac_embrague_autoajustable_info.pdf": {
+    "sha256": "3b09b8dd70ee2f61d060f414534a9720d0c85a4b1c9a090de2b5e208107b1c08",
+    "size": 271363,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\schaeffler_luk_sac_embrague_autoajustable_info.pdf"
+  },
+  "fuentes_documentales\\pdfs_autorizados\\toyota_tsb_0098_19_corolla_valvematic_controller.pdf": {
+    "sha256": "4f3a657b2c4832c91db946a5d6cc5996ec7cbc4fbe81e5862e4f9062807c6037",
+    "size": 351855,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_autorizados\\toyota_tsb_0098_19_corolla_valvematic_controller.pdf"
+  },
+  "fuentes_documentales\\pdfs_rechazados_auditoria\\hyundai_tsb_13_fl_012_accent_misfire_p0300.pdf": {
+    "sha256": "5668d4efae2451588d737709a2f4b78fc2c4f4f845a6e864da685a4b665cdf2f",
+    "size": 138193,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_rechazados_auditoria\\hyundai_tsb_13_fl_012_accent_misfire_p0300.pdf"
+  },
+  "fuentes_documentales\\pdfs_rechazados_auditoria\\hyundai_tsb_19_fl_001h_gdi_fuel_pressure.pdf": {
+    "sha256": "06673cc031269c96e0cb991efaa02680ba29793048f584c40b8d1acc6ae4b5d5",
+    "size": 314772,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_rechazados_auditoria\\hyundai_tsb_19_fl_001h_gdi_fuel_pressure.pdf"
+  },
+  "fuentes_documentales\\pdfs_rechazados_auditoria\\kia_tsb_gdi_high_pressure_fuel_system.pdf": {
+    "sha256": "990235abc4ccd84b5a792bc0b42237632b2ea0c7f0604ca9cd6c6cb10feb4b6d",
+    "size": 524855,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_rechazados_auditoria\\kia_tsb_gdi_high_pressure_fuel_system.pdf"
+  },
+  "fuentes_documentales\\pdfs_rechazados_auditoria\\nissan_tsb_ntb19_040f_versa_cvt_lack_of_power.pdf": {
+    "sha256": "617f436a73a95a739feea181a1d20368a97c89dbadb7bffcea409c4a14a6211d",
+    "size": 54903,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_rechazados_auditoria\\nissan_tsb_ntb19_040f_versa_cvt_lack_of_power.pdf"
+  },
+  "fuentes_documentales\\pdfs_rechazados_auditoria\\nissan_tsb_ntb19_060c_cvt_judder_sentra_versa.pdf": {
+    "sha256": "ee7b00348be06074251ad3d28e26f1c452dcae09a6885567810e43250266e3c5",
+    "size": 225440,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_rechazados_auditoria\\nissan_tsb_ntb19_060c_cvt_judder_sentra_versa.pdf"
+  },
+  "fuentes_documentales\\pdfs_rechazados_auditoria\\nissan_tsb_ntb20_035c_cvt_hesitation_judder.pdf": {
+    "sha256": "636a0a7b7c7db63e7649ecef88fced62a136d530625d30a32b78e94a6f33facf",
+    "size": 299855,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_rechazados_auditoria\\nissan_tsb_ntb20_035c_cvt_hesitation_judder.pdf"
+  },
+  "fuentes_documentales\\pdfs_rechazados_auditoria\\toyota_ssc_jsd_corolla_cvt_reflash_pulley.pdf": {
+    "sha256": "783d75b660efd87782a5c781b3f9f7c1e012bf977b0aaeb07376e1adc84cfa2d",
+    "size": 215565,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_rechazados_auditoria\\toyota_ssc_jsd_corolla_cvt_reflash_pulley.pdf"
+  },
+  "fuentes_documentales\\pdfs_rechazados_auditoria\\toyota_tsb_0112_24_corolla_coolant_bypass_valve.pdf": {
+    "sha256": "476268b63b0a34ca83909acb729f65fa49c3556b79307e92ab627a4ebd0dbc0c",
+    "size": 46456,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pdfs_rechazados_auditoria\\toyota_tsb_0112_24_corolla_coolant_bypass_valve.pdf"
+  },
+  "fuentes_documentales\\pendientes_validacion\\dossier_01_denso_manual_bujias.md": {
+    "sha256": "472ff51e2b4cb8330d4ad043f76535d87b0d874f78f2a1cb3c73d51e68034b87",
+    "size": 1146,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pendientes_validacion\\dossier_01_denso_manual_bujias.md"
+  },
+  "fuentes_documentales\\pendientes_validacion\\dossier_02_bosch_automotive_handbook.md": {
+    "sha256": "33a418bd508eb8386b5584072cc7e111338ca19daae2a938fa193c09d9a3c6e0",
+    "size": 867,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pendientes_validacion\\dossier_02_bosch_automotive_handbook.md"
+  },
+  "fuentes_documentales\\pendientes_validacion\\dossier_03_delphi_diesel_ddnx125.md": {
+    "sha256": "eed6d0326c8b3f2bd064b39fe62717be8f84e6ccc2d8c2d4f434d15c6243c71e",
+    "size": 888,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pendientes_validacion\\dossier_03_delphi_diesel_ddnx125.md"
+  },
+  "fuentes_documentales\\pendientes_validacion\\dossier_04_manuales_taller_oem_suscripcion.md": {
+    "sha256": "7fd43dbedb95173f073ed56cdb9e798a4e96551f87bc27fb47a842ec4042b92b",
+    "size": 1012,
+    "source": "scratch\\rag03e-worktree\\machine_learning\\rag\\fuentes_documentales\\pendientes_validacion\\dossier_04_manuales_taller_oem_suscripcion.md"
+  }
+}

@@ -140,6 +140,18 @@ def formatear_orientacion_abstencion(
             "⚠️ *Seguridad:* No abrir el circuito de refrigerante presurizado en caliente."
         )
 
+    mediciones_registradas = [
+        str(h.valor) for h in getattr(estado, "hechos", {}).values()
+        if getattr(h, "categoria", "") == "medicion" and getattr(h, "valor", None)
+    ]
+    if mediciones_registradas:
+        resumen_med = ", ".join(dict.fromkeys(mediciones_registradas))
+        return (
+            f"Conservo las mediciones registradas ({resumen_med}). "
+            "No tengo una hipótesis ML compatible con la evidencia y los descartes de este caso. "
+            "Se requiere revisión técnica antes de proponer otra falla; puedes aportar el resultado de una prueba pendiente."
+        )
+
     return (
         "No tengo una hipótesis ML compatible con la evidencia y los descartes de este caso. "
         "Conservo las comprobaciones registradas. Se requiere revisión técnica antes de "

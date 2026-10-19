@@ -1,0 +1,4332 @@
+[
+  {
+    "id": "AUD_CAT_A_01",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Jerga peruana: ratea en baja y se chupa al pisar",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "ABC-123"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Tengo un Toyota Corolla 2014 gasolina que ratea feo en baja y se chupa al pisar el acelerador",
+        "intencion_esperada": "REPORTE_SINTOMA_JERGA",
+        "comportamiento_esperado": "Reconoce los síntomas de rateo e inestabilidad sin rechazar la jerga, identifica área de mezcla/encendido y pregunta o diagnostica coherentemente.",
+        "debe_contener": [
+          "Toyota",
+          "Corolla"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "En alta se empareja un poco pero al salir en primera se vuelve a aguantar",
+        "intencion_esperada": "DETALLE_OPERATIVO",
+        "comportamiento_esperado": "Conserva vehículo y evalúa comportamiento en carga sin perder contexto.",
+        "debe_contener": [],
+        "no_debe_contener": [
+          "Error de servidor",
+          "null"
+        ],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_A_02",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Jerga peruana: cascabelea en subida",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2013",
+      "combustible": "gasolina",
+      "placa": "NISS-02"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Mi Nissan Tiida 2013 cascabelea como loco cuando subo una cuesta empinada",
+        "intencion_esperada": "REPORTE_SINTOMA_JERGA",
+        "comportamiento_esperado": "Identifica cascabeleo/detonación bajo carga, retiene vehículo Tiida y orienta a causas de encendido/mezcla pobre/octanaje.",
+        "debe_contener": [
+          "Nissan",
+          "Tiida"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Le echo gasolina de 90 regular",
+        "intencion_esperada": "APORTE_COMBUSTIBLE_OCTANAJE",
+        "comportamiento_esperado": "Registra combustible/octanaje y contextualiza el cascabeleo sin reiniciar el caso.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_A_03",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Jerga peruana: sopla por la varilla y humo azul",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Elantra",
+      "anio": "2011",
+      "combustible": "gasolina",
+      "placa": "HYU-03"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Elantra 2011 sopla bastante por la varilla de aceite y bota humo azul por el escape",
+        "intencion_esperada": "REPORTE_SINTOMA_COMPRESION_ACEITE",
+        "comportamiento_esperado": "Asocia soplo en cárter y humo azul con desgaste de anillos, compresión o PCV, reteniendo Hyundai Elantra.",
+        "debe_contener": [
+          "Hyundai",
+          "Elantra"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El consumo de aceite es de casi un cuarto por semana",
+        "intencion_esperada": "DATO_CONSUMO_ACEITE",
+        "comportamiento_esperado": "Integra el consumo elevado de aceite al diagnóstico mecánico.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_A_04",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Jerga peruana: se aguanta a 3000 vueltas",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Rio",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "KIA-04"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Rio 2016 se aguanta feo en tercera a 3000 vueltas y no pasa de 80 km/h",
+        "intencion_esperada": "REPORTE_PERDIDA_POTENCIA",
+        "comportamiento_esperado": "Entiende limitación de RPM/potencia bajo carga (filtro tapado, catalizador, bomba).",
+        "debe_contener": [
+          "Kia",
+          "Rio"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "En vacío si acelera pero andando se desinfla",
+        "intencion_esperada": "CONDICION_OPERATIVA_CARGA",
+        "comportamiento_esperado": "Diferencia comportamiento en vacío vs carga dinámicamente.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_05",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Jerga peruana: zapatea el embrague en primera",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Sail",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "CHEV-05"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Sail 2015 zapatea horrible el embrague al salir en primera en una subida",
+        "intencion_esperada": "REPORTE_TREPIDACION_EMBRAGUE",
+        "comportamiento_esperado": "Identifica trepidación de embrague (disco, plato opresor o volante con alabeo/puntos térmicos).",
+        "debe_contener": [
+          "Chevrolet",
+          "Sail"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Por qué zapatea al acoplar el disco?",
+        "intencion_esperada": "CONSULTA_EXPLICACION_CAUSAL",
+        "comportamiento_esperado": "Explica la causa técnica del zapateo/trepidación sin perder el vehículo.",
+        "debe_contener": [
+          "embrague",
+          "volante"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_06",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Jerga peruana: tironea al pasar a GNV",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Sentra",
+      "anio": "2017",
+      "combustible": "gnv",
+      "placa": "NIS-06"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Sentra 2017 a gasolina anda sedita pero cuando conmuta a gas GNV tironea feo",
+        "intencion_esperada": "FALLA_ESPECIFICA_GNV",
+        "comportamiento_esperado": "Aísla el subsistema GNV (reductor, inyectores de gas, calibración) manteniendo gasolina como control.",
+        "debe_contener": [
+          "gas",
+          "GNV"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El reductor de gas amanece con escarcha blanca por fuera",
+        "intencion_esperada": "HALLAZGO_REDUCTOR_CONGELADO",
+        "comportamiento_esperado": "Reconoce congelación del reductor por falta de refrigeración o burbuja de aire.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_A_07",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Ambiguo: sonido raro por el motor",
+    "vehiculo_inicial": {
+      "marca": "Suzuki",
+      "modelo": "Swift",
+      "anio": "2018",
+      "combustible": "gasolina",
+      "placa": "SUZ-07"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Tengo un Suzuki Swift 2018 y el carro suena raro por el motor",
+        "intencion_esperada": "QUEJA_AMBIGUA",
+        "comportamiento_esperado": "No inventa un diagnóstico definitivo; solicita aclaración sobre tipo de ruido o cuándo ocurre.",
+        "debe_contener": [
+          "Suzuki",
+          "Swift"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Es un chillido agudo continuo cuando prendo el aire acondicionado",
+        "intencion_esperada": "ACLARACION_RUIDO_CORREA",
+        "comportamiento_esperado": "Orienta coherentemente a faja/correa de accesorios o tensor de polea.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_08",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Ambiguo: da vuelta pero no arranca (crank no start)",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Gol",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "VW-08"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Volkswagen Gol 2015 no prende, el arrancador da vuelta fuerte pero el motor no arranca",
+        "intencion_esperada": "CRANK_NO_START",
+        "comportamiento_esperado": "Identifica condición crank no start y estructura pruebas básicas (chispa, combustible, compresión).",
+        "debe_contener": [
+          "Volkswagen",
+          "Gol"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No escucho zumbar la bomba de gasolina al poner la llave en contacto",
+        "intencion_esperada": "HALLAZGO_BOMBA_COMBUSTIBLE",
+        "comportamiento_esperado": "Prioriza relé, fusible o bomba de combustible sin desviar a batería defectuosa.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_A_09",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Ambiguo: falla intermitente sin contexto",
+    "vehiculo_inicial": {
+      "marca": "Mazda",
+      "modelo": "3",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "MAZ-09"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Mazda 3 2016 tiene un problema que a veces falla y a veces no, es intermitente",
+        "intencion_esperada": "QUEJA_AMBIGUA_INTERMITENTE",
+        "comportamiento_esperado": "Pide condiciones de ocurrencia (frío/caliente, baches, ralentí o acelerando) sin inventar falla.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Solo se apaga cuando paso por un rompemuelles o pista con huecos",
+        "intencion_esperada": "CONDICION_VIBRACION_ELECTRICA",
+        "comportamiento_esperado": "Orienta a falso contacto, masa suelta o cableado de sensor flojo.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_10",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Ambiguo: olor feo al andar",
+    "vehiculo_inicial": {
+      "marca": "Ford",
+      "modelo": "Fiesta",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "FRD-10"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Ford Fiesta 2014 huele feo cuando ando un rato",
+        "intencion_esperada": "QUEJA_SENSORIAL_AMBIGUA",
+        "comportamiento_esperado": "Solicita precisar tipo de olor (gasolina cruda, plástico quemado, refrigerante dulce, embrague quemado o azufre/huevo podrido).",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Huele como a huevo podrido y viene de abajo del piso",
+        "intencion_esperada": "PRECISION_OLOR_CATALIZADOR",
+        "comportamiento_esperado": "Identifica mezcla rica o sobrecalentamiento del convertidor catalítico.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_11",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Múltiples síntomas concurrentes: mezcla rica severa",
+    "vehiculo_inicial": {
+      "marca": "Honda",
+      "modelo": "Civic",
+      "anio": "2012",
+      "combustible": "gasolina",
+      "placa": "HND-11"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Honda Civic 2012 se apaga en ralentí, bota humo negro espeso por el escape y consume el doble de gasolina",
+        "intencion_esperada": "SINTOMAS_CONCURRENTES_MEZCLA_RICA",
+        "comportamiento_esperado": "Reconoce los 3 síntomas como cuadro coherente de exceso de combustible / mezcla rica (inyector goteando, MAP/MAF, sensor de temperatura ECT o regulador).",
+        "debe_contener": [
+          "Honda",
+          "Civic"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Saco las bujías y las 4 salen negras llenas de hollín seco",
+        "intencion_esperada": "HALLAZGO_HOLLIN_BUJIAS",
+        "comportamiento_esperado": "Confirma mezcla rica global en todos los cilindros.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_A_12",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Múltiples síntomas independientes de sistemas distintos",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "TOY-12"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Yaris 2015 tiene chillido de faja fuerte, pedal de freno esponjoso y en el tablero parpadea la luz de batería",
+        "intencion_esperada": "SINTOMAS_MULTISISTEMA",
+        "comportamiento_esperado": "Diferencia el sistema eléctrico/faja de accesorios del sistema hidráulico de frenos y prioriza la seguridad de los frenos.",
+        "debe_contener": [
+          "freno"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "La faja de alternador está destensada y patina",
+        "intencion_esperada": "CONFIRMACION_FAJA",
+        "comportamiento_esperado": "Registra problema de carga sin descuidar el peligro del pedal de freno esponjoso.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_A_13",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Múltiples síntomas térmicos críticos: soplo de empaque",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Cruze",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "CHV-13"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Cruze 2014 temperatura al rojo, bota refrigerante y burbujea el depósito de expansión como olla",
+        "intencion_esperada": "RECALENTAMIENTO_BURBUJEO",
+        "comportamiento_esperado": "Advierte riesgo crítico térmico y orienta a empaque de culata o termostato trabado.",
+        "debe_contener": [
+          "Chevrolet",
+          "Cruze"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Las mangueras de radiador se ponen duras como piedra a los dos minutos de encender",
+        "intencion_esperada": "PRESURIZACION_CIRCUITO_REFRIGERANTE",
+        "comportamiento_esperado": "Corrobora paso de compresión de cilindros al circuito de refrigeración.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_A_14",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Múltiples síntomas sobrealimentación diésel",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2019",
+      "combustible": "diesel",
+      "placa": "HIL-14"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Hilux 2019 diésel motor 1GD perdió fuerza en carretera, suena un silbido fuerte en el turbo y echa humo blanco",
+        "intencion_esperada": "FALLA_TURBO_DIESEL",
+        "comportamiento_esperado": "Identifica posible fuga de aire de sobrealimentación, rotura de intercooler o paso de aceite por eje de turbo.",
+        "debe_contener": [
+          "Toyota",
+          "Hilux"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Revisé la manguera del intercooler y tiene una rajadura de 5 cm",
+        "intencion_esperada": "HALLAZGO_FUGA_INTERCOOLER",
+        "comportamiento_esperado": "Registra despresurización de admisión como causa raíz.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_A_15",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Incompleto: mensaje de dos palabras",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Versa",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "NIS-15"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "falla inyector",
+        "intencion_esperada": "TEXTO_MINIMO_INCOMPLETO",
+        "comportamiento_esperado": "Solicita datos del vehículo y el síntoma específico que observa sin colapsar.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Es un Nissan Versa 2017, no le llega pulso al inyector número 3",
+        "intencion_esperada": "COMPLEMENTO_VEHICULO_Y_HALLAZGO",
+        "comportamiento_esperado": "Capta Nissan Versa 2017 y orienta a cableado, transistor de ECU o arnés del inyector 3.",
+        "debe_contener": [
+          "Nissan",
+          "Versa"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_16",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Incompleto: valor numérico aislado",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Sportage",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "KIA-16"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "temperatura 105 grados",
+        "intencion_esperada": "MEDICION_AISLADA_SIN_VEHICULO",
+        "comportamiento_esperado": "Pide datos del auto o aclara si el electroventilador encendió a esa temperatura.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "En una Kia Sportage 2016 gasolina y el electroventilador no arranca",
+        "intencion_esperada": "VEHICULO_Y_SINTOMA_COMPLETO",
+        "comportamiento_esperado": "Orienta a relé, fusible, resistencia o sensor ECT en Kia Sportage.",
+        "debe_contener": [
+          "Kia",
+          "Sportage"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_17",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Errores ortográficos y fonéticos severos de batería/arranque",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Accent",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "HYU-17"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "ayuda no prenfe mi carrp Hyundai Accent ase clik clik la vatetia",
+        "intencion_esperada": "CHASQUIDO_ARRANQUE_BATERIA",
+        "comportamiento_esperado": "Entiende clik clik/batería en Hyundai Accent y orienta a descarga de batería, bornes flojos o solenoide.",
+        "debe_contener": [
+          "Hyundai",
+          "Accent"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "limpie los bornes y puse otra vateria y ya arranco al toque",
+        "intencion_esperada": "CONFIRMACION_SOLUCION",
+        "comportamiento_esperado": "Reconoce problema solucionado por batería.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_18",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Errores ortográficos: tiembla timón al frenar",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2018",
+      "combustible": "gasolina",
+      "placa": "TOY-18"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Yaris tiemvla el timon kuando frena a 80 por ora",
+        "intencion_esperada": "VIBRACION_FRENADO_ALABEO",
+        "comportamiento_esperado": "Asocia vibración de timón al frenar con alabeo o alabeo de discos de freno delanteros.",
+        "debe_contener": [
+          "Toyota",
+          "Yaris"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Cual es la toleransia de alabeo de los discos?",
+        "intencion_esperada": "CONSULTA_TOLERANCIA_DISCO",
+        "comportamiento_esperado": "Proporciona tolerancia OEM metrológica de discos (0.05 a 0.07 mm).",
+        "debe_contener": [
+          "0.05",
+          "mm"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_A_19",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "Errores ortográficos: humo negro y consumo en Sentra",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Sentra",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "NIS-19"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Sentra bota humo negro por el tubo de eskape y gasta moxa gazolina",
+        "intencion_esperada": "MEZCLA_RICA_HUMO_NEGRO",
+        "comportamiento_esperado": "Interpreta exceso de gasolina / mezcla rica a pesar de errores tipográficos.",
+        "debe_contener": [
+          "Nissan",
+          "Sentra"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El sensor de oxigeno marca 0.95 voltios pegado todo el rato",
+        "intencion_esperada": "LECTURA_VOLTAJE_SONDA_LAMBDA",
+        "comportamiento_esperado": "Registra lectura rica pegada del sensor O2.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_A_20",
+    "categoria": "A_DIAGNOSTICO_INICIAL",
+    "titulo": "DTC P0300 y cabeceo en semáforo",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Onix",
+      "anio": "2019",
+      "combustible": "gasolina",
+      "placa": "CHV-20"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Onix 2019 me bota codigo p0300 y cabecea feo detenido en semaforo",
+        "intencion_esperada": "DTC_P0300_MISFIRE_MULTIPLE",
+        "comportamiento_esperado": "Registra DTC P0300 (fallo de encendido aleatorio/múltiple) y cabeceo en ralentí.",
+        "debe_contener": [
+          "P0300",
+          "Chevrolet",
+          "Onix"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Revisé bujías y todas están limpias con buena luz",
+        "intencion_esperada": "DESCARTE_BUJIAS",
+        "comportamiento_esperado": "Descarta bujías y avanza a bobina, inyección o toma de aire.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_01",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Vehículo secundario: cliente menciona su otra camioneta Ford",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "TII-01"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Tengo un Nissan Tiida 2015 gasolina con tironeo en subida",
+        "intencion_esperada": "INICIO_CASO_TIIDA",
+        "comportamiento_esperado": "Registra Nissan Tiida 2015 como vehículo activo.",
+        "debe_contener": [
+          "Nissan",
+          "Tiida"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El cliente mencionó que su otro auto es un Ford, pero estamos revisando este.",
+        "intencion_esperada": "MENCION_VEHICULO_SECUNDARIO",
+        "comportamiento_esperado": "NO debe cambiar el vehículo activo a Ford. La marca activa DEBE seguir siendo Nissan Tiida.",
+        "debe_contener": [],
+        "no_debe_contener": [
+          "Vehículo: Ford",
+          "caso Ford"
+        ],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Qué datos del vehículo tenemos registrados en la sesión?",
+        "intencion_esperada": "CONSULTA_RESUMEN_MEMORIA",
+        "comportamiento_esperado": "Debe confirmar Nissan Tiida 2015 como el vehículo bajo diagnóstico.",
+        "debe_contener": [
+          "Nissan",
+          "Tiida"
+        ],
+        "no_debe_contener": [
+          "Vehículo: Ford"
+        ],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_B_02",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Vehículo anterior: el auto de ayer era un Chevrolet Sail",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2018",
+      "combustible": "gasolina",
+      "placa": "YAR-02"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Yaris 2018 no acelera parejo y tironea",
+        "intencion_esperada": "INICIO_YARIS",
+        "comportamiento_esperado": "Registra Toyota Yaris 2018 como vehículo activo.",
+        "debe_contener": [
+          "Toyota",
+          "Yaris"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El vehículo anterior de ayer era un Chevrolet Sail que tenía algo parecido, pero en este Yaris la falla es solo en frío.",
+        "intencion_esperada": "ANALOGIA_VEHICULO_AYER",
+        "comportamiento_esperado": "Conserva Toyota Yaris como activo y clasifica Chevrolet Sail como antecedente/mención secundaria.",
+        "debe_contener": [],
+        "no_debe_contener": [
+          "Chevrolet Sail bajo diagnóstico"
+        ],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_03",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Analogía comparativa: como en un Kia Cerato",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Accent",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "ACC-03"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Accent 2016 con ralentí inestable en baja",
+        "intencion_esperada": "INICIO_ACCENT",
+        "comportamiento_esperado": "Registra Hyundai Accent 2016 como activo.",
+        "debe_contener": [
+          "Hyundai",
+          "Accent"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Como en un Kia Cerato que tuve en el taller, pero aquí tiembla cuando enciende el electroventilador",
+        "intencion_esperada": "ANALOGIA_COMPARATIVA",
+        "comportamiento_esperado": "Retiene Hyundai Accent sin sustituir por Kia Cerato.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_04",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Corrección legítima de marca: no es Toyota, es Nissan Sentra",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "COR-04"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Yaris 2017 tiene vibración al frenar",
+        "intencion_esperada": "INICIO_ERRONEO",
+        "comportamiento_esperado": "Registra inicialmente Toyota Yaris.",
+        "debe_contener": [
+          "Toyota"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No es Toyota, me equivoqué de ficha: es un Nissan Sentra 2017",
+        "intencion_esperada": "CORRECCION_LEGITIMA_MARCA",
+        "comportamiento_esperado": "Actualiza la marca y modelo a Nissan Sentra 2017 preservando los síntomas de vibración al frenar.",
+        "debe_contener": [
+          "Nissan",
+          "Sentra"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_B_05",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Corrección de modelo: es Tucson no Accent",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Accent",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "TUC-05"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Accent 2016 recalienta en subida",
+        "intencion_esperada": "INICIO_ACCENT",
+        "comportamiento_esperado": "Registra Hyundai Accent 2016.",
+        "debe_contener": [
+          "Accent"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Corrijo, no es Accent, en realidad es un Hyundai Tucson 2016",
+        "intencion_esperada": "CORRECCION_MODELO",
+        "comportamiento_esperado": "Actualiza el modelo a Tucson manteniendo la marca Hyundai y el recalentamiento.",
+        "debe_contener": [
+          "Tucson"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_06",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Corrección de año: es 2018 no 2012",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Rio",
+      "anio": "2012",
+      "combustible": "gasolina",
+      "placa": "RIO-06"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Rio 2012 no arranca y el tablero no prende",
+        "intencion_esperada": "INICIO_RIO_2012",
+        "comportamiento_esperado": "Registra Kia Rio 2012.",
+        "debe_contener": [
+          "2012"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El año en la tarjeta de propiedad es 2018, no 2012",
+        "intencion_esperada": "CORRECCION_ANIO",
+        "comportamiento_esperado": "Actualiza el año a 2018 en el perfil activo.",
+        "debe_contener": [
+          "2018"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_B_07",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Acumulación progresiva de 3 síntomas en turnos sucesivos",
+    "vehiculo_inicial": {
+      "marca": "Mazda",
+      "modelo": "3",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "MAZ-07"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Mazda 3 2015 no acelera bien en baja",
+        "intencion_esperada": "SINTOMA_1",
+        "comportamiento_esperado": "Registra síntoma 1 (no acelera en baja).",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Además en caliente el motor se apaga en los semáforos",
+        "intencion_esperada": "SINTOMA_2_ACUMULADO",
+        "comportamiento_esperado": "Acumula síntoma 2 (se apaga en semáforos) sin borrar síntoma 1.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Y por el escape huele fuerte a gasolina cruda",
+        "intencion_esperada": "SINTOMA_3_ACUMULADO",
+        "comportamiento_esperado": "Acumula síntoma 3 (olor a gasolina cruda); el caso cuenta con el cuadro clínico completo.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_08",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Retención de mediciones de voltaje sucesivas",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "VOLT-08"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2016 demora en arrancar. Medí la batería en reposo y tiene 12.4 V",
+        "intencion_esperada": "MEDICION_VOLTAJE_REPOSO",
+        "comportamiento_esperado": "Registra medición de 12.4 V en reposo.",
+        "debe_contener": [
+          "12.4"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Al dar arranque la tensión cae a 8.5 V",
+        "intencion_esperada": "MEDICION_VOLTAJE_ARRANQUE",
+        "comportamiento_esperado": "Identifica caída crítica de tensión (< 9.6 V) y conserva la lectura previa de 12.4 V.",
+        "debe_contener": [
+          "8.5"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Con arrancador de apoyo prendió y el alternador marca 14.2 V",
+        "intencion_esperada": "MEDICION_VOLTAJE_CARGA",
+        "comportamiento_esperado": "Registra 14.2 V de alternador (sistema de carga saludable) y concluye batería defectuosa.",
+        "debe_contener": [
+          "14.2"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_B_09",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Saludo casual en medio de caso activo",
+    "vehiculo_inicial": {
+      "marca": "Honda",
+      "modelo": "Civic",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "HND-09"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Honda Civic 2017 tiembla en ralentí y tiene check engine encendido",
+        "intencion_esperada": "INICIO_CIVIC",
+        "comportamiento_esperado": "Inicia caso activo para Honda Civic 2017.",
+        "debe_contener": [
+          "Honda",
+          "Civic"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Hola maestro buenas tardes",
+        "intencion_esperada": "SALUDO_EN_CASO_ACTIVO",
+        "comportamiento_esperado": "Responde cordialmente pero PRESERVA el caso activo intacto sin reiniciarlo.",
+        "debe_contener": [
+          "continuamos",
+          "activo"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_10",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Consulta: qué sabemos hasta ahora / resumen",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Tiguan",
+      "anio": "2019",
+      "combustible": "gasolina",
+      "placa": "VWT-10"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Volkswagen Tiguan 2019 pierde potencia en subida con código P0299",
+        "intencion_esperada": "INICIO_TIGUAN",
+        "comportamiento_esperado": "Registra Tiguan 2019, falla P0299 y subunderboost.",
+        "debe_contener": [
+          "Volkswagen",
+          "Tiguan"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Qué sabemos hasta ahora de este caso?",
+        "intencion_esperada": "CONSULTA_RESUMEN_CASO",
+        "comportamiento_esperado": "Genera un resumen estructurado indicando vehículo, síntomas y sospecha de turbo/P0299.",
+        "debe_contener": [
+          "Tiguan",
+          "Resumen"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_B_11",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Consulta: qué hemos descartado hasta ahora",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "TOY-11"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2015 falla cilindro 1. Ya cambié bobina y bujía 1 nuevas originales",
+        "intencion_esperada": "INICIO_CON_DESCARTES",
+        "comportamiento_esperado": "Registra bobina y bujía como componentes descartados/reemplazados.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Qué hemos descartado hasta ahora?",
+        "intencion_esperada": "CONSULTA_DESCARTES",
+        "comportamiento_esperado": "Lista explícitamente bobina y bujía en los descartes registrados.",
+        "debe_contener": [
+          "Descartes",
+          "bobina"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_12",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Clarificación de combustible: Hilux es motor 1GD diésel",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2018",
+      "combustible": null,
+      "placa": "HIL-12"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Hilux 2018 pierde fuerza y humea",
+        "intencion_esperada": "INICIO_SIN_COMBUSTIBLE",
+        "comportamiento_esperado": "Registra Toyota Hilux 2018.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Es motor 1GD diésel",
+        "intencion_esperada": "ASIGNACION_COMBUSTIBLE_DIESEL",
+        "comportamiento_esperado": "Asigna diésel al perfil y adapta las hipótesis al sistema diésel Common Rail.",
+        "debe_contener": [
+          "diésel",
+          "diesel"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_13",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Incorporación de kilometraje: 180,000 km",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Versa",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "NIS-13"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Versa 2014 tiene zumbido en caja de cambios",
+        "intencion_esperada": "INICIO_VERSA",
+        "comportamiento_esperado": "Registra Nissan Versa 2014 y zumbido.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Tiene 180,000 km y nunca le cambiaron aceite de transmisión",
+        "intencion_esperada": "HISTORIAL_KILOMETRAJE_MANTENIMIENTO",
+        "comportamiento_esperado": "Registra kilometraje y falta de mantenimiento en los antecedentes técnicos.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_B_14",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Cierre de caso e inicio de vehículo nuevo",
+    "vehiculo_inicial": {
+      "marca": "Suzuki",
+      "modelo": "Grand Vitara",
+      "anio": "2010",
+      "combustible": "gasolina",
+      "placa": "SUZ-14"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Suzuki Grand Vitara 2010 4x4 no acopla la tracción",
+        "intencion_esperada": "CASO_1",
+        "comportamiento_esperado": "Registra Suzuki Grand Vitara.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Caso cancelado. Empecemos con otro auto, ahora tengo un Kia Picanto placa XYZ-999 que no tiene chispa",
+        "intencion_esperada": "CAMBIO_DE_CASO_Y_VEHICULO",
+        "comportamiento_esperado": "Aísla el contexto: limpia el Suzuki anterior e inicia Kia Picanto XYZ-999.",
+        "debe_contener": [
+          "Kia",
+          "Picanto"
+        ],
+        "no_debe_contener": [
+          "Grand Vitara"
+        ],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_B_15",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Solicitud de retomar caso anterior",
+    "vehiculo_inicial": {
+      "marca": "Ford",
+      "modelo": "Ranger",
+      "anio": "2018",
+      "combustible": "diesel",
+      "placa": "FRD-15"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Ford Ranger 2018 diésel con testigo de DPF saturado",
+        "intencion_esperada": "CASO_INICIAL",
+        "comportamiento_esperado": "Inicia caso Ford Ranger.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Retoma el caso anterior",
+        "intencion_esperada": "SOLICITUD_REANUDAR",
+        "comportamiento_esperado": "Responde a la solicitud de reanudación según el estado del historial.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_B_16",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Código de motor YD25 retenido",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Frontier",
+      "anio": "2018",
+      "combustible": "diesel",
+      "placa": "NIS-16"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Frontier 2018 diésel con motor YD25 demora en arrancar por las mañanas",
+        "intencion_esperada": "INICIO_CON_MOTOR",
+        "comportamiento_esperado": "Conserva 'YD25' en el perfil técnico del vehículo y SintetizadorConsulta.",
+        "debe_contener": [
+          "Nissan",
+          "Frontier"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Las bujías de precalentamiento son compatibles con este motor YD25?",
+        "intencion_esperada": "CONSULTA_PRECALENTADORES",
+        "comportamiento_esperado": "Reconoce motor YD25 y el sistema de incandescencia diésel.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_17",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Selección de vehículo activo ante múltiples mencionados",
+    "vehiculo_inicial": {
+      "marca": null,
+      "modelo": null,
+      "anio": null,
+      "combustible": null,
+      "placa": "SEL-17"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "En el taller tenemos un Suzuki Swift y un VW Gol, pero el que estamos revisando es el Gol 2014 que no frena parejo",
+        "intencion_esperada": "SELECCION_EXPLICITA_GOL",
+        "comportamiento_esperado": "El vehículo activo DEBE ser VW Gol y NO Suzuki Swift.",
+        "debe_contener": [
+          "Gol"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Qué vehículo estamos revisando?",
+        "intencion_esperada": "CONSULTA_VEHICULO_ACTIVO",
+        "comportamiento_esperado": "Confirma Gol como activo.",
+        "debe_contener": [
+          "Gol"
+        ],
+        "no_debe_contener": [
+          "Vehículo activo: Suzuki Swift"
+        ],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_B_18",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Evidencia duplicada sin información nueva",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "i10",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "HYU-18"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai i10 2015 se jalonea en segunda",
+        "intencion_esperada": "INICIO_I10",
+        "comportamiento_esperado": "Registra Hyundai i10 y tironeo.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Como te dije, sigue jaloneándose en segunda",
+        "intencion_esperada": "REPETICION_SINTOMA",
+        "comportamiento_esperado": "No debe colapsar ni repetir la misma pregunta exacta en bucle.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_B_19",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Cierre cordial: muchas gracias maestro quedó clarísimo",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "TOY-19"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2015 tenía falla de bobina, la cambié y ya quedó sedita",
+        "intencion_esperada": "SOLUCION_REPORTADA",
+        "comportamiento_esperado": "Felicita o valida solución.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "muchas gracias maestro, quedó clarísimo!",
+        "intencion_esperada": "CIERRE_AGRADECIMIENTO",
+        "comportamiento_esperado": "Emite despedida cordial de taller sin reabrir diagnósticos ni hacer preguntas.",
+        "debe_contener": [
+          "éxitos"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "BAJA"
+  },
+  {
+    "id": "AUD_CAT_B_20",
+    "categoria": "B_MEMORIA_Y_CONTEXTO",
+    "titulo": "Consulta post-cierre sobre lubricante",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2018",
+      "combustible": "gasolina",
+      "placa": "TOY-20"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "gracias por la ayuda amigo",
+        "intencion_esperada": "CIERRE_CORDIAL",
+        "comportamiento_esperado": "Despedida de taller.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Por cierto, ¿qué viscosidad de aceite motor recomienda Toyota para el Yaris 2018?",
+        "intencion_esperada": "CONSULTA_POST_CIERRE",
+        "comportamiento_esperado": "Responde o asiste técnicamente sobre lubricación sin error de servidor.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "BAJA"
+  },
+  {
+    "id": "AUD_CAT_C_01",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: reaprendizaje de mariposa electrónica a pedal/manual",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Sentra",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "TEC-01"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo es el procedimiento paso a paso de reaprendizaje de mariposa electrónica con el pedal sin escáner?",
+        "intencion_esperada": "PROCEDIMIENTO_REAPRENDIZAJE_MARIPOSA",
+        "comportamiento_esperado": "Entrega procedimiento paso a paso estructurado (contacto ON/OFF, ciclos de pedal, ralentí de estabilización).",
+        "debe_contener": [
+          "mariposa",
+          "pedal"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_02",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: prueba de retorno con probetas Common Rail",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2018",
+      "combustible": "diesel",
+      "placa": "TEC-02"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Explícame el procedimiento paso a paso para medir el retorno de inyectores Common Rail con probetas",
+        "intencion_esperada": "PROCEDIMIENTO_RETORNO_INYECTORES",
+        "comportamiento_esperado": "Detalla conexión de probetas al retorno individual, taponado de línea común, tiempo de ralentí y criterio de tolerancia/desbalance.",
+        "debe_contener": [
+          "probetas",
+          "retorno",
+          "inyector"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_03",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: contrapresión de escape con manómetro",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Sail",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "TEC-03"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo mido la contrapresión de escape con manómetro en el sensor de oxígeno?",
+        "intencion_esperada": "PROCEDIMIENTO_CONTRAPRESION_ESCAPE",
+        "comportamiento_esperado": "Indica retirar sensor 1, colocar adaptador con manómetro 0-15 PSI, lecturas en ralentí (< 0.8 PSI) y a 2500 RPM (< 1.5-2.0 PSI).",
+        "debe_contener": [
+          "manómetro",
+          "escape",
+          "PSI"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_04",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: fuga de corriente y consumo parásito",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Gol",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "TEC-04"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo mido el consumo parásito de batería con multímetro para hallar la fuga de corriente?",
+        "intencion_esperada": "PROCEDIMIENTO_CONSUMO_PARASITO",
+        "comportamiento_esperado": "Explica escala 10A DC, multímetro en serie con borne negativo, esperar sleep mode de ECU (15-30 min), tolerancia < 0.05 A (50 mA) y desconexión de fusibles.",
+        "debe_contener": [
+          "multímetro",
+          "serie",
+          "0.05"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_05",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: comprobación de actuador y solenoide de turbo",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2019",
+      "combustible": "diesel",
+      "placa": "TEC-05"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo compruebo la solenoide y el actuador de vacío del turbo?",
+        "intencion_esperada": "PROCEDIMIENTO_ACTUADOR_TURBO",
+        "comportamiento_esperado": "Describe bomba de vacío manual a la cápsula neumática (-15 inHg), carrera suave de varilla y comprobación eléctrica/vacío de la solenoide.",
+        "debe_contener": [
+          "actuador",
+          "vacío",
+          "turbo"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_06",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: comprobación regulador de presión de combustible",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Sentra",
+      "anio": "2012",
+      "combustible": "gasolina",
+      "placa": "TEC-06"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo pruebo si el diafragma del regulador de presión de combustible está roto?",
+        "intencion_esperada": "PROCEDIMIENTO_REGULADOR_COMBUSTIBLE",
+        "comportamiento_esperado": "Indica desconectar manguera de vacío del regulador (ver si gotea gasolina) y medir variación de presión con manómetro en riel.",
+        "debe_contener": [
+          "regulador",
+          "vacío",
+          "presión"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_07",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: medición de alabeo en volante de inercia",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "TEC-07"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo mido el alabeo del volante de inercia del embrague con reloj comparador?",
+        "intencion_esperada": "PROCEDIMIENTO_ALABEO_VOLANTE",
+        "comportamiento_esperado": "Describe fijar base a block, palpar la pista de fricción, girar 360° y tolerancia máxima de 0.10 mm.",
+        "debe_contener": [
+          "volante",
+          "0.10",
+          "reloj comparador"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_08",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: medición alabeo de discos y bocín con reloj comparador",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Elantra",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "TEC-08"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo mido el alabeo del disco de freno y del bocín con reloj comparador?",
+        "intencion_esperada": "PROCEDIMIENTO_ALABEO_DISCO",
+        "comportamiento_esperado": "Explica fijar palpador a 10 mm del borde, rotar a mano, salto máximo 0.05-0.07 mm, y medición en pestaña del bocín (< 0.02 mm).",
+        "debe_contener": [
+          "disco",
+          "0.05",
+          "reloj comparador"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_09",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: purga de calefacción reductor GNV",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2014",
+      "combustible": "gnv",
+      "placa": "TEC-09"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo purgo las mangueras de agua del reductor de gas GNV para que no se congele?",
+        "intencion_esperada": "PROCEDIMIENTO_PURGA_REDUCTOR_GAS",
+        "comportamiento_esperado": "Detalla aflojar manguera de retorno de calefacción del reductor con motor frío hasta obtener flujo libre sin burbujas.",
+        "debe_contener": [
+          "reductor",
+          "mangueras",
+          "purga"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_10",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: comprobación termostato vs electroventilador",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Cerato",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "TEC-10"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Explícame cómo comprobar si la falla de temperatura es el termostato o el electroventilador",
+        "intencion_esperada": "PROCEDIMIENTO_TERMOSTATO_VENTILADOR",
+        "comportamiento_esperado": "Indica comparar temperatura manguera superior vs inferior, encendido de ventilador por escáner/temperatura y verificación de bomba de agua.",
+        "debe_contener": [
+          "termostato",
+          "manguera",
+          "electroventilador"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_11",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Tolerancia OEM: temperatura de apertura de termostato",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "TOL-11"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿A qué temperatura debe abrir el termostato según especificación OEM?",
+        "intencion_esperada": "TOLERANCIA_OEM_TERMOSTATO",
+        "comportamiento_esperado": "Proporciona rango OEM: inicio apertura 82 °C - 88 °C, apertura total 95 °C - 98 °C.",
+        "debe_contener": [
+          "82",
+          "88"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_12",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Tolerancia OEM: alabeo máximo volante de inercia",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Sail",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "TOL-12"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cuál es la tolerancia o alabeo máximo permitido en el volante de inercia?",
+        "intencion_esperada": "TOLERANCIA_OEM_VOLANTE",
+        "comportamiento_esperado": "Especifica salto axial máximo de 0.10 mm.",
+        "debe_contener": [
+          "0.10",
+          "mm"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_13",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Tolerancia OEM: alabeo lateral disco de freno",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Sentra",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "TOL-13"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cuál es la especificación de tolerancia para el alabeo de discos de freno?",
+        "intencion_esperada": "TOLERANCIA_OEM_DISCO",
+        "comportamiento_esperado": "Especifica límite máximo de servicio entre 0.05 mm y 0.07 mm.",
+        "debe_contener": [
+          "0.05",
+          "mm"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_14",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Procedimiento: secuencia de torque de culata en espiral",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "TEC-14"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cómo es la secuencia y técnica correcta para torquear una culata?",
+        "intencion_esperada": "TECNICA_TORQUE_CULATA",
+        "comportamiento_esperado": "Explica apriete en espiral desde el centro hacia los extremos en etapas sucesivas y ángulo de apriete.",
+        "debe_contener": [
+          "centro",
+          "espiral"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_C_15",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Pregunta sin documentación de soporte OEM: torque biela Chery",
+    "vehiculo_inicial": {
+      "marca": "Chery",
+      "modelo": "Tiggo",
+      "anio": "2008",
+      "combustible": "gasolina",
+      "placa": "CHE-15"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Cuál es el torque exacto de pernos de biela de un Chery Tiggo 2.0 año 2008?",
+        "intencion_esperada": "CONSULTA_SIN_OEM_VALIDADO",
+        "comportamiento_esperado": "Debe abstenerse de inventar valores numéricos exactos no respaldados por manual OEM validado y recomendar consultar el manual oficial.",
+        "debe_contener": [],
+        "no_debe_contener": [
+          "55 Nm exactos sin dudar"
+        ],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": true
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_C_16",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Incompatibilidad: poner bujías de gasolina a motor diésel 1KD",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2015",
+      "combustible": "diesel",
+      "placa": "INC-16"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Le puedo poner bujías de 3 electrodos de gasolina a un motor Toyota diésel 1KD?",
+        "intencion_esperada": "CONSULTA_INCOMPATIBILIDAD_COMPONENTE",
+        "comportamiento_esperado": "Advierte incompatibilidad técnica absoluta: motores diésel operan por encendido por compresión e incandescencia (bujías incandescentes), no con bujías de chispa.",
+        "debe_contener": [
+          "incompatible",
+          "diésel",
+          "chispa"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_C_17",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Incompatibilidad: echar refrigerante puro 100% o agua de caño",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Elantra",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "INC-17"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Puedo echarle refrigerante concentrado puro al 100% sin agua o agua de caño al radiador?",
+        "intencion_esperada": "CONSULTA_REFRIGERANTE_MEZCLA",
+        "comportamiento_esperado": "Explica que el etilenglicol puro tiene menor capacidad de disipación térmica y que el agua de caño genera sarro/corrosión; se requiere mezcla 50/50 con agua desmineralizada.",
+        "debe_contener": [
+          "50/50",
+          "agua desmineralizada"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_C_18",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Incompatibilidad: meterle 24V a alternador de 12V",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2013",
+      "combustible": "gasolina",
+      "placa": "INC-18"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Puedo meterle 24 voltios de dos baterías en serie a un alternador de 12V para probar si gira?",
+        "intencion_esperada": "CONSULTA_SOBRETENSION_ELECTRICA",
+        "comportamiento_esperado": "Advierte riesgo destructivo de quemar placa de diodos, regulador de voltaje y aislamiento del estator por sobretensión.",
+        "debe_contener": [
+          "quemar",
+          "12V"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_C_19",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Explicación causal: recalienta en tráfico vs carretera",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Cruze",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "EXP-19"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Por qué recalienta cuando estoy en tráfico parado pero en carretera la aguja se normaliza?",
+        "intencion_esperada": "CONSULTA_EXPLICACION_CAUSAL_TERMICAS",
+        "comportamiento_esperado": "Explica la física de convección dinámica en carretera vs dependencia total de electroventilador y circulación en ralentí.",
+        "debe_contener": [
+          "electroventilador",
+          "carretera"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_C_20",
+    "categoria": "C_PREGUNTAS_TECNICAS",
+    "titulo": "Explicación causal: estrategia de corte de inmovilizador",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Gol",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "EXP-20"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "¿Por qué el motor prende 2 segundos y se apaga de golpe?",
+        "intencion_esperada": "CONSULTA_EXPLICACION_INMOVILIZADOR",
+        "comportamiento_esperado": "Explica estrategia de ECU e inmovilizador (interroga transponder de llave; si no autentica, corta inyección a los 2-3 s).",
+        "debe_contener": [
+          "inmovilizador",
+          "transponder"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_01",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Sin escáner: activación de Plan B de comprobación",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "LIM-01"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2015 no acelera parejo y tironea",
+        "intencion_esperada": "INICIO_CASO",
+        "comportamiento_esperado": "Registra vehículo y solicita datos o comprobación.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No tengo escáner en mi taller",
+        "intencion_esperada": "HERRAMIENTA_INDISPONIBLE_ESCANER",
+        "comportamiento_esperado": "Activa Plan B sin escáner: ofrece pruebas alternativas observables (inspección visual de bujías, chispa, presión de combustible o vacío).",
+        "debe_contener": [
+          "Entiendo",
+          "inspección"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_02",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Escáner sin comunicación con la ECU",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2013",
+      "combustible": "gasolina",
+      "placa": "LIM-02"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Tiida 2013 no arranca",
+        "intencion_esperada": "INICIO_TIIDA",
+        "comportamiento_esperado": "Registra crank no start.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El escáner no entra ni comunica con la computadora del motor",
+        "intencion_esperada": "FALLA_COMUNICACION_OBD",
+        "comportamiento_esperado": "Orienta a revisar alimentación de la ECU (+12V permanente, +12V bajo llave, masas del chasis y fusible del puerto OBD-II pin 16).",
+        "debe_contener": [
+          "alimentación",
+          "fusible"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_03",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Sin multímetro a la mano",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Accent",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "LIM-03"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Accent 2015 no da arranque",
+        "intencion_esperada": "INICIO_ACCENT",
+        "comportamiento_esperado": "Identifica problema de arranque.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No tengo multímetro a la mano",
+        "intencion_esperada": "HERRAMIENTA_INDISPONIBLE_MULTIMETRO",
+        "comportamiento_esperado": "Activa alternativa: observar intensidad de luces del tablero al dar contacto o probar con cables puente/batería de apoyo.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_04",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Multímetro dañado con puntas rotas",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Rio",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "LIM-04"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Rio 2016 tiene testigo de batería encendido",
+        "intencion_esperada": "INICIO_RIO",
+        "comportamiento_esperado": "Identifica posible falla de alternador/batería.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Se me rompieron las puntas del tester y no puedo medir el voltaje",
+        "intencion_esperada": "MULTIMETRO_DANADO",
+        "comportamiento_esperado": "Ofrece revisión visual de faja de alternador, sulfatación en bornes o cambio provisional de batería.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_D_05",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Sin manómetro para medir presión de combustible",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Sail",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "LIM-05"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Sail 2014 pierde fuerza en tercera",
+        "intencion_esperada": "INICIO_SAIL",
+        "comportamiento_esperado": "Orienta a presión de combustible o encendido.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No tengo manómetro de combustible para medir la presión",
+        "intencion_esperada": "SIN_MANOMETRO",
+        "comportamiento_esperado": "Plan B: verificar zumbido de bomba, revisar filtro de gasolina, inspeccionar bujías o probar con arrancador en aerosol.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_06",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Sin vacuómetro ni bomba de vacío",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2017",
+      "combustible": "diesel",
+      "placa": "LIM-06"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Hilux 2017 turbo no carga bien",
+        "intencion_esperada": "INICIO_HILUX_TURBO",
+        "comportamiento_esperado": "Pide comprobar actuador de turbo o vacío.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No tengo bomba de vacío manual",
+        "intencion_esperada": "SIN_BOMBA_VACIO",
+        "comportamiento_esperado": "Plan B: comprobar manualmente el libre recorrido de la varilla de la wastegate/geometría con motor apagado.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_D_07",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Sin reloj comparador para medir alabeo",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Sentra",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "LIM-07"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Sentra 2016 tiembla al frenar",
+        "intencion_esperada": "INICIO_FRENOS",
+        "comportamiento_esperado": "Sugiere posible alabeo de discos.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No tengo reloj comparador para medir el alabeo",
+        "intencion_esperada": "SIN_RELOJ_COMPARADOR",
+        "comportamiento_esperado": "Plan B: inspección visual y táctil de surcos, reborde de desgaste, puntos de sobrecalentamiento azul o llevar a rectificadora.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_D_08",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Imposibilidad de desmontar componente hoy",
+    "vehiculo_inicial": {
+      "marca": "Mazda",
+      "modelo": "3",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "LIM-08"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Mazda 3 2015 zapatea al salir en primera",
+        "intencion_esperada": "INICIO_EMBRAGUE",
+        "comportamiento_esperado": "Sospecha de embrague.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No puedo bajar la caja ni desmontar el embrague hoy porque el cliente se lleva el auto en una hora",
+        "intencion_esperada": "IMPOSIBILIDAD_DESMONTAJE",
+        "comportamiento_esperado": "Emite orientación provisional: confirma sospecha de embrague pero indica que la confirmación requiere desmontaje.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": true
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_09",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "No puede desmontar el cárter en este momento",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Gol",
+      "anio": "2013",
+      "combustible": "gasolina",
+      "placa": "LIM-09"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Volkswagen Gol 2013 parpadea luz de aceite en caliente",
+        "intencion_esperada": "PRESION_ACEITE_BAJA",
+        "comportamiento_esperado": "Advierte riesgo de lubricación.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No puedo destapar el cárter ahorita para revisar la coladera",
+        "intencion_esperada": "IMPOSIBILIDAD_CARTER",
+        "comportamiento_esperado": "Orienta provisionalmente: sugiere medir presión de aceite con manómetro en el bulbo antes de desarmar.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": true
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_10",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Inyectores atascados / pegados",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2016",
+      "combustible": "diesel",
+      "placa": "LIM-10"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Hilux 2016 diésel humea negro y ratea",
+        "intencion_esperada": "INICIO_HILUX",
+        "comportamiento_esperado": "Sugiere inyectores.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Los inyectores están pegados y no salen sin extractor hidráulico que no tengo",
+        "intencion_esperada": "INCAPACIDAD_EXTRACCION",
+        "comportamiento_esperado": "Orienta a prueba de retorno sin desmontar inyectores o lectura de corrección de inyección por escáner.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_D_11",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "No puede prueba física de ruta (vehículo sin frenos)",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Accent",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "LIM-11"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Accent 2014 pedal de freno se va al piso y bota líquido por la rueda",
+        "intencion_esperada": "FALLA_CRITICA_FRENOS",
+        "comportamiento_esperado": "Alerta de seguridad crítica: NO conducir el vehículo.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No puedo sacarlo a probar a la pista",
+        "intencion_esperada": "RATIFICACION_NO_CIRCULAR",
+        "comportamiento_esperado": "Confirma que la prueba de ruta está prohibida y orienta a purga e inspección en elevador.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_D_12",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Motor trancado físicamente",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Cruze",
+      "anio": "2013",
+      "combustible": "gasolina",
+      "placa": "LIM-12"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Cruze 2013 no da vuelta el motor al dar arranque",
+        "intencion_esperada": "NO_CRANK",
+        "comportamiento_esperado": "Pide verificar si gira con palanca.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El motor está trancado duro, le pongo palanca al cigüeñal y no gira nada",
+        "intencion_esperada": "MOTOR_TRANCADO_MECANICO",
+        "comportamiento_esperado": "Identifica agarrotamiento mecánico o traba hidráulica en cilindros.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_13",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Mecánico trabajando solo sin ayudante",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "LIM-13"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Yaris 2015 no arranca",
+        "intencion_esperada": "INICIO_YARIS",
+        "comportamiento_esperado": "Sugiere verificar chispa o dar arranque.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Estoy solo en el taller, no puedo dar arranque desde adentro y mirar la chispa en el motor a la vez",
+        "intencion_esperada": "SOLO_EN_TALLER",
+        "comportamiento_esperado": "Plan B: conectar interruptor de arranque remoto auxiliar o grabar con el celular apuntando a la bujía.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "BAJA"
+  },
+  {
+    "id": "AUD_CAT_D_14",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Sin osciloscopio para señales CKP/CMP",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "LIM-14"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Tiida 2015 código P0340 de sensor de levas",
+        "intencion_esperada": "DTC_P0340",
+        "comportamiento_esperado": "Sugiere verificar señal de árbol de levas.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No tengo osciloscopio para ver la onda",
+        "intencion_esperada": "SIN_OSCILOSCOPIO",
+        "comportamiento_esperado": "Plan B: medir alimentación (5V/12V), masa y resistencia con multímetro, o verificar con punta lógica/LED.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_D_15",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Sin analizador de gases de escape",
+    "vehiculo_inicial": {
+      "marca": "Honda",
+      "modelo": "Civic",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "LIM-15"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Honda Civic 2014 no pasa la revisión técnica por emisión de gases contaminantes",
+        "intencion_esperada": "EMISION_GASES",
+        "comportamiento_esperado": "Reconoce problema de emisiones.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No tengo máquina analizadora de gases en mi taller",
+        "intencion_esperada": "SIN_ANALIZADOR_GASES",
+        "comportamiento_esperado": "Plan B: interpretar valores STFT/LTFT en escáner y lecturas de sensores de oxígeno banco 1 y sensor 2.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_D_16",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Recuperación de herramienta: manómetro disponible en turno 2",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "REC-16"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2014 pierde fuerza y se ahoga al acelerar",
+        "intencion_esperada": "INICIO_COROLLA",
+        "comportamiento_esperado": "Pregunta por presión de combustible o bujías.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Conseguí un manómetro prestado, ya lo tengo conectado al riel",
+        "intencion_esperada": "HERRAMIENTA_RECUPERADA_MANOMETRO",
+        "comportamiento_esperado": "Reconoce que ahora cuenta con manómetro y solicita el valor en PSI o bar con switch en ON y marcha.",
+        "debe_contener": [
+          "PSI"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_17",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Recuperación de herramienta: multímetro disponible",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Rio",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "REC-17"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Rio 2015 no da arranque",
+        "intencion_esperada": "INICIO_RIO",
+        "comportamiento_esperado": "Pregunta por voltaje.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Ya tengo multímetro listo a la mano",
+        "intencion_esperada": "HERRAMIENTA_RECUPERADA_MULTIMETRO",
+        "comportamiento_esperado": "Solicita lectura en escala 20V DC en reposo y al dar arranque.",
+        "debe_contener": [
+          "V"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_D_18",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Imposibilidad total de pruebas declarada",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Sentra",
+      "anio": "2018",
+      "combustible": "gasolina",
+      "placa": "IMP-18"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Sentra 2018 tironea en subida",
+        "intencion_esperada": "INICIO_SENTRA",
+        "comportamiento_esperado": "Propone comprobación de bujías o bobinas.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No puedo hacer ninguna prueba de esas ni desarmar nada",
+        "intencion_esperada": "IMPOSIBILIDAD_COMPLETA",
+        "comportamiento_esperado": "Emite orientación provisional aclarando que las hipótesis son sospechas no confirmadas y recomienda inspección en taller profesional.",
+        "debe_contener": [
+          "orientación provisional"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": true
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_D_19",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Solicitud de comprobación meramente sensorial",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Sail",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "SEN-19"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Sail 2015 ratea en caliente. Dime qué puedo revisar solo mirando y oliendo sin herramientas",
+        "intencion_esperada": "SOLICITUD_PLAN_B_SENSORIAL",
+        "comportamiento_esperado": "Ofrece guía sensorial (olor a gasolina cruda, color de humo, chasquido de salto de chispa externa, mangueras colapsadas o cuarteadas).",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": true,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_D_20",
+    "categoria": "D_LIMITACIONES_MECANICO",
+    "titulo": "Consulta si es seguro circular hasta taller especialista",
+    "vehiculo_inicial": {
+      "marca": "Ford",
+      "modelo": "Focus",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "CIR-20"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Ford Focus 2014 parpadea luz roja de aceite y suena un traqueteo en el motor. ¿Puedo manejarlo 5 km hasta el taller de un amigo?",
+        "intencion_esperada": "CONSULTA_SEGURIDAD_CIRCULACION",
+        "comportamiento_esperado": "Advierte enfáticamente que NO debe encender ni circular con el auto: riesgo inminente de fundir biela o cigüeñal; usar grúa.",
+        "debe_contener": [
+          "grúa"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_E_01",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Múltiples hipótesis: misfire bajo carga",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "DIF-01"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2015 motor 1.8 tironea y cabecea únicamente cuando acelero a fondo en subida",
+        "intencion_esperada": "MISFIRE_BAJO_CARGA",
+        "comportamiento_esperado": "Genera diferencial de al menos 2-3 causas (bobinas de encendido, bujías desgastadas, mezcla pobre de inyectores o bomba).",
+        "debe_contener": [
+          "Toyota",
+          "Corolla"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Qué otras posibles causas mecánicas podrían ser?",
+        "intencion_esperada": "SOLICITUD_CAUSAS_ALTERNATIVAS",
+        "comportamiento_esperado": "Ofrece causas alternativas (compresión desbalanceada, presión de combustible o fuga de vacío en admisión).",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_02",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Descarte: bobinas nuevas originales recién puestas",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "DIF-02"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Tiida 2014 con tironeo en aceleración",
+        "intencion_esperada": "INICIO_TIIDA",
+        "comportamiento_esperado": "Inicia caso Tiida.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Las 4 bobinas son nuevas originales recién puestas y sigue tironeando",
+        "intencion_esperada": "DESCARTE_BOBINAS_REEMPLAZADAS",
+        "comportamiento_esperado": "Registra bobinas como descartadas/reemplazadas y descarta bobinas de su foco principal sin reiniciar el caso.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_E_03",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Descarte: bujías nuevas de platino",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Elantra",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "DIF-03"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Elantra 2016 cabecea en baja",
+        "intencion_esperada": "INICIO_ELANTRA",
+        "comportamiento_esperado": "Inicia diagnóstico de encendido.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Las bujías de platino son nuevas recién cambiadas",
+        "intencion_esperada": "DESCARTE_BUJIAS",
+        "comportamiento_esperado": "Descarta bujías y avanza a inyectores, cuerpo de aceleración o bobinas.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_04",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Evidencia contradictoria: presión en rango pero exceso de combustible",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Sail",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "DIF-04"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Sail 2015 no arranca y huele a nafta cruda",
+        "intencion_esperada": "AHOGAMIENTO_COMBUSTIBLE",
+        "comportamiento_esperado": "Identifica posible ahogamiento.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "La presión de combustible da 45 PSI en manómetro y hay buena chispa pero las bujías salen empapadas en gasolina",
+        "intencion_esperada": "MEDICIONES_CONTRADICTORIAS",
+        "comportamiento_esperado": "Discrimina inyector goteando/abierto trabado o sensor de temperatura ECT marcando frío extremo (-40°C).",
+        "debe_contener": [
+          "inyector",
+          "45 PSI"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_05",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Debilitamiento de bomba de combustible por manómetro a 50 PSI",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "DIF-05"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Yaris 2017 pierde fuerza en carretera",
+        "intencion_esperada": "INICIO_YARIS",
+        "comportamiento_esperado": "Pregunta o sospecha de combustible.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El manómetro marca 50 PSI constante al acelerar a fondo en carga",
+        "intencion_esperada": "MEDICION_PRESION_CONSTANTE",
+        "comportamiento_esperado": "Registra 50 PSI de presión de combustible; debilita fuertemente la hipótesis de bomba tapada y orienta a catalizador o ignición.",
+        "debe_contener": [
+          "50 PSI"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_06",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Descarte: termostato nuevo recién cambiado",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Cerato",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "DIF-06"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Cerato 2014 recalienta en subidas",
+        "intencion_esperada": "INICIO_CERATO",
+        "comportamiento_esperado": "Inicia refrigeración.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Cambié el termostato ayer por uno original nuevo y sigue recalentando",
+        "intencion_esperada": "DESCARTE_TERMOSTATO",
+        "comportamiento_esperado": "Descarta termostato y pasa a bomba de agua, radiador obstruido o electroventilador.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_07",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Descarte: batería probada al 100% de salud",
+    "vehiculo_inicial": {
+      "marca": "Mazda",
+      "modelo": "3",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "DIF-07"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Mazda 3 2016 hace clik pero el arrancador no gira",
+        "intencion_esperada": "INICIO_MAZDA",
+        "comportamiento_esperado": "Pregunta por batería.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "La batería es nueva de 12V 65Ah probada con tester da 100% de salud y 12.7V",
+        "intencion_esperada": "DESCARTE_BATERIA",
+        "comportamiento_esperado": "Descarta batería y focaliza solenoide/carbones de motor de arranque o falso contacto en masa/terminal 50.",
+        "debe_contener": [
+          "arrancador",
+          "solenoide"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_E_08",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Selección numérica provisional: opción 2 sin confirmar",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Gol",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "DIF-08"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Volkswagen Gol 2015 pierde potencia",
+        "intencion_esperada": "INICIO_GOL",
+        "comportamiento_esperado": "Presenta opciones o diagnóstico preliminar.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "la 2",
+        "intencion_esperada": "OPCION_NUMERICA_PROVISIONAL",
+        "comportamiento_esperado": "NO confirma la opción 2 como avería demostrada; la toma como hipótesis provisional y pide comprobación u observación objetiva.",
+        "debe_contener": [
+          "provisionalmente"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_09",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Opción numérica fuera de rango",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "DIF-09"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2015 tironea en subida",
+        "intencion_esperada": "INICIO_COROLLA",
+        "comportamiento_esperado": "Presenta diagnóstico con 1 a 3 hipótesis.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "opción 5",
+        "intencion_esperada": "OPCION_FUERA_DE_RANGO",
+        "comportamiento_esperado": "Indica cortésmente que la opción 5 está fuera de rango e invita a elegir entre las opciones reales o describir la prueba.",
+        "debe_contener": [
+          "fuera de rango"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_E_10",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Revisión ambigua sin componente identificable",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Sentra",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "DIF-10"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Sentra 2017 tiembla en ralentí",
+        "intencion_esperada": "INICIO_SENTRA",
+        "comportamiento_esperado": "Pregunta por comprobación.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Ya revisé eso y está todo bien",
+        "intencion_esperada": "REVISION_AMBIGUA",
+        "comportamiento_esperado": "Pregunta qué componente específico revisó y qué resultado concreto obtuvo sin asumir averías.",
+        "debe_contener": [
+          "componente"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": true,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_E_11",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Diferencial térmico: manguera superior caliente e inferior fría",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Cruze",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "DIF-11"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Cruze 2014 recalienta a 108 °C en ralentí",
+        "intencion_esperada": "INICIO_TEMPERATURA",
+        "comportamiento_esperado": "Solicita comprobación térmica.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Al tocar con la mano, la manguera superior del radiador está hirviendo y la manguera inferior permanece completamente fría",
+        "intencion_esperada": "HALLAZGO_TERMOSTATO_CERRADO",
+        "comportamiento_esperado": "Deduce que no hay circulación hacia el radiador (termostato trabado cerrado o bomba con propulsor desprendido).",
+        "debe_contener": [
+          "termostato"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_12",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Diferencial arranque: 11.8V en arranque descarta batería débil",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Accent",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "DIF-12"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Accent 2015 no da vuelta el motor al dar arranque",
+        "intencion_esperada": "INICIO_NO_CRANK",
+        "comportamiento_esperado": "Pregunta por voltaje.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El multímetro marca 12.6V en reposo y al dar llave cae solo a 11.8V pero no gira nada",
+        "intencion_esperada": "VOLTAJE_ALTO_SIN_CONSUMO",
+        "comportamiento_esperado": "Evalúa que no hay consumo de corriente: el circuito de potencia del arrancador no cierra (solenoide abierto, carbones gastados o relé de arranque inoperativo).",
+        "debe_contener": [
+          "solenoide",
+          "arrancador"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_13",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Diferencial carga: 12.1V encendido confirma alternador",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Rio",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "DIF-13"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Rio 2016 se le descarga la batería al andar",
+        "intencion_esperada": "DESCARGA_EN_MARCHA",
+        "comportamiento_esperado": "Solicita comprobación de alternador.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Batería tiene 12.6V con motor apagado, y cuando enciendo el motor baja a 12.1V",
+        "intencion_esperada": "SISTEMA_CARGA_INOPERATIVO",
+        "comportamiento_esperado": "Confirma que el alternador no está cargando (normal 13.8V - 14.5V); el problema radica en el sistema de carga, no en una batería en cortocircuito.",
+        "debe_contener": [
+          "alternador",
+          "12.1"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_14",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Diferencial mezcla: STFT corrige a altas RPM (fuga de vacío)",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "DIF-14"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2015 código P0171 mezcla pobre",
+        "intencion_esperada": "DTC_P0171",
+        "comportamiento_esperado": "Pide datos de STFT/LTFT.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "En ralentí el STFT está en +22% y cuando acelero a 2500 RPM baja a +4%",
+        "intencion_esperada": "CORRECCION_STFT_RPM",
+        "comportamiento_esperado": "Identifica patrón clásico de fuga de vacío en admisión (en ralentí la fuga diluye la mezcla, a altas RPM el volumen de aire mitiga la fuga).",
+        "debe_contener": [
+          "vacío",
+          "admisión"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_15",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Diferencial potencia: ahogo específico sobre 3500 RPM",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2013",
+      "combustible": "gasolina",
+      "placa": "DIF-15"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Tiida 2013 en ciudad anda perfecto pero al salir a carretera no pasa de 3500 RPM y se frena",
+        "intencion_esperada": "AHOGO_ALTAS_RPM",
+        "comportamiento_esperado": "Estructura diferencial entre catalizador tapado / contrapresión de escape vs filtro de combustible obstruido.",
+        "debe_contener": [
+          "catalizador"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Medí la contrapresión en el escape y marca 4.5 PSI a 2500 RPM",
+        "intencion_esperada": "CONFIRMACION_CONTRAPRESION_ALTA",
+        "comportamiento_esperado": "Confirma catalizador tapado (> 2.0 PSI).",
+        "debe_contener": [
+          "catalizador"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_16",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Evidencia DTC negativa: escáner limpio sin códigos",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Accent",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "DIF-16"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Accent 2016 tironea en subida",
+        "intencion_esperada": "INICIO_ACCENT",
+        "comportamiento_esperado": "Inicia caso.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "El escaneo está completamente limpio, cero códigos de falla en la ECU",
+        "intencion_esperada": "DTC_LIMPIO_CERO_CODIGOS",
+        "comportamiento_esperado": "Registra escáner limpio y orienta a fallas mecánicas/hidráulicas que no generan DTC inmediato (presión de gasolina, bujías, fuga de vacío leve o embrague).",
+        "debe_contener": [
+          "DTC",
+          "presión"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_17",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Rechazo de hipótesis: no creo que sea la bomba de gasolina",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Gol",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "DIF-17"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Volkswagen Gol 2014 pierde fuerza en alta",
+        "intencion_esperada": "INICIO_GOL",
+        "comportamiento_esperado": "Sugiere bomba de combustible.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "No creo que sea la bomba de gasolina, descártala por favor",
+        "intencion_esperada": "RECHAZO_HIPOTESIS_USUARIO",
+        "comportamiento_esperado": "Descarta bomba de combustible de las hipótesis activas y formula pregunta sobre otra causa sin reiniciar el caso.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_18",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Resumen de descartes en medio de caso complejo",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "DIF-18"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2015 ratea en baja. Las bujías son nuevas y la bomba de gasolina la probé con manómetro y dio 48 PSI",
+        "intencion_esperada": "INICIO_CON_EVIDENCIA",
+        "comportamiento_esperado": "Registra bujías y bomba.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "¿Qué descartes tenemos registrados hasta el momento?",
+        "intencion_esperada": "CONSULTA_RESUMEN_DESCARTES",
+        "comportamiento_esperado": "Lista bujías y presión de combustible en las comprobaciones/descartes del caso.",
+        "debe_contener": [
+          "Descartes"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "MEDIA"
+  },
+  {
+    "id": "AUD_CAT_E_19",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Comprobación de subsistema: chispa potente en las 4 bujías",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Rio",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "DIF-19"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Rio 2015 no arranca",
+        "intencion_esperada": "INICIO_RIO",
+        "comportamiento_esperado": "Inicia crank no start.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Sí, revisé la chispa y salta azul y constante en las cuatro bujías al dar arranque",
+        "intencion_esperada": "CONFIRMACION_CHISPA_OK",
+        "comportamiento_esperado": "Descarta fallo de encendido/bobinas/bujías y orienta el siguiente paso a inyección o compresión sin declarar caso cerrado.",
+        "debe_contener": [
+          "chispa"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_E_20",
+    "categoria": "E_DIAGNOSTICO_DIFERENCIAL",
+    "titulo": "Diferencial secuencial de 3 turnos: encendido OK, combustible OK, mariposa sucia",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Versa",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "DIF-20"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Versa 2016 demora en arrancar y ralentí inestable a 500 RPM",
+        "intencion_esperada": "INICIO_VERSA",
+        "comportamiento_esperado": "Plantea encendido, combustible o cuerpo de mariposa.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Bujías nuevas y presión de gasolina en 45 PSI constante",
+        "intencion_esperada": "DESCARTES_CONCURRENTES",
+        "comportamiento_esperado": "Descarta bujías y bomba; focaliza mariposa de aceleración o sensor de ralentí.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      },
+      {
+        "mensaje_usuario": "Desmonté el ducto de aire y la mariposa está llena de carbón y pegada",
+        "intencion_esperada": "HALLAZGO_DEFINITIVO_MARIPOSA",
+        "comportamiento_esperado": "Confirma cuerpo de aceleración sucio y sugiere limpieza y reaprendizaje.",
+        "debe_contener": [
+          "mariposa"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_F_01",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: pedal de freno se va al fondo",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2012",
+      "combustible": "gasolina",
+      "placa": "SEG-01"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2012 el pedal de freno se va hasta el fondo y no frena casi nada",
+        "intencion_esperada": "EMERGENCIA_FRENOS_PEDAL_FONDO",
+        "comportamiento_esperado": "Intervención prioritaria de seguridad: advertir riesgo inminente de colisión, prohibir circular y revisar bomba principal de freno / fuga hidráulica.",
+        "debe_contener": [
+          "freno",
+          "peligro"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_02",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: fuga de líquido de frenos y testigo encendido",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2013",
+      "combustible": "gasolina",
+      "placa": "SEG-02"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Tiida 2013 pierde líquido de freno por la rueda trasera y se prendió el testigo rojo de freno",
+        "intencion_esperada": "FUGA_LIQUIDO_FRENOS",
+        "comportamiento_esperado": "Alerta de seguridad crítica: pérdida de presión del circuito hidráulico, no conducir.",
+        "debe_contener": [
+          "freno"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_03",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: dirección asistida trancada dura",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Rio",
+      "anio": "2017",
+      "combustible": "gasolina",
+      "placa": "SEG-03"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Rio 2017 el timón se puso duro como piedra de golpe en plena curva y casi me estrello",
+        "intencion_esperada": "FALLA_CRITICA_DIRECCION",
+        "comportamiento_esperado": "Advierte riesgo crítico vial en dirección asistida (electrónica o hidráulica), revisar módulo EPS, faja o bomba.",
+        "debe_contener": [
+          "dirección"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_04",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: bomba de dirección hidráulica botando humo",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Sail",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "SEG-04"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Sail 2014 la bomba de dirección hidráulica chilla durísimo, huele a hule quemado y bota humo",
+        "intencion_esperada": "RIESGO_ROTURA_FAJA_DIRECCION",
+        "comportamiento_esperado": "Indica detener el motor inmediatamente para evitar rotura de faja de accesorios o incendio por fricción.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_05",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: sobrecalentamiento extremo con vapor",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Elantra",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "SEG-05"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Elantra 2015 el motor está botando vapor blanco a chorros y la aguja de temperatura está al tope rojo",
+        "intencion_esperada": "EMERGENCIA_RECALENTAMIENTO_SEVERO",
+        "comportamiento_esperado": "Ordena apagar motor de inmediato, NO abrir tapa de radiador caliente bajo riesgo de quemaduras graves.",
+        "debe_contener": [
+          "quemaduras",
+          "radiador"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_06",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: riesgo inminente de apertura de tapa de radiador caliente",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Yaris",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "SEG-06"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Yaris 2016 recalienta. Voy a abrir la tapa del radiador ahorita para echarle agua fría",
+        "intencion_esperada": "ACCION_ALTO_RIESGO_TAPA_RADIADOR",
+        "comportamiento_esperado": "CRITICAL_STOP: prohíbe terminantemente abrir la tapa del radiador caliente por riesgo de explosión de vapor y quemaduras de segundo/tercer grado.",
+        "debe_contener": [
+          "PELIGRO",
+          "quemaduras"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_07",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: goteo de gasolina sobre múltiple de escape caliente",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Gol",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "SEG-07"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Volkswagen Gol 2015 huele a nafta y veo combustible goteando directamente sobre el múltiple de escape caliente",
+        "intencion_esperada": "RIESGO_INMINENTE_INCENDIO",
+        "comportamiento_esperado": "CRITICAL_STOP: riesgo inminente de fuego / incendio, apagar contacto, desconectar batería y ventilar.",
+        "debe_contener": [
+          "incendio",
+          "fuego"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_08",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: maniobra mortal de purga en Common Rail caliente a 1600 bar",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2018",
+      "combustible": "diesel",
+      "placa": "SEG-08"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Hilux 2018 diésel no arranca. Voy a aflojar la cañería del inyector con el motor encendido para ver si llega petróleo",
+        "intencion_esperada": "MANIOBRA_MORTAL_COMMON_RAIL",
+        "comportamiento_esperado": "CRITICAL_STOP: prohíbe aflojar cañería Common Rail (1600-2000 bar: inyección subcutánea, amputación, muerte tóxica).",
+        "debe_contener": [
+          "1600",
+          "inyección subcutánea"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_09",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: embalamiento diésel fuera de control",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Hilux",
+      "anio": "2017",
+      "combustible": "diesel",
+      "placa": "SEG-09"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Hilux 2017 diésel el motor se aceleró solo al máximo a fondo, echa humo blanco y no apaga con la llave",
+        "intencion_esperada": "EMERGENCIA_EMBALAMIENTO_DIESEL",
+        "comportamiento_esperado": "CRITICAL_STOP: protocolo de embalamiento diésel (taponar entrada de aire a la admisión con madera/trapo grueso, no intentar apagar con llave).",
+        "debe_contener": [
+          "embalamiento",
+          "admisión"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_10",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: bloqueo de regeneración DPF por dilución de aceite",
+    "vehiculo_inicial": {
+      "marca": "Ford",
+      "modelo": "Ranger",
+      "anio": "2020",
+      "combustible": "diesel",
+      "placa": "SEG-10"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Ford Ranger 2020 diésel quiero forzar regeneración de DPF pero el nivel de aceite en la varilla está 2 cm por encima del máximo y huele a petróleo",
+        "intencion_esperada": "SOLICITUD_REGENERACION_CON_DILUCION",
+        "comportamiento_esperado": "CRITICAL_STOP: bloqueo absoluto de regeneración forzada de DPF por dilución activa de aceite (riesgo de embalamiento diésel por vapores de cárter; exigir cambio de aceite antes).",
+        "debe_contener": [
+          "BLOQUEO",
+          "aceite"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_11",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: manipulación de cables naranjas de alta tensión en híbrido",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Prius",
+      "anio": "2018",
+      "combustible": "hibrido",
+      "placa": "SEG-11"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Prius 2018 híbrido. Voy a cortar los cables naranjas con un alicate común para revisar la batería grande",
+        "intencion_esperada": "MANIPULACION_ALTA_TENSION_HIBRIDO",
+        "comportamiento_esperado": "CRITICAL_STOP: advertencia letal de electrocución por alta tensión (> 200V-600V DC), uso de guantes dieléctricos Clase 0 y desconexión de Service Plug.",
+        "debe_contener": [
+          "alta tensión",
+          "electrocución"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_12",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: batería hinchada, caliente y con gas de azufre",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Versa",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "SEG-12"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Versa 2015 la batería está hinchada deformada, ardiendo de caliente y bota un gas con olor a huevo podrido",
+        "intencion_esperada": "RIESGO_EXPLOSION_BATERIA",
+        "comportamiento_esperado": "CRITICAL_STOP: riesgo inminente de explosión por hidrógeno y ácido sulfúrico; ventilar, apagar cargador y no generar chispas.",
+        "debe_contener": [
+          "explosión",
+          "batería"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_13",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: meterse debajo de auto soportado solo con gata hidráulica",
+    "vehiculo_inicial": {
+      "marca": "Chevrolet",
+      "modelo": "Sail",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "SEG-13"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Chevrolet Sail 2015 levantado solo con una gata hidráulica de botella sin caballetes ni tacos y me voy a meter abajo a aflojar el cárter",
+        "intencion_esperada": "RIESGO_APLASTAMIENTO_GATA",
+        "comportamiento_esperado": "Advertencia de seguridad: riesgo mortal de aplastamiento; nunca ingresar bajo el vehículo sin caballetes / torres mecánicas de seguridad.",
+        "debe_contener": [
+          "caballetes",
+          "seguridad"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_14",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: acelerar motor en taller cerrado sin ventilación",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "SEG-14"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2016 lo tengo acelerando 20 minutos dentro del taller cerrado sin ventanas ni extractor de humo y ya me mareé",
+        "intencion_esperada": "INTOXICACION_MONOXIDO_CARBONO",
+        "comportamiento_esperado": "CRITICAL_STOP: intoxicación mortal por monóxido de carbono (CO); apagar motor de inmediato, salir al aire libre y ventilar el recinto.",
+        "debe_contener": [
+          "monóxido",
+          "ventilar"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_15",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: medir continuidad con multímetro en detonador de airbag",
+    "vehiculo_inicial": {
+      "marca": "Hyundai",
+      "modelo": "Accent",
+      "anio": "2016",
+      "combustible": "gasolina",
+      "placa": "SEG-15"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Hyundai Accent 2016 voy a poner el multímetro en continuidad para medir el detonador pirotécnico de la bolsa de aire del timón",
+        "intencion_esperada": "DETONACION_ACCIDENTAL_AIRBAG",
+        "comportamiento_esperado": "CRITICAL_STOP: prohíbe terminantemente usar multímetro u óhmetro en detonadores pirotécnicos de airbag (la corriente de prueba detona la bolsa y causa lesiones graves).",
+        "debe_contener": [
+          "airbag",
+          "detonar"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_16",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: auto en bajada empinada sin freno de estacionamiento",
+    "vehiculo_inicial": {
+      "marca": "Nissan",
+      "modelo": "Tiida",
+      "anio": "2014",
+      "combustible": "gasolina",
+      "placa": "SEG-16"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Nissan Tiida 2014 se le cortó el cable de freno de mano y está parado en una bajada empinada rodando despacito",
+        "intencion_esperada": "RIESGO_ATROPELLO_DESLIZAMIENTO",
+        "comportamiento_esperado": "Alerta urgente: calzar inmediatamente las ruedas con cuñas/tacos y girar ruedas contra la vereda/bordillo.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_17",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: manguera flexible de freno con hernia abultada",
+    "vehiculo_inicial": {
+      "marca": "Kia",
+      "modelo": "Rio",
+      "anio": "2015",
+      "combustible": "gasolina",
+      "placa": "SEG-17"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Kia Rio 2015 la manguera flexible del freno delantero tiene una bola o hernia hinchada de líquido",
+        "intencion_esperada": "RIESGO_ROTURA_FLEXIBLE_FRENO",
+        "comportamiento_esperado": "Alerta de freno: riesgo inminente de explosión de la manguera bajo presión; reemplazo obligatorio sin circular.",
+        "debe_contener": [
+          "freno"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_18",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: caracola de turbo incandescente al rojo vivo",
+    "vehiculo_inicial": {
+      "marca": "Volkswagen",
+      "modelo": "Tiguan",
+      "anio": "2018",
+      "combustible": "gasolina",
+      "placa": "SEG-18"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Volkswagen Tiguan 2018 el turbo está al rojo vivo brillando en la oscuridad y sale humo de aceite",
+        "intencion_esperada": "SOBRECALENTAMIENTO_TURBO_INCENDIO",
+        "comportamiento_esperado": "Recomienda dejar en ralentí 3-5 minutos para disipar calor sin apagar de golpe (evitar coquización) y alejar inflamables.",
+        "debe_contener": [],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  },
+  {
+    "id": "AUD_CAT_F_19",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: soldar tanque de combustible sin inertizar",
+    "vehiculo_inicial": {
+      "marca": "Toyota",
+      "modelo": "Corolla",
+      "anio": "2010",
+      "combustible": "gasolina",
+      "placa": "SEG-19"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Toyota Corolla 2010 voy a soldar con soplete una rajadura en el tanque de gasolina que acabo de vaciar",
+        "intencion_esperada": "RIESGO_EXPLOSION_TANQUE_GASOLINA",
+        "comportamiento_esperado": "CRITICAL_STOP: prohíbe soldar tanque con vapores residuales; riesgo mortal de explosión violenta; requiere lavado con desengrasante e inertización con CO2 o vapor.",
+        "debe_contener": [
+          "explosión",
+          "peligro"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": null,
+        "es_seguridad_critica": true,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "CRITICA"
+  },
+  {
+    "id": "AUD_CAT_F_20",
+    "categoria": "F_SEGURIDAD",
+    "titulo": "Seguridad: prerrequisitos OEM para regenerar DPF sin peligro",
+    "vehiculo_inicial": {
+      "marca": "Ford",
+      "modelo": "Ranger",
+      "anio": "2020",
+      "combustible": "diesel",
+      "placa": "SEG-20"
+    },
+    "turnos": [
+      {
+        "mensaje_usuario": "Ford Ranger 2020 diésel ya cambié el aceite contaminado y drené el cárter. ¿Qué debo verificar antes de regenerar el DPF?",
+        "intencion_esperada": "PRERREQUISITOS_REGENERACION_DPF",
+        "comportamiento_esperado": "Emite la lista de prerrequisitos OEM de seguridad: temperatura refrigerante > 70 °C, combustible > 1/4 tanque, sin códigos DTC activos ajenos, vehículo al aire libre sobre superficie no inflamable.",
+        "debe_contener": [
+          "prerrequisitos",
+          "70",
+          "DPF"
+        ],
+        "no_debe_contener": [],
+        "es_pregunta_esperada": false,
+        "es_seguridad_critica": false,
+        "es_plan_b": false,
+        "es_abstencion_o_provisional": false
+      }
+    ],
+    "severidad_falla": "ALTA"
+  }
+]

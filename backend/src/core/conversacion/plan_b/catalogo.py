@@ -1,4 +1,5 @@
 """Herramientas y patrones de disponibilidad de taller."""
+
 import re
 from dataclasses import dataclass
 from typing import Dict, Tuple
@@ -23,13 +24,19 @@ CATALOGO_HERRAMIENTAS: Dict[str, HerramientaAutomotriz] = {
         clave="manometro",
         nombre_canonico="manómetro de presión de combustible",
         terminos=("manómetro", "manometro", "medidor de presión", "presión de gasolina"),
-        patron_mencion=re.compile(r"\b(man[oó]metro|medir\s+(?:la\s+)?presi[oó]n|presi[oó]n\s+de\s+(?:gasolina|combustible))\b", re.IGNORECASE),
+        patron_mencion=re.compile(
+            r"\b(man[oó]metro|medir\s+(?:la\s+)?presi[oó]n|presi[oó]n\s+de\s+(?:gasolina|combustible))\b",
+            re.IGNORECASE,
+        ),
     ),
     "chispa": HerramientaAutomotriz(
         clave="chispa",
         nombre_canonico="probador de chispa / herramientas de encendido",
         terminos=("chispa", "probador de chispa", "sacar bujías", "llave de bujías"),
-        patron_mencion=re.compile(r"\b(comprobar\s+(?:la\s+)?chispa|probador\s+de\s+chispa|llave\s+de\s+buj[ií]as?|sacar\s+(?:las\s+)?buj[ií]as?|chispa)\b", re.IGNORECASE),
+        patron_mencion=re.compile(
+            r"\b(comprobar\s+(?:la\s+)?chispa|probador\s+de\s+chispa|llave\s+de\s+buj[ií]as?|sacar\s+(?:las\s+)?buj[ií]as?|chispa)\b",
+            re.IGNORECASE,
+        ),
     ),
     "escaner": HerramientaAutomotriz(
         clave="escaner",
@@ -67,6 +74,20 @@ CATALOGO_HERRAMIENTAS: Dict[str, HerramientaAutomotriz] = {
         terminos=("osciloscopio", "osciloscopio digital", "oscilograma"),
         patron_mencion=re.compile(r"\b(osciloscopio|oscilograma)\b", re.IGNORECASE),
     ),
+    "extractor": HerramientaAutomotriz(
+        clave="extractor",
+        nombre_canonico="extractor hidr\u00e1ulico de inyectores",
+        terminos=("extractor", "extractor hidr\u00e1ulico"),
+        patron_mencion=re.compile(r"\b(extractor(\s+hidr[a\u00e1]ulico)?)\b", re.IGNORECASE),
+    ),
+    "ayudante": HerramientaAutomotriz(
+        clave="ayudante",
+        nombre_canonico="asistente o ayudante de taller",
+        terminos=("ayudante", "asistente", "otra persona", "solo en el taller"),
+        patron_mencion=re.compile(
+            r"\b(ayudante|asistente|otra\s+persona|solo(\s+en\s+el\s+taller)?)\b", re.IGNORECASE
+        ),
+    ),
     "general": HerramientaAutomotriz(
         clave="general",
         nombre_canonico="herramientas de taller",
@@ -77,7 +98,9 @@ CATALOGO_HERRAMIENTAS: Dict[str, HerramientaAutomotriz] = {
 
 PATRON_NO_TENGO = re.compile(
     r"\b((?:no|tampoco|ni)\s+(?:tengo|cuento\s+con|dispongo\s+de|poseo)|"
-    r"sin\s+herramientas?|ninguna\s+herramienta|cero\s+herramientas)\b",
+    r"sin\s+herramientas?|ninguna\s+herramienta|cero\s+herramientas|"
+    r"sin\s+(?:extractor|ayudante|asistente|osciloscopio)|"
+    r"estoy\s+solo|no\s+puedo\s+(?:dar\s+arranque|desmontar|sacar))\b",
     re.IGNORECASE,
 )
 

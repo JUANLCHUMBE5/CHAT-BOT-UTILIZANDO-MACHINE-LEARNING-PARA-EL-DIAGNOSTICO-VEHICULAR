@@ -23,16 +23,50 @@ if TYPE_CHECKING:
     from src.core.conversacion.models import ConversationState
 
 RESPUESTAS_AFIRMATIVAS = {
-    "si", "sí", "si causa", "ajá", "aja", "así es", "asi es",
-    "correcto", "exactamente", "eso mismo", "afirmativo", "sí maestro",
-    "si maestro", "claro", "claro que sí", "claro que si", "por supuesto",
-    "efectivamente", "de acuerdo", "seguro", "exacto", "simon", "sii", "siii",
+    "si",
+    "sí",
+    "si causa",
+    "ajá",
+    "aja",
+    "así es",
+    "asi es",
+    "correcto",
+    "exactamente",
+    "eso mismo",
+    "afirmativo",
+    "sí maestro",
+    "si maestro",
+    "claro",
+    "claro que sí",
+    "claro que si",
+    "por supuesto",
+    "efectivamente",
+    "de acuerdo",
+    "seguro",
+    "exacto",
+    "simon",
+    "sii",
+    "siii",
 }
 
 RESPUESTAS_NEGATIVAS = {
-    "no", "para nada", "negativo", "nunca", "eso no pasa", "en lo absoluto",
-    "jamás", "jamas", "tampoco", "falso", "nada que ver", "no pasa eso",
-    "incorrecto", "noo", "nooo", "no maestro", "de ninguna manera",
+    "no",
+    "para nada",
+    "negativo",
+    "nunca",
+    "eso no pasa",
+    "en lo absoluto",
+    "jamás",
+    "jamas",
+    "tampoco",
+    "falso",
+    "nada que ver",
+    "no pasa eso",
+    "incorrecto",
+    "noo",
+    "nooo",
+    "no maestro",
+    "de ninguna manera",
 }
 
 
@@ -46,13 +80,22 @@ def interpretar_respuesta_corta(
     accion = interpretar_accion_previa(estado, texto_usuario, ultima_preg)
     if accion is not None:
         return accion
+
     def _parsear_indice_opcion(raw_val: str) -> int:
         mapa = {
-            "1": 0, "primera": 0, "1️⃣": 0,
-            "2": 1, "segunda": 1, "2️⃣": 1,
-            "3": 2, "tercera": 2, "3️⃣": 2,
-            "4": 3, "cuarta": 3,
-            "5": 4, "quinta": 4,
+            "1": 0,
+            "primera": 0,
+            "1️⃣": 0,
+            "2": 1,
+            "segunda": 1,
+            "2️⃣": 1,
+            "3": 2,
+            "tercera": 2,
+            "3️⃣": 2,
+            "4": 3,
+            "cuarta": 3,
+            "5": 4,
+            "quinta": 4,
             "0": -1,
         }
         if raw_val in mapa:
@@ -60,12 +103,24 @@ def interpretar_respuesta_corta(
         return int(raw_val) - 1 if raw_val.isdigit() else 2
 
     if not ultima_preg:
+        if PATRON_AMBIGUO.fullmatch(texto_l):
+            hecho = estado.registrar_hecho(
+                "respuesta_tentativa_sin_pregunta", texto_usuario,
+                categoria="ambiguo", estado=FactState.AMBIGUO,
+                texto_crudo=texto_usuario,
+            )
+            return {
+                "categoria_respuesta": "AMBIGUO", "campo": hecho.campo,
+                "valor": texto_usuario, "estado": FactState.AMBIGUO.value,
+                "hecho": hecho.to_dict(),
+            }
         m_opt_pre = PATRON_OPCION_NUMERICA.fullmatch(texto_l)
-        if m_opt_pre and getattr(estado, "top3_actual", None):
+        if m_opt_pre:
             raw_val = m_opt_pre.group(3).lower()
             idx = _parsear_indice_opcion(raw_val)
-            if 0 <= idx < len(estado.top3_actual):
-                item = estado.top3_actual[idx]
+            top3 = getattr(estado, "top3_actual", None) or []
+            if top3 and 0 <= idx < len(top3):
+                item = top3[idx]
                 hip_val = item.get("falla", "") if isinstance(item, dict) else str(item)
                 return {
                     "categoria_respuesta": "OPCION_NUMERICA_PROVISIONAL",
@@ -78,15 +133,57 @@ def interpretar_respuesta_corta(
                 "campo": "opcion_fuera_de_rango",
                 "valor": raw_val,
                 "indice_opcion": idx + 1,
-                "total_opciones": len(estado.top3_actual),
+                "total_opciones": len(top3) or 3,
             }
+        if re.search(
+            r"\b(?:ya\s+)?(?:lo|la|eso)\s+revis[eé]\b|\b(?:ya\s+)?revis[eé]\s+(?:lo|la|eso)\b|\bya\s+(?:lo\s+)?revis[eé]\b",
+            texto_l,
+        ):
+            hecho = estado.registrar_hecho(
+                "revision_componente_pendiente",
+                texto_usuario,
+                categoria="inspeccion",
+                estado=FactState.AMBIGUO,
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "REVISION_AMBIGUA",
+                "campo": "revision_componente_pendiente",
+                "valor": texto_usuario,
+                "hecho": hecho.to_dict(),
+            }
+        indisponibles = GestorPlanB.detectar_indisponibilidad_en_texto(texto_l)
+        no_sabe_usar = GestorPlanB.detectar_no_sabe_usar(texto_l)
+        if indisponibles or no_sabe_usar:
+            hechos_bloqueo = GestorPlanB.registrar_bloqueos_en_estado(estado, texto_usuario, "")
+            her_principal = indisponibles[0] if indisponibles else "general"
+            cat_resp = "HERRAMIENTA_INDISPONIBLE"
+            primer_hecho = list(hechos_bloqueo.values())[0] if hechos_bloqueo else {}
+            return {
+                "categoria_respuesta": cat_resp,
+                "campo": f"{her_principal}_disponible",
+                "valor": "NO",
+                "herramientas": indisponibles,
+                "no_sabe_usar": no_sabe_usar,
+                "hechos": hechos_bloqueo,
+                "hecho": primer_hecho,
+            }
+
         if PATRON_NO_SE.fullmatch(texto_l):
             hecho = estado.registrar_hecho(
-                "desconocido", "no determinado / no se fijó", categoria="desconocido",
-                estado=FactState.DESCONOCIDO, texto_crudo=texto_usuario,
+                "desconocido",
+                "no determinado / no se fijó",
+                categoria="desconocido",
+                estado=FactState.DESCONOCIDO,
+                texto_crudo=texto_usuario,
             )
-            return {"categoria_respuesta": "DESCONOCIDO", "campo": "desconocido",
-                    "valor": "desconocido", "hecho": hecho.to_dict()}
+            return {
+                "categoria_respuesta": "DESCONOCIDO",
+                "campo": "desconocido",
+                "valor": "desconocido",
+                "hecho": hecho.to_dict(),
+            }
         if texto_l in RESPUESTAS_AFIRMATIVAS:
             h = estado.registrar_hecho(
                 f"confirmado_pregunta_{estado.turno_actual}",
@@ -128,7 +225,7 @@ def interpretar_respuesta_corta(
         if respuesta_numerica:
             return respuesta_numerica
 
-    if intent_str == QuestionIntent.MEDICION_TECNICA.value and (\
+    if intent_str == QuestionIntent.MEDICION_TECNICA.value and (
         texto_l in RESPUESTAS_NEGATIVAS
         or PATRON_NO_SE.search(texto_l)
         or texto_l in ("no lo tengo", "no tengo ese dato")
@@ -155,9 +252,8 @@ def interpretar_respuesta_corta(
             "valor": "disponible_sin_valor",
         }
 
-    if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and (\
-        texto_l in RESPUESTAS_NEGATIVAS
-        or texto_l in ("no aun", "todavia no", "aun no")
+    if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and (
+        texto_l in RESPUESTAS_NEGATIVAS or texto_l in ("no aun", "todavia no", "aun no")
     ):
         hecho = estado.registrar_hecho(
             campo="estado_inspeccion_previa",
@@ -174,9 +270,8 @@ def interpretar_respuesta_corta(
             "hecho": hecho.to_dict(),
         }
 
-    if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and (\
-        texto_l in RESPUESTAS_AFIRMATIVAS
-        or texto_l in ("ya", "lo revise", "lo revisé")
+    if intent_str == QuestionIntent.COMPONENTE_REVISADO.value and (
+        texto_l in RESPUESTAS_AFIRMATIVAS or texto_l in ("ya", "lo revise", "lo revisé")
     ):
         hecho = estado.registrar_hecho(
             campo="revision_componente_pendiente",
@@ -195,13 +290,16 @@ def interpretar_respuesta_corta(
 
     # Revisión general reportada
     if re.search(
-        r"\b(?:ya\s+)?(?:lo|la|eso)\s+revis[eé]\b.*\b(?:est[aá]\s+bien|correcto|normal)\b",
+        r"\b(?:ya\s+)?(?:lo|la|eso)\s+revis[eé]\b.*\b(?:est[aá]\s+(?:bien|normal|todo\s+bien)|correcto|normal)\b|\b(?:ya\s+)?revis[eé]\s+(?:lo|la|eso)\b.*\b(?:est[aá]\s+(?:bien|normal|todo\s+bien)|correcto|normal)\b",
         texto_l,
     ) or re.search(
-        r"\b(?:eso|ya)\s+(?:lo\s+)?(?:revis[eé]|prob[eé])\s+y\s+(?:eso\s+)?(?:est[aá]\s+bien|est[aá]\s+normal)\b",
+        r"\b(?:eso|ya)\s+(?:lo\s+)?(?:revis[eé]|prob[eé])\s+y\s+(?:eso\s+)?(?:est[aá]\s+(?:bien|normal|todo\s+bien))\b",
         texto_l,
     ):
-        if intent_str == QuestionIntent.CONFIRMACION_ALTERNATIVA.value or "verificar este punto" in texto_preg:
+        if (
+            intent_str == QuestionIntent.CONFIRMACION_ALTERNATIVA.value
+            or "verificar este punto" in texto_preg
+        ):
             diagnostico_actual = next(
                 (
                     str(h.get("falla", "")) if isinstance(h, dict) else str(h)
@@ -269,7 +367,11 @@ def interpretar_respuesta_corta(
 
     # 0. Manejo de 'No aplica'
     if PATRON_NO_APLICA.search(texto_l):
-        campo = "herramienta_disponible" if "multimetro" in texto_preg or "manometro" in texto_preg else "condicion_operacion"
+        campo = (
+            "herramienta_disponible"
+            if "multimetro" in texto_preg or "manometro" in texto_preg
+            else "condicion_operacion"
+        )
         h = estado.registrar_hecho(
             campo=campo,
             valor="no aplica",
@@ -311,9 +413,16 @@ def interpretar_respuesta_corta(
         }
 
     # 0.1 Manejo de 'No sé' / 'Ni idea' / 'Tendría que revisar'
-    if PATRON_NO_SE.search(texto_l) and not GestorPlanB.detectar_no_sabe_usar(texto_l) and not GestorPlanB.detectar_no_sabe_realizar(texto_l):
+    if (
+        PATRON_NO_SE.search(texto_l)
+        and not GestorPlanB.detectar_no_sabe_usar(texto_l)
+        and not GestorPlanB.detectar_no_sabe_realizar(texto_l)
+    ):
         campo_desconocido = "desconocido"
-        if intent_str in (QuestionIntent.DISPONIBILIDAD_HERRAMIENTA.value, QuestionIntent.MEDICION_VOLTAJE.value) or any(t in texto_preg for t in ("multimetro", "tester", "manometro")):
+        if intent_str in (
+            QuestionIntent.DISPONIBILIDAD_HERRAMIENTA.value,
+            QuestionIntent.MEDICION_VOLTAJE.value,
+        ) or any(t in texto_preg for t in ("multimetro", "tester", "manometro")):
             campo_desconocido = "herramienta_disponible"
         elif intent_str == QuestionIntent.TEMPERATURA_APARICION.value:
             campo_desconocido = "temperatura"
@@ -338,7 +447,9 @@ def interpretar_respuesta_corta(
         }
 
     # 0.2 Manejo de respuestas ambiguas / tentativas
-    if PATRON_AMBIGUO.search(texto_l) and not any(w in texto_l for w in ("12.", "11.", "13.", "10.", "9.", "8.")):
+    if PATRON_AMBIGUO.search(texto_l) and not any(
+        w in texto_l for w in ("12.", "11.", "13.", "10.", "9.", "8.")
+    ):
         campo_ambiguo = "comportamiento_ambiguo"
         m_amb = PATRON_AMBIGUO.search(texto_l)
         valor_ambiguo = m_amb.group(0) if m_amb else "ambiguo"
@@ -372,16 +483,23 @@ def interpretar_respuesta_corta(
     m_opt = PATRON_OPCION_NUMERICA.fullmatch(texto_l)
     pregunta_vigente = (
         len(estado.respuestas_obtenidas) < len(estado.preguntas_realizadas)
-        and (not estado.pending_question or (
-            estado.pending_question.get("intent") == intent_str
-            and estado.pending_question.get("texto", "") == ultima_preg.get("texto", "")
-            and (not estado.pending_question.get("case_id") or estado.pending_question["case_id"] == estado.case_id)
-        ))
+        and (
+            not estado.pending_question
+            or (
+                estado.pending_question.get("intent") == intent_str
+                and estado.pending_question.get("texto", "") == ultima_preg.get("texto", "")
+                and (
+                    not estado.pending_question.get("case_id")
+                    or estado.pending_question["case_id"] == estado.case_id
+                )
+            )
+        )
         and (not ultima_preg.get("case_id") or ultima_preg["case_id"] == estado.case_id)
     )
     hipotesis_candidatas = (
         list(hipotesis)
-        if intent_str in (
+        if intent_str
+        in (
             QuestionIntent.DISCRIMINACION_TOP3.value,
             QuestionIntent.CONFIRMACION_ALTERNATIVA.value,
         )
@@ -398,42 +516,47 @@ def interpretar_respuesta_corta(
         QuestionIntent.MEDICION_PRESION.value,
         QuestionIntent.MEDICION_TECNICA.value,
     )
+    opciones_preg = ultima_preg.get("opciones") or []
     tiene_prefijo_opcion = bool(m_opt and (m_opt.group(1) or m_opt.group(2)))
-    if (
-        m_opt
-        and (not es_intent_medicion or tiene_prefijo_opcion or m_opt.group(3).lower() in ("1", "2", "3", "primera", "segunda", "tercera", "1️⃣", "2️⃣", "3️⃣"))
-        and hipotesis_candidatas
-        and (
-            pregunta_vigente
-            or (
-                bool(getattr(estado, "top3_actual", None))
-                and not estado.pending_question
-            )
-        )
-    ):
+    if m_opt and not pregunta_vigente:
+        return None
+    if m_opt and pregunta_vigente and (not es_intent_medicion or tiene_prefijo_opcion):
         raw_val = m_opt.group(3).lower()
         idx = _parsear_indice_opcion(raw_val)
-        if 0 <= idx < len(hipotesis_candidatas):
+        total_opc = len(hipotesis_candidatas) or len(opciones_preg) or 3
+        if hipotesis_candidatas and 0 <= idx < len(hipotesis_candidatas):
             return {
                 "categoria_respuesta": "OPCION_NUMERICA_PROVISIONAL",
                 "campo": "hipotesis_seleccionada_provisional",
                 "valor": hipotesis_candidatas[idx],
                 "indice_opcion": idx + 1,
             }
-        return {
-            "categoria_respuesta": "OPCION_NUMERICA_FUERA_DE_RANGO",
-            "campo": "opcion_fuera_de_rango",
-            "valor": raw_val,
-            "indice_opcion": idx + 1,
-            "total_opciones": len(hipotesis_candidatas),
-        }
+        elif 0 <= idx < total_opc and (hipotesis_candidatas or opciones_preg):
+            val_sel = (
+                opciones_preg[idx] if (opciones_preg and idx < len(opciones_preg)) else f"opción {idx + 1}"
+            )
+            return {
+                "categoria_respuesta": "OPCION_NUMERICA_PROVISIONAL",
+                "campo": "hipotesis_seleccionada_provisional",
+                "valor": val_sel,
+                "indice_opcion": idx + 1,
+            }
+        elif idx >= total_opc or idx >= 3:
+            return {
+                "categoria_respuesta": "OPCION_NUMERICA_FUERA_DE_RANGO",
+                "campo": "opcion_fuera_de_rango",
+                "valor": raw_val,
+                "indice_opcion": idx + 1,
+                "total_opciones": total_opc,
+            }
 
     opciones_preg = ultima_preg.get("opciones") or []
     if (
         m_opt
         and not hipotesis_candidatas
         and opciones_preg
-        and intent_str not in (
+        and intent_str
+        not in (
             QuestionIntent.COMPORTAMIENTO_ARRANQUE.value,
             QuestionIntent.ACLARACION_CONTRADICCION.value,
         )
@@ -451,13 +574,42 @@ def interpretar_respuesta_corta(
         opc_txt = str(opciones_preg[idx]).lower()
         if intent_str == QuestionIntent.TEMPERATURA_APARICION.value:
             val_temp = "frío" if idx == 0 else ("caliente" if idx == 1 else "frío y caliente")
-            h = estado.registrar_hecho("temperatura", val_temp, categoria="temperatura", texto_crudo=texto_usuario)
-            return {"categoria_respuesta": "CONDICION", "campo": "temperatura", "valor": val_temp, "hecho": h.to_dict()}
+            h = estado.registrar_hecho(
+                "temperatura", val_temp, categoria="temperatura", texto_crudo=texto_usuario
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "temperatura",
+                "valor": val_temp,
+                "hecho": h.to_dict(),
+            }
         if intent_str == QuestionIntent.CONDICION_OPERACION.value:
-            h = estado.registrar_hecho("condicion_operacion", opc_txt, categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "CONDICION", "campo": "condicion_operacion", "valor": opc_txt, "hecho": h.to_dict()}
-        h = estado.registrar_hecho(f"respuesta_{intent_str}", opc_txt, categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-        return {"categoria_respuesta": "CONDICION", "campo": f"respuesta_{intent_str}", "valor": opc_txt, "hecho": h.to_dict()}
+            h = estado.registrar_hecho(
+                "condicion_operacion",
+                opc_txt,
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "condicion_operacion",
+                "valor": opc_txt,
+                "hecho": h.to_dict(),
+            }
+        h = estado.registrar_hecho(
+            f"respuesta_{intent_str}",
+            opc_txt,
+            categoria="condicion",
+            texto_crudo=texto_usuario,
+            tipo=FactType.CONDICION,
+        )
+        return {
+            "categoria_respuesta": "CONDICION",
+            "campo": f"respuesta_{intent_str}",
+            "valor": opc_txt,
+            "hecho": h.to_dict(),
+        }
 
     from .contexto_presion import presion_de_otro_circuito
 
@@ -465,6 +617,7 @@ def interpretar_respuesta_corta(
         return None
 
     from .mediciones_turno import interpretar_mediciones
+
     respuesta_numerica = interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_str)
     if respuesta_numerica:
         return respuesta_numerica
@@ -481,8 +634,10 @@ def interpretar_respuesta_corta(
         val_resp = "NO" if (indisponibles or no_sabe_usar) else ("SI" if recuperadas else "no_revisado")
         if no_sabe_usar:
             cat_resp = "HERRAMIENTA_INDISPONIBLE"
+        elif intent_str == QuestionIntent.DISPONIBILIDAD_HERRAMIENTA.value:
+            cat_resp = "NEGACION" if val_resp == "NO" else ("AFIRMACION" if val_resp == "SI" else "HERRAMIENTA_INDISPONIBLE")
         elif indisponibles:
-            cat_resp = "NEGACION"
+            cat_resp = "HERRAMIENTA_INDISPONIBLE"
         elif recuperadas:
             cat_resp = "AFIRMACION"
         else:
@@ -490,7 +645,9 @@ def interpretar_respuesta_corta(
         primer_hecho = list(hechos_bloqueo.values())[0] if hechos_bloqueo else None
         return {
             "categoria_respuesta": cat_resp,
-            "campo": "estado_inspeccion_previa" if cat_resp == "NO_REVISADO" else f"{her_principal}_disponible",
+            "campo": "estado_inspeccion_previa"
+            if cat_resp == "NO_REVISADO"
+            else f"{her_principal}_disponible",
             "valor": val_resp,
             "herramientas": indisponibles or recuperadas,
             "no_revisado": no_revisado,
@@ -500,44 +657,199 @@ def interpretar_respuesta_corta(
         }
 
     # 4. Respuestas a COMPORTAMIENTO_ARRANQUE y Luces del Tablero
-    if intent_str == QuestionIntent.COMPORTAMIENTO_ARRANQUE.value or any(w in texto_preg for w in ("luces del tablero", "tablero", "atenuan", "atenúan", "bajan bastante")):
-        if any(w in texto_l for w in ("se apagan", "se bajan", "se atenúan", "se atenuan", "bajan bastante", "bajan mucho", "se ponen tenues", "tenues", "se van", "parpadean")):
-            h = estado.registrar_hecho("luces_se_atenuan", "SI", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "AFIRMACION", "campo": "luces_se_atenuan", "valor": "SI", "hecho": h.to_dict()}
-        if any(w in texto_l for w in ("se mantienen igual", "permanecen igual", "se mantienen", "iguales", "normal", "brillo normal", "no se apagan", "no bajan")):
-            h = estado.registrar_hecho("luces_se_atenuan", "NO", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "NEGACION", "campo": "luces_se_atenuan", "valor": "NO", "hecho": h.to_dict()}
-        if any(w in texto_l for w in ("no gira", "inmóvil", "inmovil", "nada", "solo el clic", "solo clic", "1", "la 1")):
-            h = estado.registrar_hecho("giro_motor", "no_gira", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "CONDICION", "campo": "giro_motor", "valor": "no_gira", "hecho": h.to_dict()}
-        if any(w in texto_l for w in ("gira pesado", "gira lento", "pesado", "lento", "le cuesta", "2", "la 2")):
-            h = estado.registrar_hecho("giro_motor", "gira_lento", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "CONDICION", "campo": "giro_motor", "valor": "gira_lento", "hecho": h.to_dict()}
+    if intent_str == QuestionIntent.COMPORTAMIENTO_ARRANQUE.value or any(
+        w in texto_preg for w in ("luces del tablero", "tablero", "atenuan", "atenúan", "bajan bastante")
+    ):
+        if any(
+            w in texto_l
+            for w in (
+                "se apagan",
+                "se bajan",
+                "se atenúan",
+                "se atenuan",
+                "bajan bastante",
+                "bajan mucho",
+                "se ponen tenues",
+                "tenues",
+                "se van",
+                "parpadean",
+            )
+        ):
+            h = estado.registrar_hecho(
+                "luces_se_atenuan",
+                "SI",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "AFIRMACION",
+                "campo": "luces_se_atenuan",
+                "valor": "SI",
+                "hecho": h.to_dict(),
+            }
+        if any(
+            w in texto_l
+            for w in (
+                "se mantienen igual",
+                "permanecen igual",
+                "se mantienen",
+                "iguales",
+                "normal",
+                "brillo normal",
+                "no se apagan",
+                "no bajan",
+            )
+        ):
+            h = estado.registrar_hecho(
+                "luces_se_atenuan",
+                "NO",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "NEGACION",
+                "campo": "luces_se_atenuan",
+                "valor": "NO",
+                "hecho": h.to_dict(),
+            }
+        if any(
+            w in texto_l
+            for w in ("no gira", "inmóvil", "inmovil", "nada", "solo el clic", "solo clic", "1", "la 1")
+        ):
+            h = estado.registrar_hecho(
+                "giro_motor",
+                "no_gira",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "giro_motor",
+                "valor": "no_gira",
+                "hecho": h.to_dict(),
+            }
+        if any(
+            w in texto_l for w in ("gira pesado", "gira lento", "pesado", "lento", "le cuesta", "2", "la 2")
+        ):
+            h = estado.registrar_hecho(
+                "giro_motor",
+                "gira_lento",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "giro_motor",
+                "valor": "gira_lento",
+                "hecho": h.to_dict(),
+            }
 
     # 5. Respuestas a preguntas de temperatura (frío vs caliente)
-    if intent_str == QuestionIntent.TEMPERATURA_APARICION.value or texto_l in ("caliente", "en caliente", "frio", "frío", "en frio", "en frío"):
+    if intent_str == QuestionIntent.TEMPERATURA_APARICION.value or texto_l in (
+        "caliente",
+        "en caliente",
+        "frio",
+        "frío",
+        "en frio",
+        "en frío",
+    ):
         if any(w in texto_l for w in ("caliente", "cuando calienta", "despues de andar", "después")):
-            h = estado.registrar_hecho("temperatura", "caliente", categoria="temperatura", texto_crudo=texto_usuario)
-            return {"categoria_respuesta": "CONDICION", "campo": "temperatura", "valor": "caliente", "hecho": h.to_dict()}
+            h = estado.registrar_hecho(
+                "temperatura", "caliente", categoria="temperatura", texto_crudo=texto_usuario
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "temperatura",
+                "valor": "caliente",
+                "hecho": h.to_dict(),
+            }
         if any(w in texto_l for w in ("frio", "frío", "primer arranque", "en la mañana")):
-            h = estado.registrar_hecho("temperatura", "frío", categoria="temperatura", texto_crudo=texto_usuario)
-            return {"categoria_respuesta": "CONDICION", "campo": "temperatura", "valor": "frío", "hecho": h.to_dict()}
+            h = estado.registrar_hecho(
+                "temperatura", "frío", categoria="temperatura", texto_crudo=texto_usuario
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "temperatura",
+                "valor": "frío",
+                "hecho": h.to_dict(),
+            }
 
     # 6. Respuestas a preguntas de condición de operación
-    if intent_str == QuestionIntent.CONDICION_OPERACION.value or any(w in texto_l for w in ("parado", "semaforo", "semáforo", "detenido", "ralenti", "ralentí", "al frenar")):
+    if intent_str == QuestionIntent.CONDICION_OPERACION.value or any(
+        w in texto_l
+        for w in ("parado", "semaforo", "semáforo", "detenido", "ralenti", "ralentí", "al frenar")
+    ):
         if any(w in texto_l for w in ("parado", "semaforo", "semáforo", "detenido", "ralenti", "ralentí")):
-            h = estado.registrar_hecho("condicion_operacion", "detenido en ralentí", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "CONDICION", "campo": "condicion_operacion", "valor": "detenido en ralentí", "hecho": h.to_dict()}
-        if any(w in texto_l for w in ("acelerando", "cuando acelero", "al acelerar", "en subida")) and not any(w in texto_l for w in ("empareja", "mejora", "se le pasa")):
-            h = estado.registrar_hecho("condicion_operacion", "al acelerar bajo carga", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "CONDICION", "campo": "condicion_operacion", "valor": "al acelerar bajo carga", "hecho": h.to_dict()}
+            h = estado.registrar_hecho(
+                "condicion_operacion",
+                "detenido en ralentí",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "condicion_operacion",
+                "valor": "detenido en ralentí",
+                "hecho": h.to_dict(),
+            }
+        if any(
+            w in texto_l for w in ("acelerando", "cuando acelero", "al acelerar", "en subida")
+        ) and not any(w in texto_l for w in ("empareja", "mejora", "se le pasa")):
+            h = estado.registrar_hecho(
+                "condicion_operacion",
+                "al acelerar bajo carga",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "condicion_operacion",
+                "valor": "al acelerar bajo carga",
+                "hecho": h.to_dict(),
+            }
         if any(w in texto_l for w in ("frenando", "cuando freno", "al frenar")):
-            h = estado.registrar_hecho("condicion_operacion", "al frenar", categoria="condicion", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "CONDICION", "campo": "condicion_operacion", "valor": "al frenar", "hecho": h.to_dict()}
+            h = estado.registrar_hecho(
+                "condicion_operacion",
+                "al frenar",
+                categoria="condicion",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "CONDICION",
+                "campo": "condicion_operacion",
+                "valor": "al frenar",
+                "hecho": h.to_dict(),
+            }
 
     # 7b. Resultado negativo de inspección
-    if any(c in texto_l for c in ("no tienen holgura", "no tienen juego", "están firmes", "estan firmes", "se ven bien", "están bien", "estan bien", "no hay holgura", "sin holgura", "sin juego", "no se observa holgura")):
-        campo_neg = "holgura_componentes" if any(w in texto_preg for w in ("holgura", "buje", "rotula", "rótula")) else "inspeccion_componente"
+    if any(
+        c in texto_l
+        for c in (
+            "no tienen holgura",
+            "no tienen juego",
+            "están firmes",
+            "estan firmes",
+            "se ven bien",
+            "están bien",
+            "estan bien",
+            "no hay holgura",
+            "sin holgura",
+            "sin juego",
+            "no se observa holgura",
+        )
+    ):
+        campo_neg = (
+            "holgura_componentes"
+            if any(w in texto_preg for w in ("holgura", "buje", "rotula", "rótula"))
+            else "inspeccion_componente"
+        )
         h = estado.registrar_hecho(
             campo=campo_neg,
             valor="ausente / sin holgura confirmada",
@@ -556,21 +868,77 @@ def interpretar_respuesta_corta(
 
     # 8. Respuestas a ACLARACION_CONTRADICCION
     if intent_str == QuestionIntent.ACLARACION_CONTRADICCION.value:
-        if any(w in texto_l for w in ("antes", "antecedente", "pasó antes", "1", "la 1", "opcion 1", "opción 1")):
+        if any(
+            w in texto_l for w in ("antes", "antecedente", "pasó antes", "1", "la 1", "opcion 1", "opción 1")
+        ):
             estado.eliminar_hecho("conflicto_operativo")
-            h = estado.registrar_hecho("antecedente_marcha", "ocurrio_antes", categoria="antecedente", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "ACLARACION", "campo": "antecedente_marcha", "valor": "ocurrio_antes", "hecho": h.to_dict()}
-        if any(w in texto_l for w in ("otro", "otro carro", "otro problema", "otra consulta", "2", "la 2", "opcion 2", "opción 2")):
+            h = estado.registrar_hecho(
+                "antecedente_marcha",
+                "ocurrio_antes",
+                categoria="antecedente",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "ACLARACION",
+                "campo": "antecedente_marcha",
+                "valor": "ocurrio_antes",
+                "hecho": h.to_dict(),
+            }
+        if any(
+            w in texto_l
+            for w in (
+                "otro",
+                "otro carro",
+                "otro problema",
+                "otra consulta",
+                "2",
+                "la 2",
+                "opcion 2",
+                "opción 2",
+            )
+        ):
             estado.eliminar_hecho("conflicto_operativo")
-            h = estado.registrar_hecho("antecedente_marcha", "otro_vehiculo", categoria="antecedente", texto_crudo=texto_usuario, tipo=FactType.CONDICION)
-            return {"categoria_respuesta": "ACLARACION", "campo": "antecedente_marcha", "valor": "otro_vehiculo", "hecho": h.to_dict()}
+            h = estado.registrar_hecho(
+                "antecedente_marcha",
+                "otro_vehiculo",
+                categoria="antecedente",
+                texto_crudo=texto_usuario,
+                tipo=FactType.CONDICION,
+            )
+            return {
+                "categoria_respuesta": "ACLARACION",
+                "campo": "antecedente_marcha",
+                "valor": "otro_vehiculo",
+                "hecho": h.to_dict(),
+            }
 
     # 9. Respuestas genéricas SÍ / NO
     if texto_l in RESPUESTAS_AFIRMATIVAS:
-        h = estado.registrar_hecho(f"confirmado_pregunta_{estado.turno_actual}", "sí", categoria="confirmacion", texto_crudo=texto_usuario)
-        return {"categoria_respuesta": "AFIRMACION", "campo": "confirmacion", "valor": "sí", "hecho": h.to_dict()}
+        h = estado.registrar_hecho(
+            f"confirmado_pregunta_{estado.turno_actual}",
+            "sí",
+            categoria="confirmacion",
+            texto_crudo=texto_usuario,
+        )
+        return {
+            "categoria_respuesta": "AFIRMACION",
+            "campo": "confirmacion",
+            "valor": "sí",
+            "hecho": h.to_dict(),
+        }
     if texto_l in RESPUESTAS_NEGATIVAS:
-        h = estado.registrar_hecho(f"descartado_pregunta_{estado.turno_actual}", "no", categoria="descarte", texto_crudo=texto_usuario)
-        return {"categoria_respuesta": "NEGACION", "campo": "confirmacion", "valor": "no", "hecho": h.to_dict()}
+        h = estado.registrar_hecho(
+            f"descartado_pregunta_{estado.turno_actual}",
+            "no",
+            categoria="descarte",
+            texto_crudo=texto_usuario,
+        )
+        return {
+            "categoria_respuesta": "NEGACION",
+            "campo": "confirmacion",
+            "valor": "no",
+            "hecho": h.to_dict(),
+        }
 
     return None

@@ -92,6 +92,49 @@ def detectar_correcciones(texto: str) -> List[Tuple[str, str, str, FactType]]:
     return correcciones
 
 
+def es_mencion_hipotetica(clausula: str, texto_completo: str) -> bool:
+    """Detecta si la mencion o la condicion de normalidad esta subordinada a una suposicion,
+    duda o pregunta exploratoria, evitando que una hipotesis condicional se interprete
+    como una comprobacion fisica confirmada.
+    """
+    c = (clausula or "").strip().lower()
+    t = (texto_completo or "").strip().lower()
+
+    if re.search(r"\b(?:no\s+s[eé]\s+si|para\s+ver\s+si|averiguar\s+si|dudo\s+que|sin\s+saber\s+si)\b", c):
+        return True
+
+    if re.search(r"\b(?:estuviera|estuviese|fuera|fuese|anduviera|estando\s+bien)\b", c):
+        return True
+
+    pat_cond = re.compile(
+        r"(?:^|[^\wáéíóúñ])(?:"
+        r"si\s+(?!,\s*)(?:(?:el|la|los|las|mi|tu|su|este|esta)\s+)?\w+|"
+        r"en\s+caso\s+de\s+que|"
+        r"suponiendo\s+(?:que\s+)?|"
+        r"asumiendo\s+(?:que\s+)?|"
+        r"y\s+si\b|"
+        r"que\s+tal\s+si\b|"
+        r"por\s+si\b|"
+        r"si\s+acaso\b|"
+        r"en\s+el\s+supuesto\s+de\s+que|"
+        r"si\s+es\s+que"
+        r")\b",
+        re.IGNORECASE,
+    )
+    if pat_cond.search(c):
+        return True
+
+    pat_pregunta_alt = re.compile(
+        r"\b(?:qu[eé]\s+(?:otra\s+cosa|m[aá]s|otro\s+componente|otra\s+falla|podr[ií]a\s+ser|ser[ií]a|reviso|hago|chequeo)|"
+        r"cu[aá]l\s+(?:ser[ií]a|otra)|por\s+qu[eé]\s+(?:no\s+prende|sigue\s+fallando))\b",
+        re.IGNORECASE,
+    )
+    if pat_pregunta_alt.search(t) and re.search(r"\bsi\b", c):
+        return True
+
+    return False
+
+
 def registrar_rechazos_explicitos(estado: ConversationState, texto: str) -> List[Dict[str, Any]]:
     """Guarda rechazos conversacionales sin convertirlos en fallas físicamente confirmadas."""
     normalizado = "".join(
@@ -109,7 +152,7 @@ def registrar_rechazos_explicitos(estado: ConversationState, texto: str) -> List
         ("map", r"\bmap\b"),
         ("iac", r"\biac\b"),
         ("cuerpo_aceleracion", r"\bcuerpo(?:\s+de)?\s+aceleracion\b"),
-        ("bomba_combustible", r"\bbomba\s+de\s+(?:combustible|gasolina)\b"),
+        ("bomba_combustible", r"\b(?:bomba\s+de\s+(?:combustible|gasolina|nafta|bencina)|bomba(?!\s+de\s+(?:agua|frenos?|direcci[oó]n|aceite)))\b"),
         ("sensor_oxigeno", r"\b(?:sensor\s+de\s+oxigeno|sonda\s+lambda|o2)\b"),
         ("termostato", r"\btermostato\b"),
         ("radiador", r"\bradiador\b"),
@@ -155,6 +198,8 @@ def registrar_rechazos_explicitos(estado: ConversationState, texto: str) -> List
         texto_componente = " ".join(c for c in clausulas if re.search(patron, c))
         if not texto_componente and familia in componentes_por_contexto:
             texto_componente = normalizado
+        if es_mencion_hipotetica(texto_componente, normalizado):
+            continue
         es_nuevo = bool(reemplazo_nuevo.search(texto_componente))
         es_comprobado = bool(normalidad.search(texto_componente))
         rechazo_explicito = bool(

@@ -80,7 +80,7 @@ def test_2_informacion_parcial_ralenti_confirmado_check_desconocido():
         estado=FactState.CONFIRMADO, tipo=FactType.CONDICION,
     )
     # Check Engine y DTC son desconocidos
-    assert estado.dtc_status == DtcStatus.SIN_DTC
+    assert estado.dtc_status in (DtcStatus.SIN_DTC, DtcStatus.DTC_DESCONOCIDO)
     assert estado.obtener_hecho("sintoma_testigo_check_engine") is None
 
     pregunta, intent = GeneradorPreguntas.formular_pregunta_discriminante_post_descarte(

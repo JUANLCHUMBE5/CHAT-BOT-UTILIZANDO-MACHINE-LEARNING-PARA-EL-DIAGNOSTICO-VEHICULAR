@@ -63,14 +63,15 @@ def evitar_respuesta_repetida(
         normalizado = unicodedata.normalize("NFD", texto.casefold())
         limpio = "".join(c for c in normalizado if not unicodedata.combining(c))
         return {
-            palabra for palabra in re.findall(r"[a-z0-9]+", limpio)
-            if len(palabra) > 2 and palabra not in {"con", "para", "por", "que", "del", "una", "los", "las", "esta", "este"}
+            palabra
+            for palabra in re.findall(r"[a-z0-9]+", limpio)
+            if len(palabra) > 2
+            and palabra not in {"con", "para", "por", "que", "del", "una", "los", "las", "esta", "este"}
         }
 
     actuales = tokens(respuesta)
     repetida = any(
-        len(actuales & previos) >= 5
-        and len(actuales & previos) / max(1, len(actuales | previos)) >= 0.72
+        len(actuales & previos) >= 5 and len(actuales & previos) / max(1, len(actuales | previos)) >= 0.72
         for previos in (tokens(anterior) for anterior in respuestas_previas)
     )
     if not repetida:
@@ -80,8 +81,11 @@ def evitar_respuesta_repetida(
         hechos_nuevos = hechos_nuevos or []
         if hechos_nuevos and all(
             "pendiente" in str(hecho.get("campo", "")).casefold()
-            or str(hecho.get("estado", "")).upper() in {
-                "DESCONOCIDO", "NO_REVISADO", "NO_SABE_REALIZAR",
+            or str(hecho.get("estado", "")).upper()
+            in {
+                "DESCONOCIDO",
+                "NO_REVISADO",
+                "NO_SABE_REALIZAR",
             }
             for hecho in hechos_nuevos
         ):
@@ -96,7 +100,9 @@ def evitar_respuesta_repetida(
         for hecho in hechos_nuevos:
             campo = re.sub(r"_+", " ", str(hecho.get("campo", "dato"))).strip()
             valor = re.sub(r"\s+", " ", str(hecho.get("valor", ""))).strip()
-            detalle = f"{campo}: {valor}" if valor else campo
+            # Presentación sin ceros artificiales; conservar el dato original en hechos.
+            valor = re.sub(r'(?<![\d.])(\d+)\.0+(?=\s+[A-Za-z])', r'\1', valor)
+            detalle = f'{campo}: {valor}' if valor else campo
             if detalle and detalle not in novedades:
                 novedades.append(detalle)
         if novedades:
@@ -129,10 +135,7 @@ def calcular_scores_presentacion(
         float(item.get("probabilidad", 0.0)) if origen == "SVM" else 0.0
         for item, origen in zip(items, origenes)
     ]
-    pcts = [
-        int(round(p * 100)) if p <= 1.0 else int(round(p))
-        for p in probs
-    ]
+    pcts = [int(round(p * 100)) if p <= 1.0 else int(round(p)) for p in probs]
     suma_pcts = sum(pcts)
 
     es_conjunta = sum(probs) <= 1.05
@@ -147,13 +150,15 @@ def calcular_scores_presentacion(
 
     resultado = []
     for item, pct in zip(items, pcts):
-        resultado.append({
-            "falla": item.get("falla", ""),
-            "probabilidad_raw": item.get("probabilidad", 0.0),
-            "porcentaje_presentacion": pct,
-            "es_distribucion_conjunta": es_conjunta,
-            "origen_probabilidad": str(item.get("origen_probabilidad", "SVM")).upper(),
-        })
+        resultado.append(
+            {
+                "falla": item.get("falla", ""),
+                "probabilidad_raw": item.get("probabilidad", 0.0),
+                "porcentaje_presentacion": pct,
+                "es_distribucion_conjunta": es_conjunta,
+                "origen_probabilidad": str(item.get("origen_probabilidad", "SVM")).upper(),
+            }
+        )
     return resultado
 
 
@@ -216,8 +221,13 @@ def formatear_respuesta_diagnostico(
         else:
             etiqueta_confianza = f"{conf_pct}% (SVM)"
 
-        es_precalentamiento = any(k in falla_l for k in ("precalentamiento", "incandesc", "glow", "calentador"))
-        es_diesel_exclusivo = any(k in falla_l for k in ("diesel", "dpf", "fap", "adblue", "def ", "common rail diesel")) or es_precalentamiento
+        es_precalentamiento = any(
+            k in falla_l for k in ("precalentamiento", "incandesc", "glow", "calentador")
+        )
+        es_diesel_exclusivo = (
+            any(k in falla_l for k in ("diesel", "dpf", "fap", "adblue", "def ", "common rail diesel"))
+            or es_precalentamiento
+        )
         if es_diesel_exclusivo:
             if combustible_str in ("gasolina", "glp", "gnv", "nafta"):
                 continue
@@ -262,7 +272,10 @@ def formatear_respuesta_diagnostico(
                 "🛠️ *Primero revisa:* inspección en elevador con palanca para verificar holgura axial/vertical en rótulas de suspensión, terminales de dirección y bieletas estabilizadoras.\n\n"
                 "¿Has verificado con palanca si la rótula de suspensión presenta juego vertical u oscilación en el elevador?"
             )
-        if any(w in texto_ctx for w in ("gira motor con fuerza", "gira con fuerza", "candado", "inmovilizador", "transponder")):
+        if any(
+            w in texto_ctx
+            for w in ("gira motor con fuerza", "gira con fuerza", "candado", "inmovilizador", "transponder")
+        ):
             return (
                 "🔧 *Orientación técnica para sistema de inmovilizador / encendido:*\n\n"
                 "El motor gira con fuerza al dar arranque, descartando batería y motor de arranque. "
@@ -280,26 +293,48 @@ def formatear_respuesta_diagnostico(
     bloque_causas = "\n".join(lineas_hipotesis)
     titulo_causas = "🔧 *Posibles causas*" if es_conjunta else "🔧 *Posibles causas (confianza individual)*"
 
-    top1_falla = candidatos_compatibles[0].get("falla", "") if candidatos_compatibles else top_hipotesis[0].get("falla", "")
-    accion = prueba_personalizada or extraer_accion_prioritaria(top1_falla, contexto_rag, estado)
+    top1_falla = (
+        candidatos_compatibles[0].get("falla", "")
+        if candidatos_compatibles
+        else top_hipotesis[0].get("falla", "")
+    )
+    es_solicitud_sensorial = bool(
+        re.search(
+            r"\b(?:sin\s+herramientas?|solo\s+mirando|sensorial|mirando\s+y\s+oliendo)\b",
+            sintoma_original,
+            re.I,
+        )
+    )
+    if es_solicitud_sensorial:
+        accion = "inspecci\u00f3n visual y comprobaci\u00f3n sensorial (olor a combustible crudo por el tubo de escape o vano motor, inspecci\u00f3n visual de cables cuarteados, arneses y mangueras de vac\u00edo sin herramientas)."
+        pregunta = "\u00bfPercibes olor a gasolina cruda por el escape o notas cables/mangueras cuarteadas al revisar visualmente?"
+    else:
+        accion = prueba_personalizada or extraer_accion_prioritaria(top1_falla, contexto_rag, estado)
     if not accion.endswith("."):
         accion += "."
 
     if pregunta_personalizada is not None:
         pregunta = pregunta_personalizada
-    else:
+    elif not es_solicitud_sensorial:
         pregunta, _ = obtener_pregunta_contextual(top1_falla, sintoma_original, estado)
 
     if estado and pregunta:
         from src.core.conversacion.compatibilidad_preguntas import CompatibilidadPreguntas
+
         if CompatibilidadPreguntas.contradice_hecho_negado(pregunta, estado):
             pregunta = "La causa sigue pendiente de una comprobación física; conservo los síntomas negados."
 
     advertencia_seguridad = ""
     texto_eval_seg = f"{sintoma_original} {getattr(estado, 'active_symptoms', [])}".lower()
-    if any(w in texto_eval_seg for w in ("recalienta", "sobrecalentamiento", "temperatura", "108 grados", "hirviendo")):
+    if any(
+        w in texto_eval_seg
+        for w in ("recalienta", "sobrecalentamiento", "temperatura", "108 grados", "hirviendo")
+    ):
         advertencia_seguridad = "\n\n⚠️ *Seguridad:* Evite circular con temperatura elevada para proteger el empaque de culata. No abrir la tapa del radiador ni del depósito de expansión mientras el motor permanezca caliente por riesgo de quemaduras por vapor presurizado."
-    elif any(w in texto_eval_seg for w in ("suspensi", "bache", "amortiguador", "bujes", "rotula", "tren delantero")):
+    elif any(
+        w in texto_eval_seg
+        for w in ("suspensi", "bache", "amortiguador", "bujes", "rotula", "tren delantero")
+    ):
         advertencia_seguridad = "\n\n⚠️ *Seguridad:* En comprobaciones de suspensión, utilice siempre elevador automotriz con trabas mecánicas o caballetes certificados. Nunca realice inspecciones bajo el vehículo sostenido únicamente con gata hidráulica."
     elif any(w in texto_eval_seg for w in ("freno", "frenar", "pastilla", "disco")):
         advertencia_seguridad = "\n\n⚠️ *Seguridad:* Al tratarse del sistema de frenos, la inspección física presencial en taller es indispensable antes de seguir circulando para evitar pérdida de frenado."

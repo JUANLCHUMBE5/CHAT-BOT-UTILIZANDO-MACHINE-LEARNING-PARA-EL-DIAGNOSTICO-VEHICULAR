@@ -1,109 +1,101 @@
-# --- Python Cache ---
-__pycache__/
-.pytest_cache/
-.ruff_cache/
-.coverage
-htmlcov/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# --- Entornos Virtuales ---
-venv/
-env/
-ENV/
-.venv
-
-# --- Credenciales y Claves ---
+# Environment and system files
 .env
 .env.local
 .env.*.local
-*.pem
-credenciales_temporales*.txt
-credenciales_temporales*.csv
+.venv/
+venv/
+ENV/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
 
-# --- Archivos del IDE & OS ---
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+*.tsbuildinfo
+
+# IDE and OS
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
-~$*.docx
+*.swp
+*.swo
 
-# --- Archivos de Auditoría y Agentes ---
-.gemini/
-.agents/
-.codex_tmp/
-/tmp/
-ORIGINAL_REQUEST.md
-TEST_INFRA.md
-TEST_READY.md
+# Logs and databases
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.sqlite3
+*.db
+backend/recordings/
+backend/src/infrastructure/audio/recordings/
+backend/grabacion.wav
 
-# --- Datos operativos y artefactos ajenos al proyecto ---
-machine_learning/data/tracker_diagnosticos.csv
-backend/data/tracker_diagnosticos.csv
-machine_learning/data/evidencias_evaluacion/
-sss/
-
-
-# --- Modelos Binarios de ML (>100MB) ---
-machine_learning/models/modelo_diagnostico.pkl
+# Machine Learning / Artifacts (keep models/ and manifests tracked)
+machine_learning/output/
+machine_learning/tmp/
+machine_learning/runs/
+machine_learning/cache/
+*.joblib
 *.pkl
-machine_learning/models/experimentos/**/*.joblib
+*.bin
+!machine_learning/models/
+!machine_learning/models/**
+!machine_learning/manuals/candidates/v1/indexes/indice_faiss_v1.index
+!machine_learning/manuals/candidates/v1/indexes/manifests/bundle_manifest.json
 
-# --- Frontend Web Dashboard ---
-frontend/node_modules/
-frontend/dist/
+# Audio and temporary test files
+*.wav
+*.mp3
+*.ogg
+*.m4a
+*.flac
+test_output/
+tests/output/
+tmp/
+temp/
 
-# --- Repositorios Separados Exportados ---
-repositorios_separados/
+# Coverage and testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+coverage.xml
+*.cover
+
+# Temporary artifacts from diagnosis tracking
+backend/data/tracker_diagnosticos.csv
+machine_learning/data/tracker_diagnosticos.csv
+
+# Worktrees and isolated scratch environments
 scratch/
 outputs/
 
 # --- Datos masivos, experimentales y repositorios externos clonados ---
 machine_learning/data/fuentes_abiertas/*/
 !machine_learning/data/fuentes_abiertas/normalizado/
-machine_learning/data/fuentes_abiertas/fallas_vehiculares/
+!machine_learning/data/fuentes_abiertas/fallas_vehiculares/
 machine_learning/manuals/sandbox_rag_experimental/
 machine_learning/experimentos/
 machine_learning/data/experimental_nhtsa/*.jsonl
 *.index
 
-
 # Build independiente del laboratorio local; nunca imagen web pública.
 frontend/dist-laboratorio/
+
+# --- RAG Documental y Experimentos (RAG-03) ---
+machine_learning/rag/fuentes_documentales/pdfs_autorizados/
+machine_learning/rag/fuentes_documentales/pdfs_rechazados_auditoria/
+machine_learning/rag/experimentos/
+*.pdf

@@ -53,6 +53,7 @@ COSTO_META_MENSAJE_SERVICIO_USD = Decimal(str(settings.meta_message_price_usd))
 _LOCKS_CONVERSACION: dict[str, asyncio.Lock] = {}
 _GLOBAL_LOCKS_LOCK = threading.Lock()
 
+
 def _obtener_lock_conversacion(remitente: str) -> asyncio.Lock:
     """Devuelve un lock asíncrono serializado por remitente/conversación para evitar condiciones de carrera."""
     with _GLOBAL_LOCKS_LOCK:
@@ -70,8 +71,12 @@ class WebhookService:
     async def actualizar_estado_entrega_externo(self, id_externo: str, estado: str) -> bool:
         """Relaciona callbacks Meta/Twilio con el ID externo guardado en el outbox."""
         mapa = {
-            "queued": "enviado", "sent": "enviado", "delivered": "entregado",
-            "read": "leido", "failed": "fallido", "undelivered": "fallido",
+            "queued": "enviado",
+            "sent": "enviado",
+            "delivered": "entregado",
+            "read": "leido",
+            "failed": "fallido",
+            "undelivered": "fallido",
         }
         estado_db = mapa.get(estado.lower())
         if not id_externo or not estado_db or not database_configurada():
@@ -217,7 +222,9 @@ class WebhookService:
                                 mensaje_id=msg_in_id,
                             )
                     except IntegrityError:
-                        logger.info(f"[Webhook Deduplicación] Carrera concurrente resuelta para {meta_message_id}.")
+                        logger.info(
+                            f"[Webhook Deduplicación] Carrera concurrente resuelta para {meta_message_id}."
+                        )
                         return {
                             "status": "duplicado_ignorado",
                             "meta_message_id": meta_message_id,
@@ -235,11 +242,30 @@ class WebhookService:
                         unidades=Decimal("1.0"),
                         costo_estimado=(
                             Decimal(str(settings.twilio_message_price_usd))
-                            if proveedor == "twilio" else COSTO_META_MENSAJE_SERVICIO_USD
+                            if proveedor == "twilio"
+                            else COSTO_META_MENSAJE_SERVICIO_USD
                         ),
                         moneda="USD",
                         mensaje_id=mensaje_in.id,
                     )
+
+                    if tipo_mensaje == "text":
+                        from src.core.services.webhook.seguridad_prioritaria import responder_peligro_activo
+
+                        emergencia = await responder_peligro_activo(
+                            self.gestor,
+                            session,
+                            usuario,
+                            conversacion,
+                            texto_cliente,
+                            meta_message_id,
+                            remitente,
+                            proveedor,
+                            placa,
+                            marca_modelo,
+                        )
+                        if emergencia is not None:
+                            return emergencia
 
                     # 5. Enrutamiento por rol: Cliente vs Personal Técnico
                     codigo_rol = usuario.rol.codigo if usuario.rol else "cliente"
@@ -247,7 +273,13 @@ class WebhookService:
 
                     if codigo_rol not in roles_tecnicos:
                         resultado_cliente = await ClientWorkflow.procesar_y_persistir(
-                            session, usuario, conversacion, texto_cliente, meta_message_id, proveedor, remitente,
+                            session,
+                            usuario,
+                            conversacion,
+                            texto_cliente,
+                            meta_message_id,
+                            proveedor,
+                            remitente,
                             tipo_mensaje=tipo_mensaje,
                         )
                         total_ms = (time.perf_counter() - inicio) * 1000
@@ -259,15 +291,28 @@ class WebhookService:
 
                     if tipo_mensaje == "text":
                         informativa = await responder_consulta_informativa(
-                            self.gestor, session, usuario, conversacion, texto_cliente,
-                            meta_message_id, remitente, proveedor,
+                            self.gestor,
+                            session,
+                            usuario,
+                            conversacion,
+                            texto_cliente,
+                            meta_message_id,
+                            remitente,
+                            proveedor,
                         )
                         if informativa is not None:
                             return informativa
 
                     resultado_perfil, placa, marca_modelo, texto_cliente = await preparar_flujo_vehiculo(
-                        self, session, conversacion, texto_cliente, tipo_mensaje,
-                        proveedor, remitente, placa, marca_modelo,
+                        self,
+                        session,
+                        conversacion,
+                        texto_cliente,
+                        tipo_mensaje,
+                        proveedor,
+                        remitente,
+                        placa,
+                        marca_modelo,
                     )
                     if resultado_perfil is not None:
                         return resultado_perfil
@@ -295,8 +340,17 @@ class WebhookService:
 
                     # 7. Diagnóstico Técnico ML + RAG + Gemini
                     flujo_diagnostico = await TechnicalDiagnosticWorkflow.preparar(
-                        self.gestor, conversacion, usuario, remitente, proveedor, tipo_mensaje,
-                        texto_cliente, audio_id, placa, marca_modelo, image_id=image_id,
+                        self.gestor,
+                        conversacion,
+                        usuario,
+                        remitente,
+                        proveedor,
+                        tipo_mensaje,
+                        texto_cliente,
+                        audio_id,
+                        placa,
+                        marca_modelo,
+                        image_id=image_id,
                         diagnostico_forzado=diagnostico_forzado_alternativa,
                     )
                     dto = flujo_diagnostico.dto

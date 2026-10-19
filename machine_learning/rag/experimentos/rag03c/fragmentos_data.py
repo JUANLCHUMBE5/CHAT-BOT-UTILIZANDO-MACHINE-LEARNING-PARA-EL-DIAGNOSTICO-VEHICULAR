@@ -1,0 +1,857 @@
+# -*- coding: utf-8 -*-
+"""Definición exhaustiva, auditada y normalizada de los 17 fragmentos autorizados extraídos de los 5 PDFs.
+
+Auditoría y Remediación RAG-03F / Agente 2:
+- Compatibilidad absoluta con el contrato documental publicado por el Agente 1 (contrato_documental.py).
+- Normalización estricta de metadatos:
+    * 'pagina': entero positivo (int) correspondiente a la página principal/inicial de la especificación o procedimiento.
+    * 'paginas': lista de enteros con todas las páginas de procedencia en el PDF original.
+    * 'rango_paginas': representación textual de folios ("5-6", "3, 4, 5, 14", etc.).
+    * 'cifras_trazadas': matriz explícita de correspondencia cifra -> unidad -> página exacta del PDF.
+- Resolución Crítica C01: Apertura de refrigeración exclusivamente con motor frío y apagado (Laser 5524, Págs. 1 y 2).
+- Resolución Alta A08: Cero cifras inventadas ni tolerancias no documentadas en los PDFs oficiales.
+- Delimitación vehicular estricta por marca, modelo, año, motor y mercado documentados.
+- Trazabilidad exacta de los 5 PDFs con hashes criptográficos SHA-256 verificados.
+"""
+
+FRAGMENTOS_5PDFS = [
+    # -------------------------------------------------------------------------
+    # BREMBO GUIDE (4 fragmentos)
+    # PDF: brembo_guide_brake_disc_diagnostics.pdf (15 págs, folios impresos 1-27)
+    # SHA-256: ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1
+    # -------------------------------------------------------------------------
+    {
+        "doc_id": "RAG_EXP_BREMBO_001",
+        "titulo": "VERIFICACIÓN DE ALABEO LATERAL EN DISCO Y BUJE DE RUEDA",
+        "fabricante": "Brembo S.p.A.",
+        "vehiculo": "Turismos y comerciales ligeros equipados con frenos de disco de fundición gris",
+        "sistema": "FRENOS",
+        "subsistema": "Discos y Pastillas de Freno",
+        "componente": "Discos y Buje de Freno",
+        "pagina": 5,
+        "paginas": [5, 6],
+        "rango_paginas": "5-6",
+        "pdf_origen": "brembo_guide_brake_disc_diagnostics.pdf",
+        "sha256_pdf": "ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1",
+        "condiciones_medicion": "Reloj comparador DTI fijado al soporte de suspensión; punta palpadora sobre la pista de frenado en el diámetro exterior del disco. Si el disco se sujeta con un solo tornillo, fijarlo al buje con tuercas y arandelas simulando el apriete de rueda.",
+        "tolerancias_unidades": "Alabeo máximo en disco montado: <= 0.10 mm tras una rotación completa de 360 grados (Página 5). Alabeo en buje desnudo: el valor medido en el buje se duplica al proyectarse al diámetro exterior del disco (Página 6).",
+        "procedimiento": "1. Limpiar cuidadosamente las superficies de contacto del buje y disco eliminando óxido con cepillo de alambre y disolvente. 2. Montar el disco asegurando su fijación al buje. 3. Colocar el reloj comparador DTI sobre la superficie de frenado en su diámetro exterior (Página 5). 4. Girar el disco una vuelta completa registrando la oscilación: no debe exceder 0.10 mm. 5. Si excede 0.10 mm, cambiar la posición del disco respecto a los agujeros de fijación o probar con el segundo disco del kit. 6. Si el exceso persiste, verificar el alabeo del buje desnudo (Página 6), considerando que cualquier descentramiento del buje se duplicará en el extremo exterior del disco.",
+        "advertencias_seguridad": "Un alabeo de disco superior a 0.10 mm induce contacto intermitente con las pastillas, generando variación progresiva de espesor (DTV) y trepidación severa al frenar tras unos pocos miles de kilómetros.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Alabeo lateral máximo en disco montado",
+                "cifra": "0.10",
+                "unidad": "mm",
+                "pagina": 5,
+                "condicion": "Medido en el diámetro exterior tras rotación completa de 360 grados"
+            },
+            {
+                "parametro": "Descentramiento en buje desnudo",
+                "cifra": "se duplica en el disco",
+                "unidad": "factor 2x",
+                "pagina": 6,
+                "condicion": "Cualquier oscilación en la cara de apoyo del buje se duplica en la periferia del disco"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Procedimiento universal de montaje y verificación para discos de freno de turismos y comerciales ligeros según Guía Técnica de Diagnóstico Brembo (Apartado 1.1, Pasos 10 y 11, Páginas 5 y 6).",
+        "marcas_aplicables": ["Universal / Multimarca"],
+        "modelos_aplicables": ["Turismos y vehículos comerciales ligeros"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Indiferente",
+        "mercados_aplicables": "Global / Aftermarket",
+        "condiciones_uso": "Guía técnica de diagnóstico Brembo S.p.A. para profesionales de automoción. Uso exclusivo de consulta técnica.",
+    },
+    {
+        "doc_id": "RAG_EXP_BREMBO_002",
+        "titulo": "DIAGNÓSTICO DE VARIACIÓN DE ESPESOR DE DISCO (DTV) Y TREPIDACIÓN DE FRENO",
+        "fabricante": "Brembo S.p.A.",
+        "vehiculo": "Turismos y comerciales ligeros equipados con frenos de disco de fundición gris",
+        "sistema": "FRENOS",
+        "subsistema": "Metrología de Pistas de Freno",
+        "componente": "Variación de Espesor de Disco (DTV)",
+        "pagina": 7,
+        "paginas": [7, 10, 14],
+        "rango_paginas": "7, 10, 14",
+        "pdf_origen": "brembo_guide_brake_disc_diagnostics.pdf",
+        "sha256_pdf": "ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1",
+        "condiciones_medicion": "Comprobación en banco de trabajo limpio: disco apoyado sobre superficie plana para verificar estabilidad diametral; reloj comparador DTI sobre base fija midiendo en el borde no desgastado y en el centro de la pista de frenado.",
+        "tolerancias_unidades": "Alabeo de producción en banco: si es > 0.05 mm indica defecto de origen del disco (Página 7). DTV (Disc Thickness Variation): variación no paralela del espesor de pista inducida por desgaste irregular durante la rodadura (Páginas 10 y 14).",
+        "procedimiento": "1. Colocar el disco desmontado sobre una bancada limpia verificando con las manos en los extremos de un diámetro que no exista cabeceo o inestabilidad (distorsión por sobreapriete). 2. Con reloj comparador DTI en base fija, medir el alabeo en el borde exterior/interior donde las pastillas no han rozado (Página 7): si supera 0.05 mm, el disco tenía defecto de origen. 3. Medir el alabeo adquirido en el centro de la pista de frenado: un exceso fuera de tolerancia indica montaje defectuoso. 4. El contacto irregular de la pastilla contra una pista alabeada durante la rodadura desgasta selectivamente las caras, incrementando el DTV y provocando trepidación en frío (cold judder) y pulsaciones en el pedal tras varios miles de kilómetros.",
+        "advertencias_seguridad": "El DTV no se corrige cambiando solo pastillas; un disco con variación de espesor o alabeo remanente debe ser sustituido o rectificado siempre que no baje del espesor mínimo reglamentario (Min Th).",
+        "cifras_trazadas": [
+            {
+                "parametro": "Alabeo de producción verificado en banco",
+                "cifra": "0.05",
+                "unidad": "mm",
+                "pagina": 7,
+                "condicion": "Medido en borde no rozado; si excede 0.05 mm indica defecto de fabricación"
+            },
+            {
+                "parametro": "Variación de espesor de disco (DTV)",
+                "cifra": "desgaste no paralelo",
+                "unidad": "DTV",
+                "pagina": 10,
+                "condicion": "Causa primordial de trepidación en frío (cold judder) y pulsaciones de pedal"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Diagnóstico de trepidación y vibraciones de frenado en turismos y comerciales ligeros según Guía Técnica Brembo (Secciones 1.1, 2.2 y 2.5, Páginas 7, 10 y 14).",
+        "marcas_aplicables": ["Universal / Multimarca"],
+        "modelos_aplicables": ["Turismos y comerciales ligeros"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Indiferente",
+        "mercados_aplicables": "Global / Aftermarket",
+        "condiciones_uso": "Documentación técnica Brembo S.p.A. Uso técnico y formativo.",
+    },
+    {
+        "doc_id": "RAG_EXP_BREMBO_003",
+        "titulo": "SECUENCIA DE APRIETE DE RUEDAS Y PREVENCIÓN DE DEFORMACIÓN EN CAMPANA DE FRENO",
+        "fabricante": "Brembo S.p.A.",
+        "vehiculo": "Turismos y utilitarios con fijación de rueda por pernos o tuercas",
+        "sistema": "FRENOS",
+        "subsistema": "Montaje de Ruedas y Campana de Disco",
+        "componente": "Campana de Disco y Pernos de Rueda",
+        "pagina": 6,
+        "paginas": [6, 8],
+        "rango_paginas": "6, 8",
+        "pdf_origen": "brembo_guide_brake_disc_diagnostics.pdf",
+        "sha256_pdf": "ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1",
+        "condiciones_medicion": "Llave dinamométrica calibrada; superficies de apoyo de buje, campana y cono de tuercas limpias; apriete en secuencia en cruz o estrella según especificación del fabricante del vehículo.",
+        "tolerancias_unidades": "Par de apriete: observar estrictamente el valor nominal especificado por el fabricante del vehículo (OEM) en N.m (Página 6). Secuencia: en cruz (4 pernos) o en estrella (5 pernos) (Páginas 6 y 8).",
+        "procedimiento": "1. Antes del montaje de la rueda, verificar que las llantas no estén deformadas y que el conjunto rueda/neumático esté correctamente equilibrado. 2. Presentar y apretar los pernos a mano. 3. Aplicar el par final utilizando una llave dinamométrica en la secuencia recomendada en cruz/estrella (Página 6). 4. Prohibido utilizar llaves de impacto neumáticas o eléctricas sin control de par. Según la sección 2.1 de Brembo (Página 8), el apriete excesivo o asimétrico con pistola provoca distorsión plástica en la campana del disco, rotura de los asientos de fijación y trepidación severa inmediata.",
+        "advertencias_seguridad": "El uso de llaves de impacto descontroladas es la causa primordial de rotura de la superficie de apoyo de la campana y deformación del disco. Si la campana se fractura o deforma, el disco debe ser reemplazado de inmediato.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Secuencia de apriete de fijaciones de rueda",
+                "cifra": "en cruz (4 pernos) o en estrella (5 pernos)",
+                "unidad": "secuencia",
+                "pagina": 6,
+                "condicion": "Apriete preliminar manual y apriete final con llave dinamométrica"
+            },
+            {
+                "parametro": "Par de apriete nominal de rueda",
+                "cifra": "nominal OEM del fabricante",
+                "unidad": "N.m",
+                "pagina": 6,
+                "condicion": "Exige confirmación en manual de servicio OEM del vehículo específico"
+            }
+        ],
+        "requiere_confirmacion_oem": True,
+        "alcance_aplicacion": "Montaje de ruedas en vehículos con discos de freno según Guía Técnica Brembo (Apartado 1.1 Paso 14, Apartados 2.1.1 y 2.1.2, Páginas 6 y 8). Los valores numéricos exactos de torque deben obtenerse del manual OEM del vehículo.",
+        "marcas_aplicables": ["Universal / Multimarca"],
+        "modelos_aplicables": ["Turismos y vehículos comerciales"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Indiferente",
+        "mercados_aplicables": "Global / Aftermarket",
+        "condiciones_uso": "Guía técnica Brembo S.p.A. Consulta profesional de taller.",
+    },
+    {
+        "doc_id": "RAG_EXP_BREMBO_004",
+        "titulo": "CRITERIOS DE DAÑO TÉRMICO, AGRIETAMIENTO Y ESPESOR MÍNIMO EN DISCOS DE FRENO",
+        "fabricante": "Brembo S.p.A.",
+        "vehiculo": "Turismos con frenos de disco de fundición gris",
+        "sistema": "FRENOS",
+        "subsistema": "Inspección de Fatiga Térmica",
+        "componente": "Pistas de Freno y Espesor Mínimo",
+        "pagina": 6,
+        "paginas": [6, 10, 14],
+        "rango_paginas": "6, 10, 14",
+        "pdf_origen": "brembo_guide_brake_disc_diagnostics.pdf",
+        "sha256_pdf": "ae78db3748db9d2c62a5a885d84056d880a2018a00d90074d637c5b060bab9a1",
+        "condiciones_medicion": "Inspección visual de coloración de pista y estado de aletas; medición de espesor con micrómetro o calibre de frenos; rodaje en carretera de 200 a 300 km.",
+        "tolerancias_unidades": "Espesor mínimo: Min Th grabado de forma indeleble en el canto del disco (Página 6). Tolerancia de rodaje: recorrido de adaptación de 200 a 300 km en itinerario mixto sin frenadas violentas (Página 6).",
+        "procedimiento": "1. Verificar el espesor de la pista de frenado: si el espesor medido es igual o inferior al valor Min Th grabado en el borde del disco, o si al rectificar se superaría este límite, sustituir el disco de inmediato (Página 6). 2. Evaluar daños por sobrecalentamiento: la aparición de zonas azuladas, violetas o doradas evidencia temperaturas extremas que alteran la fundición gris precipitando cementita dura (Fe3C), la cual genera puntos calientes insolubles y trepidación (Páginas 10 y 14). 3. Inspeccionar grietas térmicas: si se aprecian fisuras que alcanzan el borde exterior del disco o fisuras en las paletas de ventilación interna, existe riesgo inminente de fractura y el disco debe ser reemplazado. 4. Tras sustituir discos y pastillas, prescribir un período de rodaje de 200 a 300 km evitando frenadas bruscas o prolongadas para permitir la correcta alineación y transferencia de material.",
+        "advertencias_seguridad": "Discos por debajo del espesor mínimo (Min Th) o con fisuras en aletas de ventilación presentan peligro de rotura catastrófica bajo frenada de emergencia. Nunca sustituir un solo disco por eje; reemplazar siempre en parejas.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Espesor mínimo de seguridad",
+                "cifra": "Min Th grabado en canto",
+                "unidad": "mm",
+                "pagina": 6,
+                "condicion": "Grabado indeleble en el canto del disco; sustitución obligatoria al alcanzarlo"
+            },
+            {
+                "parametro": "Recorrido de rodaje de adaptación",
+                "cifra": "200-300",
+                "unidad": "km",
+                "pagina": 6,
+                "condicion": "Evitar frenadas violentas o prolongadas durante los primeros 200 a 300 km"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Evaluación de desgaste y degradación térmica en discos según Guía Técnica Brembo (Apartados 1.1.2, 2.2.1, 2.2.2 y 2.5, Páginas 6, 10 y 14).",
+        "marcas_aplicables": ["Universal / Multimarca"],
+        "modelos_aplicables": ["Turismos y comerciales ligeros"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Indiferente",
+        "mercados_aplicables": "Global / Aftermarket",
+        "condiciones_uso": "Guía técnica de diagnóstico Brembo S.p.A. Consulta profesional.",
+    },
+
+    # -------------------------------------------------------------------------
+    # HYUNDAI MDPS 17-ST-002 (4 fragmentos)
+    # PDF: hyundai_tsb_mdps_flexible_coupling_replacement.pdf (16 págs)
+    # SHA-256: 3b051b41ae128a2a971f103d8908bc99f1be9720b1d4df5b2699ab8a3967d282
+    # -------------------------------------------------------------------------
+    {
+        "doc_id": "RAG_EXP_HYUNDAI_001",
+        "titulo": "DIAGNÓSTICO DE RUIDO DE CHASQUIDO O GOLPETEO EN COLUMNA C-MDPS HYUNDAI",
+        "fabricante": "Hyundai Motor America",
+        "vehiculo": "Hyundai Elantra (HD/FD/MD/UD) 2007-2015 y Sonata (YF/HEV) 2011-2015",
+        "sistema": "DIRECCIÓN",
+        "subsistema": "Servodirección Eléctrica C-MDPS",
+        "componente": "Acoplador de Columna MDPS",
+        "pagina": 1,
+        "paginas": [1],
+        "rango_paginas": "1",
+        "pdf_origen": "hyundai_tsb_mdps_flexible_coupling_replacement.pdf",
+        "sha256_pdf": "3b051b41ae128a2a971f103d8908bc99f1be9720b1d4df5b2699ab8a3967d282",
+        "condiciones_medicion": "Giro del volante a vehículo detenido o a baja velocidad; auscultación de la base de la columna de dirección asistida C-MDPS.",
+        "tolerancias_unidades": "Síntoma acústico: ruido leve de chasquido ('clicking') o golpe sordo/seco ('thud') al maniobrar el volante (Página 1). Garantía extendida TXX7: 10 años o 100,000 millas (Página 1).",
+        "procedimiento": "1. Confirmar el síntoma del cliente: ruido perceptible de chasquido ('clicking') o golpe seco ('thud') procedente de la columna al girar el volante (Página 1). 2. Verificar que el vehículo corresponda a los modelos y rangos de producción cubiertos por el boletín TSB 17-ST-002: Elantra (HD) 2007-2010, Elantra Touring (FD) 2009-2012, Elantra (MD) 2011-2015 (prod. 13/08/2010 a 19/02/2014), Elantra (UD) 2011-2015 (prod. 03/11/2010 a 19/05/2014), Sonata (YF/YFa) 2011-2014, y Sonata Hybrid (YF HEV) 2011-2015. 3. Descartar holguras en la articulación del cardán de la columna o en la cremallera mecánica. 4. La causa raíz es el desgaste del acoplador flexible de caucho interno del motor MDPS.",
+        "advertencias_seguridad": "El boletín Hyundai 17-ST-002 aclara taxativamente que el desgaste del acoplador no afecta la capacidad de dirigir o controlar el vehículo y no constituye un problema de seguridad de la dirección ('does not affect the ability to steer or control the vehicle and is not a safety issue'). No reemplazar la columna completa de dirección.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Garantía especial extendida TXX7",
+                "cifra": "10",
+                "unidad": "anios",
+                "pagina": 1,
+                "condicion": "Cobertura oficial de garantía de 10 años para sustitución de acoplador flexible"
+            },
+            {
+                "parametro": "Distancia de cobertura TXX7",
+                "cifra": "100000",
+                "unidad": "millas",
+                "pagina": 1,
+                "condicion": "O 100,000 millas de rodaje en el mercado norteamericano (HMA)"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Exclusivamente modelos Hyundai Elantra y Sonata del mercado norteamericano listados en la página 1 del TSB 17-ST-002. No aplicable a Hyundai Accent, Veloster ni modelos Kia en este boletín.",
+        "marcas_aplicables": ["Hyundai"],
+        "modelos_aplicables": ["Elantra (HD)", "Elantra Touring (FD)", "Elantra (MD)", "Elantra (UD)", "Sonata (YF)", "Sonata (YFa)", "Sonata Hybrid (YF HEV)"],
+        "anios_aplicables": "2007-2015",
+        "motores_aplicables": "Gasolina y Híbrido según modelos cubiertos",
+        "mercados_aplicables": "Norteamérica (HMA)",
+        "condiciones_uso": "Boletín Técnico de Servicio (TSB 17-ST-002) publicado por Hyundai Motor America. Consulta técnica oficial.",
+    },
+    {
+        "doc_id": "RAG_EXP_HYUNDAI_002",
+        "titulo": "SUSTITUCIÓN DE ACOPLADOR FLEXIBLE 56315-2K000-FFF EN SERVO-DIRECCIÓN C-MDPS",
+        "fabricante": "Hyundai Motor America",
+        "vehiculo": "Hyundai Elantra (HD/FD/MD/UD) 2007-2015 y Sonata (YF/HEV) 2011-2015",
+        "sistema": "DIRECCIÓN",
+        "subsistema": "Acoplador de Motor Eléctrico MDPS",
+        "componente": "Acoplador Flexible 56315-2K000-FFF",
+        "pagina": 2,
+        "paginas": [2, 5, 8, 9],
+        "rango_paginas": "2, 5, 8-9",
+        "pdf_origen": "hyundai_tsb_mdps_flexible_coupling_replacement.pdf",
+        "sha256_pdf": "3b051b41ae128a2a971f103d8908bc99f1be9720b1d4df5b2699ab8a3967d282",
+        "condiciones_medicion": "Desmontaje parcial de la unidad MDPS en banco o bajo tablero; verificación visual de marcado de pieza de repuesto antes del montaje.",
+        "tolerancias_unidades": "Número de pieza mejorado: 56315-2K000-FFF (Página 2). Versiones válidas: 1. Marcado 'HNBR' en pieza de poliuretano; 2. Marcado '4P' en pieza de caucho revisada (Página 2). Cantidad: 1 unidad.",
+        "procedimiento": "1. Desmontar los componentes de la columna de dirección MDPS siguiendo el procedimiento correspondiente según modelo (páginas 3-9 para Elantra HD/FD; páginas 10-15 para Sonata YF y Elantra MD/UD). 2. Retirar los pernos del motor MDPS y separar el motor del cuerpo de la columna (Página 5 y 13). 3. Retirar el acoplador degradado y limpiar minuciosamente cualquier residuo o partícula de material desgastado en la cavidad y estrías del soporte flexible (Página 8). 4. Verificar que el repuesto nuevo 56315-2K000-FFF presente el marcado '4P' o 'HNBR' (Página 2). 5. Instalar el nuevo acoplador flexible verificando visualmente que asiente plano y correctamente en el soporte. 6. Reensamblar el motor MDPS en orden inverso.",
+        "advertencias_seguridad": "Comprobar que el acoplador esté perfectamente asentado antes de rearmar el motor para evitar atascos mecánicos en la servodirección. Desconectar la batería antes de intervenir conectores de la columna.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Número de parte oficial del repuesto mejorado",
+                "cifra": "56315-2K000-FFF",
+                "unidad": "referencia OEM",
+                "pagina": 2,
+                "condicion": "Pieza con marcado '4P' en caucho o 'HNBR' en poliuretano"
+            },
+            {
+                "parametro": "Cantidad requerida por reparación",
+                "cifra": "1",
+                "unidad": "unidad",
+                "pagina": 2,
+                "condicion": "Un acoplador flexible por unidad de columna C-MDPS"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Modelos Hyundai Elantra y Sonata del TSB 17-ST-002 equipados con C-MDPS. No aplica a otros modelos sin verificación de número de parte en catálogo.",
+        "marcas_aplicables": ["Hyundai"],
+        "modelos_aplicables": ["Elantra (HD)", "Elantra Touring (FD)", "Elantra (MD)", "Elantra (UD)", "Sonata (YF)", "Sonata Hybrid (YF HEV)"],
+        "anios_aplicables": "2007-2015",
+        "motores_aplicables": "Universal para los modelos indicados",
+        "mercados_aplicables": "Norteamérica (HMA)",
+        "condiciones_uso": "Boletín Técnico TSB 17-ST-002 de Hyundai Motor America. Consulta técnica autorizada.",
+    },
+    {
+        "doc_id": "RAG_EXP_HYUNDAI_003",
+        "titulo": "PARES DE APRIETE OFICIALES EN COLUMNA DE DIRECCIÓN C-MDPS HYUNDAI",
+        "fabricante": "Hyundai Motor America",
+        "vehiculo": "Hyundai Elantra (HD/FD/MD/UD) 2007-2015 y Sonata (YF/HEV) 2011-2015",
+        "sistema": "DIRECCIÓN",
+        "subsistema": "Fijación Mecánica de Columna",
+        "componente": "Pernos de Columna C-MDPS",
+        "pagina": 3,
+        "paginas": [3, 4, 5, 14],
+        "rango_paginas": "3, 4, 5, 14",
+        "pdf_origen": "hyundai_tsb_mdps_flexible_coupling_replacement.pdf",
+        "sha256_pdf": "3b051b41ae128a2a971f103d8908bc99f1be9720b1d4df5b2699ab8a3967d282",
+        "condiciones_medicion": "Llave dinamométrica en rangos de precisión para pares bajos y medios; roscas limpias de suciedad.",
+        "tolerancias_unidades": "Tornillos cubierta (Página 3): A1 = 2.9 N.m (2.2 lb-ft), A2 = 4.9 N.m (3.6 lb-ft). Perno soporte articulación F (Página 5): Tipo 1 = 9.8~13.7 N.m (7.2~10.1 lb-ft); Tipo 2 = 17.7~19.6 N.m (13.0~14.5 lb-ft). Pernos soporte columna C (Página 4): 17.7~19.6 N.m (13.0~14.5 lb-ft). Perno superior de fijación MDPS a soporte (Página 14): 44.1~49.0 N.m (32.5~36.2 lb-ft).",
+        "procedimiento": "1. Para vehículos Elantra HD/FD (Páginas 3-5): Apretar tornillos de cubierta A1 a 2.9 N.m (2.2 lb-ft) y A2 a 4.9 N.m (3.6 lb-ft) (Página 3). Apretar pernos de soporte de columna C a 17.7~19.6 N.m (Página 4). Apretar el perno de bisagra del soporte de columna F a 9.8~13.7 N.m (7.2~10.1 lb-ft) en conjuntos Tipo 1 con cuerpo de aluminio, o a 17.7~19.6 N.m (13.0~14.5 lb-ft) en conjuntos Tipo 2 con buje plástico (Página 5). 2. Para vehículos Sonata YF y Elantra MD/UD (Página 14): Al reinstalar la unidad MDPS sobre el soporte superior del tablero, apretar el perno de fijación a 44.1~49.0 N.m (32.5~36.2 lb-ft) (Página 14). 3. Respetar siempre el par exacto con torquímetro.",
+        "advertencias_seguridad": "El apriete incorrecto de los pernos de bisagra o de montaje de la columna MDPS puede causar desalineación de la columna, ruidos parásitos o soltura estructural de la dirección.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Tornillos de cubierta MDPS A1",
+                "cifra": "2.9",
+                "unidad": "N.m",
+                "cifra_alt": "2.2",
+                "unidad_alt": "lb-ft",
+                "pagina": 3,
+                "condicion": "Tornillo de fijación A1 en Elantra HD/FD (Página 3)"
+            },
+            {
+                "parametro": "Tornillos de cubierta MDPS A2",
+                "cifra": "4.9",
+                "unidad": "N.m",
+                "cifra_alt": "3.6",
+                "unidad_alt": "lb-ft",
+                "pagina": 3,
+                "condicion": "Tornillo de fijación A2 en Elantra HD/FD (Página 3)"
+            },
+            {
+                "parametro": "Pernos de soporte de columna C",
+                "cifra": "17.7-19.6",
+                "unidad": "N.m",
+                "cifra_alt": "13.0-14.5",
+                "unidad_alt": "lb-ft",
+                "pagina": 4,
+                "condicion": "Fijaciones soporte de columna C en Elantra HD/FD (Página 4)"
+            },
+            {
+                "parametro": "Perno de bisagra soporte F Tipo 1 (aluminio)",
+                "cifra": "9.8-13.7",
+                "unidad": "N.m",
+                "cifra_alt": "7.2-10.1",
+                "unidad_alt": "lb-ft",
+                "pagina": 5,
+                "condicion": "Soporte con cuerpo de fundición de aluminio en Elantra HD/FD (Página 5)"
+            },
+            {
+                "parametro": "Perno de bisagra soporte F Tipo 2 (buje plástico)",
+                "cifra": "17.7-19.6",
+                "unidad": "N.m",
+                "cifra_alt": "13.0-14.5",
+                "unidad_alt": "lb-ft",
+                "pagina": 5,
+                "condicion": "Soporte con buje plástico en Elantra HD/FD (Página 5)"
+            },
+            {
+                "parametro": "Perno superior de fijación MDPS a soporte",
+                "cifra": "44.1-49.0",
+                "unidad": "N.m",
+                "cifra_alt": "32.5-36.2",
+                "unidad_alt": "lb-ft",
+                "pagina": 14,
+                "condicion": "Montaje superior de columna MDPS en Sonata YF y Elantra MD/UD (Página 14)"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Pares de apriete oficiales del boletín TSB 17-ST-002 para Hyundai Elantra (2007-2015) y Sonata (2011-2015). No extrapolar a Hyundai Accent ni Kia.",
+        "marcas_aplicables": ["Hyundai"],
+        "modelos_aplicables": ["Elantra (HD)", "Elantra Touring (FD)", "Elantra (MD)", "Elantra (UD)", "Sonata (YF)", "Sonata Hybrid (YF HEV)"],
+        "anios_aplicables": "2007-2015",
+        "motores_aplicables": "Universal para modelos cubiertos",
+        "mercados_aplicables": "Norteamérica (HMA)",
+        "condiciones_uso": "Boletín Técnico de Servicio Hyundai TSB 17-ST-002. Datos técnicos oficiales.",
+    },
+    {
+        "doc_id": "RAG_EXP_HYUNDAI_004",
+        "titulo": "CALIBRACIÓN ASP (ABSOLUTE STEERING POSITION) Y COMPROBACIÓN DTC EN HYUNDAI MDPS",
+        "fabricante": "Hyundai Motor America",
+        "vehiculo": "Hyundai Elantra (HD/FD/MD/UD) 2007-2015 y Sonata (YF/HEV) 2011-2015",
+        "sistema": "DIRECCIÓN",
+        "subsistema": "Sensor de Posición Absoluta ASP / SAS",
+        "componente": "Sensor ASP de Servodirección",
+        "pagina": 9,
+        "paginas": [9],
+        "rango_paginas": "9",
+        "pdf_origen": "hyundai_tsb_mdps_flexible_coupling_replacement.pdf",
+        "sha256_pdf": "3b051b41ae128a2a971f103d8908bc99f1be9720b1d4df5b2699ab8a3967d282",
+        "condiciones_medicion": "Vehículo completamente detenido en superficie plana con ruedas orientadas hacia el frente; encendido en contacto (IG ON); herramienta de diagnóstico oficial GDS conectada al puerto OBD-II.",
+        "tolerancias_unidades": "Calibración ASP completada exitosamente; ausencia total de códigos DTC almacenados en la ECU de MDPS (Página 9).",
+        "procedimiento": "1. Tras completar la instalación de la unidad MDPS en el vehículo, conectar el equipo de diagnóstico GDS. 2. Ejecutar el procedimiento de calibración ASP (Absolute Steering Position) según las instrucciones del manual de servicio aplicable (TSB 17-ST-002, Paso 13, Página 9). 3. Comprobar y borrar cualquier código de avería (DTC) generado durante el desmontaje de la columna (Paso 14, Página 9). 4. Realizar prueba funcional del volante confirmando la suavidad del retorno y el correcto centrado.",
+        "advertencias_seguridad": "Omitir la calibración ASP tras reinstalar la servodirección puede provocar lecturas erróneas del ángulo de giro hacia los sistemas de control de tracción y estabilidad (ESC), comprometiendo la respuesta dinámica del vehículo.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Calibración ASP de ángulo de dirección",
+                "cifra": "procedimiento GDS exitoso",
+                "unidad": "calibración",
+                "pagina": 9,
+                "condicion": "Paso 13: ejecutar calibración de posición absoluta tras montaje de columna"
+            },
+            {
+                "parametro": "Comprobación y borrado de DTCs",
+                "cifra": "0 códigos de avería",
+                "unidad": "DTC",
+                "pagina": 9,
+                "condicion": "Paso 14: verificar ausencia de códigos DTC en el módulo MDPS"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Procedimiento final obligatorio de reinstalación MDPS para Elantra y Sonata según TSB 17-ST-002 (Página 9).",
+        "marcas_aplicables": ["Hyundai"],
+        "modelos_aplicables": ["Elantra (HD)", "Elantra Touring (FD)", "Elantra (MD)", "Elantra (UD)", "Sonata (YF)", "Sonata Hybrid (YF HEV)"],
+        "anios_aplicables": "2007-2015",
+        "motores_aplicables": "Universal para modelos cubiertos",
+        "mercados_aplicables": "Norteamérica (HMA)",
+        "condiciones_uso": "Boletín Técnico TSB 17-ST-002 de Hyundai Motor America.",
+    },
+
+    # -------------------------------------------------------------------------
+    # KIA CHA084 (4 fragmentos)
+    # PDF: kia_tsb_cmdps_steering_column_repair.pdf (6 págs)
+    # SHA-256: deded09b3e1ecfea115faf2f2c0171a087056c1873f2cd187b2928b3ffa8d0b9
+    # -------------------------------------------------------------------------
+    {
+        "doc_id": "RAG_EXP_KIA_001",
+        "titulo": "TABLA DE CÓDIGOS DTC Y CRITERIOS DE DIAGNÓSTICO EN DIRECCIÓN ASISTIDA KIA C-MDPS",
+        "fabricante": "Kia Motors America",
+        "vehiculo": "Modelos Kia con C-MDPS desde 2010MY (Soul, Optima, Forte, Rio, Sorento, Sportage, Cadenza, Niro)",
+        "sistema": "DIRECCIÓN",
+        "subsistema": "Control Electrónico de Servodirección C-MDPS",
+        "componente": "ECU y Motor C-MDPS",
+        "pagina": 4,
+        "paginas": [4, 6],
+        "rango_paginas": "4, 6",
+        "pdf_origen": "kia_tsb_cmdps_steering_column_repair.pdf",
+        "sha256_pdf": "deded09b3e1ecfea115faf2f2c0171a087056c1873f2cd187b2928b3ffa8d0b9",
+        "condiciones_medicion": "Lectura de códigos DTC con equipo KDS / escáner; comprobación de tensión de batería; verificación de bus de comunicación CAN.",
+        "tolerancias_unidades": "DTC C1102 (Problema de tensión de batería); DTC C1603 (Protección térmica de MDPS); DTCs de red CAN: C1611, C1616, C1622, C1696, C1697, C1612, C1646, C1628, C1656, C1692, C1693 (Página 4).",
+        "procedimiento": "1. Conectar equipo KDS y leer códigos de avería en módulo MDPS (Página 4). 2. Si aparece C1102 (Battery Voltage Problem): verificar estado y carga de la batería; recargar la batería (la columna/módulo MDPS no debe reemplazarse). 3. Si aparece C1603 (MDPS Thermal Protection): investigar condiciones de manejo; este código es una protección normal para evitar sobrecalentamiento del motor eléctrico en maniobras intensivas continuas (no se requiere sustituir ninguna pieza). 4. Si aparecen códigos de red CAN (C1611, C1616, C1622, etc.): revisar conectores, arnés y masa en EMS/HECU/Cluster; no se debe sustituir el conjunto de columna MDPS.",
+        "advertencias_seguridad": "El boletín CHA084 prohíbe explícitamente sustituir la columna completa de dirección C-MDPS ante códigos de protección térmica o fallos de red CAN externa.",
+        "cifras_trazadas": [
+            {
+                "parametro": "DTC C1102 (Battery Voltage Problem)",
+                "cifra": "verificar y recargar batería",
+                "unidad": "DTC C1102",
+                "pagina": 4,
+                "condicion": "Prohibido sustituir columna o módulo MDPS por baja tensión de batería"
+            },
+            {
+                "parametro": "DTC C1603 (MDPS Thermal Protection)",
+                "cifra": "protección térmica normal",
+                "unidad": "DTC C1603",
+                "pagina": 4,
+                "condicion": "Maniobras intensivas continuas; no sustituir componentes de dirección"
+            },
+            {
+                "parametro": "DTCs de comunicación bus CAN",
+                "cifra": "C1611, C1616, C1622",
+                "unidad": "DTC CAN",
+                "pagina": 4,
+                "condicion": "Revisar cableado y masa exterior; no reemplazar conjunto de columna"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Modelos Kia equipados con columna C-MDPS desde 2010MY listados en la página 6 del TSB CHA084 Rev 4: Soul (AM/PS), Optima (TF/JF), Forte (YD/BD), Rio (UB/SC), Sorento (XMa/UMa), Sportage (SL/QL), Cadenza (VG/YG), Niro (DE). Proveedores Mobis y Mando.",
+        "marcas_aplicables": ["Kia"],
+        "modelos_aplicables": ["Soul (AM)", "Soul (PS)", "Optima (TF)", "Optima (JF)", "Forte (YD)", "Forte (BD)", "Rio (UB)", "Rio (SC)", "Sorento (UMa)", "Sorento (XMa)", "Sportage (SL)", "Sportage (QL)", "Cadenza (VG)", "Cadenza (YG)", "Niro (DE)"],
+        "anios_aplicables": "2010-2026",
+        "motores_aplicables": "Gasolina, Híbrido, EV según catálogo",
+        "mercados_aplicables": "Kia Motors America / Global",
+        "condiciones_uso": "Boletín Técnico de Servicio TSB CHA084 Rev 4 de Kia Motors America. Consulta técnica autorizada.",
+    },
+    {
+        "doc_id": "RAG_EXP_KIA_002",
+        "titulo": "DIAGNÓSTICO DE SENSOR DE ÁNGULO DE DIRECCIÓN DTC C1259, C1260 Y C1261 EN KIA",
+        "fabricante": "Kia Motors America",
+        "vehiculo": "Modelos Kia con C-MDPS desde 2010MY (Soul, Optima, Forte, Rio, Sorento, Sportage)",
+        "sistema": "DIRECCIÓN",
+        "subsistema": "Sensor de Ángulo SAS",
+        "componente": "Sensor de Ángulo de Dirección SAS",
+        "pagina": 2,
+        "paginas": [2, 4, 6],
+        "rango_paginas": "2, 4, 6",
+        "pdf_origen": "kia_tsb_cmdps_steering_column_repair.pdf",
+        "sha256_pdf": "deded09b3e1ecfea115faf2f2c0171a087056c1873f2cd187b2928b3ffa8d0b9",
+        "condiciones_medicion": "Lectura de DTCs en KDS; reinicio y calibración del sensor de ángulo de dirección (SAS) con escáner; inspección física de cableado y conectores.",
+        "tolerancias_unidades": "DTC C1259 (Steering Angle Sensor Signal Error); DTC C1260 (Steering Angle Sensor Signal Error); DTC C1261 (Zero-Setting Error) (Páginas 2 y 4).",
+        "procedimiento": "1. Ante la presencia de DTC C1259: Realizar el reinicio/calibración del sensor de ángulo con KDS y borrar el código DTC. Revisar minuciosamente la condición del arnés y conectores. Si el código C1259 retorna tras el borrado, reemplazar el conjunto de carcasa y columna de dirección (Column and Housing Assembly) (Páginas 2 y 4). 2. Ante la presencia de DTC C1260: Reiniciar la calibración del sensor de ángulo. Si el DTC retorna, inspeccionar la condición del cableado y conectores de la columna. 3. Ante la presencia de DTC C1261: Realizar el procedimiento de puesta a cero / calibración del sensor de ángulo de dirección.",
+        "advertencias_seguridad": "Asegurarse de seguir minuciosamente los procedimientos del manual de taller KGIS para la calibración del sensor de ángulo tras la sustitución o intervención de componentes.",
+        "cifras_trazadas": [
+            {
+                "parametro": "DTC C1259 (SAS Signal Error)",
+                "cifra": "calibrar; si persiste sustituir Housing & Column",
+                "unidad": "DTC C1259",
+                "pagina": 2,
+                "condicion": "Páginas 2 y 4: diagrama de flujo oficial Kia para error de señal SAS"
+            },
+            {
+                "parametro": "DTC C1260 y C1261 (Zero-Setting Error)",
+                "cifra": "recalibrar y puesta a cero",
+                "unidad": "DTC C1261",
+                "pagina": 2,
+                "condicion": "Reinicio y puesta a cero de calibración SAS con equipo KDS"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Modelos Kia con servodirección C-MDPS listados en TSB CHA084 Rev 4 (Páginas 2, 4 y 6).",
+        "marcas_aplicables": ["Kia"],
+        "modelos_aplicables": ["Soul", "Optima", "Forte", "Rio", "Sorento", "Sportage", "Cadenza", "Niro"],
+        "anios_aplicables": "2010-2026",
+        "motores_aplicables": "Universal según modelo Kia",
+        "mercados_aplicables": "Kia Motors America / Global",
+        "condiciones_uso": "Boletín Técnico Oficial Kia CHA084 Rev 4.",
+    },
+    {
+        "doc_id": "RAG_EXP_KIA_003",
+        "titulo": "DIAGNÓSTICO DE SENSOR DE PAR (TORQUE SENSOR) DTC C1290 Y C1112 EN KIA C-MDPS",
+        "fabricante": "Kia Motors America",
+        "vehiculo": "Modelos Kia con C-MDPS desde 2010MY (Soul, Optima, Forte, Rio, Sorento, Sportage)",
+        "sistema": "DIRECCIÓN",
+        "subsistema": "Sensor de Par y Esfuerzo de Torsión",
+        "componente": "Sensor de Par Integrado",
+        "pagina": 2,
+        "paginas": [2, 4, 6],
+        "rango_paginas": "2, 4, 6",
+        "pdf_origen": "kia_tsb_cmdps_steering_column_repair.pdf",
+        "sha256_pdf": "deded09b3e1ecfea115faf2f2c0171a087056c1873f2cd187b2928b3ffa8d0b9",
+        "condiciones_medicion": "Lectura de DTCs en KDS; verificación de integridad física de arnés y conectores entre sensor de par y la unidad de control MDPS ECU.",
+        "tolerancias_unidades": "DTC C1290 (Torque Sensor Error); DTC C1112 (Torque Sensor Voltage Error). Criterio de reemplazo: Carcasa/Columna vs MDPS ECU (Página 2).",
+        "procedimiento": "1. Ante código DTC C1290 (Torque Sensor Error): Primero borrar el código DTC y comprobar la condición del cableado y conectores del sensor de par. Si el código DTC retorna tras el borrado, la recomendación oficial del fabricante es sustituir el conjunto de columna y carcasa (Steering Column and Housing Assembly) (Página 2), ya que el sensor de par viene integrado y no se desmonta individualmente. 2. Ante código DTC C1112 (Torque Sensor Voltage Error): Comprobar el estado del cableado y conectores entre el sensor de par y la ECU de MDPS. Si el código DTC retorna, la recomendación técnica oficial es sustituir la unidad de control de dirección (MDPS ECU) (Página 2).",
+        "advertencias_seguridad": "Diferenciar rigurosamente entre C1290 (sustitución de columna y carcasa) y C1112 (sustitución de la ECU electrónica) conforme al diagrama de flujo oficial de Kia para evitar reemplazos innecesarios.",
+        "cifras_trazadas": [
+            {
+                "parametro": "DTC C1290 (Torque Sensor Error)",
+                "cifra": "sustituir Steering Column and Housing Assembly",
+                "unidad": "DTC C1290",
+                "pagina": 2,
+                "condicion": "Sensor integrado en carcasa de columna (no desmontable individualmente)"
+            },
+            {
+                "parametro": "DTC C1112 (Torque Sensor Voltage Error)",
+                "cifra": "sustituir MDPS ECU",
+                "unidad": "DTC C1112",
+                "pagina": 2,
+                "condicion": "Fallo de tensión de referencia procesada internamente por la ECU"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Procedimiento oficial de reparación parcial según TSB CHA084 Rev 4 para vehículos Kia equipados con columna C-MDPS (Páginas 2, 4 y 6).",
+        "marcas_aplicables": ["Kia"],
+        "modelos_aplicables": ["Soul", "Optima", "Forte", "Rio", "Sorento", "Sportage", "Cadenza", "Niro"],
+        "anios_aplicables": "2010-2026",
+        "motores_aplicables": "Universal según catálogo",
+        "mercados_aplicables": "Kia Motors America / Global",
+        "condiciones_uso": "Boletín Técnico Oficial Kia CHA084 Rev 4.",
+    },
+    {
+        "doc_id": "RAG_EXP_KIA_004",
+        "titulo": "DIAGNÓSTICO DE MOTOR ELÉCTRICO Y ECU MDPS DTC C2400, C2401, C2412 Y C1704",
+        "fabricante": "Kia Motors America",
+        "vehiculo": "Modelos Kia con C-MDPS desde 2010MY (Soul, Optima, Forte, Rio, Sorento, Sportage)",
+        "sistema": "DIRECCIÓN",
+        "subsistema": "Servomotor Eléctrico y Módulo ECU MDPS",
+        "componente": "Motor y ECU MDPS",
+        "pagina": 2,
+        "paginas": [2, 4, 5, 6],
+        "rango_paginas": "2, 4, 5, 6",
+        "pdf_origen": "kia_tsb_cmdps_steering_column_repair.pdf",
+        "sha256_pdf": "deded09b3e1ecfea115faf2f2c0171a087056c1873f2cd187b2928b3ffa8d0b9",
+        "condiciones_medicion": "Lectura de DTCs en KDS; verificación de arnés y conectores entre MDPS ECU y motor de dirección asistida.",
+        "tolerancias_unidades": "DTC C2400 (Motor Signal Error); DTC C2401 (Motor Circuit Error); DTC C2412 (Motor Voltage Supply Error); DTC C1704 (ECU Fail-Safe Relay Fault) (Páginas 2 y 4).",
+        "procedimiento": "1. Códigos de motor C2400 / C2401: Borrar el código; si el DTC retorna, sustituir exclusivamente el motor eléctrico MDPS (MDPS Motor) según capítulo de reparación en Shop Manual KGIS (Páginas 2 y 5). 2. Código de alimentación de motor C2412: Primero borrar el DTC; revisar el cableado y conectores entre la ECU y el motor eléctrico. Si el fallo persiste, sustituir en primer lugar la ECU de MDPS; si tras reemplazar la ECU el código C2412 retorna, sustituir el motor MDPS (Página 2). 3. Código de relé fail-safe C1704 (y códigos C1705, C1604, C2413): Borrar el DTC y revisar conectores en la ECU; si retorna, reemplazar la ECU de MDPS (Páginas 2 y 4).",
+        "advertencias_seguridad": "El boletín CHA084 autoriza la reparación parcial (motor, ECU o carcasa) sin sustituir la columna completa, reduciendo costos de garantía y tiempo de taller.",
+        "cifras_trazadas": [
+            {
+                "parametro": "DTC C2400 / C2401 (Motor Signal/Circuit Error)",
+                "cifra": "sustituir exclusivamente MDPS Motor",
+                "unidad": "DTC C2400",
+                "pagina": 2,
+                "condicion": "Procedimiento de sustitución parcial de motor en Página 5"
+            },
+            {
+                "parametro": "DTC C2412 (Motor Voltage Supply Error)",
+                "cifra": "sustituir MDPS ECU primero, luego Motor si persiste",
+                "unidad": "DTC C2412",
+                "pagina": 2,
+                "condicion": "Diagrama de flujo de alimentación de potencia en Página 2"
+            },
+            {
+                "parametro": "DTC C1704 (ECU Fail-Safe Relay Fault)",
+                "cifra": "sustituir MDPS ECU",
+                "unidad": "DTC C1704",
+                "pagina": 2,
+                "condicion": "Fallo interno de relé fail-safe en circuito electrónico de la ECU"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Servodirección en columna C-MDPS en vehículos Kia listados en CHA084 Rev 4 (Páginas 2, 4, 5 y 6).",
+        "marcas_aplicables": ["Kia"],
+        "modelos_aplicables": ["Soul", "Optima", "Forte", "Rio", "Sorento", "Sportage", "Cadenza", "Niro"],
+        "anios_aplicables": "2010-2026",
+        "motores_aplicables": "Universal según catálogo",
+        "mercados_aplicables": "Kia Motors America / Global",
+        "condiciones_uso": "Boletín Técnico Oficial Kia CHA084 Rev 4.",
+    },
+
+    # -------------------------------------------------------------------------
+    # PICO WPS500X (3 fragmentos)
+    # PDF: pico_wps500x_pressure_transducer_manual.pdf (20 págs, DO157-14)
+    # SHA-256: 3de1537817f51acb803cc77a79ed85a2bb044d2438a6dd4cd12fcb28227af678
+    # -------------------------------------------------------------------------
+    {
+        "doc_id": "RAG_EXP_PICO_001",
+        "titulo": "RANGOS DE MEDICIÓN Y ESPECIFICACIONES DEL TRANSDUCTOR DE PRESIÓN PICO WPS500X",
+        "fabricante": "Pico Technology",
+        "vehiculo": "Instrumental de diagnóstico para motores de combustión interna",
+        "sistema": "INSTRUMENTAL",
+        "subsistema": "Transductores de Presión y Osciloscopio",
+        "componente": "Transductor de Presión WPS500X",
+        "pagina": 3,
+        "paginas": [3, 4, 10, 16],
+        "rango_paginas": "3-4, 10, 16",
+        "pdf_origen": "pico_wps500x_pressure_transducer_manual.pdf",
+        "sha256_pdf": "3de1537817f51acb803cc77a79ed85a2bb044d2438a6dd4cd12fcb28227af678",
+        "condiciones_medicion": "Conexión BNC a osciloscopio PicoScope mediante cable TA098; alimentación por batería interna de LiPo; temperatura ambiente de operación 0 a 60 °C (32 a 140 °F) (Página 16).",
+        "tolerancias_unidades": "Rango 1: -15 a +500 psi (-1 a +34.5 bar), escala 1 V / 100 psi (6.89 bar), precisión 1% de escala (Página 10 y 16). Rango 2: -15 a +50 psi (-1 a +3.45 bar), escala 1 V / 10 psi (0.689 bar), precisión 1% de escala (Página 10 y 16). Rango 3: -5 a +5 psi (-0.345 a +0.345 bar), escala 1 V / 1 psi (0.0689 bar), precisión 5% de escala (Página 10 y 16). Tiempo de respuesta: 100 micras / 100 us (10% a 90%) (Página 16). Presión máxima admisible: 500 psi (34.5 bar) (Página 16).",
+        "procedimiento": "1. Desconectar cualquier fuente de presión antes de encender el transductor para permitir su auto-calibración (auto-zeroing) (Página 3). 2. Encender y verificar la secuencia de LEDs indicadores. 3. Seleccionar el rango deseado mediante el botón frontal: Rango 1 para alta presión (-15 a +500 psi, compresión en arranque/marcha y presión de combustible); Rango 2 para pruebas de vacío y presión de combustible en baja (-15 a +50 psi); Rango 3 para pulsos de escape y micro-presiones (-5 a +5 psi) (Página 10). 4. Conectar al osciloscopio seleccionando la sonda preconfigurada para WPS500X en PicoScope.",
+        "advertencias_seguridad": "ADVERTENCIA DE SEGURIDAD CRÍTICA (Página 4): Para evitar daños al equipo o lesiones personales, NO UTILIZAR el transductor para pruebas de compresión con el motor en marcha en motores diésel ('do not use for running compression tests on diesel engines'). La combinación de elevadísima presión de compresión y alta temperatura de combustión destruye el diafragma sensor. No exceder nunca la presión máxima admisible de 500 psi (34.5 bar).",
+        "cifras_trazadas": [
+            {
+                "parametro": "Rango 1 alta presión (compresión y combustible)",
+                "cifra": "-15 a 500",
+                "unidad": "psi",
+                "cifra_alt": "-1 a 34.5",
+                "unidad_alt": "bar",
+                "pagina": 10,
+                "condicion": "Escala 1 V / 100 psi (6.89 bar), precisión 1% de escala completa (Página 10 y 16)"
+            },
+            {
+                "parametro": "Rango 2 media presión y vacío",
+                "cifra": "-15 a 50",
+                "unidad": "psi",
+                "cifra_alt": "-1 a 3.45",
+                "unidad_alt": "bar",
+                "pagina": 10,
+                "condicion": "Escala 1 V / 10 psi (0.689 bar), precisión 1% de escala (Página 10 y 16)"
+            },
+            {
+                "parametro": "Rango 3 baja presión y pulsaciones",
+                "cifra": "-5 a 5",
+                "unidad": "psi",
+                "cifra_alt": "-0.345 a 0.345",
+                "unidad_alt": "bar",
+                "pagina": 10,
+                "condicion": "Escala 1 V / 1 psi (0.0689 bar), precisión 5% de escala (Página 10 y 16)"
+            },
+            {
+                "parametro": "Tiempo de respuesta",
+                "cifra": "100",
+                "unidad": "micras",
+                "cifra_alt": "100",
+                "unidad_alt": "us",
+                "pagina": 16,
+                "condicion": "Tiempo de subida del 10% al 90% de escala completa (Página 16)"
+            },
+            {
+                "parametro": "Presión máxima de trabajo admisible",
+                "cifra": "500",
+                "unidad": "psi",
+                "cifra_alt": "34.5",
+                "unidad_alt": "bar",
+                "pagina": 16,
+                "condicion": "Presión máxima sin daño permanente (Página 16)"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Manual de Usuario del Transductor de Presión Automotriz Pico WPS500X (Documento DO157-14, Páginas 3, 4, 10 y 16). Válido para diagnóstico con osciloscopio en motores de combustión.",
+        "marcas_aplicables": ["Universal / Equipamiento de Taller"],
+        "modelos_aplicables": ["Motores de combustión interna de automoción"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Gasolina y Diésel (baja presión / arranque)",
+        "mercados_aplicables": "Global",
+        "condiciones_uso": "Manual de Instrucciones oficial DO157-14 de Pico Technology. Documentación técnica de instrumental.",
+    },
+    {
+        "doc_id": "RAG_EXP_PICO_002",
+        "titulo": "PRUEBAS DE COMPRESIÓN DE CILINDRO Y PURGA DE PRESIÓN CON TRANSDUCTOR PICO WPS500X",
+        "fabricante": "Pico Technology",
+        "vehiculo": "Motores de combustión interna de automoción (Gasolina / Ciclo Otto)",
+        "sistema": "MOTOR",
+        "subsistema": "Diagnóstico de Compresión y Sincronismo",
+        "componente": "Cámara de Combustión y Sincronismo",
+        "pagina": 4,
+        "paginas": [4, 10, 11, 12, 16],
+        "rango_paginas": "4, 10, 11-12, 16",
+        "pdf_origen": "pico_wps500x_pressure_transducer_manual.pdf",
+        "sha256_pdf": "3de1537817f51acb803cc77a79ed85a2bb044d2438a6dd4cd12fcb28227af678",
+        "condiciones_medicion": "Manguera especial de compresión Pico TA212 conectada firmemente al orificio de bujía mediante adaptadores M10/M12/M14/M18; transductor en Rango 1 (-15 a +500 psi / -1 a +34.5 bar); osciloscopio PicoScope configurado (Páginas 4 y 10).",
+        "tolerancias_unidades": "Rango de medición 1: -1 a +34.5 bar (-15 a +500 psi); tiempo de respuesta 100 us; presión máxima admisible 500 psi (Página 16). Temperatura máxima de operación: 60 °C (Página 16).",
+        "procedimiento": "1. Asegurar que la válvula o tornillo de purga del WPS500X esté firmemente cerrada antes del ensayo (Página 12). 2. Conectar la manguera de compresión especialmente diseñada de Pico al puerto de bujía, asegurando un apriete firme para evitar fugas. 3. Seleccionar el Rango 1 en el transductor (-15 a +500 psi) y registrar la forma de onda de presión en el osciloscopio durante el arranque o en marcha (motor gasolina) (Página 10). 4. Aplicación de diagnóstico documentada (Página 10): La elevada resolución y precisión del Rango 1 permite identificar anomalías en el calado de la distribución (cam timing), tales como saltos en la correa de distribución o cadenas estiradas, especialmente en motores con múltiples árboles de levas que no dispongan de sensor de fase en cada árbol. 5. Procedimiento obligatorio de purga tras la medición (Página 12): Al concluir el ensayo, el transductor retiene fluido y gas a presión en la cámara de medición; antes de desconectar la manguera, sostener el transductor sobre un recipiente adecuado y pulsar el botón de purga o aflojar lentamente en sentido antihorario el tornillo de purga orientando el venteo lejos de personas y equipos.",
+        "advertencias_seguridad": "ADVERTENCIAS CRÍTICAS DE SEGURIDAD (Páginas 4 y 12): 1. PROHIBICIÓN en diésel en marcha: No realizar pruebas de compresión con motor en marcha en vehículos diésel; la compresión extrema y calor de ignición destruirán el sensor. 2. Riesgo de alta presión en purga: El fluido expulsado por el orificio de purga tras el ensayo puede salir a alta presión; orientar el venteo en dirección contraria a operadores y componentes sensibles.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Rango 1 compresión de cilindro en gasolina",
+                "cifra": "-15 a 500",
+                "unidad": "psi",
+                "cifra_alt": "-1 a 34.5",
+                "unidad_alt": "bar",
+                "pagina": 10,
+                "condicion": "Manguera Pico TA212 conectada a orificio de bujía con adaptadores"
+            },
+            {
+                "parametro": "Límite de temperatura ambiente de servicio",
+                "cifra": "60",
+                "unidad": "°C",
+                "pagina": 16,
+                "condicion": "Temperatura máxima admisible en el cuerpo del transductor"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Manual de Usuario Pico WPS500X (DO157-14, Secciones 6, 7 y 10, Páginas 4, 10, 11, 12 y 16). Procedimiento instrumental de ensayo de compresión en cilindro y despresurización segura.",
+        "marcas_aplicables": ["Universal / Instrumental"],
+        "modelos_aplicables": ["Motores térmicos ciclo Otto"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Gasolina (diésel solo en prueba de arrastre/arranque en frío)",
+        "mercados_aplicables": "Global",
+        "condiciones_uso": "Manual Oficial de Usuario Pico Technology DO157-14.",
+    },
+    {
+        "doc_id": "RAG_EXP_PICO_003",
+        "titulo": "CAPTURA DE MICRO-PULSACIONES DE ESCAPE Y VACÍO CON PICO WPS500X EN RANGO 3",
+        "fabricante": "Pico Technology",
+        "vehiculo": "Motores de combustión interna de automoción",
+        "sistema": "MOTOR",
+        "subsistema": "Diagnóstico de Pulsos de Escape y Admisión",
+        "componente": "Línea de Escape y Colector de Admisión",
+        "pagina": 6,
+        "paginas": [6, 10, 16],
+        "rango_paginas": "6, 10, 16",
+        "pdf_origen": "pico_wps500x_pressure_transducer_manual.pdf",
+        "sha256_pdf": "3de1537817f51acb803cc77a79ed85a2bb044d2438a6dd4cd12fcb28227af678",
+        "condiciones_medicion": "Transductor WPS500X configurado en Rango 3 (-5 a +5 psi / -0.345 a +0.345 bar); conexión al tubo de escape mediante el adaptador de escape oficial Pico TA130 o a toma de vacío con manguera TA085; función Zoom activada según necesidad (Páginas 6 y 10).",
+        "tolerancias_unidades": "Rango de medición: -5 a +5 psi (-0.345 a +0.345 bar); escala de salida: 1 V / 1 psi (0.0689 bar); precisión: 5% de la escala (Página 16); corte de filtrado en modo Zoom: 100 Hz (Página 10). Temperatura máxima: 60 °C (Página 16).",
+        "procedimiento": "1. Seleccionar el Rango 3 en el transductor WPS500X (-5 a +5 psi) para disponer de la máxima sensibilidad en la detección de presiones pequeñas o pulsos de baja magnitud (Página 10). 2. Conectar el útil al escape utilizando el adaptador de escape metálico TA130 para proteger el instrumento (Página 6). 3. Si se precisa magnificar variaciones de presión rápidas en el colector de admisión o en el escape, presionar el botón Zoom (modos Zoom 1, 2 o 3): esta función suprime la componente de tensión estática por debajo de 100 Hz y amplifica la señal dinámica restante hasta 1000 veces (Página 10). 4. Observar la regularidad periódica de los pulsos en el osciloscopio durante ralentí o arranque para identificar desequilibrios en el flujo gaseoso entre cilindros.",
+        "advertencias_seguridad": "Para evitar daños o deformaciones por temperatura, no conectar el transductor directamente a componentes calientes de la línea de escape; emplear el adaptador de escape TA130 y verificar que la temperatura en el cuerpo del transductor no supere los 60 °C (140 °F) (Página 16).",
+        "cifras_trazadas": [
+            {
+                "parametro": "Rango 3 micro-pulsaciones de escape y vacío",
+                "cifra": "-5 a 5",
+                "unidad": "psi",
+                "cifra_alt": "-0.345 a 0.345",
+                "unidad_alt": "bar",
+                "pagina": 10,
+                "condicion": "Adaptador metálico de escape Pico TA130 para proteger el sensor"
+            },
+            {
+                "parametro": "Filtro de corte estático en función Zoom",
+                "cifra": "100",
+                "unidad": "Hz",
+                "pagina": 10,
+                "condicion": "Suprime componentes por debajo de 100 Hz y amplifica señal dinámica hasta 1000x"
+            },
+            {
+                "parametro": "Temperatura máxima admisible en escape con TA130",
+                "cifra": "60",
+                "unidad": "°C",
+                "pagina": 16,
+                "condicion": "Límite térmico en el transductor durante la prueba de pulsaciones"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Manual de Usuario Pico WPS500X DO157-14 (Apartado 6 y Especificaciones, Páginas 6, 10 y 16). Ajuste del transductor para análisis de micro-pulsaciones.",
+        "marcas_aplicables": ["Universal / Instrumental"],
+        "modelos_aplicables": ["Motores de combustión interna"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Gasolina y Diésel",
+        "mercados_aplicables": "Global",
+        "condiciones_uso": "Manual de Instrucciones DO157-14 Pico Technology.",
+    },
+
+    # -------------------------------------------------------------------------
+    # LASER 5524 (2 fragmentos)
+    # PDF: laser_5524_instrucciones_es.pdf (2 págs)
+    # SHA-256: 513d6c527cc661e92503c7c35fb3c85c981e4af6726ec3bfb56a99e66840b63d
+    # -------------------------------------------------------------------------
+    {
+        "doc_id": "RAG_EXP_LASER_001",
+        "titulo": "PROCEDIMIENTO DE DETECCIÓN QUÍMICA DE CO2 EN EL CIRCUITO DE REFRIGERACIÓN",
+        "fabricante": "Laser Tools / The Tool Connection Ltd",
+        "vehiculo": "Motores de combustión interna con refrigeración líquida (Gasolina, Diésel, Gas)",
+        "sistema": "REFRIGERACIÓN",
+        "subsistema": "Diagnóstico de Fuga de Gases de Combustión",
+        "componente": "Culata, Junta de Culata y Radiador",
+        "pagina": 2,
+        "paginas": [1, 2],
+        "rango_paginas": "1, 2",
+        "pdf_origen": "laser_5524_instrucciones_es.pdf",
+        "sha256_pdf": "513d6c527cc661e92503c7c35fb3c85c981e4af6726ec3bfb56a99e66840b63d",
+        "condiciones_medicion": "VEHÍCULO COMPLETAMENTE FRÍO al iniciar el procedimiento antes de retirar el tapón; motor apagado; equipo de protección individual (guantes y gafas) obligatorio; fluido de prueba azul Laser 5526 (Páginas 1 y 2).",
+        "tolerancias_unidades": "Indicador colorimétrico de CO2: Azul original (ausencia de gases de combustión); viraje a Verde / Amarillo (presencia confirmada de CO2 en el sistema de refrigeración) (Página 2).",
+        "procedimiento": "1. EL VEHÍCULO DEBE ESTAR FRÍO (Paso 1, Página 2). Si el sistema de refrigeración del vehículo está caliente, bajo ninguna circunstancia intente retirar el tapón del depósito o radiador; espere hasta que se enfríe completamente. 2. Monte el detector uniendo la cámara superior a la inferior y fije el cono de goma. 3. Llene la cámara superior con líquido de prueba azul (Laser Tools 5526) hasta la línea marcada. 4. RETIRE EL TAPÓN DEL DEPÓSITO O RADIADOR ÚNICAMENTE CON EL MOTOR FRÍO (Paso 6, Página 2). 5. Encienda el motor y espere a que el refrigerante comience a calentarse progresivamente hasta aproximarse a su temperatura normal de funcionamiento. 6. Cuando el sistema casi haya alcanzado la temperatura de régimen, coloque el detector en la abertura del depósito o radiador presionándolo con firmeza hacia abajo para asegurar el sellado hermético (Paso 7, Página 2). 7. Conforme aumente la presión en la cámara inferior y aparezcan burbujas, apriete la perilla de goma repetidamente para hacer circular el vapor a través del líquido de prueba azul (Paso 8, Página 2). 8. Si el fluido vira a verde o amarillo, indica presencia indudable de CO2 proveniente de una fuga de compresión (junta de culata dañada o culata agrietada). 9. Retire el detector de la abertura y APAGUE EL MOTOR (Paso 10, Página 2). 10. Vuelva a colocar el tapón del radiador/depósito (Paso 11, Página 2).",
+        "advertencias_seguridad": "ADVERTENCIA CRÍTICA DE SEGURIDAD (C01 / Páginas 1 y 2): Si el sistema de refrigeración del vehículo está caliente o presurizado, ESTÁ TERMINANTEMENTE PROHIBIDO intentar extraer el tapón del depósito de gravedad o del radiador; existe un peligro extremo de quemaduras graves por proyección de vapor y refrigerante hirviendo. El tapón debe quitarse SIEMPRE antes de calentar el motor, con el vehículo frío y apagado. Trabajar en áreas bien ventiladas para no inhalar gases.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Viraje de color de reactivo Laser 5526",
+                "cifra": "azul a verde o amarillo",
+                "unidad": "escala colorimétrica",
+                "pagina": 2,
+                "condicion": "Presencia confirmada de CO2 proveniente de combustión en el circuito de refrigeración"
+            },
+            {
+                "parametro": "Condición térmica previa obligatoria",
+                "cifra": "motor completamente frío y apagado",
+                "unidad": "estado térmico",
+                "pagina": 2,
+                "condicion": "Paso 1 y 6: Prohibición absoluta de manipular tapón caliente"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Manual oficial de instrucciones del detector de fugas de combustión Laser Tools 5524 (The Tool Connection Ltd, Páginas 1 y 2). Aplicable universalmente a motores refrigerados por agua.",
+        "marcas_aplicables": ["Universal / Equipamiento de Taller"],
+        "modelos_aplicables": ["Motores de combustión interna refrigerados por líquido"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Gasolina, Diésel, GLP, GNV",
+        "mercados_aplicables": "Global / Reino Unido / Europa",
+        "condiciones_uso": "Instrucciones oficiales de operación Laser Tools 5524. Uso profesional de taller.",
+    },
+    {
+        "doc_id": "RAG_EXP_LASER_002",
+        "titulo": "REGENERACIÓN, REUTILIZACIÓN Y MANTENIMIENTO DEL LÍQUIDO REACTIVO LASER 5526",
+        "fabricante": "Laser Tools / The Tool Connection Ltd",
+        "vehiculo": "Instrumental químico de comprobación de culata",
+        "sistema": "REFRIGERACIÓN",
+        "subsistema": "Reactivo Químico de Bloque",
+        "componente": "Fluido Reactivo Laser 5526",
+        "pagina": 2,
+        "paginas": [1, 2],
+        "rango_paginas": "1, 2",
+        "pdf_origen": "laser_5524_instrucciones_es.pdf",
+        "sha256_pdf": "513d6c527cc661e92503c7c35fb3c85c981e4af6726ec3bfb56a99e66840b63d",
+        "condiciones_medicion": "Operación de regeneración con aire fresco ambiente tras finalizar la prueba; piezas desmontadas y limpias (Página 2).",
+        "tolerancias_unidades": "Color de reposo y reutilización: Azul original límpido (Página 2). Fluido de repuesto oficial: Laser Tools N.º de pieza 5526 (Página 1).",
+        "procedimiento": "1. Concluida la prueba de detección, desmonte la cámara superior de la cámara inferior girándolas hasta separarlas completamente (Paso 12, Página 2). 2. Apriete la perilla de goma varias veces de forma continuada para aspirar aire fresco y limpio a través del líquido de prueba virado. 3. El contacto con el aire fresco purga el CO2 del reactivo hasta que este recobra totalmente su color azul original. 4. Una vez restablecido el color azul, devuelva el fluido a su depósito original para utilizarlo en futuras ocasiones (el líquido de prueba es reutilizable). 5. Si el reactivo se agota o contamina, reponer utilizando el recambio original Laser Tools referencia 5526 (Página 1). 6. Mantenimiento del detector (Página 1): Desmonte, lave y seque meticulosamente todos los componentes del detector después de cada uso para evitar depósitos secos o impurezas.",
+        "advertencias_seguridad": "Usar protección para manos y ojos. No ingerir el reactivo ni dejarlo al alcance de niños. Desechar fluidos turbios o contaminados conforme a las normativas locales de reciclaje de productos de taller.",
+        "cifras_trazadas": [
+            {
+                "parametro": "Regeneración de fluido reactivo",
+                "cifra": "bombeo de aire limpio hasta retorno a azul",
+                "unidad": "colorimetría",
+                "pagina": 2,
+                "condicion": "Paso 12: desarmar cámaras y aspirar aire fresco con la perilla de goma"
+            },
+            {
+                "parametro": "Referencia oficial de recambio",
+                "cifra": "Laser 5526",
+                "unidad": "referencia",
+                "pagina": 1,
+                "condicion": "Líquido de prueba de repuesto original"
+            }
+        ],
+        "requiere_confirmacion_oem": False,
+        "alcance_aplicacion": "Manual de Instrucciones Laser 5524 (Apartado de Precauciones y Paso 12, Páginas 1 y 2). Procedimiento oficial para conservación del reactivo indicador.",
+        "marcas_aplicables": ["Universal / Equipamiento de Taller"],
+        "modelos_aplicables": ["Equipos de diagnosis química Laser Tools"],
+        "anios_aplicables": "Universal",
+        "motores_aplicables": "Indiferente",
+        "mercados_aplicables": "Global",
+        "condiciones_uso": "Instrucciones de mantenimiento Laser Tools 5524.",
+    },
+]

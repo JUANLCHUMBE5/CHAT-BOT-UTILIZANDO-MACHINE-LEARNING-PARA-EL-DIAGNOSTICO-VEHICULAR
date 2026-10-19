@@ -11,12 +11,37 @@ from src.core.conversacion.respuestas_cortas.patrones_deteccion import PATRON_NU
 def resolver_condicion_fragmento(frag: str) -> Optional[str]:
     """Determina la condición de operación automotriz descrita en un fragmento."""
     frag_l = frag.lower()
-    if any(w in frag_l for w in ("con luces", "luces prendidas", "luces altas", "luces bajas", "prendo luces", "con carga")):
+    m_cil = re.search(r"\bcilindro\s*(\d+)\b", frag_l)
+    if m_cil:
+        return f"cilindro_{m_cil.group(1)}"
+    if any(w in frag_l for w in ("el resto", "los demas", "los demás", "los otros", "resto de cilindros")):
+        return "resto_cilindros"
+    if any(
+        w in frag_l
+        for w in ("con luces", "luces prendidas", "luces altas", "luces bajas", "prendo luces", "con carga")
+    ):
         return "con_carga_electrica"
-    elif any(w in frag_l for w in ("arranque", "doy arranque", "al prender", "al dar contacto", "intentar prender", "intento prender", "al dar marcha", "doy marcha", "al arrancar", "al girar la llave", "dando marcha")):
+    elif any(
+        w in frag_l
+        for w in (
+            "arranque",
+            "doy arranque",
+            "al prender",
+            "al dar contacto",
+            "intentar prender",
+            "intento prender",
+            "al dar marcha",
+            "doy marcha",
+            "al arrancar",
+            "al girar la llave",
+            "dando marcha",
+        )
+    ):
         return "durante_arranque"
     elif any(w in frag_l for w in ("ralenti", "ralentí", "en marcha minima", "marcha lenta")):
         return "ralenti_carga"
+    elif any(w in frag_l for w in ("motor encendido", "motor prendido", "enciendo el motor", "motor en marcha")):
+        return "motor_en_marcha"
     elif any(w in frag_l for w in ("reposo", "apagado", "motor apagado", "en frio", "en frío")):
         return "reposo"
     elif any(w in frag_l for w in ("contacto", "llave en on", "contacto puesto")):
@@ -98,6 +123,10 @@ def extraer_medicion(
             return None
         if re.match(r"^(?:19[89]\d|20[0-2]\d)$", m.group(1)):
             return None
+        if re.search(r"\b(?:opci[oó]n|elijo|prefiero|alternativa|la\s+[1-9]|n[uú]mero\s+[1-9])\b", texto_l):
+            return None
+        if re.fullmatch(r"\s*(?:la\s+)?[1-9]\s*", texto_l):
+            return None
 
     unidad_norm = normalizar_unidad_automotriz(unidad_raw)
     if unidad_norm:
@@ -153,6 +182,13 @@ def extraer_medicion_fragmento(
                 return None
             if any(w in fragmento.lower() for w in ("minuto", "minutos", "min", "hora", "horas", "segundo")):
                 return None
+            if re.search(
+                r"\b(?:opci[oó]n|elijo|prefiero|alternativa|la\s+[1-9]|n[uú]mero\s+[1-9])\b",
+                fragmento.lower(),
+            ):
+                return None
+            if re.fullmatch(r"\s*(?:la\s+)?[1-9]\s*", fragmento.lower()):
+                return None
 
         unidad_norm = normalizar_unidad_automotriz(unidad_raw)
         if unidad_norm:
@@ -179,9 +215,37 @@ def extraer_todas_mediciones(
     """Extrae todas las mediciones cuantitativas identificando cláusulas y condiciones operativas."""
     resultados: List[Tuple[float, str, Optional[str]]] = []
 
-    # 1. Evaluar por cláusulas para respetar la condición operativa local
-    clausulas = re.split(r'[,;]|\s+(?:y|pero|pero\s+con|mientras)\s+', texto_l, flags=re.IGNORECASE)
-    for c in clausulas:
+    # 0. Detección de series de compresión o mediciones por cilindro (M01: 150-140-145-150 psi o 150, 140, 145, 150 psi)
+    patron_serie = re.search(
+        r"\b(\d+(?:[.,]\d+)?)\s*(?:[-/,\s]+)\s*(\d+(?:[.,]\d+)?)\s*(?:[-/,\s]+)\s*(\d+(?:[.,]\d+)?)\s*(?:[-/,\s]+)\s*(\d+(?:[.,]\d+)?)(?:\s*(?:[-/,\s]+)\s*(\d+(?:[.,]\d+)?))?(?:\s*(?:[-/,\s]+)\s*(\d+(?:[.,]\d+)?))?\s*(psi|bar|kpa|mbar)?\b",
+        texto_l,
+        re.IGNORECASE,
+    )
+    if patron_serie:
+        grupos = patron_serie.groups()
+        u_serie = normalizar_unidad_automotriz(grupos[-1] or "")
+        if not u_serie and pending_q and pending_q.get("expected_units"):
+            u_serie = pending_q["expected_units"][0]
+        elif not u_serie and any(w in texto_preg or w in texto_l for w in ("compresi", "cilindro")):
+            u_serie = "PSI"
+
+        if u_serie:
+            valores_serie = [g for g in grupos[:-1] if g is not None]
+            if len(valores_serie) >= 3:
+                res_serie = []
+                for idx_cil, v_str in enumerate(valores_serie, 1):
+                    try:
+                        v_num = float(v_str.replace(",", "."))
+                        res_serie.append((v_num, u_serie, f"cilindro_{idx_cil}"))
+                    except ValueError:
+                        pass
+                if len(res_serie) >= 3:
+                    return res_serie
+
+    # 1. Evaluar por cláusulas para respetar la condición operativa local (sin romper comas decimales)
+    # Split sólo en comas NO seguidas de dígito
+    partes = re.split(r",(?!\d)|[;]|\s+(?:y|pero|pero\s+con|mientras)\s+", texto_l, flags=re.IGNORECASE)
+    for c in partes:
         c_l = c.strip()
         if not c_l:
             continue

@@ -14,12 +14,28 @@ def gestor():
 
 
 def test_a_dar_arranque_no_es_motor_de_arranque(gestor):
-    """Test A: 'le doy arranque pero no prende' debe interpretarse como acción del chofer y no como motor de arranque."""
+    """Test A: 'le doy arranque pero no prende' debe interpretarse como acción del chofer y no como motor de arranque.
+
+    En diagnóstico progresivo (Fase 14-16), ante la frase ambigua breve, CarBot emite
+    una auto-pregunta de descarte para precisar la causa (bomba, encendido, CKP), sin culpar
+    al motor de arranque. Al confirmar el giro del motor en el siguiente turno, diagnostica
+    sistema de combustible o encendido.
+    """
     txt = "le doy arranque pero no prende"
     res = gestor.procesar_consulta_texto(txt, session_id="test_a", proveedor="web")
-    # No debe culpar al arrancador si gira pero no enciende
+    # 1. No debe culpar al motor de arranque en el diagnóstico ni en la respuesta
     assert "motor de arranque" not in res.diagnostico_ml.lower()
-    assert any(c in res.diagnostico_ml.lower() for c in ("bomba", "gasolina", "combustible", "bujia", "encendido"))
+    assert "motor de arranque" not in res.respuesta_texto.lower()
+
+    # 2. Si emite auto-pregunta técnica de descarte, debe orientarse a combustible/encendido/sensores
+    if "auto-pregunta" in res.diagnostico_ml.lower():
+        assert any(c in res.respuesta_texto.lower() for c in ("bomba", "gasolina", "combustible", "bujia", "encendido", "sensor", "ckp"))
+        # Turno 2: el mecánico aclara que el motor gira normalmente
+        res_t2 = gestor.procesar_consulta_texto("el motor si gira normalmente pero no enciende", session_id="test_a", proveedor="web")
+        assert "motor de arranque" not in res_t2.diagnostico_ml.lower()
+        assert any(c in res_t2.diagnostico_ml.lower() for c in ("bomba", "gasolina", "combustible", "bujia", "encendido"))
+    else:
+        assert any(c in res.diagnostico_ml.lower() for c in ("bomba", "gasolina", "combustible", "bujia", "encendido"))
 
 
 def test_b_motor_gira_al_dar_arranque(gestor):

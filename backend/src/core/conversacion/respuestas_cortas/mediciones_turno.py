@@ -4,6 +4,7 @@ import re
 from src.core.conversacion.models import EstadoOperativo, FactState, FactType, QuestionIntent
 
 from .extractor_mediciones import extraer_todas_mediciones
+from .seguimiento_mediciones import registrar_contraste_pendiente
 
 
 def interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_str):
@@ -38,24 +39,23 @@ def interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_st
                 elif unidad in ("V", "mV"):
                     es_caida = bool(
                         re.search(r"\b(?:ca[ií]da\s+de\s+tensi[oó]n|masa|chasis|tierra|borne\s+negativo)\b", texto_l)
-                        or (val < 2.0 and not condicion)
                     )
                     if es_caida:
                         campo = "medicion_caida_tension_masa"
                         tipo_med = "caida_tension"
                         contexto_med = "masa_chasis"
+                    elif re.search(r"\balternador\b", texto_l):
+                        campo = "medicion_voltaje_alternador"
+                        tipo_med = "voltaje_alternador"
+                        contexto_med = condicion or "alternador_condicion_pendiente"
                     elif condicion in ("reposo", "durante_arranque", "contacto_on"):
                         campo = f"medicion_voltaje_{condicion}"
                         tipo_med = "voltaje_bateria"
                         contexto_med = condicion
-                    elif 13.0 <= val <= 15.5:
-                        campo = "medicion_voltaje_alternador"
-                        tipo_med = "voltaje_alternador"
-                        contexto_med = "carga_alternador"
                     else:
-                        campo = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
-                        tipo_med = "voltaje_bateria" if val < 13.0 else "voltaje_alternador"
-                        contexto_med = condicion or "circuito"
+                        campo = f'medicion_voltaje_{condicion}' if condicion else 'medicion_voltaje'
+                        tipo_med = 'voltaje_circuito'
+                        contexto_med = condicion or 'circuito_sin_identificar'
                 elif unidad in ("mA", "A"):
                     es_parasito = bool(re.search(r"\b(?:par[aá]sito|fuga|descarga|reposo|consumo)\b", texto_l))
                     tipo_med = "consumo_parasito" if es_parasito else "corriente_electrica"
@@ -144,18 +144,10 @@ def interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_st
                 )
                 estado.registrar_prueba_completada(campo, f"{val} {unidad}")
 
+                # Una lectura no demuestra normalidad ni una falla sin límite
+                # aplicable. Conservar exclusivamente la observación y su unidad.
                 if unidad == "V":
-                    if condicion == "durante_arranque":
-                        if val < 9.6:
-                            estado.registrar_hecho("caida_tension_excesiva", "SI", categoria="medicion", tipo=FactType.CONDICION)
-                        else:
-                            estado.registrar_hecho("caida_tension_excesiva", "NO", categoria="medicion", tipo=FactType.CONDICION)
-                            estado.registrar_hecho("voltaje_arranque_normal", "SI", categoria="medicion", tipo=FactType.CONDICION)
-                    elif condicion == "reposo":
-                        if val >= 12.4:
-                            estado.registrar_hecho("voltaje_reposo_normal", "SI", categoria="medicion", tipo=FactType.CONDICION)
-                    elif condicion == "con_carga_electrica" and val < 13.0:
-                        estado.registrar_hecho("caida_voltaje_con_luces", "SI", categoria="medicion", tipo=FactType.CONDICION)
+                    registrar_contraste_pendiente(estado, condicion, texto_usuario)
 
                 if respuesta_retorno is None:
                     respuesta_retorno = {

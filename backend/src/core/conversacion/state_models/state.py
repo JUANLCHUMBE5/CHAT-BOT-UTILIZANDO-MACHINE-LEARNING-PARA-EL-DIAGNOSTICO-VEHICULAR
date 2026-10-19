@@ -39,7 +39,7 @@ class ConversationState:
     max_repreguntas: int = 3
     confianza_actual: float = 0.0
     conversation_evidence_level: EvidenceLevel = EvidenceLevel.BAJA
-    dtc_status: DtcStatus = DtcStatus.SIN_DTC
+    dtc_status: DtcStatus = DtcStatus.DTC_DESCONOCIDO
     top3_actual: List[Dict[str, Any]] = field(default_factory=list)
     falla_principal: Optional[str] = None
     hipotesis_descartadas: List[str] = field(default_factory=list)
@@ -131,9 +131,15 @@ class ConversationState:
         if h and h not in self.herramientas_no_disponibles:
             self.herramientas_no_disponibles.append(h)
             self.updated_at = time.time()
+        if h and h not in self.tools_unavailable:
+            self.tools_unavailable.append(h)
+        if h in self.tools_available:
+            self.tools_available.remove(h)
 
     def desbloquear_herramienta(self, her: str) -> None:
         h = her.lower().strip()
+        if h in self.tools_unavailable:
+            self.tools_unavailable.remove(h)
         if h in self.herramientas_no_disponibles:
             self.herramientas_no_disponibles.remove(h)
             self.pruebas_no_disponibles = [p for p in self.pruebas_no_disponibles if p.get("herramienta") != h]
@@ -392,6 +398,7 @@ class ConversationState:
 
     def marcar_herramienta_disponible(self, her: str) -> None:
         h = her.lower().strip()
+        self.desbloquear_herramienta(h)
         if h not in self.tools_available:
             self.tools_available.append(h)
         if h in self.tools_unavailable:
@@ -400,6 +407,7 @@ class ConversationState:
 
     def marcar_herramienta_indisponible(self, her: str) -> None:
         h = her.lower().strip()
+        self.bloquear_herramienta(h)
         if h not in self.tools_unavailable:
             self.tools_unavailable.append(h)
         if h in self.tools_available:
@@ -488,7 +496,7 @@ class ConversationState:
         self.turnos_repregunta = 0
         self.confianza_actual = 0.0
         self.conversation_evidence_level = EvidenceLevel.BAJA
-        self.dtc_status = DtcStatus.SIN_DTC
+        self.dtc_status = DtcStatus.DTC_DESCONOCIDO
         self.top3_actual = []
         self.falla_principal = None
         self.hipotesis_descartadas = []
@@ -511,6 +519,8 @@ class ConversationState:
         if preservar_vehiculo:
             for campo, valor in vehiculo.items():
                 setattr(self, campo, valor)
+        else:
+            self.banner_vehiculo_mostrado = False
         self.updated_at = time.time()
 
     def restaurar_caso_archivado(self, case_id: str) -> bool:
@@ -541,6 +551,7 @@ class ConversationState:
         historial = list(self.hechos_historicos)
         estado_vacio = type(self)(session_id=self.session_id)
         estado_vacio.hechos_historicos = historial
+        self.__dict__.clear()
         self.__dict__.update(estado_vacio.__dict__)
 
     def exportar_dict(self, incluir_trazabilidad: bool = True) -> Dict[str, Any]:
@@ -610,7 +621,7 @@ class ConversationState:
             max_repreguntas=int(data.get("max_repreguntas", 3)),
             confianza_actual=float(data.get("confianza_actual", 0.0)),
             conversation_evidence_level=EvidenceLevel(data.get("conversation_evidence_level", "BAJA")),
-            dtc_status=DtcStatus(data.get("dtc_status", "SIN_DTC")),
+            dtc_status=DtcStatus(data.get("dtc_status", "DTC_DESCONOCIDO")),
             top3_actual=list(data.get("top3_actual") or []),
             hipotesis_descartadas=list(data.get("hipotesis_descartadas") or []),
             created_at=float(data.get("created_at", time.time())),

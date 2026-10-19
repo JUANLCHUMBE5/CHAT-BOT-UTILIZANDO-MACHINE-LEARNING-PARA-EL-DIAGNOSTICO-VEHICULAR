@@ -6,13 +6,18 @@ import re
 from typing import List, Optional, Tuple
 
 PATRONES_REINICIO = [
-    re.compile(r"^\s*(?:quiero\s+)?cancelar(?:(?:\s+el)?\s+(?:caso|diagn[oó]stico|consulta))?\s*[.!]?\s*$", re.IGNORECASE),
+    re.compile(
+        r"^\s*(?:quiero\s+)?cancelar(?:(?:\s+el)?\s+(?:caso|diagn[oó]stico|consulta))?\s*[.!]?\s*$",
+        re.IGNORECASE,
+    ),
     re.compile(r"^\s*(?:nuevo|neuvo)\s*[.!]?\s*$", re.IGNORECASE),
     re.compile(r"\b(otro\s+(carro|auto|veh[ií]culo))\b", re.IGNORECASE),
     re.compile(r"\b((?:nuevo|neuvo)\s+diagn[oó]stico|(?:nuevo|neuvo)\s+caso)\b", re.IGNORECASE),
     re.compile(r"\b(reiniciar|empezar\s+de\s+nuevo|comenzar\s+de\s+nuevo)\b", re.IGNORECASE),
     re.compile(r"\b(limpiar\s+sesi[oó]n|caso\s+(?:nuevo|neuvo))\b", re.IGNORECASE),
-    re.compile(r"\b(vamos\s+con\s+otro\s+cliente|termin[eé]\s+ese|tengo\s+uno\s+(?:nuevo|neuvo))\b", re.IGNORECASE),
+    re.compile(
+        r"\b(vamos\s+con\s+otro\s+cliente|termin[eé]\s+ese|tengo\s+uno\s+(?:nuevo|neuvo))\b", re.IGNORECASE
+    ),
 ]
 
 PATRON_NO_ARRANCA = re.compile(
@@ -48,7 +53,7 @@ PATRON_ANTECEDENTE_MARCHA = re.compile(
     re.IGNORECASE,
 )
 PATRON_DEMORA_ARRANQUE = re.compile(
-    r"\b(demora\s+(?:(?:mucho|bastante|demasiado|(?:unos?\s+)?(?:\d+|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+segundos?)\s+)?en\s+(?:arrancar|prender|encender)|"
+    r"\b(demora\s+(?:(?:mucho|bastante|demasiado|(?:unos?\s+)?(?:\\d+|un|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s+segundos?)\s+)?en\s+(?:arrancar|prender|encender)|"
     r"le\s+cuesta\s+(?:arrancar|prender|encender)|"
     r"tarda\s+(?:(?:mucho|bastante|demasiado)\s+)?en\s+(?:arrancar|prender|encender)|"
     r"da\s+marcha\s+(?:varios\s+segundos|un\s+rato)\s+antes\s+de\s+encender|"
@@ -60,9 +65,9 @@ PATRON_DEMORA_ARRANQUE = re.compile(
 )
 
 PATRONES_MARCA = [
-    (re.compile(r"\b(toyota)\b", re.IGNORECASE), "Toyota"),
-    (re.compile(r"\b(nissan)\b", re.IGNORECASE), "Nissan"),
-    (re.compile(r"\b(hyundai)\b", re.IGNORECASE), "Hyundai"),
+    (re.compile(r"\b(toyota|toyoyta|toyta)\b", re.IGNORECASE), "Toyota"),
+    (re.compile(r"\b(nissan|nisan)\b", re.IGNORECASE), "Nissan"),
+    (re.compile(r"\b(hyundai|iundai|hyunday|hiundai)\b", re.IGNORECASE), "Hyundai"),
     (re.compile(r"\b(kia)\b", re.IGNORECASE), "Kia"),
     (re.compile(r"\b(chevrolet|chevy)\b", re.IGNORECASE), "Chevrolet"),
     (re.compile(r"\b(ford)\b", re.IGNORECASE), "Ford"),
@@ -107,7 +112,7 @@ PATRONES_MODELO = [
     (re.compile(r"\b(sportage)\b", re.IGNORECASE), "Sportage"),
     (re.compile(r"\b(sorento)\b", re.IGNORECASE), "Sorento"),
     (re.compile(r"\b(elantra)\b", re.IGNORECASE), "Elantra"),
-    (re.compile(r"\b(accent)\b", re.IGNORECASE), "Accent"),
+    (re.compile(r"\b(accent|acent)\b", re.IGNORECASE), "Accent"),
     (re.compile(r"\b(tucson)\b", re.IGNORECASE), "Tucson"),
     (re.compile(r"\b(santa\s*fe)\b", re.IGNORECASE), "Santa Fe"),
     (re.compile(r"\b(civic)\b", re.IGNORECASE), "Civic"),
@@ -135,15 +140,33 @@ PATRONES_MODELO = [
 ]
 
 PATRON_NEGACION_VEHICULAR = re.compile(
-    r"(?:\bno\b|\bno\s+(?:es|era|fue|ser[ií]a)\b|\bnunca\s+fue\b|\btampoco\s+(?:es|era)?\b|\bdescart(?:o|ado)\b|\bmenos\b|\ben\s+vez\s+de\b)\s*(?:un\s+|una\s+|el\s+|la\s+)?(?:[a-záéíóú0-9-]+\s+)?$",
+    r"(?:\bno\b|\bno\s+(?:es|era|fue|ser[ií]a)\b|\bnunca\s+fue\b|\btampoco\s+(?:es|era)?\b|\bdescart(?:o|ado)\b|\bmenos\b|\ben\s+vez\s+de\b)\s*(?:un\b|una\b|el\b|la\b|\s)*(?:[a-záéíóú0-9-]+\s+)?$",
     re.IGNORECASE,
 )
 PATRON_ANTECEDENTE_VEHICULAR = re.compile(
-    r"(?:\bantes\s+(?:de\s+este\s+)?(?:revis[eé]|vi|atend[ií]|ten[ií]a|era)\b|\bel\s+anterior\s+(?:era|fue|carro|auto)\b)\s*(?:un\s+|una\s+)?$",
+    r"(?:"
+    r"\b(?:tiene|ten[i\u00ed]a)?\s*(?:su\s+|el\s+|la\s+|mi\s+|un\s+|una\s+)?otro\s+(?:auto|carro|veh[i\u00ed]culo|coche|camioneta)(?:\s+(?:del?\s+cliente|que\s+tiene))?(?:\s+(?:que\s+)?(?:es|era|fue))?\b|"
+    r"\b(?:otro|otra)\s+(?:carro|auto|veh[i\u00ed]culo|coche|camioneta)\s+del?\s+cliente(?:\s+(?:es|era|fue))?\b|"
+    r"\b(?:veh[i\u00ed]culo|auto|carro|coche|camioneta)\s+anterior(?:\s+(?:es|era|fue))?\b|"
+    r"\b(?:el|la)\s+(?:auto|carro|veh[i\u00ed]culo|coche|camioneta)\s+de\s+ayer(?:\s+(?:era|fue))?\b|"
+    r"\bantes\s+(?:de\s+(?:este|mi|el)\s+)?(?:revis[e\u00e9]|vi|atend[i\u00ed]|ten[i\u00ed]|era|tuve)\b|"
+    r"\bel\s+anterior\s+(?:era|fue|carro|auto|veh[i\u00ed]culo)\b|"
+    r"\b(?:en\s+un|en\s+el|como\s+en\s+un|como\s+un|al\s+igual\s+que\s+(?:en\s+)?(?:un|el)?)\b"
+    r")(?:(?:\s+(?:es|era|fue))?\s+(?:un|una|el|la|este|mi))?(?:\s+[a-z\u00e1\u00e9\u00ed\u00f3\u00fa0-9-]+)?\s*$",
+    re.IGNORECASE,
+)
+PATRON_COMPARATIVO_POST = re.compile(
+    r"^(?:[a-z\u00e1\u00e9\u00ed\u00f3\u00fa0-9-]+\s+)?(?:,\s*)?(?:"
+    r"pero\s+(?:estamos|sigo|sigue|seguimos|aqu[i\u00ed]|vamos\s+a)\s+(?:revisando|viendo|con|atendiendo|enfocados\s+en)\s+este|"
+    r"pero\s+(?:este|aqu[i\u00ed])\s+es|"
+    r"era\s+(?:de\s+)?(?:ayer|antes|otro|otra|la\s+semana\s+pasada)|"
+    r"fue\s+ayer|del?\s+otro|del?\s+anterior|"
+    r"me\s+pas[o\u00f3]|pasaba|ten[i\u00ed]|vi|recuerdo|ocurr[i\u00ed]|fallaba"
+    r")",
     re.IGNORECASE,
 )
 PATRON_AFIRMACION_VEHICULAR = re.compile(
-    r"(?:\bes\b|\bera\b|\btengo\b|\ben\b|\bdel?\b|\bpara\b|\bcorrijo\b|\bcorrecci[oó]n\b|\bme\s+equivoqu[eé](?:,\s*era|\s*es)?\b)\s*(?:un\s+|una\s+)?$",
+    r"(?:\bes\b|\bera\b|\btengo\b|\ben\b|\bdel?\b|\bpara\b|\bcorrijo\b|\bcorrecci[oó]n\b|\bme\s+equivoqu[eé](?:,\s*era|\s*es)?\b)\s*(?:un\b|una\b|\s)*$",
     re.IGNORECASE,
 )
 PATRON_CORRECCION_VEHICULO = re.compile(
@@ -164,11 +187,13 @@ def seleccionar_entidad_vehicular(
 
     for start, end, nombre in coincidencias:
         prefijo = texto[:start].rstrip(" ,;:")
-        ventana_pre = prefijo[-45:] if len(prefijo) > 45 else prefijo
+        ventana_pre = prefijo[-75:] if len(prefijo) > 75 else prefijo
 
         es_negado = bool(
             PATRON_NEGACION_VEHICULAR.search(ventana_pre)
-            or re.search(r"\bno\s+(?:es|era)\s+(?:[a-záéíóú0-9-]+\s+)*" + re.escape(nombre.lower()) + r"\b", texto_l)
+            or re.search(
+                r"\bno\s+(?:es|era)\s+(?:[a-záéíóú0-9-]+\s+)*" + re.escape(nombre.lower()) + r"\b", texto_l
+            )
         )
 
         if es_negado:
@@ -176,17 +201,29 @@ def seleccionar_entidad_vehicular(
                 fue_negada_actual = True
             continue
 
-        if PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre):
+        sufijo = texto[end:].lstrip(" ,;:")
+        ventana_post = sufijo[:75]
+        es_comparativo = bool(
+            PATRON_ANTECEDENTE_VEHICULAR.search(ventana_pre) or PATRON_COMPARATIVO_POST.search(ventana_post)
+        )
+        if es_comparativo:
             candidatos_validos.append((start, nombre, 1))
             continue
 
-        prioridad = 3 if PATRON_AFIRMACION_VEHICULAR.search(ventana_pre) else 2
+        if PATRON_CORRECCION_VEHICULO.search(ventana_pre):
+            prioridad = 4
+        elif PATRON_AFIRMACION_VEHICULAR.search(ventana_pre):
+            prioridad = 3
+        else:
+            prioridad = 2
         candidatos_validos.append((start, nombre, prioridad))
 
     if not candidatos_validos:
         return (None, fue_negada_actual)
 
     candidatos_validos.sort(key=lambda x: (x[2], x[0]), reverse=True)
+    if entidad_actual and candidatos_validos[0][2] <= 1:
+        return (None, fue_negada_actual)
     return (candidatos_validos[0][1], fue_negada_actual)
 
 
@@ -196,9 +233,7 @@ PATRON_PLACA_EXPLICITA = re.compile(
     r"\b(?:placa|patente)\s*(?:es\s+|:\s*|\s+)?([A-Za-z0-9]{2,3}[-\s]?[0-9]{3,4})\b",
     re.IGNORECASE,
 )
-PATRON_PLACA_FORMATO = re.compile(
-    r"\b([A-Za-z][0-9A-Za-z]{2}[-\s][0-9]{3,4})\b"
-)
+PATRON_PLACA_FORMATO = re.compile(r"\b([A-Za-z][0-9A-Za-z]{2}[-\s][0-9]{3,4})\b")
 
 PATRON_DTC = re.compile(r"\b([PBUCpbuc][0-3][0-9A-Fa-f]{3})\b")
 PATRON_ANIO = re.compile(
@@ -228,22 +263,51 @@ PATRON_CAUSAL_INYECCION = re.compile(
 PATRON_HALLAZGO_MAF = re.compile(
     r"\b(?:el\s+)?maf\b.{0,55}\b(?:lecturas?\s+(?:raras?|irregulares?|anormales?)|"
     r"valores?\s+(?:raros?|irregulares?|anormales?)|fuera\s+de\s+rango|no\s+mide\s+bien)\b|"
-    r"\b(?:lecturas?\s+(?:raras?|irregulares?|anormales?)|valores?\s+(?:raros?|irregulares?|anormales?))"
+    r"\b(?:lecturas?\\s+(?:raras?|irregulares?|anormales?)|valores?\\s+(?:raros?|irregulares?|anormales?))"
     r".{0,55}\b(?:sensor\s+)?maf\b|"
     r"\b(?:desconect[eé]|solt[eé]|saqu[eé])\b.{0,30}\b(?:sensor\s+)?maf\b|"
     r"\b(?:sensor\s+)?maf\b.{0,30}\b(?:desconectad[oa]|desconect[eé])\b",
     re.IGNORECASE,
 )
-PATRON_SENSOR_OXIGENO = re.compile(r"\b(sensor\s+(?:de\s+)?ox[ií]geno|sonda\s+lambda|sensor\s+o2)\b", re.IGNORECASE)
+PATRON_SENSOR_OXIGENO = re.compile(
+    r"\b(sensor\s+(?:de\s+)?ox[ií]geno|sonda\s+lambda|sensor\s+o2)\b", re.IGNORECASE
+)
 
 PATRONES_SALUDO = [
-    re.compile(r"^\s*(hola+|buen(?:as|os)?(?:\s+(?:d[ií]as|tardes|noches))?|qu[eé]\s+tal|saludos?|alo|al[oó])\s*[!.,]*\s*$", re.IGNORECASE),
-    re.compile(r"^\s*(hola+\s+(?:buenas|buenos\s+d[ií]as|buenas\s+tardes|amigo|maestro|carbot|bot))\s*[!.,]*\s*$", re.IGNORECASE),
+    re.compile(
+        r"^\s*(hola+|buen(?:as|os)?(?:\s+(?:d[ií]as|tardes|noches))?|qu[eé]\s+tal|saludos?|alo|al[oó])\s*[!.,]*\s*$",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"^\s*(hola+\s+(?:(?:amigo|maestro|carbot|bot)\s+)?(?:buenas|buenos\s+d[ií]as|buenas\s+tardes|buenas\s+noches|amigo|maestro|carbot|bot)?)\s*[!.,]*\s*$",
+        re.IGNORECASE,
+    ),
 ]
 
 PATRONES_SOLICITUD_DETALLE = [
     re.compile(r"\b(m[aá]s\s+detalles?|dame\s+m[aá]s\s+detalles?|detallar|detalle)\b", re.IGNORECASE),
-    re.compile(r"\b(c[oó]mo\s+(?:lo\s+)?reviso|c[oó]mo\s+(?:se\s+)?prueba|c[oó]mo\s+compruebo)\b", re.IGNORECASE),
-    re.compile(r"\b(c[oó]mo\s+(?:reviso|compruebo)\s+(?:la\s+)?(?:1|2|3|primera|segunda|tercera))\b", re.IGNORECASE),
-    re.compile(r"\b(expl[ií]came|explica|por\s+qu[eé]|paso\s+a\s+paso|procedimiento)\b", re.IGNORECASE),
+    re.compile(
+        r"\b(?:c[oó]mo\s+(?:(?:lo|la|los|las|se|puedo|debo|podemos|hay\s+que)\s+)?"
+        r"(?:medir|comprobar|probar|calibrar|ajustar|revisar|chequear|checar|testear|purgar|diagnosticar|desarmar|limpiar|armar|reaprender|instalar|"
+        r"hacer\s+(?:la\s+)?(?:prueba|medici[oó]n|calibraci[oó]n|revisi[oó]n|purga)))\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:c[oó]mo\s+(?:(?:lo|la|los|las|se)\s+)?"
+        r"(?:mide|mido|comprueba|compruebo|prueba|pruebo|calibra|calibro|ajusta|ajusto|revisa|reviso|chequea|chequeo|checa|testea|purga|purgo|purgar|reaprende))\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:c[oó]mo\s+(?:(?:se|lo|la)\s+)?(?:revisa|reviso|revisar|comprueba|compruebo|comprobar|mide|mido|medir|prueba|pruebo|probar)\s+"
+        r"(?:la\s+|el\s+)?(?:1|2|3|primera|segunda|tercera|opci[oó]n\s+\d+|hip[oó]tesis\s+\d+))\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:paso\s+a\s+paso|procedimiento\s+(?:de\s+|para\s+)?|"
+        r"gu[ií]a\s+para\s+(?:medir|probar|calibrar|revisar)|"
+        r"instrucciones\s+para\s+(?:medir|probar|calibrar|revisar)|"
+        r"expl[ií]came\s+(?:el\s+procedimiento|paso\s+a\s+paso|c[oó]mo\s+se\s+hace)|"
+        r"tolerancia|especificaci[oó]n|(?:c[oó]mo\s+(?:se\s+)?(?:usa|utiliza|coloca|monta|mide\s+con)\s+)?reloj\s+comparador\s+paso\s+a\s+paso)\b",
+        re.IGNORECASE,
+    ),
 ]

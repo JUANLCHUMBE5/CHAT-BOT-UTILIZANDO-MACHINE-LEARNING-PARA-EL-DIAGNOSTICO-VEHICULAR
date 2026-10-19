@@ -136,7 +136,7 @@ def _fallback_heuristico_determinista(
             "vehiculo": TipoHechoSemantico.VEHICULO,
             "herramienta": TipoHechoSemantico.HERRAMIENTA,
         }
-        tipo_h = tipo_map.get(cat, TipoHechoSemantico.SINTOMA)
+        tipo_h = tipo_map.get(cat, TipoHechoSemantico.CONDICION)
 
         estado_crudo = str(h_dict.get("estado", "CONFIRMADO"))
         if "NO_REVISADO" in estado_crudo:
@@ -242,7 +242,7 @@ def interpretar_mensaje_usuario(
 
             prompt_usuario = (
                 f"CONTEXTO DEL CASO:\n{resumen_contexto}\n\n"
-                f"MENSAJE DEL MECÁNICO:\n\"{texto_sanitizado}\"\n\n"
+                f'MENSAJE DEL MECÁNICO:\n"{texto_sanitizado}"\n\n'
                 "Interpreta las intenciones, síntomas, condiciones, comprobaciones (distinguiendo NO_REVISADO, REEMPLAZADO y DESCARTADO) "
                 "y la pregunta técnica si existe. Devuelve el JSON:"
             )
