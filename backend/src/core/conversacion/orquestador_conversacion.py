@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import re
 from typing import Any, Dict, Optional
 
 from src.core.conversacion.repositorio import ConversationStateRepository, PostgresConversationRepository
@@ -19,6 +18,7 @@ from src.core.conversacion.turnos.resolver_diagnostico import resolver_diagnosti
 from src.core.conversacion.turnos.respuestas_cortas import respuestas_cortas
 from src.core.conversacion.turnos.transicion_y_plan_b import transicion_y_plan_b
 from src.infrastructure.rag.contrato_documental import proteger_salida_conversacional
+from src.infrastructure.rag.documental_evidencia import mediciones_con_procedencia
 from src.infrastructure.rag.documental_salida import es_solicitud_especificacion
 
 
@@ -48,11 +48,7 @@ class OrquestadorConversacion:
                 consulta_usuario=consulta_usuario,
                 corpus_validado=corpus_validado,
                 especificacion_autorizada=False,
-                mediciones_reportadas=[
-                    str(x)
-                    for x in getattr(salida_dict.get("estado"), "historial_mensajes_usuario", [])
-                    if re.search(r"(?:bar|psi|mm|volt|v\b|°c|kpa|rpm|ohm|Ω|amp|\bda\b|\bmide\b|\bmarca\b)", str(x), re.I)
-                ],
+                mediciones_reportadas=mediciones_con_procedencia(salida_dict.get("estado")),
             )
             salida_dict["respuesta_texto"] = resp_seg
             if fue_interceptada:
@@ -104,9 +100,23 @@ class OrquestadorConversacion:
             remitente=remitente,
         )
         estado = res.get("estado")
+        # Defensa final frente a retornos anticipados: la respuesta de peligro
+        # es autoritativa; jamás se agrega a una instrucción contradictoria.
+        from src.core.diagnostico.politica_seguridad import PoliticaSeguridad, SeveridadSeguridad
+
+        severidad, banner = PoliticaSeguridad.evaluar_severidad(texto_usuario, "", estado=estado)
+        if severidad == SeveridadSeguridad.CRITICAL_STOP and banner:
+            res.update(
+                respuesta_texto=banner.strip(),
+                decision="SEGURIDAD_CRITICA",
+                confianza_ml=0.0,
+                es_pregunta=False,
+            )
         if estado is not None:
             res.setdefault("case_id", estado.case_id)
         veh_str = f"{getattr(estado, 'marca', '') or ''} {getattr(estado, 'modelo', '') or ''} {getattr(estado, 'anio', '') or ''}".strip()
+        if res.get("decision") == "SEGURIDAD_CRITICA" and veh_str:
+            res["respuesta_texto"] = f"Vehículo: {veh_str}.\n" + res["respuesta_texto"]
         corpus_val = bool(getattr(getattr(gestor_diagnostico, "motor_rag", None), "corpus_validado", False))
         resultado = self._proteger_salida(res, texto_usuario, veh_str, corpus_val)
         if estado is not None and resultado.get("decision") != "CONSULTA_MEMORIA":

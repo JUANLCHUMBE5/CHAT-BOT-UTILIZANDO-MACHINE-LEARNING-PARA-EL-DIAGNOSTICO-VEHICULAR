@@ -6,6 +6,7 @@ from importlib import import_module as _importar
 
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 from src.core.conversacion.models import DtcStatus, QuestionIntent
+from src.core.conversacion.respuestas_cortas.seguimiento_mediciones import evaluar_lectura
 
 
 async def respuestas_cortas(self, turno):
@@ -202,7 +203,7 @@ async def respuestas_cortas(self, turno):
                         "Prueba de chispa ya completada: evitando repetición de la comprobación"
                     )
             else:
-                turno.pregunta_elegida = "Con el multímetro conectado en escala de 20 V DC: ¿cuánto marca en reposo y a cuánto baja al dar arranque?"
+                turno.pregunta_elegida = "Con el multímetro en tensión continua y un rango adecuado al circuito: ¿cuánto marca en reposo y a cuánto baja al dar arranque?"
                 turno.intent_elegido, turno.decision = (QuestionIntent.MEDICION_VOLTAJE.value, "PREGUNTAR")
                 turno.motivo_decision = "Usuario cuenta con multímetro: solicitando lectura de voltaje"
                 turno.estado.establecer_pregunta_pendiente(
@@ -264,7 +265,7 @@ async def respuestas_cortas(self, turno):
                     else "¿Dispones de escáner para verificar códigos DTC y presión en datos en vivo?"
                 )
             elif turno.chispa_ya_evaluada and turno.escaneo_ya_realizado:
-                turno.pregunta_sug = "Con la presión de combustible y el encendido en buen estado y sin códigos DTC, la falla apunta al cuerpo de aceleración o compresión. ¿Se observa suciedad o carbón en la mariposa de admisión?"
+                turno.pregunta_sug = "Con presión reportada y encendido revisado, sin códigos DTC, considera también admisión y compresión como hipótesis pendientes. ¿Se observa suciedad o carbón en la mariposa de admisión?"
             elif turno.chispa_ya_evaluada:
                 turno.pregunta_sug = "Con el encendido descartado, ¿dispones de escáner para verificar códigos DTC o datos en vivo de sensores?"
             elif turno.escaneo_ya_realizado:
@@ -277,7 +278,7 @@ async def respuestas_cortas(self, turno):
                     for w in ("empapada", "empapadas", "mojada", "mojadas", "ahogado", "ahogando")
                 )
             ):
-                turno.respuesta_texto = f"🔬 *Diagnóstico diferencial de exceso de combustible:*\n\nCon {turno.val} {turno.unidad} de presión de combustible en el riel y buena chispa, si las bujías salen empapadas en gasolina, descarta chispa débil o falta de combustible. La causa apunta directamente a un **inyector** goteando o trabado abierto en ese cilindro, provocando ahogamiento e impidiendo el arranque."
+                turno.respuesta_texto = f'Registrado: {turno.val} {turno.unidad} de presión de combustible. Las bujías mojadas reportadas orientan a considerar inyector con fuga, encendido insuficiente o exceso de combustible; no confirman una causa ni descartan alimentación sin contrastar con el manual. ¿Cómo se comprobó el encendido y bajo qué condición se tomó la presión?'
             else:
                 turno.respuesta_texto = f"Registrado: {turno.val} {turno.unidad} de presión de combustible en el riel. Compara este valor con la especificación de servicio del fabricante para el motor y sistema de inyección específico. {turno.pregunta_sug}"
             turno.decision = "CONCLUSION_TECNICA"
@@ -285,113 +286,11 @@ async def respuestas_cortas(self, turno):
                 f"Medición de presión {turno.val} {turno.unidad} registrada y contextualizada"
             )
             turno.es_pregunta = False
-        elif (
-            turno.campo_ic == "medicion_voltaje" or str(turno.campo_ic).startswith("medicion_voltaje_")
-        ) and turno.interpretacion_corta.get("valor") is not None:
-            turno.val = turno.interpretacion_corta.get("valor")
-            turno.cond = turno.interpretacion_corta.get("condicion_medicion") or (
-                str(turno.campo_ic).split("medicion_voltaje_")[1]
-                if "medicion_voltaje_" in str(turno.campo_ic)
-                else None
-            )
-            turno.val_num = float(turno.val)
-            turno.es_motor_encendido = any(
-                (
-                    w in turno.norm_txt_cons
-                    for w in (
-                        "encendido",
-                        "prendido",
-                        "marcha",
-                        "alternador",
-                        "ralenti",
-                        "ralentí",
-                        "andando",
-                        "cargando",
-                    )
-                )
-            )
-            turno.es_arranque = turno.cond == "durante_arranque" or any(
-                (
-                    w in turno.norm_txt_cons
-                    for w in ("arranque", "cranking", "arrancando", "girar la llave", "dar llave")
-                )
-            )
-            if turno.es_arranque or turno.cond == "durante_arranque":
-                if turno.val_num < 9.6:
-                    turno.respuesta_texto = f"⚠️ Caída de tensión crítica: {turno.val} V en arranque. Esto confirma descarga profunda, celda dañada o consumo excesivo del arrancador. Revisa ajuste de bornes y prueba con una batería de apoyo."
-                else:
-                    turno.respuesta_texto = f"✅ Caída de tensión normal: {turno.val} V en arranque. La batería retiene carga bajo demanda. Con {turno.val} V en arranque queda descartada batería débil; el problema de no giro apunta directamente al **solenoide** o switch de encendido del **arrancador**."
-                turno.decision = "CONCLUSION_TECNICA"
-                turno.motivo_decision = f"Medición de voltaje en arranque evaluada: {turno.val} V"
-                turno.es_pregunta = False
-            elif (
-                turno.es_motor_encendido
-                or turno.val_num >= 13.0
-                or ("baja a" in turno.norm_txt_cons and "12.1" in turno.norm_txt_cons)
-            ):
-                if "12.1" in turno.norm_txt_cons:
-                    turno.val = "12.1"
-                    turno.val_num = 12.1
-                if turno.val_num >= 13.5 and turno.val_num <= 14.8:
-                    turno.respuesta_texto = f"✅ Sistema de carga en rango normal: {turno.val} V con motor en marcha (especificación OEM: 13.5 V a 14.8 V). El alternador y el regulador de voltaje están generando carga correctamente."
-                elif turno.val_num < 13.0:
-                    turno.respuesta_texto = f"⚠️ Tensión insuficiente con motor en marcha: {turno.val} V (debe generar entre 13.5 V y 14.8 V). Esto confirma que el **alternador** NO está suministrando carga y el vehículo rueda consumiendo la batería."
-                else:
-                    turno.respuesta_texto = f"⚠️ Sobretensión de carga: {turno.val} V con motor encendido (límite 14.8 V). Riesgo de sobrecarga en batería por falla en el regulador del alternador."
-                turno.decision = "CONCLUSION_TECNICA"
-                turno.motivo_decision = f"Voltaje de carga evaluado: {turno.val} V"
-                turno.es_pregunta = False
-            elif any(
-                (
-                    w in turno.norm_txt_cons
-                    for w in ("100%", "nueva", "buena", "vida util", "vida útil", "probador", "tester")
-                )
-            ):
-                turno.respuesta_texto = f"✅ Batería verificada: {turno.val} V en reposo y prueba de estado al 100%. Queda completamente descartada la batería como causa de falla. Si se escucha clic y no gira, el foco técnico está en los contactos internos del **solenoide** o carbones del **arrancador**."
-                turno.decision = "CONCLUSION_TECNICA"
-                turno.motivo_decision = f"Batería descartada con {turno.val} V al 100%"
-                turno.es_pregunta = False
-            else:
-                turno.pregunta_arranque = f"Registrado: {turno.val} V. Para comprobar si la batería mantiene la carga bajo consumo real, ¿a cuánto desciende el multímetro mientras mantienes la llave en posición de arranque?"
-                turno.intent_arranque = QuestionIntent.MEDICION_VOLTAJE
-                turno.estado.registrar_pregunta(
-                    intent=turno.intent_arranque, texto=turno.pregunta_arranque, incrementar_repregunta=False
-                )
-                turno.decision = "PREGUNTAR"
-                turno.motivo_decision = (
-                    f"Voltaje inicial {turno.val} V registrado: solicitando medición durante el arranque"
-                )
-                turno.respuesta_texto = turno.pregunta_arranque
-                turno.es_pregunta = True
-                turno.intent_elegido = turno.intent_arranque.value
-                turno.pregunta_elegida = turno.pregunta_arranque
-        elif turno.campo_ic in ("medicion_alabeo_disco", "alabeo_disco") or (
-            turno.interpretacion_corta.get("tipo_medicion") == "alabeo_disco"
-            and turno.interpretacion_corta.get("valor") is not None
-        ):
-            turno.val = turno.interpretacion_corta.get("valor")
-            turno.unidad = turno.interpretacion_corta.get("unidad", "mm")
-            try:
-                turno.val_float = float(turno.val)
-            except (ValueError, TypeError):
-                turno.val_float = 0.0
-            turno.estado.registrar_medicion(
-                "alabeo_disco", turno.val_float, turno.unidad, contexto="disco_freno", prueba="alabeo_disco"
-            )
-            turno.estado.registrar_prueba_completada("alabeo_disco", f"{turno.val} {turno.unidad}")
-            turno.estado.limpiar_pregunta_pendiente()
-            turno.ref_oem = (
-                "Toyota (Manual de Servicio BR-Brake: máx. 0.05 mm en disco montado)"
-                if turno.estado.marca and "toyota" in turno.estado.marca.lower()
-                else "OEM del fabricante (tolerancia estándar 0.05 a 0.07 mm)"
-            )
-            if turno.val_float > 0.07:
-                turno.respuesta_texto = f"🔬 *Evaluación metrológica (Alabeo lateral de disco): {turno.val} {turno.unidad}*\n\n• **Referencia de taller:** Según la especificación oficial {turno.ref_oem}, una lectura de {turno.val} {turno.unidad} supera el límite de servicio admisible y explica físicamente la pulsación en el pedal y la vibración al frenar.\n• **Incertidumbre y comprobación requerida:** Para no confirmar un cambio o rectificado a ciegas, se requiere descartar falso alabeo inducido: 1) Verificar que la cara de acoplamiento de la maza esté libre de óxido y las tuercas torqueadas al par especificado. 2) Medir con micrómetro el espesor remanente del disco para comprobar que admita rectificado sin quedar por debajo del espesor mínimo de seguridad (MIN THK grabado en el rotor).\n\n¿Pudiste verificar el asiento en la maza o tienes la medida del espesor actual del disco?"
-            else:
-                turno.respuesta_texto = f"🔬 *Evaluación metrológica (Alabeo lateral de disco): {turno.val} {turno.unidad}*\n\n• **Referencia de taller:** La lectura de {turno.val} {turno.unidad} se encuentra dentro de la tolerancia de servicio {turno.ref_oem}.\n• **Orientación técnica:** El disco montado no presenta alabeo lateral excesivo. La causa de vibración o chirrido apunta a pastillas de freno cristalizadas, calzas antiruido defectuosas o desbalanceo dinámico de ruedas.\n\n¿El chirrido desaparece al frenar suavemente o las pastillas presentan desgaste irregular?"
-            turno.decision = "CONCLUSION_TECNICA"
-            turno.motivo_decision = f"Medición de alabeo {turno.val} {turno.unidad} evaluada contra tolerancia OEM con solicitud de espesor"
-            turno.es_pregunta = False
+        elif (resultado_lectura := evaluar_lectura(turno.estado, turno.interpretacion_corta)) is not None:
+            (
+                turno.decision, turno.motivo_decision, turno.respuesta_texto,
+                turno.es_pregunta, turno.intent_elegido, turno.pregunta_elegida,
+            ) = resultado_lectura
         elif (
             turno.campo_ic == "compresor_acopla"
             or turno.estado.obtener_valor_confirmado("compresor_acopla") == "SI"
@@ -413,7 +312,7 @@ async def respuestas_cortas(self, turno):
             if turno.valor_ic == "SI":
                 turno.respuesta_texto = "Al atenuarse fuertemente las luces del tablero al dar contacto, se produce una caída drástica de tensión. Revisa ajuste y sulfatación en bornes de batería, o prueba con cables puente."
             else:
-                turno.respuesta_texto = "Al mantenerse las luces encendidas con brillo normal, la batería no sufre caída de tensión. El fallo de arranque se concentra en el circuito de control: relé de arranque, terminal 50 o solenoide."
+                turno.respuesta_texto = 'La observación de luces es una pista, no una medición de voltaje ni una prueba de capacidad de batería. Mantén como alternativas conexiones, batería y circuito de arrancador/solenoide; requiere comprobación con equipo adecuado, sin puentear terminales.'
             turno.decision = "CONCLUSION_TECNICA"
             turno.motivo_decision = f"Observación de luces de tablero procesada: {turno.valor_ic}"
             turno.es_pregunta = False

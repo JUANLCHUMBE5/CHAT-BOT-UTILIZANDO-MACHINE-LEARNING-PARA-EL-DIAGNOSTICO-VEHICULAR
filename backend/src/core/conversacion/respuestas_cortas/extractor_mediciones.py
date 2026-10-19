@@ -40,6 +40,8 @@ def resolver_condicion_fragmento(frag: str) -> Optional[str]:
         return "durante_arranque"
     elif any(w in frag_l for w in ("ralenti", "ralentí", "en marcha minima", "marcha lenta")):
         return "ralenti_carga"
+    elif any(w in frag_l for w in ("motor encendido", "motor prendido", "enciendo el motor", "motor en marcha")):
+        return "motor_en_marcha"
     elif any(w in frag_l for w in ("reposo", "apagado", "motor apagado", "en frio", "en frío")):
         return "reposo"
     elif any(w in frag_l for w in ("contacto", "llave en on", "contacto puesto")):

@@ -129,7 +129,7 @@ def main():
             cov = coverage.Coverage(
                 source=[str(ROOT / "backend/src")],
                 data_file=str(out / ".coverage"),
-                timid=True,
+                timid=False,
             )
             cov.start()
         pytest_args = [

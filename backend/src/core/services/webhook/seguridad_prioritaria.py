@@ -8,6 +8,7 @@ from src.core.diagnostico.politica_seguridad import PoliticaSeguridad, Severidad
 from src.core.security import cifrar_texto_reversible
 from src.core.services.webhook.diagnostic_workflow import TechnicalDiagnosticWorkflow
 from src.infrastructure.database.repositories.mensaje_repository import MensajeRepository
+from src.infrastructure.rag.contrato_documental import proteger_salida_conversacional
 
 
 async def responder_peligro_activo(
@@ -16,13 +17,17 @@ async def responder_peligro_activo(
     contexto = dict(conversacion.contexto or {})
     raw = contexto.get("conversation_state") or contexto.get("estado_conversacion")
     estado = ConversationState.from_dict(raw) if isinstance(raw, dict) else None
-    severidad, _ = PoliticaSeguridad.evaluar_severidad(texto, "", estado=estado)
+    severidad, banner = PoliticaSeguridad.evaluar_severidad(texto, "", estado=estado)
     if severidad != SeveridadSeguridad.CRITICAL_STOP:
         return None
     dto = await TechnicalDiagnosticWorkflow._procesar_texto(
         gestor, texto, placa, marca_modelo, str(conversacion.id), remitente, proveedor, usuario, conversacion
     )
-    # La respuesta ha pasado por la misma política documental final del orquestador.
+    # No confiar en una etiqueta interna ni en texto de un retorno anticipado.
+    # La barrera documental también alcanza el banner autoritativo.
+    dto.respuesta_texto, _, _ = proteger_salida_conversacional(
+        banner, marca_modelo or "este vehículo", texto, corpus_validado=False
+    )
     contexto = dict(conversacion.contexto or {})
     case_id = contexto.get("case_id")
     await MensajeRepository(session).crear_mensaje(

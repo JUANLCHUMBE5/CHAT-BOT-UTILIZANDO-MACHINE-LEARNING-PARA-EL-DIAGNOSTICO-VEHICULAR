@@ -41,6 +41,10 @@ class DiagnosticSession:
                 if texto_limpio not in self.sintomas:
                     self.sintomas.append(texto_limpio)
                 ExtractorHechos.extraer_y_actualizar(self.conversation_state, texto_limpio)
+                # Preservar el dato literal y su condición operativa en el caso,
+                # no solo la etiqueta normalizada que produce el extractor.
+                if texto_limpio not in self.conversation_state.active_symptoms:
+                    self.conversation_state.active_symptoms.append(texto_limpio)
                 self.updated_at = time.time()
 
     def obtener_sintoma_completo(self) -> str:

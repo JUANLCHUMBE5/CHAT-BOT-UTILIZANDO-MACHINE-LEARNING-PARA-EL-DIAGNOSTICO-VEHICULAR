@@ -100,7 +100,9 @@ def evitar_respuesta_repetida(
         for hecho in hechos_nuevos:
             campo = re.sub(r"_+", " ", str(hecho.get("campo", "dato"))).strip()
             valor = re.sub(r"\s+", " ", str(hecho.get("valor", ""))).strip()
-            detalle = f"{campo}: {valor}" if valor else campo
+            # Presentación sin ceros artificiales; conservar el dato original en hechos.
+            valor = re.sub(r'(?<![\d.])(\d+)\.0+(?=\s+[A-Za-z])', r'\1', valor)
+            detalle = f'{campo}: {valor}' if valor else campo
             if detalle and detalle not in novedades:
                 novedades.append(detalle)
         if novedades:

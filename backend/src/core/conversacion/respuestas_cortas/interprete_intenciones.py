@@ -103,6 +103,17 @@ def interpretar_respuesta_corta(
         return int(raw_val) - 1 if raw_val.isdigit() else 2
 
     if not ultima_preg:
+        if PATRON_AMBIGUO.fullmatch(texto_l):
+            hecho = estado.registrar_hecho(
+                "respuesta_tentativa_sin_pregunta", texto_usuario,
+                categoria="ambiguo", estado=FactState.AMBIGUO,
+                texto_crudo=texto_usuario,
+            )
+            return {
+                "categoria_respuesta": "AMBIGUO", "campo": hecho.campo,
+                "valor": texto_usuario, "estado": FactState.AMBIGUO.value,
+                "hecho": hecho.to_dict(),
+            }
         m_opt_pre = PATRON_OPCION_NUMERICA.fullmatch(texto_l)
         if m_opt_pre:
             raw_val = m_opt_pre.group(3).lower()

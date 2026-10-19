@@ -150,8 +150,6 @@ async def ciclo_casos(self, turno):
             turno.resp_cierre = "🤝 *¡De nada maestro! Quedo a tu disposición en el taller para cualquier otra consulta técnica, medición o nuevo caso vehicular. ¡Muchos éxitos en la reparación!*"
         if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
             turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
-        if not turno.estado.active_symptoms:
-            turno.estado.active_symptoms.append("caso concluido / consulta general")
         turno.estado.turno_actual += 1
         return {
             "status": "cierre",

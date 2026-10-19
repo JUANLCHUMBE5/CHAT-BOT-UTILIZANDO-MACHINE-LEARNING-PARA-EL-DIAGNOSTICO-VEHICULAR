@@ -7,9 +7,34 @@ import time
 from importlib import import_module as _importar
 
 from src.core.conversacion.sintetizador_consulta import SintetizadorConsulta
+from src.infrastructure.rag.documental_salida import normalizar
 
 
 async def preparar_diagnostico(self, turno):
+    texto = normalizar(turno.texto_limpio)
+    if (
+        re.search(r"\b(?:tiem[bv]l\w*|vibr\w*|sacud\w*|zapate\w*)\b", texto)
+        and re.search(r"\b(?:al|cuando|kuando)\s+fren(?:ar|a|o)\b", texto)
+        and not re.search(r"\b(?:no|sin)\b.{0,20}\b(?:vibr\w*|tiem[bv]l\w*|fren\w*)\b", texto)
+    ):
+        from src.core.conversacion.models import QuestionIntent
+
+        turno.estado.active_system = "frenos"
+        pregunta = (
+            "La vibración vinculada al frenado requiere comprobar discos, asiento de maza y pastillas; "
+            "no confirma alabeo ni se resuelve suponiendo desbalanceo. Con el vehículo inmovilizado y "
+            "apoyado de forma segura, ¿puedes registrar alabeo con reloj comparador y espesor con micrómetro? "
+            "Si no dispones de equipo, conserva la hipótesis y solicita inspección de frenos en taller."
+        )
+        turno.estado.registrar_pregunta(QuestionIntent.MEDICION_TECNICA, pregunta, incrementar_repregunta=False)
+        await self.repositorio.save_session(turno.session_id, turno.estado)
+        return {
+            "status": "completado", "respuesta_texto": pregunta,
+            "diagnostico_ml": "Vibración al frenar: comprobación física pendiente",
+            "confianza_ml": 0.0, "fase": turno.estado.fase.value,
+            "es_pregunta": True, "decision": "PREGUNTAR", "estado": turno.estado,
+            "case_id": turno.estado.case_id,
+        }
     turno.consulta_consolidada = SintetizadorConsulta.sintetizar(turno.estado)
     turno.GuardiaContextoDiagnostico = _importar(
         "src.core.conversacion.guardia_contexto"
@@ -35,14 +60,14 @@ async def preparar_diagnostico(self, turno):
         turno.norm_txt_cons,
     ):
         if "4.5" in turno.norm_txt_cons:
-            turno.resp_e15 = "🔬 *Confirmación metrológica: Contrapresión de escape excesiva (4.5 PSI a 2500 RPM)*\n\n• **Diagnóstico diferencial:** El límite OEM admisible de contrapresión de escape en aceleración es de 1.5 a 2.0 PSI. Una lectura de 4.5 PSI confirma que el **catalizador está tapado u obstruido**, impidiendo el desalojo de gases y frenando el motor al superar 3500 RPM.\n• **Solución técnica:** Desmontar el catalizador para inspección visual de celdas colapsadas o derretidas y proceder a su reemplazo."
+            turno.resp_e15 = 'La contrapresión reportada orienta a una posible restricción de escape, pero no confirma el catalizador ni autoriza reemplazo. Contrasta la lectura, régimen y punto de toma con el manual aplicable; considera también suministro de combustible. ¿Se midió con un instrumento adecuado y bajo qué condiciones?'
         else:
             turno.resp_e15 = "🔍 *Diagnóstico diferencial de restricción a alta demanda (Ahogo a 3500 RPM):*\n\nSi el motor funciona perfecto en ciudad pero se frena y no supera 3500 RPM en carretera, las dos causas principales son:\n1. **Restricción de escape:** **Catalizador tapado** o silenciador colapsado que genera contrapresión.\n2. **Caudal de combustible insuficiente:** Bomba de gasolina o filtro tupido bajo carga.\n\n¿Puedes medir la contrapresión en el orificio del sensor de oxígeno frontal con un manómetro?"
         return {
             "status": "completado",
             "respuesta_texto": turno.resp_e15,
             "diagnostico_ml": "Catalizador tapado u obstruido",
-            "confianza_ml": 0.95,
+            "confianza_ml": 0.0,
             "fase": turno.estado.fase.value,
             "es_pregunta": "4.5" not in turno.norm_txt_cons,
             "decision": "CONCLUSION_TECNICA" if "4.5" in turno.norm_txt_cons else "PREGUNTAR",
@@ -54,12 +79,12 @@ async def preparar_diagnostico(self, turno):
         r"\bmanguera\s+superior\b.{0,40}\bhirviendo\b.{0,60}\bmanguera\s+inferior\b.{0,40}\bfr[ií]a\b|\bmanguera\s+inferior\b.{0,40}\bfr[ií]a\b.{0,60}\bmanguera\s+superior\b.{0,40}\bhirviendo\b",
         turno.norm_txt_cons,
     ):
-        turno.resp_e11 = "🌡️ *Deducción diagnóstica térmica: Ausencia de circulación hacia el radiador*\n\n• **Diagnóstico diferencial:** Manguera superior hirviendo combinada con manguera inferior fría confirma que el refrigerante no está circulando por el radiador. La causa directa y principal es el **termostato trabado cerrado** (no abre mecánicamente a su temperatura de calibración).\n• **Comprobación:** Dejar enfriar el motor, retirar el termostato y probar su apertura sumergido en agua caliente con termómetro."
+        turno.resp_e11 = 'La diferencia térmica reportada orienta a circulación insuficiente. Considera termostato, bomba, aire atrapado y obstrucción; no confirma una pieza. Detén el motor si se recalienta, espera a que enfríe y no abras el circuito caliente. La prueba debe seguir el manual aplicable.'
         return {
             "status": "completado",
             "respuesta_texto": turno.resp_e11,
             "diagnostico_ml": "Termostato trabado cerrado",
-            "confianza_ml": 0.95,
+            "confianza_ml": 0.0,
             "fase": turno.estado.fase.value,
             "es_pregunta": False,
             "decision": "CONCLUSION_TECNICA",
@@ -71,12 +96,12 @@ async def preparar_diagnostico(self, turno):
         r"\bstft\b.{0,30}(?:\+?22%|\+?20%).{0,50}(?:2500|acelero).{0,30}(?:\+?4%|\+?[0-5]%)|\b(?:ralent[ií]\s+el\s+stft|stft\s+en\s+ralent[ií])\b.{0,40}\+?22%",
         turno.norm_txt_cons,
     ):
-        turno.resp_e14 = "🔍 *Diagnóstico diferencial de mezcla: Corrección STFT por régimen de giro*\n\n• **Interpretación física:** Un STFT de +22% en ralentí que corrige drásticamente a +4% al acelerar a 2500 RPM es la firma clásica e inequívoca de una **fuga de vacío en el múltiple de admisión** (empaquetaduras resecas, manguera de booster o válvula PCV agrietada).\n• **Fundamento:** En ralentí la mariposa cerrada genera alto vacío que succiona aire parásito no medido. A 2500 RPM el vacío cae y el flujo de aire principal hace insignificante la fuga.\n• **Prueba recomendada:** Realizar prueba de humo (smoke test) en el múltiple de admisión."
+        turno.resp_e14 = 'La variación de STFT reportada entre ralentí y aceleración orienta a una posible entrada de aire no medido, sin confirmar una fuga. Considera también sensores y alimentación de combustible. Conserva las lecturas originales y comprueba admisión con equipo y procedimiento adecuados.'
         return {
             "status": "completado",
             "respuesta_texto": turno.resp_e14,
             "diagnostico_ml": "Fuga de vacío en múltiple de admisión",
-            "confianza_ml": 0.95,
+            "confianza_ml": 0.0,
             "fase": turno.estado.fase.value,
             "es_pregunta": False,
             "decision": "CONCLUSION_TECNICA",
@@ -88,12 +113,12 @@ async def preparar_diagnostico(self, turno):
         r"\bcero\s+c[oó]digos\s+(?:de\s+falla\s+)?en\s+la\s+ecu\b|\bescaneo\s+(?:est[aá]\s+)?completamente\s+limpio\b|\bsin\s+c[oó]digos?\s+de\s+falla\b",
         turno.norm_txt_cons,
     ):
-        turno.resp_e16 = "📋 *Evaluación de evidencia negativa: Cero códigos DTC en la ECU*\n\n• **Interpretación:** La ausencia total de códigos **DTC** descarta averías eléctricas francas en los sensores del sistema de inyección o bobinas.\n• **Diferencial enfocado:** El tironeo en subida sin DTC obedece a deficiencias mecánicas o hidráulicas no monitoreadas directamente:\n1. **Presión de combustible deficiente:** Caída de presión en riel o filtro tapado bajo carga.\n2. **Fugas secundarias de alta tensión:** Bujías con luz excesiva o aislamiento degradado.\n\n¿Tienes manómetro para verificar la presión de gasolina durante la aceleración en carga?"
+        turno.resp_e16 = 'La ausencia de códigos DTC no descarta fallas eléctricas, de sensores ni mecánicas. Ante tironeo bajo carga considera alimentación de combustible, encendido y admisión como hipótesis. ¿Qué comprobación de combustible o encendido se ha realizado y con qué resultado?'
         return {
             "status": "completado",
             "respuesta_texto": turno.resp_e16,
             "diagnostico_ml": "Falla mecánica/hidráulica sin DTC",
-            "confianza_ml": 0.9,
+            "confianza_ml": 0.0,
             "fase": turno.estado.fase.value,
             "es_pregunta": True,
             "decision": "ORIENTACION_SIN_DTC",
@@ -105,12 +130,12 @@ async def preparar_diagnostico(self, turno):
         r"\bmariposa\s+(?:est[aá]\s+)?llena\s+de\s+carb[oó]n\s+y\s+pegada\b|\bcuerpo\s+de\s+mariposa\b.{0,30}\b(?:carb[oó]n|pegad[oa]|sucia)\b",
         turno.norm_txt_cons,
     ):
-        turno.resp_e20 = "🔧 *Confirmación técnica de causa raíz: Mariposa trabada por acumulación de carbón*\n\n• **Diagnóstico confirmado:** La presencia de carbón y el atascamiento de la **mariposa** de aceleración restringe el paso de aire mínimo en ralentí, explicando la caída a 500 RPM y la demora en arrancar con encendido y presión de combustible ya verificados.\n• **Procedimiento de servicio:** Desmontar el cuerpo de aceleración, limpiarlo con solvente para cuerpos de mariposa sin forzar el eje electrónico y realizar el reaprendizaje electrónico de ralentí con escáner."
+        turno.resp_e20 = 'La suciedad o el atasco de mariposa reportados son una hipótesis relevante, no una causa confirmada. No doy por verificados encendido ni presión de combustible. Inspecciona conforme al manual, sin forzar el actuador electrónico; cualquier limpieza o reaprendizaje depende de la variante y del procedimiento del fabricante.'
         return {
             "status": "completado",
             "respuesta_texto": turno.resp_e20,
             "diagnostico_ml": "Cuerpo de mariposa sucio o atascado",
-            "confianza_ml": 0.95,
+            "confianza_ml": 0.0,
             "fase": turno.estado.fase.value,
             "es_pregunta": False,
             "decision": "CONCLUSION_TECNICA",

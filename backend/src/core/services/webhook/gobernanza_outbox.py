@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.infrastructure.database.connection import obtener_engine
 from src.infrastructure.database.models.messaging import Conversacion, Mensaje
 from src.infrastructure.rag.contrato_documental import proteger_salida_conversacional
+from src.infrastructure.rag.documental_evidencia import mediciones_con_procedencia
 
 
 async def proteger_mensaje_saliente(mensaje):
@@ -24,7 +25,8 @@ async def proteger_mensaje_saliente(mensaje):
         query = entrada or (history[-1] if history else "")
         vehiculo = " ".join(str(state.get(k) or "") for k in ("marca", "modelo", "anio", "motor", "mercado"))
         texto, _, changed = proteger_salida_conversacional(
-            mensaje.texto or "", vehiculo, query, corpus_validado=False, mediciones_reportadas=history
+            mensaje.texto or "", vehiculo, query, corpus_validado=False,
+            mediciones_reportadas=mediciones_con_procedencia(state)
         )
         if changed and texto != mensaje.texto:
             await session.execute(update(Mensaje).where(Mensaje.id == mensaje.id).values(texto=texto))

@@ -445,7 +445,7 @@ class EvaluadorDecisionTurno:
                     estado.registrar_pregunta(intent=QuestionIntent(intent_elegido), texto=pregunta_elegida, incrementar_repregunta=False)
                     return ("PREGUNTAR", "Usuario cuenta con probador de chispa: solicitando comprobación", pregunta_elegida, True, intent_elegido, pregunta_elegida)
             else:
-                pregunta_elegida = "Con el multímetro conectado en escala de 20 V DC: ¿cuánto marca en reposo y a cuánto baja al dar arranque?"
+                pregunta_elegida = "Con el multímetro en tensión continua y un rango adecuado al circuito: ¿cuánto marca en reposo y a cuánto baja al dar arranque?"
                 intent_elegido = QuestionIntent.MEDICION_VOLTAJE.value
                 estado.establecer_pregunta_pendiente(
                     intent=QuestionIntent.MEDICION_VOLTAJE,
@@ -479,7 +479,7 @@ class EvaluadorDecisionTurno:
             if es_diesel:
                 pregunta_sug = "¿Se observa humo anómalo en el escape, o dispones de probetas para prueba de retorno de inyectores?" if escaneo_ya_realizado else "¿Dispones de escáner para verificar códigos DTC y presión en datos en vivo?"
             elif chispa_ya_evaluada and escaneo_ya_realizado:
-                pregunta_sug = "Con la presión de combustible y el encendido en buen estado y sin códigos DTC, la falla apunta al cuerpo de aceleración o compresión. ¿Se observa suciedad o carbón en la mariposa de admisión?"
+                pregunta_sug = "Con presión reportada y encendido revisado, sin códigos DTC, considera también admisión y compresión como hipótesis pendientes. ¿Se observa suciedad o carbón en la mariposa de admisión?"
             elif chispa_ya_evaluada:
                 pregunta_sug = "Con el encendido descartado, ¿dispones de escáner para verificar códigos DTC o datos en vivo de sensores?"
             elif escaneo_ya_realizado:
@@ -494,31 +494,11 @@ class EvaluadorDecisionTurno:
             )
             return ("CONCLUSION_TECNICA", f"Medición de presión {val} {unidad} registrada y contextualizada", respuesta_texto, False, None, None)
 
-        # Medición de voltaje
-        if (campo_ic == "medicion_voltaje" or str(campo_ic).startswith("medicion_voltaje_")) and interpretacion_corta.get("valor") is not None:
-            val = interpretacion_corta.get("valor")
-            cond = interpretacion_corta.get("condicion_medicion") or (str(campo_ic).split("medicion_voltaje_")[1] if "medicion_voltaje_" in str(campo_ic) else None)
-            if cond == "durante_arranque":
-                if float(val) < 9.6:
-                    respuesta_texto = (
-                        f"⚠️ Caída de tensión crítica: {val} V en arranque. "
-                        f"Esto confirma descarga profunda, celda dañada o consumo excesivo del arrancador. "
-                        f"Revisa ajuste de bornes y prueba con una batería de apoyo."
-                    )
-                else:
-                    respuesta_texto = (
-                        f"✅ Caída de tensión normal: {val} V en arranque. "
-                        f"La batería retiene carga bajo demanda. El problema de arranque apunta al solenoide/arrancador o switch de encendido."
-                    )
-                return ("CONCLUSION_TECNICA", f"Medición de voltaje en arranque evaluada: {val} V", respuesta_texto, False, None, None)
-            else:
-                pregunta_arranque = (
-                    f"Registrado: {val} V. Para comprobar si la batería mantiene la carga bajo consumo real, "
-                    f"¿a cuánto desciende el multímetro mientras mantienes la llave en posición de arranque?"
-                )
-                intent_arranque = QuestionIntent.MEDICION_VOLTAJE
-                estado.registrar_pregunta(intent=intent_arranque, texto=pregunta_arranque, incrementar_repregunta=False)
-                return ("PREGUNTAR", f"Voltaje inicial {val} V registrado: solicitando medición durante el arranque", pregunta_arranque, True, intent_arranque.value, pregunta_arranque)
+        # La ruta histórica comparte el mismo contrato de mediciones que las etapas.
+        from src.core.conversacion.respuestas_cortas.seguimiento_mediciones import evaluar_lectura
+        lectura = evaluar_lectura(estado, interpretacion_corta)
+        if lectura is not None:
+            return lectura
 
         # Acople de compresor A/C
         if campo_ic == "compresor_acopla" or estado.obtener_valor_confirmado("compresor_acopla") == "SI":

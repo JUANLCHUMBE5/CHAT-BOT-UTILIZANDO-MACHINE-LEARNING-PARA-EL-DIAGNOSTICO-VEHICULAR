@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from decimal import Decimal, InvalidOperation
 from typing import Iterable
 
 MAGNITUD = re.compile(
     r"(?<![\w.])(-?\d+(?:[.,]\d+)*(?:\s*(?:[–-]|a)\s*\d+(?:[.,]\d+)*)?)\s*\+?\s*"
-    r"(n[· ]?m|lb[- ]?ft|kgf[·]?m|m?bar|psi|[km]?pa|mm|micras?|[µu]m|mv|v|"
-    r"ohmios?|ohms?|Ω|ma|amperios|°\s*c|grados\s*c|gramos?|litros?|minutos?|segundos?|rpm)\b",
+    r"(n[.· ]?m|lb[- ]?ft|kgf[.· ]?m|m?bar|psi|[km]?pa|mm|micras?|[µu]m|mv|v|"
+    r"ohmios?|ohms?|Ω|ma|a|amperios|voltios?|volts?|°\s*c|grados\s*c|gramos?|ml|litros?|inHg|"
+    r"min(?:utos?)?|segundos?|rpm)(?!\w)",
     re.I,
 )
 
@@ -19,20 +21,17 @@ def normalizar(texto):
 
 
 def magnitudes(texto):
+    def valor_normalizado(valor):
+        valor = valor.replace(",", ".").replace(" ", "")
+        try:
+            return str(Decimal(valor).normalize())
+        except InvalidOperation:
+            return valor
+
     return {
-        (m[0].replace(",", ".").replace(" ", ""), re.sub(r"[.·\s]", "", m[1].lower()))
+        (valor_normalizado(m[0]), re.sub(r"[.·\s]", "", m[1].lower()))
         for m in MAGNITUD.findall(texto or "")
     }
-
-
-def es_banner_seguridad(texto: str) -> bool:
-    t = normalizar(texto)
-    return bool(
-        re.search(
-            r"\b(?:peligro|prohibicion|incompatibilidad|bloqueo de seguridad|prerrequisitos|critical_stop|alto voltaje|alta tension)\b",
-            t,
-        )
-    )
 
 
 def es_reporte_medicion(texto):
@@ -41,7 +40,7 @@ def es_reporte_medicion(texto):
         magnitudes(texto)
         and not re.search(r"(?:\?|\bcual\b|\btolerancia\b|\bdeberia\b)", t)
         and re.search(
-            r"\b(?:medi|medimos|mide|marca|marco|marcando|registro|registra|lectura|compresion es|obtuve|dio|da|tengo|tenemos|esta en|baja a|bajo a|cae a|cayo a|sube a|subio a|arroja|arrojando|tira|entrega|oscila)\b",
+            r"\b(?:medi|medimos|mide|marca|marco|marcando|registro|registra|lectura|compresion es|obtuve|dio|da|tengo|tenemos|tiene|esta en|baja a|bajo a|cae a|cayo a|sube a|subio a|arroja|arrojando|tira|entrega|oscila|meti|alimente|aplique)\b",
             t,
         )
     )
@@ -73,6 +72,19 @@ def limpiar_advertencia(texto):
     return "\n".join(seguras)
 
 
+def es_mandato_intervencion(texto):
+    """Una cifra observada tampoco autoriza ajustar o sustituir una pieza."""
+    for coincidencia in re.finditer(
+        r"\b(?:apriet[ae](?=\s+(?:el|la|los|las|a|\d)\b)|rectifi(?:ca|que)|sustituy[ae]|reemplaz[ae]|"
+        r"(?:calibr[ae]|ajust[ae])(?=\s+(?:el|la|los|las|a)\b)|"
+        r"debe\s+(?:cambiarse|reemplazarse|rectificarse|sustituirse))\b", texto
+    ):
+        prefijo = texto[max(0, coincidencia.start() - 30):coincidencia.start()]
+        if not re.search(r"\b(?:no|nunca)\s+(?:\w+\s+){0,2}$", prefijo):
+            return True
+    return False
+
+
 def proteger_salida_conversacional(
     respuesta_propuesta: str,
     vehiculo_str: str,
@@ -90,10 +102,6 @@ def proteger_salida_conversacional(
     if corpus_validado and especificacion_autorizada:
         return respuesta_propuesta, 1.0, False
 
-    # Banners de seguridad crítica y advertencias físicas legítimas no deben ser censurados
-    if es_banner_seguridad(respuesta_propuesta):
-        return respuesta_propuesta, 1.0, False
-
     fuentes = [t for t in mediciones_reportadas if es_reporte_medicion(t)]
     if es_reporte_medicion(consulta_usuario):
         fuentes.append(consulta_usuario)
@@ -104,7 +112,7 @@ def proteger_salida_conversacional(
         r"\b(?:tolerancia|alabeo|torque|apriete|especificacion|apertura|calibracion)\b",
         normalizar(consulta_usuario),
     )
-    normativa = bool(
+    normativa = es_mandato_intervencion(texto) or bool(
         re.search(
             r"\b(?:tolerancia (?:es|oem|admisible)|maximo admisible|minimo permitido|debe medir|"
             r"debe (?:ser|estar|abrir)|valor nominal|exige rectificado|requiere (?:cambio|rectificado)|"
@@ -113,18 +121,8 @@ def proteger_salida_conversacional(
         )
     )
 
-    # Filtrar magnitudes que sean escalas estándar de instrumentación o pines de conexionado
-    propuestas_no_estandar = {
-        m
-        for m in propuestas
-        if not (
-            m[1] in ("v", "mv", "ohmios", "ohms", "Ω", "ma", "amperios", "mm", "psi")
-            and re.search(
-                r"\b(?:escala|rango|mult[ií]metro|tester|reloj\s+comparador|comparador|man[oó]metro|pin|conector|fusible|bater[ií]a de 12|sistema de 12|24\s*v)\b",
-                texto,
-            )
-        )
-    }
+    # La herramienta o un encabezado de seguridad no acreditan ninguna cifra.
+    propuestas_no_estandar = propuestas
 
     if (
         consulta_sin_respuesta
@@ -148,13 +146,9 @@ def proteger_salida_conversacional(
         for parte in partes:
             n = normalizar(parte)
             cifras = magnitudes(parte)
-            es_herramienta_o_pin = bool(
-                re.search(
-                    r"\b(?:pin\s*\d+|conector|obd|fusible|mult[ií]metro|tester|escala|rango|reloj\s+comparador|comparador|man[oó]metro|bater[ií]a de 12\s*v|sistema de 12\s*v|24\s*v)\b",
-                    n,
-                )
-            )
-            if cifras and not cifras.issubset(observadas) and not es_herramienta_o_pin:
+            if cifras and not cifras.issubset(observadas):
+                continue
+            if es_mandato_intervencion(n):
                 continue
             if re.search(
                 r"\b(?:la tolerancia|maximo admisible|minimo permitido|debe medir|debe ser|"

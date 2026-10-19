@@ -35,17 +35,19 @@ BANNER_COMBUSTIBLE = (
 )
 
 BANNER_TEMPERATURA = (
-    "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: SOBRECALENTAMIENTO SEVERO**\\n\\n"
+    "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: SOBRECALENTAMIENTO SEVERO**\n\n"
     "PELIGRO: Detén el vehículo de inmediato y apaga el motor en un lugar seguro. "
-    "NUNCA intente abrir el tapón del radiador ni del depósito de refrigerante mientras el motor esté caliente o hirviendo. "
-    "El líquido presurizado causará quemaduras graves e instantáneas por vapor caliente.\\n\\n"
+    "No abras el tapón del radiador mientras el motor esté caliente o hirviendo. "
+    "No retires la tapa del depósito de refrigerante caliente o presurizado. "
+    "El líquido presurizado puede causar quemaduras graves por vapor caliente.\n\n"
 )
 
 BANNER_HV = (
     "🛑 **BLOQUEO DE SEGURIDAD MECÁNICA — PELIGRO MORTAL DE ALTA TENSIÓN Y ELECTROCUCIÓN**\n\n"
     "PROHIBICIÓN ESTRICTA: Nunca toques, cortes ni manipules cables naranjas, inversor o batería de tracción de alta tensión. "
     "Riesgo inminente de descarga eléctrica letal y electrocución instantánea. "
-    "Detén el trabajo de inmediato y no intentes intervenir sin equipo de protección dieléctrico CAT IV 1000V y protocolo de desenergización OEM certificado. "
+    "Detén el trabajo de inmediato. Solo personal capacitado puede intervenir, con protección dieléctrica y herramientas "
+    "adecuadas al sistema, aislamiento y comprobación de ausencia de tensión conforme al procedimiento OEM. "
     "Apagar el vehículo no acredita ausencia de tensión.\n\n"
 )
 
@@ -79,28 +81,26 @@ BANNER_BLOQUEO_REGENERACION_DILUCION = (
     "Con el nivel de aceite por encima del máximo y diluido con combustible, la regeneración estática somete al motor a temperaturas extremas (550 °C a 650 °C en escape y cárter caliente) durante 20 a 35 minutos. El calor excesivo vaporiza el diésel acumulado en el cárter, y estos vapores inflamables son aspirados a través del sistema de ventilación positiva del cárter (PCV) hacia la admisión. Al ser un motor diésel sin mariposa de corte estricto, el motor comenzará a combustionar su propio aceite/diésel de forma incontrolada (**embalamiento diésel / runaway**), acelerándose por encima de las 5,000 RPM sin responder a la llave de contacto hasta su desbielamiento catastrófico o incendio en el taller.\n\n"
     "2. **Diferenciación Técnica: Sospecha vs Confirmación Física:**\n"
     "• Si se sospecha sobrellenado, confirme primero el nivel con el vehículo en superficie plana y motor frío (10 minutos de reposo).\n"
-    "• Compruebe la consistencia y viscosidad: si el aceite está excesivamente fluido y desprende olor a diésel, la dilución está confirmada físicamente.\n\n"
+    "• Compruebe la consistencia y viscosidad: si el aceite está excesivamente fluido y desprende olor a diésel, sospeche dilución y solicite comprobación técnica.\n\n"
     "3. **Procedimiento Obligatorio Antes de Considerar la Regeneración:**\n"
     "El cambio de aceite por sí solo **NO constituye una autorización automática** para forzar la regeneración. Debe seguirse la secuencia técnica OEM:\n"
     "a) **Drenar y reemplazar totalmente el aceite y filtro contaminados** utilizando lubricante que cumpla estrictamente la norma del fabricante (aceite Low SAPS / bajo contenido de cenizas, ej. ACEA C2/C3).\n"
     "b) **Investigar y corregir la causa de la dilución previa:** postinyecciones reiteradas por regeneraciones automáticas abortadas en ciudad, inyectores con goteo o retorno excesivo, sensor de contrapresión de escape (DPF) descalibrado o termostato que no permite alcanzar temperatura de régimen.\n"
     "c) **Verificar los prerrequisitos OEM obligatorios antes de regenerar:**\n"
-    "   • Temperatura de refrigerante de motor estabilizada (> 70 °C - 80 °C).\n"
+    "   • Temperatura de refrigerante de motor estabilizada conforme al manual aplicable.\n"
     "   • Sin códigos de falla activos en sensores EGT (temperatura de escape), MAF, EGR o bujías de incandescencia.\n"
     "   • Masa o acumulación de hollín dentro de los límites de regeneración de servicio.\n"
-    "   • Nivel de combustible mínimo en el tanque (al menos 1/4).\n"
+    "   • Nivel de combustible mínimo en el tanque conforme al manual aplicable.\n"
     "   • Vehículo en exterior ventilado, sobre suelo no inflamable y capó abierto.\n\n"
 )
 
 PRERREQUISITOS_REGENERACION_DPF_OEM = (
-    "📋 *Prerrequisitos y comprobaciones OEM antes de forzar la regeneración de DPF:*\n\n"
-    "Habiendo verificado y corregido el aceite de motor (nivel correcto y sin dilución), confirme todos los requisitos del manual de servicio antes de iniciar el ciclo con el escáner:\n\n"
-    "1. **Temperatura de motor:** Refrigerante estabilizado a temperatura de régimen de trabajo (> 70 °C - 80 °C).\n"
-    "2. **Sin DTCs inhibitorios:** Compruebe que no existan códigos activos en sensores de temperatura de escape (EGT), sensor MAF, válvula EGR ni bujías de precalentamiento (esenciales para postinyección térmica).\n"
-    "3. **Masa de hollín dentro de límites de servicio:** La acumulación no debe superar el umbral crítico de regeneración estática.\n"
-    "4. **Sensor de presión diferencial:** Compruebe que las mangueras no estén cuarteadas y que la lectura en ralentí sea coherente.\n"
-    "5. **Nivel de combustible:** Al menos 1/4 de tanque.\n"
-    "6. **Seguridad del entorno:** Vehículo estacionado en área abierta ventilada, lejos de materiales inflamables y capó abierto.\n\n"
+    "Prerrequisitos pendientes antes de considerar una regeneración DPF: "
+    "No se autoriza iniciar el ciclo con esta respuesta. Comprueba nivel y estado del aceite, "
+    "investiga y corrige cualquier dilución y su causa; no doy esas comprobaciones por realizadas. "
+    "Consulta los límites de temperatura, carga de hollín y combustible del manual aplicable. "
+    "Verifica DTC inhibitorios, sensores y seguridad del entorno con personal capacitado. "
+    "Sin documentación y condiciones confirmadas, abstenerse de la regeneración forzada.\n"
 )
 
 BANNER_BATERIA_MOTOR_ENCENDIDO = (
@@ -165,9 +165,10 @@ BANNER_TURBO_INCENDIO = (
     "PROHIBICIÓN ESTRICTA: NUNCA toques la caracola ni acerques manos ni materiales inflamables. "
     "Inmovilice el vehículo de inmediato. "
     "La caracola de turbo al rojo vivo con humo de aceite representa un peligro inminente de incendio y falla catastrófica. "
-    "Mantenga el motor en ralentí durante 3 a 5 minutos para que la circulación de aceite disipe el calor extremo; "
-    "no intentes apagar de golpe (apagarlo de inmediato carboniza el aceite y destruye los cojinetes). "
-    "Aleje de inmediato cualquier material inflamable del vano motor y verifique fugas de aceite hacia el escape.\n\n"
+    "Detén el motor si puedes hacerlo sin acercarte al foco de peligro. No lo mantengas en ralentí ni lo reinicies. "
+    "Aléjate del vehículo y evita que otros se acerquen; ante humo o fuego solicita servicios de emergencia. "
+    "No abras el capó ni intentes localizar fugas junto al escape caliente. "
+    "La inspección y el traslado en grúa deben quedar a cargo de personal capacitado cuando el área sea segura.\n\n"
 )
 
 BANNER_FRENO_PRECAUCION = (

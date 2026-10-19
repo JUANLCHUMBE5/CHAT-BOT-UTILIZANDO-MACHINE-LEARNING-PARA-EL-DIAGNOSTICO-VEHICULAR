@@ -40,7 +40,6 @@ def extraer_mediciones_instrumentales(
         if unidad in ("V", "mV"):
             es_caida_tension = bool(
                 re.search(r"\b(?:ca[ií]da\s+de\s+tensi[oó]n|masa|chasis|tierra|borne\s+negativo)\b", texto_l)
-                or (val < 2.0 and not condicion)
             )
             if es_caida_tension:
                 campo_v = "medicion_caida_tension_masa"
@@ -50,14 +49,10 @@ def extraer_mediciones_instrumentales(
                 campo_v = f"medicion_voltaje_{condicion}"
                 tipo_v = "voltaje_bateria"
                 ctx_v = condicion
-            elif 13.0 <= val <= 15.5:
-                campo_v = "medicion_voltaje_alternador"
-                tipo_v = "voltaje_alternador"
-                ctx_v = "carga_alternador"
             else:
-                campo_v = f"medicion_voltaje_{condicion}" if condicion else "medicion_voltaje"
-                tipo_v = "voltaje_bateria" if val < 13.0 else "voltaje_alternador"
-                ctx_v = condicion or "circuito"
+                campo_v = f'medicion_voltaje_{condicion}' if condicion else 'medicion_voltaje'
+                tipo_v = 'voltaje_circuito'
+                ctx_v = condicion or 'circuito_sin_identificar'
 
             valor_str = f"{val} {unidad}" + (f" ({condicion})" if condicion else "")
             h_m = estado.registrar_hecho(
@@ -68,25 +63,7 @@ def extraer_mediciones_instrumentales(
                 tipo=tipo_v, valor=val, unidad=unidad, contexto=ctx_v, prueba=campo_v, estado="observado"
             )
             estado.registrar_prueba_completada(campo_v, f"{val} {unidad}")
-            if condicion == "durante_arranque":
-                if val < 9.6:
-                    h_c = estado.registrar_hecho(
-                        "caida_tension_excesiva", "SI", categoria="medicion", tipo=FactType.CONDICION
-                    )
-                else:
-                    h_c = estado.registrar_hecho(
-                        "caida_tension_excesiva", "NO", categoria="medicion", tipo=FactType.CONDICION
-                    )
-                    h_a = estado.registrar_hecho(
-                        "voltaje_arranque_normal", "SI", categoria="medicion", tipo=FactType.CONDICION
-                    )
-                    hechos_extraidos.append(h_a.to_dict())
-                hechos_extraidos.append(h_c.to_dict())
-            elif condicion == "reposo" and val >= 12.4:
-                h_r = estado.registrar_hecho(
-                    "voltaje_reposo_normal", "SI", categoria="medicion", tipo=FactType.CONDICION
-                )
-                hechos_extraidos.append(h_r.to_dict())
+            # No crear hechos de normalidad a partir de umbrales genéricos.
         elif unidad in ("mA", "A"):
             es_parasito = bool(re.search(r"\b(?:par[aá]sito|fuga|descarga|reposo|consumo)\b", texto_l))
             tipo_a = "consumo_parasito" if es_parasito else "corriente_electrica"

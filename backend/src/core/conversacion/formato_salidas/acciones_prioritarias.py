@@ -71,9 +71,9 @@ def extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optio
         or (voltaje_arranque_normal and voltaje_arranque_normal.valor == "SI")
     )
     if ("bateria" in falla_l or "borne" in falla_l) and not bateria_normal:
-        return "voltaje en reposo (referencial ≥12.6 V), caída en arranque (mínimo 9.6 V) y ajuste de bornes."
+        return "voltaje en reposo, caída en arranque y ajuste de bornes; contrastar con el manual aplicable."
     if "alternador" in falla_l or ("carga" in falla_l and "descarga" not in falla_l):
-        return "voltaje de carga en ralentí con motor encendido (debe situarse entre 13.8 V y 14.4 V)."
+        return "voltaje de carga con las condiciones y consumidores registrados; contrastar con el manual aplicable."
     if "arranque" in falla_l or "arrancador" in falla_l or "solenoide" in falla_l:
         return (
             "caída de tensión en el terminal 50 del solenoide y verificar si el motor gira al dar contacto."
@@ -85,7 +85,7 @@ def extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optio
     if "inyector" in falla_l or "filtro" in falla_l:
         return "presión en el riel de inyección y prueba de entrega/goteo en banco o probador."
     if any(k in falla_l for k in ("precalentamiento", "incandesc", "glow", "calentador")):
-        return "resistencia de las bujías incandescentes con multímetro (típico 0.5 a 1.5 Ω) y alimentación de 12 V del relé de precalentamiento."
+        return "resistencia y alimentación de las bujías incandescentes conforme al procedimiento y valores del fabricante."
     if "bujia" in falla_l or "bobina" in falla_l:
         prueba_chispa_completada = bool(
             estado and getattr(estado, "completed_tests", {}).get("prueba_chispa") is not None
@@ -196,7 +196,7 @@ def generar_pregunta_contextual(
             )
         elif multimetro_disp == "SI":
             return (
-                "Con el multímetro conectado en escala de 20 V DC: ¿cuánto marca en reposo y a cuánto baja al dar arranque?",
+                "Con el multímetro en tensión continua y un rango adecuado al circuito: ¿cuánto marca en reposo y a cuánto baja al dar arranque?",
                 QuestionIntent.MEDICION_VOLTAJE,
             )
         return "¿Tienes multímetro para comprobar el voltaje?", QuestionIntent.DISPONIBILIDAD_HERRAMIENTA

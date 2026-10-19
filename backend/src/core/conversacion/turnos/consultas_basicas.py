@@ -130,8 +130,8 @@ async def consultas_basicas(self, turno):
         "\\bqu[eé]\\s+(?:veh[ií]culo|auto|carro)\\s+(?:estamos\\s+)?revisando\\b|\\bcu[aá]l\\s+(?:es\\s+el\\s+)?(?:veh[ií]culo|auto|carro)\\b",
         turno.norm_txt_cons,
     ):
-        turno.veh_info = f"*{turno.estado.marca or 'Volkswagen'} {turno.estado.modelo or 'Gol'}* ({turno.estado.anio or '2014'})"
-        turno.resp_veh = f"🚗 Estamos revisando el {turno.veh_info} con sistema {turno.estado.combustible or 'gasolina'}.\n\n¿Qué nueva prueba o síntoma deseas reportar en este vehículo?"
+        turno.veh_info = f"*{turno.estado.marca or 'marca pendiente'} {turno.estado.modelo or 'modelo pendiente'}* ({turno.estado.anio or 'año pendiente'})"
+        turno.resp_veh = f"🚗 Estamos revisando el {turno.veh_info} con sistema {turno.estado.combustible or 'combustible pendiente'}.\n\n¿Qué nueva prueba o síntoma deseas reportar en este vehículo?"
         return {
             "status": "vehiculo_activo",
             "respuesta_texto": turno.resp_veh,

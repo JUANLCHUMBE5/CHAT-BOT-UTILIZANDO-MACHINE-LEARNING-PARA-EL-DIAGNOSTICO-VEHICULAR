@@ -37,7 +37,10 @@ async def entrada_segura(self, turno):
     turno.sev_seguridad_early, turno.banner_seguridad_early = turno.PoliticaSeguridad.evaluar_severidad(
         turno.texto_limpio, str(turno.estado.falla_principal or ""), estado=turno.estado
     )
-    if turno.sev_seguridad_early == turno.SeveridadSeguridad.CRITICAL_STOP and turno.banner_seguridad_early and turno.banner_seguridad_early != turno.BANNER_TEMPERATURA:
+    if (
+        turno.sev_seguridad_early == turno.SeveridadSeguridad.CRITICAL_STOP
+        and turno.banner_seguridad_early
+    ):
         if not turno.estado.case_id:
             turno.estado.case_id = str(uuid.uuid4())
             turno.estado.active_problem_id = str(uuid.uuid4())

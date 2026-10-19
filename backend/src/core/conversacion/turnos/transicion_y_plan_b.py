@@ -186,12 +186,16 @@ async def transicion_y_plan_b(self, turno):
     if InterpreteRespuestasCortas.es_respuesta_corta(turno.texto_limpio):
         turno.interpretacion_corta = InterpreteRespuestasCortas.interpretar(turno.estado, turno.texto_limpio)
     if turno.interpretacion_corta:
+        if not turno.estado.preguntas_realizadas:
+            turno.estado.registrar_respuesta(
+                turno.texto_limpio, turno.interpretacion_corta.get("categoria_respuesta")
+            )
         turno.cat_resp = turno.interpretacion_corta.get(
             "categoria_respuesta", turno.interpretacion_corta.get("categoria", "")
         )
         turno.val_resp = turno.interpretacion_corta.get("valor", "")
         if turno.cat_resp == "REVISION_AMBIGUA":
-            turno.msg_ambiguo = "¿Qué componente específico revisaste y cuál fue el resultado o medición obtenida? Detalla la comprobación realizada para orientar el diagnóstico sin descartes apresurados."
+            turno.msg_ambiguo = "¿Qué componente o prueba revisaste y cuál fue el resultado o medición obtenida? Detalla la comprobación realizada para orientar el diagnóstico sin descartes apresurados."
             turno.estado.registrar_pregunta(
                 QuestionIntent.MEDICION_TECNICA,
                 turno.msg_ambiguo,

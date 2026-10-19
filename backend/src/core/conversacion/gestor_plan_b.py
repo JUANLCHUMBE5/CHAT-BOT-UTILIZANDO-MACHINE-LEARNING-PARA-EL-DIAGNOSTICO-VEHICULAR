@@ -7,6 +7,7 @@ hacia la derivación profesional sin repetir pruebas inviables.
 
 from __future__ import annotations
 
+import re
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.core.conversacion.models import (
@@ -47,7 +48,10 @@ class GestorPlanB:
             return []
 
         # Si el usuario responde sobre una herramienta preguntada previamente
-        if (es_negacion_directa or es_no_sabe_usar or es_negacion_general) and texto_preg_l:
+        negacion_eliptica = bool(re.fullmatch(
+            r"no\s+(?:tengo|dispongo|cuento\s+con)(?:\s+(?:uno|una|ninguno|ninguna))?[.!]?", texto_l
+        ))
+        if (es_negacion_directa or negacion_eliptica or es_no_sabe_usar) and texto_preg_l:
             for clave, h in CATALOGO_HERRAMIENTAS.items():
                 if clave != "general" and h.patron_mencion.search(texto_preg_l):
                     if clave not in herramientas_detectadas:
@@ -59,11 +63,22 @@ class GestorPlanB:
         for clave, h in CATALOGO_HERRAMIENTAS.items():
             if clave == "general":
                 continue
-            if h.patron_mencion.search(texto_l) and clave not in herramientas_detectadas:
+            clausulas = re.split(r"[.;!?]|\b(?:pero|aunque|y)\b", texto_l)
+            negada = any(
+                h.patron_mencion.search(c)
+                and (PATRON_NO_TENGO.search(c) or PATRON_NO_SE_USAR.search(c))
+                for c in clausulas
+            )
+            if negada and clave not in herramientas_detectadas:
                 herramientas_detectadas.append(clave)
 
         # Si no especificó ninguna en particular pero dijo "no tengo herramientas", marcar "general"
-        if not herramientas_detectadas and (es_negacion_general or es_no_sabe_usar):
+        if not herramientas_detectadas and (
+            es_no_sabe_usar or (es_negacion_general and re.search(
+                r"\b(?:herramientas?|equipos?|bomba\s+de\s+vac[ií]o|"
+                r"(?:m[aá]quina\s+)?analizadora?\s+de\s+gases)\b", texto_l
+            ))
+        ):
             herramientas_detectadas.append("general")
 
         return herramientas_detectadas
@@ -362,6 +377,24 @@ class GestorPlanB:
         """
         dominio_norm = (dominio or "").upper()
         preg_norm = (ultima_preg or "").lower()
+
+        if str(getattr(estado.estado_operativo, "value", "")) == "ARRANQUE":
+            if "multimetro" in estado.herramientas_no_disponibles:
+                return cls.obtener_plan_b_para_falla("bateria / arranque", estado)
+            return (
+                "observación del comportamiento del arranque desde el puesto de conducción.",
+                "Sin escáner puedes describir el arranque: ¿el motor gira lento, gira normal sin encender "
+                "o solo se escucha un clic? ¿Las luces del tablero se atenúan? No puentear terminales.",
+                QuestionIntent.COMPORTAMIENTO_ARRANQUE,
+            )
+        if estado.active_system == "combustible_admision":
+            return (
+                "inspección visual externa de conexiones de combustible con motor apagado.",
+                "La bomba y el suministro de combustible siguen como hipótesis pendientes, no confirmadas. "
+                "Sin manómetro, realiza solo inspección visual externa de conectores y mangueras con motor "
+                "apagado, sin abrir líneas. ¿Hay daño visible? Ante olor o fuga, detén el trabajo.",
+                QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+            )
 
         # 1. SUSPENSION: holgura de bujes / rótulas / terminales
         if dominio_norm == "SUSPENSION" or any(w in preg_norm for w in ("buje", "rotula", "rótula", "suspension", "holgura")):
