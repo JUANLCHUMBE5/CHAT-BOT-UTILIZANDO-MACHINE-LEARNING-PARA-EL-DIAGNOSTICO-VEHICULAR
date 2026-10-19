@@ -6,7 +6,7 @@ import asyncio
 import re
 from dataclasses import dataclass
 from typing import Optional
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -220,41 +220,6 @@ class WhatsAppProviderService:
             return await self._descargar_imagen_twilio(referencia)
         raise ValueError("Proveedor de imagen no soportado.")
 
-    async def _descargar_audio_meta(self, media_id: str) -> tuple[bytes, str]:
-        if not re.fullmatch(r"[A-Za-z0-9_-]{1,200}", media_id or ""):
-            raise ValueError("ID de audio Meta inválido.")
-        if not settings.meta_access_token:
-            raise RuntimeError("La descarga de audio Meta no está configurada.")
-        version = settings.meta_graph_api_version.strip("/")
-        headers = {"Authorization": f"Bearer {settings.meta_access_token}"}
-        metadata = await asyncio.to_thread(
-            requests.get,
-            f"https://graph.facebook.com/{version}/{media_id}",
-            headers=headers,
-            timeout=10,
-            allow_redirects=False,
-        )
-        metadata.raise_for_status()
-        media_url = metadata.json().get("url")
-        mime = metadata.json().get("mime_type", "")
-        parsed = urlparse(media_url or "")
-        host = (parsed.hostname or "").lower()
-        if parsed.scheme != "https" or not _host_permitido(host, meta=True):
-            raise ValueError("Meta no devolvió una URL HTTPS de audio autorizada.")
-        return await self._descargar_audio_limitado(media_url, mime, headers=headers, meta=True)
-
-    async def _descargar_audio_twilio(self, media_url: str) -> tuple[bytes, str]:
-        parsed = urlparse(media_url or "")
-        host = (parsed.hostname or "").lower()
-        if parsed.scheme != "https" or not _host_permitido(host, meta=False):
-            raise ValueError("Twilio no devolvió una URL HTTPS autorizada.")
-        return await self._descargar_audio_limitado(
-            media_url,
-            "",
-            auth=(settings.twilio_account_sid, settings.twilio_auth_token),
-            meta=False,
-        )
-
     async def _descargar_imagen_meta(self, media_id: str) -> tuple[bytes, str]:
         if not re.fullmatch(r"[A-Za-z0-9_-]{1,200}", media_id or ""):
             raise ValueError("ID de imagen Meta inválido.")
@@ -281,138 +246,102 @@ class WhatsAppProviderService:
     async def _descargar_imagen_twilio(self, media_url: str) -> tuple[bytes, str]:
         parsed = urlparse(media_url or "")
         host = (parsed.hostname or "").lower()
-        if parsed.scheme != "https" or not _host_permitido(host, meta=False):
-            raise ValueError("Twilio no devolvió una URL HTTPS autorizada.")
-        return await self._descargar_imagen_limitado(
-            media_url,
-            "",
-            auth=(settings.twilio_account_sid, settings.twilio_auth_token),
-            meta=False,
-        )
-
-    async def _descargar_audio_limitado(
-        self,
-        url: str,
-        mime_declarado: str,
-        headers: Optional[dict] = None,
-        auth: Optional[tuple[str, str]] = None,
-        meta: bool = True,
-    ) -> tuple[bytes, str]:
-        limite_bytes = settings.audio_max_bytes
-        def _get():
-            with requests.get(
-                url,
-                headers=headers,
-                auth=auth,
-                stream=True,
-                timeout=15,
-                allow_redirects=False,
-            ) as res:
-                if res.status_code in (301, 302, 303, 307, 308):
-                    redir = res.headers.get("Location")
-                    p_redir = urlparse(redir or "")
-                    h_redir = (p_redir.hostname or "").lower()
-                    if p_redir.scheme != "https" or not _host_permitido(h_redir, meta=meta):
-                        raise ValueError("Redirección hacia host no permitido.")
-                    return self._descargar_audio_directo(redir, headers if meta else None, auth if not meta else None)
-                res.raise_for_status()
-                chunks = []
-                total = 0
-                for c in res.iter_content(chunk_size=16384):
-                    total += len(c)
-                    if total > limite_bytes:
-                        raise ValueError("El archivo de audio excede el límite permitido.")
-                    chunks.append(c)
-                return b"".join(chunks), res.headers.get("Content-Type") or mime_declarado
-        return await asyncio.to_thread(_get)
-
-    def _descargar_audio_directo(self, url: str, headers, auth):
-        limite_bytes = settings.audio_max_bytes
-        with requests.get(
-            url,
-            headers=headers,
-            auth=auth,
-            stream=True,
-            timeout=15,
-            allow_redirects=False,
-        ) as res:
-            res.raise_for_status()
-            chunks = []
-            total = 0
-            for c in res.iter_content(chunk_size=16384):
-                total += len(c)
-                if total > limite_bytes:
-                    raise ValueError("El archivo de audio excede el límite permitido.")
-                chunks.append(c)
-            return b"".join(chunks), res.headers.get("Content-Type", "")
+        if parsed.scheme != "https" or not _host_permitido(host, twilio=True):
+            raise ValueError("URL de imagen Twilio no autorizada.")
+        auth = (settings.twilio_account_sid, settings.twilio_auth_token)
+        return await self._descargar_imagen_limitado(media_url, "", auth=auth, twilio=True)
 
     async def _descargar_imagen_limitado(
-        self,
-        url: str,
-        mime_declarado: str,
-        headers: Optional[dict] = None,
-        auth: Optional[tuple[str, str]] = None,
-        meta: bool = True,
+        self, url: str, mime_declarado: str, *, meta: bool = False, twilio: bool = False, **kwargs
     ) -> tuple[bytes, str]:
-        limite_bytes = settings.image_vision_max_bytes
-        def _get():
-            with requests.get(
-                url,
-                headers=headers,
-                auth=auth,
-                stream=True,
-                timeout=15,
-                allow_redirects=False,
-            ) as res:
-                if res.status_code in (301, 302, 303, 307, 308):
-                    redir = res.headers.get("Location")
-                    p_redir = urlparse(redir or "")
-                    h_redir = (p_redir.hostname or "").lower()
-                    if p_redir.scheme != "https" or not _host_permitido(h_redir, meta=meta):
-                        raise ValueError("Redirección hacia host no permitido.")
-                    return self._descargar_imagen_directo(redir, headers if meta else None, auth if not meta else None)
-                res.raise_for_status()
-                chunks = []
-                total = 0
-                for c in res.iter_content(chunk_size=16384):
-                    total += len(c)
-                    if total > limite_bytes:
-                        raise ValueError("El archivo de imagen excede el límite permitido.")
-                    chunks.append(c)
-                return b"".join(chunks), res.headers.get("Content-Type") or mime_declarado
-        return await asyncio.to_thread(_get)
+        def descargar() -> tuple[bytes, str]:
+            actual = url
+            opciones = dict(kwargs)
+            for _ in range(4):
+                parsed = urlparse(actual)
+                host = (parsed.hostname or "").lower()
+                if parsed.scheme != "https" or not _host_permitido(host, meta=meta, twilio=twilio):
+                    raise ValueError("Redirección de imagen a un host no autorizado.")
+                with requests.get(
+                    actual, stream=True, timeout=15, allow_redirects=False, **opciones
+                ) as response:
+                    if response.is_redirect:
+                        destino = urljoin(actual, response.headers.get("Location", ""))
+                        host_destino = (urlparse(destino).hostname or "").lower()
+                        if not _host_permitido(host_destino, meta=meta, twilio=twilio):
+                            raise ValueError("Redirección de imagen a un host no autorizado.")
+                        if host_destino != host:
+                            opciones.pop("headers", None)
+                            opciones.pop("auth", None)
+                        actual = destino
+                        continue
+                    response.raise_for_status()
+                    mime = (mime_declarado or response.headers.get("content-type", "")).split(";")[0].lower()
+                    if mime not in {"image/jpeg", "image/png", "image/webp"}:
+                        raise ValueError("Formato no permitido; use JPEG, PNG o WEBP.")
+                    contenido = bytearray()
+                    for bloque in response.iter_content(chunk_size=64 * 1024):
+                        contenido.extend(bloque)
+                        if len(contenido) > settings.image_max_bytes:
+                            raise ValueError("La imagen supera el tamaño máximo permitido.")
+                    if not contenido:
+                        raise ValueError("La imagen descargada está vacía.")
+                    return bytes(contenido), mime
+            raise ValueError("Demasiadas redirecciones al descargar la imagen.")
 
-    def _descargar_imagen_directo(self, url: str, headers, auth):
-        limite_bytes = settings.image_vision_max_bytes
-        with requests.get(
-            url,
+        return await asyncio.to_thread(descargar)
+
+    async def _descargar_audio_meta(self, media_id: str) -> tuple[bytes, str]:
+        version = settings.meta_graph_api_version.strip("/")
+        headers = {"Authorization": f"Bearer {settings.meta_access_token}"}
+        metadata = await asyncio.to_thread(
+            requests.get,
+            f"https://graph.facebook.com/{version}/{media_id}",
             headers=headers,
-            auth=auth,
-            stream=True,
-            timeout=15,
-            allow_redirects=False,
-        ) as res:
-            res.raise_for_status()
-            chunks = []
-            total = 0
-            for c in res.iter_content(chunk_size=16384):
-                total += len(c)
-                if total > limite_bytes:
-                    raise ValueError("El archivo de imagen excede el límite permitido.")
-                chunks.append(c)
-            return b"".join(chunks), res.headers.get("Content-Type", "")
-
-
-def _host_permitido(host: str, meta: bool) -> bool:
-    if meta:
-        return any(
-            host == dominio or host.endswith(f".{dominio}")
-            for dominio in ("facebook.com", "fbcdn.net", "whatsapp.net")
+            timeout=10,
         )
-    return any(
-        host == dominio or host.endswith(f".{dominio}")
-        for dominio in ("twilio.com", "twiliocdn.com")
-    )
+        metadata.raise_for_status()
+        media_url = metadata.json().get("url")
+        if not media_url or urlparse(media_url).scheme != "https":
+            raise ValueError("Meta no devolvió una URL HTTPS de audio válida.")
+        return await self._descargar_limitado(media_url, headers=headers)
+
+    async def _descargar_audio_twilio(self, media_url: str) -> tuple[bytes, str]:
+        parsed = urlparse(media_url)
+        host = (parsed.hostname or "").lower()
+        if parsed.scheme != "https" or not (
+            host.endswith(".twilio.com") or host.endswith(".twiliocdn.com") or host == "api.twilio.com"
+        ):
+            raise ValueError("URL de audio Twilio no autorizada.")
+        auth = (settings.twilio_account_sid, settings.twilio_auth_token)
+        return await self._descargar_limitado(media_url, auth=auth)
+
+    async def _descargar_limitado(self, url: str, **kwargs) -> tuple[bytes, str]:
+        def descargar() -> tuple[bytes, str]:
+            with requests.get(url, stream=True, timeout=15, **kwargs) as response:
+                response.raise_for_status()
+                limite = settings.audio_max_bytes
+                contenido = bytearray()
+                for bloque in response.iter_content(chunk_size=64 * 1024):
+                    contenido.extend(bloque)
+                    if len(contenido) > limite:
+                        raise ValueError("El audio supera el límite permitido.")
+                mime = response.headers.get("content-type", "audio/ogg").split(";")[0]
+                return bytes(contenido), mime
+
+        return await asyncio.to_thread(descargar)
 
 
 whatsapp_provider_service = WhatsAppProviderService()
+
+
+def _host_permitido(host: str, *, meta: bool = False, twilio: bool = False) -> bool:
+    if meta:
+        return (
+            host == "graph.facebook.com"
+            or host == "lookaside.fbsbx.com"
+            or host.endswith(".fbcdn.net")
+        )
+    if twilio:
+        return host == "api.twilio.com" or host.endswith(".twilio.com") or host.endswith(".twiliocdn.com")
+    return False
