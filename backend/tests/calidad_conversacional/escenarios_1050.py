@@ -14,20 +14,14 @@ Total: 7 * 150 = 1,050 escenarios multiturno completos.
 
 from __future__ import annotations
 
-import asyncio
 import os
-import re
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List
 
 os.environ.setdefault("DATABASE_ENABLED", "false")
 os.environ["GEMINI_API_KEY"] = ""
 os.environ["GROQ_API_KEY"] = ""
 os.environ["GROQ_CHAT_ENABLED"] = "false"
 
-from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
-from src.core.conversacion.repositorio import InMemoryConversationRepository
-from src.core.conversacion.models import ConversationState, FactType
-from src.core.gestor_diagnostico import GestorDiagnostico
 
 
 MARCAS_MODELOS = [

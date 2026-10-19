@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """Pruebas unitarias e integrales para interpretacion condicional vs comprobaciones reales."""
 
-import pytest
-from src.core.conversacion.models import ConversationState, FactState, FactType
-from src.core.conversacion.extraccion_hechos.actualizador_estado import extraer_y_actualizar
 from src.core.conversacion.clasificador_mensajes import clasificar_mensaje
+from src.core.conversacion.extraccion_hechos.actualizador_estado import extraer_y_actualizar
+from src.core.conversacion.models import ConversationState, FactState
 
 
 class TestInterpretacionCondicionalYHipotetica:
@@ -116,20 +115,20 @@ class TestInterpretacionCondicionalYHipotetica:
         sid = "test_multi_hip_e2e"
 
         # Turno 1: Falla inicial
-        r1 = gestor.procesar_consulta_texto("Toyota Corolla 2012 le doy arranque pero no prende", session_id=sid, proveedor="web")
+        gestor.procesar_consulta_texto("Toyota Corolla 2012 le doy arranque pero no prende", session_id=sid, proveedor="web")
         sesion = gestor.session_manager.obtener_sesion(sid)
         assert sesion.conversation_state.marca == "Toyota"
         assert sesion.conversation_state.modelo == "Corolla"
 
         # Turno 2: Pregunta exploratoria hipotetica
-        r2 = gestor.procesar_consulta_texto("¿Qué otra cosa podría ser si la bomba de gasolina está bien?", session_id=sid, proveedor="web")
+        gestor.procesar_consulta_texto("¿Qué otra cosa podría ser si la bomba de gasolina está bien?", session_id=sid, proveedor="web")
         sesion = gestor.session_manager.obtener_sesion(sid)
         # La bomba de combustible NO debe haber sido descartada
         assert "componente:bomba_combustible" not in sesion.conversation_state.hipotesis_descartadas
         assert "componente_comprobado_bomba_combustible" not in sesion.conversation_state.hechos
 
         # Turno 3: Comprobacion fisica real
-        r3 = gestor.procesar_consulta_texto("Ya revisé las bujías y dan buena chispa", session_id=sid, proveedor="web")
+        gestor.procesar_consulta_texto("Ya revisé las bujías y dan buena chispa", session_id=sid, proveedor="web")
         sesion = gestor.session_manager.obtener_sesion(sid)
         assert "componente:bujia" in sesion.conversation_state.hipotesis_descartadas
         assert "componente_comprobado_bujia" in sesion.conversation_state.hechos

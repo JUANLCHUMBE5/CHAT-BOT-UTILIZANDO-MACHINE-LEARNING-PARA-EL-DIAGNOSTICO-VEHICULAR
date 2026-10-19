@@ -5,8 +5,9 @@ y preservación del vehículo activo durante el diagnóstico conversacional.
 """
 
 import pytest
-from src.core.conversacion.models import ConversationState
+
 from src.core.conversacion.extraccion_hechos.actualizador_estado import extraer_y_actualizar
+from src.core.conversacion.models import ConversationState
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
 from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.gestor_diagnostico import GestorDiagnostico

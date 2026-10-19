@@ -1,6 +1,7 @@
 """Pruebas de regresión de Fase 16C: Despacho y reconocimiento de consultas técnicas y procedimentales."""
 
 import pytest
+
 from src.core.conversacion.extraccion_hechos.clasificador_mensajes import es_solicitud_detalle
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
 from src.core.conversacion.repositorio import InMemoryConversationRepository

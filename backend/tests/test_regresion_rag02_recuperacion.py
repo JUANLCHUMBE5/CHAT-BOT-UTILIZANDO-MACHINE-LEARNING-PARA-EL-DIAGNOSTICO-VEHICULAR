@@ -6,6 +6,7 @@ preservando la recuperacion valida en todos los sistemas.
 """
 
 import pytest
+
 from src.infrastructure.motor_rag import MotorRAG
 
 

@@ -17,7 +17,7 @@ import pytest
 import src.core.services.webhook_service as modulo
 from src.core.conversacion.extraccion_hechos.actualizador_estado import extraer_y_actualizar
 from src.core.conversacion.extraccion_hechos.clasificador_mensajes import es_solicitud_detalle
-from src.core.conversacion.models import ConversationState, FactState
+from src.core.conversacion.models import ConversationState
 from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.diagnostico.semantic_purifier import purificar_sintoma_para_vectorizador_ml
 from src.core.gestor_diagnostico import GestorDiagnostico
@@ -74,7 +74,7 @@ class TestFase16BCorreccionesFinales:
         estado = ConversationState(session_id="test-session-antecedente")
         texto = "Es un Nissan Sentra 2018, pero antes de este revisé un Toyota Corolla"
 
-        hechos = extraer_y_actualizar(estado, texto)
+        extraer_y_actualizar(estado, texto)
 
         assert estado.marca == "Nissan", f"Marca activa incorrecta: {estado.marca}"
         assert estado.modelo == "Sentra", f"Modelo activo incorrecto: {estado.modelo}"
