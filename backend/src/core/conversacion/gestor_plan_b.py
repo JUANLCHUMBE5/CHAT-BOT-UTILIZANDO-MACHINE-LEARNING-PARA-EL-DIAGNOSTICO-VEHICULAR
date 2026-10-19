@@ -301,7 +301,21 @@ class GestorPlanB:
             from .plan_b.transmision import alternativa_embrague
             return alternativa_embrague(estado)
 
-        # 4. Frenos: Discos alabeados / Pastillas
+        # 4. Frenos: Fuga hidráulica / Aire vs Discos / Pastillas
+        es_frenos_hidraulico = "freno" in falla_l and any(k in falla_l for k in ("fuga", "aire", "hidraul", "liquido", "líquido", "bomba"))
+        if es_frenos_hidraulico:
+            if not estado.ya_preguntado_texto("depósito del líquido") and not estado.ya_preguntado_texto("deposito del liquido"):
+                return (
+                    "inspección visual del depósito de líquido de frenos y cilindro maestro.",
+                    "Sin herramientas: inspecciona el depósito del líquido de frenos con el capó abierto. ¿El nivel se encuentra por debajo del mínimo o notas humedad/goteo alrededor del cilindro maestro?",
+                    QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+                )
+            return (
+                "revisión de estanqueidad hidráulica y purga de frenos en taller especializado.",
+                "Conservo la orientación provisional de fuga/aire sin confirmar. Requiere inspección en elevador y purga en taller.",
+                QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+            )
+
         if "disco" in falla_l or "pastilla" in falla_l or "freno" in falla_l:
             if "reloj_comparador" in herramientas_bloqueadas or "elevador" in herramientas_bloqueadas or sin_herramientas or estado.es_prueba_no_sabe_realizar():
                 if estado.ya_preguntado_texto("alumbra con una linterna"):
@@ -312,7 +326,7 @@ class GestorPlanB:
                     )
                 return (
                     "inspección visual a través de los rines para detectar surcos profundos o coloración azulada en los discos.",
-                    "Sin desmontar la rueda: al alumbrar con una linterna a través del rin hacia el disco, ¿se observa algún surco profundo o marcas azuladas de sobrecalentamiento? Realiza una inspección visual directa.",
+                    "Sin desmontar la rueda: al alumbrar con una linterna a través del rin hacia el disco, ¿se observa algún surco profundo o marcas oscuras de fricción? Realiza una inspección visual directa.",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 
@@ -340,7 +354,10 @@ class GestorPlanB:
                 )
 
         # 7. Climatización: Compresor / A/C
-        if "aire" in falla_l or "clima" in falla_l or "compresor" in falla_l:
+        es_falla_clima = any(k in falla_l for k in ("clima", "compresor", "refrigeracion", "a/c")) or (
+            "aire" in falla_l and "freno" not in falla_l and "hidraul" not in falla_l and "admision" not in falla_l
+        )
+        if es_falla_clima:
             if not estado.ya_comprobado_o_respondido("acople_compresor") and not estado.ya_preguntado_texto("clic metálico claro"):
                 return (
                     "comprobación acústica segura de acople del compresor en ralentí.",
@@ -425,12 +442,28 @@ class GestorPlanB:
             from .plan_b.transmision import alternativa_embrague
             return alternativa_embrague(estado)
 
-        # 2. FRENOS: medición de espesor o estado de discos / pastillas
-        if dominio_norm == "FRENOS" or any(w in preg_norm for w in ("disco", "pastilla", "freno", "espesor")):
+        # 2. FRENOS: hidráulico (fuga/aire/pedal esponjoso) vs mecánico (discos/pastillas)
+        if dominio_norm == "FRENOS" or any(w in preg_norm for w in ("disco", "pastilla", "freno", "espesor", "liquido", "líquido", "pedal")):
+            es_falla_hidraulica = any(
+                k in (" ".join(str(s) for s in estado.active_symptoms) + " " + preg_norm + " " + str(estado.falla_principal)).lower()
+                for k in ("esponjoso", "al fondo", "se hunde", "blando", "fuga", "liquido", "líquido", "aire")
+            )
+            if es_falla_hidraulica:
+                if not estado.ya_preguntado_texto("depósito del líquido") and not estado.ya_preguntado_texto("deposito del liquido"):
+                    return (
+                        "inspección visual del depósito de líquido de frenos y cilindro maestro.",
+                        "Sin herramientas: inspecciona el depósito del líquido de frenos con el capó abierto. ¿El nivel se encuentra por debajo del mínimo o notas humedad/goteo alrededor del cilindro maestro?",
+                        QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+                    )
+                return (
+                    "revisión de estanqueidad y purga de frenos en taller especializado.",
+                    "Conservo la orientación provisional de sospecha hidráulica sin confirmar. Requiere inspección en elevador y purga en taller.",
+                    QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+                )
             if not estado.ya_preguntado_texto("alumbra con una linterna"):
                 return (
                     "inspección visual segura del disco y pastilla a través de los rines con linterna.",
-                    "Sin desmontar la rueda: al alumbrar con una linterna a través del rin hacia el disco, ¿se observa algún surco profundo o marcas azuladas de sobrecalentamiento? Realiza una inspección visual directa.",
+                    "Sin desmontar la rueda: al alumbrar con una linterna a través del rin hacia el disco, ¿se observa algún surco profundo o marcas oscuras de fricción? Realiza una inspección visual directa.",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
             return (

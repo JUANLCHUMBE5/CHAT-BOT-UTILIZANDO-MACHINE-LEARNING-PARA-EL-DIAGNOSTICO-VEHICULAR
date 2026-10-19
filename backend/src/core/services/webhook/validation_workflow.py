@@ -592,12 +592,25 @@ class ValidationWorkflow:
                 else None
             )
 
-            if seleccion_top3 and seleccion_top3.accion == "AMBIGUO":
-                respuesta_texto = (
-                    "🤔 No registraré una confirmación ni un descarte con esa respuesta.\n"
-                    "Si quieres continuar, describe una observación o una comprobación "
-                    "que sí puedas realizar de forma segura."
-                )
+            if seleccion_top3 and seleccion_top3.accion in ("AMBIGUO", "NO_SE", "NINGUNA"):
+                if seleccion_top3.accion == "NO_SE":
+                    respuesta_texto = (
+                        "Entendido, no te preocupes. Conservo las hipótesis bajo revisión técnica "
+                        "sin confirmar ni descartar.\n\n"
+                        "Para continuar orientándote: ¿qué síntoma o comportamiento adicional observas en el vehículo?"
+                    )
+                elif seleccion_top3.accion == "NINGUNA":
+                    respuesta_texto = (
+                        "Entendido. Ninguna de las opciones corresponde a lo observado.\n\n"
+                        "Conservo el diagnóstico en revisión abierta. Por favor, indícame qué componente sospechas "
+                        "o qué síntoma específico presenta para reorientar el análisis."
+                    )
+                else:
+                    respuesta_texto = (
+                        "🤔 No registraré una confirmación ni un descarte con esa respuesta.\n"
+                        "Si quieres continuar, describe una observación o una comprobación "
+                        "que sí puedas realizar de forma segura."
+                    )
                 flujo_validacion["etapa"] = "esperando_aclaracion_confirmacion"
                 contexto_conversacion["validacion_diagnostico"] = flujo_validacion
                 conversacion.contexto = contexto_conversacion

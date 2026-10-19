@@ -55,11 +55,16 @@ def test_respuesta_si_no_no_interpreta_una_consulta_completa():
 
 
 def test_instrucciones_piden_confirmacion_binaria():
-    instrucciones = instrucciones_confirmacion_whatsapp()
+    instrucciones = instrucciones_confirmacion_whatsapp(cantidad_hipotesis=1)
 
     assert "¿Fue correcta?" in instrucciones
     assert "*SÍ / NO*" in instrucciones
     assert len(instrucciones.strip()) < 40
+
+    instrucciones_top3 = instrucciones_confirmacion_whatsapp(cantidad_hipotesis=3)
+    assert "¿Fue correcta?" in instrucciones_top3
+    assert "*SÍ / NO*" in instrucciones_top3
+    assert "1 / 2 / 3 / NINGUNA / NO SÉ" in instrucciones_top3
 
 
 def test_respuesta_si_confirma_el_diagnostico_exacto_y_deja_auditoria():

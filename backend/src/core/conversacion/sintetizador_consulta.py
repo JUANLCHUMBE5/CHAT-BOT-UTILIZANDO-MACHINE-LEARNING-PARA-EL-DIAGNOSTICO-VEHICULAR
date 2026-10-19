@@ -48,7 +48,10 @@ class SintetizadorConsulta:
         vistos_sintomas = set()
         for h in estado.hechos.values():
             if h.categoria == "sintoma" and h.estado == FactState.CONFIRMADO:
-                v = h.valor
+                v = str(h.valor).strip()
+                # Omitir banderas binarias crudas como "SI" o "TRUE" registradas como síntoma
+                if v.upper() in ("SI", "SÍ", "TRUE", "1", "NO", "FALSE", "0"):
+                    continue
                 # Normalizar redundancia en síntomas de climatización
                 if "climatización" in v.lower() or "aire acondicionado no enfría" in v.lower():
                     v = "aire acondicionado no enfría / sale aire caliente"
