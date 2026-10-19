@@ -16,8 +16,8 @@ export const DiagnosticosDesktopTable: React.FC<DiagnosticosDesktopTableProps> =
   onVerDetalle,
 }) => {
   return (
-    <div className="diagnosticos-desktop-table" style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+    <div className="diagnosticos-desktop-table" style={{ overflowX: 'auto', width: '100%' }}>
+      <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse', textAlign: 'left' }}>
         <thead>
           <tr
             style={{
@@ -130,6 +130,7 @@ export const DiagnosticosDesktopTable: React.FC<DiagnosticosDesktopTableProps> =
                         textOverflow: 'ellipsis',
                         margin: 0,
                         fontSize: '12px',
+                        maxWidth: '240px',
                       }}
                       title={d.sintoma_original}
                     >
@@ -178,9 +179,14 @@ export const DiagnosticosDesktopTable: React.FC<DiagnosticosDesktopTableProps> =
                       variant="outline"
                       size="sm"
                       onClick={() => onVerDetalle(d)}
-                      style={{ fontSize: '11.5px', padding: '4px 10px', fontWeight: 700 }}
+                      style={{
+                        height: '28px',
+                        fontSize: '11.5px',
+                        padding: '0 10px',
+                        gap: '4px',
+                      }}
                     >
-                      Ver diagnóstico
+                      Ver
                     </Button>
                   </td>
                 </tr>

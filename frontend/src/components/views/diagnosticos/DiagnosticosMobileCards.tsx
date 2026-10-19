@@ -38,7 +38,7 @@ export const DiagnosticosMobileCards: React.FC<DiagnosticosMobileCardsProps> = (
   }
 
   return (
-    <div className="diagnosticos-mobile-list" style={{ padding: '2px 0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div className="diagnosticos-mobile-list" style={{ padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
       {diagnosticos.map((d) => {
         const tienePlaca =
           d.placa_vehiculo &&
@@ -72,6 +72,11 @@ export const DiagnosticosMobileCards: React.FC<DiagnosticosMobileCardsProps> = (
               cursor: 'pointer',
               boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
               transition: 'all 0.15s ease',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              boxSizing: 'border-box',
+              width: '100%',
+              maxWidth: '100%',
             }}
           >
             {/* 1. Vehículo & 2. Fecha */}
@@ -105,6 +110,8 @@ export const DiagnosticosMobileCards: React.FC<DiagnosticosMobileCardsProps> = (
                 color: 'var(--text-main)',
                 border: '1px solid #f1f5f9',
                 lineHeight: 1.4,
+                wordBreak: 'break-word',
+                overflowWrap: 'anywhere',
               }}
             >
               "{d.sintoma_original}"
@@ -116,7 +123,7 @@ export const DiagnosticosMobileCards: React.FC<DiagnosticosMobileCardsProps> = (
                 <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                   Diagnóstico IA:
                 </div>
-                <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>
+                <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', wordBreak: 'break-word' }}>
                   {d.falla_predicha}
                 </div>
               </div>
@@ -130,6 +137,7 @@ export const DiagnosticosMobileCards: React.FC<DiagnosticosMobileCardsProps> = (
                   border: `1px solid ${d.confianza >= 70 ? '#a7f3d0' : '#fde68a'}`,
                   padding: '2px 8px',
                   borderRadius: '6px',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 {d.confianza}% confianza
@@ -148,7 +156,9 @@ export const DiagnosticosMobileCards: React.FC<DiagnosticosMobileCardsProps> = (
                 color: 'var(--text-muted)',
               }}
             >
-              <span>{d.mecanico_nombre || d.cliente_nombre || 'Mecánico'}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
+                {d.mecanico_nombre || d.cliente_nombre || 'Mecánico'}
+              </span>
               <span
                 style={{
                   display: 'inline-flex',
@@ -156,9 +166,10 @@ export const DiagnosticosMobileCards: React.FC<DiagnosticosMobileCardsProps> = (
                   gap: '4px',
                   fontWeight: 700,
                   color: 'var(--primary)',
+                  flexShrink: 0,
                 }}
               >
-                <span>Ver diagnóstico</span>
+                <span>Detalle</span>
                 <ArrowRight size={13} />
               </span>
             </div>
