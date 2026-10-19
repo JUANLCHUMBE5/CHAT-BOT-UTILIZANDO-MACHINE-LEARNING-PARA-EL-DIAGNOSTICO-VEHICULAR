@@ -189,3 +189,38 @@ async def test_plan_b_turbo_no_deriva_a_frenos():
     r = await o.procesar_turno("vacio", "No tengo bomba de vacío manual", g)
     assert "turbo" in r["respuesta_texto"] and "mangueras" in r["respuesta_texto"]
     assert "disco" not in r["respuesta_texto"] and "freno" not in r["respuesta_texto"]
+
+
+def test_no_escaneado_no_significa_sin_codigos():
+    from src.core.conversacion.extractor_hechos import ExtractorHechos
+    from src.core.conversacion.models import DtcStatus
+
+    s = ConversationState(session_id="dtc")
+    assert s.dtc_status == DtcStatus.DTC_DESCONOCIDO
+    ExtractorHechos.extraer_y_actualizar(s, "Toyota Hilux diésel, pierde fuerza en subida")
+    assert s.dtc_status == DtcStatus.DTC_DESCONOCIDO
+    ExtractorHechos.extraer_y_actualizar(s, "Revisé con escáner, no hay códigos DTC")
+    assert s.dtc_status == DtcStatus.SIN_DTC
+
+
+@pytest.mark.parametrize("valor", [9.0, 14.2, 18.3])
+def test_componente_alternador_procede_del_mensaje_no_del_rango(valor):
+    from src.core.conversacion.extractor_hechos import ExtractorHechos
+
+    s = ConversationState(session_id="componente")
+    ExtractorHechos.extraer_y_actualizar(s, f"El alternador marca {valor} V")
+    h = s.obtener_hecho("medicion_voltaje_alternador")
+    assert h is not None and str(valor) in h.valor
+    assert s.obtener_valor_confirmado("voltaje_reposo_normal") is None
+
+
+@pytest.mark.anyio
+async def test_ood_recuerda_transmision_sin_contaminar_otro_vehiculo():
+    o = OrquestadorConversacion(InMemoryConversationRepository())
+    g = GestorDiagnostico()
+    await o.procesar_turno("ood", "Volkswagen con caja automática DSG", g)
+    r = await o.procesar_turno("ood", "golpea al pasar los cambios cuando calienta", g)
+    assert r["decision"] == "ABSTENCION_OOD"
+    r = await o.procesar_turno("ood", "Ahora otro vehículo: Toyota Corolla 2018 gasolina, ratea en ralentí", g)
+    assert r["decision"] != "ABSTENCION_OOD"
+    assert "DSG" not in r["respuesta_texto"]

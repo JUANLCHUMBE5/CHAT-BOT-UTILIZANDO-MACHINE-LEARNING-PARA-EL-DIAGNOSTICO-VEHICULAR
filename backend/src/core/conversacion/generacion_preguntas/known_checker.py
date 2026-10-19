@@ -248,7 +248,7 @@ def pregunta_por_area(
             return None
         if estado.ya_preguntado_texto("STFT/LTFT") or "stft/ltft" in pregunta_anterior:
             return None
-        if estado.dtc_status == DtcStatus.DTC_AUSENTE or estado.obtener_hecho("sin_dtc"):
+        if estado.obtener_valor_confirmado("sin_dtc") or estado.obtener_valor_confirmado("escaner_limpio"):
             return (
                 "Dado que no hay códigos DTC activos, ¿qué valores de ajuste de combustible STFT/LTFT muestra el escáner en datos en vivo? Si no los tienes, indícalo.",
                 QuestionIntent.MEDICION_TECNICA,

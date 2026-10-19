@@ -45,6 +45,10 @@ def extraer_mediciones_instrumentales(
                 campo_v = "medicion_caida_tension_masa"
                 tipo_v = "caida_tension"
                 ctx_v = "masa_chasis"
+            elif re.search(r"\balternador\b", texto_l):
+                campo_v = "medicion_voltaje_alternador"
+                tipo_v = "voltaje_alternador"
+                ctx_v = condicion or "alternador_condicion_pendiente"
             elif condicion in ("reposo", "durante_arranque", "contacto_on"):
                 campo_v = f"medicion_voltaje_{condicion}"
                 tipo_v = "voltaje_bateria"
@@ -64,6 +68,11 @@ def extraer_mediciones_instrumentales(
             )
             estado.registrar_prueba_completada(campo_v, f"{val} {unidad}")
             # No crear hechos de normalidad a partir de umbrales genéricos.
+            from src.core.conversacion.respuestas_cortas.seguimiento_mediciones import (
+                registrar_contraste_pendiente,
+            )
+
+            hechos_extraidos.extend(registrar_contraste_pendiente(estado, condicion, texto_usuario))
         elif unidad in ("mA", "A"):
             es_parasito = bool(re.search(r"\b(?:par[aá]sito|fuga|descarga|reposo|consumo)\b", texto_l))
             tipo_a = "consumo_parasito" if es_parasito else "corriente_electrica"

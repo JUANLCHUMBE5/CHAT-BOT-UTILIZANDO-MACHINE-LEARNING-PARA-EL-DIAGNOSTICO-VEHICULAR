@@ -16,7 +16,11 @@ async def consultas_basicas(self, turno):
     turno.detectar_sintoma_fuera_de_catalogo = _importar(
         "src.core.diagnostico.detector_ood"
     ).detectar_sintoma_fuera_de_catalogo
-    turno.es_ood, turno.regla_ood = turno.detectar_sintoma_fuera_de_catalogo(turno.texto_limpio)
+    contexto_ood = " ".join([*turno.estado.historial_mensajes_usuario, turno.texto_limpio])
+    # Una corrección explícita no debe heredar el mecanismo previamente indicado.
+    if re.search(r"\b(?:no es|me equivoqu[eé]|en realidad|corrijo)\b", turno.texto_limpio, re.I):
+        contexto_ood = turno.texto_limpio
+    turno.es_ood, turno.regla_ood = turno.detectar_sintoma_fuera_de_catalogo(contexto_ood)
     if turno.es_ood and turno.regla_ood is not None:
         ExtractorHechos.extraer_y_actualizar(turno.estado, turno.texto_limpio)
         if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:

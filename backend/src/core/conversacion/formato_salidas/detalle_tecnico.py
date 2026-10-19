@@ -19,6 +19,7 @@ def formatear_detalle_tecnico(
     """Formatea la explicación técnica paso a paso bajo demanda ('más detalles')."""
     falla_nom = simplificar_nombre_falla(falla)
     lineas = [f"📋 *Procedimiento de comprobación: {falla_nom}*\n"]
+    codigos = []
     if estado:
         codigos = list(dict.fromkeys(
             h.valor for h in estado.hechos.values()
@@ -31,4 +32,16 @@ def formatear_detalle_tecnico(
     from src.core.conversacion.formato_salidas.orientacion_segura import orientar_sin_manual
 
     lineas.append(orientar_sin_manual(falla_nom))
+    # Los códigos orientativos son hipótesis del catálogo, nunca DTC observados.
+    if estado is None or not codigos:
+        from src.core.taxonomy.catalogo_pruebas_taller import obtener_directriz_taller
+
+        directriz = obtener_directriz_taller(falla)
+        if directriz and not directriz.es_mecanica_pura and directriz.dtc_frecuente != "N/A":
+            lineas.append(
+                "Si realizas un escaneo, algunos códigos relacionados que podrían aparecer son: "
+                + str(directriz.dtc_frecuente)
+                + ". Son posibilidades del catálogo; no se registran como códigos observados."
+            )
+    lineas.append("¿Deseas registrar el resultado de una comprobación disponible y segura?")
     return "\n".join(lineas)

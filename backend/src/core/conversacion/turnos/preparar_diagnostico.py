@@ -11,8 +11,10 @@ from src.infrastructure.rag.documental_salida import normalizar
 
 
 async def preparar_diagnostico(self, turno):
-    texto = normalizar(turno.texto_limpio)
+    texto = normalizar(" ".join([*turno.estado.active_symptoms, turno.texto_limpio]))
     if (
+        not turno.estado.measurements
+        and
         re.search(r"\b(?:tiem[bv]l\w*|vibr\w*|sacud\w*|zapate\w*)\b", texto)
         and re.search(r"\b(?:al|cuando|kuando)\s+fren(?:ar|a|o)\b", texto)
         and not re.search(r"\b(?:no|sin)\b.{0,20}\b(?:vibr\w*|tiem[bv]l\w*|fren\w*)\b", texto)

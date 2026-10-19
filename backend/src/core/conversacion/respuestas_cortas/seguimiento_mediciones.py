@@ -1,6 +1,23 @@
 """Interpretación de lecturas sin convertirlas en umbrales ni fallas confirmadas."""
 
-from src.core.conversacion.models import QuestionIntent
+from src.core.conversacion.models import FactState, FactType, QuestionIntent
+
+
+def registrar_contraste_pendiente(estado, condicion, texto):
+    """Preserva el contrato de campos sin convertir una lectura en normalidad."""
+    campos = {
+        "reposo": ("voltaje_reposo_normal",),
+        "durante_arranque": ("caida_tension_excesiva", "voltaje_arranque_normal"),
+    }.get(condicion, ())
+    hechos = []
+    for campo in campos:
+        if estado.obtener_hecho(campo) is None:
+            h = estado.registrar_hecho(
+                campo, "DESCONOCIDO", categoria="contraste_pendiente",
+                estado=FactState.NO_REVISADO, tipo=FactType.CONDICION, texto_crudo=texto,
+            )
+            hechos.append(h.to_dict())
+    return hechos
 
 
 def evaluar_lectura(estado, interpretacion):
@@ -25,6 +42,13 @@ def evaluar_lectura(estado, interpretacion):
             return ("CONCLUSION_TECNICA", "Mediciones múltiples preservadas", respuesta, False, None, None)
         condicion = interpretacion.get("condicion_medicion") or campo.removeprefix("medicion_voltaje_")
         estado.registrar_medicion("voltaje_" + condicion, float(valor), "V", contexto=condicion, prueba="voltaje")
+        if campo == "medicion_voltaje_alternador":
+            respuesta = (
+                f"Lectura reportada en el alternador: {valor} V. No confirma carga correcta ni falla. "
+                "Indica si el motor estaba apagado o en marcha, consumidores y punto de toma; "
+                "contrasta con el manual aplicable."
+            )
+            return ("CONCLUSION_TECNICA", "Componente explícito preservado", respuesta, False, None, None)
         if condicion == "durante_arranque":
             respuesta = (
                 f"Registrado: {valor} V en arranque. Esta lectura aislada no confirma descarga, "

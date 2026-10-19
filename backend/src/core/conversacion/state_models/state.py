@@ -39,7 +39,7 @@ class ConversationState:
     max_repreguntas: int = 3
     confianza_actual: float = 0.0
     conversation_evidence_level: EvidenceLevel = EvidenceLevel.BAJA
-    dtc_status: DtcStatus = DtcStatus.SIN_DTC
+    dtc_status: DtcStatus = DtcStatus.DTC_DESCONOCIDO
     top3_actual: List[Dict[str, Any]] = field(default_factory=list)
     falla_principal: Optional[str] = None
     hipotesis_descartadas: List[str] = field(default_factory=list)
@@ -488,7 +488,7 @@ class ConversationState:
         self.turnos_repregunta = 0
         self.confianza_actual = 0.0
         self.conversation_evidence_level = EvidenceLevel.BAJA
-        self.dtc_status = DtcStatus.SIN_DTC
+        self.dtc_status = DtcStatus.DTC_DESCONOCIDO
         self.top3_actual = []
         self.falla_principal = None
         self.hipotesis_descartadas = []
@@ -613,7 +613,7 @@ class ConversationState:
             max_repreguntas=int(data.get("max_repreguntas", 3)),
             confianza_actual=float(data.get("confianza_actual", 0.0)),
             conversation_evidence_level=EvidenceLevel(data.get("conversation_evidence_level", "BAJA")),
-            dtc_status=DtcStatus(data.get("dtc_status", "SIN_DTC")),
+            dtc_status=DtcStatus(data.get("dtc_status", "DTC_DESCONOCIDO")),
             top3_actual=list(data.get("top3_actual") or []),
             hipotesis_descartadas=list(data.get("hipotesis_descartadas") or []),
             created_at=float(data.get("created_at", time.time())),

@@ -9,7 +9,6 @@ from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.evidencia_acciones import registrar_acciones_taller
 from src.core.conversacion.models import (
     ConversationState,
-    DtcStatus,
     FactState,
     FactType,
 )
@@ -229,12 +228,15 @@ def extraer_comprobaciones_mecanicas(
         hechos_extraidos.append(h_ret.to_dict())
 
     if re.search(
-        r"\b(?:no\s+(?:tiene|hay|registra|arroja)\s+(?:ning[u\u00fa]n\s+)?c[o\u00f3]digo|sin\s+(?:c[o\u00f3]digos?|dtc)|sin\s+fallas?\s+en\s+el\s+esc[a\u00e1]ner|esc[a\u00e1]ner\s+(?:limpio|no\s+tiene\s+ning[u\u00fa]n\s+c[o\u00f3]digo)|no\s+tiene\s+dtc)\b",
+        r"\b(?:no\s+(?:tiene|hay|registra|arroja)\s+(?:ning[u\u00fa]n\s+)?c[o\u00f3]digos?|sin\s+(?:c[o\u00f3]digos?|dtc)|sin\s+fallas?\s+en\s+el\s+esc[a\u00e1]ner|esc[a\u00e1]ner\s+(?:limpio|no\s+tiene\s+ning[u\u00fa]n\s+c[o\u00f3]digo)|no\s+tiene\s+dtc)\b",
         texto_l,
     ):
         h_sdtc = estado.registrar_hecho(
             "sin_dtc", "sin códigos DTC", categoria="dtc", tipo=FactType.CONDICION
         )
+        from src.core.conversacion.models import DtcStatus
+
+        estado.dtc_status = DtcStatus.SIN_DTC
         hechos_extraidos.append(h_sdtc.to_dict())
 
     hechos_extraidos.extend(registrar_acciones_taller(estado, texto_usuario))

@@ -4,6 +4,7 @@ import re
 from src.core.conversacion.models import EstadoOperativo, FactState, FactType, QuestionIntent
 
 from .extractor_mediciones import extraer_todas_mediciones
+from .seguimiento_mediciones import registrar_contraste_pendiente
 
 
 def interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_str):
@@ -43,6 +44,10 @@ def interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_st
                         campo = "medicion_caida_tension_masa"
                         tipo_med = "caida_tension"
                         contexto_med = "masa_chasis"
+                    elif re.search(r"\balternador\b", texto_l):
+                        campo = "medicion_voltaje_alternador"
+                        tipo_med = "voltaje_alternador"
+                        contexto_med = condicion or "alternador_condicion_pendiente"
                     elif condicion in ("reposo", "durante_arranque", "contacto_on"):
                         campo = f"medicion_voltaje_{condicion}"
                         tipo_med = "voltaje_bateria"
@@ -141,6 +146,8 @@ def interpretar_mediciones(estado, texto_usuario, texto_l, texto_preg, intent_st
 
                 # Una lectura no demuestra normalidad ni una falla sin límite
                 # aplicable. Conservar exclusivamente la observación y su unidad.
+                if unidad == "V":
+                    registrar_contraste_pendiente(estado, condicion, texto_usuario)
 
                 if respuesta_retorno is None:
                     respuesta_retorno = {
