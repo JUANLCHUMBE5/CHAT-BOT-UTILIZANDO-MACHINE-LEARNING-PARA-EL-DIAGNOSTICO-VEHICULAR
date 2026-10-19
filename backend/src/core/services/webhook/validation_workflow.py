@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.application.services.confirmacion_diagnostico import (
     ConfirmacionDiagnosticoWhatsApp,
+    SeleccionHipotesisTop3,
     _normalizar,
     interpretar_confirmacion_whatsapp,
     interpretar_respuesta_validacion_whatsapp,
@@ -284,14 +285,23 @@ class ValidationWorkflow:
         respuesta_texto: str,
         proveedor: str,
         remitente: str,
+        interactivo: Optional[dict] = None,
     ) -> None:
         """Persiste una respuesta del flujo de validación en el outbox durable."""
+        out_msg_id = f"out_{meta_message_id or uuid.uuid4()}"
+        if interactivo and conversacion and hasattr(conversacion, "contexto"):
+            ctx = dict(conversacion.contexto or {})
+            ctx["mensaje_interactivo"] = {
+                "msg_id": out_msg_id,
+                "interactivo": interactivo,
+            }
+            conversacion.contexto = ctx
 
         await msg_repo.crear_mensaje(
             conversacion_id=conversacion.id,
             taller_id=usuario.taller_id,
             usuario_id=usuario.id,
-            meta_message_id=f"out_{meta_message_id or uuid.uuid4()}",
+            meta_message_id=out_msg_id,
             direccion="salida",
             tipo="texto",
             texto=respuesta_texto,
@@ -320,6 +330,7 @@ class ValidationWorkflow:
         proveedor: str,
         remitente: str,
         t_inicio: float,
+        payload_interactivo: Optional[str] = None,
     ) -> Optional[dict[str, Any]]:
         """
         Interpreta si el mensaje entrante corresponde a la validación conversacional
@@ -335,6 +346,23 @@ class ValidationWorkflow:
         contexto_conversacion = dict(conversacion.contexto or {})
         flujo_validacion = dict(contexto_conversacion.get("validacion_diagnostico") or {})
         etapa_validacion = flujo_validacion.get("etapa")
+
+        btn_accion_interactiva = None
+        if payload_interactivo:
+            p_lower = payload_interactivo.lower()
+            if p_lower.startswith("conf_si") or p_lower in ("btn_si", "si"):
+                btn_accion_interactiva = "si"
+            elif p_lower.startswith("conf_no") or p_lower in ("btn_no", "no"):
+                btn_accion_interactiva = "no"
+            elif "hip_" in p_lower:
+                m_ord = re.search(r"hip[_\-]?([1-9])", p_lower)
+                if m_ord:
+                    btn_accion_interactiva = SeleccionHipotesisTop3(
+                        accion="CONFIRMAR",
+                        orden=int(m_ord.group(1)),
+                        metodo="boton_interactivo",
+                        texto_referencia=texto_cliente,
+                    )
 
         # Una consulta de memoria es de solo lectura. Debe prevalecer sobre la
         # validación pendiente y sobre cualquier fallback por imposibilidad.
@@ -402,7 +430,7 @@ class ValidationWorkflow:
             logger.info("[Validación] Nueva evidencia técnica o consulta; se reanuda el flujo diagnóstico con el orquestador.")
             return None
 
-        if tipo_mensaje == "text" and etapa_validacion:
+        if tipo_mensaje in ("text", "interactive", "button") and etapa_validacion:
             _registrar_turno_consumido_por_validacion(
                 contexto_conversacion, texto_cliente, str(conversacion.id)
             )
@@ -521,7 +549,7 @@ class ValidationWorkflow:
                 "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
             }
 
-        if tipo_mensaje == "text" and etapa_validacion in {
+        if tipo_mensaje in ("text", "interactive", "button") and etapa_validacion in {
             "esperando_confirmacion",
             "esperando_aclaracion_confirmacion",
         }:
@@ -583,14 +611,17 @@ class ValidationWorkflow:
                                     {"falla": nombre_h}
                                 )
 
-            seleccion_top3 = (
-                interpretar_seleccion_top3(
-                    texto_cliente,
-                    hipotesis_selector,
+            if isinstance(btn_accion_interactiva, SeleccionHipotesisTop3):
+                seleccion_top3 = btn_accion_interactiva
+            else:
+                seleccion_top3 = (
+                    interpretar_seleccion_top3(
+                        texto_cliente,
+                        hipotesis_selector,
+                    )
+                    if hipotesis_selector
+                    else None
                 )
-                if hipotesis_selector
-                else None
-            )
 
             if seleccion_top3 and seleccion_top3.accion in ("AMBIGUO", "NO_SE", "NINGUNA"):
                 if seleccion_top3.accion == "NO_SE":
@@ -647,8 +678,12 @@ class ValidationWorkflow:
                 flujo_validacion["orden_seleccionado"] = seleccion_top3.orden
                 flujo_validacion["hipotesis_seleccionada"] = _nombre_hipotesis(hipotesis_elegida)
                 flujo_validacion["etapa"] = "esperando_confirmacion"
+                flujo_validacion["diagnostico_id"] = str(diagnostico_selector.id)
                 contexto_conversacion["validacion_diagnostico"] = flujo_validacion
                 conversacion.contexto = contexto_conversacion
+
+                from src.application.services.confirmacion_diagnostico import construir_botones_confirmacion
+                interactivo_conf = construir_botones_confirmacion(diagnostico_selector.id)
 
                 await cls.guardar_respuesta_validacion_outbox(
                     msg_repo,
@@ -658,6 +693,7 @@ class ValidationWorkflow:
                     respuesta_texto,
                     proveedor,
                     remitente,
+                    interactivo=interactivo_conf,
                 )
                 await session.commit()
                 return {
@@ -694,9 +730,12 @@ class ValidationWorkflow:
                 respuesta_binaria = None
 
             else:
-                respuesta_binaria = interpretar_respuesta_validacion_whatsapp(
-                    texto_cliente
-                )
+                if btn_accion_interactiva in ("si", "no"):
+                    respuesta_binaria = btn_accion_interactiva
+                else:
+                    respuesta_binaria = interpretar_respuesta_validacion_whatsapp(
+                        texto_cliente
+                    )
 
             if (
                 confirmacion is None
@@ -779,7 +818,7 @@ class ValidationWorkflow:
                 metodo_seleccion = "binario"
 
             elif confirmacion is None and respuesta_binaria == "no":
-                if _normalizar(texto_cliente).strip(" .,!¡¿?") in {
+                if not flujo_validacion.get("orden_seleccionado") and btn_accion_interactiva != "no" and _normalizar(texto_cliente).strip(" .,!¡¿?") in {
                     "no",
                     "incorrecto",
                     "incorrecta",
@@ -813,6 +852,7 @@ class ValidationWorkflow:
                         "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
                     }
 
+                orden_hipotesis_seleccionada = flujo_validacion.get("orden_seleccionado") or orden_hipotesis_seleccionada or 1
                 diagnostico = (
                     await diag_repo.obtener_pendiente_mecanico_por_id(
                         diagnostico_id=diagnostico_contexto_id,
@@ -945,8 +985,21 @@ class ValidationWorkflow:
                 flujo_validacion["sintoma_base"] = sintoma_base
                 contexto_conversacion["validacion_diagnostico"] = flujo_validacion
                 conversacion.contexto = contexto_conversacion
+                interactivo_siguiente = None
+                hipotesis_restantes = [
+                    h for h in (getattr(diagnostico, "hipotesis", None) or [])
+                    if getattr(h, "resultado", None) not in ("descartada", "confirmada")
+                ]
+                if hipotesis_restantes and diagnostico:
+                    from src.application.services.confirmacion_diagnostico import construir_botones_hipotesis
+                    preds_restantes = [
+                        {"falla": _nombre_hipotesis(h), "probabilidad": float(getattr(h, "confianza", 0.0) or 0.0)}
+                        for h in hipotesis_restantes
+                    ]
+                    interactivo_siguiente = construir_botones_hipotesis(preds_restantes, case_id=str(diagnostico.id))
+
                 await cls.guardar_respuesta_validacion_outbox(
-                    msg_repo, conversacion, usuario, meta_message_id, respuesta_texto, proveedor, remitente
+                    msg_repo, conversacion, usuario, meta_message_id, respuesta_texto, proveedor, remitente, interactivo=interactivo_siguiente
                 )
                 await session.commit()
                 return {
@@ -956,7 +1009,46 @@ class ValidationWorkflow:
                     "respuesta": respuesta_texto,
                     "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
                 }
-        elif tipo_mensaje == "text" and etapa_validacion == "esperando_falla_real":
+        elif etapa_validacion == "esperando_falla_real":
+            # Si el mecánico selecciona otra hipótesis mediante botón interactivo
+            if isinstance(btn_accion_interactiva, SeleccionHipotesisTop3) and btn_accion_interactiva.accion == "CONFIRMAR":
+                diag_sel = (
+                    await diag_repo.obtener_pendiente_mecanico_por_id(
+                        diagnostico_id=diagnostico_contexto_id,
+                        taller_id=usuario.taller_id,
+                        mecanico_id=usuario.id,
+                    )
+                    if diagnostico_contexto_id
+                    else None
+                )
+                if diag_sel:
+                    hip_elegida = next(
+                        (h for h in (getattr(diag_sel, "hipotesis", None) or []) if getattr(h, "orden", None) == btn_accion_interactiva.orden),
+                        None
+                    )
+                    if hip_elegida:
+                        resp_t = _respuesta_detalle_hipotesis(hip_elegida, btn_accion_interactiva.orden or 1)
+                        flujo_validacion["orden_seleccionado"] = btn_accion_interactiva.orden
+                        flujo_validacion["hipotesis_seleccionada"] = _nombre_hipotesis(hip_elegida)
+                        flujo_validacion["etapa"] = "esperando_confirmacion"
+                        flujo_validacion["diagnostico_id"] = str(diag_sel.id)
+                        contexto_conversacion["validacion_diagnostico"] = flujo_validacion
+                        conversacion.contexto = contexto_conversacion
+
+                        from src.application.services.confirmacion_diagnostico import construir_botones_confirmacion
+                        inter_c = construir_botones_confirmacion(diag_sel.id)
+                        await cls.guardar_respuesta_validacion_outbox(
+                            msg_repo, conversacion, usuario, meta_message_id, resp_t, proveedor, remitente, interactivo=inter_c
+                        )
+                        await session.commit()
+                        return {
+                            "status": "esperando_confirmacion",
+                            "diagnostico_id": str(diag_sel.id),
+                            "conversacion_id": str(conversacion.id),
+                            "respuesta": resp_t,
+                            "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+                        }
+
             falla_real = texto_cliente.strip()[:4000]
             texto_norm = _normalizar(falla_real)
 
