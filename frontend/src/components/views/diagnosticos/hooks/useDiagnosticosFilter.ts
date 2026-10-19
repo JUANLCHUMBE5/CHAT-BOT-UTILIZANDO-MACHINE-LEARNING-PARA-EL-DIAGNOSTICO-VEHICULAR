@@ -6,6 +6,7 @@ export interface UseDiagnosticosFilterProps {
   totalDiagnosticos: number;
   mecanicos: Mecanico[];
   initialFiltroMecanico?: string;
+  initialLimite?: number;
   onFiltrar?: (filtros: {
     busqueda?: string;
     estado?: string;
@@ -20,19 +21,31 @@ export interface UseDiagnosticosFilterProps {
   periodoExterno?: Periodo;
 }
 
+export interface FiltrosDiagnosticosState {
+  busqueda: string;
+  estado: string;
+  mecanico: string;
+  pagina: number;
+  limite: number;
+}
+
 export function useDiagnosticosFilter({
   totalDiagnosticos,
   mecanicos,
   initialFiltroMecanico,
+  initialLimite = 10,
   onFiltrar,
   refreshKey = 0,
   periodoExterno,
 }: UseDiagnosticosFilterProps) {
-  const [filtros, setFiltros] = useState({
+  const limiteInicial = [10, 20, 50].includes(initialLimite) ? initialLimite : 10;
+
+  const [filtros, setFiltros] = useState<FiltrosDiagnosticosState>({
     busqueda: '',
     estado: '',
     mecanico: initialFiltroMecanico || 'todos',
     pagina: 1,
+    limite: limiteInicial,
   });
   const [periodoInterno, setPeriodo] = useState<Periodo>({});
   const periodo = periodoExterno || periodoInterno;
@@ -51,19 +64,29 @@ export function useDiagnosticosFilter({
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      const lim = filtros.limite || 10;
       void onFiltrar?.({
         busqueda: filtros.busqueda.trim() || undefined,
         estado: filtros.estado || undefined,
         mecanico_id: filtros.mecanico !== 'todos' ? filtros.mecanico : undefined,
-        limite: 10,
-        offset: (filtros.pagina - 1) * 10,
+        limite: lim,
+        offset: (filtros.pagina - 1) * lim,
         ...limitesDiagnosticos(periodo),
       });
     }, 300);
     return () => clearTimeout(timer);
   }, [filtros, periodo, refreshKey, onFiltrar]);
 
-  const totalPaginas = Math.max(1, Math.ceil(totalDiagnosticos / 10));
+  const totalPaginas = Math.max(1, Math.ceil(totalDiagnosticos / (filtros.limite || 10)));
+
+  const cambiarLimite = (nuevoLimite: number) => {
+    const lim = [10, 20, 50].includes(nuevoLimite) ? nuevoLimite : 10;
+    setFiltros((f) => ({
+      ...f,
+      limite: lim,
+      pagina: 1,
+    }));
+  };
 
   const mecanicoSeleccionado = useMemo(() => {
     if (!filtros.mecanico || filtros.mecanico === 'todos') return null;
@@ -98,6 +121,7 @@ export function useDiagnosticosFilter({
   return {
     filtros,
     setFiltros,
+    cambiarLimite,
     periodo,
     rangoFechas,
     setRangoFechas,

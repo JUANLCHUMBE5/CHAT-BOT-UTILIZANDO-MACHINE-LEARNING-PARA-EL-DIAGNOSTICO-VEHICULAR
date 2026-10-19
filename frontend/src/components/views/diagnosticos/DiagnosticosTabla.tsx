@@ -33,8 +33,10 @@ export const DiagnosticosTabla: React.FC<DiagnosticosTablaProps> = ({
   onElementosPorPaginaChange,
   onVerDetalle,
 }) => {
+  const limiteActual = [10, 20, 50].includes(elementosPorPagina) ? elementosPorPagina : 10;
+
   return (
-    <Card style={{ padding: 0, overflow: 'hidden' }}>
+    <Card style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       {/* 1. Desktop / Tablet Table View */}
       <DiagnosticosDesktopTable
         diagnosticos={diagnosticosPaginados}
@@ -58,9 +60,13 @@ export const DiagnosticosTabla: React.FC<DiagnosticosTablaProps> = ({
             alignItems: 'center',
             padding: '10px 14px',
             borderTop: '1px solid var(--border-color)',
-            backgroundColor: 'var(--bg-main)',
+            backgroundColor: '#ffffff',
             flexWrap: 'wrap',
             gap: '10px',
+            position: 'sticky',
+            bottom: 0,
+            zIndex: 10,
+            boxShadow: '0 -2px 6px rgba(0,0,0,0.03)',
           }}
         >
           <div
@@ -74,7 +80,7 @@ export const DiagnosticosTabla: React.FC<DiagnosticosTablaProps> = ({
           >
             <span>Mostrar</span>
             <select
-              value={elementosPorPagina}
+              value={limiteActual}
               onChange={(e) => onElementosPorPaginaChange(Number(e.target.value))}
               style={{
                 padding: '4px 8px',
@@ -82,6 +88,7 @@ export const DiagnosticosTabla: React.FC<DiagnosticosTablaProps> = ({
                 border: '1px solid var(--border-color)',
                 fontSize: '12px',
                 backgroundColor: '#ffffff',
+                cursor: 'pointer',
               }}
             >
               <option value={10}>10</option>

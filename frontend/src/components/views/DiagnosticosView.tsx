@@ -52,6 +52,7 @@ export const DiagnosticosView: React.FC<DiagnosticosViewProps> = ({
   const {
     filtros,
     setFiltros,
+    cambiarLimite,
     periodo,
     rangoFechas,
     setRangoFechas,
@@ -72,12 +73,13 @@ export const DiagnosticosView: React.FC<DiagnosticosViewProps> = ({
   });
 
   const ejecutarFiltroActual = () => {
+    const lim = filtros.limite || 10;
     void onFiltrar?.({
       busqueda: filtros.busqueda.trim() || undefined,
       estado: filtros.estado || undefined,
       mecanico_id: filtros.mecanico !== 'todos' ? filtros.mecanico : undefined,
-      limite: 10,
-      offset: (filtros.pagina - 1) * 10,
+      limite: lim,
+      offset: (filtros.pagina - 1) * lim,
       ...limitesDiagnosticos(periodo),
     });
   };
@@ -184,7 +186,7 @@ export const DiagnosticosView: React.FC<DiagnosticosViewProps> = ({
                 )}
               </div>
               <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                Mostrando {diagnosticos.length} por página · Auditoría técnica vehicular y trazabilidad IA
+                Mostrando {diagnosticos.length} de {totalDiagnosticos} registros ({filtros.limite || 10} por página) · Auditoría técnica vehicular y trazabilidad IA
               </span>
             </div>
           </div>
@@ -310,11 +312,11 @@ export const DiagnosticosView: React.FC<DiagnosticosViewProps> = ({
         totalProcesados={totalDiagnosticos}
         paginaActual={filtros.pagina}
         totalPaginas={totalPaginas}
-        elementosPorPagina={10}
+        elementosPorPagina={filtros.limite || 10}
         onCambiarPagina={(pagina) =>
           setFiltros((f) => ({ ...f, pagina: Math.max(1, Math.min(pagina, totalPaginas)) }))
         }
-        onElementosPorPaginaChange={() => {}}
+        onElementosPorPaginaChange={cambiarLimite}
         onVerDetalle={onAbrirModalDetalle}
       />
 
