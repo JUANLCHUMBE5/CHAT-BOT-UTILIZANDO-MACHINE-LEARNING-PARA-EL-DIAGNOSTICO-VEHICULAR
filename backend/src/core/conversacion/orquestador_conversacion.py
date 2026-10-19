@@ -112,12 +112,37 @@ class OrquestadorConversacion:
                     continue
                 herramienta = CATALOGO_HERRAMIENTAS.get(clave)
                 terminos = getattr(herramienta, "terminos", ()) if herramienta else (clave,)
-                if any(normalizar(termino) in respuesta_norm for termino in terminos):
+                if res.get("es_pregunta") and any(
+                    normalizar(termino) in respuesta_norm for termino in terminos
+                ):
                     herramientas_pedidas_de_nuevo.append(
                         getattr(herramienta, "nombre_canonico", clave)
                     )
             if herramientas_pedidas_de_nuevo:
                 lista = ", ".join(dict.fromkeys(herramientas_pedidas_de_nuevo))
+                contexto_sintomas = normalizar(
+                    " ".join(getattr(estado, "active_symptoms", []))
+                    + " " + str(getattr(estado, "falla_principal", ""))
+                    + " " + " ".join(str(x) for x in getattr(estado, "top3_actual", []))
+                    + " " + str(getattr(estado, "active_system", ""))
+                )
+                if "reloj_comparador" in getattr(estado, "herramientas_no_disponibles", []) and any(
+                    termino in contexto_sintomas for termino in ("freno", "disco", "pastilla", "alabeo")
+                ):
+                    res.update(
+                        respuesta_texto=(
+                            "Anotado: no dispones de reloj comparador. Sin desmontar ni meterte debajo del auto, "
+                            "y solo con el vehículo completamente inmovilizado, puedes observar desde fuera con "
+                            "una linterna si el disco presenta surcos marcados o zonas azuladas. No hagas pruebas "
+                            "en vía pública ni toques piezas calientes. Esta observación no confirma alabeo; si "
+                            "no es visible o persiste la vibración, solicita inspección en taller y mantén el caso pendiente."
+                        ),
+                        decision="PLAN_B",
+                        status="plan_b_visual_frenos_sin_reloj",
+                        es_pregunta=False,
+                    )
+                    herramientas_pedidas_de_nuevo = []
+            if herramientas_pedidas_de_nuevo:
                 res.update(
                     respuesta_texto=(
                         f"Anotado: no dispones de {lista}. No repetiré esa medición ni la daré por realizada. "
@@ -148,10 +173,20 @@ class OrquestadorConversacion:
             and getattr(estado, "last_user_correction", None) in ("marca", "modelo", "anio")
         )
         if correccion_vehicular_actual and veh_str and veh_str not in res.get("respuesta_texto", ""):
-            res["respuesta_texto"] = (
-                f"Entendido, actualicé el vehículo a *{veh_str}*. Conservo los síntomas y mediciones reportados.\n\n"
-                + res.get("respuesta_texto", "")
-            )
+            if res.get("es_pregunta"):
+                res.update(
+                    respuesta_texto=(
+                        f"Entendido, actualicé el vehículo a *{veh_str}*. Conservo los síntomas y mediciones reportados. "
+                        "La comprobación de frenos sigue pendiente; no confirmo alabeo ni una pieza sin medición."
+                    ),
+                    es_pregunta=False,
+                    status="correccion_vehiculo_pendiente",
+                )
+            else:
+                res["respuesta_texto"] = (
+                    f"Entendido, actualicé el vehículo a *{veh_str}*. Conservo los síntomas y mediciones reportados.\n\n"
+                    + res.get("respuesta_texto", "")
+                )
         if res.get("decision") == "SEGURIDAD_CRITICA" and veh_str:
             res["respuesta_texto"] = f"Vehículo: {veh_str}.\n" + res["respuesta_texto"]
         elif (
@@ -163,6 +198,13 @@ class OrquestadorConversacion:
             estado.banner_vehiculo_mostrado = True
         corpus_val = bool(getattr(getattr(gestor_diagnostico, "motor_rag", None), "corpus_validado", False))
         resultado = self._proteger_salida(res, texto_usuario, veh_str, corpus_val)
+        if (
+            resultado.get("decision") == "OPCION_NUMERICA_INVALIDA"
+            and "fuera de rango" not in normalizar(str(resultado.get("respuesta_texto", "")))
+        ):
+            resultado["respuesta_texto"] = (
+                "La opción indicada está fuera de rango. " + resultado.get("respuesta_texto", "")
+            )
         if estado is not None and resultado.get("decision") != "CONSULTA_MEMORIA":
             if estado.trazabilidad:
                 estado.trazabilidad[-1]["respuesta_enviada"] = resultado.get("respuesta_texto", "")

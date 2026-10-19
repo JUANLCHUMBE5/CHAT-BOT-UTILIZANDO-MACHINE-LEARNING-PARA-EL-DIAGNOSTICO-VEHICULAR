@@ -222,6 +222,10 @@ async def test_sin_reloj_comparador_no_repite_medicion_inviable():
     assert "inspección" in r["respuesta_texto"].lower() or "taller" in r["respuesta_texto"].lower()
 
 
+    assert "surcos marcados" in r["respuesta_texto"].lower()
+    assert "no hagas pruebas en" in r["respuesta_texto"].lower()
+
+
 def test_procedimiento_legacy_tambien_se_abstiene():
     from src.core.conversacion.orquestador.consultas_tecnicas import ManejadorConsultasTecnicas
     texto = ManejadorConsultasTecnicas._obtener_procedimiento_respaldo("torque de culata paso a paso")

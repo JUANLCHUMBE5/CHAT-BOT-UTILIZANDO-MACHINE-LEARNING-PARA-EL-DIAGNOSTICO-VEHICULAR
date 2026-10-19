@@ -27,13 +27,14 @@ def orientar_sin_manual(consulta: str) -> str:
     elif any(p in texto for p in ("actuador", "solenoide", "turbo")):
         orientacion = (
             "No fuerces ni ajustes el actuador del turbo. Con el motor apagado y frio, limita la revision "
-            "a observar desde fuera mangueras y conectores accesibles, sin desmontar. La prueba funcional "
+            "a observar desde fuera mangueras, conectores y lineas de vacio accesibles, sin desmontar. La prueba funcional "
             "requiere equipo y procedimiento OEM aplicables, ejecutados por personal capacitado."
         )
     elif any(p in texto for p in ("termostato", "electroventilador", "ventilador")):
         orientacion = (
-            "Diferencia termostato y electroventilador con lectura de temperatura y activacion conforme "
-            "al procedimiento OEM, sin asumir un umbral universal. No acerques las manos al ventilador ni "
+            "En frio, limita la inspeccion a observar externamente las mangueras y conexiones. Diferencia "
+            "termostato y electroventilador con lectura de temperatura y activacion conforme al procedimiento "
+            "OEM, sin asumir un umbral universal. No acerques las manos al ventilador ni "
             "abras el circuito de refrigeracion caliente; solicita la prueba en taller si no tienes equipo."
         )
     elif any(p in texto for p in ("culata", "torque", "apriete")):

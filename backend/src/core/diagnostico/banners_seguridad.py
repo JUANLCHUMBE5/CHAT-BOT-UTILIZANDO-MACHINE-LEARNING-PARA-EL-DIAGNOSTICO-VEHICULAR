@@ -62,7 +62,8 @@ BANNER_DIESEL_EMBALAMIENTO = (
 
 BANNER_DIESEL_ALTA_PRESION = (
     "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO DE INYECCIÓN DE COMBUSTIBLE A ALTA PRESIÓN**\n\n"
-    "⚠️ **PROHIBICIÓN ESTRICTA: No aflojes racores ni tuberías. No busques fugas ni intentes comprobarlas.** "
+    "⚠️ **PROHIBICIÓN ESTRICTA: No aflojes racores ni tuberías. No busques fugas ni intentes comprobarlas "
+    "con las manos, dedos, piel, trapos u objetos.** "
     "Aléjate del sistema; no intentes localizar la fuga.\n\n"
     "Si el motor está funcionando, apágalo únicamente si puedes hacerlo desde un lugar seguro, sin acercarte al vano motor. Aléjate y solicita asistencia de personal capacitado para revisar el sistema según el procedimiento del fabricante.\n\n"
     "Si combustible pudo penetrar la piel, busca atención médica de emergencia de inmediato, aunque la lesión parezca pequeña.\n\n"
