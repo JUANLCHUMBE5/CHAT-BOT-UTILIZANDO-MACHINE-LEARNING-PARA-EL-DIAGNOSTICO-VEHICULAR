@@ -1035,7 +1035,9 @@ class ValidationWorkflow:
                         contexto_conversacion["validacion_diagnostico"] = flujo_validacion
                         conversacion.contexto = contexto_conversacion
 
-                        from src.application.services.confirmacion_diagnostico import construir_botones_confirmacion
+                        from src.application.services.confirmacion_diagnostico import (
+                            construir_botones_confirmacion,
+                        )
                         inter_c = construir_botones_confirmacion(diag_sel.id)
                         await cls.guardar_respuesta_validacion_outbox(
                             msg_repo, conversacion, usuario, meta_message_id, resp_t, proveedor, remitente, interactivo=inter_c

@@ -13,8 +13,6 @@ from src.application.services.confirmacion_diagnostico import (
     construir_botones_confirmacion,
     construir_botones_hipotesis,
     generar_titulo_boton_hipotesis,
-    interpretar_respuesta_validacion_whatsapp,
-    interpretar_seleccion_top3,
 )
 from src.core.services.webhook.validation_workflow import ValidationWorkflow
 

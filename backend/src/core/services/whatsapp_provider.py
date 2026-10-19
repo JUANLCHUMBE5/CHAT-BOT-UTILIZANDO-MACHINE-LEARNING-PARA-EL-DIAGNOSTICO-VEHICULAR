@@ -6,7 +6,7 @@ import asyncio
 import re
 from dataclasses import dataclass
 from typing import Optional
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 import requests
 
