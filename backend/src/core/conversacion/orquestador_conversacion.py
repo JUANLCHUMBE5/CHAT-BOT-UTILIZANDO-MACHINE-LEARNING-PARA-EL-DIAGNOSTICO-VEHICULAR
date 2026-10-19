@@ -106,9 +106,9 @@ class OrquestadorConversacion:
             respuesta_norm = normalizar(str(res.get("respuesta_texto", "")))
             herramientas_pedidas_de_nuevo = []
             for clave in getattr(estado, "herramientas_no_disponibles", []):
-                # La categoría general incluye "equipo" y "herramientas", términos
-                # comunes en cualquier derivación y no equivalentes a la herramienta concreta.
-                if clave == "general":
+                # El bloqueo adicional solo cubre la regresión reproducida de frenos.
+                # Las demás herramientas ya tienen Plan B específico y no deben perderlo.
+                if clave != "reloj_comparador":
                     continue
                 herramienta = CATALOGO_HERRAMIENTAS.get(clave)
                 terminos = getattr(herramienta, "terminos", ()) if herramienta else (clave,)

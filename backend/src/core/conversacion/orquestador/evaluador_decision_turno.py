@@ -445,7 +445,7 @@ class EvaluadorDecisionTurno:
                     estado.registrar_pregunta(intent=QuestionIntent(intent_elegido), texto=pregunta_elegida, incrementar_repregunta=False)
                     return ("PREGUNTAR", "Usuario cuenta con probador de chispa: solicitando comprobación", pregunta_elegida, True, intent_elegido, pregunta_elegida)
             else:
-                pregunta_elegida = "¿Qué voltaje (V) registras en reposo y cuánto cae durante el arranque? Indica el punto de medición."
+                pregunta_elegida = "¿Cuánto marca en reposo (V) y cuánto cae en arranque (V)? Indica el punto de medición."
                 intent_elegido = QuestionIntent.MEDICION_VOLTAJE.value
                 estado.establecer_pregunta_pendiente(
                     intent=QuestionIntent.MEDICION_VOLTAJE,

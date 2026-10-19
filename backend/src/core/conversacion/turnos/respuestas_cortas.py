@@ -208,7 +208,7 @@ async def respuestas_cortas(self, turno):
                         "Prueba de chispa ya completada: evitando repetición de la comprobación"
                     )
             else:
-                turno.pregunta_elegida = "¿Qué voltaje (V) registras en reposo y cuánto cae durante el arranque? Indica el punto de medición."
+                turno.pregunta_elegida = "¿Cuánto marca en reposo (V) y cuánto cae en arranque (V)? Indica el punto de medición."
                 turno.intent_elegido, turno.decision = (QuestionIntent.MEDICION_VOLTAJE.value, "PREGUNTAR")
                 turno.motivo_decision = "Usuario cuenta con multímetro: solicitando lectura de voltaje"
                 turno.estado.establecer_pregunta_pendiente(

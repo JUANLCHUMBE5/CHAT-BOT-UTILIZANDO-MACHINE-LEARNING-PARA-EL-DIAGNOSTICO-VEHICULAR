@@ -71,7 +71,7 @@ def extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optio
         or (voltaje_arranque_normal and voltaje_arranque_normal.valor == "SI")
     )
     if ("bateria" in falla_l or "borne" in falla_l) and not bateria_normal:
-        return "voltaje en reposo y caída durante el arranque; contrastar ambas lecturas con el manual aplicable."
+        return "voltaje en reposo y caída en arranque; contrastar ambas lecturas con el manual aplicable."
     if "alternador" in falla_l or ("carga" in falla_l and "descarga" not in falla_l):
         return "voltaje de carga en ralentí, con las condiciones y consumidores registrados; contrastar con el manual aplicable."
     if "arranque" in falla_l or "arrancador" in falla_l or "solenoide" in falla_l:
