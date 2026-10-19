@@ -162,17 +162,17 @@ def _respuesta_para_continuar_diagnostico(texto: str) -> str:
         return (
             "Entendido. La hipótesis queda pendiente: no registraré una confirmación "
             "ni un descarte sin evidencia física.\n\n"
-            "👁️ *Alternativa de inspección visual segura (sin herramientas ni elevador):*\n"
+            "👁️ *Alternativa de inspección visual segura (sin herramientas ni elevador, sin desmontar la rueda):*\n"
             "- Con el vehículo detenido y motor apagado, realiza una inspección visual directa "
             "del componente o conexiones accesibles a simple vista.\n"
             "- Revisa visualmente si hay fugas, manchas de fluido, conectores flojos o desgaste evidente.\n\n"
-            "Indica qué observas a simple vista o describe otro síntoma para continuar el diagnóstico."
+            "Podemos continuar el diagnóstico. Indica qué observas a simple vista o describe otro síntoma."
         )
     return (
         "Entendido. La hipótesis queda pendiente: no registraré una confirmación "
         "ni un descarte sin evidencia física.\n\n"
         "👁️ *Alternativa visual segura:*\n"
-        "Puedes realizar una inspección visual preliminar con el auto detenido y freno de mano colocado, "
+        "Podemos continuar el diagnóstico. Puedes realizar una inspección visual preliminar con el auto detenido y freno de mano colocado, "
         "sin necesidad de herramientas complejas ni elevador.\n\n"
         "Describe la siguiente observación o síntoma que notes para continuar."
     )
