@@ -14,6 +14,7 @@ from src.core.conversacion.models import (
 from src.core.conversacion.respuestas_cortas.acciones_previas import interpretar_accion_previa
 from src.core.conversacion.respuestas_cortas.patrones_deteccion import (
     PATRON_AMBIGUO,
+    PATRON_NINGUNA_COINCIDE,
     PATRON_NO_APLICA,
     PATRON_NO_SE,
     PATRON_OPCION_NUMERICA,
@@ -480,6 +481,25 @@ def interpretar_respuesta_corta(
         }
 
     # 1. Selección provisional de una opción de la pregunta activa.
+    if PATRON_NINGUNA_COINCIDE.search(texto_l) and (
+        intent_str in (QuestionIntent.DISCRIMINACION_TOP3.value, QuestionIntent.CONFIRMACION_ALTERNATIVA.value)
+        or bool(ultima_preg.get("opciones"))
+    ):
+        h = estado.registrar_hecho(
+            campo="opciones_sugeridas_no_coinciden",
+            valor="ninguna_coincide",
+            categoria="inspeccion_desacuerdo",
+            estado=FactState.CONFIRMADO,
+            texto_crudo=texto_usuario,
+            tipo=FactType.CONDICION,
+        )
+        return {
+            "categoria_respuesta": "OPCION_NINGUNA_COINCIDE",
+            "campo": "opciones_sugeridas_no_coinciden",
+            "valor": "ninguna_coincide",
+            "hecho": h.to_dict(),
+        }
+
     m_opt = PATRON_OPCION_NUMERICA.fullmatch(texto_l)
     pregunta_vigente = (
         len(estado.respuestas_obtenidas) < len(estado.preguntas_realizadas)
