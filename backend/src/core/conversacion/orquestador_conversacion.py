@@ -51,7 +51,7 @@ class OrquestadorConversacion:
                 mediciones_reportadas=[
                     str(x)
                     for x in getattr(salida_dict.get("estado"), "historial_mensajes_usuario", [])
-                    if re.search("(?:bar|psi|mm|volt|°C)", str(x), re.I)
+                    if re.search(r"(?:bar|psi|mm|volt|v\b|°c|kpa|rpm|ohm|Ω|amp|\bda\b|\bmide\b|\bmarca\b)", str(x), re.I)
                 ],
             )
             salida_dict["respuesta_texto"] = resp_seg

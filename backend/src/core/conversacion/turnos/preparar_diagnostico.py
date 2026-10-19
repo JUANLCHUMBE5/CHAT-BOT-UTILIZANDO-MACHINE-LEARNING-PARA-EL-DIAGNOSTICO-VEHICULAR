@@ -22,7 +22,7 @@ async def preparar_diagnostico(self, turno):
         )
     )
     turno.decision = "DIAGNOSTICAR"
-    turno.motivo_decision = turno.motivo_suficiencia
+    turno.motivo_decision = getattr(turno, "motivo_suficiencia", "suficiencia")
     turno.respuesta_texto = ""
     turno.dto_resultado = None
     turno.es_pregunta = False
@@ -31,7 +31,7 @@ async def preparar_diagnostico(self, turno):
     turno.candidatas_traza = []
     turno.descartadas_traza = []
     if re.search(
-        "\\bno\\s+pasa\\s+de\\s+3500\\s*rpm\\b|\\bcontrapresi[oó]n\\b.{0,30}\\b4\\.5\\s*psi\\b|\\b4\\.5\\s*psi\\b.{0,30}\\b(?:escape|2500|rpm)\\b",
+        r"\bno\s+pasa\s+de\s+3500\s*rpm\b|\bcontrapresi[oó]n\b.{0,30}\b4\.5\s*psi\b|\b4\.5\s*psi\b.{0,30}\b(?:escape|2500|rpm)\b",
         turno.norm_txt_cons,
     ):
         if "4.5" in turno.norm_txt_cons:
@@ -51,7 +51,7 @@ async def preparar_diagnostico(self, turno):
             "estado": turno.estado,
         }
     if re.search(
-        "\\bmanguera\\s+superior\\b.{0,40}\\bhirviendo\\b.{0,60}\\bmanguera\\s+inferior\\b.{0,40}\\bfr[ií]a\\b|\\bmanguera\\s+inferior\\b.{0,40}\\bfr[ií]a\\b.{0,60}\\bmanguera\\s+superior\\b.{0,40}\\bhirviendo\\b",
+        r"\bmanguera\s+superior\b.{0,40}\bhirviendo\b.{0,60}\bmanguera\s+inferior\b.{0,40}\bfr[ií]a\b|\bmanguera\s+inferior\b.{0,40}\bfr[ií]a\b.{0,60}\bmanguera\s+superior\b.{0,40}\bhirviendo\b",
         turno.norm_txt_cons,
     ):
         turno.resp_e11 = "🌡️ *Deducción diagnóstica térmica: Ausencia de circulación hacia el radiador*\n\n• **Diagnóstico diferencial:** Manguera superior hirviendo combinada con manguera inferior fría confirma que el refrigerante no está circulando por el radiador. La causa directa y principal es el **termostato trabado cerrado** (no abre mecánicamente a su temperatura de calibración).\n• **Comprobación:** Dejar enfriar el motor, retirar el termostato y probar su apertura sumergido en agua caliente con termómetro."
@@ -68,7 +68,7 @@ async def preparar_diagnostico(self, turno):
             "estado": turno.estado,
         }
     if re.search(
-        "\\bstft\\b.{0,30}(?:\\+?22%|\\+?20%).{0,50}(?:2500|acelero).{0,30}(?:\\+?4%|\\+?[0-5]%)|\\b(?:ralent[ií]\\s+el\\s+stft|stft\\s+en\\s+ralent[ií])\\b.{0,40}\\+?22%",
+        r"\bstft\b.{0,30}(?:\+?22%|\+?20%).{0,50}(?:2500|acelero).{0,30}(?:\+?4%|\+?[0-5]%)|\b(?:ralent[ií]\s+el\s+stft|stft\s+en\s+ralent[ií])\b.{0,40}\+?22%",
         turno.norm_txt_cons,
     ):
         turno.resp_e14 = "🔍 *Diagnóstico diferencial de mezcla: Corrección STFT por régimen de giro*\n\n• **Interpretación física:** Un STFT de +22% en ralentí que corrige drásticamente a +4% al acelerar a 2500 RPM es la firma clásica e inequívoca de una **fuga de vacío en el múltiple de admisión** (empaquetaduras resecas, manguera de booster o válvula PCV agrietada).\n• **Fundamento:** En ralentí la mariposa cerrada genera alto vacío que succiona aire parásito no medido. A 2500 RPM el vacío cae y el flujo de aire principal hace insignificante la fuga.\n• **Prueba recomendada:** Realizar prueba de humo (smoke test) en el múltiple de admisión."
@@ -85,7 +85,7 @@ async def preparar_diagnostico(self, turno):
             "estado": turno.estado,
         }
     if re.search(
-        "\\bcero\\s+c[oó]digos\\s+(?:de\\s+falla\\s+)?en\\s+la\\s+ecu\\b|\\bescaneo\\s+(?:est[aá]\\s+)?completamente\\s+limpio\\b|\\bsin\\s+c[oó]digos?\\s+de\\s+falla\\b",
+        r"\bcero\s+c[oó]digos\s+(?:de\s+falla\s+)?en\s+la\s+ecu\b|\bescaneo\s+(?:est[aá]\s+)?completamente\s+limpio\b|\bsin\s+c[oó]digos?\s+de\s+falla\b",
         turno.norm_txt_cons,
     ):
         turno.resp_e16 = "📋 *Evaluación de evidencia negativa: Cero códigos DTC en la ECU*\n\n• **Interpretación:** La ausencia total de códigos **DTC** descarta averías eléctricas francas en los sensores del sistema de inyección o bobinas.\n• **Diferencial enfocado:** El tironeo en subida sin DTC obedece a deficiencias mecánicas o hidráulicas no monitoreadas directamente:\n1. **Presión de combustible deficiente:** Caída de presión en riel o filtro tapado bajo carga.\n2. **Fugas secundarias de alta tensión:** Bujías con luz excesiva o aislamiento degradado.\n\n¿Tienes manómetro para verificar la presión de gasolina durante la aceleración en carga?"
@@ -102,7 +102,7 @@ async def preparar_diagnostico(self, turno):
             "estado": turno.estado,
         }
     if re.search(
-        "\\bmariposa\\s+(?:est[aá]\\s+)?llena\\s+de\\s+carb[oó]n\\s+y\\s+pegada\\b|\\bcuerpo\\s+de\\s+mariposa\\b.{0,30}\\b(?:carb[oó]n|pegad[oa]|sucia)\\b",
+        r"\bmariposa\s+(?:est[aá]\s+)?llena\s+de\s+carb[oó]n\s+y\s+pegada\b|\bcuerpo\s+de\s+mariposa\b.{0,30}\b(?:carb[oó]n|pegad[oa]|sucia)\b",
         turno.norm_txt_cons,
     ):
         turno.resp_e20 = "🔧 *Confirmación técnica de causa raíz: Mariposa trabada por acumulación de carbón*\n\n• **Diagnóstico confirmado:** La presencia de carbón y el atascamiento de la **mariposa** de aceleración restringe el paso de aire mínimo en ralentí, explicando la caída a 500 RPM y la demora en arrancar con encendido y presión de combustible ya verificados.\n• **Procedimiento de servicio:** Desmontar el cuerpo de aceleración, limpiarlo con solvente para cuerpos de mariposa sin forzar el eje electrónico y realizar el reaprendizaje electrónico de ralentí con escáner."

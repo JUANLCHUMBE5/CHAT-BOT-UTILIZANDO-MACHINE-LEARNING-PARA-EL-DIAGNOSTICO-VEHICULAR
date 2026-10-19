@@ -147,7 +147,7 @@ def interpretar_respuesta_corta(
         if indisponibles or no_sabe_usar:
             hechos_bloqueo = GestorPlanB.registrar_bloqueos_en_estado(estado, texto_usuario, "")
             her_principal = indisponibles[0] if indisponibles else "general"
-            cat_resp = "NO_SABE_REALIZAR_PRUEBA" if no_sabe_usar else "HERRAMIENTA_INDISPONIBLE"
+            cat_resp = "HERRAMIENTA_INDISPONIBLE"
             primer_hecho = list(hechos_bloqueo.values())[0] if hechos_bloqueo else {}
             return {
                 "categoria_respuesta": cat_resp,
@@ -622,7 +622,9 @@ def interpretar_respuesta_corta(
         her_principal = indisponibles[0] if indisponibles else (recuperadas[0] if recuperadas else "general")
         val_resp = "NO" if (indisponibles or no_sabe_usar) else ("SI" if recuperadas else "no_revisado")
         if no_sabe_usar:
-            cat_resp = "NO_SABE_REALIZAR_PRUEBA"
+            cat_resp = "HERRAMIENTA_INDISPONIBLE"
+        elif intent_str == QuestionIntent.DISPONIBILIDAD_HERRAMIENTA.value:
+            cat_resp = "NEGACION" if val_resp == "NO" else ("AFIRMACION" if val_resp == "SI" else "HERRAMIENTA_INDISPONIBLE")
         elif indisponibles:
             cat_resp = "HERRAMIENTA_INDISPONIBLE"
         elif recuperadas:

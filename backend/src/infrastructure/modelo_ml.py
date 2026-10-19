@@ -1,4 +1,4 @@
-"""Carga y ejecución segura del clasificador jerárquico de síntomas (Sistema -> Falla).
+﻿"""Carga y ejecución segura del clasificador jerárquico de síntomas (Sistema -> Falla).
 Cumple estrictamente con la Regla 1 de Arquitectura de Tesis (Linear SVM + TF-IDF).
 """
 
@@ -52,9 +52,14 @@ class ModeloML:
 
     def _cargar_modelos(self) -> None:
         if os.path.exists(self.modelo_path) and os.path.exists(self.vectorizador_path):
-            self.modelo = joblib.load(self.modelo_path)
-            self.vectorizador = joblib.load(self.vectorizador_path)
-            logger.info("Modelo ML Nivel 2 y vectorizador TF-IDF cargados correctamente.")
+            try:
+                self.modelo = joblib.load(self.modelo_path)
+                self.vectorizador = joblib.load(self.vectorizador_path)
+                logger.info("Modelo ML Nivel 2 y vectorizador TF-IDF cargados correctamente.")
+            except Exception as e:
+                logger.warning("No se pudo cargar el modelo ML Nivel 2: %s", e)
+                self.modelo = None
+                self.vectorizador = None
         else:
             logger.warning("Archivos del modelo ML no encontrados.")
 

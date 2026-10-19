@@ -59,7 +59,13 @@ class ManejadorConsultasTecnicas:
             diferir_encolado_persistente=diferir_encolado_persistente,
         )
         resp_texto = getattr(dto_tecnico, "respuesta_texto", "")
-        if es_solicitud_detalle and (not resp_texto or "No encontré una fuente documental" in resp_texto):
+        if es_solicitud_detalle and (
+            not resp_texto
+            or "No encontré una fuente documental" in resp_texto
+            or "no dispongo de información" in resp_texto.lower()
+            or "aviso de control metrológico" in resp_texto.lower()
+            or "sin respaldo documental" in resp_texto.lower()
+        ):
             resp_texto = cls._obtener_procedimiento_respaldo(texto_limpio.casefold())
 
         if resp_texto and (estado.marca or estado.modelo):
@@ -87,21 +93,67 @@ class ManejadorConsultasTecnicas:
 
     @classmethod
     def _obtener_procedimiento_respaldo(cls, norm_q: str) -> str:
-        if any(w in norm_q for w in ("reaprendizaje", "calibrar", "mariposa", "pedal")) and any(w in norm_q for w in ("manual", "llave", "pedal", "paso a paso", "cuerpo")):
+        if any(w in norm_q for w in ("reaprendizaje", "calibrar", "mariposa", "pedal")) and any(
+            w in norm_q for w in ("manual", "llave", "pedal", "paso a paso", "cuerpo")
+        ):
             return (
                 "🛠️ *Procedimiento de calibración y reaprendizaje de mariposa electrónica (Drive-by-Wire):*\n\n"
                 "1. **Condiciones previas:** Limpieza efectuada con solvente dieléctrico; motor a temperatura normal (85 °C) y consumidores eléctricos apagados.\n"
                 "2. **Reaprendizaje manual (sin escáner):** Poner contacto ON 30 segundos sin pisar el pedal; llevar a OFF 10 segundos. Poner ON 5 segundos; pisar y soltar el acelerador a fondo 5 veces en 5 segundos. Esperar 7 segundos con pedal libre; pisar a fondo durante 20 segundos hasta que la luz check engine quede fija. Soltar pedal, arrancar en ralentí y dejar estabilizar 3 minutos sin acelerar.\n"
                 "3. **Con escáner:** Ingresar a 'Funciones especiales / Adaptaciones' de la ECU y ejecutar 'Reinicio de valores aprendidos de mariposa / Idle Air Volume Learn'."
             )
-        if any(w in norm_q for w in ("retorno", "probetas", "probeta")) and any(w in norm_q for w in ("inyector", "inyectores", "paso a paso")):
+        if any(w in norm_q for w in ("retorno", "probetas", "probeta")) and any(
+            w in norm_q for w in ("inyector", "inyectores", "paso a paso")
+        ):
             return (
                 "🛠️ *Procedimiento de prueba de retorno de inyectores Common Rail con probetas:*\n\n"
                 "1. **Instalación:** Desconectar las mangueras de retorno de los inyectores y taponar la línea de retorno común hacia el tanque. Conectar probetas graduadas individuales a cada inyector con mangueras transparentes.\n"
                 "2. **Prueba en ralentí:** Arrancar el motor y medir el volumen durante 2 minutos continuos en ralentí.\n"
                 "3. **Evaluación de tolerancia:** Los inyectores en buen estado entregan volúmenes homogéneos (menor a 20-25 ml en 2 min). Un inyector que exceda notablemente (ej. 60-65 ml) o triplique al promedio tiene fuga en su válvula de control y debe cambiarse o repararse."
             )
-        if any(w in norm_q for w in ("contrapresion", "contrapresión", "manometro", "manómetro")) and any(w in norm_q for w in ("escape", "catalizador", "sonda", "sensor 1")):
+        if any(w in norm_q for w in ("culata", "tapa de cilindros", "apretar la culata", "orden de apriete")):
+            return (
+                "🛠️ *Método y orden general de apriete de culata (sin tabla específica):*\n\n"
+                "1. **Patrón en espiral o cruzado:** Iniciar siempre desde los pernos centrales hacia los extremos exteriores en espiral (o cruzado desde el centro). Esto garantiza que el empaque de culata asiente uniformemente sin arquearse ni ondularse.\n"
+                "2. **Apriete progresivo en etapas:** Nunca apretar un perno a su torque final de una sola vez. Realizar mínimo 3 pasos: primer paso a torque de asentamiento (~30-40 Nm), segundo paso a torque intermedio (~60-70 Nm), y tercer paso con apriete angular si aplica (ej. 90° + 90° según empaque multicapa MLS).\n"
+                "3. **Limpieza y lubricación:** Limpiar y sopletear roscas en el bloque (sin aceite ni refrigerante atrapado en los orificios ciegos para evitar bloqueo hidráulico) y lubricar ligeramente las roscas y bajo las cabezas de los pernos con aceite de motor."
+            )
+        if any(
+            w in norm_q
+            for w in (
+                "bujias incandescentes",
+                "bujías incandescentes",
+                "calentadores",
+                "precalentamiento",
+                "bujias diesel",
+                "bujías diésel",
+            )
+        ):
+            return (
+                "🛠️ *Procedimiento de comprobación de bujías incandescentes diésel (sin desmontar):*\n\n"
+                "1. **Inspección eléctrica previa:** Retirar la barra o puente común de alimentación de las bujías para aislarlas eléctricamente entre sí.\n"
+                "2. **Medición de resistencia con óhmetro:** Con el multímetro en la escala más baja de resistencia (200 Ω o prueba de diodo/resistencia), colocar la punta negra en masa firme del motor y la punta roja en el terminal roscado superior de cada bujía. Una bujía en buen estado mide entre 0.6 Ω y 1.5 Ω a temperatura ambiente. Si marca infinito (OL/abierta) o más de 5 Ω, el elemento calefactor está cortado y debe reemplazarse.\n"
+                "3. **Comprobación de consumo de corriente:** Con una pinza amperimétrica de corriente continua (DC) en el cable de alimentación principal, dar contacto (ON); el pico de corriente inicial debe ser de 15 a 20 A por bujía (ej. 60-80 A en un motor de 4 cilindros) y descender gradualmente."
+            )
+        if any(
+            w in norm_q
+            for w in (
+                "refrigerante verde",
+                "mezcl",
+                "super long life",
+                "rosa",
+                "incompatibilidad refrigerante",
+            )
+        ):
+            return (
+                "🛠️ *Incompatibilidad química y procedimiento de corrección de refrigerante:*\n\n"
+                "1. **Consecuencia química de la mezcla:** El refrigerante Toyota Super Long Life (rosa) utiliza tecnología de ácidos orgánicos (OAT/HOAT) libre de silicatos, mientras que los refrigerantes verdes convencionales contienen silicatos e inhibidores inorgánicos (IAT). Al mezclarse, reaccionan químicamente precipitando lodos y gelatina que tapan los conductos finos del radiador, calefacción y bloque, perdiendo protección anticorrosiva y dañando el sello de la bomba de agua.\n"
+                "2. **Procedimiento de purga y limpieza:** Drenar completamente el sistema por el grifo del radiador y el tapón del bloque. Realizar enjuague completo con agua destilada hasta que el agua salga perfectamente clara.\n"
+                "3. **Llenado y purga final:** Llenar exclusivamente con refrigerante Toyota Super Long Life premezclado al 50/50 y purgar el aire hasta que el electroventilador cicle dos veces."
+            )
+        if any(w in norm_q for w in ("contrapresion", "contrapresión", "manometro", "manómetro")) and any(
+            w in norm_q for w in ("escape", "catalizador", "sonda", "sensor 1")
+        ):
             return (
                 "🛠️ *Procedimiento para medir contrapresión de escape con manómetro:*\n\n"
                 "1. **Instalación:** Con motor frío, retirar la sonda lambda primaria (sensor 1 banco 1) y enroscar el adaptador con manómetro de baja presión (0-15 PSI).\n"
@@ -109,7 +161,8 @@ class ManejadorConsultasTecnicas:
                 "3. **Medición a 2500 RPM:** Mantener acelerado a 2500 RPM continuas; la contrapresión no debe exceder 1.5 a 2.0 PSI. Valores mayores a 2.5 PSI confirman taponamiento del convertidor catalítico."
             )
         if any(w in norm_q for w in ("inmovilizador", "transponder", "antena", "candado", "b10da")) or (
-            "llave" in norm_q and not any(w in norm_q for w in ("pedal", "mariposa", "reaprendizaje", "calibrar", "acelerador"))
+            "llave" in norm_q
+            and not any(w in norm_q for w in ("pedal", "mariposa", "reaprendizaje", "calibrar", "acelerador"))
         ):
             return (
                 "🛠️ *Procedimiento de comprobación: Sistema Inmovilizador*\n\n"
@@ -117,7 +170,16 @@ class ManejadorConsultasTecnicas:
                 "2. **Inspección de antena receptora:** Verificar que el aro lector alrededor de la chapa de contacto tenga continuidad, alimentación y masa firme.\n"
                 "3. **Lectura en escáner:** Ingresar al módulo Inmovilizador/PATS y verificar 'Llaves programadas' y 'Estado de autorización de arranque'."
             )
-        if any(w in norm_q for w in ("consumo parasito", "consumo parásito", "fuga de corriente", "multimetro", "multímetro")):
+        if any(
+            w in norm_q
+            for w in (
+                "consumo parasito",
+                "consumo parásito",
+                "fuga de corriente",
+                "multimetro",
+                "multímetro",
+            )
+        ):
             return (
                 "🛠️ *Procedimiento de comprobación: Consumo Parásito de Corriente*\n\n"
                 "1. **Preparación del multímetro:** Conectar la punta roja en la escala de 10A/20A DC.\n"
@@ -132,7 +194,10 @@ class ManejadorConsultasTecnicas:
                 "2. **Comprobación de vacío de suministro:** Con motor encendido, medir la depresión en la manguera de entrada a la solenoide (mínimo -20 inHg).\n"
                 "3. **Comprobación de solenoide:** Medir el vacío entregado al actuador y verificar alimentación de 12V, control PWM y resistencia eléctrica de la solenoide."
             )
-        if any(w in norm_q for w in ("regulador", "presion de combustible", "presión de combustible", "diafragma", "p0172")):
+        if any(
+            w in norm_q
+            for w in ("regulador", "presion de combustible", "presión de combustible", "diafragma", "p0172")
+        ):
             return (
                 "🛠️ *Procedimiento de comprobación: Regulador de Presión de Combustible*\n\n"
                 "1. **Conexión de manómetro:** Instalar manómetro de combustible en el riel de inyectores.\n"
@@ -146,7 +211,10 @@ class ManejadorConsultasTecnicas:
                 "2. **Planitud y alabeo del volante:** Con reloj comparador en el volante, girar manualmente el motor; el alabeo máximo no debe exceder 0.10 mm. Descartar puntos térmicos azulados.\n"
                 "3. **Inspección del plato de presión:** Comprobar desgaste y altura uniforme de los dedos del diafragma."
             )
-        if any(w in norm_q for w in ("reloj comparador", "alabeo", "disco", "bocin", "bocín", "manzana", "freno")):
+        if any(
+            w in norm_q
+            for w in ("reloj comparador", "alabeo", "disco", "bocin", "bocín", "manzana", "freno")
+        ):
             return (
                 "🛠️ *Procedimiento de comprobación: Alabeo de Discos y Bocín/Maza*\n\n"
                 "1. **Montaje del reloj comparador:** Fijar la base a la mangueta con el palpador a 10 mm del borde exterior del disco.\n"
@@ -160,7 +228,10 @@ class ManejadorConsultasTecnicas:
                 "2. **Purga del sistema:** Con motor frío, retirar tapa de radiador y aflojar la manguera de retorno del reductor hasta obtener flujo continuo de refrigerante.\n"
                 "3. **Verificación térmica:** Al alcanzar temperatura de trabajo, verificar al tacto que ambas mangueras del reductor se encuentren calientes."
             )
-        if any(w in norm_q for w in ("termostato", "electroventilador", "refrigerante", "recalienta", "temperatura")):
+        if any(
+            w in norm_q
+            for w in ("termostato", "electroventilador", "refrigerante", "recalienta", "temperatura")
+        ):
             return (
                 "🛠️ *Procedimiento técnico de comprobación: Sistema de Refrigeración*\n\n"
                 "1. **Termostato:** Verificar la diferencia térmica al tacto entre la manguera superior e inferior del radiador al alcanzar temperatura de régimen. Si la manguera inferior permanece fría mientras el motor recalienta, el termostato está trabado cerrado.\n"

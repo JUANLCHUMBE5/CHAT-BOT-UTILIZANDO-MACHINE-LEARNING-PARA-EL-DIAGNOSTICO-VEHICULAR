@@ -68,8 +68,7 @@ PATRON_COMBUSTIBLE_ESCAPE_CALIENTE = re.compile(
 PATRON_TEMPERATURA_CRITICA = re.compile(
     r"\b(temperatura\s+(?:al\s+m[aá]ximo|en\s+zona\s+roja|al\s+tope|pegada\s+al\s+m[aá]ximo|sube\s+casi\s+a\s+la\s+zona\s+roja|muy\s+alta|cr[ií]tica|peligrosa)|"
     r"aguja\s+(?:de\s+temperatura\s+)?(?:sube|llega|casi|en)\s+(?:a\s+la\s+)?zona\s+roja|"
-    r"(?:el\s+motor\s+|motor\s+)?recalienta(?:\s+cuando|\s+en|\s+al|\s+detenido|\s+parado)?|"
-    r"recalentamiento\s+(?:extremo|severo|peligroso|del\s+motor|en\s+tr[aá]fico)?|"
+    r"recalentamiento\s+(?:extremo|severo|peligroso)|"
     r"(?:sale|bota|botando|sale\s+con|expulsa|tirando)\s+(?:mucho\s+)?vapor|"
     r"(?:agua|refrigerante)\s+hirviendo|hirviendo\s+(?:con\s+vapor|el\s+agua|el\s+refrigerante)|"
     r"sale\s+vapor\s+(?:blanco\s+)?(?:del\s+motor|debajo\s+del\s+cap[oó]|por\s+el\s+cap[oó])|hierve\s+el\s+refrigerante|"
@@ -107,16 +106,16 @@ PATRON_DIESEL_EMBALAMIENTO_CRITICO = re.compile(
 
 PATRON_DIESEL_ALTA_PRESION_TACTIL = re.compile(
     r"\b("
-    r"(?:(?:purg(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?|afloj(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?|solt(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?|desconect(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?)(?:le|lo|la|los|las)?\b.{0,40}\b(?:racor(?:es)?|cañer[ií]a(?:s)?|caño(?:s)?|tuber[ií]a(?:s)?|tubo(?:s)?|riel|rail|inyector(?:es)?)\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|un\s+trapo)|a\s+mano|la\s+mano|el\s+dedo|al\s+tacto|en\s+caliente|con\s+presi[oó]n|presurizado|arranc(?:ar|ando|ado|e)|(?:dar|da|dan|dando)\s+arranque|girando|en\s+marcha|petr[oó]leo|di[eé]sel))|"
-    r"(?:(?:purg(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?|afloj(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?)\b.{0,40}\b(?:el\s+)?(?:riel|rail|common\s*rail)\b.{0,60}\b(?:aflojando|soltando|racor(?:es)?|cañer[ií]a(?:s)?|dar\s+arranque|da\s+arranque|arranque|en\s+marcha))|"
-    r"(?:(?:pas(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la|los|las)?|toc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|palp(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|tante(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|met(?:er|o|[ií]|ió|ieron|es|a|an|iendo|amos)?(?:le|lo|la)?|acerc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo)?|revis(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|busc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|comprob(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|detect(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|sentir|limpi(?:ar|o|[eé]|ando|emos))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|dedo|mano\s+pelada|a\s+mano|al\s+tacto|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño|papelito))\b.{0,60}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|inyector|alta\s+presi[oó]n|fuga|petr[oó]leo|di[eé]sel|combustible|chorro))|"
-    r"(?:(?:cañer[ií]a|caño|tuber[ií]a|tubo|riel|rail|common\s*rail|inyector|alta\s+presi[oó]n|fuga\s+de\s+(?:di[eé]sel|petr[oó]leo)|chorro)\b.{0,60}\b(?:pas(?:ar|o|[eé]|es|a|an|ando)|toc(?:ar|o|[eé]|es|a|an|ando)|palp(?:ar|o|[eé]|es|a|an|ando)|tante(?:ar|o|[eé]|es|a|an|ando)|met(?:er|o|[ií]|es|a|an|iendo)|acerc(?:ar|o|[eé]|es|a|an|ando)|revis(?:ar|o|[eé]|es|a|an|ando)|afloj(?:ar|o|[eé]|es|a|an|ando)|limpi(?:ar|o|[eé]|ando))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|con\s+(?:la\s+mano|el\s+dedo|un\s+trapo|trapito|una\s+franela|tela|paño)|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)|a\s+mano|a\s+mano\s+pelada|al\s+tacto))|"
-    r"(?:(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|trapos|una\s+franela|tela|paño|papelito)|a\s+mano|al\s+tacto|a\s+mano\s+pelada)\b.{0,45}\b(?:revis(?:ar|o|[eé]|es|a|an|ando)|busc(?:ar|o|[eé]|es|a|an|ando)|sentir|tante(?:ar|o|[eé]|es|a|an|ando)|comprob(?:ar|o|[eé]|es|a|an|ando)|detect(?:ar|o|[eé]|es|a|an|ando)|ver|palpar|tocar)\b.{0,45}\b(?:fuga|petr[oó]leo|di[eé]sel|cañer[ií]a|caño|tuber[ií]a|tubo|riel|inyector|chorro|alta\s+presi[oó]n))|"
-    r"(?:(?:puedo|voy\s+a|se\s+puede|meter(?:le)?|quiere|dice\s+si\s+puede|pregunta\s+si\s+puede|va\s+a|dejo\s+que)\s+(?:tocar|pasar(?:le|lo)?\s+(?:la\s+mano|el\s+dedo|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño))|usar\s+(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|paño)|palpar|tantear|meter\s+mano|sentir)\b.{0,60}\b(?:cañer[ií]a|caño|tuber[ií]a|tubo|inyector|fuga|petr[oó]leo|riel|rail|chorro|alta\s+presi[oó]n))|"
-    r"(?:(?:buscar|encontrar|detectar|revisar|ubicar|localizar|sentir|ver|tocar)\b.{0,45}\b(?:la\s+)?fuga\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|una\s+franela|tela|paño|papelito)|a\s+mano|al\s+tacto|con\s+el\s+tacto))|"
+    r"(?:(?:purg(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?|afloj(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?|solt(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?|desconect(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?)(?:le|lo|la|los|las)?\b.{0,40}\b(?:racor(?:es)?|ca\u00f1er[ií]a(?:s)?|ca\u00f1o(?:s)?|tuber[ií]a(?:s)?|tubo(?:s)?|riel|rail|inyector(?:es)?)\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|un\s+trapo)|a\s+mano|la\s+mano|el\s+dedo|al\s+tacto|en\s+caliente|con\s+presi[oó]n|presurizado|arranc(?:ar|ando|ado|e)|(?:dar|da|dan|dando)\s+arranque|girando|en\s+marcha|petr[oó]leo|di[eé]sel))|"
+    r"(?:(?:purg(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?|afloj(?:ar|o|e|[eé]|es|a|an|ando|are|ar[eé])?)\b.{0,40}\b(?:el\s+)?(?:riel|rail|common\s*rail)\b.{0,60}\b(?:aflojando|soltando|racor(?:es)?|ca\u00f1er[ií]a(?:s)?|dar\s+arranque|da\s+arranque|arranque|en\s+marcha))|"
+    r"(?:(?:pas(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la|los|las)?|toc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|palp(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|tante(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|met(?:er|o|[ií]|ió|ieron|es|a|an|iendo|amos)?(?:le|lo|la)?|acerc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo)?|revis(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?(?:le|lo|la)?|busc(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|comprob(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|detect(?:ar|o|[eé]|ó|aron|es|a|an|ando|emos)?|sentir|limpi(?:ar|o|[eé]|ando|emos))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|dedo|mano\s+pelada|a\s+mano|al\s+tacto|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|pa\u00f1o|papelito))\b.{0,60}\b(?:ca\u00f1er[ií]a|ca\u00f1o|tuber[ií]a|tubo|riel|rail|inyector|alta\s+presi[oó]n|fuga|petr[oó]leo|di[eé]sel|combustible|chorro))|"
+    r"(?:(?:ca\u00f1er[ií]a|ca\u00f1o|tuber[ií]a|tubo|riel|rail|common\s*rail|inyector|alta\s+presi[oó]n|fuga\s+de\s+(?:di[eé]sel|petr[oó]leo)|chorro)\b.{0,60}\b(?:pas(?:ar|o|[eé]|es|a|an|ando)|toc(?:ar|o|[eé]|es|a|an|ando)|palp(?:ar|o|[eé]|es|a|an|ando)|tante(?:ar|o|[eé]|es|a|an|ando)|met(?:er|o|[ií]|es|a|an|iendo)|acerc(?:ar|o|[eé]|es|a|an|ando)|revis(?:ar|o|[eé]|es|a|an|ando)|afloj(?:ar|o|[eé]|es|a|an|ando)|limpi(?:ar|o|[eé]|ando))\b.{0,45}\b(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|la\s+piel|mano|con\s+(?:la\s+mano|el\s+dedo|un\s+trapo|trapito|una\s+franela|tela|pa\u00f1o)|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|pa\u00f1o)|a\s+mano|a\s+mano\s+pelada|al\s+tacto))|"
+    r"(?:(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|trapos|una\s+franela|tela|pa\u00f1o|papelito)|a\s+mano|al\s+tacto|a\s+mano\s+pelada)\b.{0,45}\b(?:revis(?:ar|o|[eé]|es|a|an|ando)|busc(?:ar|o|[eé]|es|a|an|ando)|sentir|tante(?:ar|o|[eé]|es|a|an|ando)|comprob(?:ar|o|[eé]|es|a|an|ando)|detect(?:ar|o|[eé]|es|a|an|ando)|ver|palpar|tocar)\b.{0,45}\b(?:fuga|petr[oó]leo|di[eé]sel|ca\u00f1er[ií]a|ca\u00f1o|tuber[ií]a|tubo|riel|inyector|chorro|alta\s+presi[oó]n))|"
+    r"(?:(?:puedo|voy\s+a|se\s+puede|meter(?:le)?|quiere|dice\s+si\s+puede|pregunta\s+si\s+puede|va\s+a|dejo\s+que)\s+(?:tocar|pasar(?:le|lo)?\s+(?:la\s+mano|el\s+dedo|(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|pa\u00f1o))|usar\s+(?:un\s+|una\s+)?(?:trapo|trapito|franela|tela|pa\u00f1o)|palpar|tantear|meter\s+mano|sentir)\b.{0,60}\b(?:ca\u00f1er[ií]a|ca\u00f1o|tuber[ií]a|tubo|inyector|fuga|petr[oó]leo|riel|rail|chorro|alta\s+presi[oó]n))|"
+    r"(?:(?:buscar|encontrar|detectar|revisar|ubicar|localizar|sentir|ver|tocar)\b.{0,45}\b(?:la\s+)?fuga\b.{0,60}\b(?:con\s+(?:la\s+mano|el\s+dedo|las\s+manos|los\s+dedos|un\s+trapo|trapito|una\s+franela|tela|pa\u00f1o|papelito)|a\s+mano|al\s+tacto|con\s+el\s+tacto))|"
     r"(?:(?:qu[eé]\s+riesgo|peligro|es\s+peligroso|qu[eé]\s+pasa\s+si|qu[eé]\s+consecuencia(?:s)?|consecuencia\s+m[eé]dica)\b.{0,50}\b(?:fuga\s+de\s+alta\s+presi[oó]n|chorro\s+de\s+inyecci[oó]n|alta\s+presi[oó]n\s+(?:di[eé]sel|petr[oó]leo|common\s*rail)|fuga\s+en\s+(?:el\s+)?common\s*rail|chorro\s+de\s+(?:di[eé]sel|petr[oó]leo|inyecci[oó]n)))|"
     r"(?:(?:pinche|pinchazo|inyecci[oó]n)\b.{0,30}\b(?:chorro|alta\s+presi[oó]n|di[eé]sel|petr[oó]leo|common\s*rail)\b)|"
-    r"(?:aflojar\s+(?:la\s+)?cañer[ií]a\s+del\s+riel)"
+    r"(?:aflojar\s+(?:la\s+)?ca\u00f1er[ií]a\s+del\s+riel)"
     r")\b",
     re.IGNORECASE,
 )
@@ -133,7 +132,9 @@ PATRON_SOLICITUD_REGENERACION_DPF = re.compile(
     r"\bregeneraci[oó]n\s+(?:forzada|est[aá]tica|estacionaria|con\s+(?:el\s+)?esc[aá]ner|de\s+servicio|en\s+taller)\b|"
     r"\bregenerar\s+(?:el\s+)?(?:dpf|filtro|fap)\s+(?:con\s+(?:el\s+)?esc[aá]ner|en\s+(?:taller|est[aá]tico|parado)|a\s+la\s+fuerza)?\b|"
     r"\b(?:puedo|se\s+puede|quiere|insiste\s+en)\s+regenerar\b|"
-    r"\bdestapar\s+(?:el\s+)?(?:filtro|dpf)\s+(?:con\s+(?:el\s+)?esc[aá]ner|forzando|est[aá]tico)\b"
+    r"\bdestapar\s+(?:el\s+)?(?:filtro|dpf)\s+(?:con\s+(?:el\s+)?esc[aá]ner|forzando|est[aá]tico)\b|"
+    r"\bcondiciones\b.{0,45}\bregeneraci[oó]n\s+(?:del?\s+)?(?:dpf|filtro)\b|"
+    r"\bregeneraci[oó]n\s+(?:del?\s+)?(?:dpf|filtro)\b.{0,45}\bcondiciones\b"
     r")\b",
     re.IGNORECASE,
 )
@@ -190,7 +191,7 @@ PATRON_OBJETO_REFRIGERACION = re.compile(
 PATRON_CALOR_REFRIGERACION = re.compile(
     r"\b("
     r"caliente|hirviendo|hierve|hervir|vapor|ebullici[oó]n|"
-    r"recalentado|recalienta|recalentando|sobrecalentado|sobrecalentamiento|"
+    r"recalentado|recalentando|sobrecalentado|sobrecalentamiento|"
     r"temperatura\s+(?:alta|elevada|al\s+m[aá]ximo|en\s+rojo|cr[ií]tica|peligrosa)|"
     r"agua\s+caliente|refrigerante\s+caliente|humo\s+(?:de\s+vapor|blanco)|"
     r"10[0-9]|1[1-9]\d|\d{3}\s*grados|\d{3}\s*°\s*c"
@@ -257,7 +258,8 @@ PATRON_MONOXIDO_CARBONO = re.compile(
 PATRON_BATERIA_EXPLOSION = re.compile(
     r"\b("
     r"(?:bater[ií]a\b.{0,45}\b(?:hinchada|deformada|abultada|hirviendo|ardiendo|caliente)\b.{0,50}\b(?:azufre|huevo\s+podrido|gas|humo|olor\s+a\s+[aá]cido))|"
-    r"(?:(?:hinchada|deformada|abultada)\b.{0,30}\bbater[ií]a\b.{0,50}\b(?:azufre|huevo\s+podrido|caliente|gas))"
+    r"(?:(?:hinchada|deformada|abultada)\b.{0,30}\bbater[ií]a\b.{0,50}\b(?:azufre|huevo\s+podrido|caliente|gas))|"
+    r"(?:bater[ií]a\b.{0,30}\b(?:hinchada|deformada|abultada))"
     r")\b",
     re.IGNORECASE,
 )
@@ -281,7 +283,7 @@ PATRON_TURBO_INCENDIO = re.compile(
 # Patrones para filtrado de falsos positivos (consultas puramente teóricas o eventos resueltos)
 
 PATRON_CONSULTA_TEORICA = re.compile(
-    r"^\s*¿?\s*(?:"
+    r"^\s*¿?\s*("
     r"qu[eé]\s+(?:es|significa|funci[oó]n|son)|\bpor\s+qu[eé]\b|"
     r"c[oó]mo\s+(?:funciona|opera|se\s+produce|se\s+genera)|\bcu[aá]l\s+es\b|"
     r"a\s+qu[eé]\s+(?:presi[oó]n|temperatura|voltaje|tensi[oó]n)|"

@@ -1,4 +1,4 @@
-"""Gobernanza de salida: evidencia reportada no equivale a una especificación OEM."""
+﻿"""Gobernanza de salida: evidencia reportada no equivale a una especificación OEM."""
 
 from __future__ import annotations
 
@@ -7,9 +7,9 @@ import unicodedata
 from typing import Iterable
 
 MAGNITUD = re.compile(
-    r"(?<![\w.])(-?\d+(?:[.,]\d+)*(?:\s*(?:[-–]|a)\s*\d+(?:[.,]\d+)*)?)\s*\+?\s*"
-    r"(n[.· ]?m|lb[- ]?ft|kgf[.·]?m|m?bar|psi|[km]?pa|mm|micras?|[µu]m|mv|v|"
-    r"ohmios?|ohms?|ma|amperios|°\s*c|grados\s*c|gramos?|litros?|minutos?|segundos?|rpm)\b",
+    r"(?<![\w.])(-?\d+(?:[.,]\d+)*(?:\s*(?:[–-]|a)\s*\d+(?:[.,]\d+)*)?)\s*\+?\s*"
+    r"(n[· ]?m|lb[- ]?ft|kgf[·]?m|m?bar|psi|[km]?pa|mm|micras?|[µu]m|mv|v|"
+    r"ohmios?|ohms?|Ω|ma|amperios|°\s*c|grados\s*c|gramos?|litros?|minutos?|segundos?|rpm)\b",
     re.I,
 )
 
@@ -25,12 +25,25 @@ def magnitudes(texto):
     }
 
 
+def es_banner_seguridad(texto: str) -> bool:
+    t = normalizar(texto)
+    return bool(
+        re.search(
+            r"\b(?:peligro|prohibicion|incompatibilidad|bloqueo de seguridad|prerrequisitos|critical_stop|alto voltaje|alta tension)\b",
+            t,
+        )
+    )
+
+
 def es_reporte_medicion(texto):
     t = normalizar(texto)
     return bool(
         magnitudes(texto)
         and not re.search(r"(?:\?|\bcual\b|\btolerancia\b|\bdeberia\b)", t)
-        and re.search(r"\b(?:medi|medimos|mide|marca|marco|registro|lectura|compresion es|obtuve|dio)\b", t)
+        and re.search(
+            r"\b(?:medi|medimos|mide|marca|marco|marcando|registro|registra|lectura|compresion es|obtuve|dio|da|tengo|tenemos|esta en|baja a|bajo a|cae a|cayo a|sube a|subio a|arroja|arrojando|tira|entrega|oscila)\b",
+            t,
+        )
     )
 
 
@@ -76,6 +89,11 @@ def proteger_salida_conversacional(
     """
     if corpus_validado and especificacion_autorizada:
         return respuesta_propuesta, 1.0, False
+
+    # Banners de seguridad crítica y advertencias físicas legítimas no deben ser censurados
+    if es_banner_seguridad(respuesta_propuesta):
+        return respuesta_propuesta, 1.0, False
+
     fuentes = [t for t in mediciones_reportadas if es_reporte_medicion(t)]
     if es_reporte_medicion(consulta_usuario):
         fuentes.append(consulta_usuario)
@@ -94,9 +112,23 @@ def proteger_salida_conversacional(
             texto,
         )
     )
+
+    # Filtrar magnitudes que sean escalas estándar de instrumentación o pines de conexionado
+    propuestas_no_estandar = {
+        m
+        for m in propuestas
+        if not (
+            m[1] in ("v", "mv", "ohmios", "ohms", "Ω", "ma", "amperios", "mm", "psi")
+            and re.search(
+                r"\b(?:escala|rango|mult[ií]metro|tester|reloj\s+comparador|comparador|man[oó]metro|pin|conector|fusible|bater[ií]a de 12|sistema de 12|24\s*v)\b",
+                texto,
+            )
+        )
+    }
+
     if (
         consulta_sin_respuesta
-        or (propuestas and (not propuestas.issubset(observadas) or normativa))
+        or (propuestas_no_estandar and (not propuestas_no_estandar.issubset(observadas) or normativa))
         or normativa
     ):
         aviso = (
@@ -111,12 +143,18 @@ def proteger_salida_conversacional(
             aviso += "\nMediciones reportadas por el mecánico (sin validar contra límites OEM): " + "; ".join(
                 fuentes
             )
-        partes = re.split(r"(?<=[.!?])\s+|\n", respuesta_propuesta)
+        partes = re.split(r"(?<=[!?])\s+|(?<=[a-zA-Z\)])\.\s+|\n+", respuesta_propuesta)
         conservadas = []
         for parte in partes:
             n = normalizar(parte)
             cifras = magnitudes(parte)
-            if cifras and not cifras.issubset(observadas):
+            es_herramienta_o_pin = bool(
+                re.search(
+                    r"\b(?:pin\s*\d+|conector|obd|fusible|mult[ií]metro|tester|escala|rango|reloj\s+comparador|comparador|man[oó]metro|bater[ií]a de 12\s*v|sistema de 12\s*v|24\s*v)\b",
+                    n,
+                )
+            )
+            if cifras and not cifras.issubset(observadas) and not es_herramienta_o_pin:
                 continue
             if re.search(
                 r"\b(?:la tolerancia|maximo admisible|minimo permitido|debe medir|debe ser|"

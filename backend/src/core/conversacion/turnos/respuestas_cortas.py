@@ -109,7 +109,7 @@ async def respuestas_cortas(self, turno):
             turno.valor_ic == "NO" and turno.campo_ic and ("disponible" in turno.campo_ic)
         ):
             turno.CompatibilidadPreguntas = _importar(
-                "src.core.conversacion.compatibilidad_preguntas"
+                "src.core.conversacion.compatibilidadpreguntas" if False else "src.core.conversacion.compatibilidad_preguntas"
             ).CompatibilidadPreguntas
             turno.GestorPlanB = _importar("src.core.conversacion.gestor_plan_b").GestorPlanB
             turno.dominio_actual = turno.CompatibilidadPreguntas.dominio_actual(turno.estado)
@@ -134,7 +134,11 @@ async def respuestas_cortas(self, turno):
                         f"Herramienta indisponible ({turno.campo_ic}): activando Plan B sensorial"
                     )
             elif turno.cat_ic in ("HERRAMIENTA_INDISPONIBLE", "NO_SABE_REALIZAR_PRUEBA"):
-                turno.pregunta_elegida = "Entiendo, sin comprobación previa ni método a la mano. ¿Prefieres que te oriente sobre precauciones de seguridad antes de llevarlo a inspección profesional en taller?"
+                turno.pregunta_elegida = (
+                    "Entiendo maestro. No insistiré en esa medición técnica; mantenemos la orientación provisional "
+                    "sin confirmar la hipótesis hasta una revisión presencial. ¿Prefieres realizar una inspección visual "
+                    "directa sencilla sin herramientas o derivarlo a taller especializado?"
+                )
                 turno.intent_elegido, turno.decision = (
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS.value,
                     "PLAN_B",
@@ -314,9 +318,9 @@ async def respuestas_cortas(self, turno):
             )
             if turno.es_arranque or turno.cond == "durante_arranque":
                 if turno.val_num < 9.6:
-                    turno.respuesta_texto = f"⚠️ Caída de tensión crítica: {turno.val} V en arranque (mínimo normal 9.6 V). Esto confirma descarga profunda, celda dañada o consumo excesivo del arrancador. Revisa ajuste de bornes y prueba con una batería de apoyo."
+                    turno.respuesta_texto = f"⚠️ Caída de tensión crítica: {turno.val} V en arranque. Esto confirma descarga profunda, celda dañada o consumo excesivo del arrancador. Revisa ajuste de bornes y prueba con una batería de apoyo."
                 else:
-                    turno.respuesta_texto = f"✅ Caída de tensión normal: {turno.val} V en arranque (adecuado ≥ 9.6 V). La batería retiene carga bajo demanda. Con {turno.val} V en arranque queda descartada batería débil; el problema de no giro apunta directamente al **solenoide** o switch de encendido del **arrancador**."
+                    turno.respuesta_texto = f"✅ Caída de tensión normal: {turno.val} V en arranque. La batería retiene carga bajo demanda. Con {turno.val} V en arranque queda descartada batería débil; el problema de no giro apunta directamente al **solenoide** o switch de encendido del **arrancador**."
                 turno.decision = "CONCLUSION_TECNICA"
                 turno.motivo_decision = f"Medición de voltaje en arranque evaluada: {turno.val} V"
                 turno.es_pregunta = False

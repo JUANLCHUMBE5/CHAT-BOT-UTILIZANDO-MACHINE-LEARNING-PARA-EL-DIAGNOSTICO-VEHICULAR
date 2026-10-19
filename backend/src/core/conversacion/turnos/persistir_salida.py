@@ -1,4 +1,4 @@
-"""Etapa persistir salida; contexto por turno."""
+﻿"""Etapa persistir salida; contexto por turno."""
 
 from __future__ import annotations
 
@@ -83,7 +83,7 @@ async def persistir_salida(self, turno):
         turno.es_pregunta = False
         turno.pregunta_elegida = None
     if getattr(turno.estado, "turno_ultima_correccion", None) == turno.estado.turno_actual:
-        if getattr(turno.estado, "last_user_correction", None) in ("marca", "modelo"):
+        if getattr(turno.estado, "last_user_correction", None) in ("marca", "modelo", "anio"):
             turno.veh_actualizado = (
                 f"{turno.estado.marca or ''} {turno.estado.modelo or ''} {turno.estado.anio or ''}".strip()
             )
@@ -100,6 +100,15 @@ async def persistir_salida(self, turno):
                 turno.respuesta_texto = (
                     f"Entendido, actualicé el síntoma a: {turno.resumen_correccion}. {turno.respuesta_texto}"
                 )
+    if not getattr(turno.estado, "banner_vehiculo_mostrado", False) and not getattr(turno.estado, "turno_ultima_correccion", None):
+        marca = getattr(turno.estado, "marca", None)
+        modelo = getattr(turno.estado, "modelo", None)
+        anio = getattr(turno.estado, "anio", None)
+        if marca or modelo:
+            turno.veh_inicial = f"{marca or ''} {modelo or ''} {anio or ''}".strip()
+            if turno.veh_inicial and (turno.veh_inicial not in turno.respuesta_texto):
+                turno.respuesta_texto = f"🚗 *Vehículo identificado: {turno.veh_inicial}*\n\n{turno.respuesta_texto}"
+                turno.estado.banner_vehiculo_mostrado = True
     if (
         turno.sev_seguridad == turno.SeveridadSeguridad.CRITICAL_STOP
         and turno.banner_seguridad
@@ -131,21 +140,21 @@ async def persistir_salida(self, turno):
         preguntas_candidatas=turno.candidatas_traza,
         preguntas_descartadas=turno.descartadas_traza,
         pregunta_final=turno.pregunta_elegida,
-        top3_ml_raw=locals().get("top3_ml_raw"),
+        top3_ml_raw=getattr(turno, "top3_ml_raw", None),
         hipotesis_rechazadas_usuario=list(turno.estado.hipotesis_descartadas),
         nueva_evidencia=turno.texto_limpio if turno.hechos_extraidos else None,
-        hipotesis_final_presentada=locals().get("hipotesis_final_presentada"),
-        exclusiones_compatibilidad=locals().get("exclusiones_compat", []),
-        scores_presentacion=locals().get("scores_pres"),
-        estado_previo=turno.transicion.estado_previo.value if "transicion" in locals() else None,
+        hipotesis_final_presentada=getattr(turno, "hipotesis_final_presentada", None),
+        exclusiones_compatibilidad=getattr(turno, "exclusiones_compat", []),
+        scores_presentacion=getattr(turno, "scores_pres", {}),
+        estado_previo=turno.transicion.estado_previo.value if getattr(turno, "transicion", None) else None,
         estado_detectado_mensaje_actual=turno.transicion.estado_detectado_mensaje.value
-        if "transicion" in locals()
+        if getattr(turno, "transicion", None)
         else None,
-        decision_transicion=turno.transicion.decision.value if "transicion" in locals() else None,
-        motivo_transicion=turno.transicion.motivo if "transicion" in locals() else None,
-        dominio_previo=turno.transicion.dominio_previo.value if "transicion" in locals() else None,
+        decision_transicion=turno.transicion.decision.value if getattr(turno, "transicion", None) else None,
+        motivo_transicion=turno.transicion.motivo if getattr(turno, "transicion", None) else None,
+        dominio_previo=turno.transicion.dominio_previo.value if getattr(turno, "transicion", None) else None,
         dominio_detectado_actual=turno.transicion.dominio_detectado_mensaje.value
-        if "transicion" in locals()
+        if getattr(turno, "transicion", None)
         else None,
         dominio_actual=turno.estado.dominio_probable,
         plan_b_activado=turno.intent_elegido if turno.decision == "PLAN_B" else None,

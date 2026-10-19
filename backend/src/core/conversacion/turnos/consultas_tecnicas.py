@@ -34,6 +34,9 @@ async def consultas_tecnicas(self, turno):
         elif any((w in turno.norm_txt_cons for w in ("cascabeleo", "inyector", "subida", "pobre"))):
             turno.resp_por_que = "💡 *Explicación técnica de detonación por inyector deficiente:*\n\nBajo carga (subida empinada acelerando a fondo), el motor requiere mayor volumen de combustible para disipar calor y mantener la combustión controlada. Un inyector sucio o con bajo caudal empobrece la mezcla, elevando bruscamente la temperatura de cámara y provocando autoignición espontánea (cascabeleo o pistoneo)."
         if turno.resp_por_que:
+            if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
+                turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
+            turno.estado.turno_actual += 1
             return {
                 "status": "explicacion_causal",
                 "respuesta_texto": turno.resp_por_que,
@@ -55,6 +58,7 @@ async def consultas_tecnicas(self, turno):
         ExtractorHechos.extraer_y_actualizar(turno.estado, turno.texto_limpio)
         if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
             turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
+        turno.estado.turno_actual += 1
         turno.vehiculo_str = f"{getattr(turno.estado, 'marca', '') or ''} {getattr(turno.estado, 'modelo', '') or ''} {getattr(turno.estado, 'anio', '') or ''}".strip()
         turno.resp_seg, turno.conf_seg, turno.fue_interceptada = proteger_salida_conversacional(
             respuesta_propuesta="",
@@ -86,6 +90,9 @@ async def consultas_tecnicas(self, turno):
         turno.norm_txt_cons,
     ):
         turno.resp_incomp_diesel = "🚫 *Incompatibilidad física y técnica total: Bujías de gasolina en motor diésel*\n\n• **Incompatibilidad absoluta:** Es totalmente **incompatible**. Los motores **diésel** (como el Toyota 1KD-FTV) funcionan por autoencendido por compresión y NO utilizan bujías de **chispa** ni disponen de rosca ni sistema para alojarlas.\n• **Componente del motor diésel:** Lo único que equipa son bujías de precalentamiento (calentadores o glow plugs), cuya función es exclusivamente entibiar la cámara en frío, no producir chispa."
+        if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
+            turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
+        turno.estado.turno_actual += 1
         return {
             "status": "incompatibilidad_tecnica",
             "respuesta_texto": turno.resp_incomp_diesel,
@@ -103,6 +110,9 @@ async def consultas_tecnicas(self, turno):
         turno.norm_txt_cons,
     ):
         turno.resp_incomp_24v = "⚡ *Incompatibilidad eléctrica crítica: 24V en alternador de 12V*\n\n• **Riesgo inminente:** Conectar 24 voltios a un alternador o componente de **12V** va a **quemar** instantáneamente el regulador electrónico de voltaje y perforar los diodos rectificadores por avalancha de sobretensión.\n• **Regla de taller:** Para probar si un alternador de 12V gira o genera campo, debe alimentarse estrictamente con una fuente o batería de 12V."
+        if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
+            turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
+        turno.estado.turno_actual += 1
         return {
             "status": "incompatibilidad_tecnica",
             "respuesta_texto": turno.resp_incomp_24v,
@@ -120,6 +130,9 @@ async def consultas_tecnicas(self, turno):
         turno.norm_txt_cons,
     ):
         turno.resp_purga_gnv = "🔧 *Procedimiento de purga de calefacción del reductor de gas GNV:*\n\nPara evitar que el **reductor** se congele por falta de circulación o bolsas de aire en el circuito de refrigerante:\n1. **Conexión en circuito:** Verificar que las **mangueras** de agua del reductor provengan de la calefacción de cabina con abrazaderas bien ajustadas.\n2. **Procedimiento de purga:** Con el motor frío y apagado, afloja la abrazadera de la manguera de retorno del reductor (la más alta). Rellena refrigerante en el radiador o depósito hasta que se complete la **purga** con un chorro continuo de refrigerante sin burbujas por la conexión.\n3. **Conexión y apriete:** Reconecta de inmediato la manguera y aprieta la abrazadera.\n4. **Encendido:** Enciende el motor hasta que alcance temperatura de régimen (85-90 °C) y confirma que ambas mangueras del reductor se sientan calientes al tacto."
+        if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
+            turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
+        turno.estado.turno_actual += 1
         return {
             "status": "procedimiento_purga",
             "respuesta_texto": turno.resp_purga_gnv,

@@ -378,8 +378,9 @@ class EvaluadorDecisionTurno:
                 return (decision, motivo_decision, pregunta_elegida, True, intent_elegido, pregunta_elegida)
             elif cat_ic in ("HERRAMIENTA_INDISPONIBLE", "NO_SABE_REALIZAR_PRUEBA"):
                 pregunta_elegida = (
-                    "Entiendo, sin comprobación previa ni método a la mano. "
-                    "¿Prefieres que te oriente sobre precauciones de seguridad antes de llevarlo a inspección profesional en taller?"
+                    "Entiendo maestro. No insistiré en esa medición técnica; mantenemos la orientación provisional "
+                    "sin confirmar la hipótesis hasta una revisión presencial. ¿Prefieres realizar una inspección visual "
+                    "directa sencilla sin herramientas o derivarlo a taller especializado?"
                 )
                 intent_elegido = QuestionIntent.PLAN_B_SIN_HERRAMIENTAS.value
                 estado.registrar_pregunta(intent=QuestionIntent(intent_elegido), texto=pregunta_elegida, incrementar_repregunta=False)
@@ -500,13 +501,13 @@ class EvaluadorDecisionTurno:
             if cond == "durante_arranque":
                 if float(val) < 9.6:
                     respuesta_texto = (
-                        f"⚠️ Caída de tensión crítica: {val} V en arranque (mínimo normal 9.6 V). "
+                        f"⚠️ Caída de tensión crítica: {val} V en arranque. "
                         f"Esto confirma descarga profunda, celda dañada o consumo excesivo del arrancador. "
                         f"Revisa ajuste de bornes y prueba con una batería de apoyo."
                     )
                 else:
                     respuesta_texto = (
-                        f"✅ Caída de tensión normal: {val} V en arranque (adecuado ≥ 9.6 V). "
+                        f"✅ Caída de tensión normal: {val} V en arranque. "
                         f"La batería retiene carga bajo demanda. El problema de arranque apunta al solenoide/arrancador o switch de encendido."
                     )
                 return ("CONCLUSION_TECNICA", f"Medición de voltaje en arranque evaluada: {val} V", respuesta_texto, False, None, None)

@@ -1,4 +1,4 @@
-"""Orientación provisional segura y manejo de imposibilidad de comprobaciones físicas."""
+﻿"""Orientación provisional segura y manejo de imposibilidad de comprobaciones físicas."""
 
 from __future__ import annotations
 
@@ -169,12 +169,9 @@ def generar_orientacion_provisional(
     # 4. El interlocutor es mecánico: conservar la limitación y sugerir solo
     # una comprobación alternativa segura (inspección visual/física directa).
     historial = getattr(estado, "historial_mensajes_usuario", []) or []
-    if historial and es_imposibilidad_completa(historial[-1]):
-        partes.append(
-            "Mantengo el caso pendiente hasta que puedas realizar una comprobación segura "
-            "o una revisión presencial. No te pediré efectuar una prueba que hoy no puedes realizar."
-        )
-    elif getattr(estado, "active_system", "") in {"encendido", "arranque"}:
+    if getattr(estado, "active_system", "") in {"encendido", "arranque"} or any(
+        w in str(getattr(estado, "active_symptoms", [])).lower() for w in ("acelera", "tironea", "arranc", "chispa")
+    ):
         partes.append(
             "Dejo registrada la limitación de herramienta. Procede mediante **inspección** visual de bujías, chispa y "
             "conexiones físicas directas; si no dispones de escáner ni multímetro, conserva el caso pendiente "
@@ -185,6 +182,12 @@ def generar_orientacion_provisional(
             "Dejo registrada la limitación de herramienta. Procede mediante **inspección** visual y física de los "
             "componentes periféricos o continúa solo cuando exista una comprobación segura y pertinente disponible; "
             "no confirmes una causa ni sustituyas piezas con la evidencia actual."
+        )
+
+    if historial and es_imposibilidad_completa(historial[-1]):
+        partes.append(
+            "Mantengo el caso pendiente hasta que puedas realizar una comprobación segura "
+            "o una revisión presencial. No te pediré efectuar una prueba que hoy no puedes realizar."
         )
 
     if es_sistema_frenos(estado):

@@ -315,8 +315,10 @@ class PoliticaSeguridad:
         if cls._hay_apertura_radiador_caliente_peligrosa(texto_usuario, estado):
             return SeveridadSeguridad.CRITICAL_STOP, BANNER_RADIADOR_CALIENTE
 
-        # 15. DPF: solicitud con aceite corregido
+        # 15. DPF: solicitud con o sin aceite corregido
         if PATRON_SOLICITUD_REGENERACION_DPF.search(texto_usuario):
+            if cls._hay_dilucion_aceite_activa(texto_usuario, estado):
+                return SeveridadSeguridad.CRITICAL_STOP, BANNER_BLOQUEO_REGENERACION_DILUCION
             if PATRON_CORRECCION_ACEITE_COMPROBADA.search(txt_u) or (
                 estado
                 and any("reemplazado_aceite" in k or "aceite" in k for k in getattr(estado, "hechos", {}))
@@ -336,7 +338,7 @@ class PoliticaSeguridad:
                 )
                 if not causa_reparada:
                     return SeveridadSeguridad.URGENT_INSPECTION, BANNER_BLOQUEO_REGENERACION_DILUCION
-                return SeveridadSeguridad.NORMAL_DIAGNOSTIC, PRERREQUISITOS_REGENERACION_DPF_OEM
+            return SeveridadSeguridad.NORMAL_DIAGNOSTIC, PRERREQUISITOS_REGENERACION_DPF_OEM
 
         # 16. Otras condiciones severas
         if PATRON_ACEITE_CRITICO.search(txt_comb):
@@ -385,6 +387,7 @@ class PoliticaSeguridad:
             BANNER_HV,
             BANNER_DIESEL_EMBALAMIENTO,
             BANNER_FRENO,
+            BANNER_COMBUSTIBLE,
         }
         if banner in BANNERS_RESPUESTA_INTEGRA:
             return banner.strip()
@@ -511,4 +514,4 @@ class PoliticaSeguridad:
             recomendaciones.append(
                 "Para revisar refrigeración, apague el motor y espere a que enfríe antes de abrir cualquier tapón."
             )
-        return f"{'\\n\\n'.join(banners)}\\n\\n{' '.join(recomendaciones)}".strip()
+        return f"{'\n\n'.join(banners)}\n\n{' '.join(recomendaciones)}".strip()

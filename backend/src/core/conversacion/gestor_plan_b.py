@@ -240,15 +240,15 @@ class GestorPlanB:
         if "bujia" in falla_l or "bobina" in falla_l:
             if "chispa" in herramientas_bloqueadas or sin_herramientas or estado.es_prueba_bloqueada("comprobar_chispa_bobinas"):
                 # Si el Plan B ya fue preguntado o respondido, pasar a Plan C (Inspección acústica / olor o derivación)
-                if estado.ya_preguntado_texto("Al revisar visualmente las bobinas"):
+                if estado.ya_preguntado_texto("Al realizar una inspección visual de bobinas") or estado.ya_preguntado_texto("Al revisar visualmente las bobinas"):
                     return (
                         "comprobación de olor a combustible crudo por el tubo de escape al acelerar.",
-                        "¿Percibes un olor fuerte a gasolina cruda en el escape o notas humo negro cuando el motor tironea?",
+                        "¿Percibes un olor fuerte a gasolina cruda en el escape o notas humo negro cuando el motor tironea? Realiza una inspección visual del escape.",
                         QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                     )
                 return (
                     "inspección visual de bobinas y cables (grietas o sulfato) y verificar si hay aceite en los pozos de bujía.",
-                    "Entiendo, sin herramientas para chispa. Al revisar visualmente las bobinas y cables: ¿notas grietas, cables resecos o presencia de aceite en los pozos de bujía?",
+                    "Entiendo, sin herramientas para chispa. Realiza una inspección visual de bobinas y cables: ¿notas grietas, cables resecos o presencia de aceite en los pozos de bujía?",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 
@@ -258,7 +258,7 @@ class GestorPlanB:
                 if estado.ya_preguntado_texto("zumbido de la bomba"):
                     return (
                         "observación del comportamiento del tironeo según el nivel de combustible en el tanque.",
-                        "¿El tironeo o pérdida de fuerza empeora significativamente cuando el tanque tiene un cuarto de gasolina o menos?",
+                        "Realiza una observación directa: ¿el tironeo o pérdida de fuerza empeora significativamente cuando el tanque tiene un cuarto de gasolina o menos?",
                         QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                     )
                 return (
@@ -273,12 +273,12 @@ class GestorPlanB:
                 if estado.ya_preguntado_texto("luces del tablero bajan bastante"):
                     return (
                         "inspección física de terminales de batería y presencia de sarro blanquecino en los bornes.",
-                        "¿Los bornes de la batería presentan sarro blanco/verdoso o terminales flojos que se muevan con la mano?",
+                        "Realiza una inspección visual: ¿los bornes de la batería presentan sarro blanco/verdoso o terminales flojos que se muevan con la mano?",
                         QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                     )
                 return (
                     "inspección visual de atenuación de luces de tablero o faros al accionar el arranque.",
-                    "Entiendo, no tienes multímetro. Cuando intentas arrancar, ¿las luces del tablero bajan bastante de intensidad o permanecen casi igual?",
+                    "Entiendo, no tienes multímetro. Realiza una inspección visual: cuando intentas arrancar, ¿observas que las luces del tablero bajan bastante de intensidad o permanecen casi igual?",
                     QuestionIntent.COMPORTAMIENTO_ARRANQUE,
                 )
 
@@ -292,12 +292,12 @@ class GestorPlanB:
                 if estado.ya_preguntado_texto("alumbra con una linterna"):
                     return (
                         "medición de alabeo de disco con reloj comparador en taller especializado.",
-                        "Para medir con exactitud el alabeo del disco se requiere reloj comparador en taller. ¿Deseas recomendaciones para evitar cristalizar las pastillas?",
+                        "Conservo la orientación provisional sin confirmar la hipótesis. No insistiré en esa prueba sin herramientas especializadas; requiere revisión presencial en taller.",
                         QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                     )
                 return (
                     "inspección visual a través de los rines para detectar surcos profundos o coloración azulada en los discos.",
-                    "Sin desmontar la rueda: al alumbra con una linterna a través del rin hacia el disco, ¿se observan surcos profundos al tacto o marcas azuladas de sobrecalentamiento?",
+                    "Sin desmontar la rueda: al alumbrar con una linterna a través del rin hacia el disco, ¿se observa algún surco profundo o marcas azuladas de sobrecalentamiento? Realiza una inspección visual directa.",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 
@@ -306,12 +306,12 @@ class GestorPlanB:
             if not estado.ya_preguntado_texto("movimientos cortos de vaivén"):
                 return (
                     "comprobación segura de holgura mediante vaivén de dirección en plano sin elevar el vehículo.",
-                    "Para comprobarlo de forma segura sin levantar el vehículo ni correr riesgos: con el auto estacionado en plano y motor apagado, gira el volante bruscamente con movimientos cortos de vaivén de lado a lado, o empuja la carrocería hacia abajo. ¿Se percibe un 'clac-clac' metálico seco o juego muerto?",
+                    "Para comprobarlo de forma segura sin elevar el vehículo ni correr riesgos: con el auto estacionado en plano y motor apagado, gira el volante bruscamente con movimientos cortos de vaivén de lado a lado, o empuja la carrocería hacia abajo. ¿Se percibe un 'clac-clac' metálico seco o juego muerto?",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
             return (
                 "inspección técnica en taller con elevador hidráulico y palanca especializada.",
-                "Para verificar con total precisión la holgura interna de trapecios o rótulas se requiere elevar el auto con seguridad en taller. ¿Prefieres que te resuma las precauciones antes de llevarlo a revisión?",
+                "Conservo la orientación provisional sin confirmar la hipótesis. No insistiré en esa prueba sin elevar; requiere revisión presencial en taller especializado. ¿Prefieres precauciones de seguridad antes de llevarlo?",
                 QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
             )
 
@@ -320,7 +320,7 @@ class GestorPlanB:
             if not estado.ya_preguntado_texto("retira la varilla"):
                 return (
                     "comprobación segura del fluido ATF mediante varilla medidora o goteo en piso.",
-                    "Para revisarlo de forma segura: con el auto en plano y motor tibio en P, retira la varilla de transmisión (suele decir ATF) y límpiala con papel blanco. ¿El fluido se ve rojizo transparente, o negro/marrón con olor a quemado?",
+                    "Para revisarlo de forma segura sin elevar: realiza una inspección visual en plano con motor tibio en P, retira la varilla de transmisión y límpiala con papel blanco. ¿El fluido se ve rojizo transparente o negro/marrón con olor a quemado?",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 
@@ -335,7 +335,7 @@ class GestorPlanB:
             elif not estado.ya_preguntado_texto("electroventilador del condensador"):
                 return (
                     "inspección visual de flujo de refrigerante y electroventilador de condensador.",
-                    "Para verificar si la falta de frío se debe a pérdida de carga o condensación deficiente: ¿gira el electroventilador del condensador al encender el A/C y las tuberías de servicio del vano motor se sienten una fría y la otra caliente?",
+                    "Realiza una inspección visual: al encender el A/C, ¿observas que gira el electroventilador del condensador y las tuberías de servicio del vano motor se sienten una fría y la otra caliente?",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 
@@ -343,7 +343,7 @@ class GestorPlanB:
         if (sin_herramientas or estado.es_prueba_no_sabe_realizar()) and len(estado.preguntas_realizadas) >= 2:
             return (
                 "inspección técnica en taller automotriz con escáner y manómetro profesional.",
-                "Debido a que esta avería requiere comprobar componentes internos sin desmontar a ciegas, ¿deseas que te oriente con las precauciones antes de llevarlo al taller?",
+                "Conservo la hipótesis pendiente sin confirmar. No insistiré en esa prueba; mantenemos la orientación provisional hasta una revisión presencial en taller especializado.",
                 QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
             )
 
@@ -368,12 +368,12 @@ class GestorPlanB:
             if not estado.ya_preguntado_texto("movimientos cortos de vaivén"):
                 return (
                     "comprobación segura de holgura mediante vaivén de dirección en plano sin elevar el vehículo.",
-                    "Para comprobarlo de forma segura sin levantar el vehículo ni correr riesgos: con el auto estacionado en plano y motor apagado, gira el volante bruscamente con movimientos cortos de vaivén de lado a lado, o empuja la carrocería hacia abajo. ¿Se percibe un 'clac-clac' metálico seco o juego muerto?",
+                    "Para comprobarlo de forma segura sin elevar el vehículo ni correr riesgos: con el auto estacionado en plano y motor apagado, gira el volante bruscamente con movimientos cortos de vaivén de lado a lado, o empuja la carrocería hacia abajo. ¿Se percibe un 'clac-clac' metálico seco o juego muerto?",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
             return (
                 "inspección técnica en taller con elevador hidráulico y palanca especializada.",
-                "Para verificar con total precisión la holgura interna de trapecios o rótulas se requiere elevar el auto con seguridad en taller. ¿Prefieres que te resuma las precauciones antes de llevarlo a revisión?",
+                "Conservo la orientación provisional sin confirmar la hipótesis. No insistiré en esa prueba sin elevar; requiere revisión presencial en taller especializado. ¿Prefieres precauciones de seguridad antes de llevarlo?",
                 QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
             )
 
@@ -388,12 +388,12 @@ class GestorPlanB:
             if not estado.ya_preguntado_texto("alumbra con una linterna"):
                 return (
                     "inspección visual segura del disco y pastilla a través de los rines con linterna.",
-                    "Sin desmontar la rueda: al alumbra con una linterna a través del rin hacia el disco, ¿se observan surcos profundos al tacto o marcas azuladas de sobrecalentamiento?",
+                    "Sin desmontar la rueda: al alumbrar con una linterna a través del rin hacia el disco, ¿se observa algún surco profundo o marcas azuladas de sobrecalentamiento? Realiza una inspección visual directa.",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
             return (
                 "medición de alabeo de disco con reloj comparador en taller especializado.",
-                "Para medir con exactitud el alabeo del disco se requiere reloj comparador en taller. ¿Deseas recomendaciones para evitar cristalizar las pastillas?",
+                "Conservo la orientación provisional sin confirmar la hipótesis. No insistiré en esa prueba sin herramientas especializadas; requiere revisión presencial en taller.",
                 QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
             )
 
@@ -402,7 +402,7 @@ class GestorPlanB:
             if not estado.ya_preguntado_texto("aguja de revoluciones"):
                 return (
                     "comprobación segura sin riesgo eléctrico observando RPM y olor en escape.",
-                    "Para evitar riesgos eléctricos de alta tensión: al dar arranque, ¿la aguja de revoluciones (RPM) del tablero oscila ligeramente o notas un fuerte olor a gasolina cruda en el escape?",
+                    "Para evitar riesgos eléctricos de alta tensión sin herramientas: realiza una inspección visual de la aguja de revoluciones (RPM) al dar arranque. ¿Oscila ligeramente o notas un fuerte olor a gasolina cruda en el escape?",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 
@@ -411,7 +411,7 @@ class GestorPlanB:
             if not estado.ya_preguntado_texto("retira la varilla"):
                 return (
                     "comprobación segura del fluido ATF mediante varilla medidora o goteo en piso.",
-                    "Para revisarlo de forma segura: con el auto en plano y motor tibio en P, retira la varilla de transmisión (suele decir ATF) y límpiala con papel blanco. ¿El fluido se ve rojizo transparente, o negro/marrón con olor a quemado?",
+                    "Para revisarlo de forma segura sin elevar: realiza una inspección visual en plano con motor tibio en P, retira la varilla de transmisión y límpiala con papel blanco. ¿El fluido se ve rojizo transparente o negro/marrón con olor a quemado?",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 
@@ -426,7 +426,7 @@ class GestorPlanB:
             elif not estado.ya_preguntado_texto("electroventilador del condensador"):
                 return (
                     "inspección visual de flujo de refrigerante y electroventilador de condensador.",
-                    "Para verificar si la falta de frío se debe a pérdida de carga o condensación deficiente: ¿gira el electroventilador del condensador al encender el A/C y las tuberías de servicio del vano motor se sienten una fría y la otra caliente?",
+                    "Realiza una inspección visual: al encender el A/C, ¿observas que gira el electroventilador del condensador y las tuberías de servicio del vano motor se sienten una fría y la otra caliente?",
                     QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
                 )
 

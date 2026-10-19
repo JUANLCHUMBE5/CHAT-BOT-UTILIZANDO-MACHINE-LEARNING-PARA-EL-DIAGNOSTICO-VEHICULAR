@@ -359,7 +359,7 @@ def contiene_informacion_diagnostica(texto: str) -> bool:
             r"luz\s+de\s+(?:advertencia|falla|check|motor)|"
             r"demora\s+en\s+(?:enganchar|entrar|acoplar)|reversa|"
             r"golpe|golpes|ruido|ruidos|zumbido|chillido|chirrido|frena|freno|frenos|frena\s+mal|pedal|volante|"
-            r"suspensi[o\u00f3]n|bache|baches|amortiguador|amortiguadores|buje|bujes|r[o\u00f3]tula|r[o\u00f3]tulas)\b",
+            r"suspensi[o\u00f3]n|bache|baches|amortiguador|amortiguadores|buje|bujes|r[o\u00f3]tula|r[o\u00f3]tulas|olor|huele|peste|turbo|no\s+carga|parpadea|revisi[o\u00f3]n\s+t[e\u00e9]cnica|gases|emisi[o\u00f3]n|cilindro|bobina|buj[i\u00ed]a|dpf|testigo|bater[i\u00ed]a|vatetia|alternador|tironeo|subida|aceleraci[o\u00f3]n|tim[o\u00f3]n|da\s+marcha|ase\s+tac|hace\s+tac|no\s+pren[df]e|no\s+[gj]ira|clik|click|chasquido)\b",
             re.IGNORECASE,
         ),
     ]

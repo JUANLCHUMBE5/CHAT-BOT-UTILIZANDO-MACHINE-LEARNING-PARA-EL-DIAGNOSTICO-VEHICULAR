@@ -16,18 +16,19 @@ def con_gobernanza_documental(func):
         sesion_id = kwargs.get("session_id") or kwargs.get("conversacion_id")
         sesion = gestor.session_manager.obtener_sesion(sesion_id) if sesion_id else None
         estado = getattr(sesion, "conversation_state", None)
-        severidad, banner = PoliticaSeguridad.evaluar_severidad(texto, "", estado=estado)
-        if severidad == SeveridadSeguridad.CRITICAL_STOP and banner:
-            return ResultadoDiagnostico(
-                respuesta_texto=limpiar_advertencia(banner),
-                diagnostico_ml="Advertencia de seguridad física",
-                confianza_ml=0.0,
-                contexto_manual="",
-                titulo_manual="",
-                requiere_revision_humana=True,
-                modo_diagnostico="seguridad_critica",
-                tipo_consulta="seguridad_critica",
-            )
+        if not kwargs.get("orquestado", False):
+            severidad, banner = PoliticaSeguridad.evaluar_severidad(texto, "", estado=estado)
+            if severidad == SeveridadSeguridad.CRITICAL_STOP and banner:
+                return ResultadoDiagnostico(
+                    respuesta_texto=limpiar_advertencia(banner),
+                    diagnostico_ml="Advertencia de seguridad física",
+                    confianza_ml=0.0,
+                    contexto_manual="",
+                    titulo_manual="",
+                    requiere_revision_humana=True,
+                    modo_diagnostico="seguridad_critica",
+                    tipo_consulta="seguridad_critica",
+                )
         dto = func(gestor, *args, **kwargs)
         if not isinstance(dto, ResultadoDiagnostico):
             return dto

@@ -1,4 +1,4 @@
-"""Etapa ciclo casos; contexto por turno."""
+﻿"""Etapa ciclo casos; contexto por turno."""
 
 from __future__ import annotations
 
@@ -57,16 +57,25 @@ async def ciclo_casos(self, turno):
             "estado": turno.estado,
         }
     if turno.solicitud_caso and turno.solicitud_caso.get("accion") in ("nuevo_caso", "cancelar"):
-        if ExtractorHechos.contiene_informacion_diagnostica(turno.texto_limpio) or any(
-            (
-                w in turno.texto_limpio.lower()
-                for w in (
-                    "ahora tengo",
-                    "empecemos con otro",
-                    "otro auto",
-                    "otro vehiculo",
-                    "otro carro",
-                    "placa",
+        es_frase_reinicio_pura = bool(
+            re.fullmatch(
+                r"\s*(?:otro\s+(?:carro|auto|veh[ií]culo)|nuevo\s+caso|nuevo\s+diagn[oó]stico|empecemos\s+con\s+otro|empezar\s+de\s+nuevo|cancelar(?:\s+caso)?|reiniciar)\s*[!.]*\s*",
+                turno.texto_limpio,
+                re.IGNORECASE,
+            )
+        )
+        if not es_frase_reinicio_pura and (
+            ExtractorHechos.contiene_informacion_diagnostica(turno.texto_limpio)
+            or any(
+                (
+                    w in turno.texto_limpio.lower()
+                    for w in (
+                        "ahora tengo",
+                        "placa",
+                        "falla",
+                        "suena",
+                        "vibra",
+                    )
                 )
             )
         ):
@@ -117,7 +126,7 @@ async def ciclo_casos(self, turno):
                 "estado": turno.estado,
             }
     turno.PATRON_CIERRE = re.compile(
-        "^\\s*(?:(?:muchas\\s+)?gracias(?:\\s+maestro|\\s+amigo)?(?:\\s+por\\s+.*)?|perfecto,?\\s*(?:qued[oó]\\s+clar[ií]simo|gracias.*)?|excelente\\s+(?:servicio|explicaci[oó]n|ayuda)(?:\\s+maestro)?|qued[oó]\\s+clar[ií]simo)\\s*[!.]*\\s*$",
+        r"^\s*(?:(?:muchas\s+)?gracias(?:\s+maestro|\s+amigo)?(?:\s+por\s+.*)?|perfecto,?\s*(?:qued[oó]\s+clar[ií]simo|gracias.*)?|excelente\s+(?:servicio|explicaci[oón]|ayuda)(?:\s+maestro)?|qued[oó]\s+clar[ií]simo)\s*[!.]*\s*$",
         re.IGNORECASE,
     )
     if turno.PATRON_CIERRE.match(turno.texto_limpio.strip()):
@@ -139,6 +148,11 @@ async def ciclo_casos(self, turno):
             turno.resp_cierre = "🤝 *¡De nada maestro! Recuerda mantener el motor detenido y drenar completamente el cárter contaminado antes de cualquier intento de arranque para evitar el peligro crítico de embalamiento diésel. Quedo a tu disposición en el taller para cualquier otra consulta técnica o nuevo caso vehicular. ¡Muchos éxitos!*"
         else:
             turno.resp_cierre = "🤝 *¡De nada maestro! Quedo a tu disposición en el taller para cualquier otra consulta técnica, medición o nuevo caso vehicular. ¡Muchos éxitos en la reparación!*"
+        if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
+            turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
+        if not turno.estado.active_symptoms:
+            turno.estado.active_symptoms.append("caso concluido / consulta general")
+        turno.estado.turno_actual += 1
         return {
             "status": "cierre",
             "respuesta_texto": turno.resp_cierre,
@@ -162,7 +176,7 @@ async def ciclo_casos(self, turno):
         )
     )
     if turno.es_caso_freno and re.search(
-        "\\b(?:sacar(?:lo)?\\s+a\\s+(?:probar\\s+a\\s+)?(?:la\\s+)?pista|probar\\s+(?:en\\s+|a\\s+la\\s+)?pista|circular|rodar\\s+en\\s+calle|manejar\\s+as[ií])\\b",
+        r"\b(?:sacar(?:lo)?\s+a\s+(?:probar\s+a\s+)?(?:la\s+)?pista|probar\s+(?:en\s+|a\s+la\s+)?pista|circular|rodar\s+en\s+calle|manejar\s+as[ií])\b",
         turno.texto_limpio.casefold(),
     ):
         if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
@@ -184,15 +198,15 @@ async def ciclo_casos(self, turno):
     turno.norm_txt_cons = turno.texto_limpio.casefold()
     turno.es_consulta_prerrequisitos_dpf = bool(
         re.search(
-            "\\b(?:qu[eé]\\s+(?:debo|se\\s+debe|hay\\s+que|tengo\\s+que)\\s+(?:verificar|revisar|comprobar|chequear)|prerrequisitos?|condiciones\\s+previas|requisitos?)\\b.{0,50}\\b(?:antes\\s+de\\s+regenerar|regeneraci[oó]n|regenerar)\\b|\\b(?:antes\\s+de\\s+regenerar|para\\s+regenerar)\\b.{0,40}\\b(?:qu[eé]\\s+(?:verifico|reviso|compruebo|chequeo)|prerrequisitos?)\\b",
+            r"\b(?:qu[eé]\s+(?:debo|se\s+debe|hay\s+que|tengo\s+que)\s+(?:verificar|revisar|comprobar|chequear|tener)|prerrequisitos?|condiciones\s+previas|requisitos?|condiciones)\b.{0,50}\b(?:antes\s+de\s+regenerar|regeneraci[oó]n|regenerar|listas)\b|\b(?:antes\s+de\s+regenerar|para\s+regenerar|regenerar\s+el\s+dpf)\b.{0,40}\b(?:qu[eé]\s+(?:verifico|reviso|compruebo|chequeo|condiciones)|prerrequisitos?|condiciones)\b",
             turno.norm_txt_cons,
         )
         or (
             re.search(
-                "\\b(?:ya\\s+correg[ií]|ya\\s+cambi[eé]|dren[eé]|bot[eé]|aceite\\s+nuevo)\\b",
+                r"\b(?:ya\s+correg[ií]|ya\s+cambi[eé]|dren[eé]|bot[eé]|aceite\s+nuevo)\b",
                 turno.norm_txt_cons,
             )
-            and re.search("\\b(?:regenerar|regeneraci[oó]n)\\b", turno.norm_txt_cons)
+            and re.search(r"\b(?:regenerar|regeneraci[oó]n)\b", turno.norm_txt_cons)
         )
     )
     if turno.es_consulta_prerrequisitos_dpf and (

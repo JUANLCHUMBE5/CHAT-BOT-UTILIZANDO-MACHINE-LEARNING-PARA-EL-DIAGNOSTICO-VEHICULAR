@@ -10,6 +10,10 @@ from src.core.conversacion.models import FactType, QuestionIntent
 
 
 async def resolver_diagnostico(self, turno):
+    if not hasattr(turno, 'es_suficiente'):
+        turno.es_suficiente = False
+    if not hasattr(turno, 'score'):
+        turno.score = 0
     if turno.forzar_avance and turno.decision in {"PREGUNTAR", "PENDIENTE_MEDICION", "CONCLUSION_TECNICA"}:
         turno.respuesta_texto = ""
         turno.pregunta_elegida = None
@@ -95,7 +99,7 @@ async def resolver_diagnostico(self, turno):
             )
             turno.decision = "PREGUNTAR"
             turno.motivo_decision = (
-                f"Información insuficiente ({turno.score}/3 categorías). Aclarando {turno.intent_preg.value}"
+                f"Información insuficiente ({getattr(turno, 'score', 0)}/3 categorías). Aclarando {turno.intent_preg.value}"
             )
             turno.respuesta_texto = turno.txt_preg
             turno.es_pregunta = True
@@ -287,7 +291,7 @@ async def resolver_diagnostico(self, turno):
             turno.motivo_decision = f"Límite de {settings.diagnostic.max_clarifications} repreguntas alcanzado: forzando diagnóstico diferencial"
         else:
             turno.decision = "DIAGNOSTICAR"
-            turno.motivo_decision = f"Diagnóstico completado con {turno.score} categorías y certidumbre {int(turno.dto_resultado.confianza_ml * 100)}%"
+            turno.motivo_decision = f"Diagnóstico completado con {getattr(turno, 'score', 0)} categorías y certidumbre {int(turno.dto_resultado.confianza_ml * 100)}%"
         if turno.preg_ctx and turno.intent_ctx and (not turno.es_caso_b):
             turno.estado.registrar_pregunta(
                 intent=turno.intent_ctx,

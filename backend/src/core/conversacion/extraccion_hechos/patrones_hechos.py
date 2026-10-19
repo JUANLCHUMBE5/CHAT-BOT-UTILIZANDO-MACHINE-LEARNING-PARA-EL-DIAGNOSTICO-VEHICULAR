@@ -65,9 +65,9 @@ PATRON_DEMORA_ARRANQUE = re.compile(
 )
 
 PATRONES_MARCA = [
-    (re.compile(r"\b(toyota)\b", re.IGNORECASE), "Toyota"),
-    (re.compile(r"\b(nissan)\b", re.IGNORECASE), "Nissan"),
-    (re.compile(r"\b(hyundai)\b", re.IGNORECASE), "Hyundai"),
+    (re.compile(r"\b(toyota|toyoyta|toyta)\b", re.IGNORECASE), "Toyota"),
+    (re.compile(r"\b(nissan|nisan)\b", re.IGNORECASE), "Nissan"),
+    (re.compile(r"\b(hyundai|iundai|hyunday|hiundai)\b", re.IGNORECASE), "Hyundai"),
     (re.compile(r"\b(kia)\b", re.IGNORECASE), "Kia"),
     (re.compile(r"\b(chevrolet|chevy)\b", re.IGNORECASE), "Chevrolet"),
     (re.compile(r"\b(ford)\b", re.IGNORECASE), "Ford"),
@@ -112,7 +112,7 @@ PATRONES_MODELO = [
     (re.compile(r"\b(sportage)\b", re.IGNORECASE), "Sportage"),
     (re.compile(r"\b(sorento)\b", re.IGNORECASE), "Sorento"),
     (re.compile(r"\b(elantra)\b", re.IGNORECASE), "Elantra"),
-    (re.compile(r"\b(accent)\b", re.IGNORECASE), "Accent"),
+    (re.compile(r"\b(accent|acent)\b", re.IGNORECASE), "Accent"),
     (re.compile(r"\b(tucson)\b", re.IGNORECASE), "Tucson"),
     (re.compile(r"\b(santa\s*fe)\b", re.IGNORECASE), "Santa Fe"),
     (re.compile(r"\b(civic)\b", re.IGNORECASE), "Civic"),

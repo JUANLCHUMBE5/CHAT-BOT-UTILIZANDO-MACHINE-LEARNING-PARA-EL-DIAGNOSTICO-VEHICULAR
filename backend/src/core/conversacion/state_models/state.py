@@ -511,6 +511,8 @@ class ConversationState:
         if preservar_vehiculo:
             for campo, valor in vehiculo.items():
                 setattr(self, campo, valor)
+        else:
+            self.banner_vehiculo_mostrado = False
         self.updated_at = time.time()
 
     def restaurar_caso_archivado(self, case_id: str) -> bool:
@@ -541,6 +543,7 @@ class ConversationState:
         historial = list(self.hechos_historicos)
         estado_vacio = type(self)(session_id=self.session_id)
         estado_vacio.hechos_historicos = historial
+        self.__dict__.clear()
         self.__dict__.update(estado_vacio.__dict__)
 
     def exportar_dict(self, incluir_trazabilidad: bool = True) -> Dict[str, Any]:
