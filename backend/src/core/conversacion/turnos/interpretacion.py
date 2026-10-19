@@ -12,6 +12,7 @@ from src.core.logger import logger
 
 
 async def interpretacion(self, turno):
+    turno.estado_previo_hechos = dict(turno.estado.hechos)
     turno.interp_semantica = None
     try:
         turno.EstadoHechoSemantico = _importar(
@@ -124,7 +125,6 @@ async def interpretacion(self, turno):
     except Exception as exc:
         turno.exc = exc
         logger.warning(f"[OrquestadorConversacion] Error no bloqueante en comprensión semántica: {turno.exc}")
-    turno.estado_previo_hechos = dict(turno.estado.hechos)
     turno.hechos_extraidos = ExtractorHechos.extraer_y_actualizar(turno.estado, turno.texto_limpio)
     turno.registrar_evidencia = _importar("src.core.conversacion.evidencia_taller").registrar_evidencia
     turno.hechos_extraidos.extend(turno.registrar_evidencia(turno.estado, turno.texto_limpio))

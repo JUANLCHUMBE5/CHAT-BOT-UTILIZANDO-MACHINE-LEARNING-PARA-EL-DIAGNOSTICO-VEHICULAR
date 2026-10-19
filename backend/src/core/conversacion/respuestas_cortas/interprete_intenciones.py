@@ -14,6 +14,7 @@ from src.core.conversacion.models import (
 from src.core.conversacion.respuestas_cortas.acciones_previas import interpretar_accion_previa
 from src.core.conversacion.respuestas_cortas.patrones_deteccion import (
     PATRON_AMBIGUO,
+    PATRON_NINGUNA_COINCIDE,
     PATRON_NO_APLICA,
     PATRON_NO_SE,
     PATRON_OPCION_NUMERICA,
@@ -480,6 +481,25 @@ def interpretar_respuesta_corta(
         }
 
     # 1. Selección provisional de una opción de la pregunta activa.
+    if PATRON_NINGUNA_COINCIDE.search(texto_l) and (
+        intent_str in (QuestionIntent.DISCRIMINACION_TOP3.value, QuestionIntent.CONFIRMACION_ALTERNATIVA.value)
+        or bool(ultima_preg.get("opciones"))
+    ):
+        h = estado.registrar_hecho(
+            campo="opciones_sugeridas_no_coinciden",
+            valor="ninguna_coincide",
+            categoria="inspeccion_desacuerdo",
+            estado=FactState.CONFIRMADO,
+            texto_crudo=texto_usuario,
+            tipo=FactType.CONDICION,
+        )
+        return {
+            "categoria_respuesta": "OPCION_NINGUNA_COINCIDE",
+            "campo": "opciones_sugeridas_no_coinciden",
+            "valor": "ninguna_coincide",
+            "hecho": h.to_dict(),
+        }
+
     m_opt = PATRON_OPCION_NUMERICA.fullmatch(texto_l)
     pregunta_vigente = (
         len(estado.respuestas_obtenidas) < len(estado.preguntas_realizadas)
@@ -523,6 +543,49 @@ def interpretar_respuesta_corta(
     if m_opt and pregunta_vigente and (not es_intent_medicion or tiene_prefijo_opcion):
         raw_val = m_opt.group(3).lower()
         idx = _parsear_indice_opcion(raw_val)
+
+        tiene_opcion_ninguna = (
+            intent_str in (
+                QuestionIntent.DISCRIMINACION_TOP3.value,
+                QuestionIntent.CONFIRMACION_ALTERNATIVA.value,
+            )
+            and len(hipotesis_candidatas) >= 2
+            and ("ninguna" in texto_preg or "describir otra" in texto_preg or len(hipotesis_candidatas) >= 2)
+        )
+        if tiene_opcion_ninguna and hipotesis_candidatas:
+            total_opc = len(hipotesis_candidatas) + 1
+            if 0 <= idx < len(hipotesis_candidatas):
+                return {
+                    "categoria_respuesta": "OPCION_NUMERICA_PROVISIONAL",
+                    "campo": "hipotesis_seleccionada_provisional",
+                    "valor": hipotesis_candidatas[idx],
+                    "indice_opcion": idx + 1,
+                }
+            elif idx == len(hipotesis_candidatas):
+                h = estado.registrar_hecho(
+                    campo="opciones_sugeridas_no_coinciden",
+                    valor="ninguna_coincide",
+                    categoria="inspeccion_desacuerdo",
+                    estado=FactState.CONFIRMADO,
+                    texto_crudo=texto_usuario,
+                    tipo=FactType.CONDICION,
+                )
+                return {
+                    "categoria_respuesta": "OPCION_NINGUNA_COINCIDE",
+                    "campo": "opciones_sugeridas_no_coinciden",
+                    "valor": "ninguna_coincide",
+                    "indice_opcion": idx + 1,
+                    "hecho": h.to_dict(),
+                }
+            else:
+                return {
+                    "categoria_respuesta": "OPCION_NUMERICA_FUERA_DE_RANGO",
+                    "campo": "opcion_fuera_de_rango",
+                    "valor": raw_val,
+                    "indice_opcion": idx + 1,
+                    "total_opciones": total_opc,
+                }
+
         total_opc = len(hipotesis_candidatas) or len(opciones_preg) or 3
         if hipotesis_candidatas and 0 <= idx < len(hipotesis_candidatas):
             return {

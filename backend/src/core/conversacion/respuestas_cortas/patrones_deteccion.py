@@ -9,6 +9,12 @@ PATRON_OPCION_NUMERICA = re.compile(
     re.IGNORECASE,
 )
 
+PATRON_NINGUNA_COINCIDE = re.compile(
+    r"^(?:(?:me\s+parece\s+que\s+|creo\s+que\s+)?(?:ninguna|ninguno)(?:\s+coincide|\s+de\s+las\s+anteriores|\s+de\s+esas)?|"
+    r"ninguna|ninguno|ninguna\s+coincide|ninguna\s+de\s+las\s+anteriores|otra\s+causa|otra\s+cosa|otro\s+motivo)\s*[.!]?\s*$",
+    re.IGNORECASE,
+)
+
 PATRON_NO_SE = re.compile(
     r"\b(no\s+s[eé]|ni\s+idea|no\s+me\s+fij[eé]|no\s+sabr[ií]a|no\s+estoy\s+seguro|desconozco|"
     r"tendr[ií]a\s+que\s+revisar|no\s+tengo\s+c[oó]mo\s+(?:comprobarlo|probarlo|revisarlo)|"
@@ -65,6 +71,9 @@ CUES_RESPUESTA_CORTA = (
     "eso no aplica",
     "ninguno",
     "ninguna",
+    "ninguna coincide",
+    "ninguna de las anteriores",
+    "otra causa",
     "no tengo",
     "no cuento",
     "no tengo tester",
@@ -136,13 +145,13 @@ def es_respuesta_corta(texto: str) -> bool:
         return False
     # Afirmaciones
     if re.search(
-        r"^(?:s[ií](?:[,\\s]+(?:causa|maestro|amigo|bot|carbot))?|[aá]firmativo|correcto|exactamente|eso\s+mismo|as[ií]\s+es|aj[aá]|claro(?:\s+que\s+s[ií])?|por\s+supuesto|efectivamente|lo\s+tengo|ya\s+lo\s+conect[eé]|s[ií]\s+(?:tengo|cuento|dispongo))\b",
+        r"^(?:s[ií](?:[,\s]+(?:causa|maestro|amigo|bot|carbot))?|[aá]firmativo|correcto|exactamente|eso\s+mismo|as[ií]\s+es|aj[aá]|claro(?:\s+que\s+s[ií])?|por\s+supuesto|efectivamente|lo\s+tengo|ya\s+lo\s+conect[eé]|s[ií]\s+(?:tengo|cuento|dispongo))\b",
         limpio,
     ):
         return True
     # Negaciones
     if re.search(
-        r"^(?:no(?:[,\\s]+(?:causa|maestro|amigo|bot|carbot))?|negativo|para\s+nada|nunca|eso\s+no\s+pasa|en\s+lo\s+absoluto|jam[aá]s|tampoco)\b",
+        r"^(?:no(?:[,\s]+(?:causa|maestro|amigo|bot|carbot))?|negativo|para\s+nada|nunca|eso\s+no\s+pasa|en\s+lo\s+absoluto|jam[aá]s|tampoco)\b",
         limpio,
     ):
         return True

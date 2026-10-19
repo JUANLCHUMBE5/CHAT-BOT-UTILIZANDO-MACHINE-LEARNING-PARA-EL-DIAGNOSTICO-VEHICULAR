@@ -37,14 +37,16 @@ def generar_pregunta_discriminante_top3(
     lineas_opciones = [
         f"{iconos[i]} {opciones_texto[i]}" for i in range(len(opciones_texto))
     ]
+    idx_ninguna = len(lineas_opciones) + 1
+    iconos_ext = {4: "4⃣", 3: "3⃣"}
+    icono_ninguna = iconos_ext.get(idx_ninguna, str(idx_ninguna) + "⃣")
+    lineas_opciones.append(icono_ninguna + " Ninguna coincide / Describir otra situación o síntoma")
 
     texto = (
         "Para confirmar la causa exacta entre las posibilidades principales, "
         "¿cuál de las siguientes situaciones describe mejor el comportamiento de tu vehículo?\n\n"
         + "\n".join(lineas_opciones)
-        + "\n\nResponde indicando el número (1, 2"
-        + (", o 3" if len(opciones_texto) == 3 else "")
-        + ")."
+        + "\n\nResponde indicando el número (1 a " + str(idx_ninguna) + " según corresponda)."
     )
 
     return texto, opciones_texto, hipotesis_validas, QuestionIntent.DISCRIMINACION_TOP3

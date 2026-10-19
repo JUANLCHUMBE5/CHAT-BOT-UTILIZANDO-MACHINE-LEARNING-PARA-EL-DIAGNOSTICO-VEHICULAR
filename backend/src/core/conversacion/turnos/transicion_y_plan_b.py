@@ -247,6 +247,35 @@ async def transicion_y_plan_b(self, turno):
         turno.estado.registrar_respuesta(
             texto=turno.texto_limpio, interpretacion=f"{turno.cat_resp}:{turno.val_resp}"
         )
+        if turno.cat_resp == "OPCION_NINGUNA_COINCIDE":
+            turno.msg_ninguna = (
+                "Entendido: mantenemos las posibilidades abiertas sin descartar prematuramente. "
+                "¿Has observado algún síntoma adicional o realizado alguna comprobación que no hayamos considerado?"
+            )
+            turno.estado.registrar_pregunta(
+                QuestionIntent.GENERAL,
+                turno.msg_ninguna,
+                metadata={"case_id": turno.estado.case_id, "origen": "opcion_ninguna_coincide"},
+            )
+            turno.estado.establecer_pregunta_pendiente(
+                intent=QuestionIntent.GENERAL.value,
+                texto=turno.msg_ninguna,
+            )
+            await self.repositorio.save_session(turno.session_id, turno.estado)
+            return {
+                "status": "completado",
+                "respuesta_texto": turno.msg_ninguna,
+                "diagnostico_ml": turno.estado.falla_principal or "Reevaluación de síntomas",
+                "confianza_ml": turno.estado.confianza_actual,
+                "top3_actual": turno.estado.top3_actual,
+                "fase": turno.estado.fase.value,
+                "es_pregunta": True,
+                "decision": "PREGUNTAR",
+                "pregunta_final": turno.msg_ninguna,
+                "case_id": turno.estado.case_id,
+                "tiempo_ms": round((time.perf_counter() - turno.t0) * 1000, 2),
+                "estado": turno.estado,
+            }
         if turno.cat_resp == "OPCION_NUMERICA_PROVISIONAL":
             turno.hipotesis_elegida = str(turno.val_resp)
             turno.pregunta_comprobacion = f"Seleccionaste provisionalmente la opción {turno.interpretacion_corta['indice_opcion']} ({turno.hipotesis_elegida}). ¿Qué comprobación o medición objetiva has realizado para esa posibilidad y cuál fue el resultado? Si todavía no la revisaste, indícalo."
