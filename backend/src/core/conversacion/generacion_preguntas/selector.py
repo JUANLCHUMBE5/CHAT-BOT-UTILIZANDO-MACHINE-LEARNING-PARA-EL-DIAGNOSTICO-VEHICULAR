@@ -210,6 +210,13 @@ def seleccionar_pregunta_con_filtro(
             any(k in str(h.valor).lower() for k in ("vibra", "tiembla", "trepida", "zapate"))
             for h in estado.hechos.values()
         )
+        tiene_hidraulica = any(
+            k in mensajes_txt
+            for k in ("esponjoso", "se hunde", "al fondo", "blando", "fuga", "liquido", "líquido", "aire")
+        ) or any(
+            any(k in str(h.valor).lower() for k in ("esponjoso", "se hunde", "al fondo", "blando", "fuga", "liquido", "líquido", "aire"))
+            for h in estado.hechos.values()
+        )
         if tiene_vibracion and puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):
             candidatas.append((
                 "Al frenar, ¿la vibración se siente principalmente en el volante, en el pedal o en todo el vehículo?",
@@ -217,13 +224,28 @@ def seleccionar_pregunta_con_filtro(
                 QuestionIntent.PRESENCIA_RUIDO,
                 85,
             ))
-        if puede_preguntar(QuestionIntent.PLAN_B_SIN_HERRAMIENTAS, estado):
+        if tiene_hidraulica and puede_preguntar(QuestionIntent.COMPORTAMIENTO_MOTOR, estado):
             candidatas.append((
-                "Sin desmontar la rueda: al alumbra con una linterna a través del rin hacia el disco, ¿se observan surcos profundos al tacto o marcas azuladas de sobrecalentamiento?",
-                ["Surcos profundos / desgaste visible", "Disco liso y uniforme", "No logro ver bien"],
-                QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
-                80,
+                "Con el vehículo detenido y motor encendido: al bombear el pedal de freno varias veces consecutivas, ¿gana firmeza y altura o continúa hundiéndose?",
+                ["Gana firmeza y sube", "Continúa hundiéndose", "Permanece igual de esponjoso"],
+                QuestionIntent.COMPORTAMIENTO_MOTOR,
+                85,
             ))
+        if puede_preguntar(QuestionIntent.PLAN_B_SIN_HERRAMIENTAS, estado):
+            if tiene_hidraulica:
+                candidatas.append((
+                    "Sin herramientas: inspecciona el depósito del líquido de frenos con el capó abierto. ¿El nivel se encuentra por debajo del mínimo o notas humedad/goteo alrededor del cilindro maestro?",
+                    ["Nivel bajo / goteo visible", "Nivel normal entre MIN y MAX", "No logro ver el depósito"],
+                    QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+                    80,
+                ))
+            else:
+                candidatas.append((
+                    "Sin desmontar la rueda: al alumbra con una linterna a través del rin hacia el disco, ¿se observan surcos profundos al tacto o marcas oscuras de fricción?",
+                    ["Surcos profundos / desgaste visible", "Disco liso y uniforme", "No logro ver bien"],
+                    QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+                    80,
+                ))
     elif dominio == "SUSPENSION":
         condicion_activa = estado.obtener_valor_confirmado("condicion_operacion") or ""
         if ("bache" in condicion_activa or "irregular" in condicion_activa) and puede_preguntar(QuestionIntent.PRESENCIA_RUIDO, estado):

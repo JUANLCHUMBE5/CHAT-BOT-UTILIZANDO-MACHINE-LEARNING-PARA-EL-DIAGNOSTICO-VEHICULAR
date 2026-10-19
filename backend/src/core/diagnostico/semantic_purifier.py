@@ -58,14 +58,20 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         )
 
     # 2. Descarte de freno en vibraciones de velocidad (Balanceo / Alineación de ruedas)
-    # Detección exhaustiva de negaciones en frenado
-    niega_freno = bool(re.search(
+    # y manejo riguroso de negaciones mecánicas (sin vibración / sin pulsaciones)
+    niega_vibracion_frenado = bool(re.search(
+        r"\b(?:no\s+(?:presenta|siento|se\s+siente|tiene|hay|muestra|percibo)?\s*(?:vibraci[oó]n|vibraciones|pulsaci[oó]n|pulsaciones|temblor|zapateo))\b|"
+        r"\b(?:sin\s+(?:vibraci[oó]n|vibraciones|pulsaci[oó]n|pulsaciones|temblor|zapateo))\b",
+        limpio
+    ))
+
+    # Vibración en marcha cuando NO se pisa el freno (problema de balanceo/alineación)
+    niega_freno_marcha = bool(re.search(
         r"\b(?:al\s+(?:pisar\s+(?:el\s+)?)?fren(?:o|ar)|frenando)\s+no\s+(?:vibra|tiembla|se\s+siente|hace\s+nada|pasa\s+nada|en\s+absoluto)\b|"
         r"\bno\s+(?:vibra|tiembla|se\s+siente)\s+al\s+(?:pisar\s+(?:el\s+)?)?fren(?:o|ar)\b|"
         r"\b(?:sin\s+pisar\s+(?:el\s+)?freno\s+vibra|vibra\s+sin\s+frenar|tiembla\s+sin\s+frenar|frenos\s+descartados|frenos\s+no\s+son)\b",
         limpio
-    ))
-    niega_freno = niega_freno or bool(
+    )) or bool(
         re.search(
             r"\bsin\s+(?:tocar|pisar|apretar)\s+(?:(?:el|los)\s+)?(?:pedal\s+de\s+)?freno\b",
             limpio,
@@ -73,20 +79,32 @@ def purificar_sintoma_para_vectorizador_ml(texto: str) -> str:
         and re.search(r"\b(?:vibra|tiembla|vibraci[oó]n)\b", limpio)
     )
 
-    afirma_freno = not niega_freno and any(
-        p in limpio for p in (
-            "vibra al frenar", "tiembla al frenar", "al frenar vibra", "cuando frena vibra",
-            "cuando freno vibra", "al pisar el pedal de freno", "al pisar el freno", "cuando frena",
-            "al frenar", "apenas piso el freno", "pedal tiembla", "patea el pie", "pedal me patea"
+    # El conductor reporta vibración real inducida por frenado
+    afirma_vibracion_frenado = not niega_vibracion_frenado and not niega_freno_marcha and (
+        any(
+            p in limpio for p in (
+                "vibra al frenar", "tiembla al frenar", "al frenar vibra", "cuando frena vibra",
+                "cuando freno vibra", "pedal tiembla", "patea el pie", "pedal me patea",
+                "vibracion al frenar", "vibración al frenar", "zapateo al frenar", "trepida al frenar",
+                "pulsaciones al frenar"
+            )
+        )
+        or (
+            bool(re.search(r"\b(?:cuando\s+fren[ao]|al\s+frenar)\b", limpio))
+            and bool(re.search(r"\b(?:vibra|vibraci[oó]n|tiembla)\b", limpio))
         )
     )
 
-    if niega_freno:
+    if niega_freno_marcha:
         texto_filtrado = re.sub(r"\bfren(?:o|os|ar|ada)\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado = re.sub(r"\bdisco(?:s)?\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado = re.sub(r"\bpastilla(?:s)?\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado += " vibracion en marcha a velocidad constante"
-    elif afirma_freno and any(f in limpio for f in ("freno", "frenar", "pedal")):
+    elif niega_vibracion_frenado:
+        # El mecánico niega expresamente vibraciones/pulsaciones: eliminar tokens que sesgan a discos alabeados
+        texto_filtrado = re.sub(r"\b(?:no\s+(?:presenta|siento|se\s+siente|tiene|hay|muestra|percibo)?\s*)?(?:vibraci[oó]n|vibraciones|pulsaci[oó]n|pulsaciones|temblor|zapateo)\b", " ", texto_filtrado, flags=re.IGNORECASE)
+        texto_filtrado = re.sub(r"\b(?:no\s+he\s+revisado\s+los\s+)?disco(?:s)?\b", " ", texto_filtrado, flags=re.IGNORECASE)
+    elif afirma_vibracion_frenado and any(f in limpio for f in ("freno", "frenar", "pedal")):
         texto_filtrado = re.sub(r"\bresto\s+del\s+veh[ií]culo\s+no\s+vibra\b", " ", texto_filtrado, flags=re.IGNORECASE)
         texto_filtrado += " vibracion al frenar pedal de freno volante al frenar alabeo de disco"
 

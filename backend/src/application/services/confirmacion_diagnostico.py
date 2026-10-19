@@ -118,14 +118,14 @@ def instrucciones_confirmacion_whatsapp(cantidad_hipotesis: int = 3) -> str:
     
     Adapta las opciones numéricas a la cantidad de hipótesis realmente visibles:
     - 1 hipótesis: '¿Fue correcta? *SÍ / NO*' (sin opciones numéricas).
-    - 2 hipótesis: '¿Fue correcta? *SÍ / NO* (1/2)'
-    - 3 hipótesis: '¿Fue correcta? *SÍ / NO* (1/2/3)'
+    - 2 hipótesis: '¿Fue correcta? *SÍ / NO* (1/2) | Opciones: *1 / 2 / NINGUNA / NO SÉ*'
+    - 3 hipótesis: '¿Fue correcta? *SÍ / NO* (1/2/3) | Opciones: *1 / 2 / 3 / NINGUNA / NO SÉ*'
     """
     if cantidad_hipotesis <= 1:
-        return "\n\n🔎 ¿Fue correcta? *SÍ / NO*"
+        return "\n\n🔍 ¿Fue correcta? *SÍ / NO*"
     if cantidad_hipotesis == 2:
-        return "\n\n🔎 ¿Fue correcta? *SÍ / NO* (1/2)"
-    return "\n\n🔎 ¿Fue correcta? *SÍ / NO* (1/2/3)"
+        return "\n\n🔍 ¿Fue correcta? *SÍ / NO* (1/2) | Opciones: *1 / 2 / NINGUNA / NO SÉ*"
+    return "\n\n🔍 ¿Fue correcta? *SÍ / NO* (1/2/3) | Opciones: *1 / 2 / 3 / NINGUNA / NO SÉ*"
 
 
 @dataclass
@@ -162,11 +162,19 @@ def interpretar_seleccion_top3(
     if not t:
         return None
 
-    # "no sé" jamás equivale a NO/descarte.
-    if re.search(r"\b(no se|nose|no estoy seguro|no estoy segura)\b", t):
+    # "ninguna" descarta provisionalmente las opciones presentadas
+    if re.fullmatch(r"(?:ninguna|ninguno|ninguna de las anteriores|ninguna opcion|ninguna alternativa)", t):
         return SeleccionHipotesisTop3(
-            accion="AMBIGUO",
-            metodo="ambiguedad",
+            accion="NINGUNA",
+            metodo="ninguna",
+            texto_referencia=texto,
+        )
+
+    # "no sé" o incertidumbre técnica jamás equivale a NO/descarte físico.
+    if re.search(r"\b(no se|nose|no estoy seguro|no estoy segura|sin verificar|aun no se|todavia no se)\b", t):
+        return SeleccionHipotesisTop3(
+            accion="NO_SE",
+            metodo="incertidumbre",
             texto_referencia=texto,
         )
 
