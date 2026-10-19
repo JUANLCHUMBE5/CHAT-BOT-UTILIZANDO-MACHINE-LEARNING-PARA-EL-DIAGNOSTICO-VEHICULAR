@@ -10,6 +10,11 @@ from src.core.conversacion.respuestas_cortas.seguimiento_mediciones import evalu
 
 
 async def respuestas_cortas(self, turno):
+    if not turno.interpretacion_corta and turno.estado.preguntas_realizadas:
+        gestor_plan_b = _importar("src.core.conversacion.gestor_plan_b").GestorPlanB
+        if gestor_plan_b.detectar_indisponibilidad_en_texto(turno.texto_limpio):
+            interprete = _importar("src.core.conversacion.interprete_respuestas_cortas").InterpreteRespuestasCortas
+            turno.interpretacion_corta = interprete.interpretar(turno.estado, turno.texto_limpio)
     if turno.interpretacion_corta and (
         turno.estado.preguntas_realizadas
         or turno.interpretacion_corta.get("categoria_respuesta")
@@ -203,7 +208,7 @@ async def respuestas_cortas(self, turno):
                         "Prueba de chispa ya completada: evitando repetición de la comprobación"
                     )
             else:
-                turno.pregunta_elegida = "Con el multímetro en tensión continua y un rango adecuado al circuito: ¿cuánto marca en reposo y a cuánto baja al dar arranque?"
+                turno.pregunta_elegida = "¿Qué voltaje (V) registras en reposo y cuánto cae durante el arranque? Indica el punto de medición."
                 turno.intent_elegido, turno.decision = (QuestionIntent.MEDICION_VOLTAJE.value, "PREGUNTAR")
                 turno.motivo_decision = "Usuario cuenta con multímetro: solicitando lectura de voltaje"
                 turno.estado.establecer_pregunta_pendiente(

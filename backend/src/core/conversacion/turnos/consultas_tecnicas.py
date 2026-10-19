@@ -129,7 +129,12 @@ async def consultas_tecnicas(self, turno):
         "\\bpurgo\\b.{0,40}\\b(?:mangueras?|reductor|gas|gnv)\\b|\\b(?:mangueras?|reductor|gas|gnv)\\b.{0,40}\\bpurgo\\b|\\bpurga\\s+(?:de\\s+)?(?:las\\s+)?mangueras\\s+de\\s+agua\\s+del\\s+reductor\\b",
         turno.norm_txt_cons,
     ):
-        turno.resp_purga_gnv = "🔧 *Procedimiento de purga de calefacción del reductor de gas GNV:*\n\nPara evitar que el **reductor** se congele por falta de circulación o bolsas de aire en el circuito de refrigerante:\n1. **Conexión en circuito:** Verificar que las **mangueras** de agua del reductor provengan de la calefacción de cabina con abrazaderas bien ajustadas.\n2. **Procedimiento de purga:** Con el motor frío y apagado, afloja la abrazadera de la manguera de retorno del reductor (la más alta). Rellena refrigerante en el radiador o depósito hasta que se complete la **purga** con un chorro continuo de refrigerante sin burbujas por la conexión.\n3. **Conexión y apriete:** Reconecta de inmediato la manguera y aprieta la abrazadera.\n4. **Encendido:** Enciende el motor hasta que alcance temperatura de régimen (85-90 °C) y confirma que ambas mangueras del reductor se sientan calientes al tacto."
+        turno.resp_purga_gnv = (
+            "No puedo indicar una purga genérica del reductor GNV sin el procedimiento OEM de esta variante. "
+            "No aflojes mangueras ni abras el circuito de refrigeración; no arranques el motor para probarlo. "
+            "Solicita la comprobación a un técnico de GNV con el manual aplicable y registra cualquier fuga "
+            "o pérdida de refrigerante sin intervenir."
+        )
         if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
             turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
         turno.estado.turno_actual += 1

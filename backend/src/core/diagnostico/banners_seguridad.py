@@ -62,15 +62,10 @@ BANNER_DIESEL_EMBALAMIENTO = (
 
 BANNER_DIESEL_ALTA_PRESION = (
     "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO DE INYECCIÓN DE COMBUSTIBLE A ALTA PRESIÓN**\n\n"
-    "⚠️ **PROHIBICIÓN ESTRICTA: NUNCA intente buscar, tocar, palpar ni comprobar fugas con las manos, dedos, piel ni trapos mientras el sistema de combustible esté o pueda estar presurizado.**\n\n"
-    "1. **Riesgo Vital y Mecanismo de Lesión:**\n"
-    "Los sistemas Common Rail operan a presiones extremas de 1,000 a más de 2,200 bar (y presiones residuales de hasta 1600 bar). Un orificio diminuto o chorro fino microscópico de combustible a esta presión **atraviesa la piel y los guantes de trabajo instantáneamente**, penetrando profundamente en los tejidos musculares y torrente sanguíneo. Aunque la herida de entrada inicial parezca un pinchazo minúsculo, indoloro o insignificante, el combustible provoca toxicidad química inmediata, trombosis vascular, gangrena y necrosis masiva de tejidos, con alto riesgo de **amputación del miembro o muerte por sepsis**.\n\n"
-    "2. **Procedimiento Seguro de Inspección:**\n"
-    "• **Detenga inmediatamente el motor** y corte el contacto.\n"
-    "• **Espere el tiempo de despresurización** especificado por el fabricante OEM antes de aproximarse al vano motor.\n"
-    "• No busques fugas con manos, dedos ni trapos. Para localizar el origen de una fuga con motor apagado y despresurizado, utilice **únicamente una pantalla protectora de cartón grueso o papel**, manteniéndola a distancia segura con pinzas o soporte largo para observar si se mancha con el rocío de combustible. Utilice siempre gafas de seguridad y protección facial completa.\n\n"
-    "3. **Protocolo Médico de Emergencia Obligatorio:**\n"
-    "Si sospecha que combustible a alta presión ha entrado en contacto con su piel o ha penetrado en cualquier parte de su cuerpo, **ACUDA DE INMEDIATO A UN SERVICIO HOSPITALARIO DE URGENCIAS**. Advierta de inmediato al personal médico tratante que se trata de un accidente por **inyección subcutánea de hidrocarburo a alta presión**, el cual requiere evaluación quirúrgica urgente para desbridamiento y descompresión, independientemente de la aparente levedad del orificio externo.\n\n"
+    "⚠️ **PROHIBICIÓN ESTRICTA: No aflojes racores ni tuberías. No busques fugas ni intentes comprobarlas.** "
+    "Aléjate del sistema; no intentes localizar la fuga.\n\n"
+    "Si el motor está funcionando, apágalo únicamente si puedes hacerlo desde un lugar seguro, sin acercarte al vano motor. Aléjate y solicita asistencia de personal capacitado para revisar el sistema según el procedimiento del fabricante.\n\n"
+    "Si combustible pudo penetrar la piel, busca atención médica de emergencia de inmediato, aunque la lesión parezca pequeña.\n\n"
 )
 
 BANNER_BLOQUEO_REGENERACION_DILUCION = (

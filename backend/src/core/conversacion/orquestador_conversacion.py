@@ -19,7 +19,7 @@ from src.core.conversacion.turnos.respuestas_cortas import respuestas_cortas
 from src.core.conversacion.turnos.transicion_y_plan_b import transicion_y_plan_b
 from src.infrastructure.rag.contrato_documental import proteger_salida_conversacional
 from src.infrastructure.rag.documental_evidencia import mediciones_con_procedencia
-from src.infrastructure.rag.documental_salida import es_solicitud_especificacion
+from src.infrastructure.rag.documental_salida import es_solicitud_especificacion, normalizar
 
 
 class OrquestadorConversacion:
@@ -100,6 +100,33 @@ class OrquestadorConversacion:
             remitente=remitente,
         )
         estado = res.get("estado")
+        if estado is not None and res.get("decision") != "SEGURIDAD_CRITICA":
+            from src.core.conversacion.plan_b.catalogo import CATALOGO_HERRAMIENTAS
+
+            respuesta_norm = normalizar(str(res.get("respuesta_texto", "")))
+            herramientas_pedidas_de_nuevo = []
+            for clave in getattr(estado, "herramientas_no_disponibles", []):
+                # La categoría general incluye "equipo" y "herramientas", términos
+                # comunes en cualquier derivación y no equivalentes a la herramienta concreta.
+                if clave == "general":
+                    continue
+                herramienta = CATALOGO_HERRAMIENTAS.get(clave)
+                terminos = getattr(herramienta, "terminos", ()) if herramienta else (clave,)
+                if any(normalizar(termino) in respuesta_norm for termino in terminos):
+                    herramientas_pedidas_de_nuevo.append(
+                        getattr(herramienta, "nombre_canonico", clave)
+                    )
+            if herramientas_pedidas_de_nuevo:
+                lista = ", ".join(dict.fromkeys(herramientas_pedidas_de_nuevo))
+                res.update(
+                    respuesta_texto=(
+                        f"Anotado: no dispones de {lista}. No repetiré esa medición ni la daré por realizada. "
+                        "Mantengo el caso pendiente; solicita la comprobación en un taller equipado antes de intervenir."
+                    ),
+                    decision="PLAN_B",
+                    status="plan_b_herramienta_no_disponible",
+                    es_pregunta=False,
+                )
         # Defensa final frente a retornos anticipados: la respuesta de peligro
         # es autoritativa; jamás se agrega a una instrucción contradictoria.
         from src.core.diagnostico.politica_seguridad import PoliticaSeguridad, SeveridadSeguridad
@@ -115,6 +142,16 @@ class OrquestadorConversacion:
         if estado is not None:
             res.setdefault("case_id", estado.case_id)
         veh_str = f"{getattr(estado, 'marca', '') or ''} {getattr(estado, 'modelo', '') or ''} {getattr(estado, 'anio', '') or ''}".strip()
+        correccion_vehicular_actual = (
+            estado is not None
+            and getattr(estado, "turno_ultima_correccion", None) == getattr(estado, "turno_actual", None)
+            and getattr(estado, "last_user_correction", None) in ("marca", "modelo", "anio")
+        )
+        if correccion_vehicular_actual and veh_str and veh_str not in res.get("respuesta_texto", ""):
+            res["respuesta_texto"] = (
+                f"Entendido, actualicé el vehículo a *{veh_str}*. Conservo los síntomas y mediciones reportados.\n\n"
+                + res.get("respuesta_texto", "")
+            )
         if res.get("decision") == "SEGURIDAD_CRITICA" and veh_str:
             res["respuesta_texto"] = f"Vehículo: {veh_str}.\n" + res["respuesta_texto"]
         elif (

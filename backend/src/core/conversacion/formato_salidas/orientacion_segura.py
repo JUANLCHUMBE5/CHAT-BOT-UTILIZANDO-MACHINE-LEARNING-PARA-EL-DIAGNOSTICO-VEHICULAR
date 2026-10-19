@@ -18,11 +18,42 @@ def orientar_sin_manual(consulta: str) -> str:
             "Registra el recorrido observado, la superficie medida y el estado de apoyo. "
             "No deduzcas rectificado ni reemplazo de una referencia genérica."
         )
+    elif any(p in texto for p in ("contrapresion", "manometro", "escape")):
+        orientacion = (
+            "La medicion de contrapresion de escape requiere el adaptador, punto de toma y procedimiento "
+            "del fabricante. No indico umbrales sin respaldo para esta variante. Solicita la comprobacion "
+            "a personal capacitado y evita tocar o desmontar componentes calientes."
+        )
+    elif any(p in texto for p in ("actuador", "solenoide", "turbo")):
+        orientacion = (
+            "No fuerces ni ajustes el actuador del turbo. Con el motor apagado y frio, limita la revision "
+            "a observar desde fuera mangueras y conectores accesibles, sin desmontar. La prueba funcional "
+            "requiere equipo y procedimiento OEM aplicables, ejecutados por personal capacitado."
+        )
+    elif any(p in texto for p in ("termostato", "electroventilador", "ventilador")):
+        orientacion = (
+            "Diferencia termostato y electroventilador con lectura de temperatura y activacion conforme "
+            "al procedimiento OEM, sin asumir un umbral universal. No acerques las manos al ventilador ni "
+            "abras el circuito de refrigeracion caliente; solicita la prueba en taller si no tienes equipo."
+        )
+    elif any(p in texto for p in ("culata", "torque", "apriete")):
+        orientacion = (
+            "No aflojes ni aprietes la culata con una secuencia generica. La secuencia, etapas y "
+            "herramienta dependen del motor exacto; confirmalas en el manual de servicio aplicable antes "
+            "de intervenir."
+        )
+    elif any(p in texto for p in ("refrigerante", "anticongelante", "agua de cano", "agua de caño")):
+        orientacion = (
+            "No mezcles refrigerante concentrado ni agua de cano sin confirmar el producto y la proporcion "
+            "exigidos para esta variante. Contrasta la etiqueta y el manual aplicable; nunca abras el "
+            "deposito cuando el sistema este caliente o presurizado."
+        )
     elif any(p in texto for p in ("inyector", "common rail", "combustible", "retorno")):
         orientacion = (
-            "Registra síntomas y lecturas de combustible disponibles. No abras ni aflojes circuitos "
-            "presurizados con el motor funcionando; una prueba de retorno requiere el kit, "
-            "condiciones y procedimiento aplicables, ejecutados por personal capacitado."
+            "Una prueba de retorno de inyectores con probetas requiere el kit, las condiciones y el "
+            "procedimiento aplicables, ejecutados por personal capacitado. No abras ni aflojes circuitos "
+            "presurizados con el motor funcionando. Registra sintomas y lecturas disponibles sin "
+            "interpretarlas como una tolerancia OEM."
         )
     elif any(p in texto for p in ("multimetro", "consumo", "electrico", "incandescente")):
         orientacion = (

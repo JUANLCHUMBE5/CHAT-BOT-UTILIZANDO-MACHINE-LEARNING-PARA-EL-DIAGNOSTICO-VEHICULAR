@@ -47,7 +47,6 @@ async def evidencia(self, turno):
     turno.tiene_caso_activo = bool(
         turno.estado.top3_actual
         or getattr(turno.estado, "falla_principal", None)
-        or turno.estado.hechos
         or turno.estado.active_symptoms
     )
     turno.es_consulta_tecnica_pura = (

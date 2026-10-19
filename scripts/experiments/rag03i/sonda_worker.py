@@ -81,7 +81,7 @@ async def main():
             for text in turns:
                 msg = "audit_h_" + uuid.uuid4().hex
                 http = await helpers._send(
-                    client, msg, "5199000000", "E2E_PHONE_A", text
+                    client, msg, "51980000001", "E2E_PHONE_A", text
                 )
                 row = await db.fetchrow(
                     "select id from trabajos_sistema where clave_idempotencia=$1",

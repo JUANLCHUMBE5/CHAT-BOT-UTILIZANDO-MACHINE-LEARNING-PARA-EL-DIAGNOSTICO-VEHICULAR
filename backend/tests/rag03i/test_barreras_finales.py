@@ -1,5 +1,7 @@
 """Regresiones públicas de remediación; no constituyen un holdout independiente."""
 
+from copy import deepcopy
+
 import pytest
 
 from src.core.conversacion.gestor_plan_b import GestorPlanB
@@ -75,6 +77,24 @@ async def test_emergencia_termica_antes_de_memoria_y_cierre(prefijo):
 
 
 @pytest.mark.anyio
+async def test_common_rail_bloquea_sin_indicar_metodo_de_busqueda():
+    orq = OrquestadorConversacion(InMemoryConversationRepository())
+    r = await orq.procesar_turno(
+        "common-rail", "Toyota Hilux diésel. Voy a aflojar racores con el motor en marcha.",
+        GestorDiagnostico(),
+    )
+    texto = r["respuesta_texto"].casefold()
+    assert r["decision"] == "SEGURIDAD_CRITICA"
+    assert "no aflojes racores" in texto
+    assert "personal capacitado" in texto
+    prohibidos = [p for p in ("cartón", "papel", "pinzas", "guantes") if p in texto]
+    assert not prohibidos, f"Método inseguro {prohibidos}: {texto}"
+    import re
+
+    assert re.search(r"\b\d+(?:[.,]\d+)?\s*bar\b", texto) is None
+
+
+@pytest.mark.anyio
 async def test_fallback_no_publica_tolerancias_genericas():
     o = OrquestadorConversacion(InMemoryConversationRepository())
     g = GestorDiagnostico()
@@ -99,6 +119,38 @@ async def test_cierre_no_inventa_sintomas():
     o = OrquestadorConversacion(repo)
     await o.procesar_turno("cierre", "Gracias maestro", GestorDiagnostico())
     assert not (await repo.get_session("cierre")).active_symptoms
+
+
+@pytest.mark.anyio
+async def test_consulta_oem_despues_del_cierre_no_se_convierte_en_sintoma():
+    o = OrquestadorConversacion(InMemoryConversationRepository())
+    g = GestorDiagnostico()
+    await o.procesar_turno("cierre-oem", "Gracias por la ayuda amigo", g)
+    r = await o.procesar_turno(
+        "cierre-oem", "¿Qué viscosidad de aceite recomienda Toyota Yaris 2018?", g
+    )
+    assert "¿El problema aparece" not in r["respuesta_texto"]
+    assert "documentación OEM validada" in r["respuesta_texto"]
+    assert "corpus_validado=False" in r["respuesta_texto"]
+
+
+@pytest.mark.anyio
+async def test_correccion_vehicular_confirma_modelo_actualizado():
+    repo = InMemoryConversationRepository()
+    o = OrquestadorConversacion(repo)
+    g = GestorDiagnostico()
+    await o.procesar_turno("correccion-auto", "Toyota Yaris 2017 tiene vibración al frenar", g)
+    r = await o.procesar_turno(
+        "correccion-auto", "No es Toyota, me equivoqué de ficha: es un Nissan Sentra 2017", g
+    )
+    assert r["estado"].marca == "Nissan"
+    assert "Sentra" in r["estado"].modelo
+    assert "2017" in r["estado"].anio
+    assert "Nissan Sentra 2017" in r["respuesta_texto"], (
+        r["estado"].last_user_correction, r["estado"].turno_ultima_correccion,
+        r["estado"].turno_actual, r["respuesta_texto"],
+    )
+    assert any("vibración al frenar" in s for s in r["estado"].active_symptoms)
 
 
 def test_persistencia_preserva_sintoma_literal_y_condicion():
@@ -149,6 +201,27 @@ async def test_vibracion_de_frenado_no_se_cierra_como_desbalanceo(texto):
     assert "balanceo dinámico" not in r["respuesta_texto"]
 
 
+@pytest.mark.anyio
+async def test_sin_reloj_comparador_no_repite_medicion_inviable():
+    from src.core.conversacion.interprete_respuestas_cortas import InterpreteRespuestasCortas
+
+    o = OrquestadorConversacion(InMemoryConversationRepository())
+    g = GestorDiagnostico()
+    inicial = await o.procesar_turno("sin-comparador", "Nissan Sentra 2016 tiembla al frenar", g)
+    texto = "No tengo reloj comparador para medir el alabeo"
+    interp = InterpreteRespuestasCortas.interpretar(deepcopy(inicial["estado"]), texto)
+    assert interp and interp["categoria_respuesta"] == "HERRAMIENTA_INDISPONIBLE", interp
+    r = await o.procesar_turno(
+        "sin-comparador", texto, g
+    )
+    assert "reloj_comparador" in r["estado"].herramientas_no_disponibles
+    assert "puedes registrar alabeo con reloj comparador" not in r["respuesta_texto"].lower(), (
+        r["decision"], r["status"], r["estado"].herramientas_no_disponibles,
+        r["estado"].preguntas_realizadas[-2:],
+    )
+    assert "inspección" in r["respuesta_texto"].lower() or "taller" in r["respuesta_texto"].lower()
+
+
 def test_procedimiento_legacy_tambien_se_abstiene():
     from src.core.conversacion.orquestador.consultas_tecnicas import ManejadorConsultasTecnicas
     texto = ManejadorConsultasTecnicas._obtener_procedimiento_respaldo("torque de culata paso a paso")
@@ -189,6 +262,16 @@ async def test_plan_b_turbo_no_deriva_a_frenos():
     r = await o.procesar_turno("vacio", "No tengo bomba de vacío manual", g)
     assert "turbo" in r["respuesta_texto"] and "mangueras" in r["respuesta_texto"]
     assert "disco" not in r["respuesta_texto"] and "freno" not in r["respuesta_texto"]
+
+
+@pytest.mark.anyio
+async def test_purga_gnv_sin_manual_no_indica_aflojar_mangueras_ni_arrancar():
+    o = OrquestadorConversacion(InMemoryConversationRepository())
+    r = await o.procesar_turno("purga-gnv", "Cómo purgo las mangueras del reductor GNV", GestorDiagnostico())
+    texto = r["respuesta_texto"].lower()
+    assert "no puedo indicar" in texto and "manual" in texto
+    assert "no aflojes mangueras" in texto and "no arranques el motor" in texto
+    assert "85-90" not in texto and "chorro continuo" not in texto
 
 
 def test_no_escaneado_no_significa_sin_codigos():
