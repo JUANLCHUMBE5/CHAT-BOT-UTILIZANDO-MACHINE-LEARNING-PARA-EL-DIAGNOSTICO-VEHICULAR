@@ -170,12 +170,18 @@ async def consultas_basicas(self, turno):
         "\\b(?:esc[aá]ner|scanner)\\s+no\\s+(?:entra|comunica|conecta)\\b.{0,40}\\b(?:computadora|ecu)\\b|\\bno\\s+comunica\\s+con\\s+la\\s+(?:computadora|ecu)\\b",
         turno.norm_txt_cons,
     ):
-        turno.resp_comunicacion_ecu = "🔌 *Falla de comunicación con la ECU (puerto OBD-II):*\n\nAntes de asumir daño interno en la ECU, realiza las siguientes comprobaciones de alimentación:\n1. **Fusible:** Verificar el **fusible** de alimentación del conector OBD-II (pin 16, +12V constante) y el fusible principal de la ECU (EFI/ECM).\n2. **Alimentación y masas:** Comprobar con multímetro la **alimentación** (+12V bajo switch) y pines de masa del chasis y señal (pines 4 y 5 del conector).\n3. **Red CAN:** Medir resistencia de terminación en pines 6 (CAN-H) y 14 (CAN-L); debe marcar ~60 Ω con batería desconectada."
+        turno.resp_comunicacion_ecu = (
+            "El escáner no comunica con la ECU. Verifica únicamente que el fusible identificado en la leyenda "
+            "del vehículo y el cable/conector del escáner no presenten daño visible; no puentes fusibles ni "
+            "apliques tensión a pines. Si persiste, solicita a personal capacitado comprobar alimentación, "
+            "masas y red de comunicación con el diagrama OEM de esta variante. No atribuyas daño a la ECU "
+            "sin pruebas documentadas."
+        )
         return {
             "status": "orientacion_comunicacion_ecu",
             "respuesta_texto": turno.resp_comunicacion_ecu,
             "diagnostico_ml": "Falla de alimentación/comunicación ECU",
-            "confianza_ml": 0.95,
+            "confianza_ml": 0.0,
             "fase": turno.estado.fase.value,
             "es_pregunta": False,
             "decision": "ORIENTACION_TECNICA",

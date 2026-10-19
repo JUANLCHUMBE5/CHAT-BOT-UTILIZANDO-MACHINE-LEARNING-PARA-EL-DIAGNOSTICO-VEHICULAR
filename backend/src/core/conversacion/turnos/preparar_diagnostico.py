@@ -98,7 +98,7 @@ async def preparar_diagnostico(self, turno):
         r"\bstft\b.{0,30}(?:\+?22%|\+?20%).{0,50}(?:2500|acelero).{0,30}(?:\+?4%|\+?[0-5]%)|\b(?:ralent[ií]\s+el\s+stft|stft\s+en\s+ralent[ií])\b.{0,40}\+?22%",
         turno.norm_txt_cons,
     ):
-        turno.resp_e14 = 'La variación de STFT reportada entre ralentí y aceleración orienta a una posible entrada de aire no medido, sin confirmar una fuga. Considera también sensores y alimentación de combustible. Conserva las lecturas originales y comprueba admisión con equipo y procedimiento adecuados.'
+        turno.resp_e14 = 'La variación de STFT reportada entre ralentí y aceleración puede orientar a una posible fuga en líneas de vacío o entrada de aire no medido, sin confirmarla. Considera también sensores y alimentación de combustible. Conserva las lecturas originales y comprueba la admisión con equipo y procedimiento adecuados.'
         return {
             "status": "completado",
             "respuesta_texto": turno.resp_e14,
@@ -115,7 +115,7 @@ async def preparar_diagnostico(self, turno):
         r"\bcero\s+c[oó]digos\s+(?:de\s+falla\s+)?en\s+la\s+ecu\b|\bescaneo\s+(?:est[aá]\s+)?completamente\s+limpio\b|\bsin\s+c[oó]digos?\s+de\s+falla\b",
         turno.norm_txt_cons,
     ):
-        turno.resp_e16 = 'La ausencia de códigos DTC no descarta fallas eléctricas, de sensores ni mecánicas. Ante tironeo bajo carga considera alimentación de combustible, encendido y admisión como hipótesis. ¿Qué comprobación de combustible o encendido se ha realizado y con qué resultado?'
+        turno.resp_e16 = 'La ausencia de códigos DTC no descarta fallas eléctricas, de sensores ni mecánicas. Ante tironeo bajo carga considera alimentación, presión de combustible, encendido y admisión como hipótesis; no las doy por confirmadas. ¿Qué comprobación se ha realizado y con qué resultado?'
         return {
             "status": "completado",
             "respuesta_texto": turno.resp_e16,

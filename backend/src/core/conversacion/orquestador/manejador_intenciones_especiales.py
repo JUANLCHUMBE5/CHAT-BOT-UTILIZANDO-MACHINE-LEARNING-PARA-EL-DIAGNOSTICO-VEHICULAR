@@ -482,19 +482,16 @@ class ManejadorIntencionesEspeciales:
             r"\b(?:tolerancia|alabeo\s+m[aá]ximo|especificaci[oó]n|temperatura\s+(?:debe\s+abrir|de\s+apertura))\b",
             norm_txt_cons,
         ):
-            corpus_val = bool(
-                getattr(getattr(gestor_diagnostico, "motor_rag", None), "corpus_validado", False)
-            )
-            resp_tol = cls._obtener_tolerancia_oem(norm_txt_cons, corpus_val=corpus_val)
+            resp_tol = cls._obtener_tolerancia_oem(norm_txt_cons)
             if resp_tol:
                 return {
-                    "status": "tolerancia_oem" if corpus_val else "tolerancia_referencial",
+                    "status": "tolerancia_no_validada",
                     "respuesta_texto": resp_tol,
-                    "diagnostico_ml": estado.falla_principal or "Tolerancia referencial de taller",
+                    "diagnostico_ml": estado.falla_principal or "Tolerancia OEM pendiente de documentación",
                     "confianza_ml": float(estado.confianza_actual or 0.0),
                     "fase": estado.fase.value,
                     "es_pregunta": False,
-                    "decision": "TOLERANCIA_OEM" if corpus_val else "ABSTENCION_OEM_TOLERANCIA",
+                    "decision": "ABSTENCION_OEM_TOLERANCIA",
                     "tiempo_ms": round((time.perf_counter() - t0) * 1000, 2),
                     "estado": estado,
                 }
@@ -634,42 +631,13 @@ class ManejadorIntencionesEspeciales:
         return None
 
     @classmethod
-    @classmethod
-    def _obtener_tolerancia_oem(cls, norm_txt: str, corpus_val: bool = False) -> Optional[str]:
-        encabezado = (
-            "🔬 *Especificación metrológica y tolerancia OEM:*\n\n"
-            if corpus_val
-            else "🔬 *Referencia metrológica y estándar de taller (Sin validación OEM para esta variante):*\n\n"
-            "⚠️ *Nota documental:* El corpus no cuenta con manual de servicio OEM validado para esta unidad. Como valor técnico referencial estándar de taller:\n"
-        )
-        prefijo_fuente = (
-            "Según el manual de servicio del fabricante, "
-            if corpus_val
-            else "En la práctica automotriz general, "
-        )
-        if any(w in norm_txt for w in ("termostato", "abrir", "temperatura")):
-            return (
-                f"{encabezado}"
-                f"{prefijo_fuente}la temperatura de inicio de apertura del termostato "
-                "se sitúa entre 82 °C y 88 °C, alcanzando su carrera de apertura total a los 95 °C - 98 °C "
-                "(elevación mínima de la válvula de 8 mm). Si a 108 °C la manguera inferior permanece fría, "
-                "el termostato está trabado cerrado."
-            )
-        if any(w in norm_txt for w in ("volante", "inercia", "embrague")):
-            return (
-                f"{encabezado}"
-                f"El alabeo o salto axial máximo admisible para el volante de inercia según tolerancia estándar es de 0.10 mm. "
-                "Cualquier lectura superior a 0.10 mm o presencia de fisuras y sobrecalentamiento térmico azulado "
-                "exige rectificado de la pista de fricción o reemplazo del volante."
-            )
-        if any(w in norm_txt for w in ("disco", "freno", "alabeo")):
-            return (
-                f"{encabezado}"
-                f"La tolerancia máxima de alabeo lateral en discos de freno instalados típicamente es de 0.05 mm a 0.07 mm. "
-                "Una medición de 0.12 mm excede significativamente el límite de servicio y provocará pulsación "
-                "en el pedal y vibración en el timón a alta velocidad; requiere rectificado o cambio de discos."
-            )
-        return None
+    def _obtener_tolerancia_oem(
+        cls, norm_txt: str, corpus_val: bool = False
+    ) -> Optional[str]:
+        """No inventa límites: este manejador no recibe citas/documentos recuperados."""
+        from ..formato_salidas.orientacion_segura import orientar_sin_manual
+
+        return orientar_sin_manual(norm_txt)
 
     @classmethod
     def _procesar_detalle_caso_activo(

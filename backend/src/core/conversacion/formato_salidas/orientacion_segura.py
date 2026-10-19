@@ -20,9 +20,17 @@ def orientar_sin_manual(consulta: str) -> str:
         )
     elif any(p in texto for p in ("contrapresion", "manometro", "escape")):
         orientacion = (
-            "La medicion de contrapresion de escape requiere el adaptador, punto de toma y procedimiento "
-            "del fabricante. No indico umbrales sin respaldo para esta variante. Solicita la comprobacion "
+            "La medicion de contrapresion de escape con manometro requiere el adaptador, punto de toma y "
+            "procedimiento del fabricante. Registra la unidad indicada por el instrumento (por ejemplo, psi) "
+            "sin convertirla ni asumir un limite. No indico umbrales sin respaldo para esta variante. Solicita la comprobacion "
             "a personal capacitado y evita tocar o desmontar componentes calientes."
+        )
+    elif "regulador" in texto and any(p in texto for p in ("presion", "combustible", "vacio")):
+        orientacion = (
+            "La comprobacion del regulador de presion de combustible depende del sistema y variante. "
+            "Confirma en el manual si incorpora una linea de vacio; no la desconectes ni abras el circuito "
+            "presurizado. Limita la revision a observar conexiones externas con el motor apagado y frio. "
+            "La prueba de presion requiere el adaptador y criterio OEM aplicables, ejecutados por personal capacitado."
         )
     elif any(p in texto for p in ("actuador", "solenoide", "turbo")):
         orientacion = (
@@ -39,7 +47,8 @@ def orientar_sin_manual(consulta: str) -> str:
         )
     elif any(p in texto for p in ("culata", "torque", "apriete")):
         orientacion = (
-            "No aflojes ni aprietes la culata con una secuencia generica. La secuencia, etapas y "
+            "No aflojes ni aprietes la culata con una secuencia generica ni asumas un orden del centro "
+            "hacia afuera en espiral. La secuencia, etapas y "
             "herramienta dependen del motor exacto; confirmalas en el manual de servicio aplicable antes "
             "de intervenir."
         )

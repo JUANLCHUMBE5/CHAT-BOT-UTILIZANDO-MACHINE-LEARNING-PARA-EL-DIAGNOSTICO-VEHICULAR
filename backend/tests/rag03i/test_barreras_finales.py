@@ -233,6 +233,38 @@ def test_procedimiento_legacy_tambien_se_abstiene():
     assert "No dispongo de documentación OEM validada" in texto
 
 
+@pytest.mark.parametrize(
+    "consulta, cifras_prohibidas",
+    [
+        ("temperatura de apertura termostato", ("82", "88", "95", "98", "108")),
+        ("tolerancia alabeo volante inercia", ("0.10",)),
+        ("tolerancia alabeo disco freno", ("0.05", "0.07")),
+    ],
+)
+def test_manejador_tolerancia_no_fabrica_especificaciones(consulta, cifras_prohibidas):
+    from src.core.conversacion.orquestador.manejador_intenciones_especiales import (
+        ManejadorIntencionesEspeciales,
+    )
+
+    for corpus_validado in (False, True):
+        salida = ManejadorIntencionesEspeciales._obtener_tolerancia_oem(
+            consulta, corpus_val=corpus_validado
+        )
+        assert "No dispongo de documentación OEM validada" in salida
+        assert all(cifra not in salida for cifra in cifras_prohibidas)
+
+
+@pytest.mark.anyio
+async def test_sin_comunicacion_ecu_no_indica_pines_ni_tension_generica():
+    o = OrquestadorConversacion(InMemoryConversationRepository())
+    r = await o.procesar_turno(
+        "ecu-no-comunica", "El escáner no comunica con la ECU", GestorDiagnostico()
+    )
+    texto = r["respuesta_texto"].lower()
+    assert "fusible" in texto and "no puentes" in texto
+    assert "pin 16" not in texto and "60" not in texto and "+12" not in texto
+
+
 @pytest.mark.anyio
 async def test_dos_voltajes_no_pierden_condicion_ni_declaran_normalidad():
     o = OrquestadorConversacion(InMemoryConversationRepository())

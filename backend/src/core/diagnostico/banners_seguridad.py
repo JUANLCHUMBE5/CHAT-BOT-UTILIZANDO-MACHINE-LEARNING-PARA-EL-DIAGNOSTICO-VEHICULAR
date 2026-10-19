@@ -198,4 +198,4 @@ BANNER_INCOMPATIBILIDAD_BUJIAS_DIESEL = """� **INCOMPATIBILIDAD TÉCNICA Y SEG
 
 BANNER_INCOMPATIBILIDAD_24V_12V = """🛑 **BLOQUEO DE SEGURIDAD MECÁNICA — INCOMPATIBILIDAD DE ALIMENTACIÓN ELÉCTRICA**
 
-PROHIBICIÓN ESTRICTA: No conectes baterías en serie ni fuentes de tensión incompatibles al alternador o vehículo. Detén la prueba de inmediato: puede dañar reguladores y módulos, quemar cableado y provocar incendio o explosión de batería. Consulta la alimentación nominal y el procedimiento del fabricante antes de cualquier prueba; no improvises conexiones."""
+PROHIBICIÓN ESTRICTA: No conectes baterías en serie ni fuentes de tensión incompatibles al alternador o vehículo. Si la fuente es de 24 V y el alternador es de 12V como indicas, no realices esa conexión. Detén la prueba de inmediato: puede dañar reguladores y módulos, quemar cableado y provocar incendio o explosión de batería. Consulta la alimentación nominal y el procedimiento del fabricante antes de cualquier prueba; no improvises conexiones."""
