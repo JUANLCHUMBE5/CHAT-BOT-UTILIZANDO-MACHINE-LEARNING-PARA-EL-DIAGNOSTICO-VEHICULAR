@@ -57,6 +57,7 @@ async def _procesar_y_responder_whatsapp(
     remitente: str,
     tipo_mensaje: str,
     texto_cliente: str = "",
+    payload_interactivo: str = None,
     audio_id: str = "",
     image_id: str = "",
     placa: str = "WAPP-01",
@@ -77,6 +78,7 @@ async def _procesar_y_responder_whatsapp(
             meta_message_id=meta_message_id or f"msg_{time.time_ns()}",
             tipo_mensaje=tipo_mensaje,
             texto_cliente=texto_cliente,
+            payload_interactivo=payload_interactivo,
             audio_id=audio_id,
             image_id=image_id,
             placa=placa,
@@ -200,6 +202,7 @@ async def recibir_mensaje_meta(
                 tipo_identificador = "user_id"
 
             tipo_mensaje = msg.get("type", "text")
+            payload_interactivo = None
             if tipo_mensaje == "text":
                 texto_cliente = msg.get("text", {}).get("body", "")
                 if len(texto_cliente) > settings.user_text_max_chars:
@@ -207,6 +210,23 @@ async def recibir_mensaje_meta(
                         f"[Webhook Meta] Texto de cliente truncado de {len(texto_cliente)} a {settings.user_text_max_chars} caracteres."
                     )
                     texto_cliente = texto_cliente[: settings.user_text_max_chars]
+            elif tipo_mensaje == "interactive":
+                interactive_data = msg.get("interactive", {})
+                subtype = interactive_data.get("type", "")
+                if subtype == "button_reply":
+                    btn_reply = interactive_data.get("button_reply", {})
+                    payload_interactivo = btn_reply.get("id", "")
+                    texto_cliente = btn_reply.get("title", "") or payload_interactivo
+                elif subtype == "list_reply":
+                    list_reply = interactive_data.get("list_reply", {})
+                    payload_interactivo = list_reply.get("id", "")
+                    texto_cliente = list_reply.get("title", "") or payload_interactivo
+                else:
+                    texto_cliente = ""
+            elif tipo_mensaje == "button":
+                btn_data = msg.get("button", {})
+                payload_interactivo = btn_data.get("payload", "")
+                texto_cliente = btn_data.get("text", "") or payload_interactivo
             elif tipo_mensaje == "audio":
                 audio_id = msg.get("audio", {}).get("id", "")
             elif tipo_mensaje == "image":
@@ -229,8 +249,9 @@ async def recibir_mensaje_meta(
 
         datos_trabajo = {
             "remitente": remitente,
-            "tipo_mensaje": tipo_mensaje,
+            "tipo_mensaje": "text" if tipo_mensaje in ("interactive", "button") else tipo_mensaje,
             "texto_cliente": texto_cliente,
+            "payload_interactivo": payload_interactivo,
             "audio_id": audio_id,
             "image_id": image_id,
             "placa": "WAPP-01",
@@ -322,10 +343,12 @@ async def recibir_mensaje_twilio(
     rem_anon = anonimizar_identificador(remitente)
     logger.info(f"[Webhook Twilio] Mensaje verificado recibido de {rem_anon}")
 
+    payload_interactivo = params_dict.get("ButtonPayload") or None
     datos_trabajo = {
         "remitente": remitente,
         "tipo_mensaje": tipo_mensaje,
         "texto_cliente": texto_cliente,
+        "payload_interactivo": payload_interactivo,
         "audio_id": audio_id,
         "image_id": image_id,
         "placa": "WAPP-01",

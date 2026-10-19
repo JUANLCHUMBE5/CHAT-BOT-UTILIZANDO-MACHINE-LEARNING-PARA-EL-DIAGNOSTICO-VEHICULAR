@@ -1,10 +1,11 @@
-"""Interpretación segura de confirmaciones técnicas recibidas por WhatsApp."""
+"""Interpretación segura de confirmaciones técnicas recibidas por WhatsApp e interactividad."""
 
 from __future__ import annotations
 
 import re
 import unicodedata
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True, slots=True)
@@ -14,6 +15,17 @@ class ConfirmacionDiagnosticoWhatsApp:
     estado: str
     observacion: str | None = None
     requiere_observacion: bool = False
+
+
+@dataclass
+class SeleccionHipotesisTop3:
+    """Interpretación conservadora de una respuesta sobre el Top-3 visible."""
+
+    accion: str
+    orden: int | None = None
+    orden_descartado: int | None = None
+    metodo: str | None = None
+    texto_referencia: str | None = None
 
 
 def _normalizar(texto: str) -> str:
@@ -67,9 +79,19 @@ def interpretar_confirmacion_whatsapp(
 
 
 def interpretar_respuesta_validacion_whatsapp(texto: str) -> str | None:
-    """Interpreta un SÍ/NO únicamente cuando el flujo ya espera esa respuesta."""
+    """Interpreta un SÍ/NO únicamente cuando el flujo ya espera esa respuesta.
+
+    Soporta texto libre y payloads de botones interactivos WhatsApp (conf_si, conf_no).
+    """
 
     normalizado = _normalizar(texto).strip(" .,!¡¿?")
+
+    # Soporte para payloads de botones interactivos WhatsApp
+    if re.search(r"\bconf[_\-]?si\b|\bbtn[_\-]?si\b", normalizado) or normalizado.startswith("conf_si") or normalizado.startswith("btn_si"):
+        return "si"
+    if re.search(r"\bconf[_\-]?no\b|\bbtn[_\-]?no\b", normalizado) or normalizado.startswith("conf_no") or normalizado.startswith("btn_no"):
+        return "no"
+
     respuestas_positivas = {
         "si",
         "correcto",
@@ -114,29 +136,18 @@ def interpretar_respuesta_validacion_whatsapp(texto: str) -> str | None:
 
 
 def instrucciones_confirmacion_whatsapp(cantidad_hipotesis: int = 3) -> str:
-    """Pregunta breve que acompaña cada resultado dirigido a personal técnico.
-    
-    Adapta las opciones numéricas a la cantidad de hipótesis realmente visibles:
-    - 1 hipótesis: '¿Fue correcta? *SÍ / NO*' (sin opciones numéricas).
-    - 2 hipótesis: '¿Fue correcta? *SÍ / NO* (1/2) | Opciones: *1 / 2 / NINGUNA / NO SÉ*'
-    - 3 hipótesis: '¿Fue correcta? *SÍ / NO* (1/2/3) | Opciones: *1 / 2 / 3 / NINGUNA / NO SÉ*'
-    """
+    """Pregunta breve que acompaña cada resultado dirigido a personal técnico."""
     if cantidad_hipotesis <= 1:
-        return "\n\n🔍 ¿Fue correcta? *SÍ / NO*"
+        return "\n\n¿Fue correcta? *SÍ / NO*"
     if cantidad_hipotesis == 2:
-        return "\n\n🔍 ¿Fue correcta? *SÍ / NO* (1/2) | Opciones: *1 / 2 / NINGUNA / NO SÉ*"
-    return "\n\n🔍 ¿Fue correcta? *SÍ / NO* (1/2/3) | Opciones: *1 / 2 / 3 / NINGUNA / NO SÉ*"
-
-
-@dataclass
-class SeleccionHipotesisTop3:
-    """Interpretación conservadora de una respuesta sobre el Top-3 visible."""
-    accion: str
-    orden: int | None = None
-    orden_descartado: int | None = None
-    metodo: str | None = None
-    texto_referencia: str | None = None
-
+        return (
+            "\n\n¿Fue correcta? *SÍ / NO* (1/2)\n"
+            "O selecciona una hipótesis: *1 / 2 / NINGUNA / NO SÉ*"
+        )
+    return (
+        "\n\n¿Fue correcta? *SÍ / NO* (1/2/3)\n"
+        "O selecciona una hipótesis (1/2/3): *1 / 2 / 3 / NINGUNA / NO SÉ*"
+    )
 
 def interpretar_seleccion_top3(
     texto: str,
@@ -145,12 +156,11 @@ def interpretar_seleccion_top3(
     """
     Interpreta selecciones naturales sobre un Top-3 YA presentado.
 
+    Soporta botones interactivos (payload id 'hip_1_...' y títulos de botones),
+    así como respuestas textuales ('1', '2', '3', 'primera', nombres).
     No ejecuta diagnósticos ni modifica probabilidades.
     Devuelve None cuando el mensaje no constituye una selección segura.
     """
-    import re
-    import unicodedata
-
     def norm(valor: str) -> str:
         valor = unicodedata.normalize("NFD", str(valor or "").lower())
         valor = "".join(c for c in valor if unicodedata.category(c) != "Mn")
@@ -161,6 +171,17 @@ def interpretar_seleccion_top3(
 
     if not t:
         return None
+
+    # 0. Reconocimiento directo de botón interactivo de WhatsApp (payload id: hip_1_..., btn_hip_1_...)
+    m_btn = re.search(r"\b(?:btn[_\-]?)?hip[_\-]?([1-9])\b", t)
+    if m_btn:
+        orden = int(m_btn.group(1))
+        return SeleccionHipotesisTop3(
+            accion="CONFIRMAR",
+            orden=orden,
+            metodo="boton_interactivo",
+            texto_referencia=texto,
+        )
 
     # "ninguna" descarta provisionalmente las opciones presentadas
     if re.fullmatch(r"(?:ninguna|ninguno|ninguna de las anteriores|ninguna opcion|ninguna alternativa)", t):
@@ -273,7 +294,7 @@ def interpretar_seleccion_top3(
             )
 
         # Un número/ordinal aislado dentro del contexto Top-3
-        # se considera selección afirmativa.
+        # o que inicia con el número de opción (como los títulos de botón "1. Fuga hidráulica")
         permitido = bool(
             re.fullmatch(
                 r"(?:si\s+)?(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?"
@@ -284,6 +305,10 @@ def interpretar_seleccion_top3(
             or re.search(
                 r"\b(es|seria|confirmo|correcta|correcto|acerto|fue|elijo|escojo)\s+"
                 r"(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?(?:1|2|3|primera|segunda|tercera)\b",
+                t,
+            )
+            or re.match(
+                r"^(?:si\s+)?(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?([1-3])\b",
                 t,
             )
         )
@@ -377,3 +402,106 @@ def interpretar_seleccion_top3(
                 )
 
     return None
+
+
+def generar_titulo_boton_hipotesis(orden: int, falla: str, max_chars: int = 20) -> str:
+    """Genera un título conciso y legible para un botón interactivo WhatsApp (máx 20 caracteres)."""
+    prefijo = f"{orden}. "
+    disponible = max(1, max_chars - len(prefijo))
+    # Limpiar detalles entre paréntesis o notas accesorias
+    nombre = falla.split("(")[0].strip()
+    # Si contiene ' o ', tomar la causa primaria para no truncar a mitad de palabra
+    if len(nombre) > disponible and " o " in nombre:
+        nombre = nombre.split(" o ")[0].strip()
+    if len(nombre) > disponible:
+        palabras = nombre.split()
+        acumulado = []
+        for p in palabras:
+            if len(" ".join(acumulado + [p])) <= disponible:
+                acumulado.append(p)
+            else:
+                break
+        nombre = " ".join(acumulado) if acumulado else nombre[:disponible]
+    titulo = f"{prefijo}{nombre}".strip()
+    return titulo[:max_chars]
+
+
+def construir_botones_hipotesis(
+    hipotesis_lista: list[Any],
+    case_id: str | None = None,
+) -> dict[str, Any]:
+    """Construye la estructura de botones interactivos de WhatsApp para hipótesis.
+
+    - 1 a 3 hipótesis: Botones Quick Reply ('type': 'button', máx 20 caracteres por botón).
+    - Más de 3 hipótesis: Lista interactiva ('type': 'list').
+    """
+    cid_corto = str(case_id or "")[:8]
+    total = len(hipotesis_lista)
+
+    if total <= 3:
+        botones = []
+        action_buttons = []
+        for idx, h in enumerate(hipotesis_lista[:3], start=1):
+            falla = getattr(h, "falla", None) or getattr(h, "falla_probable", None)
+            if not falla and isinstance(h, dict):
+                falla = h.get("falla") or h.get("falla_probable") or h.get("nombre") or ""
+            falla = str(falla or f"Hipótesis {idx}")
+            titulo = generar_titulo_boton_hipotesis(idx, falla, max_chars=20)
+            btn_id = f"hip_{idx}_{cid_corto}" if cid_corto else f"hip_{idx}"
+            botones.append({"id": btn_id, "title": titulo})
+            action_buttons.append({"type": "reply", "reply": {"id": btn_id, "title": titulo}})
+        return {
+            "tipo": "button",
+            "type": "button",
+            "botones": botones,
+            "action": {"buttons": action_buttons},
+        }
+    else:
+        filas = []
+        for idx, h in enumerate(hipotesis_lista[:10], start=1):
+            falla = getattr(h, "falla", None) or getattr(h, "falla_probable", None)
+            if not falla and isinstance(h, dict):
+                falla = h.get("falla") or h.get("falla_probable") or h.get("nombre") or ""
+            falla = str(falla or f"Hipótesis {idx}")
+            confianza = getattr(h, "probabilidad", None) or getattr(h, "confianza", None)
+            if confianza is None and isinstance(h, dict):
+                confianza = h.get("probabilidad") or h.get("confianza")
+            desc = f"{int(float(confianza)*100)}% prob." if confianza is not None else ""
+            titulo = generar_titulo_boton_hipotesis(idx, falla, max_chars=24)
+            btn_id = f"hip_{idx}_{cid_corto}" if cid_corto else f"hip_{idx}"
+            fila = {"id": btn_id, "title": titulo}
+            if desc:
+                fila["description"] = desc[:72]
+            filas.append(fila)
+        return {
+            "tipo": "list",
+            "type": "list",
+            "boton_menu": "Ver hipótesis",
+            "titulo_seccion": "Causas posibles",
+            "filas": filas,
+            "action": {
+                "button": "Ver hipótesis",
+                "sections": [{"title": "Causas posibles", "rows": filas}],
+            },
+        }
+
+
+def construir_botones_confirmacion(case_id: str | None = None) -> dict[str, Any]:
+    """Construye botones interactivos SÍ / NO para confirmación física de una hipótesis."""
+    cid_corto = str(case_id or "")[:8]
+    id_si = f"conf_si_{cid_corto}" if cid_corto else "conf_si"
+    id_no = f"conf_no_{cid_corto}" if cid_corto else "conf_no"
+    botones = [
+        {"id": id_si, "title": "SÍ"},
+        {"id": id_no, "title": "NO"},
+    ]
+    action_buttons = [
+        {"type": "reply", "reply": {"id": id_si, "title": "SÍ"}},
+        {"type": "reply", "reply": {"id": id_no, "title": "NO"}},
+    ]
+    return {
+        "tipo": "button",
+        "type": "button",
+        "botones": botones,
+        "action": {"buttons": action_buttons},
+    }

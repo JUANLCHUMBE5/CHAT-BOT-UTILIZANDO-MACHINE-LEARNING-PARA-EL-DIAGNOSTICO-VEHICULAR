@@ -9,6 +9,8 @@ __all__ = [
     "GestorDiagnostico",
     "PrediccionML",
     "ResultadoDiagnostico",
+    "construir_botones_confirmacion",
+    "construir_botones_hipotesis",
     "instrucciones_confirmacion_whatsapp",
     "interpretar_confirmacion_whatsapp",
     "interpretar_respuesta_validacion_whatsapp",
@@ -22,6 +24,8 @@ def __getattr__(nombre: str) -> Any:
         return getattr(diagnostics, nombre)
     if nombre in {
         "ConfirmacionDiagnosticoWhatsApp",
+        "construir_botones_confirmacion",
+        "construir_botones_hipotesis",
         "instrucciones_confirmacion_whatsapp",
         "interpretar_confirmacion_whatsapp",
         "interpretar_respuesta_validacion_whatsapp",

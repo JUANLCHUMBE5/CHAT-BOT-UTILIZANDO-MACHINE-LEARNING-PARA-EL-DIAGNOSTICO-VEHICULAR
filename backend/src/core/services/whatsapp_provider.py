@@ -1,4 +1,4 @@
-"""Adaptador único para entrega y descarga de medios de Meta/Twilio."""
+"""Adaptador único para entrega y descarga de medios de Meta/Twilio e interactividad."""
 
 from __future__ import annotations
 
@@ -25,15 +25,26 @@ class ResultadoEnvioWhatsApp:
 class WhatsAppProviderService:
     """Encapsula diferencias de autenticación y payload entre proveedores."""
 
-    async def enviar(self, proveedor: str, destino: str, texto: str) -> ResultadoEnvioWhatsApp:
+    async def enviar(
+        self,
+        proveedor: str,
+        destino: str,
+        texto: str,
+        interactivo: Optional[dict] = None,
+    ) -> ResultadoEnvioWhatsApp:
         proveedor = proveedor.lower()
         if proveedor == "meta":
-            return await self._enviar_meta(destino, texto)
+            return await self._enviar_meta(destino, texto, interactivo=interactivo)
         if proveedor == "twilio":
             return await self._enviar_twilio(destino, texto)
         return ResultadoEnvioWhatsApp(False, False, error=f"Proveedor no soportado: {proveedor}")
 
-    async def _enviar_meta(self, destino: str, texto: str) -> ResultadoEnvioWhatsApp:
+    async def _enviar_meta(
+        self,
+        destino: str,
+        texto: str,
+        interactivo: Optional[dict] = None,
+    ) -> ResultadoEnvioWhatsApp:
         if not settings.meta_access_token or not settings.meta_phone_number_id:
             return ResultadoEnvioWhatsApp(False, False, error="Credenciales Meta incompletas")
         version = settings.meta_graph_api_version.strip("/")
@@ -44,24 +55,109 @@ class WhatsAppProviderService:
         }
         destino_limpio = destino.replace("whatsapp:", "").replace("+", "").strip()
         es_bsuid = "." in destino_limpio and not destino_limpio.isdigit()
-        payload = {
+        dest_field = "recipient" if es_bsuid else "to"
+
+        payload_interactivo = None
+        if interactivo and isinstance(interactivo, dict):
+            tipo_interactivo = interactivo.get("tipo")
+            if tipo_interactivo == "button":
+                botones_in = interactivo.get("botones", [])
+                botones_meta = []
+                for b in botones_in[:3]:
+                    b_id = str(b.get("id") or "")[:256]
+                    b_title = str(b.get("title") or "")[:20]
+                    if b_id and b_title:
+                        botones_meta.append({
+                            "type": "reply",
+                            "reply": {
+                                "id": b_id,
+                                "title": b_title,
+                            },
+                        })
+                if botones_meta:
+                    payload_interactivo = {
+                        "messaging_product": "whatsapp",
+                        "recipient_type": "individual",
+                        dest_field: destino_limpio,
+                        "type": "interactive",
+                        "interactive": {
+                            "type": "button",
+                            "body": {"text": (texto or "")[:1024]},
+                            "action": {"buttons": botones_meta},
+                        },
+                    }
+                    if interactivo.get("header"):
+                        payload_interactivo["interactive"]["header"] = {
+                            "type": "text",
+                            "text": str(interactivo["header"])[:60],
+                        }
+                    if interactivo.get("footer"):
+                        payload_interactivo["interactive"]["footer"] = {
+                            "text": str(interactivo["footer"])[:60],
+                        }
+            elif tipo_interactivo == "list":
+                filas_in = interactivo.get("filas", [])
+                filas_meta = []
+                for f in filas_in[:10]:
+                    f_id = str(f.get("id") or "")[:200]
+                    f_title = str(f.get("title") or "")[:24]
+                    if f_id and f_title:
+                        fila_dict = {"id": f_id, "title": f_title}
+                        if f.get("description"):
+                            fila_dict["description"] = str(f["description"])[:72]
+                        filas_meta.append(fila_dict)
+                if filas_meta:
+                    payload_interactivo = {
+                        "messaging_product": "whatsapp",
+                        "recipient_type": "individual",
+                        dest_field: destino_limpio,
+                        "type": "interactive",
+                        "interactive": {
+                            "type": "list",
+                            "body": {"text": (texto or "")[:1024]},
+                            "action": {
+                                "button": str(interactivo.get("boton_menu") or "Ver opciones")[:20],
+                                "sections": [
+                                    {
+                                        "title": str(interactivo.get("titulo_seccion") or "Opciones")[:24],
+                                        "rows": filas_meta,
+                                    }
+                                ],
+                            },
+                        },
+                    }
+
+        payload_texto = {
             "messaging_product": "whatsapp",
             "recipient_type": "individual",
+            dest_field: destino_limpio,
             "type": "text",
             "text": {"body": texto},
         }
-        # Meta v25 usa ``recipient`` para Business-Scoped User IDs (BSUID).
-        # Los números/wa_id tradicionales continúan utilizando ``to``.
-        payload["recipient" if es_bsuid else "to"] = destino_limpio
+
+        # Intentar enviar interactivo si se construyó; si falla con 400 (política/límite Meta), fallback inmediato a texto plano
+        payload_a_enviar = payload_interactivo if payload_interactivo else payload_texto
         try:
             response = await asyncio.to_thread(
-                requests.post, url, headers=headers, json=payload, timeout=10
+                requests.post, url, headers=headers, json=payload_a_enviar, timeout=10
             )
             data = response.json() if response.content else {}
             if response.status_code in (200, 201):
                 mensajes = data.get("messages", [])
                 externo = mensajes[0].get("id") if mensajes else None
                 return ResultadoEnvioWhatsApp(True, False, externo, status_code=response.status_code)
+
+            # Si falló el envío interactivo por HTTP 400, intentar inmediatamente como texto
+            if payload_interactivo and response.status_code == 400:
+                resp_fallback = await asyncio.to_thread(
+                    requests.post, url, headers=headers, json=payload_texto, timeout=10
+                )
+                if resp_fallback.status_code in (200, 201):
+                    fb_data = resp_fallback.json() if resp_fallback.content else {}
+                    mensajes = fb_data.get("messages", [])
+                    externo = mensajes[0].get("id") if mensajes else None
+                    return ResultadoEnvioWhatsApp(True, False, externo, status_code=resp_fallback.status_code)
+
             return ResultadoEnvioWhatsApp(
                 False,
                 response.status_code == 429 or response.status_code >= 500,
@@ -249,4 +345,3 @@ def _host_permitido(host: str, *, meta: bool = False, twilio: bool = False) -> b
     if twilio:
         return host == "api.twilio.com" or host.endswith(".twilio.com") or host.endswith(".twiliocdn.com")
     return False
-

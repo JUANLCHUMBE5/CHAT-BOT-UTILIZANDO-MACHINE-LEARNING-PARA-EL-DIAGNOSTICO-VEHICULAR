@@ -315,17 +315,35 @@ class DiagnosticPersister:
 
         await registrar_borrador_consulta(session, diag, vehiculo, case_id=case_id_actual)
 
+        out_msg_id = f"out_{meta_message_id or uuid.uuid4()}"
         # 6. Actualizar validación diagnóstica en conversación si no está en cola y no hay pregunta activa
         if solicitar_feedback:
+            from src.application.services.confirmacion_diagnostico import construir_botones_hipotesis
+
             contexto_conversacion = dict(conversacion.contexto or {})
             contexto_conversacion["validacion_diagnostico"] = {
                 "diagnostico_id": str(diag.id),
                 "etapa": "esperando_confirmacion",
+                "iteraciones": 1,
             }
+            predicciones_top = dto.predicciones_ml or []
+            if not predicciones_top and not dto.motivo_abstencion:
+                predicciones_top = [
+                    {"falla": dto.diagnostico_ml, "probabilidad": dto.confianza_ml}
+                ]
+            if predicciones_top:
+                interactivo_salida = construir_botones_hipotesis(
+                    predicciones_top, case_id=case_id_actual or str(diag.id)
+                )
+                contexto_conversacion["mensaje_interactivo"] = {
+                    "msg_id": out_msg_id,
+                    "interactivo": interactivo_salida,
+                }
             conversacion.contexto = contexto_conversacion
         elif conversacion and getattr(conversacion, "contexto", None):
             contexto_conversacion = dict(conversacion.contexto or {})
             contexto_conversacion.pop("validacion_diagnostico", None)
+            contexto_conversacion.pop("mensaje_interactivo", None)
             conversacion.contexto = contexto_conversacion
 
         # 7. Si quedó en cola, persistir en tabla de trabajos
@@ -408,7 +426,6 @@ class DiagnosticPersister:
             )
 
         # 10. Persistir mensaje saliente en outbox
-        out_msg_id = f"out_{meta_message_id or uuid.uuid4()}"
         await msg_repo.crear_mensaje(
             conversacion_id=conversacion.id,
             taller_id=usuario.taller_id,

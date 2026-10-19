@@ -216,8 +216,25 @@ async def procesar_siguiente_entrega_whatsapp() -> bool:
     except ValueError as exc:
         resultado_estado, externo, error = "fallido", None, str(exc)
     else:
+        interactivo = None
+        if mensaje.conversacion_id:
+            try:
+                async with AsyncSession(obtener_engine(), expire_on_commit=False) as session_inter:
+                    res_c = await session_inter.execute(
+                        select(Conversacion).where(Conversacion.id == mensaje.conversacion_id)
+                    )
+                    c_obj = res_c.scalar_one_or_none()
+                    if c_obj and c_obj.contexto and isinstance(c_obj.contexto, dict):
+                        mi_data = c_obj.contexto.get("mensaje_interactivo")
+                        if mi_data and isinstance(mi_data, dict):
+                            target_mid = mi_data.get("msg_id")
+                            if not target_mid or target_mid == mensaje.meta_message_id:
+                                interactivo = mi_data.get("interactivo") or mi_data
+            except Exception as e_inter:
+                logger.debug(f"[Outbox Interactivo] No se pudo cargar interactivo: {e_inter}")
+
         resultado = await whatsapp_provider_service.enviar(
-            mensaje.proveedor or "meta", destino, mensaje.texto or ""
+            mensaje.proveedor or "meta", destino, mensaje.texto or "", interactivo=interactivo
         )
         externo = resultado.id_externo
         error = resultado.error
