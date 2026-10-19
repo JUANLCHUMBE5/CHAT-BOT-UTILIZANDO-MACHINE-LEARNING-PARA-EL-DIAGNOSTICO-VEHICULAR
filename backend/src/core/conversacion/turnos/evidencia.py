@@ -192,18 +192,24 @@ async def evidencia(self, turno):
         turno.motivo_suficiencia = (
             "RPM baja sin síntomas discriminantes: solicitar contexto antes de clasificar"
         )
+    if turno.estado.obtener_hecho("opciones_sugeridas_no_coinciden"):
+        # Reevaluación legítima: requiere hechos técnicos relevantes validados (síntomas, mediciones, condiciones clínicas)
+        # Se distingue formalmente de preguntas generales, negaciones sin evidencia o texto no informativo.
+        hechos_relevantes = [
+            h for h in turno.hechos_extraidos
+            if isinstance(h, dict) and h.get("categoria") in (
+                "sintoma", "medicion", "condicion", "comprobacion", "componente_reemplazado", "dtc"
+            ) and h.get("estado") != FactState.AUSENTE_NEGADO
+        ]
+        if hechos_relevantes or (turno.hay_sintoma_en_hechos and not turno.es_no_sintoma):
+            turno.es_suficiente = True
+            turno.motivo_suficiencia = (
+                "Nueva evidencia clínica validada aportada tras desacuerdo: reevaluación del caso con SVM + RAG"
+            )
     if turno.medicion_area_pendiente:
         turno.es_suficiente = False
         turno.motivo_suficiencia = (
             "Falta la lectura técnica mínima para confirmar la ruta explícita de mezcla o MAP"
-        )
-    if turno.estado.obtener_hecho("opciones_sugeridas_no_coinciden") and (
-        bool(turno.hechos_extraidos) or len(turno.texto_limpio.split()) >= 3
-    ):
-        turno.es_suficiente = True
-        turno.medicion_area_pendiente = False
-        turno.motivo_suficiencia = (
-            "Nueva evidencia aportada tras descartar opciones previas: reevaluación del caso con SVM + RAG"
         )
     turno.forzar_avance = debe_avanzar(turno.estado, turno.texto_limpio)
     turno.sin_evidencia = not hay_evidencia_diagnostica(turno.estado)

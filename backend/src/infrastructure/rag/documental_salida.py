@@ -197,11 +197,9 @@ def proteger_salida_conversacional(
             if parte.strip():
                 conservadas.append(parte)
         # Una consulta de cifras debe abstenerse. En seguimiento clínico se conserva
-        # la pregunta orientativa si no contiene cifras ni órdenes normativas.
+        # la pregunta/Plan B/hipótesis cualitativa que no depende de la cifra retirada.
         if conservadas and not es_solicitud_especificacion(consulta_usuario):
-            cuerpo = " ".join(conservadas).strip()
-            # La prohibición persiste aunque conservemos una pregunta orientativa.
-            return f"{aviso}\n\nOrientación preliminar:\n{cuerpo}", 0.0, True
+            aviso = "\n".join(conservadas) + "\n" + aviso
         return aviso, 0.0, True
 
     return respuesta_propuesta, 1.0, False

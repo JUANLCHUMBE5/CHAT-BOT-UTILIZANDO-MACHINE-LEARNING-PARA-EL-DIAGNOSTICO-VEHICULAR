@@ -10,9 +10,10 @@ Verifica:
 
 import asyncio
 from functools import wraps
+
 import pytest
 
-from src.core.conversacion.models import ConversationState, FactState, FactType, QuestionIntent
+from src.core.conversacion.models import ConversationState, FactState, QuestionIntent
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
 from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.gestor_diagnostico import GestorDiagnostico
@@ -149,7 +150,7 @@ async def test_formato_breve_estilo_whatsapp_y_ausencia_alucinacion_oem(orquesta
     r = await orq.procesar_turno(sid, "Tengo un Toyota Yaris con chillido agudo al girar el volante a los topes", gestor)
     assert r is not None
     txt = r.get("respuesta_texto") or ""
-    lineas = [l for l in txt.split("\n") if l.strip()]
+    lineas = [linea for linea in txt.split("\n") if linea.strip()]
     # Longitud adecuada de mensaje
     assert len(lineas) <= 8
 

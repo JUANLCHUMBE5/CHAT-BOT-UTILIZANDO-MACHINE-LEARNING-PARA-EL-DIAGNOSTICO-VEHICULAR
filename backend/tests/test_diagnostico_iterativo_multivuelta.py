@@ -3,9 +3,8 @@
 import asyncio
 from functools import wraps
 from types import SimpleNamespace
-import pytest
 
-from src.core.conversacion.models import ConversationState, FactState, FactType, QuestionIntent
+from src.core.conversacion.models import ConversationState, FactState, QuestionIntent
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
 from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.conversacion.respuestas_cortas.interprete_intenciones import interpretar_respuesta_corta
