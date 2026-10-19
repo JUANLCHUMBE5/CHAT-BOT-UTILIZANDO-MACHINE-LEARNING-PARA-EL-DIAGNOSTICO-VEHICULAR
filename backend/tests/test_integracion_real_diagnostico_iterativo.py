@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import pytest
 
+from src.core.conversacion.models import FactState
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
 from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.gestor_diagnostico import GestorDiagnostico
@@ -91,11 +92,155 @@ async def test_integracion_real_multivuelta_svm_rag_fallback_transparente():
 
 
 @pytest.mark.asyncio
+async def test_reevaluacion_sintomas_descriptivos_puros_sin_nombres_de_fallas():
+    """Valida la reevaluación del SVM ante síntomas puramente descriptivos aportados por el mecánico.
+
+    Requisitos evaluados:
+    1. El mecánico describe sensaciones, ruidos y comportamientos dinámicos sin mencionar componentes ni fallas.
+    2. El SVM reevalúa el caso y FAISS/RAG recupera documentación pertinente.
+    3. No se exige forzar cambio de Top-1 si el modelo considera que la hipótesis previa sigue siendo la mejor.
+    4. Las hipótesis corresponden al ranking probabilístico autorizado y NO se confirman automáticamente.
+    """
+    repo = InMemoryConversationRepository()
+    orquestador = OrquestadorConversacion(repo)
+    gestor = GestorDiagnostico()
+
+    # --- Escenario A: Síntoma nuevo cambia el ranking probabilístico del SVM ---
+    sid_a = "ses-sintoma-puro-cambio"
+    # T1: Síntoma descriptivo de volante/dirección sin nombrar la cremallera
+    res_a1 = await orquestador.procesar_turno(
+        sid_a,
+        "Toyota Yaris 2018 gasolina, chillido agudo al girar el timon",
+        gestor,
+    )
+    assert res_a1.get("decision") == "DIAGNOSTICAR"
+    top3_a1 = res_a1.get("top3_actual", [])
+    assert len(top3_a1) >= 1
+    falla_a1 = top3_a1[0]["falla"]
+    assert top3_a1[0]["origen_probabilidad"] == "SVM"
+
+    # T2: Síntoma nuevo puramente descriptivo: zumbido sordo y vibración dinámica en velocidad
+    res_a2 = await orquestador.procesar_turno(
+        sid_a,
+        "En carretera a velocidad constante se siente un zumbido sordo continuo que aumenta con la velocidad y vibra el piso",
+        gestor,
+    )
+    assert res_a2.get("decision") == "DIAGNOSTICAR"
+    top3_a2 = res_a2.get("top3_actual", [])
+    assert len(top3_a2) >= 1
+    # SVM reevalúa: la nueva evidencia fenoménica desplaza el ranking hacia balanceo/alineación
+    assert top3_a2[0]["falla"] != falla_a1
+    assert top3_a2[0]["origen_probabilidad"] == "SVM"
+    assert res_a2.get("cambio_ranking") is True
+    assert res_a2.get("top3_previo", [])[0]["falla"] == falla_a1
+
+    # RAG recupera procedimiento congruente con la nueva hipótesis
+    dto_a2 = res_a2.get("dto")
+    assert dto_a2 is not None
+    assert dto_a2.similitud_rag > 0.0
+    assert "BALANCEO" in dto_a2.titulo_manual.upper() or "ALINEACI" in dto_a2.titulo_manual.upper()
+
+    # Invarianza clínica: la hipótesis del ranking NO se convierte automáticamente en falla confirmada
+    estado_a2 = await repo.get_session(sid_a)
+    assert estado_a2 is not None
+    # Los hechos confirmados son observaciones (síntomas, vehículo), no el diagnóstico final
+    hechos_confirmados = [h.valor for h in estado_a2.hechos.values() if h.estado == FactState.CONFIRMADO]
+    assert top3_a2[0]["falla"] not in hechos_confirmados
+
+    # --- Escenario B: Síntoma nuevo consistente donde el SVM CONSERVA el Top-1 ---
+    sid_b = "ses-sintoma-puro-conserva"
+    res_b1 = await orquestador.procesar_turno(
+        sid_b,
+        "Toyota Yaris 2018 gasolina, chillido agudo al girar el timon",
+        gestor,
+    )
+    top3_b1 = res_b1.get("top3_actual", [])
+    assert len(top3_b1) >= 1
+    falla_b1 = top3_b1[0]["falla"]
+
+    # T2: Nuevo síntoma de la misma área funcional sin mencionar piezas
+    res_b2 = await orquestador.procesar_turno(
+        sid_b,
+        "El volante se traba ligeramente al estacionar a bajas revoluciones",
+        gestor,
+    )
+    assert res_b2.get("decision") == "DIAGNOSTICAR"
+    top3_b2 = res_b2.get("top3_actual", [])
+    assert len(top3_b2) >= 1
+    # El SVM reevaluó con toda la evidencia agregada y conserva legítimamente la mejor hipótesis
+    assert top3_b2[0]["falla"] == falla_b1
+    assert res_b2.get("cambio_ranking") is False
+    assert res_b2.get("dto") is not None
+    assert "CREMALLERA" in res_b2.get("dto").titulo_manual.upper()
+
+
+@pytest.mark.asyncio
+async def test_no_reevaluacion_ante_mensajes_irrelevantes_o_sin_evidencia():
+    """Comprueba que la reevaluación probabilística y cambio de ranking NO se activan ante:
+
+    1. Agradecimientos o expresiones de cortesía.
+    2. Consultas sobre datos del vehículo en memoria.
+    3. Repeticiones del síntoma previo sin hechos nuevos.
+    """
+    repo = InMemoryConversationRepository()
+    orquestador = OrquestadorConversacion(repo)
+    gestor = GestorDiagnostico()
+
+    sid = "ses-no-reeval-irrelevante"
+    res_t1 = await orquestador.procesar_turno(
+        sid,
+        "Toyota Yaris 2018 gasolina, chillido agudo al girar el timon",
+        gestor,
+    )
+    assert res_t1.get("decision") == "DIAGNOSTICAR"
+    top3_t1 = res_t1.get("top3_actual", [])
+    assert len(top3_t1) >= 1
+    falla_original = top3_t1[0]["falla"]
+    prob_original = top3_t1[0]["probabilidad"]
+
+    # 1. Agradecimiento: cierre cordial sin reevaluación ni alteración de hipótesis
+    res_t2 = await orquestador.procesar_turno(
+        sid,
+        "muchas gracias maestro, quedo clarisimo",
+        gestor,
+    )
+    assert res_t2.get("decision") == "CIERRE_CORDIAL"
+    assert res_t2.get("cambio_ranking") is None
+
+    # 2. Consulta de memoria del vehículo: no ejecuta reevaluación
+    res_t3 = await orquestador.procesar_turno(
+        sid,
+        "¿qué vehículo estamos revisando?",
+        gestor,
+    )
+    assert res_t3.get("decision") == "VEHICULO_ACTIVO"
+    assert res_t3.get("cambio_ranking") is None
+
+    # 3. Repetición de síntoma previo sin evidencia técnica adicional
+    res_t4 = await orquestador.procesar_turno(
+        sid,
+        "como te decia, chillido al girar el timon",
+        gestor,
+    )
+    assert res_t4.get("decision") == "DIAGNOSTICAR"
+    # No hay cambio de ranking ni reordenamiento de probabilidades
+    assert res_t4.get("cambio_ranking") is False
+    assert res_t4.get("top3_actual", [])[0]["falla"] == falla_original
+    assert res_t4.get("top3_actual", [])[0]["probabilidad"] == prob_original
+
+
+@pytest.mark.asyncio
 async def test_distincion_verificable_llm_autorizado_vs_fallback_determinista():
     """Demuestra la trazabilidad técnica que distingue la generación de respuesta:
 
-    - Caso Fallback: llm_usado=False cuando el proveedor LLM no está disponible.
-    - Caso Autorizado: llm_usado=True cuando el adaptador LLM genera la respuesta con respaldo RAG.
+    - Caso Fallback: llm_usado=False cuando el proveedor LLM no está disponible (modo offline/seguro de CI y local).
+    - Caso Adaptador Simulado: llm_usado=True con metadatos explícitos de modelo y tokens.
+
+    NOTA DE GOBERNANZA TÉCNICA:
+    La prueba con el adaptador LLM en esta suite es una simulación controlada de contrato
+    de integración (mock de metadatos de generación). La integración real con el proveedor
+    externo (Google Cloud / Gemini API en producción) queda sujeta a verificación controlada
+    con credenciales de despliegue antes de la entrada a producción.
     """
     repo = InMemoryConversationRepository()
     orquestador = OrquestadorConversacion(repo)
@@ -112,7 +257,7 @@ async def test_distincion_verificable_llm_autorizado_vs_fallback_determinista():
     assert dto_fb.llm_usado is False
     assert dto_fb.llm_modelo is None
 
-    # Simular adaptador LLM autorizado para pruebas
+    # Simulación controlada del contrato del adaptador LLM para verificación de trazabilidad
     session_id_llm = "ses-diag-llm"
     orig_generar = gestor._generar_respuesta_con_metadatos
 
