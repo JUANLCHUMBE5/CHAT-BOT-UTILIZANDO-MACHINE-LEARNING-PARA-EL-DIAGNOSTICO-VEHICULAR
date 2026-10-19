@@ -64,7 +64,11 @@ def test_instrucciones_piden_confirmacion_binaria():
     instrucciones_top3 = instrucciones_confirmacion_whatsapp(cantidad_hipotesis=3)
     assert "¿Fue correcta?" in instrucciones_top3
     assert "*SÍ / NO*" in instrucciones_top3
-    assert "1 / 2 / 3 / NINGUNA / NO SÉ" in instrucciones_top3
+    assert "1. Primera hipótesis" in instrucciones_top3
+    assert "2. Segunda hipótesis" in instrucciones_top3
+    assert "3. Tercera hipótesis" in instrucciones_top3
+    assert "NINGUNA" not in instrucciones_top3
+    assert "NO SÉ" not in instrucciones_top3
 
 
 def test_respuesta_si_confirma_el_diagnostico_exacto_y_deja_auditoria():

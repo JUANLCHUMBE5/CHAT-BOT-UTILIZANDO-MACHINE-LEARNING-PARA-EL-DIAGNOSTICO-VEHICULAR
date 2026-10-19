@@ -23,6 +23,9 @@ def enviar_mensaje_meta(numero_destino, texto, requests, interactivo=None):
         "Content-Type": "application/json",
     }
     
+    if not getattr(settings, "whatsapp_interactive_buttons_enabled", False):
+        interactivo = None
+
     payload_interactivo = None
     if interactivo and isinstance(interactivo, dict) and interactivo.get("tipo") == "button":
         botones = []

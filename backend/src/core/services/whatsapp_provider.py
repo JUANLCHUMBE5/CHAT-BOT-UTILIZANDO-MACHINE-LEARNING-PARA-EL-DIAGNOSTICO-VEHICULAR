@@ -33,6 +33,8 @@ class WhatsAppProviderService:
         interactivo: Optional[dict] = None,
     ) -> ResultadoEnvioWhatsApp:
         proveedor = proveedor.lower()
+        if not getattr(settings, "whatsapp_interactive_buttons_enabled", False):
+            interactivo = None
         if proveedor == "meta":
             return await self._enviar_meta(destino, texto, interactivo=interactivo)
         if proveedor == "twilio":

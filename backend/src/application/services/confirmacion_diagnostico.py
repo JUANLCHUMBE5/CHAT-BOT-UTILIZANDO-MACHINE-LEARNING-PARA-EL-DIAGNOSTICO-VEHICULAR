@@ -142,11 +142,16 @@ def instrucciones_confirmacion_whatsapp(cantidad_hipotesis: int = 3) -> str:
     if cantidad_hipotesis == 2:
         return (
             "\n\n¿Fue correcta? *SÍ / NO* (1/2)\n"
-            "O selecciona una hipótesis: *1 / 2 / NINGUNA / NO SÉ*"
+            "O indica la opción a verificar:\n"
+            "1. Primera hipótesis\n"
+            "2. Segunda hipótesis"
         )
     return (
         "\n\n¿Fue correcta? *SÍ / NO* (1/2/3)\n"
-        "O selecciona una hipótesis (1/2/3): *1 / 2 / 3 / NINGUNA / NO SÉ*"
+        "O indica la opción a verificar:\n"
+        "1. Primera hipótesis\n"
+        "2. Segunda hipótesis\n"
+        "3. Tercera hipótesis"
     )
 
 def interpretar_seleccion_top3(
@@ -164,6 +169,7 @@ def interpretar_seleccion_top3(
     def norm(valor: str) -> str:
         valor = unicodedata.normalize("NFD", str(valor or "").lower())
         valor = "".join(c for c in valor if unicodedata.category(c) != "Mn")
+        valor = re.sub(r"(?<=\d)[.,](?=\d)", "", valor)
         valor = re.sub(r"[^a-z0-9\s]", " ", valor)
         return re.sub(r"\s+", " ", valor).strip()
 
@@ -295,6 +301,12 @@ def interpretar_seleccion_top3(
 
         # Un número/ordinal aislado dentro del contexto Top-3
         # o que inicia con el número de opción (como los títulos de botón "1. Fuga hidráulica")
+        verbos_seleccion = (
+            r"(?:es|seria|confirmo|correcta|correcto|acerto|fue|elijo|escojo|opto|"
+            r"quiero|voy|vamos|prefiero|empecemos|empezar|iniciar|revisemos|revisar|"
+            r"probar|chequear|ver|vamos\s+a\s+revisar|quiero\s+revisar|voy\s+a\s+revisar|"
+            r"me\s+inclino\s+por|me\s+quedo\s+con)"
+        )
         permitido = bool(
             re.fullmatch(
                 r"(?:si\s+)?(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?"
@@ -303,12 +315,11 @@ def interpretar_seleccion_top3(
                 t,
             )
             or re.search(
-                r"\b(es|seria|confirmo|correcta|correcto|acerto|fue|elijo|escojo)\s+"
-                r"(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?(?:1|2|3|primera|segunda|tercera)\b",
+                rf"\b{verbos_seleccion}\s+(?:por\s+|con\s+|en\s+)?(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?(?:1|2|3|primera|segunda|tercera)\b",
                 t,
             )
             or re.match(
-                r"^(?:si\s+)?(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?([1-3])\b",
+                r"^(?:si\s+)?(?:la\s+)?(?:opcion\s+)?(?:numero\s+)?([1-3]|primera|segunda|tercera)\b",
                 t,
             )
         )

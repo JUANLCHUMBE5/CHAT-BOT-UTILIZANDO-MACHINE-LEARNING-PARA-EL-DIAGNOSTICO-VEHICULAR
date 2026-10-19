@@ -331,7 +331,7 @@ class DiagnosticPersister:
                 predicciones_top = [
                     {"falla": dto.diagnostico_ml, "probabilidad": dto.confianza_ml}
                 ]
-            if predicciones_top:
+            if predicciones_top and getattr(settings, "whatsapp_interactive_buttons_enabled", False):
                 interactivo_salida = construir_botones_hipotesis(
                     predicciones_top, case_id=case_id_actual or str(diag.id)
                 )
@@ -339,6 +339,8 @@ class DiagnosticPersister:
                     "msg_id": out_msg_id,
                     "interactivo": interactivo_salida,
                 }
+            else:
+                contexto_conversacion.pop("mensaje_interactivo", None)
             conversacion.contexto = contexto_conversacion
         elif conversacion and getattr(conversacion, "contexto", None):
             contexto_conversacion = dict(conversacion.contexto or {})

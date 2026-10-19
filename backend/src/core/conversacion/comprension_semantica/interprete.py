@@ -90,7 +90,13 @@ def _construir_contexto_resumido(contexto_estado: Any) -> str:
         sintomas = getattr(contexto_estado, "active_symptoms", []) or []
         pregunta = getattr(contexto_estado, "pending_question", None)
 
-    vehiculo_str = f"{marca or ''} {modelo or ''} (Placa: {placa or 'SIN-PLACA'})".strip()
+    placa_limpia = str(placa or '').strip().upper()
+    placa_str = (
+        f" (Placa: {placa})"
+        if placa_limpia and placa_limpia not in ("SIN-PLACA", "WAPP-01", "REST-API", "DESCONOCIDO")
+        else ""
+    )
+    vehiculo_str = f"{marca or ''} {modelo or ''}{placa_str}".strip()
     if vehiculo_str:
         lineas.append(f"- Vehículo activo: {vehiculo_str}")
     if falla:
