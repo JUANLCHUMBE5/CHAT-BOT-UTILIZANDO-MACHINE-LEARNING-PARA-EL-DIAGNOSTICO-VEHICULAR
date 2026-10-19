@@ -20,14 +20,14 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from src.config import settings
 from src.application.services.confirmacion_diagnostico import (
     instrucciones_confirmacion_whatsapp,
     interpretar_seleccion_top3,
 )
-from src.core.services.whatsapp_provider import WhatsAppProviderService
-from src.core.services.webhook.validation_workflow import ValidationWorkflow
+from src.config import settings
 from src.core.conversacion.comprension_semantica.interprete import _construir_contexto_resumido
+from src.core.services.webhook.validation_workflow import ValidationWorkflow
+from src.core.services.whatsapp_provider import WhatsAppProviderService
 
 
 def test_instrucciones_menu_dinamico_sin_ninguna_ni_no_se():

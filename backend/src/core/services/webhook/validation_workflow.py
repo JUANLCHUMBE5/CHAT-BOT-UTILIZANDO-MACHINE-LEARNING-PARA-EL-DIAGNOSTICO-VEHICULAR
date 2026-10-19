@@ -732,7 +732,9 @@ class ValidationWorkflow:
 
                 interactivo_conf = None
                 if getattr(settings, "whatsapp_interactive_buttons_enabled", False):
-                    from src.application.services.confirmacion_diagnostico import construir_botones_confirmacion
+                    from src.application.services.confirmacion_diagnostico import (
+                        construir_botones_confirmacion,
+                    )
                     interactivo_conf = construir_botones_confirmacion(diagnostico_selector.id)
 
                 await cls.guardar_respuesta_validacion_outbox(
