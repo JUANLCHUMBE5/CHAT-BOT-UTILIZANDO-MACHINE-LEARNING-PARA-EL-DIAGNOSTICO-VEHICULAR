@@ -9,6 +9,7 @@ from src.core.conversacion.detector_polaridad import DetectorPolaridad
 from src.core.conversacion.evidencia_acciones import registrar_acciones_taller
 from src.core.conversacion.models import (
     ConversationState,
+    DtcStatus,
     FactState,
     FactType,
 )
@@ -234,8 +235,6 @@ def extraer_comprobaciones_mecanicas(
         h_sdtc = estado.registrar_hecho(
             "sin_dtc", "sin códigos DTC", categoria="dtc", tipo=FactType.CONDICION
         )
-        from src.core.conversacion.models import DtcStatus
-
         estado.dtc_status = DtcStatus.SIN_DTC
         hechos_extraidos.append(h_sdtc.to_dict())
 

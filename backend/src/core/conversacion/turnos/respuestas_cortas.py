@@ -5,7 +5,7 @@ from __future__ import annotations
 from importlib import import_module as _importar
 
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
-from src.core.conversacion.models import DtcStatus, QuestionIntent
+from src.core.conversacion.models import QuestionIntent
 from src.core.conversacion.respuestas_cortas.seguimiento_mediciones import evaluar_lectura
 
 
@@ -244,9 +244,8 @@ async def respuestas_cortas(self, turno):
             turno.estado.registrar_prueba_completada("presion_combustible", f"{turno.val} {turno.unidad}")
             turno.estado.limpiar_pregunta_pendiente()
             turno.escaneo_ya_realizado = bool(
-                turno.estado.dtc_status == DtcStatus.DTC_AUSENTE
-                or turno.estado.obtener_hecho("sin_dtc")
-                or turno.estado.obtener_hecho("escaner_limpio")
+                turno.estado.obtener_valor_confirmado("sin_dtc")
+                or turno.estado.obtener_valor_confirmado("escaner_limpio")
                 or getattr(turno.estado, "dtc_confirmados", None)
             )
             turno.chispa_ya_evaluada = bool(

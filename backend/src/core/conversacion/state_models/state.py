@@ -131,9 +131,15 @@ class ConversationState:
         if h and h not in self.herramientas_no_disponibles:
             self.herramientas_no_disponibles.append(h)
             self.updated_at = time.time()
+        if h and h not in self.tools_unavailable:
+            self.tools_unavailable.append(h)
+        if h in self.tools_available:
+            self.tools_available.remove(h)
 
     def desbloquear_herramienta(self, her: str) -> None:
         h = her.lower().strip()
+        if h in self.tools_unavailable:
+            self.tools_unavailable.remove(h)
         if h in self.herramientas_no_disponibles:
             self.herramientas_no_disponibles.remove(h)
             self.pruebas_no_disponibles = [p for p in self.pruebas_no_disponibles if p.get("herramienta") != h]
@@ -392,6 +398,7 @@ class ConversationState:
 
     def marcar_herramienta_disponible(self, her: str) -> None:
         h = her.lower().strip()
+        self.desbloquear_herramienta(h)
         if h not in self.tools_available:
             self.tools_available.append(h)
         if h in self.tools_unavailable:
@@ -400,6 +407,7 @@ class ConversationState:
 
     def marcar_herramienta_indisponible(self, her: str) -> None:
         h = her.lower().strip()
+        self.bloquear_herramienta(h)
         if h not in self.tools_unavailable:
             self.tools_unavailable.append(h)
         if h in self.tools_available:

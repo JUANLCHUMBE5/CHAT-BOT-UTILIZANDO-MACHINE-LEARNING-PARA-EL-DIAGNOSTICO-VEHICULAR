@@ -203,6 +203,18 @@ def test_no_escaneado_no_significa_sin_codigos():
     assert s.dtc_status == DtcStatus.SIN_DTC
 
 
+def test_extractor_sin_escaner_no_falla_por_importacion_condicional():
+    from src.core.conversacion.extraccion_hechos.comprobaciones_mecanicas import (
+        extraer_comprobaciones_mecanicas,
+    )
+    from src.core.conversacion.models import DtcStatus
+
+    s = ConversationState(session_id="sin-herramienta")
+    extraer_comprobaciones_mecanicas(s, "No tengo escáner", "no tengo escaner")
+    assert s.dtc_status == DtcStatus.DTC_DESCONOCIDO
+    assert "escaner" in s.herramientas_no_disponibles
+
+
 @pytest.mark.parametrize("valor", [9.0, 14.2, 18.3])
 def test_componente_alternador_procede_del_mensaje_no_del_rango(valor):
     from src.core.conversacion.extractor_hechos import ExtractorHechos

@@ -13,7 +13,7 @@ from src.core.conversacion.control_aclaraciones import (
     hay_evidencia_diagnostica,
 )
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
-from src.core.conversacion.models import ConversationState, DtcStatus, FactState, FactType, QuestionIntent
+from src.core.conversacion.models import ConversationState, FactState, FactType, QuestionIntent
 from src.core.conversacion.suficiencia_informacion import EvaluadorSuficiencia
 from src.core.diagnostico.politica_seguridad import PoliticaSeguridad, SeveridadSeguridad
 
@@ -464,9 +464,8 @@ class EvaluadorDecisionTurno:
             estado.registrar_prueba_completada("presion_combustible", f"{val} {unidad}")
             estado.limpiar_pregunta_pendiente()
             escaneo_ya_realizado = bool(
-                estado.dtc_status == DtcStatus.DTC_AUSENTE
-                or estado.obtener_hecho("sin_dtc")
-                or estado.obtener_hecho("escaner_limpio")
+                estado.obtener_valor_confirmado("sin_dtc")
+                or estado.obtener_valor_confirmado("escaner_limpio")
                 or getattr(estado, "dtc_confirmados", None)
             )
             chispa_ya_evaluada = bool(
