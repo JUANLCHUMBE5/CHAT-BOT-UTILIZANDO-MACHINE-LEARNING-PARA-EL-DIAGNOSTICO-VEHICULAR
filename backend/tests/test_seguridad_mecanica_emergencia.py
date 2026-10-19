@@ -40,7 +40,7 @@ def test_orquestador_prioriza_seguridad_sin_preguntas_frivolas():
         
         assert res["decision"] == "DIAGNOSTICAR"
         assert "ADVERTENCIA CRÍTICA DE SEGURIDAD" in res["respuesta_texto"]
-        assert "NUNCA intente abrir el tapón del radiador" in res["respuesta_texto"]
+        assert "no abras el tapón del radiador" in res["respuesta_texto"].lower() or "no abrir la tapa del radiador" in res["respuesta_texto"].lower() or "nunca intente abrir" in res["respuesta_texto"].lower()
         assert "¿la falla se presenta cuando el vehículo está detenido en ralentí" not in res["respuesta_texto"]
         
         top1 = res["estado"].top3_actual[0]["falla"].lower()

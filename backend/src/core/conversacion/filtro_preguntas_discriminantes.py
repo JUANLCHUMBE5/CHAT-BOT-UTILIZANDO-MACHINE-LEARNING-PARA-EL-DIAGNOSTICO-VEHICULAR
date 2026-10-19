@@ -49,7 +49,7 @@ class FiltroPreguntasDiscriminantes:
     @classmethod
     def es_testigo_o_dtc_conocido(cls, estado: ConversationState) -> bool:
         """Determina si el estado de códigos DTC, testigo Check Engine o escáner ya está conocido."""
-        if estado.dtc_status in (DtcStatus.DTC_OBSERVADO, DtcStatus.DTC_DESCONOCIDO):
+        if estado.dtc_status in (DtcStatus.DTC_OBSERVADO, DtcStatus.SIN_DTC):
             return True
 
         testigo = estado.obtener_hecho("sintoma_testigo_check_engine")

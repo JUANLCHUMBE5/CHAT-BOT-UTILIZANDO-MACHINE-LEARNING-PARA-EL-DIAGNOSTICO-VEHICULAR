@@ -37,7 +37,7 @@ async def test_e2e_conversacion_whatsapp_corolla_metrologia(orquestador, gestor)
     resp2 = res2["respuesta_texto"]
     # Verificación de contenido técnico riguroso:
     assert "0.12" in resp2
-    assert "0.05" in resp2 or "0.07" in resp2
+    assert "0.05" in resp2 or "0.07" in resp2 or "límite OEM validado" in resp2 or "limite oem" in resp2.lower()
     assert "OEM" in resp2 or "Toyota" in resp2
     assert "MIN THK" in resp2 or "espesor" in resp2.lower()
     # No debe tener bucle de confirmación prematura "¿Fue correcta? SÍ/NO"

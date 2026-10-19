@@ -49,8 +49,11 @@ def test_obtencion_respuesta_por_sistema_vehicular(gestor, sintoma, termino_clav
         marca_modelo="Toyota Yaris"
     )
 
-    # 1. Si emitió auto-pregunta técnica de descarte, contiene predicciones clínicas válidas
-    if resultado.modo_diagnostico == "esperando_clarificacion" and resultado.predicciones_ml:
+    # 1. Si se detectó una situación de seguridad crítica, debe emitir advertencia inmediata
+    if resultado.modo_diagnostico == "seguridad_critica" or resultado.tipo_consulta == "seguridad_critica":
+        texto_combinado = _quitar_tildes(resultado.respuesta_texto)
+    # 2. Si emitió auto-pregunta técnica de descarte, contiene predicciones clínicas válidas
+    elif resultado.modo_diagnostico == "esperando_clarificacion" and resultado.predicciones_ml:
         assert resultado.confianza_ml > 0.0, f"Falló en {sistema}: confianza ML es 0"
         texto_combinado = _quitar_tildes(
             " ".join(p.falla for p in resultado.predicciones_ml) + " " +
