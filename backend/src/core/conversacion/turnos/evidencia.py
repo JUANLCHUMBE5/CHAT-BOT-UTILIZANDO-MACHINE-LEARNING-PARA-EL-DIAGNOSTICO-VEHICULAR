@@ -197,6 +197,14 @@ async def evidencia(self, turno):
         turno.motivo_suficiencia = (
             "Falta la lectura técnica mínima para confirmar la ruta explícita de mezcla o MAP"
         )
+    if turno.estado.obtener_hecho("opciones_sugeridas_no_coinciden") and (
+        bool(turno.hechos_extraidos) or len(turno.texto_limpio.split()) >= 3
+    ):
+        turno.es_suficiente = True
+        turno.medicion_area_pendiente = False
+        turno.motivo_suficiencia = (
+            "Nueva evidencia aportada tras descartar opciones previas: reevaluación del caso con SVM + RAG"
+        )
     turno.forzar_avance = debe_avanzar(turno.estado, turno.texto_limpio)
     turno.sin_evidencia = not hay_evidencia_diagnostica(turno.estado)
     if turno.sin_evidencia and dato_desconocido(turno.texto_limpio):

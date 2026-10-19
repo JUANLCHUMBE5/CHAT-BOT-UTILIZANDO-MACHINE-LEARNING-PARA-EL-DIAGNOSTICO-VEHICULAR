@@ -9,10 +9,9 @@ from typing import Iterable
 
 MAGNITUD = re.compile(
     r"(?<![\w.])(-?\d+(?:[.,]\d+)*(?:\s*(?:[–-]|a)\s*\d+(?:[.,]\d+)*)?)\s*\+?\s*"
-    r"(n[.\· ]?m|lb[- ]?ft|kgf[.\· ]?m|m?bar|psi|[km]?pa|mm|micras?|[µu]m|mv|v|"
-    r"ohmios?|ohms?|Ω|ma|a|amperios|voltios?|volts?|°\s*c|grados\s*c|gramos?|ml|litros?|inHg|"
-    r"min(?:utos?)?|segundos?|rpm)(?!\w)",
-    re.I,
+    r"((?i:n[.\· ]?m|lb[- ]?ft|kgf[.\· ]?m|m?bar|psi|[km]?pa|mm|micras?|[µu]m|mv|v|"
+    r"ohmios?|ohms?|Ω|ma|amp(?:erio)?s?|voltios?|volts?|°\s*c|grados\s*c|gramos?|ml|litros?|inHg|"
+    r"min(?:utos?)?|segundos?|rpm)|A)(?!\w)"
 )
 
 
@@ -90,7 +89,7 @@ def es_banner_seguridad_canonico(texto: str) -> bool:
 def limpiar_advertencia(texto):
     """Conserva la prohibición específica; elimina cifras y órdenes normativas.
 
-    No otorga permiso por un encabezado. El mismo control documental ya decidi\u00f3
+    No otorga permiso por un encabezado. El mismo control documental ya decidió
     que la salida necesitaba intervención antes de aplicar esta redacción.
     """
     partes = re.split(r"(?<=[.!?])\s+|\n", texto)
@@ -198,8 +197,11 @@ def proteger_salida_conversacional(
             if parte.strip():
                 conservadas.append(parte)
         # Una consulta de cifras debe abstenerse. En seguimiento clínico se conserva
-        # la pregunta/Plan B/hipótesis cualitativa que no depende de la cifra retirada.
+        # la pregunta orientativa si no contiene cifras ni órdenes normativas.
         if conservadas and not es_solicitud_especificacion(consulta_usuario):
-            aviso = "\n".join(conservadas) + "\n" + aviso
+            cuerpo = " ".join(conservadas).strip()
+            # La prohibición persiste aunque conservemos una pregunta orientativa.
+            return f"{aviso}\n\nOrientación preliminar:\n{cuerpo}", 0.0, True
         return aviso, 0.0, True
+
     return respuesta_propuesta, 1.0, False

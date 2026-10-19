@@ -123,3 +123,90 @@ async def test_flujo_multivuelta_no_descarta_hipotesis_al_seleccionar_ninguna():
     # Turno 3: El mecánico responde con un síntoma adicional
     resp2 = await orquestador.procesar_turno(estado.session_id, "Solo da chispa debil y huele a gasolina cruda", gestor)
     assert resp2 is not None
+
+
+@ejecutar_async
+async def test_interpretacion_opcion_4_ninguna_coincide():
+    estado = ConversationState(session_id="test-opc4", case_id="caso-opc4")
+    estado.registrar_pregunta(
+        intent=QuestionIntent.DISCRIMINACION_TOP3,
+        texto="1. Bujias\n2. Bomba\n3. CKP\n4. Ninguna coincide",
+        opciones=["Bujias", "Bomba", "CKP"],
+        hipotesis=["Bujias", "Bomba", "CKP"],
+    )
+    # Usuario envía opción "4"
+    res = interpretar_respuesta_corta(estado, "4")
+    assert res is not None
+    assert res["categoria_respuesta"] == "OPCION_NINGUNA_COINCIDE"
+    assert res["indice_opcion"] == 4
+    hecho = estado.obtener_hecho("opciones_sugeridas_no_coinciden")
+    assert hecho is not None
+    assert hecho.valor == "ninguna_coincide"
+
+    # Opción "5" fuera de rango
+    res_invalido = interpretar_respuesta_corta(estado, "5")
+    assert res_invalido is not None
+    assert res_invalido["categoria_respuesta"] == "OPCION_NUMERICA_FUERA_DE_RANGO"
+    assert res_invalido["total_opciones"] == 4
+
+
+@ejecutar_async
+async def test_ciclo_completo_reevaluacion_svm_multivuelta():
+    repo = InMemoryConversationRepository()
+    estado = ConversationState(session_id="multi-reeval-1", case_id="caso-reeval-1")
+    estado.top3_actual = [
+        {"falla": "Falla de encendido (bujias/bobinas)", "probabilidad": 0.60},
+        {"falla": "Bomba de combustible defectuosa", "probabilidad": 0.25},
+        {"falla": "Sensor de posicion de cigueñal (CKP)", "probabilidad": 0.15},
+    ]
+    estado.falla_principal = "Falla de encendido (bujias/bobinas)"
+    estado.confianza_actual = 0.60
+    estado.registrar_pregunta(
+        QuestionIntent.DISCRIMINACION_TOP3,
+        "¿Cuál de las siguientes situaciones describe mejor el comportamiento?\n1. Bujías\n2. Bomba\n3. CKP\n4. Ninguna",
+        opciones=["Falla bujias", "Bomba combustible", "Sensor CKP"],
+        hipotesis=["Falla bujias", "Bomba combustible", "Sensor CKP"],
+    )
+    await repo.save_session(estado.session_id, estado)
+
+    # Gestor dinámico que simula cambio de predicciones tras nueva evidencia
+    class GestorReevaluacionMock:
+        def __init__(self):
+            self.turnos_ejecutados = 0
+
+        def procesar_consulta_texto(self, **kwargs):
+            self.turnos_ejecutados += 1
+            # Tras aportar evidencia de presión de combustible (nueva evidencia)
+            return SimpleNamespace(
+                predicciones_ml=[
+                    {"falla": "Bomba de combustible defectuosa", "probabilidad": 0.70},
+                    {"falla": "Falla de encendido (bujias/bobinas)", "probabilidad": 0.20},
+                    {"falla": "Filtro de combustible obstruido", "probabilidad": 0.10},
+                ],
+                diagnostico_ml="Bomba de combustible defectuosa",
+                confianza_ml=0.70,
+                respuesta_texto="Reevaluación diagnóstica con base en la presión de combustible medida.",
+                llm_usado=True,
+                respuesta_limitada=False,
+                contexto_manual_verificado="Manual OEM: Presión mínima de línea 3.5 bar en riel.",
+            )
+
+    gestor = GestorReevaluacionMock()
+    orquestador = OrquestadorConversacion(repo)
+
+    # 1. El mecánico indica opción 4 (ninguna coincide)
+    r1 = await orquestador.procesar_turno(estado.session_id, "4", gestor)
+    assert r1["decision"] == "PREGUNTAR"
+    assert "abiertas sin descartar" in r1["respuesta_texto"] or "considerado" in r1["respuesta_texto"]
+
+    # 2. El mecánico aporta evidencia técnica nueva relevante:
+    r2 = await orquestador.procesar_turno(
+        estado.session_id,
+        "El motor pierde fuerza en subida y tiembla bastante al acelerar",
+        gestor,
+    )
+    assert r2 is not None
+    assert gestor.turnos_ejecutados == 1  # procesar_consulta_texto fue invocado con SVM/RAG
+    assert r2.get("top3_previo") is not None
+    assert r2.get("cambio_ranking") is True
+    assert r2["diagnostico_ml"] == "Bomba de combustible defectuosa"

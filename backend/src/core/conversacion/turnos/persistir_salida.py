@@ -161,6 +161,8 @@ async def persistir_salida(self, turno):
         herramientas_bloqueadas=list(turno.estado.herramientas_no_disponibles),
         version_orquestador=ORCHESTRATOR_VERSION,
         tipo_mensaje=turno.tipo_mensaje,
+        top3_previo=getattr(turno, "top3_previo", None),
+        cambio_ranking=getattr(turno, "cambio_ranking", False),
     )
     turno.estado.trazabilidad.append(turno.traza.to_dict())
     if len(turno.estado.trazabilidad) > 15:
@@ -220,4 +222,6 @@ async def persistir_salida(self, turno):
         "dominio_previo": turno.traza.dominio_previo,
         "dominio_detectado_actual": turno.traza.dominio_detectado_actual,
         "dominio_actual": turno.traza.dominio_actual,
+        "top3_previo": turno.traza.top3_previo,
+        "cambio_ranking": turno.traza.cambio_ranking,
     }

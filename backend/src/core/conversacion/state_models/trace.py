@@ -46,6 +46,8 @@ class TurnTrace:
     herramientas_bloqueadas: List[str] = field(default_factory=list)
     version_orquestador: str = "9.13.0"
     tipo_mensaje: str = "sintoma_nuevo"
+    top3_previo: Optional[List[Dict[str, Any]]] = None
+    cambio_ranking: bool = False
     timestamp: float = field(default_factory=time.time)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -86,5 +88,7 @@ class TurnTrace:
             "plan_b_activado": self.plan_b_activado,
             "herramientas_bloqueadas": list(self.herramientas_bloqueadas),
             "version_orquestador": self.version_orquestador,
+            "top3_previo": self.top3_previo,
+            "cambio_ranking": self.cambio_ranking,
             "timestamp": self.timestamp,
         }

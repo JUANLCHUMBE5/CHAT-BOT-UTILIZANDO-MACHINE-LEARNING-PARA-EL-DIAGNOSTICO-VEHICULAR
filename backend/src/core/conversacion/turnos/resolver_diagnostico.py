@@ -175,6 +175,7 @@ async def resolver_diagnostico(self, turno):
                 nueva_evidencia=turno.texto_limpio if turno.hechos_extraidos else None,
             )
         )
+        turno.top3_previo = list(turno.estado.top3_actual) if getattr(turno.estado, "top3_actual", None) else []
         turno.tiene_descarte_de_componente = _importar(
             "src.core.conversacion.ruteador_sistema"
         ).tiene_descarte_de_componente
@@ -197,6 +198,9 @@ async def resolver_diagnostico(self, turno):
             else:
                 turno.estado.falla_principal = None
                 turno.estado.confianza_actual = 0.0
+        nombres_prev = [str(h.get("falla", "")) for h in turno.top3_previo]
+        nombres_act = [str(h.get("falla", "")) for h in (turno.estado.top3_actual or [])]
+        turno.cambio_ranking = bool(nombres_prev and nombres_act and nombres_prev != nombres_act)
         turno.FormateadorCompacto = _importar(
             "src.core.conversacion.formateador_compacto"
         ).FormateadorCompacto
