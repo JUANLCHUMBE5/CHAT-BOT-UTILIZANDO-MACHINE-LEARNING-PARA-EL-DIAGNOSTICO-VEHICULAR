@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 import uuid
 from importlib import import_module as _importar
@@ -37,9 +38,44 @@ async def entrada_segura(self, turno):
     turno.sev_seguridad_early, turno.banner_seguridad_early = turno.PoliticaSeguridad.evaluar_severidad(
         turno.texto_limpio, str(turno.estado.falla_principal or ""), estado=turno.estado
     )
+
+    es_consulta_mem = ExtractorHechos.es_consulta_memoria(turno.texto_limpio)
+    es_cierre_o_agradecimiento = bool(
+        re.search(
+            r"\b(?:gracias|muchas gracias|agradezco|cerrar|concluir|hasta luego|chao|chau|adios|adiós|listo amigo|perfecto amigo)\b",
+            turno.texto_limpio,
+            re.I,
+        )
+    )
+    es_emergencia_zona_roja = bool(
+        re.search(
+            r"\b(?:zona\s+roja|temperatura\s+al\s+m[aá]ximo|aguja\s+en\s+rojo)\b",
+            turno.texto_limpio,
+            re.I,
+        )
+    )
+
+    # Permitir que consultas iniciales con vehículo y síntomas térmicos fluyan a resolver_diagnostico
+    # para emitir el diagnóstico ML enriquecido con la advertencia crítica (sin repreguntas frívolas).
+    es_diagnostico_inicial_termico = (
+        turno.banner_seguridad_early == turno.BANNER_TEMPERATURA
+        and not es_consulta_mem
+        and not es_cierre_o_agradecimiento
+        and not es_emergencia_zona_roja
+        and turno.estado.turno_actual == 0
+        and bool(
+            re.search(
+                r"\b(?:nissan|toyota|ford|chevrolet|honda|hyundai|kia|sentra|corolla|yaris)\b",
+                turno.texto_limpio,
+                re.I,
+            )
+        )
+    )
+
     if (
         turno.sev_seguridad_early == turno.SeveridadSeguridad.CRITICAL_STOP
         and turno.banner_seguridad_early
+        and not es_diagnostico_inicial_termico
     ):
         if not turno.estado.case_id:
             turno.estado.case_id = str(uuid.uuid4())

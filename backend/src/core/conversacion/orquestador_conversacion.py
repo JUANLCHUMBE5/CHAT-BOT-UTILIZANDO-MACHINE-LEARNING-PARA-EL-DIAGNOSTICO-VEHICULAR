@@ -158,12 +158,18 @@ class OrquestadorConversacion:
 
         severidad, banner = PoliticaSeguridad.evaluar_severidad(texto_usuario, "", estado=estado)
         if severidad == SeveridadSeguridad.CRITICAL_STOP and banner:
-            res.update(
-                respuesta_texto=banner.strip(),
-                decision="SEGURIDAD_CRITICA",
-                confianza_ml=0.0,
-                es_pregunta=False,
-            )
+            if res.get("decision") == "DIAGNOSTICAR" and (
+                "ADVERTENCIA CRÍTICA DE SEGURIDAD" in res.get("respuesta_texto", "")
+                or "BLOQUEO DE SEGURIDAD MECÁNICA" in res.get("respuesta_texto", "")
+            ):
+                pass
+            else:
+                res.update(
+                    respuesta_texto=banner.strip(),
+                    decision="SEGURIDAD_CRITICA",
+                    confianza_ml=0.0,
+                    es_pregunta=False,
+                )
         if estado is not None:
             res.setdefault("case_id", estado.case_id)
         veh_str = f"{getattr(estado, 'marca', '') or ''} {getattr(estado, 'modelo', '') or ''} {getattr(estado, 'anio', '') or ''}".strip()
