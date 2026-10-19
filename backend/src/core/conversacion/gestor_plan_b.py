@@ -377,6 +377,15 @@ class GestorPlanB:
         """
         dominio_norm = (dominio or "").upper()
         preg_norm = (ultima_preg or "").lower()
+        sintomas = " ".join(str(s) for s in estado.active_symptoms).lower()
+        if re.search(r"\b(?:turbo|vgt|sobrealimentaci[oó]n)\b", sintomas):
+            return (
+                "inspección visual externa del circuito de admisión y actuador del turbo.",
+                "Sin bomba de vacío, realiza una inspección visual de mangueras, conectores y sujeciones "
+                "del turbo con motor apagado y frío. No fuerces la varilla del actuador ni ajustes topes. "
+                "La hipótesis queda pendiente hasta una prueba con equipo y procedimiento del fabricante.",
+                QuestionIntent.PLAN_B_SIN_HERRAMIENTAS,
+            )
 
         if str(getattr(estado.estado_operativo, "value", "")) == "ARRANQUE":
             if "multimetro" in estado.herramientas_no_disponibles:

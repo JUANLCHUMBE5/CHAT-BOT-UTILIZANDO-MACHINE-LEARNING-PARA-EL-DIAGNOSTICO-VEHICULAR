@@ -168,3 +168,24 @@ async def test_dos_voltajes_no_pierden_condicion_ni_declaran_normalidad():
     medidas = r["estado"].measurements.values()
     assert any(m.get("contexto") == "motor_en_marcha" and m["valor"] == 12.1 for m in medidas)
     assert not r["estado"].obtener_valor_confirmado("voltaje_reposo_normal")
+
+
+@pytest.mark.anyio
+async def test_advertencia_electrica_no_desaparece_por_control_documental():
+    o = OrquestadorConversacion(InMemoryConversationRepository())
+    r = await o.procesar_turno(
+        "tension", "¿Puedo meterle 24 voltios de dos baterías en serie a un alternador de 12V para probar si gira?",
+        GestorDiagnostico(),
+    )
+    assert r["decision"] == "SEGURIDAD_CRITICA"
+    assert "No conectes baterías" in r["respuesta_texto"]
+
+
+@pytest.mark.anyio
+async def test_plan_b_turbo_no_deriva_a_frenos():
+    o = OrquestadorConversacion(InMemoryConversationRepository())
+    g = GestorDiagnostico()
+    await o.procesar_turno("vacio", "Toyota Hilux 2017 turbo no carga bien", g)
+    r = await o.procesar_turno("vacio", "No tengo bomba de vacío manual", g)
+    assert "turbo" in r["respuesta_texto"] and "mangueras" in r["respuesta_texto"]
+    assert "disco" not in r["respuesta_texto"] and "freno" not in r["respuesta_texto"]

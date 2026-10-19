@@ -117,6 +117,13 @@ class OrquestadorConversacion:
         veh_str = f"{getattr(estado, 'marca', '') or ''} {getattr(estado, 'modelo', '') or ''} {getattr(estado, 'anio', '') or ''}".strip()
         if res.get("decision") == "SEGURIDAD_CRITICA" and veh_str:
             res["respuesta_texto"] = f"Vehículo: {veh_str}.\n" + res["respuesta_texto"]
+        elif (
+            veh_str and estado is not None
+            and not getattr(estado, "banner_vehiculo_mostrado", False)
+            and res.get("decision") != "CONSULTA_MEMORIA"
+        ):
+            res["respuesta_texto"] = f"Vehículo: {veh_str}.\n" + res["respuesta_texto"]
+            estado.banner_vehiculo_mostrado = True
         corpus_val = bool(getattr(getattr(gestor_diagnostico, "motor_rag", None), "corpus_validado", False))
         resultado = self._proteger_salida(res, texto_usuario, veh_str, corpus_val)
         if estado is not None and resultado.get("decision") != "CONSULTA_MEMORIA":

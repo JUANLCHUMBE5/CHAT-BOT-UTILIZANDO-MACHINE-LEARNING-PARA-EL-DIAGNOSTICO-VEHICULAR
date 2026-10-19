@@ -330,7 +330,7 @@ PATRON_INCOMPATIBILIDAD_BUJIAS_DIESEL = re.compile(
 
 PATRON_INCOMPATIBILIDAD_24V_12V = re.compile(
     r"\b("
-    r"(?:meter|conectar|poner|alimentar|puentear|pasar(?:le)?\s+corriente|auxiliar)\b.{0,40}\b24\s*v(?:oltios)?\b.{0,50}\b(?:12\s*v|auto|camioneta|bater[ií]a\s+de\s+12)\b|"
+    r"(?:meter(?:le)?|conectar(?:le)?|poner(?:le)?|alimentar|puentear|pasar(?:le)?\s+corriente|auxiliar)\b.{0,40}\b24\s*v(?:oltios)?\b.{0,160}\b(?:12\s*v|auto|camioneta|bater[ií]a\s+de\s+12)\b|"
     r"24\s*v(?:oltios)?\b.{0,40}\b(?:a\s+un\s+auto|a\s+un\s+sistema\s+de\s+12|en\s+un\s+auto\s+de\s+12)\b"
     r")\b",
     re.IGNORECASE,

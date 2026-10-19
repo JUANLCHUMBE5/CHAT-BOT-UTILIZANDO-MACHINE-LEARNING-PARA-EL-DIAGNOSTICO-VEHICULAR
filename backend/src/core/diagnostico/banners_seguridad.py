@@ -200,6 +200,6 @@ BANNER_INCOMPATIBILIDAD_BUJIAS_DIESEL = """� **INCOMPATIBILIDAD TÉCNICA Y SEG
 • Los únicos elementos roscados en la cámara son las **bujías de precalentamiento (calentadores / glow plugs)**, cuya función es exclusivamente entibiar la precámara o cámara durante el arranque en frío.
 • Si el motor diésel no arranca, las comprobaciones válidas son: estado de los calentadores (resistencia en ohmios), presión en el riel Common Rail y compresión mecánica."""
 
-BANNER_INCOMPATIBILIDAD_24V_12V = """🛑 **BLOQUEO DE SEGURIDAD MECÁNICA — INCOMPATIBILIDAD ELÉCTRICA: NO APLICAR 24V EN SISTEMAS DE 12V**
+BANNER_INCOMPATIBILIDAD_24V_12V = """🛑 **BLOQUEO DE SEGURIDAD MECÁNICA — INCOMPATIBILIDAD DE ALIMENTACIÓN ELÉCTRICA**
 
-PROHIBICIÓN ESTRICTA: Prohibido conectar fuentes de 24V a un vehículo o alternador de 12V. Detén el trabajo de inmediato. Aplicar 24 voltios va a quemar instantáneamente la ECU, reguladores, diodos del alternador y módulos electrónicos del sistema de 12V, con grave peligro de explosión de la batería e incendio del ramal eléctrico."""
+PROHIBICIÓN ESTRICTA: No conectes baterías en serie ni fuentes de tensión incompatibles al alternador o vehículo. Detén la prueba de inmediato: puede dañar reguladores y módulos, quemar cableado y provocar incendio o explosión de batería. Consulta la alimentación nominal y el procedimiento del fabricante antes de cualquier prueba; no improvises conexiones."""
