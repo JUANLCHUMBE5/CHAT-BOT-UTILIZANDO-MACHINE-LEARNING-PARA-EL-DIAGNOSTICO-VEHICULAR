@@ -1,0 +1,20 @@
+{
+  "baseline_f8_3": {
+    "version": "baseline_f8_3",
+    "hit1_pct": 87.70491803278688,
+    "contaminacion_pct": 0.0,
+    "lat_p50_ms": 90.1,
+    "lat_p95_ms": 232.59,
+    "n": 122,
+    "contaminados": []
+  },
+  "candidate_v1": {
+    "version": "candidate_v1",
+    "hit1_pct": 92.62295081967213,
+    "contaminacion_pct": 0.0,
+    "lat_p50_ms": 97.75,
+    "lat_p95_ms": 239.75,
+    "n": 122,
+    "contaminados": []
+  }
+}

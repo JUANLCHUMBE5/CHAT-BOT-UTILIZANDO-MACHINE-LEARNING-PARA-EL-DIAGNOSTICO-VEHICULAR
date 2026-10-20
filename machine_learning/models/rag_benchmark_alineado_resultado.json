@@ -1,0 +1,9 @@
+{
+  "hit1_pct": 92.62295081967213,
+  "hit1_count": 113,
+  "total": 122,
+  "contaminacion_pct": 0.0,
+  "latencia_p50": 83.13629999611294,
+  "latencia_p95": 236.865625000064,
+  "fallos_restantes": 9
+}

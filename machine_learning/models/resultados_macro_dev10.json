@@ -1,0 +1,42 @@
+[
+  {
+    "nombre": "N1_ISOTONIC_C1.0 (BASELINE)",
+    "C": 1.0,
+    "method": "isotonic",
+    "acc": 96.46376811594203,
+    "f1_macro": 94.90324361208086,
+    "t_train": 2.7
+  },
+  {
+    "nombre": "N1_ISOTONIC_C1.2",
+    "C": 1.2,
+    "method": "isotonic",
+    "acc": 96.40579710144928,
+    "f1_macro": 94.83564473805463,
+    "t_train": 0.43
+  },
+  {
+    "nombre": "N1_SIGMOID_C1.0",
+    "C": 1.0,
+    "method": "sigmoid",
+    "acc": 96.46376811594203,
+    "f1_macro": 94.89518039870202,
+    "t_train": 0.47
+  },
+  {
+    "nombre": "N1_SIGMOID_C1.2",
+    "C": 1.2,
+    "method": "sigmoid",
+    "acc": 96.46376811594203,
+    "f1_macro": 94.89518039870202,
+    "t_train": 0.47
+  },
+  {
+    "nombre": "N1_SIGMOID_C1.5",
+    "C": 1.5,
+    "method": "sigmoid",
+    "acc": 96.52173913043478,
+    "f1_macro": 94.94364634071992,
+    "t_train": 0.52
+  }
+]
