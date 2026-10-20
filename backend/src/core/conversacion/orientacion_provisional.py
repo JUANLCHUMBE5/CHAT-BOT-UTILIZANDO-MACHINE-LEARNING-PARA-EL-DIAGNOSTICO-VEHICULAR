@@ -1,4 +1,4 @@
-﻿"""Orientación provisional segura y manejo de imposibilidad de comprobaciones físicas."""
+"""Orientación provisional segura y manejo de imposibilidad de comprobaciones físicas."""
 
 from __future__ import annotations
 
@@ -26,13 +26,17 @@ PATRONES_IMPOSIBILIDAD_FISICA = (
     r"\b(?:no|ni|tampoco)\s+tengo\s+(?:un\s+)?(?:reloj\s+comparador|esc[aá]ner|scanner|mult[ií]metro|man[oó]metro|herramientas?)\b",
     r"\bno\s+puedo\s+(?:hacer|realizar)\s+ninguna\s+prueba\b",
     r"\b(?:no|ni)\s+(?:puedo\s+)?desarmar\s+nada\b",
+    r"\b(?:todav[ií]a|a[uú]n)\s+no\s+(?:he\s+)?(?:realizado|hecho|revisado|comprobado|verificado)\b",
+    r"\b(?:sin|no\s+tengo)\s+herramientas?\b",
+    r"\bqu[eé]\s+(?:puedo|podemos|se\s+puede)\s+(?:revisar|hacer|ver)(?:\s+visualmente)?\b",
+    r"\b(?:inspecci[oó]n|revisi[oó]n|comprobaci[oó]n)\s+visual\s+segura\b",
 )
 
 PATRONES_SIN_MAS_SINTOMAS = (
     r"\bno\s+(?:puedo|podemos)\b[^.!?]{0,80}\b(?:confirmar|aportar|dar|agregar|indicar)\s+(?:m[aá]s\s+|mas\s+)?s[ií]ntomas?(?:\s+adicionales?)?\b",
     r"\b(?:no\s+(?:puedo|podemos)|ni|tampoco)\s+(?:puedo\s+)?(?:confirmar|aportar|dar|agregar|indicar)\s+(?:m[aá]s\s+|mas\s+)?s[ií]ntomas?(?:\s+adicionales?)?\b",
     r"\bno\s+tengo\s+(?:m[aá]s\s+|mas\s+)?(?:s[ií]ntomas?|datos?|informaci[oó]n|detalles?)\b",
-    r"\bno\s+s[eé]\s+(?:m[aá]s|nada\s+m[aá]s)\b",
+    r"\bno\s+s[eé]\s+(?:m[aás]|nada\s+m[aá]s)\b",
     r"\bno\s+hay\s+(?:m[aá]s\s+|mas\s+)?s[ií]ntomas?\b",
     r"\bes\s+todo\s+lo\s+que\s+(?:s[eé]|tengo|siento|veo|pasa|ocurre|noto)\b",
     r"\bno\s+puedo\s+aportar\s+nada\s+m[aá]s\b",
@@ -44,6 +48,34 @@ PATRONES_FEEDBACK = (
     r"\b(?:no\s+me\s+sirvi[oó]|no\s+me\s+ayud[oó]|no\s+ayud[oó]|mala\s+atenci[oó]n)\b",
     r"\b(?:buena|mala)\s+(?:respuesta|orientaci[oó]n|explicaci[oó]n)\b",
 )
+
+
+def es_sintoma_mecanico_valido(s: str) -> bool:
+    """Verifica que el texto represente un síntoma mecánico genuino y no una palabra de control."""
+    if not s or not isinstance(s, str):
+        return False
+    norm = _normalizar(s)
+    if not norm:
+        return False
+    # Excluir palabras de control afirmativas, negativas o de menú
+    if norm in {
+        "si", "s", "no", "correcto", "negativo", "exacto", "falso", "incorrecto", "incorrecta", "fue incorrecto", "fue incorrecta", "fue correcto", "fue correcta", "esta bien", "esta mal",
+        "1", "2", "3", "primera", "segunda", "tercera", "primero", "segundo", "tercero",
+        "opcion 1", "opcion 2", "opcion 3", "la 1", "la 2", "la 3",
+        "la primera", "la 1ra", "la segunda", "la 2da", "la tercera", "la 3ra",
+        "el primero", "el segundo", "el tercero", "ninguna", "no se", "ok", "vale",
+    }:
+        return False
+    # Excluir si solo contiene números o referencias a opciones
+    if re.fullmatch(r"(?:la\s+|el\s+)?(?:primera?|segunda?|tercera?|[1-9](?:ra|da|ro)?|[1-9])", norm):
+        return False
+    # Excluir imposibilidad o sin más síntomas
+    if es_imposibilidad_completa(s):
+        return False
+    # Excluir saludos o agradecimientos
+    if norm in {"hola", "buenas", "buenos dias", "buenas tardes", "gracias", "muchas gracias"}:
+        return False
+    return True
 
 
 def es_imposibilidad_comprobacion_fisica(texto: str) -> bool:
@@ -121,6 +153,65 @@ def es_sistema_frenos(estado: Any) -> bool:
     return False
 
 
+def obtener_orientacion_visual_segura(estado: Any = None, falla: str | None = None) -> list[str]:
+    """Genera comprobaciones visuales externas, pertinentes y 100% seguras sin herramientas ni desmontajes."""
+    es_frenos = False
+    if estado is not None and es_sistema_frenos(estado):
+        es_frenos = True
+    elif falla and any(k in falla.lower() for k in ("freno", "cilindro maestro", "pastilla", "disco", "caliper", "cáliper", "pedal")):
+        es_frenos = True
+    elif estado is not None:
+        textos = []
+        if hasattr(estado, "active_symptoms") and estado.active_symptoms:
+            textos.extend(estado.active_symptoms)
+        if hasattr(estado, "sintoma_principal") and estado.sintoma_principal:
+            textos.append(estado.sintoma_principal)
+        if any(any(k in str(t).lower() for k in ("freno", "pedal", "pastilla", "disco", "liquido de freno", "esponjoso")) for t in textos):
+            es_frenos = True
+
+    guias = []
+    if es_frenos:
+        guias.append(
+            "🔍 *Inspección visual externa segura (vehículo apagado y estacionado en terreno plano):*\n"
+            "1. *Nivel de líquido de frenos:* Con el vehículo apagado, abre el capó y observa a través del "
+            "depósito translúcido si el líquido se encuentra entre las líneas MIN y MAX (sin abrir la tapa "
+            "ni retirarla para evitar introducir humedad o aire al circuito).\n"
+            "2. *Fugas externas visibles:* Revisa visualmente el piso debajo del vehículo y la cara interna "
+            "de las ruedas y neumáticos en busca de goteos o manchas de fluido, así como las uniones visibles de la bomba de frenos.\n"
+            "3. *Seguridad prioritaria:* No conduzcas el vehículo para reproducir síntomas con el pedal esponjoso, "
+            "ni intentes purgas o desmontajes sin herramientas y capacitación especializada."
+        )
+        return guias
+
+    falla_lower = (falla or "").lower()
+    sintomas_str = " ".join(getattr(estado, "active_symptoms", []) or []).lower() if estado else ""
+    if any(k in falla_lower or k in sintomas_str for k in ("refrigera", "temperatura", "recalienta", "radiador")):
+        guias.append(
+            "🔍 *Inspección visual externa segura (motor totalmente frío y apagado):*\n"
+            "1. *Depósito de reserva:* Revisa a través del plástico translúcido que el nivel de refrigerante esté entre MIN y MAX (sin abrir la tapa ni el sistema con motor caliente).\n"
+            "2. *Mangueras y radiador:* Observa si hay marcas blancas, verdes o goteos visibles en mangueras externas o en el suelo.\n"
+            "3. *Seguridad:* No intentes desmontar piezas ni abrir tapas a presión sin herramientas ni protección."
+        )
+        return guias
+
+    if any(k in falla_lower or k in sintomas_str for k in ("bateria", "batería", "alternador", "arranque")):
+        guias.append(
+            "🔍 *Inspección visual externa segura (motor apagado y sin llave en contacto):*\n"
+            "1. *Bornes de batería:* Observa si presentan sulfatación blanquecina o terminales flojos.\n"
+            "2. *Correa de accesorios:* Verifica visualmente que no presente grietas notorias sin manipular piezas.\n"
+            "3. *Seguridad:* No manipules bornes ni cableado sin herramientas aisladas."
+        )
+        return guias
+
+    guias.append(
+        "🔍 *Inspección visual externa segura (vehículo apagado y estacionado con freno de mano):*\n"
+        "1. *Revisión exterior:* Con el motor apagado, realiza una inspección visual directa del componente y conectores accesibles a simple vista.\n"
+        "2. *Inspección de fluidos:* Revisa si existen manchas de fluidos en el piso o conexiones sueltas sin desmontar piezas ni forzar componentes.\n"
+        "3. *Seguridad:* Si no dispones de herramientas adecuadas, mantén el vehículo detenido hasta contar con el equipo de diagnóstico necesario."
+    )
+    return guias
+
+
 def generar_orientacion_provisional(
     estado: Any,
     hipotesis_disponibles: Optional[List[dict]] = None,
@@ -134,11 +225,11 @@ def generar_orientacion_provisional(
         "provisional y no confirma una falla."
     ]
 
-    # 2. Resumen de síntomas limpios
-    sintomas = []
-    for s in getattr(estado, "active_symptoms", []) or []:
-        if s and not es_imposibilidad_completa(s):
-            sintomas.append(s.strip())
+    # 2. Resumen de síntomas limpios (filtrando estrictamente palabras de control)
+    sintomas = [
+        s.strip() for s in getattr(estado, "active_symptoms", []) or []
+        if es_sintoma_mecanico_valido(s)
+    ]
 
     sintomas_txt = "; ".join(sintomas[:2]) if sintomas else "los síntomas observados"
 
@@ -166,31 +257,25 @@ def generar_orientacion_provisional(
             f"{area}, manteniéndose sin confirmar al carecer de mediciones físicas."
         )
 
-    # 4. El interlocutor es mecánico: conservar la limitación y sugerir solo
-    # una comprobación alternativa segura (inspección visual/física directa).
-    historial = getattr(estado, "historial_mensajes_usuario", []) or []
-    if getattr(estado, "active_system", "") in {"encendido", "arranque"} or any(
-        w in str(getattr(estado, "active_symptoms", [])).lower() for w in ("acelera", "tironea", "arranc", "chispa")
-    ):
-        partes.append(
-            "Dejo registrada la limitación de herramienta. Procede mediante **inspección** visual de bujías, chispa y "
-            "conexiones físicas directas; si no dispones de escáner ni multímetro, conserva el caso pendiente "
-            "sin sustituir piezas ni confirmar una causa."
-        )
+    # 4. Proporcionar comprobaciones visuales concretas y seguras sin herramientas
+    guias_visuales = obtener_orientacion_visual_segura(estado, falla=h1)
+    if guias_visuales:
+        partes.extend(guias_visuales)
     else:
         partes.append(
-            "Dejo registrada la limitación de herramienta. Procede mediante **inspección** visual y física de los "
-            "componentes periféricos o continúa solo cuando exista una comprobación segura y pertinente disponible; "
-            "no confirmes una causa ni sustituyas piezas con la evidencia actual."
+            "Dejo registrada la limitación de herramienta. Continúa solo cuando exista una "
+            "comprobación segura y pertinente disponible; no confirmes una causa ni sustituyas piezas "
+            "con la evidencia actual."
         )
 
+    historial = getattr(estado, "historial_mensajes_usuario", []) or []
     if historial and es_imposibilidad_completa(historial[-1]):
         partes.append(
             "Mantengo el caso pendiente hasta que puedas realizar una comprobación segura "
             "o una revisión presencial. No te pediré efectuar una prueba que hoy no puedes realizar."
         )
 
-    if es_sistema_frenos(estado):
+    if es_sistema_frenos(estado) and not any("Atención en seguridad" in p for p in partes):
         partes.append(
             "⚠️ *Atención en seguridad:* Al tratarse del sistema de frenos, la revisión presencial "
             "en taller es indispensable y prioritaria antes de continuar circulando, para descartar "

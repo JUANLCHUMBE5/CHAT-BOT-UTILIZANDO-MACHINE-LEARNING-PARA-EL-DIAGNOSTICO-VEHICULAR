@@ -8,6 +8,7 @@ from importlib import import_module as _importar
 from src.core.conversacion.extraccion_hechos.patrones_hechos import PATRON_CORRECCION_VEHICULO
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.models import FactState, FactType
+from src.core.conversacion.orientacion_provisional import es_sintoma_mecanico_valido
 from src.core.logger import logger
 
 
@@ -112,7 +113,11 @@ async def interpretacion(self, turno):
                         tipo=FactType.CONDICION,
                     )
                 elif turno.hs.tipo == turno.TipoHechoSemantico.SINTOMA:
-                    if turno.hs.valor and turno.hs.valor not in turno.estado.active_symptoms:
+                    if (
+                        turno.hs.valor
+                        and es_sintoma_mecanico_valido(turno.hs.valor)
+                        and turno.hs.valor not in turno.estado.active_symptoms
+                    ):
                         turno.estado.active_symptoms.append(turno.hs.valor)
                     turno.estado.registrar_hecho(
                         campo=turno.hs.campo,
@@ -155,21 +160,22 @@ async def interpretacion(self, turno):
         or PATRON_CORRECCION_VEHICULO.search(turno.texto_limpio)
         or getattr(turno.estado, "turno_ultima_correccion", None) == turno.estado.turno_actual
         or re.fullmatch(
-            "\\s*(?:gasolina|di[eé]sel|petr[oó]leo|glp|gnv|nafta)\\s*", turno.texto_limpio, re.IGNORECASE
+            r"\s*(?:gasolina|di[eé]sel|petr[oó]leo|glp|gnv|nafta)\s*", turno.texto_limpio, re.IGNORECASE
         )
         or re.search(
-            "^\\s*(?:no\\s+tengo|no\\s+dispongo|no\\s+cuento|no\\s+poseo)\\b",
+            r"^\s*(?:no\s+tengo|no\s+dispongo|no\s+cuento|no\s+poseo)\b",
             turno.texto_limpio,
             re.IGNORECASE,
         )
         or ExtractorHechos.es_saludo(turno.texto_limpio)
         or bool(
             re.search(
-                "\\b(?:muchas\\s+gracias|gracias|perfecto|excelente|qued[oó]\\s+clar[ií]simo)\\b",
+                r"\b(?:muchas\s+gracias|gracias|perfecto|excelente|qued[oó]\s+clar[ií]simo)\b",
                 turno.texto_limpio,
                 re.IGNORECASE,
             )
         )
+        or not es_sintoma_mecanico_valido(turno.texto_limpio)
     )
     turno.hay_sintoma_en_hechos = any(
         (
@@ -179,9 +185,13 @@ async def interpretacion(self, turno):
         )
     )
     if (
-        turno.hay_sintoma_en_hechos
-        or (not turno.es_no_sintoma and ExtractorHechos.contiene_informacion_diagnostica(turno.texto_limpio))
-    ) and turno.texto_limpio not in turno.estado.active_symptoms:
+        (
+            turno.hay_sintoma_en_hechos
+            or (not turno.es_no_sintoma and ExtractorHechos.contiene_informacion_diagnostica(turno.texto_limpio))
+        )
+        and es_sintoma_mecanico_valido(turno.texto_limpio)
+        and turno.texto_limpio not in turno.estado.active_symptoms
+    ):
         turno.estado.active_symptoms.append(turno.texto_limpio)
     turno.es_evidencia_duplicada = False
     if turno.hechos_extraidos and turno.estado.top3_actual:

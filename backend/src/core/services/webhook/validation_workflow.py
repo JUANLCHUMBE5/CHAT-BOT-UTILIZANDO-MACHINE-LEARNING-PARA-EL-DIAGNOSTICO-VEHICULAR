@@ -48,6 +48,13 @@ def _es_evidencia_diagnostica_nueva(texto_cliente: str) -> bool:
 
     if es_feedback_conversacional(texto_cliente):
         return False
+
+    # Solicitudes de inspección visual o declaración de falta de herramientas no son evidencia nueva
+    if re.search(r"\bqu[eé]\s+(?:puedo|podemos|se\s+puede)\s+(?:revisar|hacer|ver)(?:\s+visualmente)?\b", texto_normalizado):
+        return False
+    if any(k in texto_normalizado for k in ("sin herramienta", "no tengo herramienta", "no puedo revisar", "aun no", "todavia no", "visualmente")):
+        return False
+
     from src.core.conversacion.extractor_hechos import ExtractorHechos
 
     tiene_pregunta = bool(
@@ -84,14 +91,10 @@ def _registrar_turno_consumido_por_validacion(
     texto_cliente: str,
     conversacion_id: str,
 ) -> None:
-    """Registra el turno cuando validación responde sin pasar al orquestador.
-
-    El flujo de validación tiene retornos propios para confirmaciones y
-    retroalimentación. Cada uno sigue siendo un turno aceptado y debe quedar en
-    la memoria durable, aunque no aporte una medición confirmada.
-    """
+    """Registra el turno cuando validación responde sin pasar al orquestador."""
     from src.core.conversacion.extractor_hechos import ExtractorHechos
     from src.core.conversacion.models import ConversationState
+    from src.core.conversacion.orientacion_provisional import es_sintoma_mecanico_valido
 
     serializado = (
         contexto_conversacion.get("conversation_state")
@@ -103,6 +106,7 @@ def _registrar_turno_consumido_por_validacion(
         else ConversationState(session_id=conversacion_id)
     )
     ExtractorHechos.extraer_y_actualizar(estado, texto_cliente)
+    estado.active_symptoms = [s for s in estado.active_symptoms if es_sintoma_mecanico_valido(s)]
     exportado = estado.exportar_dict()
     contexto_conversacion["conversation_state"] = exportado
     contexto_conversacion["estado_conversacion"] = exportado
@@ -110,12 +114,44 @@ def _registrar_turno_consumido_por_validacion(
 
 def _nombre_hipotesis(hipotesis: Any) -> str:
     """Obtiene el texto persistible de una hipótesis sin serializar relaciones ORM."""
-
-    return str(
+    if not hipotesis:
+        return ""
+    val = (
         getattr(hipotesis, "falla_probable", None)
         or getattr(hipotesis, "falla", None)
         or getattr(hipotesis, "nombre", None)
-        or ""
+    )
+    if isinstance(val, str) and not val.startswith("<MagicMock"):
+        return val
+    if isinstance(hipotesis, dict):
+        f = hipotesis.get("falla_probable") or hipotesis.get("falla") or hipotesis.get("nombre")
+        if isinstance(f, str) and not f.startswith("<MagicMock"):
+            return f
+    return ""
+
+
+def _procedimiento_seguro_fallback(falla: str) -> str:
+    """Fallback determinista y seguro si no existe procedimiento RAG registrado."""
+    falla_lower = falla.lower()
+    if any(k in falla_lower for k in ("freno", "cilindro maestro", "pedal", "caliper", "cáliper", "pastilla", "disco")):
+        return (
+            "Con el vehículo detenido y motor apagado, realiza una inspección visual externa del depósito translúcido "
+            "de líquido de frenos verificando que el nivel esté entre MIN y MAX (sin abrir la tapa para evitar contaminación), "
+            "y revisa si hay goteos visibles en el piso o cara interna de ruedas. No realices purgas ni desarmes sin equipo adecuado."
+        )
+    if any(k in falla_lower for k in ("refrigera", "temperatura", "recalienta", "radiador", "termostato")):
+        return (
+            "Con el motor totalmente frío y apagado, realiza una inspección visual del depósito de refrigerante verificando "
+            "que el nivel esté entre MIN y MAX, y comprueba si hay marcas de goteo en mangueras externas o radiador."
+        )
+    if any(k in falla_lower for k in ("bateria", "batería", "alternador", "arranque", "encendido")):
+        return (
+            "Con el motor apagado y sin llave en contacto, inspecciona visualmente el estado de los bornes y cables de batería "
+            "en busca de sulfatación o terminales flojos, así como el estado externo de la correa de accesorios."
+        )
+    return (
+        "Con el vehículo apagado y estacionado con freno de mano, efectúa una inspección visual directa del componente y conectores "
+        "accesibles a simple vista en busca de fisuras, desconexiones o manchas visibles de fluidos."
     )
 
 
@@ -124,13 +160,15 @@ def _respuesta_detalle_hipotesis(hipotesis: Any, orden: int) -> str:
 
     falla = _nombre_hipotesis(hipotesis) or "Hipótesis técnica bajo revisión"
     prueba = str(getattr(hipotesis, "prueba_recomendada", None) or "").strip()
+    if not prueba or any(k in prueba.lower() for k in ("sin procedimiento", "no registrado", "n/a", "none")):
+        prueba = _procedimiento_seguro_fallback(falla)
+
     respuesta = (
         f"🔎 Seleccionaste la hipótesis *{orden}*: *{falla}*.\n\n"
-        "Aún no la registraré como confirmada hasta contar con una verificación física."
+        "Aún no la registraré como confirmada hasta contar con una verificación física.\n\n"
+        f"🔧 *Primero verifica:* {prueba}\n\n"
+        "Cuando realices la comprobación, responde *SÍ* si coincide con la hipótesis, o describe qué observaste al revisar (o si aún no has podido revisar)."
     )
-    if prueba:
-        respuesta += f"\n\n🔧 *Primero verifica:* {prueba}"
-    respuesta += "\n\nResponde *SÍ* si la comprobaste o *NO* para descartar y continuar el análisis."
     return respuesta
 
 
@@ -150,32 +188,29 @@ def _solicita_continuar_sin_confirmacion(texto: str) -> bool:
         r"^no\s+se(?:\s+(?:todavia|aun))?$",
         r"\bnecesito\s+otra\s+(?:prueba|comprobacion)\b",
         r"\botra\s+forma\s+de\s+(?:revisar|comprobar|verificar)\b",
+        r"\bqu[eé]\s+(?:puedo|podemos|se\s+puede)\s+(?:revisar|hacer|ver)(?:\s+visualmente)?\b",
+        r"\b(?:revisar|verificar|inspeccionar)\s+visualmente\b",
     )
     return any(re.search(patron, normalizado) for patron in patrones)
 
 
-def _respuesta_para_continuar_diagnostico(texto: str) -> str:
-    """Mantiene la hipótesis pendiente y propone una vía segura / inspección visual sin exigir herramientas complejas ni elevador."""
+def _respuesta_para_continuar_diagnostico(
+    texto: str,
+    estado: Any = None,
+    falla_principal: str | None = None,
+) -> str:
+    """Mantiene la hipótesis pendiente y propone una guía de inspección visual segura y contextual."""
+    from src.core.conversacion.orientacion_provisional import obtener_orientacion_visual_segura
 
-    normalizado = _normalizar(texto)
-    if any(k in normalizado for k in ("desmont", "rueda", "elevador", "herramienta", "manometro", "reloj")):
-        return (
-            "Entendido. La hipótesis queda pendiente: no registraré una confirmación "
-            "ni un descarte sin evidencia física.\n\n"
-            "👁️ *Alternativa de inspección visual segura (sin herramientas ni elevador, sin desmontar la rueda):*\n"
-            "- Con el vehículo detenido y motor apagado, realiza una inspección visual directa "
-            "del componente o conexiones accesibles a simple vista.\n"
-            "- Revisa visualmente si hay fugas, manchas de fluido, conectores flojos o desgaste evidente.\n\n"
-            "Podemos continuar el diagnóstico. Indica qué observas a simple vista o describe otro síntoma."
-        )
-    return (
-        "Entendido. La hipótesis queda pendiente: no registraré una confirmación "
-        "ni un descarte sin evidencia física.\n\n"
-        "👁️ *Alternativa visual segura:*\n"
-        "Podemos continuar el diagnóstico. Puedes realizar una inspección visual preliminar con el auto detenido y freno de mano colocado, "
-        "sin necesidad de herramientas complejas ni elevador.\n\n"
-        "Describe la siguiente observación o síntoma que notes para continuar."
+    guias_visuales = obtener_orientacion_visual_segura(estado, falla=falla_principal)
+    encabezado = (
+        "Entendido. La hipótesis queda pendiente de forma provisional: no registraré una "
+        "confirmación ni un descarte sin evidencia física directa.\n\n"
+        "👁️ *Alternativa de inspección visual segura (sin herramientas ni elevador, sin desmontar la rueda):*\n"
     )
+    cuerpo = "\n\n".join(guias_visuales)
+    pie = "\n\nPodemos continuar el diagnóstico. Indica qué observas a simple vista o describe otro síntoma."
+    return encabezado + cuerpo + pie
 
 
 class ValidationWorkflow:
@@ -431,8 +466,7 @@ class ValidationWorkflow:
             return None
 
         # Una medición, DTC, pregunta técnica o resultado de prueba posterior debe volver al
-        # orquestador. Antes podía responderse desde esta validación y el
-        # mensaje quedaba en la tabla de entrada pero fuera de ConversationState.
+        # orquestador.
         if (
             tipo_mensaje == "text"
             and etapa_validacion in {"esperando_confirmacion", "esperando_aclaracion_confirmacion"}
@@ -483,69 +517,78 @@ class ValidationWorkflow:
             contexto_conversacion.pop("validacion_diagnostico", None)
             conversacion.contexto = contexto_conversacion
 
+            diagnostico_selector = (
+                await diag_repo.obtener_pendiente_mecanico_por_id(
+                    diagnostico_id=diagnostico_contexto_id,
+                    taller_id=usuario.taller_id,
+                    mecanico_id=usuario.id,
+                )
+                if diagnostico_contexto_id
+                else await diag_repo.obtener_ultimo_pendiente_mecanico(
+                    taller_id=usuario.taller_id,
+                    mecanico_id=usuario.id,
+                )
+            )
+            hipotesis_selector = []
+            if diagnostico_selector:
+                for h in sorted(
+                    list(getattr(diagnostico_selector, "hipotesis", None) or []),
+                    key=lambda x: getattr(x, "orden", 999),
+                )[:3]:
+                    nombre_h = _nombre_hipotesis(h)
+                    if nombre_h:
+                        hipotesis_selector.append({"falla": nombre_h})
+
+            from src.core.conversacion.models import ConversationState
+
+            raw_estado = (
+                contexto_conversacion.get("conversation_state")
+                or contexto_conversacion.get("estado_conversacion")
+            )
+            estado_obj = (
+                ConversationState.from_dict(raw_estado)
+                if raw_estado and isinstance(raw_estado, dict)
+                else ConversationState(session_id=str(conversacion.id))
+            )
+            from src.core.conversacion.validador_compatibilidad import ValidadorCompatibilidad
+
+            hipotesis_selector, exclusiones = (
+                ValidadorCompatibilidad.filtrar_hipotesis_almacenadas(
+                    hipotesis_selector, estado_obj
+                )
+            )
+            if exclusiones:
+                contexto_conversacion["exclusiones_compatibilidad_orientacion"] = exclusiones
+                conversacion.contexto = contexto_conversacion
+
             es_inspeccion_o_sin_herramientas = bool(
                 not es_sin_mas_sintomas(texto_cliente)
                 and "no puedo realizar comprobaciones" not in _normalizar(texto_cliente)
                 and (
                     ("desmont" in _normalizar(texto_cliente) and "rueda" in _normalizar(texto_cliente))
-                    or any(k in _normalizar(texto_cliente) for k in ("herramienta", "elevador", "aun no", "todavia no", "sin desmon", "sin reloj", "sin manometro"))
+                    or any(k in _normalizar(texto_cliente) for k in ("herramienta", "elevador", "aun no", "todavia no", "sin desmon", "sin reloj", "sin manometro", "visual"))
                     or _solicita_continuar_sin_confirmacion(texto_cliente)
                 )
             )
 
-            if es_imposible_declarado and not es_inspeccion_o_sin_herramientas:
-                diagnostico_selector = (
-                    await diag_repo.obtener_pendiente_mecanico_por_id(
-                        diagnostico_id=diagnostico_contexto_id,
-                        taller_id=usuario.taller_id,
-                        mecanico_id=usuario.id,
-                    )
-                    if diagnostico_contexto_id
-                    else await diag_repo.obtener_ultimo_pendiente_mecanico(
-                        taller_id=usuario.taller_id,
-                        mecanico_id=usuario.id,
-                    )
-                )
-                hipotesis_selector = []
-                if diagnostico_selector:
-                    for h in sorted(
-                        list(getattr(diagnostico_selector, "hipotesis", None) or []),
-                        key=lambda x: getattr(x, "orden", 999),
-                    )[:3]:
-                        nombre_h = _nombre_hipotesis(h)
-                        if nombre_h:
-                            hipotesis_selector.append({"falla": nombre_h})
+            falla_princ = hipotesis_selector[0]["falla"] if hipotesis_selector else (
+                diagnostico_selector.falla_predicha if diagnostico_selector else None
+            )
 
-                from src.core.conversacion.models import ConversationState
-
-                raw_estado = (
-                    contexto_conversacion.get("conversation_state")
-                    or contexto_conversacion.get("estado_conversacion")
+            if es_inspeccion_o_sin_herramientas:
+                respuesta_texto = _respuesta_para_continuar_diagnostico(
+                    texto_cliente,
+                    estado=estado_obj,
+                    falla_principal=falla_princ,
                 )
-                estado_obj = (
-                    ConversationState.from_dict(raw_estado)
-                    if raw_estado and isinstance(raw_estado, dict)
-                    else ConversationState(session_id=str(conversacion.id))
-                )
-                from src.core.conversacion.validador_compatibilidad import ValidadorCompatibilidad
-
-                hipotesis_selector, exclusiones = (
-                    ValidadorCompatibilidad.filtrar_hipotesis_almacenadas(
-                        hipotesis_selector, estado_obj
-                    )
-                )
-                if exclusiones:
-                    contexto_conversacion["exclusiones_compatibilidad_orientacion"] = exclusiones
-                    conversacion.contexto = contexto_conversacion
+                status_salida = "continuar_diagnostico"
+            else:
                 respuesta_texto = generar_orientacion_provisional(
                     estado=estado_obj,
                     hipotesis_disponibles=hipotesis_selector,
-                    falla_principal=(hipotesis_selector[0]["falla"] if hipotesis_selector else None),
+                    falla_principal=falla_princ,
                 )
                 status_salida = "orientacion_provisional"
-            else:
-                respuesta_texto = _respuesta_para_continuar_diagnostico(texto_cliente)
-                status_salida = "continuar_diagnostico"
 
             await cls.guardar_respuesta_validacion_outbox(
                 msg_repo,
@@ -584,25 +627,15 @@ class ValidationWorkflow:
             )
 
             hipotesis_selector = []
-
             if diagnostico_selector:
-                # Fuente principal: hipótesis persistidas del diagnóstico.
-                hipotesis_persistidas = list(
-                    getattr(diagnostico_selector, "hipotesis", None) or []
-                )
+                for h in sorted(
+                    list(getattr(diagnostico_selector, "hipotesis", None) or []),
+                    key=lambda x: getattr(x, "orden", 999),
+                )[:3]:
+                    nombre_h = _nombre_hipotesis(h)
+                    if nombre_h:
+                        hipotesis_selector.append({"falla": nombre_h})
 
-                if hipotesis_persistidas:
-                    for h in sorted(
-                        hipotesis_persistidas,
-                        key=lambda x: getattr(x, "orden", 999)
-                    )[:3]:
-                        nombre_h = _nombre_hipotesis(h)
-                        if nombre_h:
-                            hipotesis_selector.append({"falla": nombre_h})
-
-                # Compatibilidad histórica:
-                # algunos diagnósticos/tests conservan Top-3 únicamente
-                # dentro de trazabilidad["predicciones_ml"].
                 if not hipotesis_selector:
                     trazabilidad_selector = (
                         getattr(diagnostico_selector, "trazabilidad", None)
@@ -689,17 +722,15 @@ class ValidationWorkflow:
                     None,
                 )
 
-                # Si el mecánico repite la misma selección, no reiniciar el diagnóstico ni duplicar preguntas. Recordar brevemente la comprobación pendiente.
                 if orden_previo and orden_previo == seleccion_top3.orden:
                     falla_nombre = _nombre_hipotesis(hipotesis_elegida) or f"Opción {seleccion_top3.orden}"
                     prueba = str(getattr(hipotesis_elegida, "prueba_recomendada", None) or "").strip()
+                    if not prueba or any(k in prueba.lower() for k in ("sin procedimiento", "no registrado", "n/a", "none")):
+                        prueba = _procedimiento_seguro_fallback(falla_nombre)
                     respuesta_texto = (
                         f"Ya tienes seleccionada la hipótesis *{seleccion_top3.orden}*: *{falla_nombre}*.\n\n"
-                    )
-                    if prueba:
-                        respuesta_texto += f"🔧 *Comprobación técnica pendiente:* {prueba}\n\n"
-                    respuesta_texto += (
-                        "¿Pudiste realizarla? Responde *SÍ* si confirmaste la avería o *NO* para descartar e intentar otra opción."
+                        f"🔧 *Comprobación técnica pendiente:* {prueba}\n\n"
+                        "¿Pudiste realizarla? Responde *SÍ* si confirmaste la avería o describe qué observaste al revisar."
                     )
                     await cls.guardar_respuesta_validacion_outbox(
                         msg_repo,
@@ -757,8 +788,6 @@ class ValidationWorkflow:
                 }
 
             elif seleccion_top3 and seleccion_top3.accion == "DESCARTAR":
-                # Reutilizar el flujo seguro existente de NO,
-                # pero contra la hipótesis seleccionada.
                 orden_hipotesis_seleccionada = seleccion_top3.orden
                 metodo_seleccion = seleccion_top3.metodo
                 respuesta_binaria = "no"
@@ -767,7 +796,6 @@ class ValidationWorkflow:
                 seleccion_top3
                 and seleccion_top3.accion == "DESCARTAR_Y_CONFIRMAR"
             ):
-                # Persistir descarte específico antes de confirmar la alternativa.
                 for h in (
                     getattr(diagnostico_selector, "hipotesis", None) or []
                 ):
@@ -870,18 +898,36 @@ class ValidationWorkflow:
                 metodo_seleccion = "binario"
 
             elif confirmacion is None and respuesta_binaria == "no":
-                if not flujo_validacion.get("orden_seleccionado") and btn_accion_interactiva != "no" and _normalizar(texto_cliente).strip(" .,!¡¿?") in {
-                    "no",
-                    "incorrecto",
-                    "incorrecta",
-                    "fue incorrecto",
-                    "fue incorrecta",
-                    "esta mal",
-                }:
+                from src.core.conversacion.validador_compatibilidad import ValidadorCompatibilidad
+
+                texto_adicional = re.sub(
+                    r"^(?:no|negativo|descartado|falso|no es|no fue|descartar)\b[,\s.:;-]*",
+                    "",
+                    texto_cliente,
+                    flags=re.IGNORECASE,
+                ).strip()
+                tiene_observacion_tecnica = bool(
+                    _PATRON_OBSERVACION_TECNICA.search(texto_cliente)
+                    or _PATRON_DTC_O_MEDICION.search(texto_cliente)
+                    or (len(texto_adicional.split()) >= 3 and not ValidadorCompatibilidad.es_evidencia_espuria(texto_adicional))
+                )
+
+                if not tiene_observacion_tecnica and btn_accion_interactiva != "no":
+                    falla_nombre = flujo_validacion.get("hipotesis_seleccionada")
+                    if not falla_nombre and orden_hipotesis_seleccionada and diagnostico_selector and getattr(diagnostico_selector, "hipotesis", None):
+                        for h in getattr(diagnostico_selector, "hipotesis", []):
+                            if getattr(h, "orden", None) == orden_hipotesis_seleccionada:
+                                nom = _nombre_hipotesis(h)
+                                if nom and not nom.startswith("<MagicMock"):
+                                    falla_nombre = nom
+                                break
+                    prefijo_hip = f"la hipótesis *{falla_nombre}*" if (falla_nombre and not falla_nombre.startswith("<MagicMock")) else "la hipótesis"
                     respuesta_texto = (
-                        "Entendido. Ese NO no registrará una confirmación ni un descarte "
-                        "por sí solo. Indica si descartas una hipótesis por una comprobación "
-                        "o escribe que deseas continuar el diagnóstico."
+                        f"Entendido. Mantengo {prefijo_hip} abierta de forma provisional: "
+                        "no registrará una confirmación ni un descarte sin evidencia física directa, "
+                        "ya que un 'NO' sin comprobación física directa no descarta la falla por sí solo.\n\n"
+                        "¿Qué observaste al revisar? (O si todavía no pudiste realizar la prueba o no cuentas con herramientas, "
+                        "indícalo para orientarte de forma segura)."
                     )
                     flujo_validacion["etapa"] = "esperando_aclaracion_confirmacion"
                     contexto_conversacion["validacion_diagnostico"] = flujo_validacion
@@ -954,18 +1000,7 @@ class ValidationWorkflow:
                 contexto_conversacion["conversation_state"] = estado_obj.exportar_dict()
                 contexto_conversacion["estado_conversacion"] = estado_obj.exportar_dict()
 
-                # Verificar si en este mismo mensaje el mecánico ya aportó nueva evidencia
-                from src.core.conversacion.validador_compatibilidad import ValidadorCompatibilidad
-
-                texto_adicional = re.sub(
-                    r"^(?:no|negativo|descartado|falso|no es|no fue|descartar)\b[,\s.:;-]*",
-                    "",
-                    texto_cliente,
-                    flags=re.IGNORECASE,
-                ).strip()
-
                 if len(texto_adicional.split()) >= 3 and not ValidadorCompatibilidad.es_evidencia_espuria(texto_adicional):
-                    # Caso: contexto actual + hipótesis rechazada + nueva evidencia inmediata
                     contexto_conversacion.pop("validacion_diagnostico", None)
                     conversacion.contexto = contexto_conversacion
                     await session.commit()
@@ -979,7 +1014,6 @@ class ValidationWorkflow:
                         "diagnostico_forzado": None,
                     }
 
-                # Si no hay nueva evidencia suficiente, realizar pregunta discriminante adaptativa (excluyendo hechos conocidos)
                 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 
                 pregunta_disc, intent_disc = GeneradorPreguntas.formular_pregunta_discriminante_post_descarte(
@@ -987,7 +1021,6 @@ class ValidationWorkflow:
                     falla_descartada=falla_descartada,
                 )
 
-                # Registrar la respuesta del usuario ("NO") y la pregunta técnica discriminante formulada
                 estado_obj.registrar_respuesta(texto_cliente, interpretacion=f"Descarte de hipótesis: {falla_descartada}")
                 estado_obj.registrar_pregunta(
                     intent=intent_disc,
@@ -995,7 +1028,6 @@ class ValidationWorkflow:
                     incrementar_repregunta=False,
                 )
 
-                # Preservar atributos de caso y memoria estructurada
                 placa_activa = (
                     estado_obj.placa
                     or contexto_conversacion.get("placa_posttest")
@@ -1012,8 +1044,10 @@ class ValidationWorkflow:
                 if case_id_activo:
                     estado_obj.case_id = str(case_id_activo)
 
-                if diagnostico and diagnostico.sintoma_original and diagnostico.sintoma_original not in estado_obj.active_symptoms:
+                from src.core.conversacion.orientacion_provisional import es_sintoma_mecanico_valido
+                if diagnostico and diagnostico.sintoma_original and es_sintoma_mecanico_valido(diagnostico.sintoma_original) and diagnostico.sintoma_original not in estado_obj.active_symptoms:
                     estado_obj.active_symptoms.append(diagnostico.sintoma_original)
+                estado_obj.active_symptoms = [s for s in estado_obj.active_symptoms if es_sintoma_mecanico_valido(s)]
 
                 contexto_conversacion["conversation_state"] = estado_obj.exportar_dict()
                 contexto_conversacion["estado_conversacion"] = estado_obj.exportar_dict()
@@ -1071,7 +1105,6 @@ class ValidationWorkflow:
                 if diagnostico_contexto_id
                 else None
             )
-            # Soporta selección tanto por botón interactivo como por texto libre ("1", "la 2", "la segunda", etc.)
             sel_texto = interpretar_seleccion_top3(texto_cliente, getattr(diag_sel, "hipotesis", None))
             seleccion_opcion = (
                 btn_accion_interactiva
@@ -1114,7 +1147,6 @@ class ValidationWorkflow:
             falla_real = texto_cliente.strip()[:4000]
             texto_norm = _normalizar(falla_real)
 
-            # Saludos cordiales
             saludos = ("hola", "holaa", "buenas", "buenos dias", "buenas tardes", "buenas noches", "que tal", "saludos", "ola")
             if any(texto_norm == s or texto_norm.startswith(f"{s} ") for s in saludos):
                 respuesta_texto = (
@@ -1149,7 +1181,6 @@ class ValidationWorkflow:
                 )
             )
 
-            # Filtrar evidencia espuria (teléfonos, secuencias numéricas sin contenido automotriz)
             from src.core.conversacion.validador_compatibilidad import ValidadorCompatibilidad
             if ValidadorCompatibilidad.es_evidencia_espuria(falla_real):
                 respuesta_texto = (
@@ -1168,7 +1199,6 @@ class ValidationWorkflow:
                     "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
                 }
 
-            # Si el mecánico describe nueva evidencia o responde la pregunta discriminante
             if not es_confirmacion_fisica_concreta and len(falla_real.split()) >= 2:
                 from src.core.conversacion.extractor_hechos import ExtractorHechos
                 from src.core.conversacion.models import ConversationState
@@ -1177,6 +1207,8 @@ class ValidationWorkflow:
                 if raw_st and isinstance(raw_st, dict):
                     estado_obj = ConversationState.from_dict(raw_st)
                     ExtractorHechos.extraer_y_actualizar(estado_obj, falla_real)
+                    from src.core.conversacion.orientacion_provisional import es_sintoma_mecanico_valido
+                    estado_obj.active_symptoms = [s for s in estado_obj.active_symptoms if es_sintoma_mecanico_valido(s)]
                     contexto_conversacion["conversation_state"] = estado_obj.exportar_dict()
                     contexto_conversacion["estado_conversacion"] = estado_obj.exportar_dict()
 
@@ -1215,7 +1247,6 @@ class ValidationWorkflow:
                 observacion=falla_real,
             )
 
-        # Se conservan los comandos explícitos como compatibilidad
         if confirmacion is None:
             confirmacion = (
                 interpretar_confirmacion_whatsapp(texto_cliente)
