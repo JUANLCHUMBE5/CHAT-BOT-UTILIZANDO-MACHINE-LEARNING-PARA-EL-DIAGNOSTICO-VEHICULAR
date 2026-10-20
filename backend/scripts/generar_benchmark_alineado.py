@@ -1,6 +1,5 @@
 import csv
 import json
-import re
 import textwrap
 from pathlib import Path
 

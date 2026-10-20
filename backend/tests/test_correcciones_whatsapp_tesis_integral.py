@@ -1,15 +1,9 @@
 """Pruebas integrales de validación y diálogo WhatsApp para las correcciones de tesis."""
 
-import pytest
 from unittest.mock import MagicMock
 
 from src.application.services.confirmacion_diagnostico import (
-    ConfirmacionDiagnosticoWhatsApp,
-    SeleccionHipotesisTop3,
     instrucciones_confirmacion_whatsapp,
-    interpretar_confirmacion_whatsapp,
-    interpretar_respuesta_validacion_whatsapp,
-    interpretar_seleccion_top3,
 )
 from src.core.conversacion.models import ConversationState
 from src.core.conversacion.orientacion_provisional import (
@@ -18,10 +12,7 @@ from src.core.conversacion.orientacion_provisional import (
     obtener_orientacion_visual_segura,
 )
 from src.core.services.webhook.validation_workflow import (
-    _nombre_hipotesis,
-    _procedimiento_seguro_fallback,
     _respuesta_detalle_hipotesis,
-    _respuesta_para_continuar_diagnostico,
     _solicita_continuar_sin_confirmacion,
 )
 

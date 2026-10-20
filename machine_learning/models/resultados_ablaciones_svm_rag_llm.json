@@ -2,24 +2,24 @@
   "muestra_n": 30,
   "nivel_a_svm": {
     "top1_acc": 93.33333333333333,
-    "latencia_p50_ms": 31.35,
-    "latencia_p95_ms": 38.79,
+    "latencia_p50_ms": 41.89,
+    "latencia_p95_ms": 49.11,
     "seguridad_pct": 93.33333333333333,
     "completitud": "B\u00e1sica (solo etiquetas)"
   },
   "nivel_b_svm_rag": {
     "top1_acc": 93.33333333333333,
-    "cobertura_rag_pct": 96.66666666666667,
-    "contaminacion_macro_pct": 3.3333333333333335,
-    "latencia_p50_ms": 93.56,
-    "latencia_p95_ms": 224.6,
+    "cobertura_rag_pct": 93.33333333333333,
+    "contaminacion_macro_pct": 0.0,
+    "latencia_p50_ms": 108.66,
+    "latencia_p95_ms": 230.91,
     "completitud": "Alta (pasos t\u00e9cnicos de manual)"
   },
   "nivel_c_svm_rag_llm": {
     "contrato_cumplido_pct": 100.0,
     "cero_alucinaciones_pct": 100.0,
-    "latencia_p50_ms": 99.19,
-    "latencia_p95_ms": 231.47,
+    "latencia_p50_ms": 108.0,
+    "latencia_p95_ms": 266.37,
     "completitud": "Completa (formato WhatsApp 4 campos)"
   }
 }

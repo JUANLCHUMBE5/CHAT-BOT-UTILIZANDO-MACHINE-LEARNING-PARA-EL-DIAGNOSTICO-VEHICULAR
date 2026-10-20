@@ -1,5 +1,4 @@
 import json
-import os
 import sys
 import time
 from pathlib import Path
@@ -20,7 +19,7 @@ def evaluar_motor_rag(version_id: str):
     print(f"\n--- EVALUANDO MOTOR RAG: {version_id} ---")
     rag = MotorRAG(rag_version=version_id)
     latencias = []
-    hit1, hit3 = 0, 0
+    hit1, _hit3 = 0, 0
     contaminacion_macro = 0
     casos_contaminados = []
 
@@ -77,12 +76,12 @@ res_base = evaluar_motor_rag("baseline_f8_3")
 res_cand = evaluar_motor_rag("candidate_v1")
 
 print("\n=== COMPARATIVA DIRECTA SOBRE EL MISMO BENCHMARK CORREGIDO (N=122) ===")
-print(f"BASELINE F8.3:")
+print("BASELINE F8.3:")
 print(f"  Hit@1:         {res_base['hit1_pct']:.2f}%")
 print(f"  Contaminación: {res_base['contaminacion_pct']:.2f}% ({len(res_base['contaminados'])} casos)")
 print(f"  Latencia p50:  {res_base['lat_p50_ms']} ms | p95: {res_base['lat_p95_ms']} ms")
 
-print(f"\nCANDIDATE V1 (Paquete Congelado):")
+print("\nCANDIDATE V1 (Paquete Congelado):")
 print(f"  Hit@1:         {res_cand['hit1_pct']:.2f}%")
 print(f"  Contaminación: {res_cand['contaminacion_pct']:.2f}% ({len(res_cand['contaminados'])} casos)")
 print(f"  Latencia p50:  {res_cand['lat_p50_ms']} ms | p95: {res_cand['lat_p95_ms']} ms")
@@ -110,7 +109,7 @@ for idx, item in enumerate(muestra_30):
         print(f"  Query:      '{q}'")
         print(f"  Esperado:   Macro={exp_macro} | Falla={exp_falla}")
         print(f"  Retornado:  Macro={ret_macro} | Titulo='{tit}' | Sim={sim:.4f}")
-        print(f"  Explicación: Diferencia entre macro_sistema predicho/esperado vs metadato del documento retornado.")
+        print("  Explicación: Diferencia entre macro_sistema predicho/esperado vs metadato del documento retornado.")
 
 out_data = {
     "baseline_f8_3": res_base,

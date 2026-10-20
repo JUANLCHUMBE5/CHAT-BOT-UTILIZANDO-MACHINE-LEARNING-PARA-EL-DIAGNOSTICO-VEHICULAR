@@ -182,8 +182,8 @@ def reordenar_candidatos_rag(
         score_base = float(c.get("similitud", 0.0))
         factor_ajuste = 1.0
 
-        doc_sistema = str(meta.get("sistema", "")).strip().upper()
-        doc_falla = _normalizar(str(meta.get("falla", "")))
+        doc_sistema = str(meta.get("sistema") or meta.get("system") or "").strip().upper()
+        doc_falla = _normalizar(str(meta.get("falla") or meta.get("primary_fault_class") or ""))
         doc_dtcs = [
             str(d).strip().upper()
             for d in (meta.get("codigos_dtc") or meta.get("dtcs_relacionados") or [])
@@ -207,8 +207,13 @@ def reordenar_candidatos_rag(
             ("INSTRUMENTAL", "MOTOR"),
             ("MOTOR", "INSTRUMENTAL"),
             ("TRANSMISION", "MOTOR"),
+            ("MOTOR", "TRANSMISION"),
             ("SUSPENSION", "DIRECCION"),
             ("DIRECCION", "SUSPENSION"),
+            ("SUSPENSION_CHASIS", "DIRECCION"),
+            ("DIRECCION", "SUSPENSION_CHASIS"),
+            ("SUSPENSION", "SUSPENSION_CHASIS"),
+            ("SUSPENSION_CHASIS", "SUSPENSION"),
         }
         es_sistema_afin = (sistema_objetivo, doc_sistema) in sistemas_afines
 
@@ -229,16 +234,26 @@ def reordenar_candidatos_rag(
                 elif conf_ml < 0.70 or score_base >= 0.55:
                     factor_ajuste *= 0.80
                 else:
-                    factor_supresion = 0.35 if dtcs_norm else 0.60
-                    factor_ajuste *= factor_supresion
+                    # Supresión severa para evitar contaminar consultas con procedimientos de sistemas incompatibles
+                    factor_ajuste *= 0.05
 
         # 3. Ajuste por coincidencia con Top 1, Top 2, Top 3 de ML (proporcional a probabilidad)
         if top_fallas_norm and doc_falla:
             if _tiene_anclaje_pertinente(consulta, c, score_base):
-                for f_norm, p_val in zip(top_fallas_norm, top_probs):
-                    if _coinciden_fallas(doc_falla, f_norm):
-                        factor_ajuste *= 1.15 + (p_val * 1.50)
-                        break
+                # Evitar boost de falla si el macrosistema documental contradice frontalmente el sistema objetivo sin DTC
+                if (
+                    sistema_objetivo
+                    and doc_sistema
+                    and doc_sistema != sistema_objetivo
+                    and not es_sistema_afin
+                    and not coincide_dtc
+                ):
+                    pass
+                else:
+                    for f_norm, p_val in zip(top_fallas_norm, top_probs):
+                        if _coinciden_fallas(doc_falla, f_norm):
+                            factor_ajuste *= 1.15 + (p_val * 1.50)
+                            break
 
         # 4. Ajuste por compatibilidad vehicular (Marca y Modelo)
         # Permite coincidencia por tokens de marca y modelo para evitar descartar "Hyundai Accent" frente a "Hyundai Motor America"

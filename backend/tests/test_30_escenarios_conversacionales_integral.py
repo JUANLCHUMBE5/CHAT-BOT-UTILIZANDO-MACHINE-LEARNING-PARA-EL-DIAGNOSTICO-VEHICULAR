@@ -16,22 +16,13 @@ Valida de extremo a extremo:
 
 from __future__ import annotations
 
-import asyncio
-import re
-import time
-import uuid
-from types import SimpleNamespace
-from typing import Any, Dict, List
-from unittest.mock import AsyncMock, MagicMock
-
 import pytest
 
 from src.application.services.confirmacion_diagnostico import (
-    ConfirmacionDiagnosticoWhatsApp,
+    instrucciones_confirmacion_whatsapp,
     interpretar_confirmacion_whatsapp,
     interpretar_respuesta_validacion_whatsapp,
     interpretar_seleccion_top3,
-    instrucciones_confirmacion_whatsapp,
 )
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.models import ConversationState, FactState
@@ -43,10 +34,8 @@ from src.core.conversacion.orquestador_conversacion import OrquestadorConversaci
 from src.core.conversacion.repositorio import InMemoryConversationRepository
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.core.services.webhook.validation_workflow import (
-    ValidationWorkflow,
     _es_evidencia_diagnostica_nueva,
     _procedimiento_seguro_fallback,
-    _solicita_continuar_sin_confirmacion,
 )
 
 
@@ -93,7 +82,7 @@ async def test_escenario_02_frenos_vibracion_pedal(orquestador, gestor_real, rep
     sid = "case-scen-02"
     t1 = await orquestador.procesar_turno(sid, "Nissan Sentra 2018 vibra fuertemente al frenar a 80 km/h", gestor_real)
     assert len(t1.get("respuesta_texto", "")) > 0
-    t2 = await orquestador.procesar_turno(sid, "La vibración se siente solo en el pedal de freno, el timón no vibra nada", gestor_real)
+    await orquestador.procesar_turno(sid, "La vibración se siente solo en el pedal de freno, el timón no vibra nada", gestor_real)
     estado = await repo.get_session(sid)
     assert estado.obtener_hecho("vibracion_pedal") is not None or any("vibración" in k for k in estado.hechos.keys())
 
@@ -152,7 +141,7 @@ async def test_escenario_06_motor_dificultad_arranque_frio(orquestador, gestor_r
 @pytest.mark.anyio
 async def test_escenario_07_motor_perdida_potencia_dtc(orquestador, gestor_real, repo):
     sid = "case-scen-07"
-    t1 = await orquestador.procesar_turno(sid, "Kia Rio 2016 pierde potencia en subidas y escaneé DTC P0301", gestor_real)
+    await orquestador.procesar_turno(sid, "Kia Rio 2016 pierde potencia en subidas y escaneé DTC P0301", gestor_real)
     estado = await repo.get_session(sid)
     hecho_dtc = estado.obtener_hecho("dtc_P0301")
     assert hecho_dtc is not None and hecho_dtc.valor == "P0301"
