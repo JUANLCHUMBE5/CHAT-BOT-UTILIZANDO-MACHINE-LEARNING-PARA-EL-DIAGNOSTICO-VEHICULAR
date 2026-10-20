@@ -136,27 +136,31 @@ def interpretar_respuesta_validacion_whatsapp(texto: str) -> str | None:
 
 
 def instrucciones_confirmacion_whatsapp(cantidad_hipotesis: int = 3) -> str:
-    """Pregunta breve que acompaña cada resultado dirigido a personal técnico."""
+    """Pregunta breve y clara que acompaña cada resultado dirigido a personal técnico.
+
+    - Si hay 1 sola hipótesis: pregunta directamente si fue correcta (SÍ / NO).
+    - Si hay 2 o 3 hipótesis: solicita seleccionar cuál revisar sin mezclar SÍ/NO en el mismo menú.
+    - No muestra opciones 'NINGUNA' ni 'NO SÉ'.
+    """
     if cantidad_hipotesis <= 1:
         return "\n\n¿Fue correcta? *SÍ / NO*"
     if cantidad_hipotesis == 2:
         return (
-            "\n\n¿Fue correcta? *SÍ / NO* (1/2)\n"
-            "O indica la opción a verificar:\n"
+            "\n\n🔎 *Selecciona una hipótesis a verificar:* (1/2)\n"
             "1. Primera hipótesis\n"
             "2. Segunda hipótesis"
         )
     return (
-        "\n\n¿Fue correcta? *SÍ / NO* (1/2/3)\n"
-        "O indica la opción a verificar:\n"
+        "\n\n🔎 *Selecciona una hipótesis a verificar:* (1/2/3)\n"
         "1. Primera hipótesis\n"
         "2. Segunda hipótesis\n"
         "3. Tercera hipótesis"
     )
 
+
 def interpretar_seleccion_top3(
     texto: str,
-    hipotesis: list[dict] | None = None,
+    hipotesis: list[Any] | None = None,
 ) -> SeleccionHipotesisTop3 | None:
     """
     Interpreta selecciones naturales sobre un Top-3 YA presentado.
@@ -378,7 +382,12 @@ def interpretar_seleccion_top3(
                     or ""
                 )
             else:
-                nombre = str(hip)
+                nombre = (
+                    getattr(hip, "falla", None)
+                    or getattr(hip, "falla_probable", None)
+                    or getattr(hip, "nombre", None)
+                    or str(hip)
+                )
 
             n = norm(nombre)
 
@@ -419,9 +428,7 @@ def generar_titulo_boton_hipotesis(orden: int, falla: str, max_chars: int = 20) 
     """Genera un título conciso y legible para un botón interactivo WhatsApp (máx 20 caracteres)."""
     prefijo = f"{orden}. "
     disponible = max(1, max_chars - len(prefijo))
-    # Limpiar detalles entre paréntesis o notas accesorias
     nombre = falla.split("(")[0].strip()
-    # Si contiene ' o ', tomar la causa primaria para no truncar a mitad de palabra
     if len(nombre) > disponible and " o " in nombre:
         nombre = nombre.split(" o ")[0].strip()
     if len(nombre) > disponible:

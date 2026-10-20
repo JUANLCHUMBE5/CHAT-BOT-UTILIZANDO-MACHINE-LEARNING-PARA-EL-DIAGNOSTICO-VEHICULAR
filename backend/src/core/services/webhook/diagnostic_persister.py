@@ -379,8 +379,10 @@ class DiagnosticPersister:
         )
         proc_recomendado = (
             dto.contexto_manual.strip()
-            if dto.contexto_manual and dto.contexto_manual.strip()
-            else "Sin procedimiento RAG registrado"
+            if dto.contexto_manual
+            and dto.contexto_manual.strip()
+            and "sin procedimiento" not in dto.contexto_manual.strip().lower()
+            else None
         )
         predicciones_a_guardar = dto.predicciones_ml or []
         if not predicciones_a_guardar and not dto.motivo_abstencion:

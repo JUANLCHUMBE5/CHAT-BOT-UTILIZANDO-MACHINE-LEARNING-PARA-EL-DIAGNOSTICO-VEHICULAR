@@ -1,0 +1,104 @@
+[
+  {
+    "nombre": "EXP_0_BASELINE_REPRODUCIDO",
+    "prep": false,
+    "ngram": [
+      1,
+      2
+    ],
+    "max_features": 25000,
+    "C": 1.2,
+    "method": "isotonic",
+    "t_train_s": 4.29,
+    "top1": 88.17391304347825,
+    "top3": 95.71014492753623,
+    "f1_macro": 87.78373886509554,
+    "top1_count": 1521,
+    "n": 1725
+  },
+  {
+    "nombre": "EXP_1_PREP_NEGACIONES_C1.2",
+    "prep": true,
+    "ngram": [
+      1,
+      2
+    ],
+    "max_features": 25000,
+    "C": 1.2,
+    "method": "isotonic",
+    "t_train_s": 2.68,
+    "top1": 87.94202898550725,
+    "top3": 95.65217391304348,
+    "f1_macro": 87.5963801901329,
+    "top1_count": 1517,
+    "n": 1725
+  },
+  {
+    "nombre": "EXP_2_PREP_NEGACIONES_C1.0",
+    "prep": true,
+    "ngram": [
+      1,
+      2
+    ],
+    "max_features": 25000,
+    "C": 1.0,
+    "method": "isotonic",
+    "t_train_s": 2.49,
+    "top1": 88.0,
+    "top3": 95.76811594202898,
+    "f1_macro": 87.7370019926195,
+    "top1_count": 1518,
+    "n": 1725
+  },
+  {
+    "nombre": "EXP_3_PREP_NEGACIONES_C1.5",
+    "prep": true,
+    "ngram": [
+      1,
+      2
+    ],
+    "max_features": 25000,
+    "C": 1.5,
+    "method": "isotonic",
+    "t_train_s": 2.58,
+    "top1": 88.0,
+    "top3": 95.59420289855073,
+    "f1_macro": 87.63043093646269,
+    "top1_count": 1518,
+    "n": 1725
+  },
+  {
+    "nombre": "EXP_4_PREP_NGRAM1_3_C1.2",
+    "prep": true,
+    "ngram": [
+      1,
+      3
+    ],
+    "max_features": 35000,
+    "C": 1.2,
+    "method": "isotonic",
+    "t_train_s": 3.58,
+    "top1": 87.82608695652175,
+    "top3": 95.82608695652173,
+    "f1_macro": 87.39298472216502,
+    "top1_count": 1515,
+    "n": 1725
+  },
+  {
+    "nombre": "EXP_5_PREP_SIGMOID_C1.2",
+    "prep": true,
+    "ngram": [
+      1,
+      2
+    ],
+    "max_features": 25000,
+    "C": 1.2,
+    "method": "sigmoid",
+    "t_train_s": 2.74,
+    "top1": 88.92753623188406,
+    "top3": 96.17391304347827,
+    "f1_macro": 88.6241653455276,
+    "top1_count": 1534,
+    "n": 1725
+  }
+]

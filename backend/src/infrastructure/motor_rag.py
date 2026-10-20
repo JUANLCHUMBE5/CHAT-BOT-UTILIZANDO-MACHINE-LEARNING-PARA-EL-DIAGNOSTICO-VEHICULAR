@@ -476,6 +476,45 @@ class MotorRAG:
                     ]
                     candidatos_reordenados = candidatos_fuga + restantes
 
+            # Control de coherencia y no-contaminación de macrosistema:
+            # Si se especificó un macro-sistema y no hay códigos DTC explícitos que justifiquen otra área,
+            # ningún procedimiento de un macrosistema incompatible debe ser entregado al usuario ni al LLM.
+            if macro_sistema and str(macro_sistema).strip().upper() != "DESCONOCIDO":
+                macro_obj = str(macro_sistema).strip().upper()
+                sistemas_afines_comp = {
+                    ("INSTRUMENTAL", "MOTOR"),
+                    ("MOTOR", "INSTRUMENTAL"),
+                    ("TRANSMISION", "MOTOR"),
+                    ("MOTOR", "TRANSMISION"),
+                    ("SUSPENSION", "DIRECCION"),
+                    ("DIRECCION", "SUSPENSION"),
+                    ("SUSPENSION_CHASIS", "DIRECCION"),
+                    ("DIRECCION", "SUSPENSION_CHASIS"),
+                    ("SUSPENSION", "SUSPENSION_CHASIS"),
+                    ("SUSPENSION_CHASIS", "SUSPENSION"),
+                }
+                candidatos_compatibles = []
+                for cand in candidatos_reordenados:
+                    c_meta = cand.get("metadatos") or {}
+                    c_sis = str(c_meta.get("sistema") or c_meta.get("system") or "").strip().upper()
+                    c_dtcs = [
+                        str(d).strip().upper()
+                        for d in (c_meta.get("codigos_dtc") or c_meta.get("dtcs_relacionados") or [])
+                        if d
+                    ]
+                    coincide_dtc_cand = bool(
+                        codigos_dtc and any(str(d).strip().upper() in c_dtcs for d in codigos_dtc if d)
+                    )
+                    if (
+                        coincide_dtc_cand
+                        or not c_sis
+                        or c_sis == macro_obj
+                        or (macro_obj, c_sis) in sistemas_afines_comp
+                    ):
+                        candidatos_compatibles.append(cand)
+
+                candidatos_reordenados = candidatos_compatibles
+
             if not candidatos_reordenados or candidatos_reordenados[0]["similitud"] < umbral_efectivo:
                 return (
                     "No se encontró un procedimiento específico en los manuales para esta consulta.",

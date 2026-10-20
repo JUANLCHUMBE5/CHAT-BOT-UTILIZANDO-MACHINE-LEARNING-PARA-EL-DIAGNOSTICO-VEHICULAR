@@ -62,8 +62,8 @@ def test_instrucciones_piden_confirmacion_binaria():
     assert len(instrucciones.strip()) < 40
 
     instrucciones_top3 = instrucciones_confirmacion_whatsapp(cantidad_hipotesis=3)
-    assert "¿Fue correcta?" in instrucciones_top3
-    assert "*SÍ / NO*" in instrucciones_top3
+    assert "Selecciona una hipótesis a verificar" in instrucciones_top3
+    assert "¿Fue correcta? *SÍ / NO*" not in instrucciones_top3
     assert "1. Primera hipótesis" in instrucciones_top3
     assert "2. Segunda hipótesis" in instrucciones_top3
     assert "3. Tercera hipótesis" in instrucciones_top3
@@ -147,7 +147,6 @@ def test_seleccionar_top3_entrega_prueba_sin_confirmar_automaticamente():
         ),
         2,
     )
-
-    assert "hipótesis *2*" in respuesta
+    assert "Inyectores sucios o filtro de combustible obstruido" in respuesta
     assert "Medir presión de combustible" in respuesta
     assert "Aún no la registraré como confirmada" in respuesta

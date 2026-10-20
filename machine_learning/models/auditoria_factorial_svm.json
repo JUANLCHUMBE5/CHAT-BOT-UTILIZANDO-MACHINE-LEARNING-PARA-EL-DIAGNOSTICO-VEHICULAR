@@ -1,0 +1,97 @@
+[
+  {
+    "configuracion": "Base (Isotonic, C=1.0, prep=No)",
+    "dev10": {
+      "top1": 88.46376811594203,
+      "top3": 95.76811594202898,
+      "f1_macro": 88.12865268297315,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999997,
+      "prob_sum_max": 1.0000000000000004
+    },
+    "test10": {
+      "top1": 80.87431693989072,
+      "top3": 93.44262295081968,
+      "f1_macro": 80.2393508131213,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999997,
+      "prob_sum_max": 1.0000000000000002
+    }
+  },
+  {
+    "configuracion": "Factor A: Prep Negaciones (Isotonic, C=1.0)",
+    "dev10": {
+      "top1": 88.0,
+      "top3": 95.59420289855073,
+      "f1_macro": 87.71260730694425,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999996,
+      "prob_sum_max": 1.0000000000000004
+    },
+    "test10": {
+      "top1": 82.24043715846994,
+      "top3": 93.16939890710383,
+      "f1_macro": 81.59892020547758,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999997,
+      "prob_sum_max": 1.0000000000000002
+    }
+  },
+  {
+    "configuracion": "Factor B: Calibraci\u00f3n Sigmoid (Sin prep, C=1.0)",
+    "dev10": {
+      "top1": 88.69565217391305,
+      "top3": 95.88405797101449,
+      "f1_macro": 88.44585205940136,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999996,
+      "prob_sum_max": 1.0000000000000004
+    },
+    "test10": {
+      "top1": 81.69398907103826,
+      "top3": 93.71584699453553,
+      "f1_macro": 81.24176370078008,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999993,
+      "prob_sum_max": 1.0000000000000004
+    }
+  },
+  {
+    "configuracion": "Factor C: Regularizaci\u00f3n C=2.0 (Sigmoid, Sin prep)",
+    "dev10": {
+      "top1": 89.15942028985508,
+      "top3": 95.82608695652173,
+      "f1_macro": 88.8013742747046,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999994,
+      "prob_sum_max": 1.0000000000000004
+    },
+    "test10": {
+      "top1": 81.9672131147541,
+      "top3": 92.34972677595628,
+      "f1_macro": 81.45144473013325,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999997,
+      "prob_sum_max": 1.0000000000000004
+    }
+  },
+  {
+    "configuracion": "Combinado \u00d3ptimo (Sigmoid, C=2.0, Prep Negaciones)",
+    "dev10": {
+      "top1": 88.92753623188406,
+      "top3": 95.94202898550725,
+      "f1_macro": 88.4706327791458,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999994,
+      "prob_sum_max": 1.0000000000000004
+    },
+    "test10": {
+      "top1": 82.78688524590164,
+      "top3": 93.98907103825137,
+      "f1_macro": 82.24286642319429,
+      "prob_sum_mean": 1.0,
+      "prob_sum_min": 0.9999999999999996,
+      "prob_sum_max": 1.0000000000000004
+    }
+  }
+]

@@ -31,7 +31,7 @@ from src.core.services.whatsapp_provider import WhatsAppProviderService
 
 
 def test_instrucciones_menu_dinamico_sin_ninguna_ni_no_se():
-    """El menú dinámico numera 1, 2, 3 sin exponer NINGUNA ni NO SÉ."""
+    """El menú dinámico numera 1, 2, 3 sin exponer NINGUNA ni NO SÉ, y separa selección de SÍ/NO."""
     txt_1 = instrucciones_confirmacion_whatsapp(1)
     assert "*SÍ / NO*" in txt_1
     assert "1." not in txt_1
@@ -39,20 +39,22 @@ def test_instrucciones_menu_dinamico_sin_ninguna_ni_no_se():
     assert "NO SÉ" not in txt_1
 
     txt_2 = instrucciones_confirmacion_whatsapp(2)
-    assert "*SÍ / NO*" in txt_2
+    assert "Selecciona una hipótesis a verificar" in txt_2
     assert "1. Primera hipótesis" in txt_2
     assert "2. Segunda hipótesis" in txt_2
     assert "3. Tercera hipótesis" not in txt_2
     assert "NINGUNA" not in txt_2
     assert "NO SÉ" not in txt_2
+    assert "*SÍ / NO*" not in txt_2
 
     txt_3 = instrucciones_confirmacion_whatsapp(3)
-    assert "*SÍ / NO*" in txt_3
+    assert "Selecciona una hipótesis a verificar" in txt_3
     assert "1. Primera hipótesis" in txt_3
     assert "2. Segunda hipótesis" in txt_3
     assert "3. Tercera hipótesis" in txt_3
     assert "NINGUNA" not in txt_3
     assert "NO SÉ" not in txt_3
+    assert "*SÍ / NO*" not in txt_3
 
 
 @pytest.mark.parametrize(
