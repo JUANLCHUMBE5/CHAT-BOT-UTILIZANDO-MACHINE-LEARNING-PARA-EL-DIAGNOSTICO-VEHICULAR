@@ -205,6 +205,7 @@ class AppSettings(BaseModel):
     meta_verify_token: str = _env_first("META_VERIFY_TOKEN", "VERIFY_TOKEN")
     meta_app_secret: str = os.getenv("META_APP_SECRET", "")
     meta_message_price_usd: float = _env_float("META_MESSAGE_PRICE_USD", 0.0)
+    whatsapp_interactive_buttons_enabled: bool = _env_bool("WHATSAPP_INTERACTIVE_BUTTONS_ENABLED", default=False)
 
     twilio_account_sid: str = os.getenv("TWILIO_ACCOUNT_SID", "")
     twilio_auth_token: str = os.getenv("TWILIO_AUTH_TOKEN", "")

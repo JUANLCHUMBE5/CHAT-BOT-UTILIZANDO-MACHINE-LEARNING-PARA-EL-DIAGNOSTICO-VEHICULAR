@@ -142,30 +142,39 @@ def _solicita_continuar_sin_confirmacion(texto: str) -> bool:
     patrones = (
         r"\bquiero\s+(?:seguir|continuar)\b",
         r"\b(?:sigamos|continuemos|sigue|continua)\b",
-        r"\bno\s+(?:he\s+)?(?:verificado|confirmado|comprobado|revisado|inspeccionado)\b",
+        r"\bno\s+(?:he\s+)?(?:verificado|confirmado|comprobado|revisado|inspeccionado|hecho|realizado)\b",
+        r"\b(?:aun|todavia)\s+no\s+(?:lo\s+|la\s+)?(?:he\s+)?(?:revisado|hecho|comprobado|verificado|inspeccionado)\b",
         r"\bno\s+(?:puedo|podemos)\b",
+        r"\bno\s+(?:tengo|cuento\s+con|dispongo\s+de)\s+(?:herramientas?|reloj|elevador|manometro|scanner|escaner)\b",
+        r"\bsin\s+(?:herramientas?|elevador|reloj|manometro|desmontar)\b",
         r"^no\s+se(?:\s+(?:todavia|aun))?$",
         r"\bnecesito\s+otra\s+(?:prueba|comprobacion)\b",
+        r"\botra\s+forma\s+de\s+(?:revisar|comprobar|verificar)\b",
     )
     return any(re.search(patron, normalizado) for patron in patrones)
 
 
 def _respuesta_para_continuar_diagnostico(texto: str) -> str:
-    """Mantiene la hipótesis pendiente y propone una vía segura para continuar."""
+    """Mantiene la hipótesis pendiente y propone una vía segura / inspección visual sin exigir herramientas complejas ni elevador."""
 
     normalizado = _normalizar(texto)
-    if "desmont" in normalizado or "rueda" in normalizado:
+    if any(k in normalizado for k in ("desmont", "rueda", "elevador", "herramienta", "manometro", "reloj")):
         return (
             "Entendido. La hipótesis queda pendiente: no registraré una confirmación "
             "ni un descarte sin evidencia física.\n\n"
-            "Para continuar sin desmontar la rueda, indica si el chirrido cambia entre "
-            "frenado suave y fuerte y si la vibración se siente solo en el pedal."
+            "👁️ *Alternativa de inspección visual segura (sin herramientas ni elevador, sin desmontar la rueda):*\n"
+            "- Con el vehículo detenido y motor apagado, realiza una inspección visual directa "
+            "del componente o conexiones accesibles a simple vista.\n"
+            "- Revisa visualmente si hay fugas, manchas de fluido, conectores flojos o desgaste evidente.\n\n"
+            "Podemos continuar el diagnóstico. Indica qué observas a simple vista o describe otro síntoma."
         )
     return (
         "Entendido. La hipótesis queda pendiente: no registraré una confirmación "
         "ni un descarte sin evidencia física.\n\n"
-        "Podemos continuar el diagnóstico. Describe la siguiente observación o una "
-        "comprobación que sí puedas realizar de forma segura."
+        "👁️ *Alternativa visual segura:*\n"
+        "Podemos continuar el diagnóstico. Puedes realizar una inspección visual preliminar con el auto detenido y freno de mano colocado, "
+        "sin necesidad de herramientas complejas ni elevador.\n\n"
+        "Describe la siguiente observación o síntoma que notes para continuar."
     )
 
 
@@ -289,12 +298,16 @@ class ValidationWorkflow:
     ) -> None:
         """Persiste una respuesta del flujo de validación en el outbox durable."""
         out_msg_id = f"out_{meta_message_id or uuid.uuid4()}"
-        if interactivo and conversacion and hasattr(conversacion, "contexto"):
+        if interactivo and getattr(settings, "whatsapp_interactive_buttons_enabled", False) and conversacion and hasattr(conversacion, "contexto"):
             ctx = dict(conversacion.contexto or {})
             ctx["mensaje_interactivo"] = {
                 "msg_id": out_msg_id,
                 "interactivo": interactivo,
             }
+            conversacion.contexto = ctx
+        elif conversacion and hasattr(conversacion, "contexto"):
+            ctx = dict(conversacion.contexto or {})
+            ctx.pop("mensaje_interactivo", None)
             conversacion.contexto = ctx
 
         await msg_repo.crear_mensaje(
@@ -470,14 +483,17 @@ class ValidationWorkflow:
             contexto_conversacion.pop("validacion_diagnostico", None)
             conversacion.contexto = contexto_conversacion
 
-            es_solo_rueda = (
-                "desmont" in _normalizar(texto_cliente)
-                and "rueda" in _normalizar(texto_cliente)
-                and not es_sin_mas_sintomas(texto_cliente)
+            es_inspeccion_o_sin_herramientas = bool(
+                not es_sin_mas_sintomas(texto_cliente)
                 and "no puedo realizar comprobaciones" not in _normalizar(texto_cliente)
+                and (
+                    ("desmont" in _normalizar(texto_cliente) and "rueda" in _normalizar(texto_cliente))
+                    or any(k in _normalizar(texto_cliente) for k in ("herramienta", "elevador", "aun no", "todavia no", "sin desmon", "sin reloj", "sin manometro"))
+                    or _solicita_continuar_sin_confirmacion(texto_cliente)
+                )
             )
 
-            if es_imposible_declarado and not es_solo_rueda:
+            if es_imposible_declarado and not es_inspeccion_o_sin_herramientas:
                 diagnostico_selector = (
                     await diag_repo.obtener_pendiente_mecanico_por_id(
                         diagnostico_id=diagnostico_contexto_id,
@@ -664,6 +680,7 @@ class ValidationWorkflow:
                 }
 
             if seleccion_top3 and seleccion_top3.accion == "CONFIRMAR":
+                orden_previo = flujo_validacion.get("orden_seleccionado")
                 hipotesis_elegida = next(
                     (
                         h for h in (getattr(diagnostico_selector, "hipotesis", None) or [])
@@ -671,6 +688,37 @@ class ValidationWorkflow:
                     ),
                     None,
                 )
+
+                # Si el mecánico repite la misma selección, no reiniciar el diagnóstico ni duplicar preguntas. Recordar brevemente la comprobación pendiente.
+                if orden_previo and orden_previo == seleccion_top3.orden:
+                    falla_nombre = _nombre_hipotesis(hipotesis_elegida) or f"Opción {seleccion_top3.orden}"
+                    prueba = str(getattr(hipotesis_elegida, "prueba_recomendada", None) or "").strip()
+                    respuesta_texto = (
+                        f"Ya tienes seleccionada la hipótesis *{seleccion_top3.orden}*: *{falla_nombre}*.\n\n"
+                    )
+                    if prueba:
+                        respuesta_texto += f"🔧 *Comprobación técnica pendiente:* {prueba}\n\n"
+                    respuesta_texto += (
+                        "¿Pudiste realizarla? Responde *SÍ* si confirmaste la avería o *NO* para descartar e intentar otra opción."
+                    )
+                    await cls.guardar_respuesta_validacion_outbox(
+                        msg_repo,
+                        conversacion,
+                        usuario,
+                        meta_message_id,
+                        respuesta_texto,
+                        proveedor,
+                        remitente,
+                    )
+                    await session.commit()
+                    return {
+                        "status": "recordatorio_comprobacion_pendiente",
+                        "diagnostico_id": str(diagnostico_selector.id),
+                        "conversacion_id": str(conversacion.id),
+                        "respuesta": respuesta_texto,
+                        "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
+                    }
+
                 respuesta_texto = _respuesta_detalle_hipotesis(
                     hipotesis_elegida,
                     seleccion_top3.orden or 1,
@@ -682,8 +730,12 @@ class ValidationWorkflow:
                 contexto_conversacion["validacion_diagnostico"] = flujo_validacion
                 conversacion.contexto = contexto_conversacion
 
-                from src.application.services.confirmacion_diagnostico import construir_botones_confirmacion
-                interactivo_conf = construir_botones_confirmacion(diagnostico_selector.id)
+                interactivo_conf = None
+                if getattr(settings, "whatsapp_interactive_buttons_enabled", False):
+                    from src.application.services.confirmacion_diagnostico import (
+                        construir_botones_confirmacion,
+                    )
+                    interactivo_conf = construir_botones_confirmacion(diagnostico_selector.id)
 
                 await cls.guardar_respuesta_validacion_outbox(
                     msg_repo,
@@ -990,7 +1042,7 @@ class ValidationWorkflow:
                     h for h in (getattr(diagnostico, "hipotesis", None) or [])
                     if getattr(h, "resultado", None) not in ("descartada", "confirmada")
                 ]
-                if hipotesis_restantes and diagnostico:
+                if hipotesis_restantes and diagnostico and getattr(settings, "whatsapp_interactive_buttons_enabled", False):
                     from src.application.services.confirmacion_diagnostico import construir_botones_hipotesis
                     preds_restantes = [
                         {"falla": _nombre_hipotesis(h), "probabilidad": float(getattr(h, "confianza", 0.0) or 0.0)}
@@ -1010,35 +1062,43 @@ class ValidationWorkflow:
                     "tiempo_total_ms": round((time.perf_counter() - t_inicio) * 1000, 2),
                 }
         elif etapa_validacion == "esperando_falla_real":
-            # Si el mecánico selecciona otra hipótesis mediante botón interactivo
-            if isinstance(btn_accion_interactiva, SeleccionHipotesisTop3) and btn_accion_interactiva.accion == "CONFIRMAR":
-                diag_sel = (
-                    await diag_repo.obtener_pendiente_mecanico_por_id(
-                        diagnostico_id=diagnostico_contexto_id,
-                        taller_id=usuario.taller_id,
-                        mecanico_id=usuario.id,
-                    )
-                    if diagnostico_contexto_id
-                    else None
+            diag_sel = (
+                await diag_repo.obtener_pendiente_mecanico_por_id(
+                    diagnostico_id=diagnostico_contexto_id,
+                    taller_id=usuario.taller_id,
+                    mecanico_id=usuario.id,
                 )
+                if diagnostico_contexto_id
+                else None
+            )
+            # Soporta selección tanto por botón interactivo como por texto libre ("1", "la 2", "la segunda", etc.)
+            sel_texto = interpretar_seleccion_top3(texto_cliente, getattr(diag_sel, "hipotesis", None))
+            seleccion_opcion = (
+                btn_accion_interactiva
+                if isinstance(btn_accion_interactiva, SeleccionHipotesisTop3)
+                else sel_texto
+            )
+            if seleccion_opcion and seleccion_opcion.accion == "CONFIRMAR":
                 if diag_sel:
                     hip_elegida = next(
-                        (h for h in (getattr(diag_sel, "hipotesis", None) or []) if getattr(h, "orden", None) == btn_accion_interactiva.orden),
+                        (h for h in (getattr(diag_sel, "hipotesis", None) or []) if getattr(h, "orden", None) == seleccion_opcion.orden),
                         None
                     )
                     if hip_elegida:
-                        resp_t = _respuesta_detalle_hipotesis(hip_elegida, btn_accion_interactiva.orden or 1)
-                        flujo_validacion["orden_seleccionado"] = btn_accion_interactiva.orden
+                        resp_t = _respuesta_detalle_hipotesis(hip_elegida, seleccion_opcion.orden or 1)
+                        flujo_validacion["orden_seleccionado"] = seleccion_opcion.orden
                         flujo_validacion["hipotesis_seleccionada"] = _nombre_hipotesis(hip_elegida)
                         flujo_validacion["etapa"] = "esperando_confirmacion"
                         flujo_validacion["diagnostico_id"] = str(diag_sel.id)
                         contexto_conversacion["validacion_diagnostico"] = flujo_validacion
                         conversacion.contexto = contexto_conversacion
 
-                        from src.application.services.confirmacion_diagnostico import (
-                            construir_botones_confirmacion,
-                        )
-                        inter_c = construir_botones_confirmacion(diag_sel.id)
+                        inter_c = None
+                        if getattr(settings, "whatsapp_interactive_buttons_enabled", False):
+                            from src.application.services.confirmacion_diagnostico import (
+                                construir_botones_confirmacion,
+                            )
+                            inter_c = construir_botones_confirmacion(diag_sel.id)
                         await cls.guardar_respuesta_validacion_outbox(
                             msg_repo, conversacion, usuario, meta_message_id, resp_t, proveedor, remitente, interactivo=inter_c
                         )

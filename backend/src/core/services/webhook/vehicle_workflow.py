@@ -164,7 +164,11 @@ async def preparar_flujo_vehiculo(
             if placa and not _perfil_completo(perfil_nuevo_detectado):
                 contexto_placa['perfil_vehiculo_pendiente'] = True
                 conversacion.contexto = contexto_placa
-                respuesta_perfil = f'Placa registrada: *{placa}*. ' + _mensaje_solicitar_perfil()
+                placa_upper = str(placa).strip().upper()
+                if placa_upper not in ('SIN-PLACA', 'WAPP-01', 'REST-API', 'DESCONOCIDO'):
+                    respuesta_perfil = f'Placa registrada: *{placa}*. ' + _mensaje_solicitar_perfil()
+                else:
+                    respuesta_perfil = _mensaje_solicitar_perfil()
                 await whatsapp_provider_service.enviar(proveedor, remitente, respuesta_perfil)
                 await session.commit()
                 return ({'status': 'esperando_perfil_vehiculo', 'respuesta': respuesta_perfil}, placa, marca_modelo, texto_cliente)
