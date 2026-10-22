@@ -56,9 +56,9 @@ def obtener_rag_version() -> str:
     """Retorna la versión de RAG activa configurada."""
     try:
         from src.config import settings
-        return getattr(settings, "rag_version", os.getenv("CARBOT_RAG_VERSION", "candidate_v1"))
+        return getattr(settings, "rag_version", os.getenv("CARBOT_RAG_VERSION", "baseline_f8_3"))
     except Exception:
-        return os.getenv("CARBOT_RAG_VERSION", "candidate_v1")
+        return os.getenv("CARBOT_RAG_VERSION", "baseline_f8_3")
 
 
 def obtener_telemetria_proceso(rol: str = "api") -> Dict[str, Any]:

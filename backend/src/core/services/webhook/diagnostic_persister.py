@@ -44,6 +44,8 @@ class DiagnosticPersister:
     def debe_solicitar_feedback(dto: ResultadoDiagnostico) -> bool:
         """El feedback se pide solo para un diagnóstico final, nunca para una orientación pendiente."""
         respuesta = dto.respuesta_texto.lower()
+        if getattr(dto, "tipo_consulta", "") == "seguridad_critica" or getattr(dto, "modo_diagnostico", "") == "seguridad_critica" or re.search(r"\b(?:prohibido circular|no circules|no circular|no conduzcas)\b", respuesta):
+            return False
         tiene_pregunta_activa = bool(
             getattr(dto, "es_pregunta", False)
             or getattr(dto, "modo_diagnostico", "") in ("esperando_clarificacion", "aclaracion")
@@ -112,6 +114,11 @@ class DiagnosticPersister:
 
         # 1. Manejo de consultas informativas
         if dto.tipo_consulta != "diagnostico":
+            if dto.tipo_consulta == "seguridad_critica":
+                contexto_seguro = dict(conversacion.contexto or {})
+                contexto_seguro.pop("validacion_diagnostico", None)
+                contexto_seguro.pop("mensaje_interactivo", None)
+                conversacion.contexto = contexto_seguro
             if dto.modo_diagnostico == "consulta_tecnica_en_cola" and dto.solicitud_id:
                 await gemini_rate_limiter.persistir_solicitud_en_sesion(
                     session,
@@ -152,6 +159,7 @@ class DiagnosticPersister:
                 proveedor=proveedor,
                 destinatario_cifrado=cifrar_texto_reversible(remitente),
                 disponible_entrega_en=datetime.now(timezone.utc),
+                case_id=case_id_actual,
             )
             await session.commit()
             return {
@@ -264,6 +272,7 @@ class DiagnosticPersister:
             trazabilidad={
                 "version": 1,
                 "case_id": case_id_actual,
+                "confianza_detalle": getattr(dto, "confianza_detalle", {}),
                 "predicciones_ml": [pred.model_dump() for pred in dto.predicciones_ml],
                 "predicciones_ml_raw": [pred.model_dump() for pred in (dto.predicciones_ml_raw or dto.predicciones_ml)],
                 # Compatibilidad histórica: estas probabilidades ya pueden incluir

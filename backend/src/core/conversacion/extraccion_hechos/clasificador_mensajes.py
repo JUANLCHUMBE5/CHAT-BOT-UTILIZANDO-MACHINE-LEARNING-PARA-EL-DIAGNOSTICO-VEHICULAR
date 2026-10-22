@@ -129,6 +129,8 @@ def extraer_placa(texto: str) -> Optional[str]:
             return candidato
     for m in PATRON_PLACA_FORMATO.finditer(texto):
         candidato = m.group(1).upper().replace(" ", "-")
+        if re.search(r"\b(?:19|20)\d{2}\b", m.group(0)):
+            continue
         prefix = candidato.split("-")[0]
         if prefix in PALABRAS_NO_PLACA:
             continue
@@ -270,6 +272,21 @@ def clasificar_solicitud_caso(texto: str) -> Dict[str, Any] | None:
     if _es_mencion_no_destructiva(texto):
         return None
 
+    es_vehiculo_secundario_en_contexto = bool(
+        re.search(
+            r"\b(?:cliente|usuario|mec[aá]nico)\s+(?:mencion[oó]|dijo|coment[oó]|indic[oó])\b"
+            r".{0,60}\b(?:su\s+)?otro\s+(?:veh[ií]culo|carro|auto|coche|camioneta)\b",
+            limpio,
+        )
+        and re.search(
+            r"\bpero\s+(?:estamos\s+)?(?:revisando|revisamos|viendo|trabajando|diagnosticando)\s+"
+            r"(?:este|el\s+actual|el\s+mismo)\b",
+            limpio,
+        )
+    )
+    if es_vehiculo_secundario_en_contexto:
+        return None
+
     if re.fullmatch(r"(?:quiero\s+)?cancelar(?:(?:\s+el)?\s+(?:caso|diagnostico|consulta))?[.!]*", limpio):
         return {"accion": "cancelar", "preservar_vehiculo": False}
 
@@ -363,6 +380,7 @@ def contiene_informacion_diagnostica(texto: str) -> bool:
             re.IGNORECASE,
         ),
     ]
+    patrones.append(re.compile(r"\b(?:no\s+(?:hay|tiene|da|sale)\s+(?:ninguna\s+)?chispa|sin\s+chispa)\b", re.IGNORECASE))
     return any(p.search(texto) for p in patrones)
 
 

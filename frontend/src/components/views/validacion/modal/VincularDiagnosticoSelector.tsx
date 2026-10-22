@@ -1,3 +1,4 @@
+import { ConfianzaDiagnostico } from '../../../common/ConfianzaDiagnostico';
 import React, { useState, useEffect } from 'react';
 import { Search, Bot, Check, X, RefreshCw } from 'lucide-react';
 import { apiService } from '../../../../services/api';
@@ -173,9 +174,7 @@ export const VincularDiagnosticoSelector: React.FC<VincularDiagnosticoSelectorPr
                     <span style={{ fontSize: '11px', color: '#64748b' }}>
                       {d.fecha_hora ? new Date(d.fecha_hora).toLocaleDateString() : 'Reciente'}
                     </span>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#059669', backgroundColor: '#ecfdf5', padding: '1px 5px', borderRadius: '4px' }}>
-                      {d.confianza}% confianza
-                    </span>
+                    <ConfianzaDiagnostico diagnostico={d} />
                   </div>
                   <div style={{ fontSize: '13px', fontWeight: 700, color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {d.falla_predicha || 'Sin predicción'}

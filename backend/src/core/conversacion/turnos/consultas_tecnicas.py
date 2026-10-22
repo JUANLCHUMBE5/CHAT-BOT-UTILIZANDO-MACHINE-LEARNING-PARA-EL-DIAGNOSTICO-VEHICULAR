@@ -89,7 +89,7 @@ async def consultas_tecnicas(self, turno):
         "\\bbuj[ií]as?\\s+(?:de\\s+)?(?:gasolina|3\\s+electrodos)\\b.{0,50}\\bdi[eé]sel\\b",
         turno.norm_txt_cons,
     ):
-        turno.resp_incomp_diesel = "🚫 *Incompatibilidad física y técnica total: Bujías de gasolina en motor diésel*\n\n• **Incompatibilidad absoluta:** Es totalmente **incompatible**. Los motores **diésel** (como el Toyota 1KD-FTV) funcionan por autoencendido por compresión y NO utilizan bujías de **chispa** ni disponen de rosca ni sistema para alojarlas.\n• **Componente del motor diésel:** Lo único que equipa son bujías de precalentamiento (calentadores o glow plugs), cuya función es exclusivamente entibiar la cámara en frío, no producir chispa."
+        turno.resp_incomp_diesel = 'Las bujías de chispa para gasolina son incompatibles con un motor diésel 1KD: el diésel funciona por compresión y puede usar bujías incandescentes para ayudar al arranque en frío, no bujías de chispa. No instales ni pruebes esa pieza. Confirma la referencia correcta con el manual OEM según VIN, variante y mercado.'
         if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
             turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
         turno.estado.turno_actual += 1
@@ -97,10 +97,10 @@ async def consultas_tecnicas(self, turno):
             "status": "incompatibilidad_tecnica",
             "respuesta_texto": turno.resp_incomp_diesel,
             "diagnostico_ml": "Incompatibilidad: Bujías en motor diésel",
-            "confianza_ml": float(turno.estado.confianza_actual or 0.0),
+            "confianza_ml": 0.0,
             "fase": turno.estado.fase.value,
             "es_pregunta": False,
-            "decision": "INCOMPATIBILIDAD_TECNICA",
+            "decision": "ABSTENCION_TECNICA_SEGURA",
             "case_id": turno.estado.case_id,
             "tiempo_ms": round((time.perf_counter() - turno.t0) * 1000, 2),
             "estado": turno.estado,

@@ -96,6 +96,8 @@ PATRONES_COMBUSTIBLE = [
 ]
 
 PATRONES_MODELO = [
+    (re.compile(r"\bsoluto\b", re.IGNORECASE), "Soluto"),
+    (re.compile(r"\blogan\b", re.IGNORECASE), "Logan"),
     (re.compile(r"\b(corolla)\b", re.IGNORECASE), "Corolla"),
     (re.compile(r"\b(yaris)\b", re.IGNORECASE), "Yaris"),
     (re.compile(r"\b(hilux)\b", re.IGNORECASE), "Hilux"),
@@ -184,6 +186,18 @@ def seleccionar_entidad_vehicular(
     candidatos_validos: List[Tuple[int, str, int]] = []
     fue_negada_actual = False
     texto_l = (texto or "").lower()
+
+    mencion_otro_vehiculo = bool(
+        entidad_actual
+        and re.search(
+            r"\b(?:su\s+)?otro\s+(?:veh[ií]culo|carro|auto|coche|camioneta)\b"
+            r".{0,80}\b(?:pero|aunque)\b.{0,60}\b(?:revisamos?|revisando|trabajamos?|diagnosticamos?)"
+            r"\s+(?:este|el\s+actual|el\s+mismo)\b",
+            texto_l,
+        )
+    )
+    if mencion_otro_vehiculo:
+        return None, False
 
     for start, end, nombre in coincidencias:
         prefijo = texto[:start].rstrip(" ,;:")

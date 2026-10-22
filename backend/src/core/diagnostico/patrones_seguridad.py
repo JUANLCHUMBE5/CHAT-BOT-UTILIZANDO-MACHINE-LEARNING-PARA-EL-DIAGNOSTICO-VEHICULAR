@@ -191,7 +191,7 @@ PATRON_OBJETO_REFRIGERACION = re.compile(
 PATRON_CALOR_REFRIGERACION = re.compile(
     r"\b("
     r"caliente|hirviendo|hierve|hervir|vapor|ebullici[oó]n|"
-    r"recalentado|recalentando|sobrecalentado|sobrecalentamiento|"
+    r"recalienta|recalentado|recalentando|sobrecalentado|sobrecalentamiento|"
     r"temperatura\s+(?:alta|elevada|al\s+m[aá]ximo|en\s+rojo|cr[ií]tica|peligrosa)|"
     r"agua\s+caliente|refrigerante\s+caliente|humo\s+(?:de\s+vapor|blanco)|"
     r"10[0-9]|1[1-9]\d|\d{3}\s*grados|\d{3}\s*°\s*c"

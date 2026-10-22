@@ -1,3 +1,4 @@
+import { ConfianzaDiagnostico } from '../../../common/ConfianzaDiagnostico';
 import React from 'react';
 import { Calendar, Car, CheckCircle2, Clock, FileCheck, Phone, User } from 'lucide-react';
 import { DiagnosticoValidacionPanel } from './DiagnosticoValidacionPanel';
@@ -105,9 +106,7 @@ export const DiagnosticoTallerPanel: React.FC<DiagnosticoTallerPanelProps> = ({
           <span style={{ fontSize: '9.5px', fontWeight: 800, color: '#1d4ed8', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             Hipótesis CarBot IA
           </span>
-          <span style={{ fontSize: '10px', fontWeight: 800, color: '#059669', backgroundColor: '#ecfdf5', padding: '1px 6px', borderRadius: '4px', border: '1px solid #a7f3d0' }}>
-            {diagnostico.confianza}% Certeza
-          </span>
+          <ConfianzaDiagnostico diagnostico={diagnostico} />
         </div>
         <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#0f172a' }}>
           {diagnostico.falla_predicha}

@@ -1,13 +1,12 @@
-﻿"""Textos estandarizados de advertencia y banners de seguridad crítica de CarBot."""
+"""Textos estandarizados de advertencia y banners de seguridad crítica de CarBot."""
 
 from __future__ import annotations
 
 BANNER_FRENO = (
-    "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO MORTAL - NO CONDUCIR EL VEHÍCULO**\n\n"
-    "PROHIBICIÓN ESTRICTA: Detén el motor e inmovilice el vehículo de inmediato. "
-    "Existe peligro inminente de pérdida total del sistema de frenos por falla hidráulica severa o daño en mangueras. "
-    "Por su seguridad, inmovilice el vehículo de inmediato y solicite traslado exclusivo en grúa para inspección profesional. "
-    "Bajo ninguna circunstancia intente conducir ni circular hasta el taller.\n\n"
+    "🛑 **PELIGRO CRÍTICO: FALLA DE FRENOS; NO CONDUCIR EL VEHÍCULO**\n"
+    "Los síntomas informados pueden indicar una pérdida de capacidad de frenado. "
+    "Por su seguridad, inmovilice el vehículo de inmediato y solicite traslado en grúa para inspección profesional. "
+    "Bajo ninguna circunstancia intente conducir hasta el taller.\n\n"
 )
 
 BANNER_FRENO_ESTACIONAMIENTO_RODANDO = (
@@ -19,19 +18,17 @@ BANNER_FRENO_ESTACIONAMIENTO_RODANDO = (
 )
 
 BANNER_ACEITE = (
-    "🛑 **BLOQUEO DE SEGURIDAD MECÁNICA — PELIGRO CRÍTICO: FALTA DE LUBRICACIÓN**\n\n"
-    "PROHIBICIÓN ESTRICTA: Detén el motor de inmediato y no intentes arrancar ni circular. "
-    "Inmovilice el vehículo y solicita servicio de grúa para trasladarlo al taller y apagar toda marcha. "
-    "La presión de aceite en cero o el testigo de aceite encendido con ruidos mecánicos indica falta total de lubricación. "
-    "Mantener el motor en marcha provocará fundición o destrucción irreversible de metales internos.\n\n"
+    "🛑 **PELIGRO CRÍTICO: TESTIGO ROJO DE ACEITE CON RUIDO; DETENGA EL MOTOR Y NO CONDUZCA**\n"
+    "Cuando sea seguro, detenga el vehículo y apague el motor. No lo vuelva a arrancar ni lo conduzca hasta que "
+    "un técnico compruebe la presión real de lubricación y determine la causa. Solicite traslado en grúa; "
+    "el testigo junto con un traqueteo puede indicar una avería grave y continuar la marcha puede destruir el motor.\n\n"
 )
 
 BANNER_COMBUSTIBLE = (
-    "� **BLOQUEO DE SEGURIDAD MECÁNICA — PELIGRO INMINENTE DE INCENDIO Y FUEGO**\n\n"
-    "PROHIBICIÓN ESTRICTA: Detén el motor de inmediato y no intentes arrancar ni circular. "
-    "Fuga activa de combustible detectada sobre escape caliente, múltiple o fuentes de ignición. "
-    "Inmovilice el vehículo, solicita asistencia de grúa para trasladarlo al taller y procede a apagar todo el sistema eléctrico. "
-    "Existe peligro extremo de incendio y fuego súbito. Mantén alejadas fuentes de chispa con extintor a mano.\n\n"
+    "🔥 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO INMINENTE DE INCENDIO**\n"
+    "La fuga de combustible, en especial cerca de superficies calientes, puede provocar fuego o un incendio. "
+    "No arranque ni mueva el vehículo, no accione componentes eléctricos y no intente localizar o reparar la fuga. "
+    "Aléjese, mantenga a otras personas y fuentes de ignición apartadas y solicite asistencia profesional.\n\n"
 )
 
 BANNER_TEMPERATURA = (
@@ -43,60 +40,48 @@ BANNER_TEMPERATURA = (
 )
 
 BANNER_HV = (
-    "🛑 **BLOQUEO DE SEGURIDAD MECÁNICA — PELIGRO MORTAL DE ALTA TENSIÓN Y ELECTROCUCIÓN**\n\n"
-    "PROHIBICIÓN ESTRICTA: Nunca toques, cortes ni manipules cables naranjas, inversor o batería de tracción de alta tensión. "
-    "Riesgo inminente de descarga eléctrica letal y electrocución instantánea. "
-    "Detén el trabajo de inmediato. Solo personal capacitado puede intervenir, con protección dieléctrica y herramientas "
-    "adecuadas al sistema, aislamiento y comprobación de ausencia de tensión conforme al procedimiento OEM. "
-    "Apagar el vehículo no acredita ausencia de tensión.\n\n"
+    "⚡ **ADVERTENCIA DE SEGURIDAD: SISTEMA DE ALTA TENSIÓN (EV/HÍBRIDO)**\n"
+    "Los cables naranjas y la batería de tracción pueden causar electrocución. No corte, toque, desconecte "
+    "ni manipule el sistema, el inversor o la batería. No manipule los cables naranjas ni la batería de tracción. "
+    "Aléjese y derive la intervención a un técnico certificado "
+    "que siga el procedimiento OEM específico.\n\n"
 )
 
 BANNER_DIESEL_EMBALAMIENTO = (
-    "🛑 **BLOQUEO DE SEGURIDAD MECÁNICA — PELIGRO MORTAL: EMBALAMIENTO DIÉSEL**\n\n"
-    "PROHIBICIÓN ESTRICTA: Detén el motor inmediatamente si es seguro. No te acerques al motor. "
-    "Nunca toques ni introduzcas manos, tablas o trapos en la admisión ante riesgo extremo de atrapamiento o rotura. "
-    "No busques fugas ni intentes manipular el motor en marcha. "
-    "Aléjate, despeja el área y solicita asistencia de emergencia ante un motor con embalamiento diésel fuera de control. "
-    "La llave puede no apagar un motor autoalimentado por vapores de aceite.\n\n"
+    "⚠️ **ADVERTENCIA CRÍTICA DE SEGURIDAD: RIESGO DE EMBALAMIENTO DIÉSEL (DIESEL RUNAWAY)**\n"
+    "Si hay indicios de aceleración descontrolada, no se acerque al motor ni intente bloquear la admisión o intervenir "
+    "componentes. Aléjese y aparte a otras personas; solicite ayuda de emergencia. Si el motor está apagado y hay "
+    "sospecha de aceite diluido, no vuelva a arrancarlo ni fuerce la regeneración: solicite inspección profesional "
+    "antes de operar el vehículo.\n\n"
 )
 
 BANNER_DIESEL_ALTA_PRESION = (
     "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO DE INYECCIÓN DE COMBUSTIBLE A ALTA PRESIÓN**\n\n"
-    "⚠️ **PROHIBICIÓN ESTRICTA: No aflojes racores ni tuberías. No busques fugas ni intentes comprobarlas "
-    "con las manos, dedos, piel ni trapos u objetos.** "
-    "Aléjate del sistema; no intentes localizar la fuga.\n\n"
-    "Si el motor está funcionando, apágalo únicamente si puedes hacerlo desde un lugar seguro, sin acercarte al vano motor. Aléjate y solicita asistencia de personal capacitado para revisar el sistema según el procedimiento del fabricante.\n\n"
-    "Si combustible pudo penetrar la piel, busca atención médica de emergencia de inmediato, aunque la lesión parezca pequeña.\n\n"
+    "⚠️ **PROHIBICIÓN ESTRICTA: NUNCA intente buscar, tocar, palpar ni comprobar fugas con las manos, dedos, piel ni trapos mientras el sistema de combustible esté o pueda estar presurizado.**\n\n"
+    "Una línea Common Rail puede conservar presión peligrosa aunque el motor se haya detenido. No afloje tuberías, "
+    "inyectores ni conexiones, y no intente comprobar la fuga. Mantenga distancia y derive la inspección a personal "
+    "capacitado con el procedimiento OEM correspondiente. Si sospecha que combustible penetró la piel, acuda "
+    "inmediatamente a urgencias e informe que se trata de una posible lesión por inyección subcutánea de "
+    "combustible a alta presión."
 )
 
 BANNER_BLOQUEO_REGENERACION_DILUCION = (
     "🛑 **BLOQUEO DE SEGURIDAD MECÁNICA: REGENERACIÓN DE DPF CONTRAINDICADA POR DILUCIÓN DE ACEITE**\n\n"
-    "⚠️ **PROHIBICIÓN ESTRICTA: NO INICIE LA REGENERACIÓN FORZADA (ESTÁTICA O EN TALLER) EN ESTE MOMENTO.**\n\n"
-    "Prohibido realizar la regeneración estática. Detén el motor y no intentes arrancar ni forzar el ciclo.\n\n"
-    "1. **Riesgo Crítico de Embalamiento Térmico (Diesel Runaway) e Incendio:**\n"
-    "Con el nivel de aceite por encima del máximo y diluido con combustible, la regeneración estática somete al motor a temperaturas extremas (550 °C a 650 °C en escape y cárter caliente) durante 20 a 35 minutos. El calor excesivo vaporiza el diésel acumulado en el cárter, y estos vapores inflamables son aspirados a través del sistema de ventilación positiva del cárter (PCV) hacia la admisión. Al ser un motor diésel sin mariposa de corte estricto, el motor comenzará a combustionar su propio aceite/diésel de forma incontrolada (**embalamiento diésel / runaway**), acelerándose por encima de las 5,000 RPM sin responder a la llave de contacto hasta su desbielamiento catastrófico o incendio en el taller.\n\n"
-    "2. **Diferenciación Técnica: Sospecha vs Confirmación Física:**\n"
-    "• Si se sospecha sobrellenado, confirme primero el nivel con el vehículo en superficie plana y motor frío (10 minutos de reposo).\n"
-    "• Compruebe la consistencia y viscosidad: si el aceite está excesivamente fluido y desprende olor a diésel, sospeche dilución y solicite comprobación técnica.\n\n"
-    "3. **Procedimiento Obligatorio Antes de Considerar la Regeneración:**\n"
-    "El cambio de aceite por sí solo **NO constituye una autorización automática** para forzar la regeneración. Debe seguirse la secuencia técnica OEM:\n"
-    "a) **Drenar y reemplazar totalmente el aceite y filtro contaminados** utilizando lubricante que cumpla estrictamente la norma del fabricante (aceite Low SAPS / bajo contenido de cenizas, ej. ACEA C2/C3).\n"
-    "b) **Investigar y corregir la causa de la dilución previa:** postinyecciones reiteradas por regeneraciones automáticas abortadas en ciudad, inyectores con goteo o retorno excesivo, sensor de contrapresión de escape (DPF) descalibrado o termostato que no permite alcanzar temperatura de régimen.\n"
-    "c) **Verificar los prerrequisitos OEM obligatorios antes de regenerar:**\n"
-    "   • Temperatura de refrigerante de motor estabilizada conforme al manual aplicable.\n"
-    "   • Sin códigos de falla activos en sensores EGT (temperatura de escape), MAF, EGR o bujías de incandescencia.\n"
-    "   • Masa o acumulación de hollín dentro de los límites de regeneración de servicio.\n"
-    "   • Nivel de combustible mínimo en el tanque conforme al manual aplicable.\n"
-    "   • Vehículo en exterior ventilado, sobre suelo no inflamable y capó abierto.\n\n"
+    "⚠️ **PROHIBICIÓN ESTRICTA: NO INICIE NI FUERCE LA REGENERACIÓN, Y NO ARRANQUE EL MOTOR.**\n\n"
+    "Un nivel de aceite por encima del máximo o con indicios de combustible puede señalar dilución y aumentar "
+    "el riesgo de daños graves o aceleración descontrolada. No realice comprobaciones ni reparaciones con el motor "
+    "en marcha. Mantenga el vehículo apagado y solicite evaluación profesional para confirmar la condición y su causa.\n\n"
+    "El reemplazo de aceite por sí solo no autoriza una regeneración. Antes de considerar esa operación, un técnico "
+    "debe comprobar la variante exacta del vehículo y seguir el procedimiento OEM aplicable. No hay umbrales "
+    "universales de temperatura, hollín, presión o combustible que pueda recomendarse sin esa fuente."
 )
 
 PRERREQUISITOS_REGENERACION_DPF_OEM = (
-    "Prerrequisitos pendientes antes de considerar una regeneración DPF: "
-    "No se autoriza iniciar el ciclo con esta respuesta. Comprueba nivel y estado del aceite, "
-    "investiga y corrige cualquier dilución y su causa; no doy esas comprobaciones por realizadas. "
-    "Consulta los límites de temperatura, carga de hollín y combustible del manual aplicable. "
-    "Verifica DTC inhibitorios, sensores y seguridad del entorno con personal capacitado. "
-    "Sin documentación y condiciones confirmadas, abstenerse de la regeneración forzada.\n"
+    "📋 *Prerrequisitos y comprobaciones OEM antes de forzar la regeneración de DPF:*\n\n"
+    "No existe una lista universal de valores para todos los vehículos. No inicie el ciclo basándose en cifras genéricas "
+    "ni solo en el cambio de aceite. Confirme la marca, modelo, año, motor y mercado, identifique la causa de la "
+    "dilución y consulte el procedimiento OEM correspondiente. Sin ese documento y sus criterios verificables, "
+    "CarBot no puede indicar umbrales ni autorizar la regeneración; derive la comprobación a un técnico capacitado."
 )
 
 BANNER_BATERIA_MOTOR_ENCENDIDO = (
@@ -107,10 +92,10 @@ BANNER_BATERIA_MOTOR_ENCENDIDO = (
 )
 
 BANNER_RADIADOR_CALIENTE = (
-    "⚠️ **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO DE QUEMADURAS SEVERAS - NO ABRA EL SISTEMA EN CALIENTE**\n\n"
-    "PELIGRO: NUNCA abras ni retires el tapón del radiador ni abras el depósito presurizado mientras el motor o el refrigerante estén calientes o hirviendo. "
-    "La liberación súbita de presión expulsará vapor y refrigerante hirviendo a más de 100 °C, causando quemaduras corporales graves e instantáneas. "
-    "Espere a que el motor se enfríe completamente y siga el procedimiento de despresurización del fabricante antes de cualquier comprobación o recarga.\n\n"
+    "⚠️ **PELIGRO: NO ABRA EL SISTEMA DE REFRIGERACIÓN EN CALIENTE**\n"
+    "No retire el tapón del radiador ni abra el depósito presurizado mientras el motor o el refrigerante estén calientes. "
+    "El sistema puede expulsar vapor y refrigerante a presión y causar quemaduras graves. "
+    "Espere a que el motor se enfríe y solicite asistencia si no puede verificarlo con seguridad.\n\n"
 )
 
 BANNER_AIRBAG_DETONADOR = (
@@ -135,10 +120,12 @@ BANNER_SOLDADURA_COMBUSTIBLE = (
 )
 
 BANNER_MONOXIDO_CARBONO = (
-    "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: INTOXICACIÓN MORTAL POR MONÓXIDO DE CARBONO (CO)**\n\n"
-    "PROHIBICIÓN ESTRICTA: Detén el motor de inmediato y sal al aire libre. Los gases de escape en un recinto cerrado acumulan monóxido de carbono, "
-    "un veneno letal, invisible e inodoro que provoca mareo, pérdida del conocimiento y asfixia fatal en cuestión de minutos. "
-    "Abra portones y ventanas para ventilar completamente el taller antes de reingresar. Nunca aceleres ni mantengas motores en marcha en interiores sin un extractor de humos al exterior.\n\n"
+    "🛑 **PELIGRO DE INTOXICACIÓN: SALGA DEL TALLER AHORA**\n"
+    "El motor en marcha en un espacio cerrado puede acumular gases tóxicos, incluido monóxido de carbono. "
+    "Salga al aire libre y avise a las demás personas para que también salgan. No arranque ni siga usando el motor. "
+    "No vuelva a entrar para ventilar o apagarlo si eso exige exponerse; solicite ayuda de emergencia, "
+    "especialmente si alguien siente mareo, "
+    "náuseas, confusión o dolor de cabeza.\n\n"
 )
 
 BANNER_BATERIA_EXPLOSION = (
@@ -150,10 +137,10 @@ BANNER_BATERIA_EXPLOSION = (
 )
 
 BANNER_DIRECCION_CRITICA = (
-    "🛑 **ADVERTENCIA CRÍTICA DE SEGURIDAD: PELIGRO DE PÉRDIDA DE CONTROL DE DIRECCIÓN**\n\n"
-    "PROHIBICIÓN ESTRICTA: Inmovilice el vehículo de inmediato. "
-    "Bloqueo repentino o humo/fuego en la bomba de dirección asistida. Conducir en estas condiciones representa un riesgo inminente de colisión y choque. "
-    "Solicite traslado en grúa para inspección profesional del sistema de dirección asistida.\n\n"
+    "🛑 **PELIGRO CRÍTICO EN LA DIRECCIÓN: NO CONDUZCA EL VEHÍCULO; NO CONTINÚE CONDUCIENDO**\n"
+    "Una pérdida repentina de asistencia o humo en la dirección puede comprometer el control del vehículo. "
+    "Deténgase en un lugar seguro únicamente si puede hacerlo sin maniobras bruscas; no continúe la marcha "
+    "ni realice una prueba de ruta. Solicite asistencia y evaluación profesional antes de volver a circular.\n\n"
 )
 
 BANNER_TURBO_INCENDIO = (
@@ -199,3 +186,70 @@ BANNER_INCOMPATIBILIDAD_BUJIAS_DIESEL = """� **INCOMPATIBILIDAD TÉCNICA Y SEG
 BANNER_INCOMPATIBILIDAD_24V_12V = """🛑 **BLOQUEO DE SEGURIDAD MECÁNICA — INCOMPATIBILIDAD DE ALIMENTACIÓN ELÉCTRICA**
 
 PROHIBICIÓN ESTRICTA: No conectes baterías en serie ni fuentes de tensión incompatibles al alternador o vehículo. Si la fuente es de 24 V y el alternador es de 12V como indicas, no realices esa conexión. Detén la prueba de inmediato: puede dañar reguladores y módulos, quemar cableado y provocar incendio o explosión de batería. Consulta la alimentación nominal y el procedimiento del fabricante antes de cualquier prueba; no improvises conexiones."""
+
+
+BANNER_BATERIA_DANADA = (
+    "⚠️ **PELIGRO DE INCENDIO O EXPLOSIÓN: BATERÍA CALIENTE, HINCHADA O CON EMISIÓN DE GAS**\n"
+    "Aléjese y mantenga a otras personas apartadas. No toque, cargue, puentee, mida ni desconecte la batería; "
+    "evite chispas y fuentes de ignición. Si continúa calentándose, humea o emite gas, evacúe el área y contacte "
+    "a los servicios de emergencia. No intente retirarla.\n\n"
+)
+
+
+BANNER_GATO_SIN_CABALLETES = (
+    "🛑 **PELIGRO DE APLASTAMIENTO: NO TRABAJE DEBAJO SIN SOPORTE SEGURO**\n"
+    "Una gata hidráulica por sí sola no es un soporte seguro para trabajar debajo. Salga de la zona de caída "
+    "sin ubicarse bajo el vehículo y no intente manipular la gata desde esa posición. Solicite apoyo de personal "
+    "capacitado. No vuelva debajo hasta confirmar un soporte seguro, como caballetes adecuados, instalado por "
+    "personal competente conforme al fabricante. La seguridad de la inspección depende de un soporte estable.\n\n"
+)
+
+
+BANNER_AIRBAG_SRS = (
+    "🛑 **PELIGRO: NO MIDA EL DETONADOR DEL AIRBAG**\n"
+    "No conecte un multímetro, óhmetro ni fuente eléctrica al detonador o circuito SRS. La medición podría "
+    "activar o detonar el airbag y causar lesiones. No manipule el circuito; derive la comprobación a personal "
+    "capacitado que siga el procedimiento OEM específico.\n\n"
+)
+
+
+BANNER_VEHICULO_RODANDO = (
+    "🛑 **PELIGRO INMEDIATO: VEHÍCULO SIN SUJECIÓN EN PENDIENTE**\n"
+    "No se coloque delante, detrás ni en la trayectoria del vehículo, y no intente detenerlo con el cuerpo. "
+    "Aléjese a una posición protegida, advierta a otras personas desde un lugar seguro y solicite asistencia "
+    "para inmovilizarlo. No lo conduzca ni haga pruebas.\n\n"
+)
+
+
+BANNER_ESCAPE_CALIENTE = (
+    "⚠️ **PELIGRO DE QUEMADURA O INCENDIO: ESCAPE O TURBO INCANDESCENTE**\n"
+    "No toque, cubra ni enfríe el turbo o el escape y mantenga materiales inflamables y personas alejados. "
+    "Si hay humo persistente o llamas, evacúe el área y contacte a emergencias; no se acerque para inspeccionar. "
+    "Solicite evaluación profesional antes de volver a operar el vehículo.\n\n"
+)
+
+
+BANNER_SOLDADURA_TANQUE = (
+    "🛑 **PELIGRO DE EXPLOSIÓN: NO SUELDE NI CALIENTE EL TANQUE**\n"
+    "Vaciar un tanque no garantiza que haya eliminado los vapores inflamables. No manipule el tanque ni use soplete, soldadura, "
+    "corte ni otra fuente de calor. La reparación requiere un procedimiento profesional de trabajo en caliente "
+    "y verificación segura del tanque; solicite un taller especializado.\n\n"
+)
+
+
+BANNER_ALTERNADOR_SOBREVOLTAJE = (
+    "⚠️ **NO APLIQUE 24 V A UN ALTERNADOR DE 12V**\n"
+    "No conecte baterías en serie ni energice el alternador para hacer esa prueba. La tensión puede quemar o dañar el "
+    "regulador, los diodos y otros componentes, y producir chispas. Confirme la tensión nominal del sistema y "
+    "siga el procedimiento del fabricante con equipo de prueba adecuado; si no puede confirmarlo, no lo energice.\n\n"
+)
+
+
+BANNER_DIESEL_EMBALAMIENTO_ACTIVO = (
+    "🛑 **EMERGENCIA: MOTOR DIÉSEL ACELERADO SIN CONTROL (EMBALAMIENTO DIÉSEL)**\n"
+    "No se acerque al vano motor, no intente bloquear la admisión ni manipular componentes. Aleje a las personas "
+    "de la trayectoria y del vehículo, evacúe el área si hay humo o riesgo de incendio y contacte de inmediato "
+    "a los servicios de emergencia. No vuelva a operar el vehículo hasta una evaluación profesional.\n\n"
+)
+
+BANNER_TEMPERATURA += "NUNCA intente abrir el tapón del radiador mientras el motor o el refrigerante permanezcan calientes.\n\n"

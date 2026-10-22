@@ -274,6 +274,7 @@ async def analizar_sintoma(
                             },
                             trazabilidad={
                                 "origen": "REST",
+                                "confianza_detalle": getattr(dto_resultado, "confianza_detalle", {}),
                                 "tiempo_total_ms": round(elapsed_ms),
                                 # session_id identifica sesión, no necesariamente caso.
                                 "session_id": sesion_efectiva,
@@ -339,6 +340,7 @@ async def analizar_sintoma(
             falla_predicha=dto_resultado.diagnostico_ml,
             confianza=confianza_pct,
             origen_confianza=dto_resultado.origen_confianza,
+            confianza_detalle=getattr(dto_resultado, "confianza_detalle", {}),
             similitud_rag=round(dto_resultado.similitud_rag * 100, 2),
             requiere_revision_humana=dto_resultado.requiere_revision_humana,
             procedimiento_tecnico=dto_resultado.contexto_manual,

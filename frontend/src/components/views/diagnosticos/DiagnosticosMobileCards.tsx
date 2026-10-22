@@ -1,3 +1,4 @@
+import { ConfianzaDiagnostico } from '../../common/ConfianzaDiagnostico';
 import React from 'react';
 import { AlertCircle, RefreshCw, ArrowRight } from 'lucide-react';
 import { Badge } from '../../common/Badge';
@@ -121,19 +122,7 @@ export const DiagnosticosMobileCards: React.FC<DiagnosticosMobileCardsProps> = (
                 </div>
               </div>
 
-              <span
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 800,
-                  color: d.confianza >= 70 ? '#059669' : '#b45309',
-                  backgroundColor: d.confianza >= 70 ? '#ecfdf5' : '#fef3c7',
-                  border: `1px solid ${d.confianza >= 70 ? '#a7f3d0' : '#fde68a'}`,
-                  padding: '2px 8px',
-                  borderRadius: '6px',
-                }}
-              >
-                {d.confianza}% confianza
-              </span>
+              <ConfianzaDiagnostico diagnostico={d} />
             </div>
 
             {/* 7. Acción: Ver diagnóstico → */}

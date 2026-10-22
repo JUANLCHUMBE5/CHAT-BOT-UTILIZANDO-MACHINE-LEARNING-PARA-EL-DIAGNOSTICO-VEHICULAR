@@ -17,6 +17,7 @@ def _normalizar(texto: str) -> str:
 
 
 PATRONES_IMPOSIBILIDAD_FISICA = (
+    '\\bno\\s+(?:puedo|podemos|tengo\\s+forma\\s+de|tengo\\s+como)\\s+(?:realizar|hacer|efectuar|ejecutar)?\\s*(?:m[aá]s\\s+)?(?:ning[uú]n(?:a|as|os)?\\s+)?(?:comprobaciones?|pruebas?|revisiones?|mediciones?|inspecciones?|desarmes?)\\b',
     r"\b(?:sigo|seguimos|continuo|continuamos)\s+sin\s+(?:poder|posibilidad\s+de)\s+(?:comprobar|medir|verificar|revisar|probar)\b",
     r"\bno\s+(?:puedo|podemos|tengo\s+forma\s+de|tengo\s+como)\s+(?:realizar|hacer|efectuar|ejecutar)?\s*(?:m[aá]s\s+|ninguna\s+|ningun\s+)?(?:comprobaciones?|pruebas?|revisiones?|mediciones?|inspecciones?|desarmes?)\b",
     r"\b(?:no|ni|tampoco)\s+(?:puedo|podemos|tengo\s+como)\s+(?:revisar|comprobar|probar|medir|desmontar|desarmar|verificar)\b",

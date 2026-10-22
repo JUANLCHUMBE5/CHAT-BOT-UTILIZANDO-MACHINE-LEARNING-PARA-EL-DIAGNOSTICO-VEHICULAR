@@ -1,6 +1,7 @@
 """Lectura y actualización autorizadas del historial diagnóstico."""
 import uuid
 from datetime import datetime
+from src.interfaces.api.v1.dtos.fechas import fecha_hora_peru
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
@@ -183,7 +184,7 @@ async def obtener_conversacion_diagnostico(
                 direccion=m.direccion,
                 texto=m.texto,
                 tipo=m.tipo,
-                fecha_hora=m.ocurrido_en.strftime("%Y-%m-%d %H:%M") if m.ocurrido_en else "Reciente",
+                fecha_hora=fecha_hora_peru(m.ocurrido_en) if m.ocurrido_en else "Reciente",
             )
             for m in mensajes
         ]

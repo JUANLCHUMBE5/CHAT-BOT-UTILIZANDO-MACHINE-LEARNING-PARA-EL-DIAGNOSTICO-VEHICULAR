@@ -1,3 +1,4 @@
+import { ConfianzaDiagnostico } from '../../common/ConfianzaDiagnostico';
 import React from 'react';
 import { AlertCircle, RefreshCw, MessageSquare } from 'lucide-react';
 import { Badge } from '../../common/Badge';
@@ -146,20 +147,7 @@ export const DiagnosticosDesktopTable: React.FC<DiagnosticosDesktopTableProps> =
 
                   {/* 4. Confianza */}
                   <td style={{ padding: '10px 14px' }}>
-                    <span
-                      style={{
-                        fontSize: '11px',
-                        fontWeight: 800,
-                        padding: '2px 7px',
-                        borderRadius: '6px',
-                        backgroundColor: d.confianza >= 70 ? '#ecfdf5' : '#fef3c7',
-                        color: d.confianza >= 70 ? '#059669' : '#b45309',
-                        border: `1px solid ${d.confianza >= 70 ? '#a7f3d0' : '#fde68a'}`,
-                        display: 'inline-block',
-                      }}
-                    >
-                      {d.confianza}%
-                    </span>
+                    <ConfianzaDiagnostico diagnostico={d} />
                   </td>
 
                   {/* 5. Estado */}

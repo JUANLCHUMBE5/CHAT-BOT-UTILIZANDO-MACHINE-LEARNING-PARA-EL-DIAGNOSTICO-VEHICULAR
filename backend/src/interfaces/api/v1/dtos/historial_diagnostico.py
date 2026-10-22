@@ -1,5 +1,6 @@
 """Presentación del historial REST, separada del flujo de procesamiento."""
 from datetime import datetime
+from src.interfaces.api.v1.dtos.fechas import fecha_hora_peru
 from typing import Optional
 
 from src.config import settings
@@ -29,10 +30,10 @@ def _fecha_confirmacion_tecnica(diagnostico, trazabilidad: dict) -> Optional[str
     fecha_iso = validacion.get("validado_en")
     if fecha_iso:
         try:
-            return datetime.fromisoformat(str(fecha_iso)).strftime("%Y-%m-%d %H:%M")
+            return fecha_hora_peru(datetime.fromisoformat(str(fecha_iso)))
         except ValueError:
             pass
-    return diagnostico.actualizado_en.strftime("%Y-%m-%d %H:%M") if diagnostico.actualizado_en else None
+    return fecha_hora_peru(diagnostico.actualizado_en) if diagnostico.actualizado_en else None
 
 
 def presentar_historial(diag_db_list):
@@ -144,6 +145,7 @@ def presentar_historial(diag_db_list):
                 falla_predicha=d.falla_predicha or "Sin falla predicha",
                 confianza=confianza_val,
                 origen_confianza=traza.get("origen_confianza", "NO_REGISTRADO"),
+                confianza_detalle=traza.get("confianza_detalle") or {},
                 similitud_rag=similitud_val,
                 modo_diagnostico=d.modo_diagnostico or "completo_ml_rag_llm",
                 estado=d.estado or "generado",
@@ -154,7 +156,7 @@ def presentar_historial(diag_db_list):
                 cliente_telefono=cliente_tel,
                 placa_vehiculo=placa_str,
                 marca_modelo=marca_str,
-                fecha_hora=d.creado_en.strftime("%Y-%m-%d %H:%M") if d.creado_en else "Fecha no registrada",
+                fecha_hora=fecha_hora_peru(d.creado_en) if d.creado_en else "Fecha no registrada",
                 duracion_ms=duracion_val,
                 procedimiento_rag=proc_rag,
                 fuente_manual=fuente_ref,

@@ -43,6 +43,15 @@ class SintetizadorConsulta:
         if vehiculo_tokens:
             partes.append(" ".join(vehiculo_tokens))
 
+        # Conservar observaciones actuales que el extractor estructurado aún no representa.
+        # El anexo de auditoría se excluye del TF-IDF: no debe ser la única copia de una lectura.
+        from src.core.conversacion.evidencia_observada import observacion_tecnica
+
+        recientes = estado.historial_mensajes_usuario[-1:]
+        for reporte in recientes:
+            if observacion_tecnica(reporte) and not estado.obtener_hecho("observacion_tecnica_actual"):
+                partes.append(f"observación actual reportada: {reporte}")
+
         # 2. Síntomas clínicos confirmados
         sintomas_confirmados = []
         vistos_sintomas = set()
@@ -130,7 +139,7 @@ class SintetizadorConsulta:
         meds = [
             h.valor for campo, h in estado.hechos.items()
             if (
-                h.categoria == "medicion"
+                h.categoria in ("medicion", "observacion")
                 and h.estado == FactState.CONFIRMADO
                 and campo not in {"valor_medicion", "unidad_medicion", "condicion_medicion"}
             )

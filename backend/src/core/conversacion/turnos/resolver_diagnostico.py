@@ -10,6 +10,11 @@ from src.core.conversacion.models import FactType, QuestionIntent
 
 
 async def resolver_diagnostico(self, turno):
+    from src.core.conversacion.evidencia_observada import pregunta_observacion
+
+    especifica = pregunta_observacion(turno.estado)
+    if especifica and not any(p.get("texto") == especifica for p in turno.estado.preguntas_realizadas):
+        turno.es_suficiente = False
     if not hasattr(turno, 'es_suficiente'):
         turno.es_suficiente = False
     if not hasattr(turno, 'score'):
@@ -237,6 +242,7 @@ async def resolver_diagnostico(self, turno):
             llm_usado=getattr(turno.dto_resultado, "llm_usado", False) is True,
             respuesta_limitada=getattr(turno.dto_resultado, "respuesta_limitada", False) is True,
             hipotesis_rechazadas=turno.estado.hipotesis_descartadas,
+            prioridad_inspeccion=bool(turno.estado.top3_actual and turno.estado.top3_actual[0].get("criterio_presentacion")),
         )
         if (
             "gnv" in turno.norm_txt_cons or "conmuta a gas" in turno.norm_txt_cons

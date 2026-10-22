@@ -12,6 +12,7 @@ import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.config import settings
+from src.core.conversacion.prioridad_inspeccion import ordenar_inspeccion
 from src.core.conversacion.models import ConversationState, FactState
 from src.core.conversacion.ruteador_sistema import (
     detectar_ruta_sistema,
@@ -430,4 +431,4 @@ class ValidadorCompatibilidad:
             claves_presentadas.add(clave)
 
         # Limitar a Top 3 para presentación
-        return candidatas_compatibles[:3], exclusiones
+        return ordenar_inspeccion(candidatas_compatibles, estado)[:3], exclusiones

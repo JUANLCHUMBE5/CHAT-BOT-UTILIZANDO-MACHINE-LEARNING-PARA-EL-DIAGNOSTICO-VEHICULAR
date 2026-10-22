@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
+from src.core.conversacion.proteccion_turnos import proteger_turno
 from src.core.conversacion.repositorio import ConversationStateRepository, PostgresConversationRepository
 from src.core.conversacion.turnos.ciclo_casos import ciclo_casos
 from src.core.conversacion.turnos.consultas_basicas import consultas_basicas
@@ -69,6 +70,7 @@ class OrquestadorConversacion:
                     salida_dict["status"] = "tolerancia_no_validada"
         return salida_dict
 
+    @proteger_turno
     async def procesar_turno(
         self,
         session_id: str,

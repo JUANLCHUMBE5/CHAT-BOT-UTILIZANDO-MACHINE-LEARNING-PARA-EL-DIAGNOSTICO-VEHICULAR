@@ -8,6 +8,20 @@ from typing import Any, Dict, List, Optional, Tuple
 from src.core.conversacion.respuestas_cortas.patrones_deteccion import PATRON_NUMERICO_MEDICION
 
 
+def _unidad_capturada(texto: str, coincidencia: re.Match[str]) -> str:
+    """Recupera símbolos no alfabéticos que el límite de palabra del patrón omite."""
+    unidad = (coincidencia.group(2) or "").lower()
+    if unidad == "a" and re.match(
+        r"\s*(?:gasolina|gasohol|di[eé]sel|gnv|glp)\b",
+        texto[coincidencia.end() :],
+        re.IGNORECASE,
+    ):
+        return ""
+    if not unidad and re.match(r"\s*%", texto[coincidencia.end() :]):
+        return "%"
+    return unidad
+
+
 def resolver_condicion_fragmento(frag: str) -> Optional[str]:
     """Determina la condición de operación automotriz descrita en un fragmento."""
     frag_l = frag.lower()
@@ -108,7 +122,14 @@ def extraer_medicion(
     pending_q: Optional[Dict[str, Any]] = None,
 ) -> Optional[Tuple[float, str, Optional[str]]]:
     """Extrae valor, unidad y condición operacional de una respuesta técnica numérica sin mezclar magnitudes."""
-    m = PATRON_NUMERICO_MEDICION.search(texto_l)
+    m = next(
+        (
+            coincidencia
+            for coincidencia in PATRON_NUMERICO_MEDICION.finditer(texto_l)
+            if not _es_tension_nominal_de_bateria(texto_l, coincidencia)
+        ),
+        None,
+    )
     if not m:
         return None
     val_str = m.group(1).replace(",", ".")
@@ -117,7 +138,7 @@ def extraer_medicion(
     except ValueError:
         return None
 
-    unidad_raw = (m.group(2) or "").lower()
+    unidad_raw = _unidad_capturada(texto_l, m)
     if not unidad_raw:
         if any(w in texto_l for w in ("minuto", "minutos", "min", "hora", "horas", "segundo", "segundos")):
             return None
@@ -131,6 +152,10 @@ def extraer_medicion(
     unidad_norm = normalizar_unidad_automotriz(unidad_raw)
     if unidad_norm:
         unidad = unidad_norm
+    elif unidad_raw:
+        # Una unidad explícita desconocida (por ejemplo, %) nunca hereda la
+        # unidad de la pregunta pendiente, porque son magnitudes distintas.
+        return None
     elif pending_q and pending_q.get("expected_units"):
         unidad = pending_q["expected_units"][0]
     elif "presion" in texto_preg or "manometro" in texto_preg or "combustible" in texto_preg:
@@ -144,6 +169,25 @@ def extraer_medicion(
     return val, unidad, condicion
 
 
+def _es_tension_nominal_de_bateria(texto: str, coincidencia: re.Match[str]) -> bool:
+    """No trata la capacidad nominal 12 V/65 Ah como lectura medida de tensión."""
+    unidad = normalizar_unidad_automotriz(coincidencia.group(2) or "")
+    if unidad != "V":
+        return False
+    inicio = coincidencia.start(1)
+    fin = coincidencia.end(2)
+    antes = texto[max(0, inicio - 45) : inicio]
+    segmento = texto[inicio : min(len(texto), fin + 16)]
+    return bool(
+        re.search(r"\bbater[ií]a\b", antes)
+        and re.match(
+            r"\d{1,2}(?:[.,]\d+)?\s*v(?:oltios?|olts?)?\s+\d{2,3}(?:[.,]\d+)?\s*ah\b",
+            segmento,
+            re.IGNORECASE,
+        )
+    )
+
+
 def extraer_medicion_fragmento(
     fragmento: str,
     intent_str: str,
@@ -153,7 +197,9 @@ def extraer_medicion_fragmento(
     """Extrae lectura y unidad dentro de un fragmento de texto asignando su condición local."""
     mejor_match = None
     for m in PATRON_NUMERICO_MEDICION.finditer(fragmento):
-        u_raw = (m.group(2) or "").lower()
+        if _es_tension_nominal_de_bateria(fragmento, m):
+            continue
+        u_raw = _unidad_capturada(fragmento, m)
         u_norm = normalizar_unidad_automotriz(u_raw)
         if u_norm:
             mejor_match = (m, u_norm)
@@ -167,7 +213,14 @@ def extraer_medicion_fragmento(
         except ValueError:
             return None
     else:
-        m = PATRON_NUMERICO_MEDICION.search(fragmento)
+        m = next(
+            (
+                coincidencia
+                for coincidencia in PATRON_NUMERICO_MEDICION.finditer(fragmento)
+                if not _es_tension_nominal_de_bateria(fragmento, coincidencia)
+            ),
+            None,
+        )
         if not m:
             return None
         val_str = m.group(1).replace(",", ".")
@@ -176,7 +229,7 @@ def extraer_medicion_fragmento(
         except ValueError:
             return None
 
-        unidad_raw = (m.group(2) or "").lower()
+        unidad_raw = _unidad_capturada(fragmento, m)
         if not unidad_raw:
             if re.match(r"^(?:19[89]\d|20[0-2]\d)$", m.group(1)):
                 return None
@@ -193,6 +246,8 @@ def extraer_medicion_fragmento(
         unidad_norm = normalizar_unidad_automotriz(unidad_raw)
         if unidad_norm:
             unidad = unidad_norm
+        elif unidad_raw:
+            return None
         elif pending_q and pending_q.get("expected_units"):
             unidad = pending_q["expected_units"][0]
         elif "presion" in texto_preg or "manometro" in texto_preg or "combustible" in texto_preg:
@@ -255,7 +310,9 @@ def extraer_todas_mediciones(
             continue
         explicitas = []
         for coincidencia in PATRON_NUMERICO_MEDICION.finditer(c_l):
-            unidad = normalizar_unidad_automotriz(coincidencia.group(2) or "")
+            if _es_tension_nominal_de_bateria(c_l, coincidencia):
+                continue
+            unidad = normalizar_unidad_automotriz(_unidad_capturada(c_l, coincidencia))
             if not unidad:
                 continue
             try:
@@ -275,12 +332,14 @@ def extraer_todas_mediciones(
 
     # 2. Si no hubo por cláusulas, búsqueda exhaustiva directa con unidades explícitas
     for m in PATRON_NUMERICO_MEDICION.finditer(texto_l):
+        if _es_tension_nominal_de_bateria(texto_l, m):
+            continue
         val_str = m.group(1).replace(",", ".")
         try:
             val = float(val_str)
         except ValueError:
             continue
-        unit_raw = (m.group(2) or "").lower()
+        unit_raw = _unidad_capturada(texto_l, m)
         if not unit_raw:
             continue
         unit_norm = normalizar_unidad_automotriz(unit_raw)

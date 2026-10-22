@@ -1,3 +1,4 @@
+import { ConfianzaDiagnostico } from '../../../../common/ConfianzaDiagnostico';
 import React, { useState } from 'react';
 import { Search, Eye, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card } from '../../../../common/Card';
@@ -163,11 +164,7 @@ export const AuditoriaConsultas: React.FC<AuditoriaConsultasProps> = ({
                     >
                       {d.falla_predicha}
                     </div>
-                    {typeof d.confianza === 'number' && (
-                      <div style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
-                        {d.confianza.toFixed(1)}% certidumbre SVM
-                      </div>
-                    )}
+                    <ConfianzaDiagnostico diagnostico={d} />
                   </td>
                   <td style={{ padding: '10px 14px' }}>
                     <Badge type={d.estado} size="sm" />

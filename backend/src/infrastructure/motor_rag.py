@@ -147,6 +147,26 @@ def _candidato_trata_fuga_refrigerante(candidato: Dict[str, Any]) -> bool:
     )
 
 
+def _validar_coherencia_vectorial(vectorizador: Any, indice: Any, cantidad_documentos: int) -> None:
+    """Rechaza paquetes cuyo vectorizador no corresponde con su índice FAISS."""
+    dimension_vectorizador = len(getattr(vectorizador, "vocabulary_", {}))
+    dimension_indice = int(getattr(indice, "d", 0))
+    vectores_indice = int(getattr(indice, "ntotal", -1))
+
+    if dimension_vectorizador <= 0 or dimension_indice <= 0:
+        raise ValueError("El vectorizador o el índice FAISS no declara una dimensión válida.")
+    if dimension_vectorizador != dimension_indice:
+        raise ValueError(
+            "Vectorizador e índice FAISS incompatibles: "
+            f"{dimension_vectorizador} != {dimension_indice}."
+        )
+    if vectores_indice != cantidad_documentos:
+        raise ValueError(
+            "El índice FAISS y el corpus no tienen la misma cantidad de vectores: "
+            f"{vectores_indice} != {cantidad_documentos}."
+        )
+
+
 class MotorRAG:
     """Clase encargada de indexar y buscar información dentro de los manuales técnicos multimarca utilizando FAISS / Cosine Similarity (RAG)."""
 
@@ -196,12 +216,17 @@ class MotorRAG:
         """Carga el paquete original verificado sin reconstruir el índice."""
         from src.infrastructure.rag_checks.canonical_loader import cargar_candidato_congelado
 
+        manuals = self.manual_path.parent if self.manual_path.is_file() else self.manual_path
+        if not (manuals / "candidates/v1/manifests/verified_frozen_bundle.json").is_file():
+            raise FileNotFoundError("Paquete RAG incompleto; selección experimental explícita rechazada")
         try:
             cargar_candidato_congelado(self)
+            _validar_coherencia_vectorial(self.vectorizador, self.faiss_index, len(self.documentos))
         except (FrozenRAGMismatch, OSError, ValueError, KeyError) as exc:
             logger.error("RAG congelado no disponible: %s", exc)
             self.faiss_index = None
             self.rag_version = "RAG_CANDIDATO_V1 (INCOMPATIBLE)"
+            raise RuntimeError("Paquete RAG_CANDIDATO_V1 inválido") from exc
 
     def _cargar_experimental_rag03e(self):
         from src.config import PROJECT_ROOT

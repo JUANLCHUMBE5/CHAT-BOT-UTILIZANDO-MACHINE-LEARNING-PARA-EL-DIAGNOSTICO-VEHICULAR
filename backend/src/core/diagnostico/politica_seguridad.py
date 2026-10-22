@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import re
 from enum import Enum
+
+from src.core.diagnostico.patrones_seguridad_fisica import detectar_riesgo_fisico
 from typing import Any, Optional, Tuple
 
 from src.core.conversacion.polaridad_proposiciones import polaridad_evento
@@ -229,6 +231,10 @@ class PoliticaSeguridad:
         # 0. Filtrado de falsos positivos en consultas teóricas o eventos históricos resueltos
         if cls.es_consulta_teorica_o_resuelta(texto_usuario):
             return SeveridadSeguridad.NORMAL_DIAGNOSTIC, None
+
+        banner_fisico = detectar_riesgo_fisico(texto_usuario)
+        if banner_fisico:
+            return SeveridadSeguridad.CRITICAL_STOP, banner_fisico
 
         txt_comb = f"{texto_usuario} {diagnostico_ml}".lower()
         txt_u = (texto_usuario or "").lower()

@@ -187,6 +187,13 @@ def detectar_sistema_ruteo(texto: str, usar_modelo: bool = True) -> str | None:
 
 def resolver_sistema_activo(texto_actual: str, sistema_activo: str | None = None) -> str | None:
     """Actualiza sistema activo con la señal del turno; conserva memoria en respuestas neutrales."""
+    from src.core.conversacion.evidencia_observada import subsistema_observado
+
+    especifico = subsistema_observado(texto_actual)
+    # Una anomalía eléctrica describe el tipo de prueba, no sustituye el componente
+    # identificado por un DTC. La política DTC existente conserva esa autoridad.
+    if especifico and not re.search(r"\b[PBCU]\d{4}\b", texto_actual, re.I):
+        return "suspension_direccion" if especifico == "direccion" else "electrico_ecu"
     detectado = detectar_sistema_ruteo(texto_actual, usar_modelo=not sistema_activo)
     normalizado = _normalizar(texto_actual)
     if detectado == "ambiguo":

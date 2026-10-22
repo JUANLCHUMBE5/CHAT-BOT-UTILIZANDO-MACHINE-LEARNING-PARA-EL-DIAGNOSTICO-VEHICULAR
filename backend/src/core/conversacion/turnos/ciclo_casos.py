@@ -1,4 +1,4 @@
-﻿"""Etapa ciclo casos; contexto por turno."""
+"""Etapa ciclo casos; contexto por turno."""
 
 from __future__ import annotations
 
@@ -174,18 +174,18 @@ async def ciclo_casos(self, turno):
         )
     )
     if turno.es_caso_freno and re.search(
-        r"\b(?:sacar(?:lo)?\s+a\s+(?:probar\s+a\s+)?(?:la\s+)?pista|probar\s+(?:en\s+|a\s+la\s+)?pista|circular|rodar\s+en\s+calle|manejar\s+as[ií])\b",
+        r"\b(?:sacar(?:lo)?\s+a\s+(?:probar\s+a\s+)?(?:la\s+)?pista|probar\s+(?:en\s+|a\s+la\s+)?pista|circular\s+as[ií]|salir\s+a\s+circular|rodar\s+en\s+calle|manejar\s+as[ií])\b",
         turno.texto_limpio.casefold(),
     ):
         if turno.texto_limpio not in turno.estado.historial_mensajes_usuario:
             turno.estado.historial_mensajes_usuario.append(turno.texto_limpio)
         turno.estado.turno_actual += 1
-        turno.resp_freno_persiste = "🛑 *RATIFICACIÓN CRÍTICA DE SEGURIDAD VIAL: PROHIBIDO CIRCULAR O PROBAR EN PISTA*\n\n⚠️ **ADVERTENCIA:** Con el pedal de freno yéndose al piso y fuga de líquido por la rueda, el vehículo se encuentra **totalmente inoperable y sin capacidad de detención segura**.\n\n🚫 **PROHIBICIÓN ESTRICTA:** Es correcto y obligatorio NO sacarlo a la pista ni intentar pruebas de ruta. Sacarlo a rodar representa un riesgo inminente de colisión catastrófica.\n\n🔧 **ACCIÓN REQUERIDA:** La inspección y purga debe realizarse exclusivamente en el taller sobre elevador o caballetes, revisando cilindro de rueda, calipers, mangueras flexibles y bomba principal."
+        turno.resp_freno_persiste = "SEGURIDAD VIAL: NO CIRCULES NI HAGAS PRUEBAS DE RUTA. Los síntomas reportados de frenos requieren comprobación presencial. No se ha confirmado una fuga ni su ubicación. Mantén el vehículo inmovilizado y solicita traslado seguro al taller; no realices purgas ni reemplazos basados solo en esta orientación."
         return {
             "status": "seguridad_critica",
             "respuesta_texto": turno.resp_freno_persiste,
-            "diagnostico_ml": "Pérdida crítica de frenos - Prohibición de circular",
-            "confianza_ml": 1.0,
+            "diagnostico_ml": "Advertencia de seguridad: comprobación pendiente",
+            "confianza_ml": 0.0,
             "fase": turno.estado.fase.value,
             "es_pregunta": False,
             "decision": "SEGURIDAD_CRITICA",

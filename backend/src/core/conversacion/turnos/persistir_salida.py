@@ -1,4 +1,4 @@
-﻿"""Etapa persistir salida; contexto por turno."""
+"""Etapa persistir salida; contexto por turno."""
 
 from __future__ import annotations
 
@@ -115,6 +115,19 @@ async def persistir_salida(self, turno):
         and (turno.banner_seguridad.strip() not in turno.respuesta_texto)
     ):
         turno.respuesta_texto = f"{turno.banner_seguridad}{turno.respuesta_texto}"
+    mediciones_turno = [
+        str(hecho.get("valor", "")).strip()
+        for hecho in turno.hechos_extraidos
+        if isinstance(hecho, dict)
+        and hecho.get("categoria") == "medicion"
+        and hecho.get("valor")
+        and str(hecho.get("campo") or "").startswith("medicion_")
+        and hecho.get("campo") not in {"medicion", "medicion_tecnica_pendiente"}
+    ]
+    mediciones_turno = list(dict.fromkeys(mediciones_turno))
+    if mediciones_turno and not all(valor in turno.respuesta_texto for valor in mediciones_turno):
+        resumen_mediciones = ", ".join(mediciones_turno)
+        turno.respuesta_texto = f"Lecturas reportadas en este turno: {resumen_mediciones}.\n\n{turno.respuesta_texto}"
     MaquinaEstadosConversacion.transicionar(
         estado=turno.estado, es_reinicio=False, nueva_evidencia=len(turno.hechos_extraidos) > 0
     )

@@ -137,6 +137,18 @@ def pregunta_por_area(
     """Elige una pregunta técnica del área explícita antes de preguntas genéricas."""
     from src.core.diagnostico.enrutador_sistema import detectar_areas_tecnicas
 
+    from src.core.conversacion.evidencia_observada import pregunta_observacion, subsistema_observado
+
+    pregunta_especifica = pregunta_observacion(estado)
+    if pregunta_especifica and not any(
+        p.get("texto") == pregunta_especifica for p in estado.preguntas_realizadas
+    ):
+        sistema = next((s for texto in reversed(estado.historial_mensajes_usuario)
+                        if (s := subsistema_observado(texto))), None)
+        intent = (QuestionIntent.CONDICION_OPERACION if sistema in (None, "direccion")
+                  else QuestionIntent.MEDICION_TECNICA)
+        return pregunta_especifica, intent
+
     historial_original = " ".join(estado.historial_mensajes_usuario).lower()
     historial = normalizar_jerga_automotriz(historial_original)
     areas = detectar_areas_tecnicas(historial)

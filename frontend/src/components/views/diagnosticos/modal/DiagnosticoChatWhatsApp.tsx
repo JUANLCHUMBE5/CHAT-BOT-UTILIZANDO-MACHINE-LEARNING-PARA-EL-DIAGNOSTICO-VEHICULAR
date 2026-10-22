@@ -1,3 +1,4 @@
+import { presentarConfianzaDiagnostico } from '../../../../utils/prediccionPresentation';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Bot, CheckCheck, MessageSquare, RefreshCw, User } from 'lucide-react';
 import type { Diagnostico } from '../../../../types';
@@ -233,7 +234,7 @@ export const DiagnosticoChatWhatsApp: React.FC<DiagnosticoChatWhatsAppProps> = (
                 </span>
               </div>
               <div style={{ fontSize: '12px', color: '#111b21', whiteSpace: 'pre-wrap' }}>
-                {diagnostico.sintesis_llm || diagnostico.procedimiento_rag || `Diagnóstico: ${diagnostico.falla_predicha} (${diagnostico.confianza}%)`}
+                {diagnostico.sintesis_llm || diagnostico.procedimiento_rag || `Diagnóstico: ${diagnostico.falla_predicha} (${presentarConfianzaDiagnostico(diagnostico).etiqueta})`}
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '3px', marginTop: '3px' }}>
                 <span style={{ fontSize: '9.5px', color: '#667781' }}>{formatearHora(diagnostico.fecha_hora)}</span>

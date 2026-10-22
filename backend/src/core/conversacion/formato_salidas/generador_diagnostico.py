@@ -23,9 +23,10 @@ def integrar_respuesta_llm(
     llm_usado: bool,
     respuesta_limitada: bool,
     hipotesis_rechazadas: Optional[List[str]] = None,
+    prioridad_inspeccion: bool = False,
 ) -> str:
     """Usa la síntesis LLM segura y conserva una sola pregunta del flujo determinista."""
-    if not llm_usado or respuesta_limitada or not respuesta_llm:
+    if prioridad_inspeccion or not llm_usado or respuesta_limitada or not respuesta_llm:
         return respuesta_determinista
 
     preguntas = re.findall(r"¿[^?]*\?", respuesta_determinista or "", flags=re.DOTALL)
@@ -292,6 +293,8 @@ def formatear_respuesta_diagnostico(
 
     bloque_causas = "\n".join(lineas_hipotesis)
     titulo_causas = "🔧 *Posibles causas*" if es_conjunta else "🔧 *Posibles causas (confianza individual)*"
+    if top_hipotesis[0].get("criterio_presentacion") == "INSPECCION_SUSPENSION_POR_REBOTE":
+        titulo_causas = "🔧 *Hipótesis en orden de inspección*\nEl rebote tras los desniveles prioriza comprobar amortiguación. Los porcentajes del SVM se conservan; este orden no confirma la avería."
 
     top1_falla = (
         candidatos_compatibles[0].get("falla", "")

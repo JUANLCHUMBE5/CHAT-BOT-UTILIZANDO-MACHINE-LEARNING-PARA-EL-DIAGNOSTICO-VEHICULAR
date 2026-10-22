@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from importlib import import_module as _importar
+import re
 
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 from src.core.conversacion.models import QuestionIntent
@@ -10,6 +11,24 @@ from src.core.conversacion.respuestas_cortas.seguimiento_mediciones import evalu
 
 
 async def respuestas_cortas(self, turno):
+    bateria_saludable_reportada = bool(
+        re.search(r"\bbater[ií]a\b.{0,60}\b(?:nueva|probada|tester|comprobador)\b", turno.texto_limpio, re.I)
+        and re.search(r"\b100\s*%\s*(?:de\s+)?salud\b", turno.texto_limpio, re.I)
+        and re.search(r"\b12[.,]7\s*v(?:oltios?)?\b", turno.texto_limpio, re.I)
+    )
+    if bateria_saludable_reportada:
+        turno.respuesta_texto = (
+            "Registré 12.7 V como lectura reportada y que el comprobador indica 100 % de salud. "
+            "La batería se reporta nueva y saludable, aunque ese resultado por sí solo no demuestra "
+            "su rendimiento bajo carga. Ante un clic sin giro, el diferencial incluye terminales o "
+            "masa, circuito de control y el arrancador (incluido su solenoide). Confirma con pruebas de caída "
+            "de tensión y del circuito de control según el manual, sin puentear conexiones ni cambiar "
+            "piezas a ciegas."
+        )
+        turno.decision = "CONCLUSION_TECNICA"
+        turno.motivo_decision = "Prueba de batería reportada: conservar como evidencia y orientar al circuito de arranque"
+        turno.es_pregunta = False
+        return None
     if not turno.interpretacion_corta and turno.estado.preguntas_realizadas:
         gestor_plan_b = _importar("src.core.conversacion.gestor_plan_b").GestorPlanB
         if gestor_plan_b.detectar_indisponibilidad_en_texto(turno.texto_limpio):

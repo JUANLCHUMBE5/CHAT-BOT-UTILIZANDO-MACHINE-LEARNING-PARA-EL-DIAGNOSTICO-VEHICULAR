@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, computed_field, model_validator
 
 
 class PrediccionML(BaseModel):
@@ -73,3 +73,14 @@ class ResultadoDiagnostico(BaseModel):
     desde_cache: bool = False
     tipo_consulta: str = "diagnostico"
     es_orientacion_provisional: bool = False
+
+    @computed_field
+    @property
+    def confianza_detalle(self) -> dict:
+        from src.core.diagnostico.confianza_resultado import describir_confianza
+
+        return describir_confianza({
+            "dto": self, "diagnostico_ml": self.diagnostico_ml,
+            "confianza_ml": self.confianza_ml,
+            "decision": "PREGUNTAR" if self.tipo_consulta == "consulta_tecnica" else "DIAGNOSTICAR",
+        })

@@ -41,6 +41,7 @@ class ItemDiagnosticoDTO(BaseModel):
     falla_predicha: str
     confianza: float
     origen_confianza: str = "NO_REGISTRADO"
+    confianza_detalle: dict = Field(default_factory=dict)
     similitud_rag: float = 0.0
     modo_diagnostico: str
     estado: str

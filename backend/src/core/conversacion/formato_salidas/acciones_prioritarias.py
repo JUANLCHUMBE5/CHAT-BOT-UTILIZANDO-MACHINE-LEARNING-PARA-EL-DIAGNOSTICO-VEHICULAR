@@ -74,7 +74,12 @@ def extraer_accion_prioritaria(falla: str, contexto_rag: str = "", estado: Optio
         return "voltaje en reposo y caída en arranque; contrastar ambas lecturas con el manual aplicable."
     if "alternador" in falla_l or ("carga" in falla_l and "descarga" not in falla_l):
         return "voltaje de carga en ralentí, con las condiciones y consumidores registrados; contrastar con el manual aplicable."
-    if "arranque" in falla_l or "arrancador" in falla_l or "solenoide" in falla_l:
+    if "inyector" in falla_l and any(t in falla_l for t in ("circuito", "solenoide", "p020")):
+        return (
+            "alimentación, masa, conectores y mando del circuito del inyector identificado por el DTC, "
+            "según el diagrama OEM y con equipo adecuado; no puentear ni abrir líneas presurizadas."
+        )
+    if "arranque" in falla_l or "arrancador" in falla_l:
         return (
             "caída de tensión en el terminal 50 del solenoide y verificar si el motor gira al dar contacto."
         )
@@ -152,6 +157,13 @@ def generar_pregunta_contextual(
         plan_b = GestorPlanB.obtener_plan_b_para_falla(falla, estado)
         if plan_b:
             return plan_b[1], plan_b[2]
+
+    if "inyector" in falla_l and any(t in falla_l for t in ("circuito", "solenoide", "p020")):
+        return (
+            "Con el DTC registrado, ¿se revisaron el conector y el cableado del inyector "
+            "conforme al diagrama, y cuál fue el resultado?",
+            QuestionIntent.MEDICION_TECNICA,
+        )
 
     multimetro_disp = None
     manometro_disp = None

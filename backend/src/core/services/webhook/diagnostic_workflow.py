@@ -399,6 +399,9 @@ class TechnicalDiagnosticWorkflow:
                 for campo in ("marca", "modelo", "anio", "motor", "combustible", "transmision")
                 if getattr(estado_actual, campo, None)
             }
+            if decision in ("SEGURIDAD_CRITICA", "CRITICAL_STOP"):
+                contexto_fusion.pop("validacion_diagnostico", None)
+                contexto_fusion.pop("mensaje_interactivo", None)
             conversacion.contexto = dict(contexto_fusion)
 
             # Sincronizar SessionManager
@@ -429,6 +432,8 @@ class TechnicalDiagnosticWorkflow:
                 else "inicio",
                 tipo_consulta="saludo" if es_saludo else "reinicio",
             )
+        elif decision in ("SEGURIDAD_CRITICA", "CRITICAL_STOP"):
+            return ResultadoDiagnostico(respuesta_texto=res_turno["respuesta_texto"], diagnostico_ml="Advertencia de seguridad: comprobación pendiente", confianza_ml=0.0, contexto_manual="", titulo_manual="", requiere_revision_humana=True, modo_diagnostico="seguridad_critica", tipo_consulta="seguridad_critica")
         elif decision in ("PREGUNTAR", "PLAN_B") or (
             res_turno.get("es_pregunta")
             and decision not in ("DIAGNOSTICAR", "DIFERENCIAL", "DETALLE", "CONCLUSION_TECNICA")

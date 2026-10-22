@@ -48,7 +48,14 @@ export interface Diagnostico {
   sintoma_original: string;
   sintoma_normalizado: string;
   falla_predicha: string;
-  confianza: number; // 0 a 100
+  confianza: number; // Puntaje heredado 0..100; no usar como probabilidad estadística.
+  confianza_detalle?: {
+    estado: 'estimada_svm' | 'sin_estimacion';
+    valor_svm: number | null;
+    valor_operativo: number | null;
+    diagnostico_confirmado_fisicamente: boolean;
+    motivo?: string | null;
+  };
   similitud_rag?: number; // 0 a 100
   modo_diagnostico: ModoDiagnostico;
   estado: EstadoDiagnostico;

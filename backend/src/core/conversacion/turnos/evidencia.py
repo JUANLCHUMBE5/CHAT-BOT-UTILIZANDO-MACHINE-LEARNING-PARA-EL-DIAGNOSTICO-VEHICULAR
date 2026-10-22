@@ -1,4 +1,4 @@
-﻿"""Etapa evidencia; contexto por turno."""
+"""Etapa evidencia; contexto por turno."""
 
 from __future__ import annotations
 
@@ -19,6 +19,14 @@ from src.core.conversacion.suficiencia_informacion import EvaluadorSuficiencia
 
 
 async def evidencia(self, turno):
+    from src.core.conversacion.evidencia_observada import observacion_tecnica
+
+    if observacion_tecnica(turno.texto_limpio):
+        hecho = turno.estado.registrar_hecho(
+            "observacion_tecnica_actual", turno.texto_limpio,
+            categoria="observacion", texto_crudo=turno.texto_limpio, tipo=FactType.CONDICION,
+        )
+        turno.hechos_extraidos.append(hecho.to_dict())
     turno.es_solicitud_detalle = ExtractorHechos.es_solicitud_detalle(turno.texto_limpio)
     turno.clasificar_intencion_consulta = _importar(
         "src.core.intent_classifier"
@@ -39,7 +47,7 @@ async def evidencia(self, turno):
             (
                 isinstance(h, dict)
                 and h.get("categoria")
-                in ("sintoma", "medicion", "condicion", "comprobacion", "componente_reemplazado")
+                in ("sintoma", "medicion", "observacion", "condicion", "comprobacion", "componente_reemplazado")
                 for h in turno.hechos_extraidos
             )
         )
