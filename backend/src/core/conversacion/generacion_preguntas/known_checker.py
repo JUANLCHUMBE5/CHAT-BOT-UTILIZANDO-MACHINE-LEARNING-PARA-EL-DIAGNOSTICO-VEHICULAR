@@ -135,9 +135,8 @@ def pregunta_por_area(
     estado: ConversationState,
 ) -> Optional[Tuple[str, QuestionIntent]]:
     """Elige una pregunta técnica del área explícita antes de preguntas genéricas."""
-    from src.core.diagnostico.enrutador_sistema import detectar_areas_tecnicas
-
     from src.core.conversacion.evidencia_observada import pregunta_observacion, subsistema_observado
+    from src.core.diagnostico.enrutador_sistema import detectar_areas_tecnicas
 
     pregunta_especifica = pregunta_observacion(estado)
     if pregunta_especifica and not any(

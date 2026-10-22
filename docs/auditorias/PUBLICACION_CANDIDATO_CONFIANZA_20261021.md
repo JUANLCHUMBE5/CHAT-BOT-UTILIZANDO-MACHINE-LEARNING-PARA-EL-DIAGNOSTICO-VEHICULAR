@@ -9,3 +9,7 @@ Validación previa: 2171 PASS, 41 FAIL, 6 ERROR, 75 omitidas; benchmark conocido
 Bloqueo de activación: el flujo `Build verified release image` exige CI exitoso del SHA exacto. No se elimina esa condición ni se activa una candidata con regresiones funcionales pendientes. La autorización de despliegue está registrada; no se requiere una nueva confirmación para pasos rutinarios, pero deben resolverse los bloqueos técnicos.
 
 Ver INFORME_CORRECCION_GENERAL_CONFIANZA_20261021.md para resultados, comandos y limitaciones. Los hashes canónicos y las expectativas permanecen intactos.
+
+## Resultado inicial de GitHub Actions
+
+Run 39707304046: frontend aprobado; backend detenido antes de pytest por nueve errores de importaciones Ruff. Gitleaks marcó seis hashes SHA-256 del manifiesto como generic-api-key; se verificaron los 310 valores hexadecimales de 64 caracteres y se registraron exclusivamente sus seis fingerprints históricos, sin excluir rutas ni desactivar reglas. Las importaciones se ordenaron sin cambiar expectativas ni lógica funcional. El despliegue permanece pendiente.

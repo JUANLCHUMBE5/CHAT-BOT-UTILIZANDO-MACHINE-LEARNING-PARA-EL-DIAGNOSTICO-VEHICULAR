@@ -15,8 +15,8 @@ from src.core.conversacion.aislamiento_subsistemas import (
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.conversacion.models import ConversationState
 from src.core.conversacion.prioridad_inspeccion import sincronizar_prioridad
-from src.core.diagnostico.banners_seguridad import BANNER_TEMPERATURA
 from src.core.conversacion.riesgo_activo_rag03i import banner_riesgo_actual
+from src.core.diagnostico.banners_seguridad import BANNER_TEMPERATURA
 from src.core.diagnostico.politica_seguridad import PoliticaSeguridad, SeveridadSeguridad
 
 

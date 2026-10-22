@@ -12,8 +12,8 @@ import unicodedata
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.config import settings
-from src.core.conversacion.prioridad_inspeccion import ordenar_inspeccion
 from src.core.conversacion.models import ConversationState, FactState
+from src.core.conversacion.prioridad_inspeccion import ordenar_inspeccion
 from src.core.conversacion.ruteador_sistema import (
     detectar_ruta_sistema,
     hipotesis_compatibles_con_ruta,

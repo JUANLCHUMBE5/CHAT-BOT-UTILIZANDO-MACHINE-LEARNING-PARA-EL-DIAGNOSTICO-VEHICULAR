@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from importlib import import_module as _importar
 import re
+from importlib import import_module as _importar
 
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 from src.core.conversacion.models import QuestionIntent

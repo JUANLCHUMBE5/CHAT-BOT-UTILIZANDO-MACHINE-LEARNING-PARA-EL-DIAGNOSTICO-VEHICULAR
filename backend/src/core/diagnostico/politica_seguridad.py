@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import re
 from enum import Enum
-
-from src.core.diagnostico.patrones_seguridad_fisica import detectar_riesgo_fisico
 from typing import Any, Optional, Tuple
 
 from src.core.conversacion.polaridad_proposiciones import polaridad_evento
@@ -35,6 +33,7 @@ from src.core.diagnostico.banners_seguridad import (
     BANNER_TURBO_INCENDIO,
     PRERREQUISITOS_REGENERACION_DPF_OEM,
 )
+from src.core.diagnostico.patrones_seguridad_fisica import detectar_riesgo_fisico
 
 
 class SeveridadSeguridad(str, Enum):

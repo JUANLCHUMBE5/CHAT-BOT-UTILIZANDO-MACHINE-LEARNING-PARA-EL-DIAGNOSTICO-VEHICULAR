@@ -24,3 +24,11 @@ c58cf9e788310a86d4bb1480b09d353097d74e35:.env.example:generic-api-key:35
 cfa3e65240a0094fd49632f4d4370b8e33ee1446:scripts/experiments/rag03g/ejecutar.py:generic-api-key:44
 cfa3e65240a0094fd49632f4d4370b8e33ee1446:scripts/experiments/rag03g/ejecutar.py:generic-api-key:45
 cfa3e65240a0094fd49632f4d4370b8e33ee1446:scripts/experiments/rag03g/ejecutar.py:generic-api-key:46
+
+# Reviewed: SHA-256 file digests in the runtime manifest, not credentials.
+1678689bf80089eac5c599b5aa509b0f3eeb38b1:docs/auditorias/BASE_RUNTIME_RAG03I.json:generic-api-key:7
+1678689bf80089eac5c599b5aa509b0f3eeb38b1:docs/auditorias/BASE_RUNTIME_RAG03I.json:generic-api-key:21
+1678689bf80089eac5c599b5aa509b0f3eeb38b1:docs/auditorias/BASE_RUNTIME_RAG03I.json:generic-api-key:31
+1678689bf80089eac5c599b5aa509b0f3eeb38b1:docs/auditorias/BASE_RUNTIME_RAG03I.json:generic-api-key:46
+1678689bf80089eac5c599b5aa509b0f3eeb38b1:docs/auditorias/BASE_RUNTIME_RAG03I.json:generic-api-key:56
+1678689bf80089eac5c599b5aa509b0f3eeb38b1:docs/auditorias/BASE_RUNTIME_RAG03I.json:generic-api-key:95

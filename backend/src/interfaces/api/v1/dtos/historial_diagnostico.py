@@ -1,10 +1,10 @@
 """Presentación del historial REST, separada del flujo de procesamiento."""
 from datetime import datetime
-from src.interfaces.api.v1.dtos.fechas import fecha_hora_peru
 from typing import Optional
 
 from src.config import settings
 from src.interfaces.api.v1.dtos.diagnosticos import EtapaProcesamientoDTO, ItemDiagnosticoDTO, PrediccionMLDTO
+from src.interfaces.api.v1.dtos.fechas import fecha_hora_peru
 
 
 def _es_procedimiento_rag_real(valor: Optional[str]) -> bool:

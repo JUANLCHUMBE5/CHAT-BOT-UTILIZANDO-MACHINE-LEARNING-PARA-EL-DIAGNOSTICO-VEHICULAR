@@ -1,5 +1,6 @@
 """Prioridad y persistencia de riesgo activo, trasladadas desde RAG-03I."""
 import re
+
 from src.core.conversacion.extractor_hechos import ExtractorHechos
 from src.core.diagnostico.patrones_seguridad_fisica import detectar_riesgo_fisico
 

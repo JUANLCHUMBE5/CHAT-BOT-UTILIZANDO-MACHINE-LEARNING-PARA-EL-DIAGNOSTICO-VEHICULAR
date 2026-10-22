@@ -1,7 +1,6 @@
 """Lectura y actualización autorizadas del historial diagnóstico."""
 import uuid
 from datetime import datetime
-from src.interfaces.api.v1.dtos.fechas import fecha_hora_peru
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
@@ -21,6 +20,7 @@ from src.interfaces.api.v1.dtos.diagnosticos import (
     ItemDiagnosticoDTO,
     MensajeConversacionDTO,
 )
+from src.interfaces.api.v1.dtos.fechas import fecha_hora_peru
 from src.interfaces.api.v1.dtos.historial_diagnostico import (
     _es_procedimiento_rag_real as _es_procedimiento_rag_real,
 )
