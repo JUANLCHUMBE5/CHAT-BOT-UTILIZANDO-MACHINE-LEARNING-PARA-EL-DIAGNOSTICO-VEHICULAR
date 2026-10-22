@@ -55,6 +55,8 @@ jobs:
       GROQ_AUDIO_ENABLED: 'false'
       META_ACCESS_TOKEN: ''
       MODEL_VERSION: C1_FASE10_FINAL
+      # Validar el mismo paquete canónico congelado que usa el runtime; nunca el experimental.
+      CARBOT_RAG_VERSION: candidate_v1
       MODEL_PKL_PATH: ${{ github.workspace }}/machine_learning/models/c1_fase10_final/modelo_diagnostico_c1.pkl
       VECTORIZER_PKL_PATH: ${{ github.workspace }}/machine_learning/models/c1_fase10_final/vectorizador_c1.pkl
       MODELO_SISTEMA_PKL_PATH: ${{ github.workspace }}/machine_learning/models/c1_fase10_final/modelo_sistema_c1_macrofix.pkl

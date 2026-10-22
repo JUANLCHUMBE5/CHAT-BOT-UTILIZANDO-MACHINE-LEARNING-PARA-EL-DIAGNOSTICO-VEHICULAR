@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 from typing import Any, Optional, Tuple
 
@@ -34,6 +35,27 @@ def manejar_interaccion_previa(
     Retorna: (resultado_inmediato, texto_actualizado, diagnostico_forzado)
     """
     diagnostico_forzado = None
+
+    # El reinicio explícito precede a combustible y autopreguntas pendientes.
+    from src.core.conversacion.extractor_hechos import ExtractorHechos
+
+    solicitud = ExtractorHechos.clasificar_solicitud_caso(texto_normalizado)
+    if solicitud and solicitud.get("accion") in {"nuevo_caso", "cancelar"}:
+        if clave_sesion:
+            gestor.session_manager.reiniciar_sesion(clave_sesion)
+        if re.fullmatch(
+            r"\s*(?:nuevo\s+(?:caso|diagn[oó]stico)|otro\s+(?:caso|problema|veh[ií]culo|carro|auto)|"
+            r"reiniciar|cancelar(?:\s+(?:el\s+)?caso)?)\s*[.!]*\s*",
+            texto_normalizado, re.I,
+        ):
+            return ResultadoDiagnostico(
+                respuesta_texto="Caso anterior cerrado. Indica el vehículo y el síntoma del nuevo caso.",
+                diagnostico_ml="Reinicio de sesión", confianza_ml=0.0,
+                contexto_manual="", titulo_manual="", tipo_consulta="conversacional",
+                modo_diagnostico="reinicio", estado_sesion="reinicio",
+            ), texto_normalizado, diagnostico_forzado
+        # Un comando y un síntoma en el mismo mensaje deben procesarse juntos.
+        sesion_pendiente = None
 
     # 1. Mensaje con solo datos de vehículo
     if (

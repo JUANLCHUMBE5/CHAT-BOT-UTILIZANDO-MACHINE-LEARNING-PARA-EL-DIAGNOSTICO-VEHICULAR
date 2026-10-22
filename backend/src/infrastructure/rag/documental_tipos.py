@@ -166,6 +166,7 @@ class TrazabilidadDocumental:
     unidad: str = ""
     parametro: str = ""
     condicion: str = ""
+    pagina_cifra: str = ""
 
 
 @dataclass(frozen=True)

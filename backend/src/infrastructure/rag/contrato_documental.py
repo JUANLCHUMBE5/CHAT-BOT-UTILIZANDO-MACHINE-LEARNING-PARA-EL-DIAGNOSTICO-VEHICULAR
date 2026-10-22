@@ -171,7 +171,10 @@ def verificar_presencia_cifra_y_trazabilidad(
     cifra, motivo = seleccionar_cifra(consulta, candidato, normalizar_texto, parsear_referencias_paginas)
     if cifra is None:
         return (False, None, motivo)
-    pag_ref = candidato.get("pagina") or meta.get("pagina") or cifra.get("pagina")
+    # Mantener el alcance documental heredado sin perder la página exacta de la cifra.
+    pag_ref = cifra.get("pagina") if candidato.get("cifras_trazadas") else (
+        candidato.get("pagina") or meta.get("pagina") or cifra.get("pagina")
+    )
     _, paginas, pagina = parsear_referencias_paginas(pag_ref)
     trazabilidad = TrazabilidadDocumental(
         fuente=fuente,
@@ -180,6 +183,7 @@ def verificar_presencia_cifra_y_trazabilidad(
         componente=cifra["parametro"],
         parametro=cifra["parametro"],
         condicion=cifra["condicion"],
+        pagina_cifra=str(cifra["pagina"]),
         cifra_encontrada=cifra["cifra"],
         unidad=cifra["unidad"],
         marca_aplicable=candidato.get("marca"),

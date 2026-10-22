@@ -16,6 +16,20 @@ def formatear_orientacion_abstencion(
     sintomas = " ".join(getattr(estado, "active_symptoms", []) or []).lower()
     pruebas = getattr(estado, "completed_tests", {}) or {}
 
+    descripcion = f"{sintoma_original} {sintomas}".casefold()
+    if (
+        re.search(r"\b(?:pendientes?|subidas?|bajo carga)\b", descripcion)
+        and re.search(r"\b(?:pierde|pérdida|perdida|tironea|tironeo)\b", descripcion)
+    ):
+        return (
+            "La pérdida de fuerza bajo carga sigue pendiente de comprobación; no confirma una bomba averiada. "
+            "El diferencial incluye alimentación de combustible, admisión/encendido y transmisión. "
+            "El nivel del tanque no demuestra caudal ni presión suficientes. Para distinguirlas sin prueba de ruta: "
+            "¿las RPM suben sin que aumente la velocidad, o también caen y el motor tironea? "
+            "Conserva los datos ya reportados y verifica las pruebas específicas según el manual aplicable, "
+            "sin sustituir piezas ni asumir umbrales OEM."
+        )
+
     if sistema == "encendido" and ("tiembla" in sintomas or "misfire" in sintomas):
         return (
             "🔧 *Orientación de encendido, aún sin causa ML priorizable.* "

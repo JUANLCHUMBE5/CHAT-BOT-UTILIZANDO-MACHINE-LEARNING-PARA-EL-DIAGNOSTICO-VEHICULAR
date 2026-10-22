@@ -226,7 +226,12 @@ class MotorRAG:
             logger.error("RAG congelado no disponible: %s", exc)
             self.faiss_index = None
             self.rag_version = "RAG_CANDIDATO_V1 (INCOMPATIBLE)"
-            raise RuntimeError("Paquete RAG_CANDIDATO_V1 inválido") from exc
+            self.documentos = []
+            self.titulos = []
+            self.metadatos_procedimientos = []
+            self.vectorizador = None
+            self.corpus_version = "paquete-rechazado"
+            self.discrepancias_paquete = [{"motivo": str(exc)}]
 
     def _cargar_experimental_rag03e(self):
         from src.config import PROJECT_ROOT
@@ -249,13 +254,26 @@ class MotorRAG:
         # 1. Cargar metadatos_manuales.json si existe
         ruta_meta_json = directorio_manuales / "metadatos_manuales.json"
         mapa_metadatos: Dict[str, Dict[str, Any]] = {}
+        ruta_schema = directorio_manuales / "candidates/v1/metadata/metadatos_schema_v2.json"
+        schema_por_id = {}
+        if ruta_schema.is_file():
+            schema_por_id = {
+                item["doc_id"]: item
+                for item in json.loads(ruta_schema.read_text(encoding="utf-8"))
+                if item.get("doc_id")
+            }
         if ruta_meta_json.exists():
             try:
                 with open(ruta_meta_json, "r", encoding="utf-8") as f:
                     lista_meta = json.load(f)
                 for item in lista_meta:
                     tit_norm = item.get("titulo", "").strip().lower()
-                    mapa_metadatos[tit_norm] = item
+                    from src.infrastructure.rag_checks.metadata_contract import adaptar_metadata_historica
+
+                    schema = schema_por_id.get(item.get("id_procedimiento"), {})
+                    if schema.get("titulo", "").strip().lower() != tit_norm:
+                        schema = {}
+                    mapa_metadatos[tit_norm] = adaptar_metadata_historica(dict(item, **schema))
                 logger.info(f"Metadatos RAG cargados exitosamente: {len(mapa_metadatos)} registros.")
             except Exception as e:
                 logger.warning(f"No se pudo cargar metadatos_manuales.json: {e}")

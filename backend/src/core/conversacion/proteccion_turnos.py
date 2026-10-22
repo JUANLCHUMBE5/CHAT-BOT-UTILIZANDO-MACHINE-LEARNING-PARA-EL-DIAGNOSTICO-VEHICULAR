@@ -13,7 +13,7 @@ from src.core.conversacion.aislamiento_subsistemas import (
     separar_problema,
 )
 from src.core.conversacion.extractor_hechos import ExtractorHechos
-from src.core.conversacion.models import ConversationState
+from src.core.conversacion.models import ConversationState, FactState, FactType
 from src.core.conversacion.prioridad_inspeccion import sincronizar_prioridad
 from src.core.conversacion.riesgo_activo_rag03i import banner_riesgo_actual
 from src.core.diagnostico.banners_seguridad import BANNER_TEMPERATURA
@@ -46,7 +46,9 @@ def proteger_turno(procesar):
         texto = (texto_usuario or "").strip()
         estado = await self.repositorio.get_session(session_id)
         if estado is None:
-            estado = ConversationState(session_id=session_id)
+            manager = getattr(gestor_diagnostico, "session_manager", None)
+            sesion = manager.obtener_sesion(session_id) if manager else None
+            estado = getattr(sesion, "conversation_state", None) or ConversationState(session_id=session_id)
         riesgo_actual = banner_riesgo_actual(estado, texto)
         cambio = separar_problema(estado, texto)
         severidad, banner = PoliticaSeguridad.evaluar_severidad(texto, "", estado=estado)
@@ -73,6 +75,22 @@ def proteger_turno(procesar):
             if not estado.case_id:
                 estado.iniciar_nuevo_caso(preservar_vehiculo=True)
             ExtractorHechos.extraer_y_actualizar(estado, texto)
+            if texto not in estado.historial_mensajes_usuario:
+                estado.historial_mensajes_usuario.append(texto)
+                estado.turno_actual += 1
+            if (
+                ExtractorHechos.contiene_informacion_diagnostica(texto)
+                and texto not in estado.active_symptoms
+            ):
+                estado.active_symptoms.append(texto)
+            ambiguo = re.fullmatch(r"(?:a veces|creo que si|mas o menos|puede ser)[.!?]*", normalizar(texto))
+            if ambiguo:
+                estado.registrar_hecho(
+                    "respuesta_seguimiento", texto, categoria="respuesta",
+                    estado=FactState.AMBIGUO, tipo=FactType.CONDICION,
+                    texto_crudo=texto, procedencia="user_report",
+                )
+                estado.respuestas_obtenidas.append({"respuesta": texto, "estado": "AMBIGUO"})
             if banner == BANNER_TEMPERATURA:
                 estado.active_system = "refrigeracion"
             vehiculo = " ".join(str(v) for v in (estado.marca, estado.modelo, estado.anio) if v)
