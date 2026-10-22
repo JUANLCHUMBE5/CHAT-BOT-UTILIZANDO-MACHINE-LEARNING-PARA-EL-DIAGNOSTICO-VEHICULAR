@@ -1,12 +1,31 @@
 """Regresiones de publicación: rechazo íntegro, procedencia y aislamiento de casos."""
 import pytest
 
-from src.core.conversacion.models import FactState
+from src.core.conversacion.models import ConversationState, FactState
 from src.core.conversacion.orquestador_conversacion import OrquestadorConversacion
 from src.core.conversacion.repositorio import InMemoryConversationRepository
+from src.core.conversacion.respuestas_cortas.alternativa_contextual import alternativa_por_evidencia
 from src.core.gestor_diagnostico import GestorDiagnostico
 from src.infrastructure.rag.contrato_documental import verificar_presencia_cifra_y_trazabilidad
 from src.infrastructure.rag_checks.metadata_contract import adaptar_metadata_historica
+
+
+def test_plan_b_map_conserva_medicion_pendiente_sin_inventar_bomba():
+    state = ConversationState(session_id='map-pendiente', active_system='combustible_admision')
+    state.active_symptoms = ['carga absoluta fuera de rango y pierde fuerza']
+    _, response, _ = alternativa_por_evidencia(state)
+    assert 'pendiente la medición del MAP' in response
+    assert 'no confirmaré una causa' in response
+    assert not state.measurements
+
+
+def test_plan_b_inyectores_no_convierte_hallazgo_en_confirmacion():
+    state = ConversationState(session_id='inyeccion-pendiente', active_system='combustible_admision')
+    state.registrar_hecho('caudal_inyectores_reportado', 'bajo, sin lectura')
+    _, response, _ = alternativa_por_evidencia(state)
+    assert 'prueba de banco' in response
+    assert 'sin confirmar' in response
+    assert not state.measurements
 
 
 @pytest.mark.parametrize('marca', ['Universal / Multimarca', 'Toyota', ''])

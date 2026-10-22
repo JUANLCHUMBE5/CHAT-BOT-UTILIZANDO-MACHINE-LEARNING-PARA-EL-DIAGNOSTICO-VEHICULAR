@@ -7,6 +7,7 @@ from importlib import import_module as _importar
 
 from src.core.conversacion.generador_preguntas import GeneradorPreguntas
 from src.core.conversacion.models import QuestionIntent
+from src.core.conversacion.respuestas_cortas.alternativa_contextual import alternativa_por_evidencia
 from src.core.conversacion.respuestas_cortas.seguimiento_mediciones import evaluar_lectura
 
 
@@ -141,9 +142,11 @@ async def respuestas_cortas(self, turno):
             turno.ultima_preg_txt = (
                 turno.estado.ultima_pregunta().get("texto", "") if turno.estado.ultima_pregunta() else ""
             )
-            turno.plan_b = turno.GestorPlanB.obtener_plan_b_por_inspeccion(
-                dominio=turno.dominio_actual, ultima_preg=turno.ultima_preg_txt, estado=turno.estado
-            )
+            turno.plan_b = alternativa_por_evidencia(turno.estado)
+            if not turno.plan_b:
+                turno.plan_b = turno.GestorPlanB.obtener_plan_b_por_inspeccion(
+                    dominio=turno.dominio_actual, ultima_preg=turno.ultima_preg_txt, estado=turno.estado
+                )
             if not turno.plan_b and turno.estado.top3_actual:
                 turno.top1_cand = turno.estado.top3_actual[0].get("falla", "")
                 turno.plan_b = turno.GestorPlanB.obtener_plan_b_para_falla(turno.top1_cand, turno.estado)
